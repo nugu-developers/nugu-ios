@@ -1,9 +1,9 @@
 # NuguLoginKit
-![Swift](https://img.shields.io/badge/swift-5.0-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+![Swift](https://img.shields.io/badge/swift-5.1-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
 
 ## Requirements
 - iOS 10.0+
-- Xcode 10.2+
+- Xcode 11.0+
 - Swift 5+
 
 ## Installation
