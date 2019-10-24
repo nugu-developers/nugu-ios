@@ -42,14 +42,29 @@ public struct SharedBufferIndex {
     }
     
     public static func < (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
+        switch (lhs.value, rhs.value) {
+        case (0, 0):
+            return false
+        case (_, 0):
+            // 0 is the Biggest number in the Circular index world.
+            return true
+        default:
             return lhs.value < rhs.value
+        }
     }
     
     public static func > (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
+        switch (lhs.value, rhs.value) {
+        case (0, 0):
+            return false
+        case (0, _):
+            // 0 is the Biggest number in the Circular index world.
+            return true
+        default:
             return lhs.value > rhs.value
+        }
     }
     
-    // TODO: nice한 방법이 없나;;;
     public static func == (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
         return lhs.value == rhs.value
     }

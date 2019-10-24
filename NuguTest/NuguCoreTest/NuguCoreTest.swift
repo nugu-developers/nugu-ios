@@ -14,6 +14,7 @@ import RxSwift
 
 class NuguCoreTest: XCTestCase {
     let disposeBag = DisposeBag()
+    var index = 0
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -39,11 +40,12 @@ class NuguCoreTest: XCTestCase {
         reader.read { result in
             guard case .success(let element) = result else {
                 XCTAssertTrue(false)
-                complete()
                 return
             }
             
             print("reader: \(element)")
+            XCTAssertTrue(element == self.index)
+            self.index += 1
             complete()
         }
     }
@@ -55,13 +57,13 @@ class NuguCoreTest: XCTestCase {
         let reader = sharedBuffer.makeBufferReader()
         let expt = expectation(description: "Waiting done harkWork...")
         
-        Observable<Int>.timer(RxTimeInterval.seconds(1), period: RxTimeInterval.seconds(1), scheduler: ConcurrentMainScheduler.instance)
+        Observable<Int>.timer(RxTimeInterval.seconds(1), period: RxTimeInterval.milliseconds(3), scheduler: ConcurrentMainScheduler.instance)
             .subscribe(onNext: { index in
                 do {
                     try writer.write(index)
                     print("writer: \(index)")
                     
-                    if 7 == index {
+                    if 5000 == index {
                         writer.finish()
                     }
                 } catch {
@@ -70,7 +72,7 @@ class NuguCoreTest: XCTestCase {
                 
             }).disposed(by: disposeBag)
         
-        DispatchQueue.global().asyncAfter(deadline: .now() + 3) { [weak self] in
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1) { [weak self] in
             var complete: (() -> Void)!
             complete = {
                 self?.readBuffer(reader: reader, complete: complete)

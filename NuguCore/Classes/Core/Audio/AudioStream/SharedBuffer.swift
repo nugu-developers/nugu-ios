@@ -28,13 +28,11 @@ import RxSwift
  */
 public class SharedBuffer<Element> {
     private var array: [Element?]
-    private var internalLastIndex = 0
-    private var lastIndex: SharedBufferIndex
+    @Atomic private var lastIndex: SharedBufferIndex
 
     weak var writer: Writer?
     let writeQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.write")
     var writeSubject: PublishSubject<Element>?
-    private var writeWorkItem: DispatchWorkItem?
     private var readers: NSHashTable<Reader> = NSHashTable.weakObjects()
     private let disposeBag = DisposeBag()
     
@@ -48,13 +46,13 @@ public class SharedBuffer<Element> {
             guard let self = self else { return }
             
             self.array[self.lastIndex.value] = element
-            self.writeSubject?.onNext(element)
             self.lastIndex += 1
-            self.writeWorkItem = nil
+            
+            self.writeSubject?.onNext(element)
         }
     }
     
-    private func readObservable(index: SharedBufferIndex) -> Observable<Element> {
+    private func read(index: SharedBufferIndex) -> Observable<Element> {
         return Observable<Element>.create { [weak self] (observer) -> Disposable in
             let disposable = Disposables.create()
             
@@ -123,7 +121,7 @@ extension SharedBuffer {
     public class Reader {
         private let buffer: SharedBuffer
         private let readQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.reader")
-        private var readIndex: SharedBufferIndex
+        @Atomic private var readIndex: SharedBufferIndex
         public var readDisposable: Disposable?
         private let disposeBag = DisposeBag()
         
@@ -134,23 +132,20 @@ extension SharedBuffer {
         }
         
         public func read(complete: @escaping (Result<Element, Error>) -> Void) {
-            readQueue.async { [weak self] in
-                guard let self = self else { return }
-                
-                var isCompleted = false
-                self.readDisposable = self.buffer.readObservable(index: self.readIndex)
-                    .take(1)
-                    .subscribe(onNext: { (writtenElement) in
-                        isCompleted = true
-                        complete(.success(writtenElement))
-                        self.readIndex += 1
-                    }, onDisposed: {
-                        if isCompleted == false {
-                            complete(.failure(SharedBufferError.writerFinished))
-                        }
-                    })
-                self.readDisposable?.disposed(by: self.disposeBag)
-            }
+            var isCompleted = false
+            self.readDisposable = self.buffer.read(index: self.readIndex)
+                .take(1)
+                .observeOn(SerialDispatchQueueScheduler(queue: readQueue, internalSerialQueueName: "rx-"+readQueue.label))
+                .subscribe(onNext: { (writtenElement) in
+                    isCompleted = true
+                    self.readIndex += 1
+                    complete(.success(writtenElement))
+                }, onDisposed: {
+                    if isCompleted == false {
+                        complete(.failure(SharedBufferError.writerFinished))
+                    }
+                })
+            self.readDisposable?.disposed(by: self.disposeBag)
         }
     }
 }
