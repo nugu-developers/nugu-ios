@@ -1,0 +1,19 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '13.1'
+
+target 'NuguTest' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for NuguTest
+  pod 'NuguClientKit', :path => '../'
+  pod 'NuguCore', :path => '../'
+
+  target 'NuguCoreTest' do
+    inherit! :search_paths
+  end
+
+  target 'NuguClientTest' do
+    inherit! :search_paths
+  end
+end
