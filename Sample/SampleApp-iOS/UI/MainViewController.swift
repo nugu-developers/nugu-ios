@@ -22,6 +22,7 @@ import UIKit
 import MediaPlayer
 
 import NuguInterface
+import NuguUIKit
 
 final class MainViewController: UIViewController {
     
@@ -36,7 +37,7 @@ final class MainViewController: UIViewController {
     private var displayView: UIView?
     private var displayAudioPlayerView: DisplayAudioPlayerView?
     
-    private var voiceChromeView = VoiceChromeView()
+    private var nuguVoiceChrome = NuguVoiceChrome()
     
     // MARK: Override
     
@@ -263,17 +264,17 @@ private extension MainViewController {
         voiceChromeDismissWorkItem?.cancel()
         NuguCentralManager.shared.startRecognize()
         
-        voiceChromeView.removeFromSuperview()
-        voiceChromeView = VoiceChromeView(frame: CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: 256 + SampleApp.bottomSafeAreaHeight))
-        voiceChromeView.initializeView()
-        voiceChromeView.onCloseButtonClick = { [weak self] in
+        nuguVoiceChrome.removeFromSuperview()
+        nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
+        nuguVoiceChrome.initializeView()
+        nuguVoiceChrome.onCloseButtonClick = { [weak self] in
             self?.dismissVoiceChrome()
         }
-        view.addSubview(voiceChromeView)
+        view.addSubview(nuguVoiceChrome)
         
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            self.voiceChromeView.frame = CGRect(x: 0, y: self.view.frame.size.height - (256 + SampleApp.bottomSafeAreaHeight), width: self.view.frame.size.width, height: 256 + SampleApp.bottomSafeAreaHeight)
+            self.nuguVoiceChrome.frame = CGRect(x: 0, y: self.view.frame.size.height - (NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight), width: self.view.frame.size.width, height: 256 + SampleApp.bottomSafeAreaHeight)
         }
     }
     
@@ -283,9 +284,9 @@ private extension MainViewController {
         
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
-            self.voiceChromeView.frame = CGRect(x: 0, y: self.view.frame.size.height + SampleApp.bottomSafeAreaHeight, width: self.view.frame.size.width, height: 256 + SampleApp.bottomSafeAreaHeight)
+            self.nuguVoiceChrome.frame = CGRect(x: 0, y: self.view.frame.size.height + SampleApp.bottomSafeAreaHeight, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight)
         }, completion: { [weak self] _ in
-            self?.voiceChromeView.removeFromSuperview()
+            self?.nuguVoiceChrome.removeFromSuperview()
         })
     }
 }
@@ -451,22 +452,34 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0,   execute: voiceChromeDismissWorkItem)
         case .speaking(let expectingSpeech):
             refreshWakeUpDetector()
-            guard expectingSpeech == false else {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.voiceChromeView.minimize()
-                }
-                break
-            }
             DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.playAnimationByState(state: .speaking)
+                guard expectingSpeech == false else {
+                    self?.nuguVoiceChrome.minimize()
+                    return
+                }
                 self?.dismissVoiceChrome()
             }
         case .listening:
             NuguCentralManager.shared.stopWakeUpDetector()
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.playAnimationByState(state: .listeningPassive)
+                self?.nuguVoiceChrome.showSpeechGuideText()
+                SoundPlayer.playSound(soundType: .start)
+            }
+        case .recognizing:
+            refreshWakeUpDetector()
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.playAnimationByState(state: .listeningActive)
+                self?.nuguVoiceChrome.setRecognizedText(text: nil)
+            }
+        case .thinking:
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.playAnimationByState(state: .processing)
+            }
         default:
             refreshWakeUpDetector()
         }
-        voiceChromeView.dialogStateDidChange(state: state)
     }
 }
 
@@ -474,7 +487,23 @@ extension MainViewController: DialogStateDelegate {
 
 extension MainViewController: ASRAgentDelegate {
     func asrAgentDidReceive(result: ASRResult) {
-        voiceChromeView.asrAgentDidReceive(result: result)
+        switch result {
+        case .complete(let text):
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.setRecognizedText(text: text)
+                SoundPlayer.playSound(soundType: .success)
+            }
+        case .partial(let text):
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.setRecognizedText(text: text)
+            }
+        case .error:
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.playAnimationByState(state: .speakingError)
+                SoundPlayer.playSound(soundType: .fail)
+            }
+        default: break
+        }
     }
 }
 
@@ -482,7 +511,20 @@ extension MainViewController: ASRAgentDelegate {
 
 extension MainViewController: TextAgentDelegate {
     func textAgentDidReceive(result: TextAgentResult) {
-        voiceChromeView.textAgentDidReceive(result: result)
+        switch result {
+        case .complete:
+            DispatchQueue.main.async {
+                SoundPlayer.playSound(soundType: .success)
+            }
+        case .error(let textAgentError):
+            switch textAgentError {
+            case .responseTimeout:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.playAnimationByState(state: .speakingError)
+                    SoundPlayer.playSound(soundType: .fail)
+                }
+            }
+        }
     }
 }
 
