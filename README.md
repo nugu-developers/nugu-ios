@@ -1,5 +1,5 @@
 # nugu-ios
-![Platform](https://img.shields.io/badge/platforms-iOS-999999)
+![Platform](https://img.shields.io/badge/platform-iOS-999999)
 [![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguClientKit)](https://github.com/nugu-developers/nugu-ios)
 ![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
 
