@@ -1,0 +1,82 @@
+# NuguUIKit
+![Swift](https://img.shields.io/badge/swift-5.1-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+
+Provides default instances for using Nugu service 
+
+## Requirements
+- iOS 10.0+
+- Xcode 11.0+
+- Swift 5.1+
+
+## Installation
+
+### CocoaPods
+Nugu is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
+```ruby
+pod 'NuguUIKit'
+```
+
+## Dependency
+NuguUIKit has dependency on [Lottie](https://github.com/airbnb/lottie-ios) for NuguVoiceChrome animation
+
+## Usage
+### Initialize
+> By Code
+```swift
+import NuguUIKit
+
+let recommendedNuguVoiceChromeFrame = CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + bottomSafeAreaHeight)
+var nuguVoiceChrome = NuguVoiceChrome(frame: recommendedNuguVoiceChromeSize)
+```
+> By Storyboard
+```
+Place UIButton or UIView in storyboard and change it's class to NuguButton or NuguVoiceChrome (from NuguUIKit module) in storyboard's Custom Class section
+```
+
+>  **NuguButton and NuguVoiceChrome are designed in accordance with recommendedSize
+<br>Note that NuguButton and NuguVoiceChrome can be looked awkward in different size**
+
+### NuguButton
+```swift
+    // MARK: Customizable Properties
+    
+    @IBInspectable
+    public var startColor: UIColor = UIColor(red: 0.0, green: 157.0/255.0, blue: 1.0, alpha: 1.0)
+    
+    @IBInspectable
+    public var endColor: UIColor = UIColor(red: 0.0, green: 157.0/255.0, blue: 1.0, alpha: 1.0)
+    
+    // MARK: - Public Methods
+
+    public func startListeningAnimation()
+    public func stopListeningAnimation()
+```
+### NuguVoiceChrome
+```swift
+    // MARK: Customizable Properties
+    
+    public var onCloseButtonClick: (() -> Void)?
+    
+    // MARK: - Public Methods
+
+    public func initializeView()
+    public func minimize()
+    public func maximize()
+    public func showSpeechGuideText()
+    public func setRecognizedText(text: String?)
+    public func playAnimationByState(state: NuguVoiceChromeState)
+```
+```swift
+public enum NuguVoiceChromeState {
+    case listeningPassive
+    case listeningActive
+    case processing
+    case speaking
+    case speakingError
+}
+```
+
+## License
+
+The contents of this repository is licensed under the
+[Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
