@@ -1,12 +1,9 @@
 # NuguCore
-![Swift](https://img.shields.io/badge/swift-5.0-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+![Platform](https://img.shields.io/cocoapods/p/NuguCore)
+![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguCore)
+![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
 
-Nugu framework for AI Service
-
-## Requirements
-- iOS 10.0+
-- Xcode 10.2+
-- Swift 5.1+
+Nugu framework for AI Service.
 
 ## Installation
 
@@ -192,6 +189,5 @@ ttsAgent.requestTTS(text: text)
 작성예정
 
 ## License
-
 The contents of this repository is licensed under the
 [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).

@@ -1,5 +1,4 @@
-# SampleApp-iOS
-![Swift](https://img.shields.io/badge/swift-5.0-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+# Nugu Sample App
 
 ## Run
 ### CocoaPods
@@ -10,8 +9,8 @@ $ pod install
 ### Copy voice recognition model files
 Voice recognition model files downloaded from [NUGU Developers](https://developers.nugu.co.kr) should be copied and located in following destinations.
 - Wake-up Model  
-./Pods/KeenSense/KeenSense/Assets/skt_trigger_search_tinkerbel.raw  
-./Pods/KeenSense/KeenSense/Assets/skt_trigger_am_tinkerbel.raw  
+./Pods/KeenSense/KeenSense/Assets/skt_trigger_search_tinkerbell.raw  
+./Pods/KeenSense/KeenSense/Assets/skt_trigger_am_tinkerbell.raw  
 ./Pods/KeenSense/KeenSense/Assets/skt_trigger_search_aria.raw  
 ./Pods/KeenSense/KeenSense/Assets/skt_trigger_am_aria.raw
 - EPD Model  
@@ -49,6 +48,4 @@ static var clientId: String? = "{Client-id}" // Client-id is need for oauth-auth
 static var clientSecret: String? = "{Client-secret}" // Client-secret is need for oauth-authorization
 ```
 
-## For further usage guide..
-Please visit [Nugu Developers Guide page](https://developers-doc.nugu.co.kr/nugu-sdk/platform/ios)
 

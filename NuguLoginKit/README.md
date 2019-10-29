@@ -1,10 +1,7 @@
 # NuguLoginKit
-![Swift](https://img.shields.io/badge/swift-5.0-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
-
-## Requirements
-- iOS 10.0+
-- Xcode 10.2+
-- Swift 5+
+![Platform](https://img.shields.io/cocoapods/p/NuguLoginKit)
+![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguLoginKit)
+![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
 
 ## Installation
 
@@ -17,6 +14,5 @@ pod 'NuguLoginKit'
 ```
 
 ## License
-
 The contents of this repository is licensed under the
 [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).

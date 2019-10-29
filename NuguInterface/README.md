@@ -1,12 +1,9 @@
-# Nugu Interface
-![Swift](https://img.shields.io/badge/swift-5.0-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+# NuguInterface
+![Platform](https://img.shields.io/cocoapods/p/NuguInterface)
+![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguInterface)
+![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
 
 This framework offers protocols for Nugu service.
-
-## Requirements
-- iOS 10.0+
-- Xcode 10.2+
-- Swift 5.1+
 
 ## Installation
 
@@ -18,6 +15,5 @@ pod 'NuguInterface'
 ```
 
 ## License
-
 The contents of this repository is licensed under the
 [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
