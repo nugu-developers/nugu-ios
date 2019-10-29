@@ -102,7 +102,11 @@ public class NuguClient {
     /// <#Description#>
     public let endPointDetector: EndPointDetectable?
     /// <#Description#>
-    public let wakeUpDetector: WakeUpDetectable?
+    public var wakeUpDetector: WakeUpDetectable? {
+        didSet {
+            setupWakeUpDetectorDependency()
+        }
+    }
     
     // MARK: - Capability Agents
     
@@ -167,23 +171,6 @@ public extension NuguClient {
             }
             
             authorizationManager.authorizationPayload = AuthorizationPayload(accessToken: newAccessToken)
-        }
-    }
-}
-
-// MARK: - Decorator
-
-public extension WakeUpDetectable {
-    /// <#Description#>
-    var keyWord: KeyWord? {
-        get {
-            guard let keyWordDetector = self as? KeyWordDetector else { return nil }
-            return keyWordDetector.keyWord
-        }
-        set {
-            guard let keyWordDetector = self as? KeyWordDetector else { return }
-            guard let keyWordValue = newValue else { return }
-            keyWordDetector.keyWord = keyWordValue
         }
     }
 }

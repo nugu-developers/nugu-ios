@@ -243,7 +243,7 @@ extension TTSAgent: FocusChannelDelegate {
 // MARK: - ProvideContextDelegate
 
 extension TTSAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo {
+    public func provideContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,

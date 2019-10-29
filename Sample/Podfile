@@ -6,6 +6,8 @@ target 'SampleApp-iOS' do
   pod 'NuguClientKit', :path => '../'
   pod 'NuguInterface', :path => '../'
   pod 'NuguCore', :path => '../'
+  pod 'JadeMarble', :path => '../../jade-marble-ios'
+  pod 'KeenSense', :path => '../../keen-sense-ios'
 
   pod 'NattyLog'
   pod 'lottie-ios'

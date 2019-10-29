@@ -112,7 +112,7 @@ extension DisplayAgent: HandleDirectiveDelegate {
 // MARK: - ProvideContextDelegate
 
 extension DisplayAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo {
+    public func provideContext() -> ContextInfo? {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "token": currentItem?.token,
