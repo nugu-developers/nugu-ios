@@ -1,5 +1,4 @@
-# SampleApp-iOS
-![Swift](https://img.shields.io/badge/swift-5.1-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+# Nugu Sample App
 
 ## Run
 ### CocoaPods
