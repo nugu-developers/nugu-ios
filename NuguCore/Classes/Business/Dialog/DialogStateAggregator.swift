@@ -85,10 +85,10 @@ extension DialogStateAggregator: ASRAgentDelegate {
 // MARK: - TTSAgentDelegate
 
 extension DialogStateAggregator: TTSAgentDelegate {
-    public func ttsAgentDidReceive(text: String) {
+    public func ttsAgentDidReceive(text: String, dialogRequestId: String) {
     }
     
-    public func ttsAgentDidChange(state: TTSState) {
+    public func ttsAgentDidChange(state: TTSState, dialogRequestId: String) {
         dialogStateDispatchQueue.async { [weak self] in
             self?.ttsState = state
             self?.applyState()

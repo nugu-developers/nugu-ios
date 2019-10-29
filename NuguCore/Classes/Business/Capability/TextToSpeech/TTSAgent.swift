@@ -59,7 +59,9 @@ final public class TTSAgent: TTSAgentProtocol {
             }
             
             delegates.notify { delegate in
-                delegate.ttsAgentDidChange(state: ttsState)
+                if let dialogRequestId = currentMedia?.dialogRequestId {
+                    delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: dialogRequestId)
+                }
             }
         }
     }
@@ -375,7 +377,7 @@ private extension TTSAgent {
             guard let media = self.currentMedia else { return }
             
             self.delegates.notify { delegate in
-                delegate.ttsAgentDidReceive(text: media.payload.text)
+                delegate.ttsAgentDidReceive(text: media.payload.text, dialogRequestId: media.dialogRequestId)
             }
             
             self.ttsResultSubject
