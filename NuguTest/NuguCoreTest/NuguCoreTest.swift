@@ -39,7 +39,7 @@ class NuguCoreTest: XCTestCase {
     func readBuffer(reader: SharedBuffer<Int>.Reader, complete: @escaping () -> Void) {
         reader.read { result in
             guard case .success(let element) = result else {
-                XCTAssertTrue(false)
+                XCTAssertTrue(self.index == 5001)
                 return
             }
             

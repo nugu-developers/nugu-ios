@@ -43,12 +43,19 @@ extension NuguClient {
         setupExtensionAgentDependency()
         setupAudioStreamDependency()
         setupWakeUpDetectorDependency()
+        setupEndPointDetectorDependency()
     }
 }
 
 // MARK: - Capability-Agents (Optional)
 
 extension NuguClient {
+    func setupEndPointDetectorDependency() {
+        if let asrAgent = asrAgent {
+            asrAgent.endPointDetector = endPointDetector
+        }
+    }
+    
     func setupASRAgentDependency() {
         guard let agent = asrAgent else { return }
         
@@ -57,7 +64,6 @@ extension NuguClient {
         agent.messageSender = networkManager
         agent.contextManager = contextManager
         agent.audioStream = sharedAudioStream
-        agent.endPointDetector = endPointDetector
         agent.dialogStateAggregator = dialogStateAggregator
         
         do {
@@ -175,8 +181,6 @@ extension NuguClient {
         guard let wakeUpDetector = wakeUpDetector else { return }
         
         wakeUpDetector.audioStream = sharedAudioStream
-        
-        contextManager.add(provideContextDelegate: wakeUpDetector)
     }
 }
 

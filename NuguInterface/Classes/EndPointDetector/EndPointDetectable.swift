@@ -21,19 +21,23 @@
 import Foundation
 
 /// <#Description#>
-public protocol EndPointDetectable {
+public protocol EndPointDetectable: class {
     /// <#Description#>
     var state: EndPointDetectorState { get set }
+    /// <#Description#>
+    var epdFile: URL? { get set }
     /// <#Description#>
     var delegate: EndPointDetectorDelegate? { get set }
     
     /// <#Description#>
     /// - Parameter inputStream: <#inputStream description#>
     func start(inputStream: AudioStreamReadable) throws
+
     /// <#Description#>
     /// - Parameter inputStream: <#inputStream description#>
     /// - Parameter timeout: <#timeout description#>
     func start(inputStream: AudioStreamReadable, timeout: Int) throws
+
     /// <#Description#>
     func stop()
 }

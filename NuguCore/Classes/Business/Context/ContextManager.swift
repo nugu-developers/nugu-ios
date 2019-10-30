@@ -103,7 +103,10 @@ extension ContextManager {
 private extension ContextManager {
     func getContext(delegate: ProvideContextDelegate) -> Completable {
         return Completable.create { [weak self] event -> Disposable in
-            self?.set(context: delegate.provideContext())
+            if let context = delegate.provideContext() {
+                self?.set(context: context)
+            }
+
             event(.completed)
             return Disposables.create()
         }

@@ -22,7 +22,6 @@ import Foundation
 
 import NuguCore
 import NuguInterface
-import KeenSense
 
 import NattyLog
 
@@ -102,7 +101,11 @@ public class NuguClient {
     /// <#Description#>
     public let endPointDetector: EndPointDetectable?
     /// <#Description#>
-    public let wakeUpDetector: WakeUpDetectable?
+    public var wakeUpDetector: WakeUpDetectable? {
+        didSet {
+            setupWakeUpDetectorDependency()
+        }
+    }
     
     // MARK: - Capability Agents
     
@@ -171,36 +174,7 @@ public extension NuguClient {
     }
 }
 
-// MARK: - Decorator
-
-public extension WakeUpDetectable {
-    /// <#Description#>
-    var keyWord: KeyWord? {
-        get {
-            guard let keyWordDetector = self as? KeyWordDetector else { return nil }
-            return keyWordDetector.keyWord
-        }
-        set {
-            guard let keyWordDetector = self as? KeyWordDetector else { return }
-            guard let keyWordValue = newValue else { return }
-            keyWordDetector.keyWord = keyWordValue
-        }
-    }
-}
-
-// MARK: - for ASR
-
-extension NuguClient: WakeUpInfoDelegate {
-    public func requestWakeUpInfo() -> (Data, Int)? {
-        guard
-            let keyWordDetector = wakeUpDetector as? KeyWordDetector,
-            let detectedData = keyWordDetector.detectedData else {
-                return nil
-        }
-        
-        return (detectedData.data, detectedData.padding)
-    }
-}
+// MARK: - AudioStreamDelegate
 
 extension NuguClient: AudioStreamDelegate {
     public func audioStreamWillStart() {

@@ -90,7 +90,7 @@ extension SpeakerAgent: HandleDirectiveDelegate {
 // MARK: - ProvideContextDelegate
 
 extension SpeakerAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo {
+    public func provideContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "volumes": controllerVolumes.values

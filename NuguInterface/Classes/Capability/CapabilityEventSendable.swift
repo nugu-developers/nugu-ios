@@ -45,11 +45,11 @@ public extension CapabilityEventSendable {
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
     /// - Parameter messageSender: <#messageSender description#>
     func sendEvent(_ event: Event,
-                   context: ContextInfo,
+                   context: ContextInfo?,
                    dialogRequestId: String,
                    by messageSender: MessageSendable,
                    completion: ((SendMessageStatus) -> Void)? = nil) {
-        let contextPayload = ContextPayload(supportedInterfaces: [context], client: [])
+        let contextPayload = ContextPayload(supportedInterfaces: context != nil ? [context!] : [], client: [])
         
         sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, by: messageSender, completion: completion)
     }
