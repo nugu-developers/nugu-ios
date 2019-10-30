@@ -47,11 +47,11 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     // AudioPlayerAgentProtocol
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
-    public var offset: Int {
-        return currentMedia?.player.offset ?? -1
+    public var offset: Int? {
+        return currentMedia?.player.offset
     }
-    public var duration: Int {
-        return currentMedia?.player.duration ?? -1
+    public var duration: Int? {
+        return currentMedia?.player.duration
     }
     
     private var focusState: FocusState = .nothing
@@ -343,13 +343,16 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
 
 extension AudioPlayerAgent: ProvideContextDelegate {
     public func provideContext() -> ContextInfo {
-        let payload: [String: Any?] = [
+        var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "playerActivity": audioPlayerState.rawValue,
-            "offsetInMilliseconds": offset * 1000,
-            "durationInMilliseconds": duration * 1000,
+            // This is a mandatory in Play kit.
+            "offsetInMilliseconds": (offset ?? 0) * 1000,
             "token": currentMedia?.payload.audioItem.stream.token
         ]
+        if let duration = duration {
+            payload["durationInMilliseconds"] = duration * 1000
+        }
         return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
     }
 }
@@ -456,7 +459,8 @@ private extension AudioPlayerAgent {
         sendEvent(
             Event(
                 token: media.payload.audioItem.stream.token,
-                offsetInMilliseconds: offset * 1000,
+                // This is a mandatory in Play kit.
+                offsetInMilliseconds: (offset ?? 0) * 1000,
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
             ),
