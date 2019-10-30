@@ -59,20 +59,20 @@ Place UIButton or UIView in storyboard and change it's class to NuguButton or Nu
     
     // MARK: - Public Methods
 
-    public func initializeView()
+    public func changeState(state: NuguVoiceChrome.State)
+    public func setRecognizedText(text: String?)
     public func minimize()
     public func maximize()
-    public func showSpeechGuideText()
-    public func setRecognizedText(text: String?)
-    public func playAnimationByState(state: NuguVoiceChromeState)
 ```
 ```swift
-public enum NuguVoiceChromeState {
-    case listeningPassive
-    case listeningActive
-    case processing
-    case speaking
-    case speakingError
+public extension NuguVoiceChrome {
+    enum State {
+        case listeningPassive
+        case listeningActive
+        case processing
+        case speaking
+        case speakingError
+    }
 }
 ```
 
