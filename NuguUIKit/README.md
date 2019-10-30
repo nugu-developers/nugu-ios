@@ -1,5 +1,7 @@
 # NuguUIKit
-![Swift](https://img.shields.io/badge/swift-5.1-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+![Platform](https://img.shields.io/cocoapods/p/NuguUIKit)
+![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguUIKit)
+![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
 
 Provides default instances for using Nugu service 
 
