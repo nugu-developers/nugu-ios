@@ -343,7 +343,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
 
 extension AudioPlayerAgent: ProvideContextDelegate {
     public func provideContext() -> ContextInfo? {
-        let payload: [String: Any?] = [
+        var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "playerActivity": audioPlayerState.rawValue,
             // This is a mandatory in Play kit.
