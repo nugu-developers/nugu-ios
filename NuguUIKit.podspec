@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.resources = 'NuguUIKit/Assets/**/*.{json,xcassets}'
   s.source_files = 'NuguUIKit/Classes/**/*'
 
-  s.dependency 'lottie-ios'
+  s.dependency 'lottie-ios', '~> 3'
 end

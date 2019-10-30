@@ -24,9 +24,9 @@ import Lottie
 
 final public class NuguVoiceChrome: UIView {
     
-    // MARK: RecommendedSize for NuguVoiceChrome
-    // NuguVoiceChrome is designed in accordance with recommendedSize
-    // Note that NuguVoiceChrome can be looked awkward in different size
+    // MARK: RecommendedHeight for NuguVoiceChrome
+    // NuguVoiceChrome is designed in accordance with recommendedHeight
+    // Note that NuguVoiceChrome can be looked awkward in different height
     
     public static let recommendedHeight: CGFloat = 256.0
     
@@ -76,22 +76,61 @@ final public class NuguVoiceChrome: UIView {
         layer.shadowOpacity = 0.15
         layer.shadowOffset = CGSize(width: 0, height: -1)
         layer.shadowRadius = 10
+        
+        asrStatusView.loopMode = .loop
+    }
+}
+
+// MARK: - NuguVoiceChrome.State
+
+public extension NuguVoiceChrome {
+    enum State {
+        case listeningPassive
+        case listeningActive
+        case processing
+        case speaking
+        case speakingError
+        
+        var animationFileName: String {
+            get {
+                switch self {
+                case .listeningPassive:
+                    return "LP"
+                case .listeningActive:
+                    return "LA"
+                case .processing:
+                    return "PC_02"
+                case .speaking:
+                    return "SP_02"
+                case .speakingError:
+                    return "ESP_02"
+                }
+            }
+        }
     }
 }
 
 // MARK: - Public
 
 public extension NuguVoiceChrome {
-    func initializeView() {
-        topContainerView.isHidden = false
-        
-        asrStatusView.loopMode = .loop
-        playAnimationByState(state: .listeningPassive)
-        
-        showSpeechGuideText()
+    func changeState(state: NuguVoiceChrome.State) {
+        playAnimationByState(state: state)
+        switch state {
+        case .listeningPassive:
+            showSpeechGuideText()
+        case .listeningActive:
+            setRecognizedText(text: nil)
+        default: break
+        }
+    }
+    
+    func setRecognizedText(text: String?) {
+        recognizedTextLabel.textColor = recognizeTextColor
+        recognizedTextLabel.text = text
     }
     
     func minimize() {
+        guard topContainerView.isHidden == false else { return }
         topContainerView.alpha = 0
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
@@ -102,6 +141,7 @@ public extension NuguVoiceChrome {
     }
     
     func maximize() {
+        guard topContainerView.isHidden == true else { return }
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
             self.topContainerView.isHidden = false
@@ -111,20 +151,19 @@ public extension NuguVoiceChrome {
             self?.topContainerView.alpha = 1
         }
     }
+}
+
+// MARK: - Private
+
+private extension NuguVoiceChrome {
+    func playAnimationByState(state: NuguVoiceChrome.State) {
+        asrStatusView.animation = Animation.named(state.animationFileName, bundle: Bundle(for: NuguVoiceChrome.self))
+        asrStatusView.play()
+    }
     
     func showSpeechGuideText() {
         recognizedTextLabel.text = speechGuideText
         recognizedTextLabel.textColor = guideTextColor
-    }
-    
-    func setRecognizedText(text: String?) {
-        recognizedTextLabel.textColor = recognizeTextColor
-        recognizedTextLabel.text = text
-    }
-    
-    func playAnimationByState(state: NuguVoiceChromeState) {
-        asrStatusView.animation = Animation.named(state.animationFileName, bundle: Bundle(for: NuguVoiceChrome.self))
-        asrStatusView.play()
     }
 }
 
