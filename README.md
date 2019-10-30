@@ -10,6 +10,7 @@
 
 ## Components
 NUGU SDK for iOS is composed of following Libraries 
+- [NuguUIKit](NuguUIKit/) - Library for user interface components
 - [NuguLoginKit](NuguLoginKit/) - Library for user authentication with OAuth2.0
 - [NuguClientKit](NuguClientKit/) - Library for initializing essential components and inject dependency between components to use NUGU SDK
 - [NuguInterface](NuguInterface/) - Library which includes protocols, enums, structs of public components of NUGU SDK 

@@ -1,6 +1,6 @@
 //
 //  NuguButton.swift
-//  SampleApp-iOS
+//  NuguUIKit
 //
 //  Created by jin kim on 03/07/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,28 +20,38 @@
 
 import UIKit
 
-final class NuguButton: UIButton {
+final public class NuguButton: UIButton {
+
+    // MARK: RecommendedSize for NuguButton
+    // NuguButton is designed in accordance with recommendedSize
+    // Note that NuguButton can be looked awkward in different size
+    
+    public static let recommendedSize: CGFloat = 60.0
+    
+    // MARK: Customizable Properties
+    
+    @IBInspectable
+    public var startColor: UIColor = UIColor(red: 0.0, green: 157.0/255.0, blue: 1.0, alpha: 1.0)
+    
+    @IBInspectable
+    public var endColor: UIColor = UIColor(red: 0.0, green: 157.0/255.0, blue: 1.0, alpha: 1.0)
     
     // MARK: AnimationKey
     
-    enum AnimationKey: String {
+    private enum AnimationKey: String {
         case gradation = "gradation"
         case flip = "flip"
     }
     
-    // MARK: Properties
+    // MARK: Private Properties
+    
+    private let disabledColor: UIColor = UIColor(red: 120.0/255.0, green: 131.0/255.0, blue: 143.0/255.0, alpha: 1.0)
     
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var imagesStackView: UIStackView!
     @IBOutlet private weak var micImageView: UIImageView!
     @IBOutlet private weak var nuguLogoImageView: UIImageView!
-    
-    @IBInspectable
-    private var startColor: UIColor = UIColor(rgbHexValue: 0x009DFF)
-    
-    @IBInspectable
-    private var endColor: UIColor = UIColor(rgbHexValue: 0x009DFF)
     
     @IBInspectable
     private var showNuguLogo: Bool = true {
@@ -67,36 +77,29 @@ final class NuguButton: UIButton {
         loadFromXib()
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         
         refreshViews()
     }
     
-    override var isHighlighted: Bool {
+    override public var isHighlighted: Bool {
         didSet {
             highlightedLayer.isHidden = !isHighlighted
         }
     }
     
-    override var isEnabled: Bool {
+    override public var isEnabled: Bool {
         didSet {
-            if isEnabled == true {
-                startColor = UIColor(rgbHexValue: 0x009DFF)
-                endColor = UIColor(rgbHexValue: 0x009DFF)
-            } else {
-                startColor = UIColor(rgbHexValue: 0x78838F)
-                endColor = UIColor(rgbHexValue: 0x78838F)
-            }
             refreshViews()
         }
     }
 
 }
 
-// MARK: - Internal (Animation)
+// MARK: - Public (Animation)
 
-extension NuguButton {
+public extension NuguButton {
     func startListeningAnimation() {
         animateFlip()
         animateGradation()
@@ -112,7 +115,7 @@ extension NuguButton {
 
 extension NuguButton {
     private func loadFromXib() {
-        let view = Bundle.main.loadNibNamed("NuguButton", owner: self)?.first as! UIView
+        let view = Bundle(for: NuguButton.self).loadNibNamed("NuguButton", owner: self)?.first as! UIView
         view.frame = bounds
         addSubview(view)
         
@@ -145,7 +148,7 @@ extension NuguButton {
         
         gradientLayer.startPoint = CGPoint(x:0.5, y:0.0)
         gradientLayer.endPoint = CGPoint(x:0.5, y:1.0)
-        gradientLayer.colors = [startColor.cgColor, endColor.cgColor]
+        gradientLayer.colors = isEnabled ? [startColor.cgColor, endColor.cgColor] : [disabledColor.cgColor, disabledColor.cgColor]
         gradientLayer.locations =  [0, 1.0]
         
         // Add highlightedLayer

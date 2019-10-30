@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
     <device id="retina5_9" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -96,46 +96,38 @@
                                     <action selector="showSettingsButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="b1X-Ed-Vkj"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0dl-eZ-aJV" customClass="NuguButton" customModule="SampleApp_iOS" customModuleProvider="target">
-                                <rect key="frame" x="157.66666666666666" y="698" width="60" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="LGi-RB-obE"/>
-                                    <constraint firstAttribute="height" constant="60" id="mHI-ti-Dox"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="startColor">
-                                        <color key="value" red="0.0" green="0.61568627450000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="endColor">
-                                        <color key="value" red="0.0" green="0.61568627450980395" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="startRecognizeButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="R7w-Sa-MyW"/>
-                                </connections>
-                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ns-b9-eTf">
                                 <rect key="frame" x="14.999999999999998" y="49" width="26.333333333333329" height="12"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" red="1" green="0.2274509804" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pN-zT-foV" customClass="NuguButton" customModule="NuguUIKit">
+                                <rect key="frame" x="157.66666666666666" y="698" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="JUG-kC-aCN"/>
+                                    <constraint firstAttribute="height" constant="60" id="qlP-Rt-7cq"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="startRecognizeButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="188-nt-X30"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="Fng-5l-cHx" firstAttribute="bottom" secondItem="1pN-zT-foV" secondAttribute="bottom" constant="20" id="2kg-rq-IoR"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" secondItem="H7A-kt-fwH" secondAttribute="trailing" constant="50" id="4Tm-uC-Cli"/>
                             <constraint firstItem="2Ns-b9-eTf" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="5" id="HWk-vD-Fki"/>
-                            <constraint firstItem="Fng-5l-cHx" firstAttribute="bottom" secondItem="0dl-eZ-aJV" secondAttribute="bottom" constant="20" id="INu-v6-bPM"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2Ns-b9-eTf" secondAttribute="trailing" symbolic="YES" id="RUL-G7-INd"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fng-5l-cHx" secondAttribute="leading" symbolic="YES" id="Tv9-i1-zVn"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="50" id="cjZ-E8-mLe"/>
-                            <constraint firstItem="0dl-eZ-aJV" firstAttribute="centerX" secondItem="Fng-5l-cHx" secondAttribute="centerX" id="rUc-c1-IAL"/>
                             <constraint firstItem="2Ns-b9-eTf" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="15" id="yv9-4H-Zba"/>
+                            <constraint firstItem="1pN-zT-foV" firstAttribute="centerX" secondItem="Fng-5l-cHx" secondAttribute="centerX" id="ziq-Ma-Uj5"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Fng-5l-cHx"/>
                     </view>
                     <connections>
-                        <outlet property="nuguButton" destination="0dl-eZ-aJV" id="d1u-bu-8pA"/>
+                        <outlet property="nuguButton" destination="1pN-zT-foV" id="esl-yf-Cut"/>
                         <outlet property="settingButton" destination="H7A-kt-fwH" id="wvw-g1-c4g"/>
                         <outlet property="watermarkLabel" destination="2Ns-b9-eTf" id="hCm-cA-CbZ"/>
                         <segue destination="0vH-zb-MED" kind="presentation" identifier="showSettings" modalPresentationStyle="fullScreen" id="KqI-DK-yef"/>

@@ -6,8 +6,7 @@ target 'SampleApp-iOS' do
   pod 'NuguClientKit', :path => '../'
   pod 'NuguInterface', :path => '../'
   pod 'NuguCore', :path => '../'
-
-  pod 'KeenSense'
+  pod 'NuguUIKit', :path => '../'
+  
   pod 'NattyLog'
-  pod 'lottie-ios'
 end

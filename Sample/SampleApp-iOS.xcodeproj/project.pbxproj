@@ -17,7 +17,6 @@
 		1F9F6ED022D089C300CD4888 /* UserDefaults+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9F6ECF22D089C300CD4888 /* UserDefaults+Standard.swift */; };
 		1F9F6EDA22D4995200CD4888 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9F6ED322D4995200CD4888 /* SettingViewController.swift */; };
 		1F9F6EDC22D4995200CD4888 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9F6ED522D4995200CD4888 /* IntroViewController.swift */; };
-		1F9F6EDD22D4995200CD4888 /* NuguButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9F6ED622D4995200CD4888 /* NuguButton.swift */; };
 		1F9F6EDE22D4995200CD4888 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9F6ED722D4995200CD4888 /* MainViewController.swift */; };
 		1F9F6EE322D4996C00CD4888 /* NuguWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9F6EE222D4996C00CD4888 /* NuguWebView.swift */; };
 		1F9F6EF122E05DCB00CD4888 /* UIColor+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9F6EF022E05DCB00CD4888 /* UIColor+Convenience.swift */; };
@@ -29,7 +28,6 @@
 		A1766AF122B0E0410036D53A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1766AEF22B0E0410036D53A /* Main.storyboard */; };
 		A1766AF322B0E0430036D53A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1766AF222B0E0430036D53A /* Assets.xcassets */; };
 		A1766AF622B0E0430036D53A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1766AF422B0E0430036D53A /* LaunchScreen.storyboard */; };
-		A1AF6D3122DF06930030259F /* NuguButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1AF6D2F22DF06930030259F /* NuguButton.xib */; };
 		A1B3F52422BA3059003C8F17 /* NuguCentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B3F52322BA3059003C8F17 /* NuguCentralManager.swift */; };
 		A1B3F52A22BB2D78003C8F17 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B3F52922BB2D78003C8F17 /* WebKit.framework */; };
 		A1C305E422C0915400D6BE1C /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = A1C305E122C0915400D6BE1C /* asrFail.wav */; };
@@ -46,8 +44,6 @@
 		A1C6ADBC2303BAB90076C041 /* DisplayListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C6ADBB2303BAB90076C041 /* DisplayListView.xib */; };
 		A1C6ADCC2306649F0076C041 /* DisplayListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C6ADCA2306649F0076C041 /* DisplayListViewCell.swift */; };
 		A1C6ADCD2306649F0076C041 /* DisplayListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C6ADCB2306649F0076C041 /* DisplayListViewCell.xib */; };
-		A1C6ADCF230FE2A70076C041 /* VoiceChromeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C6ADCE230FE2A70076C041 /* VoiceChromeView.swift */; };
-		A1C6ADD1230FE2D70076C041 /* VoiceChromeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C6ADD0230FE2D70076C041 /* VoiceChromeView.xib */; };
 		A1C6ADD32313EA740076C041 /* DisplayAudioPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C6ADD22313EA740076C041 /* DisplayAudioPlayerView.xib */; };
 		A1C6ADF72316B0C70076C041 /* SP_none.json in Resources */ = {isa = PBXBuildFile; fileRef = A1C6ADF32316B0C70076C041 /* SP_none.json */; };
 		A1C6ADF82316B0C70076C041 /* SP_02.json in Resources */ = {isa = PBXBuildFile; fileRef = A1C6ADF42316B0C70076C041 /* SP_02.json */; };
@@ -68,7 +64,6 @@
 		1F9F6ECF22D089C300CD4888 /* UserDefaults+Standard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Standard.swift"; sourceTree = "<group>"; };
 		1F9F6ED322D4995200CD4888 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		1F9F6ED522D4995200CD4888 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
-		1F9F6ED622D4995200CD4888 /* NuguButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguButton.swift; sourceTree = "<group>"; };
 		1F9F6ED722D4995200CD4888 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		1F9F6EE222D4996C00CD4888 /* NuguWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguWebView.swift; sourceTree = "<group>"; };
 		1F9F6EF022E05DCB00CD4888 /* UIColor+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Convenience.swift"; sourceTree = "<group>"; };
@@ -84,7 +79,6 @@
 		A1766AF222B0E0430036D53A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A1766AF522B0E0430036D53A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A1766AF722B0E0430036D53A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A1AF6D2F22DF06930030259F /* NuguButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NuguButton.xib; sourceTree = "<group>"; };
 		A1B3F52322BA3059003C8F17 /* NuguCentralManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguCentralManager.swift; sourceTree = "<group>"; };
 		A1B3F52922BB2D78003C8F17 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		A1C305E122C0915400D6BE1C /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
@@ -101,8 +95,6 @@
 		A1C6ADBB2303BAB90076C041 /* DisplayListView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayListView.xib; sourceTree = "<group>"; };
 		A1C6ADCA2306649F0076C041 /* DisplayListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayListViewCell.swift; sourceTree = "<group>"; };
 		A1C6ADCB2306649F0076C041 /* DisplayListViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayListViewCell.xib; sourceTree = "<group>"; };
-		A1C6ADCE230FE2A70076C041 /* VoiceChromeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromeView.swift; sourceTree = "<group>"; };
-		A1C6ADD0230FE2D70076C041 /* VoiceChromeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VoiceChromeView.xib; sourceTree = "<group>"; };
 		A1C6ADD22313EA740076C041 /* DisplayAudioPlayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayAudioPlayerView.xib; sourceTree = "<group>"; };
 		A1C6ADF32316B0C70076C041 /* SP_none.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SP_none.json; sourceTree = "<group>"; };
 		A1C6ADF42316B0C70076C041 /* SP_02.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SP_02.json; sourceTree = "<group>"; };
@@ -159,10 +151,6 @@
 			isa = PBXGroup;
 			children = (
 				A1C6AD962303B8FD0076C041 /* DisplayViews */,
-				A1C6ADCE230FE2A70076C041 /* VoiceChromeView.swift */,
-				A1C6ADD0230FE2D70076C041 /* VoiceChromeView.xib */,
-				1F9F6ED622D4995200CD4888 /* NuguButton.swift */,
-				A1AF6D2F22DF06930030259F /* NuguButton.xib */,
 				1F9F6EE222D4996C00CD4888 /* NuguWebView.swift */,
 				A1CB9448232618E200DFD8B4 /* NuguToastManager.swift */,
 			);
@@ -424,7 +412,6 @@
 				A1C305E622C0915400D6BE1C /* asrSuccess.wav in Resources */,
 				A1766AF622B0E0430036D53A /* LaunchScreen.storyboard in Resources */,
 				A1C6AD952303AC010076C041 /* DisplayBodyView.xib in Resources */,
-				A1C6ADD1230FE2D70076C041 /* VoiceChromeView.xib in Resources */,
 				A1C6ADF72316B0C70076C041 /* SP_none.json in Resources */,
 				A1C6ADCD2306649F0076C041 /* DisplayListViewCell.xib in Resources */,
 				A1766AF322B0E0430036D53A /* Assets.xcassets in Resources */,
@@ -436,7 +423,6 @@
 				A1C3061722C49B4300D6BE1C /* PC_01_start.json in Resources */,
 				A1C6ADF82316B0C70076C041 /* SP_02.json in Resources */,
 				A1C3061222C49B4300D6BE1C /* LP.json in Resources */,
-				A1AF6D3122DF06930030259F /* NuguButton.xib in Resources */,
 				A1C3061822C49B4300D6BE1C /* PC_02.json in Resources */,
 				A1C6ADD32313EA740076C041 /* DisplayAudioPlayerView.xib in Resources */,
 				A1C6ADBC2303BAB90076C041 /* DisplayListView.xib in Resources */,
@@ -523,7 +509,6 @@
 				1F27AC8222E5A6F400551039 /* Int+Convenience.swift in Sources */,
 				1F9F6EE322D4996C00CD4888 /* NuguWebView.swift in Sources */,
 				1F9F6ECE22D0895D00CD4888 /* UserDefaults+Romaine.swift in Sources */,
-				1F9F6EDD22D4995200CD4888 /* NuguButton.swift in Sources */,
 				1FE9559122F444E80042904B /* NuguDisplayPlayerController.swift in Sources */,
 				1F9F6EF122E05DCB00CD4888 /* UIColor+Convenience.swift in Sources */,
 				A1C6AD932303ABE80076C041 /* DisplayBodyView.swift in Sources */,
@@ -531,7 +516,6 @@
 				1F9F6EDE22D4995200CD4888 /* MainViewController.swift in Sources */,
 				1F9F6EDA22D4995200CD4888 /* SettingViewController.swift in Sources */,
 				1FA45DAC22E31C0500E2FA59 /* ImageDataLoader.swift in Sources */,
-				A1C6ADCF230FE2A70076C041 /* VoiceChromeView.swift in Sources */,
 				1F38DD1D22C22C7100E29841 /* SampleApp.swift in Sources */,
 				A1C6ADAA2303BA100076C041 /* DisplayListView.swift in Sources */,
 				A1766AEC22B0E0410036D53A /* AppDelegate.swift in Sources */,
