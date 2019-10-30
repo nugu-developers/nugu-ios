@@ -71,7 +71,7 @@ final class MainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        showLoginResultIfNeeded()
+        showServiceSettingWebIfNeeded()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -89,11 +89,10 @@ final class MainViewController: UIViewController {
         }
         
         switch segueId {
-        case "mainToLoginResult":
+        case "mainToServiceSettingWeb":
             guard let webViewController = segue.destination as? WebViewController else { return }
-            webViewController.initialURL = sender as? String
-            
-            SampleApp.loginResultURL = nil
+            webViewController.initialUrl = sender as? URL
+            SampleApp.seenServiceSettingWeb = true
         default:
             return
         }
@@ -170,13 +169,9 @@ private extension MainViewController {
     }
     
     /// Show login result webpage after successful login process
-    func showLoginResultIfNeeded() {
-        guard let url = SampleApp.loginResultURL else {
-            log.debug("loginResultURL is nil")
-            return
-        }
-        
-        performSegue(withIdentifier: "mainToLoginResult", sender: url)
+    func showServiceSettingWebIfNeeded() {
+        guard let serviceSettingWebUrl = SampleApp.serviceSettingWebUrl else { return }
+        performSegue(withIdentifier: "mainToServiceSettingWeb", sender: serviceSettingWebUrl)
     }
     
     

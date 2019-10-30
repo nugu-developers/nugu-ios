@@ -131,7 +131,7 @@
                         <outlet property="settingButton" destination="H7A-kt-fwH" id="wvw-g1-c4g"/>
                         <outlet property="watermarkLabel" destination="2Ns-b9-eTf" id="hCm-cA-CbZ"/>
                         <segue destination="0vH-zb-MED" kind="presentation" identifier="showSettings" modalPresentationStyle="fullScreen" id="KqI-DK-yef"/>
-                        <segue destination="gGQ-jV-Gla" kind="presentation" identifier="mainToLoginResult" id="HfI-PN-nmd"/>
+                        <segue destination="gGQ-jV-Gla" kind="presentation" identifier="mainToServiceSettingWeb" id="HfI-PN-nmd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aSS-QQ-e3M" userLabel="First Responder" sceneMemberID="firstResponder"/>

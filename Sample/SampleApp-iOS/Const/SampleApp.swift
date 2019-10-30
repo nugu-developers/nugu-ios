@@ -34,7 +34,26 @@ struct SampleApp {
     
     fileprivate static let natty = Natty(by: nattyConfiguration)
     
-    static var loginResultURL: String?  // Saved NUGU web-page url by type1 login
+    static var shownServiceSettingWeb = false
+    
+    static var serviceSettingWebUrl: URL? {
+        get {
+            guard shownServiceSettingWeb == false, let prefixUrl = URL(string: serviceSettingPrefixUrl) else {
+                return nil
+            }
+            switch SampleApp.loginMethod {
+            case .type1:
+                var urlComponents = URLComponents(url: prefixUrl, resolvingAgainstBaseURL: false)
+                urlComponents?.queryItems = [URLQueryItem(name: "poc", value: pocId)]
+                return urlComponents?.url
+            default:
+                return nil
+            }
+        }
+    }
+    
+    private static let serviceSettingPrefixUrl = "https://stg-webview.sktnugu.com/v2/3pp/confirm.html"
+    private static let pocId = "aaa.hmpark.vacation.ios" // Should replace with 3rd party's own pocId issued from Nugu Developers site
     
     /// Intercept open url and replace with redirectUri's scheme
     /// for free pass of Sample app's Oauth validation check
