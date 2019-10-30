@@ -22,7 +22,6 @@ import Foundation
 
 import NuguInterface
 import NuguCore
-import KeenSense
 import JadeMarble
 
 extension NuguClient {
