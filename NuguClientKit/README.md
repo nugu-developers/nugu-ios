@@ -1,12 +1,9 @@
-# Nugu Client Kit
-![Swift](https://img.shields.io/badge/swift-5.0-orange) ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+# NuguClientKit
+![Platform](https://img.shields.io/cocoapods/p/NuguClientKit)
+![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguClientKit)
+![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
 
-Provides default instances for using Nugu service 
-
-## Requirements
-- iOS 10.0+
-- Xcode 10.2+
-- Swift 5.1+
+Provides nugu-client instances for using Nugu service.
 
 ## Installation
 
@@ -26,10 +23,8 @@ NUGU SDK is composed of following Libraries
 - [JadeMarble](https://github.com/nugu-developers/jade-marble-ios) - Library for detecting end point of user speech
 
 ## Example
-
 To run the example project, clone the repo, and run `pod install` from the Example directory.
 
 ## License
-
 The contents of this repository is licensed under the
 [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
