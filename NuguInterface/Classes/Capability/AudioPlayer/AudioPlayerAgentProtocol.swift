@@ -44,9 +44,9 @@ VolumeControllerDelegate {
     func remove(delegate: AudioPlayerAgentDelegate)
     
     /// This function retrieves the offset of the current MediaPlayer the AudioPlayerAgent is handling.
-    var offset: Int { get }
+    var offset: Int? { get }
     /// This function retrieves the duration of the current MediaPlayer the AudioPlayerAgent is handling.
-    var duration: Int { get }
+    var duration: Int? { get }
     
     /// Begins playback of the current item.
     func play()

@@ -139,7 +139,7 @@ extension MediaPlayer {
     public var offset: Int {
         guard let mediaPlayer = player else {
             log.warning("player is nil")
-            return -1
+            return 0
         }
         
         // CHECK-ME: TimeValue, TimeScale 조합으로 해야할지 검토
@@ -147,14 +147,14 @@ extension MediaPlayer {
         if seconds.isNaN == false {
             return Int(seconds)
         } else {
-            return -1
+            return 0
         }
     }
     
     public var duration: Int {
         guard let asset = player?.currentItem?.asset else {
             log.warning("player is nil")
-            return -1
+            return 0
         }
         
         // CHECK-ME: TimeValue, TimeScale 조합으로 해야할지 검토
@@ -162,7 +162,7 @@ extension MediaPlayer {
         if seconds.isNaN == false {
             return Int(seconds)
         } else {
-            return -1
+            return 0
         }
     }
     
