@@ -25,5 +25,5 @@ public protocol ProvideContextDelegate: class {
     /// A request to provide the context.
     ///
     /// It should perform minimum processing and return quickly
-    func provideContext() -> ContextInfo
+    func provideContext() -> ContextInfo?
 }

@@ -289,7 +289,7 @@ extension ASRAgent: FocusChannelDelegate {
 // MARK: - ProvideContextDelegate
 
 extension ASRAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo {
+    public func provideContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "engine": "skt"

@@ -29,7 +29,7 @@ public enum WakeUpDetectorState {
 }
 
 /// <#Description#>
-public protocol WakeUpDetectable: ProvideContextDelegate {
+public protocol WakeUpDetectable: class {
     /// <#Description#>
     var state: WakeUpDetectorState { get }
     /// <#Description#>

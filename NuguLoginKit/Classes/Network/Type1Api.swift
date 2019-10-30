@@ -21,6 +21,9 @@
 import Foundation
 
 struct Type1Api {
+    // Temporary exception for internal function.
+    // Should be modeled later.
+    // swiftlint:disable function_parameter_count
     @discardableResult
     func acquireToken(
         serverBaseUrl: String,

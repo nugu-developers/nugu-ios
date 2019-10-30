@@ -24,15 +24,23 @@ import AVFoundation
 import NuguInterface
 import NuguClientKit
 import KeenSense
+import JadeMarble
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     let client = NuguClient.default
+    private let keyWordDetector = KeyWordDetector()
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
     
     private init() {
+        client.wakeUpDetector = keyWordDetector
         client.focusManager.delegate = self
         client.authorizationManager.add(stateDelegate: self)
+        client.contextManager.add(provideContextDelegate: self)
+        
+        if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
+            client.endPointDetector?.epdFile = epdFile
+        }
         
         /// Set Last WakeUp Keyword
         /// If you don't want to use saved wakeup-word, don't need to be implemented
@@ -82,7 +90,15 @@ extension NuguCentralManager {
 
 // MARK: - Internal (WakeUpDetector)
 
-extension NuguCentralManager {
+extension NuguCentralManager: ProvideContextDelegate {
+    func provideContext() -> ContextInfo? {
+        guard let keyWord = KeyWord(rawValue: UserDefaults.Standard.wakeUpWord) else {
+            return nil
+        }
+
+        return ContextInfo(contextType: .client, name: "wakeupWord", payload: keyWord.description)
+    }
+    
     func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
         AVAudioSession.sharedInstance().requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
@@ -101,9 +117,17 @@ extension NuguCentralManager {
     func setWakeUpWord(rawValue wakeUpWord: Int) {
         switch wakeUpWord {
         case KeyWord.aria.rawValue:
-            client.wakeUpDetector?.keyWord = .aria
-        case KeyWord.tinkerbel.rawValue:
-            client.wakeUpDetector?.keyWord = .tinkerbel
+            if let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
+                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") {
+                keyWordDetector.netFile = netFile
+                keyWordDetector.searchFile = searchFile
+            }
+        case KeyWord.tinkerbell.rawValue:
+            if let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
+                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") {
+                keyWordDetector.netFile = netFile
+                keyWordDetector.searchFile = searchFile
+            }
         default:
             return
         }

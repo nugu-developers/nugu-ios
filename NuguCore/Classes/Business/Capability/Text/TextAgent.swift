@@ -114,7 +114,7 @@ extension TextAgent {
 // MARK: - ProvideContextDelegate
 
 extension TextAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo {
+    public func provideContext() -> ContextInfo? {
         let payload: [String: Any] = ["version": capabilityAgentProperty.version]
         
         return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)

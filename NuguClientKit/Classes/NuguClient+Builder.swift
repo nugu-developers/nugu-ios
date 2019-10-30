@@ -22,7 +22,6 @@ import Foundation
 
 import NuguInterface
 import NuguCore
-import KeenSense
 import JadeMarble
 
 extension NuguClient {
@@ -31,7 +30,7 @@ extension NuguClient {
         public lazy var inputProvider: AudioProvidable = MicInputProvider()
         public lazy var sharedAudioStream: AudioStreamable = AudioStream(capacity: 300)
         public lazy var endPointDetector: EndPointDetectable = EndPointDetector(sampleRate: 16000.0, timeout: 7, speechDuration: 10)
-        public lazy var wakeUpDetector: WakeUpDetectable? = KeyWordDetector()
+        public var wakeUpDetector: WakeUpDetectable?
         
         // MARK: - Capability Agents
         

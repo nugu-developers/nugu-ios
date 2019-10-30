@@ -35,7 +35,7 @@ public class DelegateSet<T> {
     }
     
     public func notify(_ body: (T) -> Void) {
-        allObjects.forEach ({ (value) in
+        allObjects.forEach({ (value) in
                 body(value)
             })
     }

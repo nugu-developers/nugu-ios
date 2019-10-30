@@ -1,0 +1,55 @@
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Pods
+
+included:
+  - ../NuguClientKit/Classes
+  - ../NuguCore/Nugu/Classes
+  - ../NuguInterface/Classes
+  - ../NuguLoginKit/Classes
+
+disabled_rules: # rule identifiers to exclude from running
+  - trailing_whitespace
+
+identifier_name:
+  min_length: # only min_length
+    - 3
+    - 2
+  excluded: # excluded via string array
+    - id
+    - on
+    - cp
+    - bg
+    - to
+    - up
+    - im
+    - qa
+    - ok
+
+nesting:
+  type_level:
+    warning: 4
+  statement_level:
+    warning: 10
+
+type_body_length:
+  - 300 # warning
+  - 400 # error
+
+file_length:
+  - 2000
+  - 3000
+
+line_length:
+  - 240
+
+function_body_length:
+  - 100
+  - 500
+
+cyclomatic_complexity:
+  - 20
+  - 30
+
+large_tuple:
+  - 4
+  - 6

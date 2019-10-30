@@ -21,4 +21,3 @@
 import Foundation
 
 let defaultServerBaseUrl = "https://api.sktnugu.com/v1/auth"
-
