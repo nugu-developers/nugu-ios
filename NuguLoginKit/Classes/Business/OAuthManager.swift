@@ -110,7 +110,7 @@ public extension OAuthManager where T: Type1 {
     ///
     /// - Parameter url: The URL as passed to `UIApplicationDelegate.application(app:url:options:)`.
     /// - Parameter options: Thr options as passed to `UIApplicationDelegate.application(app:url:options:)`.
-    func handle(open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    func handle(open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         guard let loginTypeInfo = loginTypeInfo else {
             return false
         }

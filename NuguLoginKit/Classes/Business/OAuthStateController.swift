@@ -28,7 +28,7 @@ final class OAuthStateController: NSObject {
             safariViewController?.delegate = self
         }
     }
-    var completionHandler: ((Result<AuthorizationInfo, Error>) -> Void)? = nil
+    var completionHandler: ((Result<AuthorizationInfo, Error>) -> Void)?
     
     @discardableResult
     func makeState() -> String {

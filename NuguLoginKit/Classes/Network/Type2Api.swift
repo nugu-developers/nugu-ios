@@ -43,7 +43,7 @@ struct Type2Api {
         var parameters = [
             "grant_type": "client_credentials",
             "client_id": clientId,
-            "client_secret": clientSecret,
+            "client_secret": clientSecret
             //"scope":"?"
         ]
         
