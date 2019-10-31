@@ -24,6 +24,16 @@ import Foundation
 ///
 /// The methods of this protocol are all mandatory.
 public protocol ExtensionAgentDelegate: class {
+    /// Provide a context of `ExtensionAgent`.
+    /// This function should return as soon as possible to reduce request delay.
+    ///
+    /// [Backend proxy API Reference]: https://developers-doc.nugu.co.kr/nugu-play/create-plays-with-play-builder/use-backend-proxy/backend-proxy-api-reference
+    ///
+    /// This context is used by the backend proxy server.
+    ///
+    /// For more information, see [Backend proxy API Reference].
+    func extensionAgentRequestContext() -> [String: Any]?
+    
     /// Tells the delegate that `ExtensionAgent` received `action` directive
     ///
     /// When received any data, must call completion block to send an event.

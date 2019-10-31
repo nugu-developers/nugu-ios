@@ -94,8 +94,11 @@ extension ExtensionAgent: HandleDirectiveDelegate {
 
 extension ExtensionAgent: ProvideContextDelegate {
     public func provideContext() -> ContextInfo? {
-        let payload: [String: Any] = ["version": capabilityAgentProperty.version]
+        let payload: [String: Any?] = [
+            "version": capabilityAgentProperty.version,
+            "data": delegate?.extensionAgentRequestContext()
+        ]
         
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
     }
 }
