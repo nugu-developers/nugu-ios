@@ -124,6 +124,8 @@ public class NuguClient {
     /// <#Description#>
     public let extensionAgent: ExtensionAgentProtocol?
     /// <#Description#>
+    public let locationAgent: LocationAgentProtocol?
+    /// <#Description#>
     public let systemAgent: SystemAgentProtocol
 
     init(inputProvider: AudioProvidable?,
@@ -136,7 +138,8 @@ public class NuguClient {
          displayAgent: DisplayAgentProtocol?,
          speakerAgent: SpeakerAgentProtocol?,
          textAgent: TextAgentProtocol?,
-         extensionAgent: ExtensionAgentProtocol?) {
+         extensionAgent: ExtensionAgentProtocol?,
+         locationAgent: LocationAgentProtocol?) {
         log.info("with NuguApp")
         
         self.inputProvider = inputProvider
@@ -150,6 +153,7 @@ public class NuguClient {
         self.speakerAgent = speakerAgent
         self.textAgent = textAgent
         self.extensionAgent = extensionAgent
+        self.locationAgent = locationAgent
         self.systemAgent = SystemAgent()
         
         setupDependencies()

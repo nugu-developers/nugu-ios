@@ -41,21 +41,16 @@ extension NuguClient {
         setupSystemAgentDependency()
         setupTextAgentDependency()
         setupExtensionAgentDependency()
+        
+        // Setup core
         setupAudioStreamDependency()
         setupWakeUpDetectorDependency()
-        setupEndPointDetectorDependency()
     }
 }
 
 // MARK: - Capability-Agents (Optional)
 
 extension NuguClient {
-    func setupEndPointDetectorDependency() {
-        if let asrAgent = asrAgent {
-            asrAgent.endPointDetector = endPointDetector
-        }
-    }
-    
     func setupASRAgentDependency() {
         guard let agent = asrAgent else { return }
         
@@ -65,6 +60,7 @@ extension NuguClient {
         agent.contextManager = contextManager
         agent.audioStream = sharedAudioStream
         agent.dialogStateAggregator = dialogStateAggregator
+        agent.endPointDetector = endPointDetector
         
         do {
             try directiveSequencer.add(handleDirectiveDelegate: agent)
@@ -171,16 +167,10 @@ extension NuguClient {
         }
     }
     
-    func setupAudioStreamDependency() {
-        guard let audioStream = sharedAudioStream as? AudioStream else { return }
+    func setupLocationAgentDependency() {
+        guard let agent = locationAgent else { return }
         
-        audioStream.delegate = self
-    }
-    
-    func setupWakeUpDetectorDependency() {
-        guard let wakeUpDetector = wakeUpDetector else { return }
-        
-        wakeUpDetector.audioStream = sharedAudioStream
+        contextManager.add(provideContextDelegate: agent)
     }
 }
 
@@ -200,5 +190,21 @@ extension NuguClient {
         } catch {
             log.info("System \(error)")
         }
+    }
+}
+
+// MARK: - Core
+
+extension NuguClient {
+    func setupAudioStreamDependency() {
+        guard let audioStream = sharedAudioStream as? AudioStream else { return }
+        
+        audioStream.delegate = self
+    }
+    
+    func setupWakeUpDetectorDependency() {
+        guard let wakeUpDetector = wakeUpDetector else { return }
+        
+        wakeUpDetector.audioStream = sharedAudioStream
     }
 }
