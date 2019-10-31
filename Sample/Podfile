@@ -8,5 +8,6 @@ target 'SampleApp-iOS' do
   pod 'NuguCore', :path => '../'
   pod 'NuguUIKit', :path => '../'
   
+  pod 'KeenSense'
   pod 'NattyLog'
 end
