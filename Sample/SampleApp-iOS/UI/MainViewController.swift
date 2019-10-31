@@ -92,7 +92,7 @@ final class MainViewController: UIViewController {
         case "mainToServiceSettingWeb":
             guard let webViewController = segue.destination as? WebViewController else { return }
             webViewController.initialUrl = sender as? URL
-            SampleApp.seenServiceSettingWeb = true
+            SampleApp.shownServiceSettingWeb = true
         default:
             return
         }
