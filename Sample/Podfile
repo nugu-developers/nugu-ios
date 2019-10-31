@@ -1,0 +1,13 @@
+use_frameworks!
+platform :ios, '10.0'
+
+target 'SampleApp-iOS' do
+  pod 'NuguLoginKit', :path => '../'
+  pod 'NuguClientKit', :path => '../'
+  pod 'NuguInterface', :path => '../'
+  pod 'NuguCore', :path => '../'
+  pod 'NuguUIKit', :path => '../'
+
+  pod 'KeenSense'
+  pod 'NattyLog'
+end

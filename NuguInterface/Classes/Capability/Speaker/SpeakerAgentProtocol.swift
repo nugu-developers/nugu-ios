@@ -1,0 +1,41 @@
+//
+//  SpeakerAgentProtocol.swift
+//  NuguInterface
+//
+//  Created by yonghoonKwon on 23/05/2019.
+//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+import Foundation
+
+/// <#Description#>
+public protocol SpeakerAgentProtocol:
+CapabilityAgentable,
+ProvideContextDelegate,
+HandleDirectiveDelegate {
+    var messageSender: MessageSendable! { get set }
+    
+    /// <#Description#>
+    var delegate: SpeakerAgentDelegate? { get set }
+    
+    /// <#Description#>
+    /// - Parameter volumeControllerDelegate: <#handleDirectiveDelegate description#>
+    func add(volumeControllerDelegate: VolumeControllerDelegate)
+    /// <#Description#>
+    /// - Parameter volumeControllerDelegate: <#handleDirectiveDelegate description#>
+    func remove(volumeControllerDelegate: VolumeControllerDelegate)
+    
+    func set(type: VolumeControllerType, muted: Bool)
+}
