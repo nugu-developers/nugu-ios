@@ -52,7 +52,7 @@ struct SampleApp {
         }
     }
     
-    private static let serviceSettingPrefixUrl = "https://stg-webview.sktnugu.com/v2/3pp/confirm.html"
+    private static let serviceSettingPrefixUrl = "https://webview.sktnugu.com/v2/3pp/confirm.html"
     private static let pocId = "aaa.hmpark.vacation.ios" // Should replace with 3rd party's own pocId issued from Nugu Developers site
     
     /// Intercept open url and replace with redirectUri's scheme
