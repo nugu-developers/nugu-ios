@@ -5,11 +5,6 @@
 
 Provides default instances for using Nugu service 
 
-## Requirements
-- iOS 10.0+
-- Xcode 11.0+
-- Swift 5.1+
-
 ## Installation
 
 ### CocoaPods
@@ -35,8 +30,8 @@ var nuguVoiceChrome = NuguVoiceChrome(frame: recommendedNuguVoiceChromeSize)
 Place UIButton or UIView in storyboard and change it's class to NuguButton or NuguVoiceChrome (from NuguUIKit module) in storyboard's Custom Class section
 ```
 
->  **NuguButton and NuguVoiceChrome are designed in accordance with recommendedSize
-<br>Note that NuguButton and NuguVoiceChrome can be looked awkward in different size**
+>  **NuguButton and NuguVoiceChrome are designed in accordance with recommended size
+<br>Note that NuguButton and NuguVoiceChrome might look awkward in other sizes**
 
 ### NuguButton
 ```swift
