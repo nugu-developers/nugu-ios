@@ -2,6 +2,7 @@
 ![Platform](https://img.shields.io/badge/platform-iOS-999999)
 [![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguClientKit)](https://github.com/nugu-developers/nugu-ios)
 ![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
+[![Build Status](https://travis-ci.org/nugu-developers/nugu-ios.svg?branch=master)](https://travis-ci.org/nugu-developers/nugu-ios)
 
 ## Requirements
 - iOS 10.0+
