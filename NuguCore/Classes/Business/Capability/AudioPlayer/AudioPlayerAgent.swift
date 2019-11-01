@@ -339,10 +339,10 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
     }
 }
 
-// MARK: - ProvideContextDelegate
+// MARK: - ContextInfoDelegate
 
-extension AudioPlayerAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+extension AudioPlayerAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "playerActivity": audioPlayerState.rawValue,
@@ -464,7 +464,7 @@ private extension AudioPlayerAgent {
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
             ),
-            context: provideContext(),
+            context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
             by: messageSender
         )

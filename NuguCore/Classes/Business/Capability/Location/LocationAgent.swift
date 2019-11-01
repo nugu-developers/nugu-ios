@@ -36,10 +36,10 @@ final public class LocationAgent: LocationAgentProtocol {
     }
 }
 
-// MARK: - ProvideContextDelegate
+// MARK: - ContextInfoDelegate
 
-extension LocationAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+extension LocationAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version
         ]

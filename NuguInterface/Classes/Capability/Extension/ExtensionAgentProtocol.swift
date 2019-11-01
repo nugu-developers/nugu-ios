@@ -23,7 +23,7 @@ import Foundation
 /// Extension-agent handles directives that not defined by other capability-agents
 public protocol ExtensionAgentProtocol:
 CapabilityAgentable,
-ProvideContextDelegate,
+ContextInfoDelegate,
 HandleDirectiveDelegate {
     var messageSender: MessageSendable! { get set }
     

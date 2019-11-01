@@ -31,7 +31,7 @@ public class ContextManager: ContextManageable {
         internalSerialQueueName: "com.sktelecom.romaine.context_manager"
     )
     
-    private let provideContextDelegates = DelegateSet<ProvideContextDelegate>()
+    private let provideContextDelegates = DelegateSet<ContextInfoDelegate>()
     
     private var capabilityContextInfos = [String: ContextInfo]()
     private var clientContextInfos = [String: ContextInfo]()
@@ -56,11 +56,11 @@ public class ContextManager: ContextManageable {
 // MARK: - ContextManageable
 
 extension ContextManager {
-    public func add(provideContextDelegate delegate: ProvideContextDelegate) {
+    public func add(provideContextDelegate delegate: ContextInfoDelegate) {
         provideContextDelegates.add(delegate)
     }
 
-    public func remove(provideContextDelegate delegate: ProvideContextDelegate) {
+    public func remove(provideContextDelegate delegate: ContextInfoDelegate) {
         provideContextDelegates.remove(delegate)
     }
 
@@ -101,9 +101,9 @@ extension ContextManager {
 // MARK: - Private
 
 private extension ContextManager {
-    func getContext(delegate: ProvideContextDelegate) -> Completable {
+    func getContext(delegate: ContextInfoDelegate) -> Completable {
         return Completable.create { [weak self] event -> Disposable in
-            if let context = delegate.provideContext() {
+            if let context = delegate.contextInfoRequestContext() {
                 self?.set(context: context)
             }
 

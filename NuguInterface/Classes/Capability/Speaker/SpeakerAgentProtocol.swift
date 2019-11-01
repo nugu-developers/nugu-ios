@@ -23,7 +23,7 @@ import Foundation
 /// <#Description#>
 public protocol SpeakerAgentProtocol:
 CapabilityAgentable,
-ProvideContextDelegate,
+ContextInfoDelegate,
 HandleDirectiveDelegate {
     var messageSender: MessageSendable! { get set }
     

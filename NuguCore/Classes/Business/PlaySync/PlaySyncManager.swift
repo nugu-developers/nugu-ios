@@ -122,9 +122,9 @@ extension PlaySyncManager {
     }
 }
 
-// MARK: - ProvideContextDelegate
-extension PlaySyncManager: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+// MARK: - ContextInfoDelegate
+extension PlaySyncManager: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         return ContextInfo(contextType: .client, name: "playStack", payload: playServiceIds)
     }
 }
