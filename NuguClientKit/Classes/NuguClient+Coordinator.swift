@@ -37,7 +37,6 @@ extension NuguClient {
         setupTTSAgentDependency()
         setupAudioPlayerAgentDependency()
         setupDisplayAgentDependency()
-        setupSpeakerAgentDependency()
         setupSystemAgentDependency()
         setupTextAgentDependency()
         setupExtensionAgentDependency()
@@ -87,7 +86,6 @@ extension NuguClient {
             agent.add(delegate: dialogStateAggregator)
             contextManager.add(provideContextDelegate: agent)
             focusManager.add(channelDelegate: agent)
-            speakerAgent?.add(volumeControllerDelegate: agent)
         } catch {
             log.info("AudioPlayerAgent \(error)")
         }
@@ -106,7 +104,6 @@ extension NuguClient {
             try directiveSequencer.add(handleDirectiveDelegate: agent)
             contextManager.add(provideContextDelegate: agent)
             focusManager.add(channelDelegate: agent)
-            speakerAgent?.add(volumeControllerDelegate: agent)
         } catch {
             log.info("AudioPlayerAgent \(error)")
         }
@@ -123,19 +120,6 @@ extension NuguClient {
             contextManager.add(provideContextDelegate: agent)
         } catch {
             log.info("DisplayAgent \(error)")
-        }
-    }
-    
-    func setupSpeakerAgentDependency() {
-        guard let agent = speakerAgent else { return }
-        
-        agent.messageSender = networkManager
-        
-        do {
-            try directiveSequencer.add(handleDirectiveDelegate: agent)
-            contextManager.add(provideContextDelegate: agent)
-        } catch {
-            log.info("Speaker \(error)")
         }
     }
     

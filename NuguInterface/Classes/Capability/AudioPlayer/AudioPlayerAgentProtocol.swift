@@ -28,7 +28,7 @@ FocusChannelDelegate,
 MediaPlayerDelegate,
 HandleDirectiveDelegate,
 PlaySyncDelegate,
-VolumeControllerDelegate {
+SpeakerVolumeDelegate {
     var focusManager: FocusManageable! { get set }
     var channel: FocusChannelConfigurable! { get set }
     var mediaPlayerFactory: MediaPlayableFactory! { get set }

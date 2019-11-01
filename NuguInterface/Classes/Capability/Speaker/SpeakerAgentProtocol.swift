@@ -31,11 +31,11 @@ HandleDirectiveDelegate {
     var delegate: SpeakerAgentDelegate? { get set }
     
     /// <#Description#>
-    /// - Parameter volumeControllerDelegate: <#handleDirectiveDelegate description#>
-    func add(volumeControllerDelegate: VolumeControllerDelegate)
+    /// - Parameter speakerVolumeDelegate: <#handleDirectiveDelegate description#>
+    func add(speakerVolumeDelegate: SpeakerVolumeDelegate)
     /// <#Description#>
-    /// - Parameter volumeControllerDelegate: <#handleDirectiveDelegate description#>
-    func remove(volumeControllerDelegate: VolumeControllerDelegate)
+    /// - Parameter speakerVolumeDelegate: <#handleDirectiveDelegate description#>
+    func remove(speakerVolumeDelegate: SpeakerVolumeDelegate)
     
-    func set(type: VolumeControllerType, muted: Bool)
+    func set(type: SpeakerVolumeType, muted: Bool)
 }

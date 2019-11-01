@@ -27,7 +27,7 @@ struct SpeakerMuteInfo: Decodable {
     let volumes: [Volume]
     
     struct Volume: Decodable, Equatable {
-        let name: VolumeControllerType
+        let name: SpeakerVolumeType
         let mute: Bool
     }
 }

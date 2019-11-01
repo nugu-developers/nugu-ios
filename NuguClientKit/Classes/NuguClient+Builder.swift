@@ -43,8 +43,6 @@ extension NuguClient {
         /// <#Description#>
         public lazy var displayAgent: DisplayAgentProtocol? = DisplayAgent()
         /// <#Description#>
-        public lazy var speakerAgent: SpeakerAgentProtocol? = SpeakerAgent()
-        /// <#Description#>
         public lazy var textAgent: TextAgentProtocol? = TextAgent()
         /// <#Description#>
         public lazy var extensionAgent: ExtensionAgentProtocol? = ExtensionAgent()
@@ -65,7 +63,6 @@ extension NuguClient {
                 ttsAgent: ttsAgent,
                 audioPlayerAgent: audioPlayerAgent,
                 displayAgent: displayAgent,
-                speakerAgent: speakerAgent,
                 textAgent: textAgent,
                 extensionAgent: extensionAgent,
                 locationAgent: locationAgent
@@ -137,13 +134,6 @@ extension NuguClient.Builder {
         return self
     }
 
-    /// <#Description#>
-    /// - Parameter speakerAgent: <#speakerAgent description#>
-    public func with(speakerAgent: SpeakerAgentProtocol?) -> Self {
-        self.speakerAgent = speakerAgent
-        return self
-    }
-    
     /// <#Description#>
     /// - Parameter textAgent: <#textAgent description#>
     public func with(textAgent: TextAgentProtocol?) -> Self {

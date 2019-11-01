@@ -32,7 +32,7 @@ final public class SpeakerAgent: SpeakerAgentProtocol {
     public var messageSender: MessageSendable!
     
     public weak var delegate: SpeakerAgentDelegate?
-    private let volumeControllers = DelegateSet<VolumeControllerDelegate>()
+    private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
     public init() {}
 }
@@ -40,18 +40,18 @@ final public class SpeakerAgent: SpeakerAgentProtocol {
 // MARK: - SpeakerAgentProtocol
 
 public extension SpeakerAgent {
-    func add(volumeControllerDelegate: VolumeControllerDelegate) {
-        volumeControllers.add(volumeControllerDelegate)
+    func add(speakerVolumeDelegate: SpeakerVolumeDelegate) {
+        speakerVolumeDelegates.add(speakerVolumeDelegate)
     }
     
-    func remove(volumeControllerDelegate: VolumeControllerDelegate) {
-        volumeControllers.remove(volumeControllerDelegate)
+    func remove(speakerVolumeDelegate: SpeakerVolumeDelegate) {
+        speakerVolumeDelegates.remove(speakerVolumeDelegate)
     }
     
-    func set(type: VolumeControllerType, muted: Bool) {
-        let controllers = self.volumeControllers.allObjects
-        let succeeded = controllers.filter { $0.volumeControllerType() == type }
-            .allSatisfy { $0.volumeControllerDidChange(muted: muted) }
+    func set(type: SpeakerVolumeType, muted: Bool) {
+        let controllers = self.speakerVolumeDelegates.allObjects
+        let succeeded = controllers.filter { $0.speakerVolumeType() == type }
+            .allSatisfy { $0.speakerVolumeShouldChange(muted: muted) }
         
         if succeeded {
             self.delegate?.speakerAgentDidChange(type: type, muted: muted)
@@ -114,10 +114,10 @@ private extension SpeakerAgent {
             self?.speakerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                let controllers = self.volumeControllers.allObjects
+                let controllers = self.speakerVolumeDelegates.allObjects
                 let results = speakerMuteInfo.volumes.map({ (volume) -> Bool in
-                    let result = controllers.filter { $0.volumeControllerType() == volume.name }
-                        .allSatisfy { $0.volumeControllerDidChange(muted: volume.mute) }
+                    let result = controllers.filter { $0.speakerVolumeType() == volume.name }
+                        .allSatisfy { $0.speakerVolumeShouldChange(muted: volume.mute) }
                     if result {
                         self.delegate?.speakerAgentDidChange(type: volume.name, muted: volume.mute)
                     }
@@ -141,13 +141,13 @@ private extension SpeakerAgent {
 
 private extension SpeakerAgent {
     var controllerVolumes: [SpeakerMuteInfo.Volume] {
-        let controllers = volumeControllers.allObjects
-        return VolumeControllerType.allCases
+        let controllers = speakerVolumeDelegates.allObjects
+        return SpeakerVolumeType.allCases
             .filter({ (type) -> Bool in
-                return controllers.contains { $0.volumeControllerType() == type }
+                return controllers.contains { $0.speakerVolumeType() == type }
             })
             .map { (type) -> SpeakerMuteInfo.Volume in
-                let isMuted = controllers.contains { $0.volumeControllerType() == type && $0.volumeControllerIsMuted() }
+                let isMuted = controllers.contains { $0.speakerVolumeType() == type && $0.speakerVolumeIsMuted() }
                 return SpeakerMuteInfo.Volume(name: type, mute: isMuted)
         }
     }

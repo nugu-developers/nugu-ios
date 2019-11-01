@@ -25,5 +25,5 @@ public protocol SpeakerAgentDelegate: class {
     /// <#Description#>
     /// - Parameter type: <#isMuted description#>
     /// - Parameter muted: <#isMuted description#>
-    func speakerAgentDidChange(type: VolumeControllerType, muted: Bool)
+    func speakerAgentDidChange(type: SpeakerVolumeType, muted: Bool)
 }

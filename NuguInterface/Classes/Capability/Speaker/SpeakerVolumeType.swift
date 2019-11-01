@@ -1,5 +1,5 @@
 //
-//  VolumeControllerConfigurable.swift
+//  SpeakerVolumeType.swift
 //  NuguInterface
 //
 //  Created by MinChul Lee on 2019/08/29.
@@ -20,7 +20,7 @@
 
 import Foundation
 
-public enum VolumeControllerType: String, CaseIterable, Decodable {
+public enum SpeakerVolumeType: String, CaseIterable, Decodable {
     case nugu = "NUGU"
     case external = "EXTERNAL"
 }

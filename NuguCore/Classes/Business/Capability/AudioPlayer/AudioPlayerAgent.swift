@@ -382,18 +382,18 @@ extension AudioPlayerAgent: PlaySyncDelegate {
     }
 }
 
-// MARK: - VolumeControllerDelegate
+// MARK: - SpeakerVolumeDelegate
 
-extension AudioPlayerAgent: VolumeControllerDelegate {
-    public func volumeControllerType() -> VolumeControllerType {
+extension AudioPlayerAgent: SpeakerVolumeDelegate {
+    public func speakerVolumeType() -> SpeakerVolumeType {
         return .nugu
     }
     
-    public func volumeControllerIsMuted() -> Bool {
+    public func speakerVolumeIsMuted() -> Bool {
         return playerIsMuted
     }
    
-    public func volumeControllerDidChange(muted: Bool) -> Bool {
+    public func speakerVolumeShouldChange(muted: Bool) -> Bool {
         playerIsMuted = muted
         return true
     }
