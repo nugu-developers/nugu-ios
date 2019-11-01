@@ -40,5 +40,5 @@ public protocol ExtensionAgentDelegate: class {
     /// - Parameter data: The message decoded from json to dictionary received by `action` directive
     /// - Parameter playServiceId: The unique identifier to specify play service.
     /// - Parameter completion: A block to call when you are finished performing the action
-    func extensionAgentDidReceive(data: [String: Any], playServiceId: String, completion: @escaping (Bool) -> Void)
+    func extensionAgentDidReceiveAction(data: [String: Any], playServiceId: String, completion: @escaping (Bool) -> Void)
 }

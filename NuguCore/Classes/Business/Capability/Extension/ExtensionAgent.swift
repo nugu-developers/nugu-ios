@@ -68,7 +68,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                 return
             }
             
-            delegate?.extensionAgentDidReceive(
+            delegate?.extensionAgentDidReceiveAction(
                 data: item.data,
                 playServiceId: item.playServiceId,
                 completion: { [weak self] (isSuccess) in
