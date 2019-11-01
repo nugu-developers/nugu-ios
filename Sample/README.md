@@ -6,20 +6,15 @@ To run SampleApp-iOS, installation with [CocoaPods](https://cocoapods.org) is re
 ```bash
 $ pod install
 ```
-### Copy voice recognition model files
-Voice recognition model files downloaded from [NUGU Developers](https://developers.nugu.co.kr) should be copied and located in following destinations.
-- Wake-up Model  
-./Pods/KeenSense/KeenSense/Assets/skt_trigger_search_tinkerbell.raw  
-./Pods/KeenSense/KeenSense/Assets/skt_trigger_am_tinkerbell.raw  
-./Pods/KeenSense/KeenSense/Assets/skt_trigger_search_aria.raw  
-./Pods/KeenSense/KeenSense/Assets/skt_trigger_am_aria.raw
-- EPD Model  
-./Pods/JadeMarble/JadeMarble/Assets/skt_epd_model.raw
-
-Voice recognition model files should be included in project's Resources and it can be easily done by updating CocoaPods
-```bash
-$ pod update
-```
+### Copy voice recognition model files and add to targets
+Voice recognition model files downloaded from [NUGU Developers](https://developers.nugu.co.kr) should be copied and added to SampleApp-iOS target
+- Wake-up Model files
+> skt_trigger_search_tinkerbell.raw  
+> skt_trigger_am_tinkerbell.raw  
+> skt_trigger_search_aria.raw  
+> skt_trigger_am_aria.raw
+- EPD Model file
+> skt_epd_model.raw
 
 ## Log-in difference by partnership type
 > Type1: Able to use Built-in/Open play/Private play after NUGU platform membership certification. (NUGU android/iOS Application linked)
