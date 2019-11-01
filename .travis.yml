@@ -1,4 +1,5 @@
 language: swift
+osx_image: xcode11.2
 xcode_workspace: Sample/SampleApp-iOS.xcworkspace
 xcode_scheme: SampleApp-iOS
 xcode_destination: platform=iOS Simulator,OS=10.0,name=iPhone X
