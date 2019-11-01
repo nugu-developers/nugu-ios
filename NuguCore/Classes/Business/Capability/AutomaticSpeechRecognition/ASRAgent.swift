@@ -286,10 +286,10 @@ extension ASRAgent: FocusChannelDelegate {
     }
 }
 
-// MARK: - ProvideContextDelegate
+// MARK: - ContextInfoDelegate
 
-extension ASRAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+extension ASRAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "engine": "skt"
@@ -539,7 +539,7 @@ private extension ASRAgent {
     func sendEvent(event: ASRAgent.Event.TypeInfo, dialogRequestId: String) {
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
-            context: provideContext(),
+            context: contextInfoRequestContext(),
             dialogRequestId: dialogRequestId,
             by: messageSender
         )

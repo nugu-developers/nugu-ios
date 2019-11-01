@@ -90,8 +90,8 @@ extension NuguCentralManager {
 
 // MARK: - Internal (WakeUpDetector)
 
-extension NuguCentralManager: ProvideContextDelegate {
-    func provideContext() -> ContextInfo? {
+extension NuguCentralManager: ContextInfoDelegate {
+    func contextInfoRequestContext() -> ContextInfo? {
         guard let keyWord = KeyWord(rawValue: UserDefaults.Standard.wakeUpWord) else {
             return nil
         }

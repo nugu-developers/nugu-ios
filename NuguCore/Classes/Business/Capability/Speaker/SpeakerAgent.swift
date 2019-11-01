@@ -87,10 +87,10 @@ extension SpeakerAgent: HandleDirectiveDelegate {
     }
 }
 
-// MARK: - ProvideContextDelegate
+// MARK: - ContextInfoDelegate
 
-extension SpeakerAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+extension SpeakerAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "volumes": controllerVolumes.values
@@ -128,7 +128,7 @@ private extension SpeakerAgent {
                 let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
                 self.sendEvent(
                     Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
-                    context: self.provideContext(),
+                    context: self.contextInfoRequestContext(),
                     dialogRequestId: TimeUUID().hexString,
                     by: self.messageSender
                 )

@@ -23,7 +23,7 @@ import Foundation
 /// <#Description#>
 public protocol LocationAgentProtocol:
 CapabilityAgentable,
-ProvideContextDelegate {
+ContextInfoDelegate {
     /// <#Description#>
     var delegate: LocationAgentDelegate? { get set }
 }

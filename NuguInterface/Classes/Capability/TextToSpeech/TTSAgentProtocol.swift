@@ -23,7 +23,7 @@ import Foundation
 /// The `TTSAgent` handles directives for controlling speech playback.
 public protocol TTSAgentProtocol:
 CapabilityAgentable,
-ProvideContextDelegate,
+ContextInfoDelegate,
 FocusChannelDelegate,
 HandleDirectiveDelegate,
 PlaySyncDelegate,

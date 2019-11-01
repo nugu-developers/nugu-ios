@@ -20,7 +20,7 @@
 
 import Foundation
 
-/// The context of the ProvideContextDelegate
+/// The context of the ContextInfoDelegate
 public struct ContextInfo {
     public let contextType: ContextType
     

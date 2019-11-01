@@ -23,7 +23,7 @@ import Foundation
 /// The AudioPlayerAgent handles directives for controlling audio playback.
 public protocol AudioPlayerAgentProtocol:
 CapabilityAgentable,
-ProvideContextDelegate,
+ContextInfoDelegate,
 FocusChannelDelegate,
 MediaPlayerDelegate,
 HandleDirectiveDelegate,

@@ -87,10 +87,10 @@ public extension SystemAgent {
     }
 }
 
-// MARK: - ProvideContextDelegate
+// MARK: - ContextInfoDelegate
 
-extension SystemAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+extension SystemAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "battery": Int(Double(UIDevice.current.batteryLevel) * 100)

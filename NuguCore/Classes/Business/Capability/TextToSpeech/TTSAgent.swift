@@ -121,7 +121,7 @@ public extension TTSAgent {
             let dialogRequestId = TimeUUID().hexString
             self.sendEvent(
                 event,
-                context: self.provideContext(),
+                context: self.contextInfoRequestContext(),
                 dialogRequestId: dialogRequestId,
                 by: self.messageSender
             )
@@ -242,10 +242,10 @@ extension TTSAgent: FocusChannelDelegate {
     }
 }
 
-// MARK: - ProvideContextDelegate
+// MARK: - ContextInfoDelegate
 
-extension TTSAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+extension TTSAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
@@ -433,7 +433,7 @@ private extension TTSAgent {
                 playServiceId: playServiceId,
                 typeInfo: info
             ),
-            context: provideContext(),
+            context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
             by: messageSender
         )

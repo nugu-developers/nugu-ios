@@ -23,7 +23,7 @@ import Foundation
 /// The DisplayAgent handles directives for controlling template display.
 public protocol DisplayAgentProtocol:
 CapabilityAgentable,
-ProvideContextDelegate,
+ContextInfoDelegate,
 HandleDirectiveDelegate,
 PlaySyncDelegate {
     var messageSender: MessageSendable! { get set }

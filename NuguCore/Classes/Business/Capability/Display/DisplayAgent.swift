@@ -72,7 +72,7 @@ public extension DisplayAgent {
                         playServiceId: template.playServiceId,
                         token: token
                     )),
-                context: self.provideContext(),
+                context: self.contextInfoRequestContext(),
                 dialogRequestId: TimeUUID().hexString,
                 by: self.messageSender
             )
@@ -109,10 +109,10 @@ extension DisplayAgent: HandleDirectiveDelegate {
     }
 }
 
-// MARK: - ProvideContextDelegate
+// MARK: - ContextInfoDelegate
 
-extension DisplayAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+extension DisplayAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "token": currentItem?.token,

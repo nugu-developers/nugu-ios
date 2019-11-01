@@ -24,7 +24,7 @@ import Foundation
 /// This agent is mandatory in SDK.
 public protocol SystemAgentProtocol:
 CapabilityAgentable,
-ProvideContextDelegate,
+ContextInfoDelegate,
 NetworkStatusDelegate,
 HandleDirectiveDelegate,
 DialogStateDelegate {

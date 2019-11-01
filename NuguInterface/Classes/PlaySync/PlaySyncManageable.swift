@@ -20,7 +20,7 @@
 
 import Foundation
 
-public protocol PlaySyncManageable: ProvideContextDelegate {
+public protocol PlaySyncManageable: ContextInfoDelegate {
     var playServiceIds: [String] { get }
     
     func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String)

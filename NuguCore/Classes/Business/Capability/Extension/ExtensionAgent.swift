@@ -79,7 +79,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                     
                     self.sendEvent(
                         event,
-                        context: self.provideContext(),
+                        context: self.contextInfoRequestContext(),
                         dialogRequestId: TimeUUID().hexString,
                         by: self.messageSender
                     )
@@ -90,10 +90,10 @@ extension ExtensionAgent: HandleDirectiveDelegate {
     }
 }
 
-// MARK: - ProvideContextDelegate
+// MARK: - ContextInfoDelegate
 
-extension ExtensionAgent: ProvideContextDelegate {
-    public func provideContext() -> ContextInfo? {
+extension ExtensionAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "data": delegate?.extensionAgentRequestContext()

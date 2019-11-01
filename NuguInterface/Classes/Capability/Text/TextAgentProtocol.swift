@@ -23,7 +23,7 @@ import Foundation
 /// Text-agent is needed to send event-based text recognition.
 public protocol TextAgentProtocol:
 CapabilityAgentable,
-ProvideContextDelegate,
+ContextInfoDelegate,
 FocusChannelDelegate,
 ReceiveMessageDelegate {
     var contextManager: ContextManageable! { get set }

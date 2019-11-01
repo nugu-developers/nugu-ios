@@ -1,5 +1,5 @@
 //
-//  ProvideContextDelegate.swift
+//  ContextInfoDelegate.swift
 //  NuguInterface
 //
 //  Created by MinChul Lee on 25/04/2019.
@@ -20,10 +20,10 @@
 
 import Foundation
 
-/// ProvideContextDelegate may be capability agent whose context needs to be sent to the server.
-public protocol ProvideContextDelegate: class {
+/// ContextInfoDelegate may be capability agent whose context needs to be sent to the server.
+public protocol ContextInfoDelegate: class {
     /// A request to provide the context.
     ///
     /// It should perform minimum processing and return quickly
-    func provideContext() -> ContextInfo?
+    func contextInfoRequestContext() -> ContextInfo?
 }
