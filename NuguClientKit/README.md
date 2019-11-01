@@ -8,7 +8,7 @@ Provides nugu-client instances for using Nugu service.
 ## Installation
 
 ### CocoaPods
-Nugu is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
+NuguClientKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 ```ruby
 pod 'NuguClientKit'
 ```
@@ -19,7 +19,7 @@ NUGU SDK is composed of following Libraries
 - [NuguClientKit](https://github.com/nugu-developers/nugu-client-kit-ios) - Library for initializing essential components and inject dependency between components to use NUGU SDK
 - [NuguInterface](https://github.com/nugu-developers/nugu-interface-ios) - Library which includes protocols, enums, structs of public components of NUGU SDK 
 - [NuguCore](https://github.com/nugu-developers/nugu-core-ios) - Main library of NUGU SDK, which has implementation of core functions such as network management, data transmission, media control, etc
-- [KeenSense](https://github.com/nugu-developers/keen-sense-ios) - Library for detecting keywords such as "Tinkerbel", "Aria" 
+- [KeenSense](https://github.com/nugu-developers/keen-sense-ios) - Library for detecting keywords such as "Tinkerbell", "Aria" 
 - [JadeMarble](https://github.com/nugu-developers/jade-marble-ios) - Library for detecting end point of user speech
 
 ## Example

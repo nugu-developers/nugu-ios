@@ -8,7 +8,7 @@ This framework offers protocols for Nugu service.
 ## Installation
 
 ### CocoaPods
-Nugu is available through [CocoaPods](https://cocoapods.org). To install
+NuguInterface is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 ```ruby
 pod 'NuguInterface'
