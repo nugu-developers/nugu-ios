@@ -1,5 +1,5 @@
 //
-//  VolumeControllerDelegate.swift
+//  SpeakerVolumeDelegate.swift
 //  NuguInterface
 //
 //  Created by MinChul Lee on 2019/08/28.
@@ -20,10 +20,10 @@
 
 import Foundation
 
-public protocol VolumeControllerDelegate: class {
-    func volumeControllerType() -> VolumeControllerType
+public protocol SpeakerVolumeDelegate: class {
+    func speakerVolumeType() -> SpeakerVolumeType
     
-    func volumeControllerIsMuted() -> Bool
+    func speakerVolumeIsMuted() -> Bool
     
-    func volumeControllerDidChange(muted: Bool) -> Bool
+    func speakerVolumeShouldChange(muted: Bool) -> Bool
 }

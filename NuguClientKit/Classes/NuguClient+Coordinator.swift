@@ -87,7 +87,7 @@ extension NuguClient {
             agent.add(delegate: dialogStateAggregator)
             contextManager.add(provideContextDelegate: agent)
             focusManager.add(channelDelegate: agent)
-            speakerAgent?.add(volumeControllerDelegate: agent)
+            speakerAgent?.add(speakerVolumeDelegate: agent)
         } catch {
             log.info("AudioPlayerAgent \(error)")
         }
@@ -106,7 +106,7 @@ extension NuguClient {
             try directiveSequencer.add(handleDirectiveDelegate: agent)
             contextManager.add(provideContextDelegate: agent)
             focusManager.add(channelDelegate: agent)
-            speakerAgent?.add(volumeControllerDelegate: agent)
+            speakerAgent?.add(speakerVolumeDelegate: agent)
         } catch {
             log.info("AudioPlayerAgent \(error)")
         }
