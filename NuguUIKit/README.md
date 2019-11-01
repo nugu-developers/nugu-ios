@@ -8,7 +8,7 @@ Provides default instances for using Nugu service
 ## Installation
 
 ### CocoaPods
-Nugu is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
+NuguUIKit is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 ```ruby
 pod 'NuguUIKit'
 ```
