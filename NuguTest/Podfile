@@ -8,6 +8,9 @@ target 'NuguTest' do
   # Pods for NuguTest
   pod 'NuguClientKit', :path => '../'
   pod 'NuguCore', :path => '../'
+  pod 'NuguInterface', :path => '../'
+  pod 'NuguLoginKit', :path => '../'
+  pod 'NuguUIKit', :path => '../'
 
   target 'NuguCoreTest' do
     inherit! :search_paths
