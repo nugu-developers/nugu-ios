@@ -118,8 +118,6 @@ public class NuguClient {
     /// <#Description#>
     public let displayAgent: DisplayAgentProtocol?
     /// <#Description#>
-    public let speakerAgent: SpeakerAgentProtocol?
-    /// <#Description#>
     public let textAgent: TextAgentProtocol?
     /// <#Description#>
     public let extensionAgent: ExtensionAgentProtocol?
@@ -136,7 +134,6 @@ public class NuguClient {
          ttsAgent: TTSAgentProtocol?,
          audioPlayerAgent: AudioPlayerAgentProtocol?,
          displayAgent: DisplayAgentProtocol?,
-         speakerAgent: SpeakerAgentProtocol?,
          textAgent: TextAgentProtocol?,
          extensionAgent: ExtensionAgentProtocol?,
          locationAgent: LocationAgentProtocol?) {
@@ -150,7 +147,6 @@ public class NuguClient {
         self.ttsAgent = ttsAgent
         self.audioPlayerAgent = audioPlayerAgent
         self.displayAgent = displayAgent
-        self.speakerAgent = speakerAgent
         self.textAgent = textAgent
         self.extensionAgent = extensionAgent
         self.locationAgent = locationAgent
