@@ -39,7 +39,7 @@ class NuguCoreTest: XCTestCase {
     func readBuffer(reader: SharedBuffer<Int>.Reader, complete: @escaping () -> Void) {
         reader.read { result in
             guard case .success(let element) = result else {
-                XCTAssertTrue(self.index == 5001)
+                XCTAssertTrue(self.index == 501)
                 return
             }
             
@@ -63,7 +63,7 @@ class NuguCoreTest: XCTestCase {
                     try writer.write(index)
                     print("writer: \(index)")
                     
-                    if 5000 == index {
+                    if 500 == index {
                         writer.finish()
                     }
                 } catch {
@@ -81,10 +81,10 @@ class NuguCoreTest: XCTestCase {
             self?.readBuffer(reader: reader, complete: complete)
         }
         
-        DispatchQueue.global().async {
-            Thread.sleep(forTimeInterval: 19.0)
-            expt.fulfill()
-        }
+        Observable<Int>.timer(.seconds(3), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+            .subscribe(onNext: { _ in
+                expt.fulfill()
+            }).disposed(by: disposeBag)
         
         waitForExpectations(timeout: 20.0, handler: nil)
     }
