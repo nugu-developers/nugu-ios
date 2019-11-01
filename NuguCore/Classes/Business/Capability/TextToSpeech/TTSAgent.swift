@@ -42,26 +42,22 @@ final public class TTSAgent: TTSAgentProtocol {
         didSet {
             log.info("\(oldValue) \(ttsState)")
             guard oldValue != ttsState else { return }
+            guard let media = currentMedia else { return }
             
-            // Release Focus
             switch ttsState {
             case .idle, .stopped, .finished:
-                if let media = currentMedia,
-                    let playServiceId = media.payload.playServiceId {
-                    currentMedia = nil
+                currentMedia = nil
+                if let playServiceId = media.payload.playServiceId {
                     playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: playServiceId)
                 }
             case .playing:
-                if let media = currentMedia,
-                    let playServiceId = media.payload.playServiceId {
+                if let playServiceId = media.payload.playServiceId {
                     playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: playServiceId)
                 }
             }
             
             delegates.notify { delegate in
-                if let dialogRequestId = currentMedia?.dialogRequestId {
-                    delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: dialogRequestId)
-                }
+                delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
             }
         }
     }
