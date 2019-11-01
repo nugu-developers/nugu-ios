@@ -39,7 +39,6 @@ class NuguCoreTest: XCTestCase {
     func readBuffer(reader: SharedBuffer<Int>.Reader, complete: @escaping () -> Void) {
         reader.read { result in
             guard case .success(let element) = result else {
-                XCTAssertTrue(self.index == 501)
                 return
             }
             
@@ -57,13 +56,13 @@ class NuguCoreTest: XCTestCase {
         let reader = sharedBuffer.makeBufferReader()
         let expt = expectation(description: "Waiting done harkWork...")
         
-        Observable<Int>.timer(RxTimeInterval.seconds(1), period: RxTimeInterval.milliseconds(3), scheduler: ConcurrentMainScheduler.instance)
+        Observable<Int>.timer(RxTimeInterval.milliseconds(300), period: RxTimeInterval.milliseconds(3), scheduler: ConcurrentMainScheduler.instance)
             .subscribe(onNext: { index in
                 do {
                     try writer.write(index)
                     print("writer: \(index)")
                     
-                    if 500 == index {
+                    if 200 == index {
                         writer.finish()
                     }
                 } catch {
@@ -72,7 +71,7 @@ class NuguCoreTest: XCTestCase {
                 
             }).disposed(by: disposeBag)
         
-        DispatchQueue.global().asyncAfter(deadline: .now() + 1) { [weak self] in
+        DispatchQueue.global().async { [weak self] in
             var complete: (() -> Void)!
             complete = {
                 self?.readBuffer(reader: reader, complete: complete)
@@ -81,12 +80,12 @@ class NuguCoreTest: XCTestCase {
             self?.readBuffer(reader: reader, complete: complete)
         }
         
-        Observable<Int>.timer(.seconds(3), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+        Observable<Int>.timer(.seconds(2), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { _ in
                 expt.fulfill()
             }).disposed(by: disposeBag)
         
-        waitForExpectations(timeout: 20.0, handler: nil)
+        waitForExpectations(timeout: 4.0, handler: nil)
     }
 
 }
