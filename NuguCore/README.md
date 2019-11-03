@@ -17,10 +17,10 @@ pod 'NuguCore'
 ## SDK Components
 ### Capability Agents
 #### AudioPlayer
-The AudioPlayerAgent handles directives for controlling audio playback.
+AudioPlayerAgent handles directives for controlling audio playback.
 
 ```swift
-// NuguClient의 default 인스턴스 사용을 가정합니다.
+// Suppose usage of NuguClient's default instance
 let audioPlayerAgent = NuguClient.default.audioPlayerAgent!
 
 // 미디어 재생 상태 변경 이벤트를 받기위한 delegate 를 등록합니다.
@@ -35,10 +35,10 @@ audioPlayerAgent.delegate = MyAudioPlayerAgentDelegate()
 audioPlayerAgent.request(command: .pause)
 ```
 
-The AudioPlayer handles directives for controlling player template display.
+AudioPlayerAgent also handles directives for controlling player template display.
 
 ```swift
-// NuguClient의 default 인스턴스 사용을 가정합니다.
+// Suppose usage of NuguClient's default instance
 let audioPlayerAgent = NuguClient.default.audioPlayerAgent!
 
 // AudioPlayerDisplayDelegate 을 통해 player 에 대한 UI 구성 상태를 SDK 와 동기화 합니다.
@@ -65,10 +65,10 @@ audioPlayerAgent.addDisplay(delegate: AudioPlayerDisplayTemplate())
 ```
 
 #### ASR(AutomaticSpeechRecognition)
-ASRAgent 는 사용자 음성을 서버로 전송하고 음성 인식 결과 및 연속 발화 directive 를 처리합니다.
+ASRAgent delivers user's voice to server and handles voice recognition results or continuous speech directives.
 
 ```swift
-// NuguClient의 default 인스턴스 사용을 가정합니다.
+// Suppose usage of NuguClient's default instance
 let asrAgent = NuguClient.default.asrAgent!
 
 // 음성 인식 결과를 받기위한 delegate 를 등록합니다.
@@ -100,10 +100,10 @@ asrAgent.recognize()
 ```
 
 #### Display
-The DisplayAgent handles directives for controlling template display.
+DisplayAgent handles directives for controlling template display.
 
 ```swift
-// NuguClient의 default 인스턴스 사용을 가정합니다.
+// Suppose usage of NuguClient's default instance
 let displayAgent = NuguClient.default.displayAgent!
 
 // DisplayAgentDelegate 을 통해 template 에 대한 UI 구성 상태를 SDK 와 동기화 합니다.
@@ -130,10 +130,10 @@ displayAgent.add(delegate: MyDisplayAgentDelegate())
 ```
 
 #### Extension
-Play Builder 및 Backend proxy 에서 정의한 custom action 을 application 에서 처리 할 수 있도록 directive 를 전달합니다.
+Extension delivers custom action directives which were previously promised in Play Builder or Backend proxy for appliction to handle it's own actions.
 
 ```swift
-// NuguClient의 default 인스턴스 사용을 가정합니다.
+// Suppose usage of NuguClient's default instance
 let extensionAgent = NuguClient.default.extensionAgent!
 
 // directive 를 전달받기 위해 delegate 를 등록합니다.
@@ -146,10 +146,10 @@ class MyExtensionAgentDelegate: ExtensionAgentDelegate {
 ```
 
 #### Text
-TextAgent 는 텍스트 명령을 서버로 전송하고 텍스트 명령 인식 결과 directive 를 처리합니다.
+TextAgent delivers user's text command to server and handles result directives of text command recognition result.
 
 ```swift
-// NuguClient의 default 인스턴스 사용을 가정합니다.
+// Suppose usage of NuguClient's default instance
 let textAgent = NuguClient.default.textAgent!
 
 // 텍스트 명령 인식 결과를 받기위한 delegate 를 등록합니다.
@@ -172,10 +172,10 @@ textAgent.recognize(text: command)
 ```
 
 #### TTS(TextToSpeech)
-The TTSAgent handles directives for controlling speech playback.
+TTSAgent handles directives for controlling speech playback.
 
 ```swift
-// NuguClient의 default 인스턴스 사용을 가정합니다.
+// Suppose usage of NuguClient's default instance
 let ttsAgent = NuguClient.default.TTSAgent!
 
 // text 에 대한 음성 합성 및 재생을 요청합니다.
