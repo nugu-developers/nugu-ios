@@ -23,13 +23,13 @@ import Foundation
 public struct DisplayTemplate {
     public let type: String
     public let typeInfo: TypeInfo
-    public let messageId: String
+    public let templateId: String
     public let dialogRequestId: String
     
-    public init(type: String, typeInfo: TypeInfo, messageId: String, dialogRequestId: String) {
+    public init(type: String, typeInfo: TypeInfo, templateId: String, dialogRequestId: String) {
         self.type = type
         self.typeInfo = typeInfo
-        self.messageId = messageId
+        self.templateId = templateId
         self.dialogRequestId = dialogRequestId
     }
     
