@@ -23,15 +23,15 @@ AudioPlayerAgent handles directives for controlling audio playback.
 // Suppose usage of NuguClient's default instance
 let audioPlayerAgent = NuguClient.default.audioPlayerAgent!
 
-// 미디어 재생 상태 변경 이벤트를 받기위한 delegate 를 등록합니다.
+// Set delegate for receiving events of media state change
 class MyAudioPlayerAgentDelegate: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState) {
-        // DialogPlayerAgent 를 통해 display 중인 player 정보를 state 에 따라 업데이트 합니다.
+        // Update player's displaying UI with AudioPlayerState state appropriately
     }
 }
 audioPlayerAgent.delegate = MyAudioPlayerAgentDelegate()
 
-// 재생/일시정지/정지/이전/다음 요청
+// play/pause/stop/previous/next request
 audioPlayerAgent.request(command: .pause)
 ```
 
@@ -41,24 +41,24 @@ AudioPlayerAgent also handles directives for controlling player template display
 // Suppose usage of NuguClient's default instance
 let audioPlayerAgent = NuguClient.default.audioPlayerAgent!
 
-// AudioPlayerDisplayDelegate 을 통해 player 에 대한 UI 구성 상태를 SDK 와 동기화 합니다.
+// Synchronize SDK's player UI state with AudioPlayerDisplayDelegate
 class MyAudioPlayerDisplayDelegate: AudioPlayerDisplayDelegate {
     func audioPlayerDisplayShouldRender(template: DisplayPlayerTemplate) -> Bool {
-        // UI 를 구성하지 않으려면 false 를 반환해야 합니다.
+        // Return false if player's UI is unnecessary
         return true
     }
 
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
-        // UI 를 구성합니다.
+        // Draw player's UI with AudioPlayerDisplayTemplate
     }
 
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) -> Bool {
-        // UI 를 유지하려면 false 를 반환해야 합니다.
+        // Return false if player's UI is not ready to be clear
         return true
     }
 
     func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
-        // UI 를 제거합니다.
+        // Clear player's UI
     }
 }
 audioPlayerAgent.addDisplay(delegate: AudioPlayerDisplayTemplate())
@@ -71,31 +71,31 @@ ASRAgent delivers user's voice to server and handles voice recognition results o
 // Suppose usage of NuguClient's default instance
 let asrAgent = NuguClient.default.asrAgent!
 
-// 음성 인식 결과를 받기위한 delegate 를 등록합니다.
+// Add delegate for speech recognition result receive
 class MyAsrASRAgentDelegate: ASRAgentDelegate {
     func asrAgentDidReceive(result: ASRResult) {
         switch result {
         case .complete(let text):
-            // 최종 인식 결과 처리.
+            // Handle reconized final result of voice recognition
             break
         case .partial(let text):
-            // 부분 인식 결과 업데이트.
+            // Handle partialy recognized voice dynamically
             break
         case .responseTimeout:
-            // 서버 응답 없음.
+            // No result from server until timeout
             break
         case .listeningTimeout:
-            // 사용자가 발화를 하지 않음.
+            // User did not speak at all until timeout
             break
         default: 
-            // 화자 인식 등 추후 업데이트 될 기능을 위한 state.
+            // States will be added
             break
         }
     }
 }
 asrAgent.add(delegate: MyAsrASRAgentDelegate())
 
-// 음성 인식을 시작합니다.
+// Start voice recognition
 asrAgent.recognize()
 ```
 
@@ -106,24 +106,24 @@ DisplayAgent handles directives for controlling template display.
 // Suppose usage of NuguClient's default instance
 let displayAgent = NuguClient.default.displayAgent!
 
-// DisplayAgentDelegate 을 통해 template 에 대한 UI 구성 상태를 SDK 와 동기화 합니다.
+// Synchronize SDK's display template UI state with DisplayAgentDelegate
 class MyDisplayAgentDelegate: DisplayAgentDelegate {
     func displayAgentShouldRender(template: DisplayTemplate) -> Bool {
-        // UI 를 구성하지 않으려면 false 를 반환해야 합니다.
+        // Return false if display template's UI is unnecessary
         return true
     }
 
     func displayAgentDidRender(template: DisplayTemplate) {
-        // UI 를 구성합니다.
+         // Draw display template UI with DisplayTemplate
     }
 
     func displayAgentShouldClear(template: DisplayTemplate) -> Bool {
-        // UI 를 유지하려면 false 를 반환해야 합니다.
+        // Return false if display template UI is not ready to be clear
         return true
     }
 
     func displayAgentDidClear(template: DisplayTemplate) {
-        // UI 를 제거합니다.
+        // Clear display template UI
     }
 }
 displayAgent.add(delegate: MyDisplayAgentDelegate())
@@ -136,10 +136,10 @@ Extension delivers custom action directives which were previously promised in Pl
 // Suppose usage of NuguClient's default instance
 let extensionAgent = NuguClient.default.extensionAgent!
 
-// directive 를 전달받기 위해 delegate 를 등록합니다.
+// Set delegate for receiving extension directives
 class MyExtensionAgentDelegate: ExtensionAgentDelegate {
     func extensionAgentDidReceive(data: [String: Any], playServiceId: String, completion: @escaping (Bool) -> Void) {
-        // action 및 data 를 처리할 수 없다면 false 를 전달해야 합니다.
+        // Should return false if actions or data can not be handled
         completion(true)
     }
 }
@@ -152,22 +152,22 @@ TextAgent delivers user's text command to server and handles result directives o
 // Suppose usage of NuguClient's default instance
 let textAgent = NuguClient.default.textAgent!
 
-// 텍스트 명령 인식 결과를 받기위한 delegate 를 등록합니다.
+// Add delegate for receiving text command recognition results
 class MyTextAgentDelegate: TextAgentDelegate {
     func textAgentDidReceive(result: TextAgentResult) {
         switch result {
         case .complete:
-            // 텍스트 명령 인식 성공
+            // Text command recognition success
             break
         case .responseTimeout:
-            // 서버 응답 없음.
+            // No result from server until timeout
             break
         }
     }
 }
 textAgent.add(delegate: MyTextAgentDelegate())
 
-// 텍스트 명령 서버 전송
+// Send text command to server
 textAgent.recognize(text: command)
 ```
 
@@ -178,15 +178,15 @@ TTSAgent handles directives for controlling speech playback.
 // Suppose usage of NuguClient's default instance
 let ttsAgent = NuguClient.default.TTSAgent!
 
-// text 에 대한 음성 합성 및 재생을 요청합니다.
+// Request for text-to-speech message generation and play
 ttsAgent.requestTTS(text: text)
 ```
 
 ### AuthorizationManager
-작성예정
+To be updated
 
 ### NetworkManager
-작성예정
+To be updated
 
 ## License
 The contents of this repository is licensed under the
