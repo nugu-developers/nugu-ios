@@ -313,10 +313,9 @@ private extension MainViewController {
                 NuguCentralManager.shared.client.displayAgent?.clearDisplay(delegate: self)
                 self.dismissDisplayView()
             }
-            displayListView.onItemSelect = { (selectedItem) in
-                guard let templateId = selectedItem.templateId,
-                    let token = selectedItem.token else { return }
-                NuguCentralManager.shared.client.displayAgent?.elementDidSelect(templateId: templateId, token: token)
+            displayListView.onItemSelect = { (selectedItemToken) in
+                guard let selectedItemToken = selectedItemToken else { return }
+                NuguCentralManager.shared.client.displayAgent?.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
             }
             displayView = displayListView
         case .bodyListTemplate(let item):

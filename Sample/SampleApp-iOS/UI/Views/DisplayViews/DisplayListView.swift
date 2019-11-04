@@ -30,7 +30,7 @@ final class DisplayListView: UIView {
     @IBOutlet private weak var tableView: UITableView!
     
     var onCloseButtonClick: (() -> Void)?
-    var onItemSelect: (((templateId: String?, token: String?)) -> Void)?
+    var onItemSelect: ((String?) -> Void)?
     
     var displayTemplate: DisplayTemplate.ListTemplate? {
         didSet {
@@ -101,7 +101,7 @@ extension DisplayListView: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?((templateId: displayTemplate?.playServiceId, token: displayTemplate?.listItems[indexPath.row].token))
+        onItemSelect?(displayTemplate?.listItems[indexPath.row].token)
     }
 }
 
