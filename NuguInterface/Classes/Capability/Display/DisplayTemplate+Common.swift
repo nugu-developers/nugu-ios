@@ -93,6 +93,8 @@ public extension DisplayTemplate {
             case mid
             /// <#Description#>
             case long
+            /// <#Description#>
+            case longest
         }
         
         public struct BadgeNumberStyle: Decodable {
@@ -129,6 +131,7 @@ extension DisplayTemplate.Common.Duration: Decodable {
         case "SHORT": self = .short
         case "MID": self = .mid
         case "LONG": self = .long
+        case "LONGEST": self = .longest
         default: self = .short
         }
     }
@@ -140,6 +143,7 @@ public extension DisplayTemplate.Common.Duration {
         case .short: return .seconds(7)
         case .mid: return .seconds(15)
         case .long: return .seconds(30)
+        case .longest: return .seconds(60 * 10)
         }
     }
 }
