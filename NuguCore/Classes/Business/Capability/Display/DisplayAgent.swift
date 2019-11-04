@@ -63,7 +63,7 @@ public extension DisplayAgent {
     func elementDidSelect(templateId: String, token: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let info = self.renderingInfos.first(where: { $0.currentItem?.messageId == templateId }),
+            guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
                 let template = info.currentItem else { return }
             
             self.sendEvent(
@@ -158,7 +158,7 @@ extension DisplayAgent: PlaySyncDelegate {
             case .releasing:
                 var cleared = true
                 self.renderingInfos
-                    .filter { $0.currentItem?.messageId == item.messageId }
+                    .filter { $0.currentItem?.templateId == item.templateId }
                     .compactMap { $0.delegate }
                     .forEach { delegate in
                         if delegate.displayAgentShouldClear(template: item) == false {
@@ -172,7 +172,7 @@ extension DisplayAgent: PlaySyncDelegate {
                 if let item = self.currentItem {
                     self.currentItem = nil
                     self.renderingInfos
-                        .filter { $0.currentItem?.messageId == item.messageId }
+                        .filter { $0.currentItem?.templateId == item.templateId }
                         .compactMap { $0.delegate }
                         .forEach { self.removeRenderedTemplate(delegate: $0) }
                 }
@@ -206,7 +206,7 @@ private extension DisplayAgent {
                 self.currentItem = DisplayTemplate(
                     type: directiveTypeInfo.type,
                     typeInfo: .bodyTemplate(item: displayItem),
-                    messageId: directive.header.messageID,
+                    templateId: directive.header.messageID,
                     dialogRequestId: directive.header.dialogRequestID
                 )
             case .textList1, .textList2, .imageList1, .imageList2, .imageList3:
@@ -214,7 +214,7 @@ private extension DisplayAgent {
                 self.currentItem = DisplayTemplate(
                     type: directiveTypeInfo.type,
                     typeInfo: .listTemplate(item: displayItem),
-                    messageId: directive.header.messageID,
+                    templateId: directive.header.messageID,
                     dialogRequestId: directive.header.dialogRequestID
                 )
             case .textList3, .textList4:
@@ -222,7 +222,7 @@ private extension DisplayAgent {
                 self.currentItem = DisplayTemplate(
                     type: directiveTypeInfo.type,
                     typeInfo: .bodyListTemplate(item: displayItem),
-                    messageId: directive.header.messageID,
+                    templateId: directive.header.messageID,
                     dialogRequestId: directive.header.dialogRequestID
                 )
             case .customTemplate:
@@ -255,6 +255,6 @@ private extension DisplayAgent {
     }
     
     func hasRenderedDisplay(template: DisplayTemplate) -> Bool {
-        return renderingInfos.contains { $0.currentItem?.messageId == template.messageId }
+        return renderingInfos.contains { $0.currentItem?.templateId == template.templateId }
     }
 }
