@@ -209,11 +209,19 @@ private extension DisplayAgent {
                     messageId: directive.header.messageID,
                     dialogRequestId: directive.header.dialogRequestID
                 )
-            case .textList1, .textList2, .textList3, .imageList1, .imageList2:
+            case .textList1, .textList2, .imageList1, .imageList2, .imageList3:
                 let displayItem = try JSONDecoder().decode(DisplayTemplate.ListTemplate.self, from: data)
                 self.currentItem = DisplayTemplate(
                     type: directiveTypeInfo.type,
                     typeInfo: .listTemplate(item: displayItem),
+                    messageId: directive.header.messageID,
+                    dialogRequestId: directive.header.dialogRequestID
+                )
+            case .textList3, .textList4:
+                let displayItem = try JSONDecoder().decode(DisplayTemplate.BodyListTemplate.self, from: data)
+                self.currentItem = DisplayTemplate(
+                    type: directiveTypeInfo.type,
+                    typeInfo: .bodyListTemplate(item: displayItem),
                     messageId: directive.header.messageID,
                     dialogRequestId: directive.header.dialogRequestID
                 )

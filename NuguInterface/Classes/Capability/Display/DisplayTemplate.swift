@@ -41,6 +41,9 @@ public struct DisplayTemplate {
         /// A template for list of entries.
         /// - Parameter item: Information of the template.
         case listTemplate(item: DisplayTemplate.ListTemplate)
+        /// A template for list of entries.
+        /// - Parameter item: Information of the template.
+        case bodyListTemplate(item: DisplayTemplate.BodyListTemplate)
     }
 }
 
@@ -49,18 +52,21 @@ public extension DisplayTemplate {
         switch typeInfo {
         case .bodyTemplate(let item): return item.token
         case .listTemplate(let item): return item.token
+        case .bodyListTemplate(let item): return item.token
         }
     }
     var playServiceId: String {
         switch typeInfo {
         case .bodyTemplate(let item): return item.playServiceId
         case .listTemplate(let item): return item.playServiceId
+        case .bodyListTemplate(let item): return item.playServiceId
         }
     }
     var duration: DisplayTemplate.Common.Duration? {
         switch typeInfo {
         case .bodyTemplate(let item): return item.duration
         case .listTemplate(let item): return item.duration
+        case .bodyListTemplate(let item): return item.duration
         }
     }
 }

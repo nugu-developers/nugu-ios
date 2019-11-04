@@ -319,6 +319,9 @@ private extension MainViewController {
                 NuguCentralManager.shared.client.displayAgent?.elementDidSelect(templateId: templateId, token: token)
             }
             displayView = displayListView
+        case .bodyListTemplate(let item):
+            // TODO
+            break
         }
         guard let displayView = displayView else { return }
         displayView.alpha = 0

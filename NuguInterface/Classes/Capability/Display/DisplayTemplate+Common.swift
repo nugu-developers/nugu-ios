@@ -49,6 +49,9 @@ public extension DisplayTemplate {
             public let logo: Image
             /// <#Description#>
             public let text: Text
+            public let subtext: Text?
+            public let subicon: Image?
+            public let button: Button?
         }
         
         /// <#Description#>
@@ -65,6 +68,11 @@ public extension DisplayTemplate {
             public let text: String
             /// <#Description#>
             public let color: String?
+        }
+        
+        public struct Button: Decodable {
+            public let text: String
+            public let token: String
         }
         
         /// <#Description#>
