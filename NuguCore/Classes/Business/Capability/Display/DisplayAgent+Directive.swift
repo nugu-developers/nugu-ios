@@ -33,8 +33,10 @@ extension DisplayAgent {
         case textList1
         case textList2
         case textList3
+        case textList4
         case imageList1
         case imageList2
+        case imageList3
         case customTemplate
     }
 }
@@ -53,8 +55,10 @@ extension DisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         case .textList1: return "Display.TextList1"
         case .textList2: return "Display.TextList2"
         case .textList3: return "Display.TextList3"
+        case .textList4: return "Display.TextList4"
         case .imageList1: return "Display.ImageList1"
         case .imageList2: return "Display.ImageList2"
+        case .imageList3: return "Display.ImageList3"
         case .customTemplate: return "Display.CustomTemplate"
         }
     }

@@ -22,7 +22,7 @@ import Foundation
 
 public extension DisplayTemplate {
     /// <#Description#>
-    struct ListTemplate: Decodable {
+    struct BodyListTemplate: Decodable {
         public let playServiceId: String
         public let token: String
         public let duration: DisplayTemplate.Common.Duration?
@@ -35,6 +35,8 @@ public extension DisplayTemplate {
         public let badgeNumber: Bool?
         /// <#Description#>
         public let listItems: [Item]
+        /// <#Description#>
+        public let caption: DisplayTemplate.Common.Text?
         
         /// <#Description#>
         public struct Item: Decodable {
@@ -47,9 +49,10 @@ public extension DisplayTemplate {
             /// <#Description#>
             public let header: DisplayTemplate.Common.Text
             /// <#Description#>
-            public let body: DisplayTemplate.Common.Text?
+            public let body: [DisplayTemplate.Common.Text]?
             /// <#Description#>
             public let footer: DisplayTemplate.Common.Text?
+            public let button: DisplayTemplate.Common.Button?
         }
     }
 }
