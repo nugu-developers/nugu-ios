@@ -69,11 +69,9 @@ public enum JadeMarbleConfiguration {
 
 // MARK: - EndPointDetectorConst
 
-enum EndPointDetectorConst {
-    static let focusTimeout: DispatchTimeInterval = .milliseconds(1000)
-    static let epdLength = 700
-    static let inputStreamType: StreamType = .linearPcm16
-    static let outputStreamType: StreamType = .speex
+public enum EndPointDetectorConst {
+    static let inputStreamType: StreamType = .linearPcm16 // fixed by engine
+    static let outputStreamType: StreamType = .speex // fixed by engine
 }
 
 // MARK: - Stream Type

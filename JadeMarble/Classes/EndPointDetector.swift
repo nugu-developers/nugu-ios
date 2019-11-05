@@ -38,9 +38,6 @@ public class EndPointDetector: EndPointDetectable {
     /// The flush time for reverb removal.
     public var flushTime: Int = 100
     
-    private let sampleRate: Double
-    private let timeout: Int
-    private let speechDuration: Int
     private var epdHandle: EpdHandle?
     private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.end_point_detector")
     private var epdWorkItem: DispatchWorkItem?
@@ -51,23 +48,22 @@ public class EndPointDetector: EndPointDetectable {
     private var outputData = Data()
     #endif
     
-    public init(sampleRate: Double, timeout: Int, speechDuration: Int) {
-        self.sampleRate = sampleRate
-        self.timeout = timeout
-        self.speechDuration = speechDuration
-    }
+    public init() {}
     
-    public func start(inputStream: AudioStreamReadable) throws {
-        try start(inputStream: inputStream, timeout: timeout)
-    }
-    
-    public func start(inputStream: AudioStreamReadable, timeout: Int) throws {
+    public func start(inputStream: AudioStreamReadable,
+                      sampleRate: Double,
+                      timeout: Int,
+                      maxDuration: Int,
+                      pauseLength: Int) throws {
         epdWorkItem?.cancel()
         epdWorkItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             
             do {
-                try self.initDetectorEngine(timeout: timeout)
+                try self.initDetectorEngine(sampleRate: sampleRate,
+                                            timeout: timeout,
+                                            maxDuration: maxDuration,
+                                            pauseLength: pauseLength)
                 self.state = .listening
             } catch {
                 self.state = .idle
@@ -77,7 +73,7 @@ public class EndPointDetector: EndPointDetectable {
             }
             
             var flushedLength: Int = 0
-            let flushLength: Int = Int((Double(self.flushTime) * self.sampleRate) / 1000)
+            let flushLength: Int = Int((Double(self.flushTime) * sampleRate) / 1000)
             let processAudioGroup = DispatchGroup()
 
             repeat {
@@ -179,7 +175,10 @@ public class EndPointDetector: EndPointDetectable {
         }
     }
     
-    private func initDetectorEngine(timeout: Int) throws {
+    private func initDetectorEngine(sampleRate: Double,
+                                    timeout: Int,
+                                    maxDuration: Int,
+                                    pauseLength: Int) throws {
         if epdHandle != nil {
             epdClientChannelRELEASE(self.epdHandle)
         }
@@ -192,9 +191,9 @@ public class EndPointDetector: EndPointDetectable {
                                                         myint(EndPointDetectorConst.inputStreamType.rawValue),
                                                         myint(EndPointDetectorConst.outputStreamType.rawValue),
                                                         1,
-                                                        myint(speechDuration),
+                                                        myint(maxDuration),
                                                         myint(timeout),
-                                                        myint(EndPointDetectorConst.epdLength)) else {
+                                                        myint(pauseLength)) else {
                                                             throw EndPointDetectorError.initFailed
             }
 
