@@ -24,8 +24,8 @@ import Foundation
 public protocol DirectiveSequenceable: ReceiveMessageDelegate {
     /// <#Description#>
     /// - Parameter handleDirectiveDelegate: <#handleDirectiveDelegate description#>
-    func add(handleDirectiveDelegate: HandleDirectiveDelegate) throws
+    func add(handleDirectiveDelegate: HandleDirectiveDelegate)
     /// <#Description#>
     /// - Parameter handleDirectiveDelegate: <#handleDirectiveDelegate description#>
-    func remove(handleDirectiveDelegate: HandleDirectiveDelegate) throws
+    func remove(handleDirectiveDelegate: HandleDirectiveDelegate)
 }

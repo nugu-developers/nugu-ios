@@ -61,15 +61,11 @@ extension NuguClient {
         agent.dialogStateAggregator = dialogStateAggregator
         agent.endPointDetector = endPointDetector
         
-        do {
-            try directiveSequencer.add(handleDirectiveDelegate: agent)
-            contextManager.add(provideContextDelegate: agent)
-            focusManager.add(channelDelegate: agent)
-            networkManager.add(receiveMessageDelegate: agent)
-            agent.add(delegate: dialogStateAggregator)
-        } catch {
-            log.info("ASRAgent \(error)")
-        }
+        directiveSequencer.add(handleDirectiveDelegate: agent)
+        contextManager.add(provideContextDelegate: agent)
+        focusManager.add(channelDelegate: agent)
+        networkManager.add(receiveMessageDelegate: agent)
+        agent.add(delegate: dialogStateAggregator)
     }
     
     func setupTTSAgentDependency() {
@@ -81,14 +77,10 @@ extension NuguClient {
         agent.messageSender = networkManager
         agent.playSyncManager = playSyncManager
         
-        do {
-            try directiveSequencer.add(handleDirectiveDelegate: agent)
-            agent.add(delegate: dialogStateAggregator)
-            contextManager.add(provideContextDelegate: agent)
-            focusManager.add(channelDelegate: agent)
-        } catch {
-            log.info("AudioPlayerAgent \(error)")
-        }
+        directiveSequencer.add(handleDirectiveDelegate: agent)
+        agent.add(delegate: dialogStateAggregator)
+        contextManager.add(provideContextDelegate: agent)
+        focusManager.add(channelDelegate: agent)
     }
     
     func setupAudioPlayerAgentDependency() {
@@ -100,13 +92,9 @@ extension NuguClient {
         agent.messageSender = networkManager
         agent.playSyncManager = playSyncManager
 
-        do {
-            try directiveSequencer.add(handleDirectiveDelegate: agent)
-            contextManager.add(provideContextDelegate: agent)
-            focusManager.add(channelDelegate: agent)
-        } catch {
-            log.info("AudioPlayerAgent \(error)")
-        }
+        directiveSequencer.add(handleDirectiveDelegate: agent)
+        contextManager.add(provideContextDelegate: agent)
+        focusManager.add(channelDelegate: agent)
     }
     
     func setupDisplayAgentDependency() {
@@ -115,12 +103,8 @@ extension NuguClient {
         agent.messageSender = networkManager
         agent.playSyncManager = playSyncManager
         
-        do {
-            try directiveSequencer.add(handleDirectiveDelegate: agent)
-            contextManager.add(provideContextDelegate: agent)
-        } catch {
-            log.info("DisplayAgent \(error)")
-        }
+        directiveSequencer.add(handleDirectiveDelegate: agent)
+        contextManager.add(provideContextDelegate: agent)
     }
     
     func setupTextAgentDependency() {
@@ -143,12 +127,8 @@ extension NuguClient {
         
         agent.messageSender = networkManager
         
-        do {
-            try directiveSequencer.add(handleDirectiveDelegate: agent)
-            contextManager.add(provideContextDelegate: agent)
-        } catch {
-            log.info("Execution \(error)")
-        }
+        directiveSequencer.add(handleDirectiveDelegate: agent)
+        contextManager.add(provideContextDelegate: agent)
     }
     
     func setupLocationAgentDependency() {
@@ -165,15 +145,11 @@ extension NuguClient {
         systemAgent.contextManager = contextManager
         systemAgent.networkManager = networkManager
         
-        do {
-            try directiveSequencer.add(handleDirectiveDelegate: systemAgent)
-            contextManager.add(provideContextDelegate: systemAgent)
-            networkManager.add(statusDelegate: systemAgent)
-            dialogStateAggregator.add(delegate: systemAgent)
-            systemAgent.add(systemAgentDelegate: authorizationManager)
-        } catch {
-            log.info("System \(error)")
-        }
+        directiveSequencer.add(handleDirectiveDelegate: systemAgent)
+        contextManager.add(provideContextDelegate: systemAgent)
+        networkManager.add(statusDelegate: systemAgent)
+        dialogStateAggregator.add(delegate: systemAgent)
+        systemAgent.add(systemAgentDelegate: authorizationManager)
     }
 }
 
