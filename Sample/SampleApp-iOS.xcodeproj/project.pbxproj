@@ -38,6 +38,7 @@
 		A1B4CC7D2372C85600867AEC /* DisplayBodyTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC7C2372C85600867AEC /* DisplayBodyTemplate.swift */; };
 		A1B4CC7F2372C86400867AEC /* DisplayListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC7E2372C86400867AEC /* DisplayListTemplate.swift */; };
 		A1B4CC812372C87400867AEC /* DisplayBodyListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC802372C87400867AEC /* DisplayBodyListTemplate.swift */; };
+		A1B4CC832372DDE300867AEC /* DisplayCommonTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC822372DDE300867AEC /* DisplayCommonTemplate.swift */; };
 		A1C305E422C0915400D6BE1C /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = A1C305E122C0915400D6BE1C /* asrFail.wav */; };
 		A1C305E522C0915400D6BE1C /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = A1C305E222C0915400D6BE1C /* asrStart.wav */; };
 		A1C305E622C0915400D6BE1C /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = A1C305E322C0915400D6BE1C /* asrSuccess.wav */; };
@@ -97,6 +98,7 @@
 		A1B4CC7C2372C85600867AEC /* DisplayBodyTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBodyTemplate.swift; sourceTree = "<group>"; };
 		A1B4CC7E2372C86400867AEC /* DisplayListTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayListTemplate.swift; sourceTree = "<group>"; };
 		A1B4CC802372C87400867AEC /* DisplayBodyListTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBodyListTemplate.swift; sourceTree = "<group>"; };
+		A1B4CC822372DDE300867AEC /* DisplayCommonTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayCommonTemplate.swift; sourceTree = "<group>"; };
 		A1C305E122C0915400D6BE1C /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
 		A1C305E222C0915400D6BE1C /* asrStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrStart.wav; sourceTree = "<group>"; };
 		A1C305E322C0915400D6BE1C /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 		A1B4CC7123728D9300867AEC /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A1B4CC822372DDE300867AEC /* DisplayCommonTemplate.swift */,
 				A1B4CC7C2372C85600867AEC /* DisplayBodyTemplate.swift */,
 				A1B4CC7E2372C86400867AEC /* DisplayListTemplate.swift */,
 				A1B4CC802372C87400867AEC /* DisplayBodyListTemplate.swift */,
@@ -558,6 +561,7 @@
 				1FA45DAC22E31C0500E2FA59 /* ImageDataLoader.swift in Sources */,
 				1F38DD1D22C22C7100E29841 /* SampleApp.swift in Sources */,
 				A1C6ADAA2303BA100076C041 /* DisplayListView.swift in Sources */,
+				A1B4CC832372DDE300867AEC /* DisplayCommonTemplate.swift in Sources */,
 				A1766AEC22B0E0410036D53A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

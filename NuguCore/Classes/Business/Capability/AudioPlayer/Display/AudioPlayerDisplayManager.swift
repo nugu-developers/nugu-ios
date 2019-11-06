@@ -92,7 +92,7 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
         return true
     }
     
-    public func playSyncDuration() -> DisplayTemplate.Common.Duration {
+    public func playSyncDuration() -> DisplayTemplate.Duration {
         return .short
     }
     
