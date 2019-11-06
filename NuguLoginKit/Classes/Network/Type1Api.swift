@@ -83,6 +83,7 @@ struct Type1Api {
         
         return dataTask
     }
+    // swiftlint:enable function_parameter_count
     
     // By Refresh-token
     @discardableResult

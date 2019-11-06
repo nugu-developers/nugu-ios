@@ -568,12 +568,21 @@ private extension ASRAgent {
         
         do {
             attachmentSeq = 0
-            if let timeout = currentExpectSpeech?.timeoutInMilliseconds {
-                try endPointDetector.start(inputStream: asrRequest.reader, timeout: timeout / 1000)
-            } else {
-                try endPointDetector.start(inputStream: asrRequest.reader)
+            
+            var timeout: Int {
+                guard let expectTimeout = currentExpectSpeech?.timeoutInMilliseconds else {
+                    return ASRConst.timeout
+                }
+                
+                return expectTimeout / 1000
             }
-
+            
+            try endPointDetector.start(inputStream: asrRequest.reader,
+                                       sampleRate: ASRConst.sampleRate,
+                                       timeout: timeout,
+                                       maxDuration: ASRConst.maxDuration,
+                                       pauseLength: ASRConst.pauseLength)
+            
             sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
                 guard case .success = status else {
                     self?.asrResult = .error(.recognizeFailed)
