@@ -1,9 +1,9 @@
 //
-//  DisplayListView.swift
+//  DisplayBodyListView.swift
 //  SampleApp-iOS
 //
-//  Created by jin kim on 14/08/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by jin kim on 2019/11/06.
+//  Copyright © 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@
 
 import UIKit
 
-final class DisplayListView: DisplayView {
-
-    @IBOutlet private weak var tableView: UITableView!
+final class DisplayBodyListView: DisplayView {
     
+    @IBOutlet private weak var tableView: UITableView!
+        
     override var displayPayload: String? {
         didSet {
             guard let payloadData = displayPayload?.data(using: .utf8),
-                let displayItem = try? JSONDecoder().decode(DisplayListTemplate.self, from: payloadData) else { return }
+                let displayItem = try? JSONDecoder().decode(DisplayBodyListTemplate.self, from: payloadData) else { return }
             
             titleLabel.text = displayItem.title.text.text
             titleLabel.textColor = UIColor(rgbHexString: displayItem.title.text.color)
@@ -39,41 +39,36 @@ final class DisplayListView: DisplayView {
                 logoImageView.isHidden = true
             }
             
-            templateListItems = displayItem.listItems
+            templateBodyListItems = displayItem.listItems
             tableView.reloadData()
         }
     }
     
-    private var templateListItems: [DisplayListTemplate.Item]?
-
+    private var templateBodyListItems: [DisplayBodyListTemplate.Item]?
+    
     override func loadFromXib() {
         let view = Bundle.main.loadNibNamed("DisplayListView", owner: self)?.first as! UIView
         view.frame = bounds
         addSubview(view)
         addBorderToTitleContainerView()
-        tableView.register(UINib(nibName: "DisplayListViewCell", bundle: nil), forCellReuseIdentifier: "DisplayListViewCell")
+        tableView.register(UINib(nibName: "DisplayBodyListViewCell", bundle: nil), forCellReuseIdentifier: "DisplayBodyListViewCell")
     }
 }
 
-extension DisplayListView: UITableViewDataSource {
+extension DisplayBodyListView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return templateListItems?.count ?? 0
+        return templateBodyListItems?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let displayListViewCell = tableView.dequeueReusableCell(withIdentifier: "DisplayListViewCell") as! DisplayListViewCell
-        displayListViewCell.configure(index: String(indexPath.row + 1), item: templateListItems?[indexPath.row])
-        return displayListViewCell
+        let displayBodyListViewCell = tableView.dequeueReusableCell(withIdentifier: "DisplayBodyListViewCell") as! DisplayBodyListViewCell
+        displayBodyListViewCell.configure(index: String(indexPath.row + 1), item: templateBodyListItems?[indexPath.row])
+        return displayBodyListViewCell
     }
 }
 
-extension DisplayListView: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 72.0
-    }
-    
+extension DisplayBodyListView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(templateListItems?[indexPath.row].token)
+        onItemSelect?(templateBodyListItems?[indexPath.row].token)
     }
 }
-

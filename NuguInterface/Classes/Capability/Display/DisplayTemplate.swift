@@ -22,51 +22,32 @@ import Foundation
 
 public struct DisplayTemplate {
     public let type: String
-    public let typeInfo: TypeInfo
+    public let payload: String
     public let templateId: String
     public let dialogRequestId: String
     
-    public init(type: String, typeInfo: TypeInfo, templateId: String, dialogRequestId: String) {
+    public init(type: String, payload: String, templateId: String, dialogRequestId: String) {
         self.type = type
-        self.typeInfo = typeInfo
+        self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
-    }
-    
-    /// The template of the DisplayAgent.
-    public enum TypeInfo {
-        /// A text only template that supports image, title, header, body and footer.
-        /// - Parameter item: Information of the template.
-        case bodyTemplate(item: DisplayTemplate.BodyTemplate)
-        /// A template for list of entries.
-        /// - Parameter item: Information of the template.
-        case listTemplate(item: DisplayTemplate.ListTemplate)
-        /// A template for list of entries.
-        /// - Parameter item: Information of the template.
-        case bodyListTemplate(item: DisplayTemplate.BodyListTemplate)
     }
 }
 
 public extension DisplayTemplate {
-    var token: String {
-        switch typeInfo {
-        case .bodyTemplate(let item): return item.token
-        case .listTemplate(let item): return item.token
-        case .bodyListTemplate(let item): return item.token
+    private var payloadDictionary: [String: Any]? {
+        guard let payloadAsData = payload.data(using: .utf8) else {
+            return nil
         }
+        return try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any]
     }
-    var playServiceId: String {
-        switch typeInfo {
-        case .bodyTemplate(let item): return item.playServiceId
-        case .listTemplate(let item): return item.playServiceId
-        case .bodyListTemplate(let item): return item.playServiceId
-        }
+    var token: String? {
+        return payloadDictionary?["token"] as? String
     }
-    var duration: DisplayTemplate.Common.Duration? {
-        switch typeInfo {
-        case .bodyTemplate(let item): return item.duration
-        case .listTemplate(let item): return item.duration
-        case .bodyListTemplate(let item): return item.duration
-        }
+    var playServiceId: String? {
+        return payloadDictionary?["playServiceId"] as? String
+    }
+    var duration: String? {
+        return payloadDictionary?["duration"] as? String
     }
 }

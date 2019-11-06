@@ -1,9 +1,9 @@
 //
-//  DisplayListViewCell.swift
+//  DisplayBodyListViewCell.swift
 //  SampleApp-iOS
 //
-//  Created by jin kim on 16/08/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by jin kim on 2019/11/06.
+//  Copyright © 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,26 +20,35 @@
 
 import UIKit
 
-final class DisplayListViewCell: UITableViewCell {
+final class DisplayBodyListViewCell: UITableViewCell {
     
     @IBOutlet private weak var numberLabel: UILabel!
     @IBOutlet private weak var displayImageView: UIImageView!
+    @IBOutlet private weak var displayIamgeViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var subTitleLabel: UILabel!
+    @IBOutlet private var bodyLabels: [UILabel]!
+    @IBOutlet private weak var footerLabel: UILabel!
     
-    func configure(index: String?, item: DisplayListTemplate.Item?) {
+    func configure(index: String?, item: DisplayBodyListTemplate.Item?) {
         numberLabel.text = index
         
         if let imageUrl = item?.image?.sources.first?.url {
             displayImageView.loadImage(from: imageUrl)
-            displayImageView.isHidden = false
+            displayIamgeViewWidthConstraint.constant = 84.0
         } else {
-            displayImageView.isHidden = true
+            displayIamgeViewWidthConstraint.constant = 0
         }
         
         titleLabel.text = item?.header.text
         titleLabel.textColor = UIColor(rgbHexString: item?.header.color)
-        subTitleLabel.text = item?.footer?.text
-        subTitleLabel.textColor = UIColor(rgbHexString: item?.footer?.color)
+        
+        item?.body?.enumerated().forEach({ (index, commonText) in
+            bodyLabels[index].isHidden = false
+            bodyLabels[index].text = commonText.text
+            bodyLabels[index].textColor = UIColor(rgbHexString: commonText.color)
+        })
+        
+        footerLabel.text = item?.footer?.text
+        footerLabel.textColor = UIColor(rgbHexString: item?.footer?.color)
     }
 }

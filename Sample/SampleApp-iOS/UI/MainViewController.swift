@@ -34,7 +34,7 @@ final class MainViewController: UIViewController {
     
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
-    private var displayView: UIView?
+    private var displayView: DisplayView?
     private var displayAudioPlayerView: DisplayAudioPlayerView?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
@@ -295,34 +295,33 @@ private extension MainViewController {
 private extension MainViewController {
     func addDisplayView(displayTemplate: DisplayTemplate) {
         displayView?.removeFromSuperview()
-        switch displayTemplate.typeInfo {
-        case .bodyTemplate(let item):
-            let displayBodyView = DisplayBodyView(frame: view.frame)
-            displayBodyView.displayTemplate = item
-            displayBodyView.onCloseButtonClick = { [weak self] in
-                guard let self = self else { return }
-                NuguCentralManager.shared.client.displayAgent?.clearDisplay(delegate: self)
-                self.dismissDisplayView()
-            }
-            displayView = displayBodyView
-        case .listTemplate(let item):
-            let displayListView = DisplayListView(frame: view.frame)
-            displayListView.displayTemplate = item
-            displayListView.onCloseButtonClick = { [weak self] in
-                guard let self = self else { return }
-                NuguCentralManager.shared.client.displayAgent?.clearDisplay(delegate: self)
-                self.dismissDisplayView()
-            }
-            displayListView.onItemSelect = { (selectedItemToken) in
-                guard let selectedItemToken = selectedItemToken else { return }
-                NuguCentralManager.shared.client.displayAgent?.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
-            }
-            displayView = displayListView
-        case .bodyListTemplate(let item):
-            // TODO
+        
+        switch displayTemplate.type {
+        case "Display.FullText1", "Display.FullText2",
+             "Display.ImageText1", "Display.ImageText2", "Display.ImageText3", "Display.ImageText4":
+            displayView = DisplayBodyView(frame: view.frame)
+        case "Display.TextList1", "Display.TextList2",
+             "Display.ImageList1", "Display.ImageList2", "Display.ImageList3":
+            displayView = DisplayListView(frame: view.frame)
+        case "Display.TextList3", "Display.TextList4":
+            displayView = DisplayBodyListView(frame: view.frame)
+        default:
+            // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break
         }
+        
         guard let displayView = displayView else { return }
+        
+        displayView.displayPayload = displayTemplate.payload
+        displayView.onCloseButtonClick = { [weak self] in
+            guard let self = self else { return }
+            NuguCentralManager.shared.client.displayAgent?.clearDisplay(delegate: self)
+            self.dismissDisplayView()
+        }
+        displayView.onItemSelect = { (selectedItemToken) in
+            guard let selectedItemToken = selectedItemToken else { return }
+            NuguCentralManager.shared.client.displayAgent?.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
+        }
         displayView.alpha = 0
         view.insertSubview(displayView, belowSubview: nuguButton)
         UIView.animate(withDuration: 0.3) {
@@ -338,6 +337,7 @@ private extension MainViewController {
             },
             completion: { [weak self] _ in
                 self?.displayView?.removeFromSuperview()
+                self?.displayView = nil
         })
     }
 }
