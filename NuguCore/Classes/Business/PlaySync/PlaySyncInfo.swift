@@ -30,7 +30,7 @@ struct PlaySyncInfo {
     let playServiceId: String
     let playSyncState: PlaySyncState
     let isDisplay: Bool
-    let duration: DisplayTemplate.Common.Duration
+    let duration: DisplayTemplate.Duration
     
     init(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String, playSyncState: PlaySyncState) {
         self.delegate = delegate

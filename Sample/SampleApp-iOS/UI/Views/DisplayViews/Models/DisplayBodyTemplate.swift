@@ -18,21 +18,19 @@
 //  limitations under the License.
 //
 
-import NuguInterface
-
 struct DisplayBodyTemplate: Decodable {
     let playServiceId: String
     let token: String
-    let duration: DisplayTemplate.Common.Duration?
-    let title: DisplayTemplate.Common.Title
-    let background: DisplayTemplate.Common.Background?
+    let duration: DisplayCommonTemplate.Common.Duration?
+    let title: DisplayCommonTemplate.Common.Title
+    let background: DisplayCommonTemplate.Common.Background?
     let content: Content
     
     struct Content: Decodable {
-        let image: DisplayTemplate.Common.Image?
-        let imageAlign: DisplayTemplate.Common.ImageAlign?
-        let header: DisplayTemplate.Common.Text?
-        let body: DisplayTemplate.Common.Text?
-        let footer: DisplayTemplate.Common.Text?
+        let image: DisplayCommonTemplate.Common.Image?
+        let imageAlign: DisplayCommonTemplate.Common.ImageAlign?
+        let header: DisplayCommonTemplate.Common.Text?
+        let body: DisplayCommonTemplate.Common.Text?
+        let footer: DisplayCommonTemplate.Common.Text?
     }
 }

@@ -47,7 +47,43 @@ public extension DisplayTemplate {
     var playServiceId: String? {
         return payloadDictionary?["playServiceId"] as? String
     }
-    var duration: String? {
-        return payloadDictionary?["duration"] as? String
+    var duration: Duration? {
+        guard let durationAsString = payloadDictionary?["duration"] as? String else { return nil }
+        switch durationAsString {
+        case "SHORT":
+            return .short
+        case "MID":
+            return .mid
+        case "LONG":
+            return .long
+        case "LONGEST":
+            return .longest
+        default:
+            return nil
+        }
+    }
+}
+
+public extension DisplayTemplate {
+    enum Duration {
+        /// <#Description#>
+        case short
+        /// <#Description#>
+        case mid
+        /// <#Description#>
+        case long
+        /// <#Description#>
+        case longest
+    }
+}
+
+public extension DisplayTemplate.Duration {
+    var time: DispatchTimeInterval {
+        switch self {
+        case .short: return .seconds(7)
+        case .mid: return .seconds(15)
+        case .long: return .seconds(30)
+        case .longest: return .seconds(60 * 10)
+        }
     }
 }

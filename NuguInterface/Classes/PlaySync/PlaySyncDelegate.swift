@@ -23,7 +23,7 @@ import Foundation
 public protocol PlaySyncDelegate: class {
     func playSyncIsDisplay() -> Bool
     
-    func playSyncDuration() -> DisplayTemplate.Common.Duration
+    func playSyncDuration() -> DisplayTemplate.Duration
     
     func playSyncDidChange(state: PlaySyncState, dialogRequestId: String)
 }

@@ -131,19 +131,8 @@ extension DisplayAgent: PlaySyncDelegate {
         return true
     }
     
-    public func playSyncDuration() -> DisplayTemplate.Common.Duration {
-        switch currentItem?.duration {
-        case "SHORT":
-            return .short
-        case "MID":
-            return .mid
-        case "LONG":
-            return .long
-        case "LONGEST":
-            return .longest
-        default:
-            return .short
-        }
+    public func playSyncDuration() -> DisplayTemplate.Duration {
+        return currentItem?.duration ?? .short
     }
     
     public func playSyncDidChange(state: PlaySyncState, dialogRequestId: String) {
