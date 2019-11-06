@@ -30,6 +30,14 @@
 		A1766AF622B0E0430036D53A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1766AF422B0E0430036D53A /* LaunchScreen.storyboard */; };
 		A1B3F52422BA3059003C8F17 /* NuguCentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B3F52322BA3059003C8F17 /* NuguCentralManager.swift */; };
 		A1B3F52A22BB2D78003C8F17 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B3F52922BB2D78003C8F17 /* WebKit.framework */; };
+		A1B4CC7323728F4C00867AEC /* DisplayBodyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC7223728F4C00867AEC /* DisplayBodyListView.swift */; };
+		A1B4CC7523728F7300867AEC /* DisplayBodyListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B4CC7423728F7300867AEC /* DisplayBodyListView.xib */; };
+		A1B4CC772372942900867AEC /* DisplayBodyListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC762372942900867AEC /* DisplayBodyListViewCell.swift */; };
+		A1B4CC792372943900867AEC /* DisplayBodyListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B4CC782372943900867AEC /* DisplayBodyListViewCell.xib */; };
+		A1B4CC7B2372963400867AEC /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC7A2372963400867AEC /* DisplayView.swift */; };
+		A1B4CC7D2372C85600867AEC /* DisplayBodyTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC7C2372C85600867AEC /* DisplayBodyTemplate.swift */; };
+		A1B4CC7F2372C86400867AEC /* DisplayListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC7E2372C86400867AEC /* DisplayListTemplate.swift */; };
+		A1B4CC812372C87400867AEC /* DisplayBodyListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CC802372C87400867AEC /* DisplayBodyListTemplate.swift */; };
 		A1C305E422C0915400D6BE1C /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = A1C305E122C0915400D6BE1C /* asrFail.wav */; };
 		A1C305E522C0915400D6BE1C /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = A1C305E222C0915400D6BE1C /* asrStart.wav */; };
 		A1C305E622C0915400D6BE1C /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = A1C305E322C0915400D6BE1C /* asrSuccess.wav */; };
@@ -81,6 +89,14 @@
 		A1766AF722B0E0430036D53A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1B3F52322BA3059003C8F17 /* NuguCentralManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguCentralManager.swift; sourceTree = "<group>"; };
 		A1B3F52922BB2D78003C8F17 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		A1B4CC7223728F4C00867AEC /* DisplayBodyListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBodyListView.swift; sourceTree = "<group>"; };
+		A1B4CC7423728F7300867AEC /* DisplayBodyListView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayBodyListView.xib; sourceTree = "<group>"; };
+		A1B4CC762372942900867AEC /* DisplayBodyListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBodyListViewCell.swift; sourceTree = "<group>"; };
+		A1B4CC782372943900867AEC /* DisplayBodyListViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayBodyListViewCell.xib; sourceTree = "<group>"; };
+		A1B4CC7A2372963400867AEC /* DisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
+		A1B4CC7C2372C85600867AEC /* DisplayBodyTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBodyTemplate.swift; sourceTree = "<group>"; };
+		A1B4CC7E2372C86400867AEC /* DisplayListTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayListTemplate.swift; sourceTree = "<group>"; };
+		A1B4CC802372C87400867AEC /* DisplayBodyListTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBodyListTemplate.swift; sourceTree = "<group>"; };
 		A1C305E122C0915400D6BE1C /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
 		A1C305E222C0915400D6BE1C /* asrStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrStart.wav; sourceTree = "<group>"; };
 		A1C305E322C0915400D6BE1C /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
@@ -270,6 +286,16 @@
 			path = "SampleApp-iOS";
 			sourceTree = "<group>";
 		};
+		A1B4CC7123728D9300867AEC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A1B4CC7C2372C85600867AEC /* DisplayBodyTemplate.swift */,
+				A1B4CC7E2372C86400867AEC /* DisplayListTemplate.swift */,
+				A1B4CC802372C87400867AEC /* DisplayBodyListTemplate.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		A1C305FD22C49B4300D6BE1C /* LottieAnimation */ = {
 			isa = PBXGroup;
 			children = (
@@ -309,11 +335,15 @@
 		A1C6AD962303B8FD0076C041 /* DisplayViews */ = {
 			isa = PBXGroup;
 			children = (
+				A1B4CC7123728D9300867AEC /* Models */,
 				A1C6ADC1230645BF0076C041 /* DisplayViewCell */,
+				A1B4CC7A2372963400867AEC /* DisplayView.swift */,
 				A1C6AD922303ABE80076C041 /* DisplayBodyView.swift */,
 				A1C6AD942303AC010076C041 /* DisplayBodyView.xib */,
 				A1C6ADA92303BA100076C041 /* DisplayListView.swift */,
 				A1C6ADBB2303BAB90076C041 /* DisplayListView.xib */,
+				A1B4CC7223728F4C00867AEC /* DisplayBodyListView.swift */,
+				A1B4CC7423728F7300867AEC /* DisplayBodyListView.xib */,
 				1FA45DA922E30CC500E2FA59 /* DisplayAudioPlayerView.swift */,
 				A1C6ADD22313EA740076C041 /* DisplayAudioPlayerView.xib */,
 			);
@@ -325,6 +355,8 @@
 			children = (
 				A1C6ADCA2306649F0076C041 /* DisplayListViewCell.swift */,
 				A1C6ADCB2306649F0076C041 /* DisplayListViewCell.xib */,
+				A1B4CC762372942900867AEC /* DisplayBodyListViewCell.swift */,
+				A1B4CC782372943900867AEC /* DisplayBodyListViewCell.xib */,
 			);
 			path = DisplayViewCell;
 			sourceTree = "<group>";
@@ -418,7 +450,9 @@
 				A1C3061122C49B4300D6BE1C /* LA.json in Resources */,
 				A1C6ADF92316B0C70076C041 /* SP_01_start.json in Resources */,
 				A1C305E522C0915400D6BE1C /* asrStart.wav in Resources */,
+				A1B4CC792372943900867AEC /* DisplayBodyListViewCell.xib in Resources */,
 				A1C6ADFA2316B0C70076C041 /* SP_03_final.json in Resources */,
+				A1B4CC7523728F7300867AEC /* DisplayBodyListView.xib in Resources */,
 				A1C305E422C0915400D6BE1C /* asrFail.wav in Resources */,
 				A1C3061722C49B4300D6BE1C /* PC_01_start.json in Resources */,
 				A1C6ADF82316B0C70076C041 /* SP_02.json in Resources */,
@@ -498,8 +532,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F815108231F7BEF00FA1970 /* DisplayAudioPlayerView.swift in Sources */,
+				A1B4CC7D2372C85600867AEC /* DisplayBodyTemplate.swift in Sources */,
+				A1B4CC7B2372963400867AEC /* DisplayView.swift in Sources */,
 				1F9F6ED022D089C300CD4888 /* UserDefaults+Standard.swift in Sources */,
 				A1CB9449232618E200DFD8B4 /* NuguToastManager.swift in Sources */,
+				A1B4CC772372942900867AEC /* DisplayBodyListViewCell.swift in Sources */,
 				A1C305E822C0AC8F00D6BE1C /* SoundPlayer.swift in Sources */,
 				1F7C9BE223597BCD0085201E /* UserDefaultsWrapper.swift in Sources */,
 				A1B3F52422BA3059003C8F17 /* NuguCentralManager.swift in Sources */,
@@ -507,6 +544,8 @@
 				A1C6ADCC2306649F0076C041 /* DisplayListViewCell.swift in Sources */,
 				1F9F6EF922E2F39800CD4888 /* WebViewController.swift in Sources */,
 				1F27AC8222E5A6F400551039 /* Int+Convenience.swift in Sources */,
+				A1B4CC7F2372C86400867AEC /* DisplayListTemplate.swift in Sources */,
+				A1B4CC812372C87400867AEC /* DisplayBodyListTemplate.swift in Sources */,
 				1F9F6EE322D4996C00CD4888 /* NuguWebView.swift in Sources */,
 				1F9F6ECE22D0895D00CD4888 /* UserDefaults+Romaine.swift in Sources */,
 				1FE9559122F444E80042904B /* NuguDisplayPlayerController.swift in Sources */,
@@ -514,6 +553,7 @@
 				A1C6AD932303ABE80076C041 /* DisplayBodyView.swift in Sources */,
 				1F38DD2A22C9EDCD00E29841 /* SampleAppError.swift in Sources */,
 				1F9F6EDE22D4995200CD4888 /* MainViewController.swift in Sources */,
+				A1B4CC7323728F4C00867AEC /* DisplayBodyListView.swift in Sources */,
 				1F9F6EDA22D4995200CD4888 /* SettingViewController.swift in Sources */,
 				1FA45DAC22E31C0500E2FA59 /* ImageDataLoader.swift in Sources */,
 				1F38DD1D22C22C7100E29841 /* SampleApp.swift in Sources */,

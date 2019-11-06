@@ -20,13 +20,7 @@
 
 import UIKit
 
-import NuguInterface
-
-final class DisplayBodyView: UIView {
-
-    @IBOutlet private weak var titleContainerView: UIView!
-    @IBOutlet private weak var logoImageView: UIImageView!
-    @IBOutlet private weak var titleLabel: UILabel!
+final class DisplayBodyView: DisplayView {
     
     @IBOutlet private weak var contentImageViewContainerView: UIView!
     @IBOutlet private weak var contentImageView: UIImageView!
@@ -34,70 +28,49 @@ final class DisplayBodyView: UIView {
     @IBOutlet private weak var bodyLabel: UILabel!
     @IBOutlet private weak var footerLabel: UILabel!
     
-    var onCloseButtonClick: (() -> Void)?
-    
-    var displayTemplate: DisplayTemplate.BodyTemplate? {
+    override var displayPayload: String? {
         didSet {
-            guard let displayTemplate = displayTemplate else { return }
+            guard let payloadData = displayPayload?.data(using: .utf8),
+            let displayItem = try? JSONDecoder().decode(DisplayBodyTemplate.self, from: payloadData) else { return }
             
-            titleLabel.text = displayTemplate.title.text.text
-            titleLabel.textColor = UIColor(rgbHexString: displayTemplate.title.text.color)
+            titleLabel.text = displayItem.title.text.text
+            titleLabel.textColor = UIColor(rgbHexString: displayItem.title.text.color)
 
-            if let logoUrl = displayTemplate.title.logo.sources.first?.url {
+            backgroundColor = UIColor(rgbHexString: displayItem.background?.color)
+            
+            if let logoUrl = displayItem.title.logo.sources.first?.url {
                 logoImageView.loadImage(from: logoUrl)
+                logoImageView.isHidden = false
                 contentImageViewContainerView.isHidden = false
             } else {
+                logoImageView.isHidden = true
                 contentImageViewContainerView.isHidden = true
             }
-            
-            if let contentUrl = displayTemplate.content.image?.sources.first?.url {
+
+            if let contentUrl = displayItem.content.image?.sources.first?.url {
                 contentImageView.loadImage(from: contentUrl)
                 contentImageViewContainerView.isHidden = false
             } else {
                 contentImageViewContainerView.isHidden = true
             }
             
-            backgroundColor = UIColor(rgbHexString: displayTemplate.background?.color)
+            headerLabel.text = displayItem.content.header?.text
+            headerLabel.textColor = UIColor(rgbHexString: displayItem.content.header?.color)
             
-            headerLabel.text = displayTemplate.content.header?.text
-            headerLabel.textColor = UIColor(rgbHexString: displayTemplate.content.header?.color)
+            bodyLabel.text = displayItem.content.body?.text
+            bodyLabel.textColor = UIColor(rgbHexString: displayItem.content.body?.color)
             
-            bodyLabel.text = displayTemplate.content.body?.text
-            bodyLabel.textColor = UIColor(rgbHexString: displayTemplate.content.body?.color)
-            
-            footerLabel.text = displayTemplate.content.footer?.text
-            footerLabel.textColor = UIColor(rgbHexString: displayTemplate.content.footer?.color)
+            footerLabel.text = displayItem.content.footer?.text
+            footerLabel.textColor = UIColor(rgbHexString: displayItem.content.footer?.color)
         }
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        loadFromXib()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        
-        loadFromXib()
-    }
-    
-    private func loadFromXib() {
+    override func loadFromXib() {
         let view = Bundle.main.loadNibNamed("DisplayBodyView", owner: self)?.first as! UIView
         view.frame = bounds
         addSubview(view)
         addBorderToTitleContainerView()
         contentImageView.layer.cornerRadius = 4.0
         contentImageView.clipsToBounds = true
-    }
-    
-    private func addBorderToTitleContainerView() {
-        titleContainerView.layer.cornerRadius = titleContainerView.bounds.size.height / 2.0
-        titleContainerView.layer.borderColor = UIColor(rgbHexValue: 0xc9cacc).cgColor
-        titleContainerView.layer.borderWidth = 1.0
-    }
-    
-    @IBAction private func closeButtonDidClick(_ button: UIButton) {
-        onCloseButtonClick?()
     }
 }

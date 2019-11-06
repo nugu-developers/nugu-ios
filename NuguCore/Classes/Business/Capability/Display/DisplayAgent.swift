@@ -64,12 +64,13 @@ public extension DisplayAgent {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
-                let template = info.currentItem else { return }
+                let template = info.currentItem,
+                let playServiceId = template.playServiceId else { return }
             
             self.sendEvent(
                 Event(
                     typeInfo: .elementSelected(
-                        playServiceId: template.playServiceId,
+                        playServiceId: playServiceId,
                         token: token
                     )),
                 context: self.contextInfoRequestContext(),
@@ -86,8 +87,8 @@ public extension DisplayAgent {
                 let template = info.currentItem else { return }
             
             self.removeRenderedTemplate(delegate: delegate)
-            if self.hasRenderedDisplay(template: template) == false {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playServiceId)
+            if self.hasRenderedDisplay(template: template) == false, let playServiceId = template.playServiceId {
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: playServiceId)
             }
         }
     }
@@ -131,7 +132,18 @@ extension DisplayAgent: PlaySyncDelegate {
     }
     
     public func playSyncDuration() -> DisplayTemplate.Common.Duration {
-        return currentItem?.duration ?? .short
+        switch currentItem?.duration {
+        case "SHORT":
+            return .short
+        case "MID":
+            return .mid
+        case "LONG":
+            return .long
+        case "LONGEST":
+            return .longest
+        default:
+            return .short
+        }
     }
     
     public func playSyncDidChange(state: PlaySyncState, dialogRequestId: String) {
@@ -153,7 +165,9 @@ extension DisplayAgent: PlaySyncDelegate {
                 }
                 if rendered == false {
                     self.currentItem = nil
-                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playServiceId)
+                    if let playServiceId = item.playServiceId {
+                        self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: playServiceId)
+                    }
                 }
             case .releasing:
                 var cleared = true
@@ -166,7 +180,9 @@ extension DisplayAgent: PlaySyncDelegate {
                         }
                 }
                 if cleared {
-                    self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playServiceId)
+                    if let playServiceId = item.playServiceId {
+                        self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: playServiceId)
+                    }
                 }
             case .released:
                 if let item = self.currentItem {
@@ -196,40 +212,15 @@ private extension DisplayAgent {
                 throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
             }
             
-            guard let data = directive.payload.data(using: .utf8) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-            }
-            
-            switch directiveTypeInfo {
-            case .fullText1, .fullText2, .imageText1, .imageText2, .imageText3, .imageText4:
-                let displayItem = try JSONDecoder().decode(DisplayTemplate.BodyTemplate.self, from: data)
-                self.currentItem = DisplayTemplate(
-                    type: directiveTypeInfo.type,
-                    typeInfo: .bodyTemplate(item: displayItem),
-                    templateId: directive.header.messageID,
-                    dialogRequestId: directive.header.dialogRequestID
-                )
-            case .textList1, .textList2, .imageList1, .imageList2, .imageList3:
-                let displayItem = try JSONDecoder().decode(DisplayTemplate.ListTemplate.self, from: data)
-                self.currentItem = DisplayTemplate(
-                    type: directiveTypeInfo.type,
-                    typeInfo: .listTemplate(item: displayItem),
-                    templateId: directive.header.messageID,
-                    dialogRequestId: directive.header.dialogRequestID
-                )
-            case .textList3, .textList4:
-                let displayItem = try JSONDecoder().decode(DisplayTemplate.BodyListTemplate.self, from: data)
-                self.currentItem = DisplayTemplate(
-                    type: directiveTypeInfo.type,
-                    typeInfo: .bodyListTemplate(item: displayItem),
-                    templateId: directive.header.messageID,
-                    dialogRequestId: directive.header.dialogRequestID
-                )
-            case .customTemplate:
-                throw HandleDirectiveError.handleDirectiveError(message: "Unsupported template")
-            }
-            if let item = self.currentItem {
-                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playServiceId)
+            self.currentItem = DisplayTemplate(
+                type: directiveTypeInfo.type,
+                payload: directive.payload,
+                templateId: directive.header.messageID,
+                dialogRequestId: directive.header.dialogRequestID
+            )
+        
+            if let item = self.currentItem, let playServiceId = item.playServiceId {
+                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: playServiceId)
             }
         }
     }
