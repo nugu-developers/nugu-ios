@@ -42,14 +42,14 @@ extension TTSAgent.DirectiveTypeInfo: DirectiveTypeInforable {
     var medium: DirectiveMedium {
         switch self {
         case .speak: return .audio
-        case .stop: return .audio
+        case .stop: return .none
         }
     }
 
     var isBlocking: Bool {
         switch self {
         case .speak: return true
-        case .stop: return true
+        case .stop: return false
         }
     }
 }

@@ -24,6 +24,7 @@ import NuguCore
 import NuguInterface
 
 import NattyLog
+import RxSwift
 
 let log = NuguClient.natty
 
@@ -125,6 +126,9 @@ public class NuguClient {
     public let locationAgent: LocationAgentProtocol?
     /// <#Description#>
     public let systemAgent: SystemAgentProtocol
+    
+    private var inputProviderStopDisposable: Disposable?
+    private let disposeBag = DisposeBag()
 
     init(inputProvider: AudioProvidable?,
          sharedAudioStream: AudioStreamable?,
@@ -178,19 +182,38 @@ public extension NuguClient {
 
 extension NuguClient: AudioStreamDelegate {
     public func audioStreamWillStart() {
-        if let sharedAudioStream = sharedAudioStream,
-            inputProvider?.isRunning == false {
-            try? inputProvider?.start(streamWriter: sharedAudioStream.makeAudioStreamWriter())
-            
-            log.debug("input provider is started.")
+        inputProviderStopDisposable?.dispose()
+        
+        guard let sharedAudioStream = sharedAudioStream,
+            inputProvider?.isRunning == false else {
+                log.debug("input provider is already started.")
+                return
         }
+        
+        do {
+            try inputProvider?.start(streamWriter: sharedAudioStream.makeAudioStreamWriter())
+            log.debug("input provider is started.")
+        } catch {
+            log.debug("input provider failed to start: \(error)")
+        }
+
     }
     
     public func audioStreamDidStop() {
-        if inputProvider?.isRunning == true {
-            inputProvider?.stop()
-            
-            log.debug("input provider is stopped.")
-        }
+        inputProviderStopDisposable?.dispose()
+        inputProviderStopDisposable = Observable<Int>.timer(.seconds(3), scheduler: ConcurrentDispatchQueueScheduler(qos: .background))
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                
+                guard self.inputProvider?.isRunning == true else {
+                    log.debug("input provider is not running")
+                    return
+                }
+                
+                self.inputProvider?.stop()
+                log.debug("input provider is stopped.")
+            })
+
+        inputProviderStopDisposable?.disposed(by: self.disposeBag)
     }
 }
