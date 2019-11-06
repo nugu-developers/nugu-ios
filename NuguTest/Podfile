@@ -12,6 +12,9 @@ target 'NuguTest' do
   pod 'NuguLoginKit', :path => '../'
   pod 'NuguUIKit', :path => '../'
 
+  pod 'JadeMarble', :path => '../'
+  pod 'KeenSense', :path => '../'
+
   target 'NuguCoreTest' do
     inherit! :search_paths
   end

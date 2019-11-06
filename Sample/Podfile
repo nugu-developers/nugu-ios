@@ -7,7 +7,8 @@ target 'SampleApp-iOS' do
   pod 'NuguInterface', :path => '../'
   pod 'NuguCore', :path => '../'
   pod 'NuguUIKit', :path => '../'
+  pod 'JadeMarble', :path => '../'
+  pod 'KeenSense', :path => '../'
 
-  pod 'KeenSense'
   pod 'NattyLog'
 end

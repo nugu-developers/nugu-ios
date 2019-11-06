@@ -30,13 +30,17 @@ public protocol EndPointDetectable: class {
     var delegate: EndPointDetectorDelegate? { get set }
     
     /// <#Description#>
-    /// - Parameter inputStream: <#inputStream description#>
-    func start(inputStream: AudioStreamReadable) throws
-
-    /// <#Description#>
-    /// - Parameter inputStream: <#inputStream description#>
-    /// - Parameter timeout: <#timeout description#>
-    func start(inputStream: AudioStreamReadable, timeout: Int) throws
+    /// - Parameters:
+    ///   - inputStream: input source.
+    ///   - sampleRate: input source's sample rate.
+    ///   - timeout: Max duration of waiting for speech.
+    ///   - maxDuration: Max duration from speech start to end.
+    ///   - pauseLength: The engine waits this time then consider speech end.
+    func start(inputStream: AudioStreamReadable,
+               sampleRate: Double,
+               timeout: Int,
+               maxDuration: Int,
+               pauseLength: Int) throws
 
     /// <#Description#>
     func stop()
