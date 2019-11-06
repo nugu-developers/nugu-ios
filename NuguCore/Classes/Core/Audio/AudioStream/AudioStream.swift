@@ -39,16 +39,23 @@ public class AudioStream {
 extension AudioStream {
     public class AudioBuffer: SharedBuffer<AVAudioPCMBuffer> {
         public weak var streamDelegate: AudioStreamDelegate?
+        private let delegateQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_stream_delegate")
         private var refCnt = 0 {
             didSet {
-                log.debug("audio reference count: \(oldValue) -> \(refCnt)")
-                switch (oldValue, refCnt) {
-                case (_, 0):
-                    streamDelegate?.audioStreamDidStop()
-                case (0, 1):
-                    streamDelegate?.audioStreamWillStart()
-                default:
-                    break
+                // When the task below is running, self.refCnt can be different from current value. so we should capture it now.
+                let currentRefCnt = refCnt
+                delegateQueue.async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    log.debug("audio reference count: \(oldValue) -> \(currentRefCnt)")
+                    switch (oldValue, currentRefCnt) {
+                    case (_, 0):
+                        self.streamDelegate?.audioStreamDidStop()
+                    case (0, 1):
+                        self.streamDelegate?.audioStreamWillStart()
+                    default:
+                        break
+                    }
                 }
             }
         }
