@@ -32,10 +32,12 @@ extension ASRAgent {
 // MARK: - DirectiveTypeInforable
 
 extension ASRAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var type: String {
+    var namespace: String { "ASR" }
+    
+    var name: String {
         switch self {
-        case .expectSpeech: return "ASR.ExpectSpeech"
-        case .notifyResult: return "ASR.NotifyResult"
+        case .expectSpeech: return "ExpectSpeech"
+        case .notifyResult: return "NotifyResult"
         }
     }
 

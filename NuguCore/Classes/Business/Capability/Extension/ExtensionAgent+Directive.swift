@@ -31,9 +31,11 @@ extension ExtensionAgent {
 // MARK: - DirectiveTypeInforable
 
 extension ExtensionAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var type: String {
+    var namespace: String { "Extension" }
+    
+    var name: String {
         switch self {
-        case .action: return "Extension.Action"
+        case .action: return "Action"
         }
     }
     

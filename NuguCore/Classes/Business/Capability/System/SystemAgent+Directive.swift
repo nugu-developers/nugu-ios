@@ -24,7 +24,7 @@ import NuguInterface
 
 extension SystemAgent {
     enum DirectiveTypeInfo: CaseIterable {
-        case handOffConnection
+        case handoffConnection
         case updateState
         case exception
         case noDirectives
@@ -35,20 +35,22 @@ extension SystemAgent {
 // MARK: - DirectiveConfigurable
 
 extension SystemAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var type: String {
+    var namespace: String { "System" }
+    
+    var name: String {
         switch self {
-        case .handOffConnection: return "System.HandOffConnection"
-        case .updateState: return "System.UpdateState"
-        case .exception: return "System.Exception"
-        case .noDirectives: return "System.NoDirectives"
-        case .revoke: return "System.Revoke"
+        case .handoffConnection: return "HandoffConnection"
+        case .updateState: return "UpdateState"
+        case .exception: return "Exception"
+        case .noDirectives: return "NoDirectives"
+        case .revoke: return "Revoke"
         }
     }
     
     // CHECK-ME: 확인 필요
     var medium: DirectiveMedium {
         switch self {
-        case .handOffConnection: return .none
+        case .handoffConnection: return .none
         case .updateState: return .none
         case .exception: return .none
         case .noDirectives: return .none
@@ -59,7 +61,7 @@ extension SystemAgent.DirectiveTypeInfo: DirectiveTypeInforable {
     // CHECK-ME: 확인 필요
     var isBlocking: Bool {
         switch self {
-        case .handOffConnection: return false
+        case .handoffConnection: return false
         case .updateState: return false
         case .exception: return false
         case .noDirectives: return false
