@@ -28,7 +28,6 @@ extension SystemAgent {
         case updateState
         case exception
         case noDirectives
-        case revoke
     }
 }
 
@@ -43,7 +42,6 @@ extension SystemAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         case .updateState: return "UpdateState"
         case .exception: return "Exception"
         case .noDirectives: return "NoDirectives"
-        case .revoke: return "Revoke"
         }
     }
     
@@ -54,7 +52,6 @@ extension SystemAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         case .updateState: return .none
         case .exception: return .none
         case .noDirectives: return .none
-        case .revoke: return .none
         }
     }
     
@@ -65,7 +62,6 @@ extension SystemAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         case .updateState: return false
         case .exception: return false
         case .noDirectives: return false
-        case .revoke: return false
         }
     }
 }

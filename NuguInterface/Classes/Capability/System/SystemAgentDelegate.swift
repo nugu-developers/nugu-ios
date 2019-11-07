@@ -24,6 +24,4 @@ import Foundation
 public protocol SystemAgentDelegate: class {
     /// Description
     func systemAgentDidReceiveAuthorizationError()
-    
-    func systemAgentDidReceiveRevoke(reason: SystemRevokeReason)
 }
