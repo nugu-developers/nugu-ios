@@ -25,55 +25,31 @@ public struct DisplayTemplate {
     public let payload: String
     public let templateId: String
     public let dialogRequestId: String
+    public let token: String
+    public let playServiceId: String
+    public let duration: Duration
     
-    public init(type: String, payload: String, templateId: String, dialogRequestId: String) {
+    public init(type: String, payload: String, templateId: String, dialogRequestId: String, token: String, playServiceId: String, duration: Duration?) {
         self.type = type
         self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
+        self.token = token
+        self.playServiceId = playServiceId
+        self.duration = duration ?? .short
     }
 }
 
 public extension DisplayTemplate {
-    private var payloadDictionary: [String: Any]? {
-        guard let payloadAsData = payload.data(using: .utf8) else {
-            return nil
-        }
-        return try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any]
-    }
-    var token: String? {
-        return payloadDictionary?["token"] as? String
-    }
-    var playServiceId: String? {
-        return payloadDictionary?["playServiceId"] as? String
-    }
-    var duration: Duration? {
-        guard let durationAsString = payloadDictionary?["duration"] as? String else { return nil }
-        switch durationAsString {
-        case "SHORT":
-            return .short
-        case "MID":
-            return .mid
-        case "LONG":
-            return .long
-        case "LONGEST":
-            return .longest
-        default:
-            return nil
-        }
-    }
-}
-
-public extension DisplayTemplate {
-    enum Duration {
+    enum Duration: String {
         /// <#Description#>
-        case short
+        case short = "SHORT"
         /// <#Description#>
-        case mid
+        case mid = "MID"
         /// <#Description#>
-        case long
+        case long = "LONG"
         /// <#Description#>
-        case longest
+        case longest = "LONGEST"
     }
 }
 

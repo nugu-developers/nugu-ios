@@ -64,13 +64,12 @@ public extension DisplayAgent {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
-                let template = info.currentItem,
-                let playServiceId = template.playServiceId else { return }
+                let template = info.currentItem else { return }
             
             self.sendEvent(
                 Event(
                     typeInfo: .elementSelected(
-                        playServiceId: playServiceId,
+                        playServiceId: template.playServiceId,
                         token: token
                     )),
                 context: self.contextInfoRequestContext(),
@@ -87,8 +86,8 @@ public extension DisplayAgent {
                 let template = info.currentItem else { return }
             
             self.removeRenderedTemplate(delegate: delegate)
-            if self.hasRenderedDisplay(template: template) == false, let playServiceId = template.playServiceId {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: playServiceId)
+            if self.hasRenderedDisplay(template: template) == false {
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playServiceId)
             }
         }
     }
@@ -154,9 +153,7 @@ extension DisplayAgent: PlaySyncDelegate {
                 }
                 if rendered == false {
                     self.currentItem = nil
-                    if let playServiceId = item.playServiceId {
-                        self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: playServiceId)
-                    }
+                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playServiceId)
                 }
             case .releasing:
                 var cleared = true
@@ -169,9 +166,7 @@ extension DisplayAgent: PlaySyncDelegate {
                         }
                 }
                 if cleared {
-                    if let playServiceId = item.playServiceId {
-                        self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: playServiceId)
-                    }
+                    self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playServiceId)
                 }
             case .released:
                 if let item = self.currentItem {
@@ -201,15 +196,25 @@ private extension DisplayAgent {
                 throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
             }
             
+            guard let payloadAsData = directive.payload.data(using: .utf8),
+                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                let token = payloadDictionary["token"] as? String,
+                let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                    throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
+            }
+                        
             self.currentItem = DisplayTemplate(
                 type: directiveTypeInfo.type,
                 payload: directive.payload,
                 templateId: directive.header.messageID,
-                dialogRequestId: directive.header.dialogRequestID
+                dialogRequestId: directive.header.dialogRequestID,
+                token: token,
+                playServiceId: playServiceId,
+                duration: DisplayTemplate.Duration(rawValue: payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue)
             )
         
-            if let item = self.currentItem, let playServiceId = item.playServiceId {
-                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: playServiceId)
+            if let item = self.currentItem {
+                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playServiceId)
             }
         }
     }
