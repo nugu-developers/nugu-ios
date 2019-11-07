@@ -57,15 +57,13 @@ public class DirectiveSequencer: DirectiveSequenceable {
 extension DirectiveSequencer {
     public func add(handleDirectiveDelegate delegate: HandleDirectiveDelegate) {
         log.debug("\(delegate)")
-        // Type 중복 체크
-        delegate.handleDirectiveTypeInfos().forEach { key, _ in
-            if handleDirectiveDelegates[key] != nil {
-                log.warning("Configuration was already set \(key)")
-            }
-        }
-
         delegate.handleDirectiveTypeInfos().forEach { typeInfo in
-            handleDirectiveDelegates[typeInfo.key] = delegate
+            // Type 중복 체크
+            if handleDirectiveDelegates[typeInfo.key] != nil {
+                log.warning("Configuration was already set \(typeInfo.key)")
+            } else {
+                handleDirectiveDelegates[typeInfo.key] = delegate
+            }
         }
     }
     
