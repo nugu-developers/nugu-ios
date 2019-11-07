@@ -38,8 +38,8 @@ final class DisplayListViewCell: UITableViewCell {
         }
         
         titleLabel.text = item?.header.text
-        titleLabel.textColor = UIColor(rgbHexString: item?.header.color)
+        titleLabel.textColor = UIColor.textColor(rgbHexString: item?.header.color)
         subTitleLabel.text = item?.footer?.text
-        subTitleLabel.textColor = UIColor(rgbHexString: item?.footer?.color)
+        subTitleLabel.textColor = UIColor.textColor(rgbHexString: item?.footer?.color)
     }
 }

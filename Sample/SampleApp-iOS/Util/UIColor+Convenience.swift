@@ -39,6 +39,14 @@ extension UIColor {
         self.init(rgbHexValue: rgbHexValue)
     }
     
+    static func backgroundColor(rgbHexString: String?) -> UIColor? {
+        return UIColor(rgbHexString: rgbHexString) ?? UIColor(named: "BackgroundColor")
+    }
+    
+    static func textColor(rgbHexString: String?) -> UIColor? {
+        return UIColor(rgbHexString: rgbHexString) ?? UIColor(named: "TextColor")
+    }
+    
     var hexString: String {
         var r: CGFloat = 0
         var g: CGFloat = 0

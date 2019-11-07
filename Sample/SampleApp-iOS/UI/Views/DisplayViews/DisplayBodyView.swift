@@ -34,9 +34,9 @@ final class DisplayBodyView: DisplayView {
             let displayItem = try? JSONDecoder().decode(DisplayBodyTemplate.self, from: payloadData) else { return }
             
             titleLabel.text = displayItem.title.text.text
-            titleLabel.textColor = UIColor(rgbHexString: displayItem.title.text.color)
+            titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)
 
-            backgroundColor = UIColor(rgbHexString: displayItem.background?.color)
+            backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
             
             if let logoUrl = displayItem.title.logo.sources.first?.url {
                 logoImageView.loadImage(from: logoUrl)
@@ -55,13 +55,13 @@ final class DisplayBodyView: DisplayView {
             }
             
             headerLabel.text = displayItem.content.header?.text
-            headerLabel.textColor = UIColor(rgbHexString: displayItem.content.header?.color)
+            headerLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.header?.color)
             
             bodyLabel.text = displayItem.content.body?.text
-            bodyLabel.textColor = UIColor(rgbHexString: displayItem.content.body?.color)
+            bodyLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.body?.color)
             
             footerLabel.text = displayItem.content.footer?.text
-            footerLabel.textColor = UIColor(rgbHexString: displayItem.content.footer?.color)
+            footerLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.footer?.color)
         }
     }
     
