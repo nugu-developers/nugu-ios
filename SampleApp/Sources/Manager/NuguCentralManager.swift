@@ -33,7 +33,6 @@ final class NuguCentralManager {
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
     
     private init() {
-        client.wakeUpDetector = keyWordDetector
         client.focusManager.delegate = self
         client.authorizationManager.add(stateDelegate: self)
         client.contextManager.add(provideContextDelegate: self)
@@ -119,14 +118,14 @@ extension NuguCentralManager: ContextInfoDelegate {
         case KeyWord.aria.rawValue:
             if let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
                 let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") {
-                keyWordDetector.netFile = netFile
-                keyWordDetector.searchFile = searchFile
+                client.wakeUpDetector?.netFile = netFile
+                client.wakeUpDetector?.searchFile = searchFile
             }
         case KeyWord.tinkerbell.rawValue:
             if let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
                 let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") {
-                keyWordDetector.netFile = netFile
-                keyWordDetector.searchFile = searchFile
+                client.wakeUpDetector?.netFile = netFile
+                client.wakeUpDetector?.searchFile = searchFile
             }
         default:
             return

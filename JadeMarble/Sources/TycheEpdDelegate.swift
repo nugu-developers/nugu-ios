@@ -1,8 +1,8 @@
 //
-//  EndPointDetectorState+Tyche.swift
+//  TycheEpdDelegate.swift
 //  JadeMarble
 //
-//  Created by DCs-OfficeMBP on 16/05/2019.
+//  Created by childc on 2019/11/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,25 +20,13 @@
 
 import Foundation
 
-import NuguInterface 
+/// <#Description#>
+public protocol TycheEpdDelegate: class {
+    /// <#Description#>
+    /// - Parameter state: <#state description#>
+    func endPointDetectorStateChanged(state: TycheEpdState)
 
-extension EndPointDetectorState {
-    init(tycheValue: Int32) {
-        switch tycheValue {
-        case 0:
-            self = .listening
-        case 1, 3:
-            self = .start
-        case 2:
-            self = .end
-        case 4:
-            self = .timeout
-        case 5:
-            self = .reachToMaxLength
-        case 6:
-            self = .finish
-        default:
-            self = .unknown
-        }
-    }
+    /// <#Description#>
+    /// - Parameter speechData: <#speechData description#>
+    func endPointDetectorSpeechDataExtracted(speechData: Data)
 }

@@ -67,7 +67,7 @@ public enum KeenSenseConfiguration {
     }
 }
 
-// MARK: - KeyWord
+// MARK: - KeyWordDetector
 
 public enum KeyWord: Int, CustomStringConvertible, CaseIterable {
     case aria = 0 // ɑriɑ
@@ -81,6 +81,14 @@ public enum KeyWord: Int, CustomStringConvertible, CaseIterable {
             return "팅커벨"
         }
     }
+}
+
+/// <#Description#>
+public enum KeyWordDetectorState {
+    /// <#Description#>
+    case active
+    /// <#Description#>
+    case inactive
 }
 
 // MARK: - Stream Type

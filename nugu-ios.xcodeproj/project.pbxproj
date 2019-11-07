@@ -241,13 +241,10 @@
 		1FFFF4032375740600C9A177 /* libTycheEpdCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF3F52375740600C9A177 /* libTycheEpdCommon.a */; };
 		1FFFF4042375740600C9A177 /* libTycheEpd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF3F62375740600C9A177 /* libTycheEpd.a */; };
 		1FFFF4052375740600C9A177 /* libTycheEpdSpeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF3F72375740600C9A177 /* libTycheEpdSpeex.a */; };
-		1FFFF4062375740600C9A177 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3F92375740600C9A177 /* EndPointDetector.swift */; };
-		1FFFF4072375740600C9A177 /* EndPointDetectorState+Tyche.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3FA2375740600C9A177 /* EndPointDetectorState+Tyche.swift */; };
 		1FFFF4092375740600C9A177 /* JadeMarble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3FC2375740600C9A177 /* JadeMarble.swift */; };
 		1FFFF41B23757DF800C9A177 /* KeenSense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF41423757DF800C9A177 /* KeenSense.swift */; };
 		1FFFF41C23757DF800C9A177 /* SpeexEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF41623757DF800C9A177 /* SpeexEncoder.swift */; };
 		1FFFF41D23757DF800C9A177 /* DetectedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF41823757DF800C9A177 /* DetectedData.swift */; };
-		1FFFF41E23757DF800C9A177 /* KeyWordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF41923757DF800C9A177 /* KeyWordDetector.swift */; };
 		1FFFF41F23757DF800C9A177 /* ShiftingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF41A23757DF800C9A177 /* ShiftingData.swift */; };
 		1FFFF42B23757E0000C9A177 /* libTycheWakeupSpeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF42123757E0000C9A177 /* libTycheWakeupSpeex.a */; };
 		1FFFF42C23757E0000C9A177 /* libSpeexApi.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF42323757E0000C9A177 /* libSpeexApi.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -331,6 +328,14 @@
 		1FFFF51A237674DF00C9A177 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
 		1FFFF51B237674DF00C9A177 /* NuguUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF525237676BE00C9A177 /* NuguTests.swift */; };
+		7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */; };
+		7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD80237A77D800FCD6E9 /* BoundStreams.swift */; };
+		7330CD84237A77D800FCD6E9 /* KeyWordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */; };
+		7330CD88237A77F900FCD6E9 /* TycheEpdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */; };
+		7330CD89237A77F900FCD6E9 /* TycheEpdState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */; };
+		7330CD8A237A77F900FCD6E9 /* TycheEpd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD87237A77F900FCD6E9 /* TycheEpd.swift */; };
+		7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */; };
+		7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKwd.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -733,14 +738,11 @@
 		1FFFF3F52375740600C9A177 /* libTycheEpdCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTycheEpdCommon.a; sourceTree = "<group>"; };
 		1FFFF3F62375740600C9A177 /* libTycheEpd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTycheEpd.a; sourceTree = "<group>"; };
 		1FFFF3F72375740600C9A177 /* libTycheEpdSpeex.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTycheEpdSpeex.a; sourceTree = "<group>"; };
-		1FFFF3F92375740600C9A177 /* EndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetector.swift; sourceTree = "<group>"; };
-		1FFFF3FA2375740600C9A177 /* EndPointDetectorState+Tyche.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EndPointDetectorState+Tyche.swift"; sourceTree = "<group>"; };
 		1FFFF3FC2375740600C9A177 /* JadeMarble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JadeMarble.swift; sourceTree = "<group>"; };
 		1FFFF41123757C9600C9A177 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		1FFFF41423757DF800C9A177 /* KeenSense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeenSense.swift; sourceTree = "<group>"; };
 		1FFFF41623757DF800C9A177 /* SpeexEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexEncoder.swift; sourceTree = "<group>"; };
 		1FFFF41823757DF800C9A177 /* DetectedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectedData.swift; sourceTree = "<group>"; };
-		1FFFF41923757DF800C9A177 /* KeyWordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordDetector.swift; sourceTree = "<group>"; };
 		1FFFF41A23757DF800C9A177 /* ShiftingData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShiftingData.swift; sourceTree = "<group>"; };
 		1FFFF42123757E0000C9A177 /* libTycheWakeupSpeex.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTycheWakeupSpeex.a; sourceTree = "<group>"; };
 		1FFFF42323757E0000C9A177 /* libSpeexApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libSpeexApi.h; sourceTree = "<group>"; };
@@ -834,6 +836,14 @@
 		3D9C42DB22745DB0000A6585 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		3D9C43012274611B000A6585 /* nugu-ios-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nugu-ios-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D9C431122746198000A6585 /* nugu-ios-macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nugu-ios-macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetector.swift; sourceTree = "<group>"; };
+		7330CD80237A77D800FCD6E9 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
+		7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordDetector.swift; sourceTree = "<group>"; };
+		7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpdDelegate.swift; sourceTree = "<group>"; };
+		7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpdState.swift; sourceTree = "<group>"; };
+		7330CD87237A77F900FCD6E9 /* TycheEpd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpd.swift; sourceTree = "<group>"; };
+		7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwdDelegate.swift; sourceTree = "<group>"; };
+		7330CD8C237A784500FCD6E9 /* TycheKwd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwd.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1725,6 +1735,9 @@
 		1FFFF3D72375735E00C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7330CD80237A77D800FCD6E9 /* BoundStreams.swift */,
+				7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */,
+				7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */,
 				1FFFF3D82375735E00C9A177 /* NuguClient+Coordinator.swift */,
 				1FFFF3D92375735E00C9A177 /* NuguClient.swift */,
 				1FFFF3DA2375735E00C9A177 /* MediaPlayerFactory.swift */,
@@ -1761,8 +1774,9 @@
 		1FFFF3F82375740600C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3F92375740600C9A177 /* EndPointDetector.swift */,
-				1FFFF3FA2375740600C9A177 /* EndPointDetectorState+Tyche.swift */,
+				7330CD87237A77F900FCD6E9 /* TycheEpd.swift */,
+				7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */,
+				7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */,
 				1FFFF3FC2375740600C9A177 /* JadeMarble.swift */,
 			);
 			path = Sources;
@@ -1789,8 +1803,9 @@
 		1FFFF41723757DF800C9A177 /* KeyWordDetector */ = {
 			isa = PBXGroup;
 			children = (
+				7330CD8C237A784500FCD6E9 /* TycheKwd.swift */,
+				7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */,
 				1FFFF41823757DF800C9A177 /* DetectedData.swift */,
-				1FFFF41923757DF800C9A177 /* KeyWordDetector.swift */,
 				1FFFF41A23757DF800C9A177 /* ShiftingData.swift */,
 			);
 			path = KeyWordDetector;
@@ -2884,7 +2899,10 @@
 				1FFFF3DD2375735E00C9A177 /* NuguClient+Coordinator.swift in Sources */,
 				1FFFF3DF2375735E00C9A177 /* MediaPlayerFactory.swift in Sources */,
 				1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */,
+				7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */,
 				1FFFF3E02375735E00C9A177 /* FocusChannelConfiguration.swift in Sources */,
+				7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */,
+				7330CD84237A77D800FCD6E9 /* KeyWordDetector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2919,9 +2937,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF4072375740600C9A177 /* EndPointDetectorState+Tyche.swift in Sources */,
+				7330CD89237A77F900FCD6E9 /* TycheEpdState.swift in Sources */,
 				1FFFF4092375740600C9A177 /* JadeMarble.swift in Sources */,
-				1FFFF4062375740600C9A177 /* EndPointDetector.swift in Sources */,
+				7330CD88237A77F900FCD6E9 /* TycheEpdDelegate.swift in Sources */,
+				7330CD8A237A77F900FCD6E9 /* TycheEpd.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2931,9 +2950,10 @@
 			files = (
 				1FFFF41D23757DF800C9A177 /* DetectedData.swift in Sources */,
 				1FFFF41C23757DF800C9A177 /* SpeexEncoder.swift in Sources */,
+				7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */,
 				1FFFF41B23757DF800C9A177 /* KeenSense.swift in Sources */,
+				7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */,
 				1FFFF41F23757DF800C9A177 /* ShiftingData.swift in Sources */,
-				1FFFF41E23757DF800C9A177 /* KeyWordDetector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

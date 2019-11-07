@@ -307,7 +307,7 @@ extension ASRAgent: EndPointDetectorDelegate {
         }
     }
     
-    public func endPointDetectorStateChanged(state: EndPointDetectorState) {
+    public func endPointDetectorStateChanged(_ state: EndPointDetectorState) {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             switch self.asrState {
