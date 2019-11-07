@@ -78,15 +78,4 @@ extension AuthorizationManager: SystemAgentDelegate {
             self?.authorizationState = .error(.authorizationFailed)
         }
     }
-    
-    public func systemAgentDidReceiveRevoke(reason: SystemRevokeReason) {
-        authorizationDispatchQueue.async { [weak self] in
-            switch reason {
-            case .revokedDevice:
-                self?.authorizationState = .error(.revokedDevice)
-            case .unknown:
-                self?.authorizationState = .error(.unknown)
-            }
-        }
-    }
 }
