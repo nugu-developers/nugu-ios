@@ -23,7 +23,6 @@ import Foundation
 public enum AuthorizationError: Error {
     case unknown
     case authorizationFailed
-    case revokedDevice
 }
 
 // MARK: - LocalizedError
@@ -35,8 +34,6 @@ extension AuthorizationError: LocalizedError {
             return "Unknown authrozation error"
         case .authorizationFailed:
             return "Authorize failed"
-        case .revokedDevice:
-            return "Revoked device"
         }
     }
 }

@@ -167,15 +167,6 @@ extension NuguCentralManager: AuthorizationStateDelegate {
             case .authorizationFailed:
                 // TODO: - refresh token logic
                 break
-            case .revokedDevice:
-                DispatchQueue.main.async {
-                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                        let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
-                    NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                    NuguCentralManager.shared.disable()
-                    UserDefaults.Standard.clear()
-                    rootNavigationViewController.popToRootViewController(animated: true)
-                }
             default: break
             }
         default: break

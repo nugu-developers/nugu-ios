@@ -66,8 +66,6 @@ extension SystemAgent: HandleDirectiveDelegate {
             case .noDirectives:
                 // do nothing
                 return .success(())
-            case .revoke:
-                return revoke(directive: directive)
             }
         })
         
@@ -165,21 +163,6 @@ private extension SystemAgent {
                     }
                 default:
                     break
-                }
-            }
-        }
-    }
-    
-    func revoke(directive: DirectiveProtocol) -> Result<Void, Error> {
-        return Result { [weak self] in
-            guard let data = directive.payload.data(using: .utf8) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-            }
-            
-            let revokeItem = try JSONDecoder().decode(SystemAgentRevokeItem.self, from: data)
-            self?.systemDispatchQueue.async { [weak self] in
-                self?.delegates.notify { delegate in
-                    delegate.systemAgentDidReceiveRevoke(reason: revokeItem.reason)
                 }
             }
         }
