@@ -47,7 +47,7 @@ final public class ASRAgent: ASRAgentProtocol {
     private var focusState: FocusState = .nothing
     private var asrState: ASRState = .idle {
         didSet {
-            log.info("\(oldValue) \(asrState)")
+            log.info("From:\(oldValue) To:\(asrState)")
             guard oldValue != asrState else { return }
             
             // dispose expectingSpeechTimeout
@@ -82,8 +82,7 @@ final public class ASRAgent: ASRAgentProtocol {
     }
     private var asrResult: ASRResult = .none {
         didSet {
-            log.info("\(oldValue) \(asrResult)")
-            guard oldValue != asrResult else { return }
+            log.info("\(asrResult)")
             
             switch asrResult {
             case .none:
@@ -264,7 +263,7 @@ extension ASRAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        log.info("\(focusState) \(asrState)")
+        log.info("Focus:\(focusState) ASR:\(asrState)")
         self.focusState = focusState
         
         asrDispatchQueue.async { [weak self] in
