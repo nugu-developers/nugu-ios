@@ -40,15 +40,15 @@ final class DisplayBodyListViewCell: UITableViewCell {
         }
         
         titleLabel.text = item?.header.text
-        titleLabel.textColor = UIColor(rgbHexString: item?.header.color)
+        titleLabel.textColor = UIColor.textColor(rgbHexString: item?.header.color)
         
         item?.body?.enumerated().forEach({ (index, commonText) in
             bodyLabels[index].isHidden = false
             bodyLabels[index].text = commonText.text
-            bodyLabels[index].textColor = UIColor(rgbHexString: commonText.color)
+            bodyLabels[index].textColor = UIColor.textColor(rgbHexString: commonText.color)
         })
         
         footerLabel.text = item?.footer?.text
-        footerLabel.textColor = UIColor(rgbHexString: item?.footer?.color)
+        footerLabel.textColor = UIColor.textColor(rgbHexString: item?.footer?.color)
     }
 }

@@ -30,8 +30,8 @@ final class DisplayListView: DisplayView {
                 let displayItem = try? JSONDecoder().decode(DisplayListTemplate.self, from: payloadData) else { return }
             
             titleLabel.text = displayItem.title.text.text
-            titleLabel.textColor = UIColor(rgbHexString: displayItem.title.text.color)
-            backgroundColor = UIColor(rgbHexString: displayItem.background?.color)
+            titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)
+            backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
             if let logoUrl = displayItem.title.logo.sources.first?.url {
                 logoImageView.loadImage(from: logoUrl)
                 logoImageView.isHidden = false
@@ -51,6 +51,7 @@ final class DisplayListView: DisplayView {
         view.frame = bounds
         addSubview(view)
         addBorderToTitleContainerView()
+        tableView.backgroundColor = UIColor(named: "BackgroundColor")
         tableView.register(UINib(nibName: "DisplayListViewCell", bundle: nil), forCellReuseIdentifier: "DisplayListViewCell")
     }
 }
