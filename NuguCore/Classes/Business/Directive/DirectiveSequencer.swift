@@ -55,31 +55,20 @@ public class DirectiveSequencer: DirectiveSequenceable {
 // MARK: - DirectiveSequenceable
 
 extension DirectiveSequencer {
-    public func add(handleDirectiveDelegate delegate: HandleDirectiveDelegate) throws {
+    public func add(handleDirectiveDelegate delegate: HandleDirectiveDelegate) {
         log.debug("\(delegate)")
-        // Type 중복 체크
-        let alreadySet = delegate.handleDirectiveTypeInfos().contains { key, _ -> Bool in
-            return handleDirectiveDelegates[key] != nil
-        }
-        if alreadySet {
-            throw DirectiveTypeInfoError.alreadySet
-        }
-        
         delegate.handleDirectiveTypeInfos().forEach { typeInfo in
-            handleDirectiveDelegates[typeInfo.key] = delegate
+            // Type 중복 체크
+            if handleDirectiveDelegates[typeInfo.key] != nil {
+                log.warning("Configuration was already set \(typeInfo.key)")
+            } else {
+                handleDirectiveDelegates[typeInfo.key] = delegate
+            }
         }
     }
     
-    public func remove(handleDirectiveDelegate delegate: HandleDirectiveDelegate) throws {
+    public func remove(handleDirectiveDelegate delegate: HandleDirectiveDelegate) {
         log.debug("\(delegate)")
-        // TypeInfo 일치하는지 확인
-        let notFound = delegate.handleDirectiveTypeInfos().contains { key, _ -> Bool in
-            return handleDirectiveDelegates[key] == nil
-        }
-        if notFound {
-            throw DirectiveTypeInfoError.notFound
-        }
-        
         delegate.handleDirectiveTypeInfos().forEach { typeInfo in
             handleDirectiveDelegates.removeValue(forKey: typeInfo.key)
         }

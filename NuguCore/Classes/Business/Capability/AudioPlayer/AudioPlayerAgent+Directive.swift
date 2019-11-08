@@ -33,14 +33,16 @@ extension AudioPlayerAgent {
 // MARK: - DirectiveTypeInforable
 
 extension AudioPlayerAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var type: String {
+    var namespace: String { "AudioPlayer" }
+    
+    var name: String {
         switch self {
-        case .play: return "AudioPlayer.Play"
-        case .stop: return "AudioPlayer.Stop"
-        case .pause: return "AudioPlayer.Pause"
+        case .play: return "Play"
+        case .stop: return "Stop"
+        case .pause: return "Pause"
         }
     }
-
+    
     var medium: DirectiveMedium {
         switch self {
         case .play: return .audio

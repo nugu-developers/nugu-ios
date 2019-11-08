@@ -57,7 +57,7 @@ extension SystemAgent: HandleDirectiveDelegate {
             return directiveTypeInfo
         }).flatMap ({ (typeInfo) -> Result<Void, Error> in
             switch typeInfo {
-            case .handOffConnection:
+            case .handoffConnection:
                 return handOffConnection(directive: directive)
             case .updateState:
                 return updateState()

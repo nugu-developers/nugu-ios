@@ -32,10 +32,12 @@ extension TTSAgent {
 // MARK: - DirectiveTypeInforable
 
 extension TTSAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var type: String {
+    var namespace: String { "TTS" }
+    
+    var name: String {
         switch self {
-        case .speak: return "TTS.Speak"
-        case .stop: return "TTS.Stop"
+        case .speak: return "Speak"
+        case .stop: return "Stop"
         }
     }
 

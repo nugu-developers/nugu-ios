@@ -44,22 +44,24 @@ extension DisplayAgent {
 // MARK: - DirectiveTypeInforable
 
 extension DisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var type: String {
+    var namespace: String { "Display" }
+    
+    var name: String {
         switch self {
-        case .fullText1: return "Display.FullText1"
-        case .fullText2: return "Display.FullText2"
-        case .imageText1: return "Display.ImageText1"
-        case .imageText2: return "Display.ImageText2"
-        case .imageText3: return "Display.ImageText3"
-        case .imageText4: return "Display.ImageText4"
-        case .textList1: return "Display.TextList1"
-        case .textList2: return "Display.TextList2"
-        case .textList3: return "Display.TextList3"
-        case .textList4: return "Display.TextList4"
-        case .imageList1: return "Display.ImageList1"
-        case .imageList2: return "Display.ImageList2"
-        case .imageList3: return "Display.ImageList3"
-        case .customTemplate: return "Display.CustomTemplate"
+        case .fullText1: return "FullText1"
+        case .fullText2: return "FullText2"
+        case .imageText1: return "ImageText1"
+        case .imageText2: return "ImageText2"
+        case .imageText3: return "ImageText3"
+        case .imageText4: return "ImageText4"
+        case .textList1: return "TextList1"
+        case .textList2: return "TextList2"
+        case .textList3: return "TextList3"
+        case .textList4: return "TextList4"
+        case .imageList1: return "ImageList1"
+        case .imageList2: return "ImageList2"
+        case .imageList3: return "ImageList3"
+        case .customTemplate: return "CustomTemplate"
         }
     }
     

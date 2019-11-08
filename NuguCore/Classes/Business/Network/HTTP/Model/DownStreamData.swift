@@ -89,7 +89,5 @@ public struct DownStreamData {
 }
 
 extension DownStreamData.Header: MessageHeaderProtocol {
-    var type: String {
-        return "\(namespace).\(name)"
-    }
+    var type: String { "\(namespace).\(name)" }
 }

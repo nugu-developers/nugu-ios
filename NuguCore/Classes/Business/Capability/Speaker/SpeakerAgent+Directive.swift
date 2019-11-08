@@ -31,9 +31,11 @@ extension SpeakerAgent {
 // MARK: - DirectiveTypeInforable
 
 extension SpeakerAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var type: String {
+    var namespace: String { "Speaker" }
+    
+    var name: String {
         switch self {
-        case .setMute: return "Speaker.SetMute"
+        case .setMute: return "SetMute"
         }
     }
     

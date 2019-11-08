@@ -20,17 +20,25 @@
 
 import Foundation
 
-/// [Type: DirectiveTypeInforable]
+/// [String: DirectiveTypeInforable]
 public typealias DirectiveTypeInfos = [String: DirectiveTypeInforable]
 
 /// <#Description#>
 public protocol DirectiveTypeInforable {
+    /// <#Description#>
+    var namespace: String { get }
+    /// <#Description#>
+    var name: String { get }
     /// <#Description#>
     var type: String { get }
     /// <#Description#>
     var medium: DirectiveMedium { get }
     /// <#Description#>
     var isBlocking: Bool { get }
+}
+
+public extension DirectiveTypeInforable {
+    var type: String { "\(namespace).\(name)" }
 }
 
 /// <#Description#>
