@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguCore'
-  s.version = '0.4.0'
+  s.version = '0.4.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu'
   s.description = <<-DESC
@@ -16,8 +16,8 @@ Nugu framework for AI Service
 
   s.swift_version = '5.1'
 
-  s.source_files = 'NuguCore/Classes/**/*', 'NuguCore/Libraries/**/*.{h,m}'
-  s.public_header_files = 'NuguCore/Libraries/**/*.h'
+  s.source_files = 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/**/*.{h,m}'
+  s.public_header_files = 'NuguCore/Libraries/**/*.h', 'NuguCore/Sources-ObjC/**/*.h'
   s.vendored_libraries = 'NuguCore/Libraries/**/*.a'
   s.preserve_paths = 'NuguCore/Libraries/**'
   s.libraries = 'c++'

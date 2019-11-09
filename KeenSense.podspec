@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'KeenSense'
-  s.version = '0.4.0'
+  s.version = '0.4.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Key Word Detector for NUGU'
   s.homepage = 'https://github.com/nugu-developers/nugu-ios'
@@ -12,15 +12,15 @@ Pod::Spec.new do |s|
 
   s.swift_version = '5.0'
 
-  s.source_files = 'KeenSense/Classes/**/*.swift', 'KeenSense/Libraries/include/*.h'
+  s.source_files = 'KeenSense/Sources/**/*.swift', 'KeenSense/Libraries/include/*.h'
   s.public_header_files = 'KeenSense/Libraries/include/*.h'
   s.vendored_libraries = 'KeenSense/Libraries/libTycheWakeupCommon.a', 'KeenSense/Libraries/libTycheWakeup.a', 'KeenSense/Libraries/libTycheWakeupSpeex.a'
   s.preserve_paths = 'KeenSense/Libraries/**'
   s.libraries = 'c++'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/KeenSense/KeenSense/Libraries/**'}
 
-  s.dependency 'NattyLog'
-  s.dependency 'RxSwift'
-  s.dependency 'NuguInterface'
+  s.dependency 'NattyLog', '~> 1'
+  s.dependency 'RxSwift', '~> 5'
+  s.dependency 'NuguInterface', '~> 0'
   
 end

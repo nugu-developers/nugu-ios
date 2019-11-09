@@ -1,0 +1,7 @@
+# nugu-ios document generator jazzy settings
+
+copyright: Copyright 2019 SK Telecom Co., Ltd.
+author: yHoonyK
+xcodebuild_arguments: [-target, nugu-ios-iOS]
+clean: true
+output: ./Documentation
