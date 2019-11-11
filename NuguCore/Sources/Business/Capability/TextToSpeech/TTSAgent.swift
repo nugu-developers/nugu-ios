@@ -338,7 +338,7 @@ private extension TTSAgent {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
-            let result = Result<Void, Error> (catching: {
+            let result = Result<Void, Error>(catching: {
                 guard let data = directive.payload.data(using: .utf8) else {
                     throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
                 }

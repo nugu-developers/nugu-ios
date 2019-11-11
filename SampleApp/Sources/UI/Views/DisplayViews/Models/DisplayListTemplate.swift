@@ -36,4 +36,3 @@ struct DisplayListTemplate: Decodable {
         let footer: DisplayCommonTemplate.Common.Text?
     }
 }
-

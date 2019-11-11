@@ -236,7 +236,7 @@ extension ASRAgent: HandleDirectiveDelegate {
         _ directive: DirectiveProtocol,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
-        let result = Result<DirectiveTypeInfo, Error> (catching: {
+        let result = Result<DirectiveTypeInfo, Error>(catching: {
             guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Unknown directive")
             }

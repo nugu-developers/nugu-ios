@@ -66,7 +66,9 @@ final class DisplayBodyView: DisplayView {
     }
     
     override func loadFromXib() {
+        // swiftlint:disable force_cast
         let view = Bundle.main.loadNibNamed("DisplayBodyView", owner: self)?.first as! UIView
+        // swiftlint:enable force_cast
         view.frame = bounds
         addSubview(view)
         addBorderToTitleContainerView()

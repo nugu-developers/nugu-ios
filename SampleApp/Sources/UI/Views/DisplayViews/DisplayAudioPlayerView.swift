@@ -94,7 +94,9 @@ final class DisplayAudioPlayerView: UIView {
     }
     
     private func loadFromXib() {
+        // swiftlint:disable force_cast
         let view = Bundle.main.loadNibNamed("DisplayAudioPlayerView", owner: self)?.first as! UIView
+        // swiftlint:enable force_cast
         view.frame = bounds
         addSubview(view)
         albumImageView.layer.cornerRadius = 4.0
@@ -108,7 +110,7 @@ final class DisplayAudioPlayerView: UIView {
     }
 }
 
-//MARK: - IBActions
+// MARK: - IBActions
 
 private extension DisplayAudioPlayerView {
     @IBAction private func previousButtonDidClick(_ button: UIButton) {
@@ -132,7 +134,7 @@ private extension DisplayAudioPlayerView {
     }
 }
 
-//MARK: - Progress Setting
+// MARK: - Progress Setting
 
 private extension DisplayAudioPlayerView {
     func setAudioPlayerProgress() {
@@ -169,4 +171,3 @@ private extension DisplayAudioPlayerView {
         audioProgressTimer = nil
     }
 }
-

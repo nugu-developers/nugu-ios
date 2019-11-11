@@ -179,7 +179,6 @@ private extension MainViewController {
         performSegue(withIdentifier: "mainToLoginResult", sender: url)
     }
     
-    
     /// Refresh Nugu status
     /// Connect or disconnect Nugu service by circumstance
     /// Hide Nugu button when Nugu service is intended not to use or network issue has occured
@@ -238,8 +237,8 @@ private extension MainViewController {
 private extension MainViewController {
     func setGradientBackground() {
         let gradientLayer = CAGradientLayer()
-        gradientLayer.startPoint = CGPoint(x:1.0, y:0.0)
-        gradientLayer.endPoint = CGPoint(x:1.0, y:1.0)
+        gradientLayer.startPoint = CGPoint(x: 1.0, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
         gradientLayer.colors = [UIColor(rgbHexValue: 0x798492).cgColor, UIColor(rgbHexValue: 0xbac7d7).cgColor]
         gradientLayer.locations =  [0, 1.0]
         gradientLayer.frame = view.frame
@@ -450,7 +449,7 @@ extension MainViewController: DialogStateDelegate {
                 self?.dismissVoiceChrome()
             })
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0,   execute: voiceChromeDismissWorkItem)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking(let expectingSpeech):
             refreshWakeUpDetector()
             DispatchQueue.main.async { [weak self] in

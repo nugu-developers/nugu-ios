@@ -69,7 +69,7 @@ extension NuguCentralManager {
     func startRecognize(completion: ((Result<Void, Error>) -> Void)? = nil) {
         AVAudioSession.sharedInstance().requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
-            let result = Result<Void, Error> (catching: {
+            let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
                 self.client.asrAgent?.startRecognition()
             })
@@ -102,7 +102,7 @@ extension NuguCentralManager: ContextInfoDelegate {
     func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
         AVAudioSession.sharedInstance().requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
-            let result = Result<Void, Error> (catching: {
+            let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
                 try self.client.wakeUpDetector?.start()
             })

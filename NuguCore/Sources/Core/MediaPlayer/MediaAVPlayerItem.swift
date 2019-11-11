@@ -68,10 +68,14 @@ final class MediaAVPlayerItem: AVPlayerItem {
         log.debug("")
     }
     
-    override func observeValue(forKeyPath keyPath: String?,
-                               of object: Any?,
-                               change: [NSKeyValueChangeKey: Any]?,
-                               context: UnsafeMutableRawPointer?) {
+    // AVPlayer has a bug when using the new block based KVO API
+    // swiftlint:disable block_based_kvo
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
         guard context == &MediaAVPlayerItem.observerContext else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
@@ -132,6 +136,7 @@ final class MediaAVPlayerItem: AVPlayerItem {
             break
         }
     }
+    // swiftlint:enable block_based_kvo
 }
 
 // MARK: - KVO Observers

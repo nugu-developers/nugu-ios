@@ -64,7 +64,9 @@ final public class NuguVoiceChrome: UIView {
     }
     
     private func loadFromXib() {
+        // swiftlint:disable force_cast
         let view = Bundle(for: NuguVoiceChrome.self).loadNibNamed("NuguVoiceChrome", owner: self)?.first as! UIView
+        // swiftlint:enable force_cast
         view.frame = bounds
         addSubview(view)
         backgroundView.layer.cornerRadius = 12.0
@@ -92,19 +94,17 @@ public extension NuguVoiceChrome {
         case speakingError
         
         var animationFileName: String {
-            get {
-                switch self {
-                case .listeningPassive:
-                    return "LP"
-                case .listeningActive:
-                    return "LA"
-                case .processing:
-                    return "PC_02"
-                case .speaking:
-                    return "SP_02"
-                case .speakingError:
-                    return "ESP_02"
-                }
+            switch self {
+            case .listeningPassive:
+                return "LP"
+            case .listeningActive:
+                return "LA"
+            case .processing:
+                return "PC_02"
+            case .speaking:
+                return "SP_02"
+            case .speakingError:
+                return "ESP_02"
             }
         }
     }
@@ -142,14 +142,18 @@ public extension NuguVoiceChrome {
     
     func maximize() {
         guard topContainerView.isHidden == true else { return }
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            guard let self = self else { return }
-            self.topContainerView.isHidden = false
-            self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y - self.topContainerView.frame.size.height, width: self.frame.size.width, height: self.frame.size.height + self.topContainerView.frame.size.height)
-            self.stackView.layoutIfNeeded()
-        }) { [weak self] _ in
-            self?.topContainerView.alpha = 1
-        }
+        
+        UIView.animate(
+            withDuration: 0.3,
+            animations: { [weak self] in
+                guard let self = self else { return }
+                self.topContainerView.isHidden = false
+                self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y - self.topContainerView.frame.size.height, width: self.frame.size.width, height: self.frame.size.height + self.topContainerView.frame.size.height)
+                self.stackView.layoutIfNeeded()
+            },
+            completion: { [weak self] _ in
+                self?.topContainerView.alpha = 1
+        })
     }
 }
 

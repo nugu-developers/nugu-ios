@@ -76,7 +76,7 @@ extension SpeakerAgent: HandleDirectiveDelegate {
             }
             
             return directiveTypeInfo
-        }).flatMap ({ (typeInfo) -> Result<Void, Error> in
+        }).flatMap({ (typeInfo) -> Result<Void, Error> in
             switch typeInfo {
             case .setMute:
                 return setMute(directive: directive)

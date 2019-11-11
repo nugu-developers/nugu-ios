@@ -58,7 +58,7 @@ extension NuguToastManager {
         toastLabel.text = toastMessage
         toastLabel.frame = CGRect(origin: CGPoint(x: ToastConst.textHorizontalPadding,
                                                   y: ToastConst.textVerticalPadding),
-                                  size:toastLabel.intrinsicContentSize)
+                                  size: toastLabel.intrinsicContentSize)
         
         toastView.addSubview(toastLabel)
         toastView.backgroundColor = ToastConst.backgroundColor
@@ -73,24 +73,26 @@ extension NuguToastManager {
         toastView.alpha = 0
         
         hideAnimationWorkItem = DispatchWorkItem {
-            UIView.animate(withDuration: ToastConst.animationDuration, animations: {
-                [weak self] in
-                self?.toastView.alpha = 0
-                }, completion: {
-                    [weak self] _ in
+            UIView.animate(
+                withDuration: ToastConst.animationDuration,
+                animations: { [weak self] in
+                    self?.toastView.alpha = 0
+                },
+                completion: { [weak self] _ in
                     self?.toastLabel.removeFromSuperview()
                     self?.toastView.removeFromSuperview()
             })
         }
         
-        UIView.animate(withDuration: ToastConst.animationDuration, animations: {
-            [weak self] in
-            guard let toastView = self?.toastView else { return }
-            toastView.alpha = 1
-            window.addSubview(toastView)
-            window.bringSubviewToFront(toastView)
-            }, completion: {
-                [weak self] _ in
+        UIView.animate(
+            withDuration: ToastConst.animationDuration,
+            animations: { [weak self] in
+                guard let toastView = self?.toastView else { return }
+                toastView.alpha = 1
+                window.addSubview(toastView)
+                window.bringSubviewToFront(toastView)
+            },
+            completion: { [weak self] _ in
                 if let hideAnimationWorkItem = self?.hideAnimationWorkItem {
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ToastConst.showingDuration,
                                                   execute: hideAnimationWorkItem)
@@ -102,11 +104,13 @@ extension NuguToastManager {
         if let hideAnimationWorkItem = self.hideAnimationWorkItem {
             hideAnimationWorkItem.cancel()
             self.hideAnimationWorkItem = nil
-            UIView.animate(withDuration: ToastConst.animationDuration, animations: {
-                [weak self] in
-                self?.toastView.alpha = 0
-                }, completion: {
-                    [weak self] _ in
+            UIView.animate(
+                withDuration: ToastConst.animationDuration,
+                animations: {
+                    [weak self] in
+                    self?.toastView.alpha = 0
+                },
+                completion: { [weak self] _ in
                     self?.toastLabel.removeFromSuperview()
                     self?.toastView.removeFromSuperview()
             })

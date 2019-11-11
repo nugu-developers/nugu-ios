@@ -137,7 +137,6 @@ private extension NuguDisplayPlayerController {
             nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
         }
         
-        
         // Set MPMediaItemArtwork if imageUrl exists
         if let imageUrl = imageUrl, let artWorkUrl = URL(string: imageUrl) {
             ImageDataLoader.shared.load(imageUrl: artWorkUrl) { (result) in
@@ -246,7 +245,6 @@ private extension NuguDisplayPlayerController {
         seekCommandTarget = nil
     }
 }
-
 
 // MARK: - DisplayPlayerAgentDelegate
 

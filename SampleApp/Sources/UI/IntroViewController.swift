@@ -132,7 +132,7 @@ private extension IntroViewController {
                 DispatchQueue.main.async { [weak self] in
                     self?.performSegue(withIdentifier: "introToMain", sender: nil)
                 }
-            case .failure(_):
+            case .failure:
                 // TODO: - present popup when only invalid refreshToken issue
                 self?.presentLoginType1ErrorPopup()
             }
@@ -154,7 +154,6 @@ private extension IntroViewController {
                 }
             case .failure(let error):
                 log.info("failed to login with error: \(error)")
-                break
             }
         }
     }
@@ -236,4 +235,3 @@ private extension IntroViewController {
         refreshView()
     }
 }
-

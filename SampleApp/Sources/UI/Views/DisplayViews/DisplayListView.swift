@@ -47,7 +47,9 @@ final class DisplayListView: DisplayView {
     private var templateListItems: [DisplayListTemplate.Item]?
 
     override func loadFromXib() {
+        // swiftlint:disable force_cast
         let view = Bundle.main.loadNibNamed("DisplayListView", owner: self)?.first as! UIView
+        // swiftlint:enable force_cast
         view.frame = bounds
         addSubview(view)
         addBorderToTitleContainerView()
@@ -62,7 +64,9 @@ extension DisplayListView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // swiftlint:disable force_cast
         let displayListViewCell = tableView.dequeueReusableCell(withIdentifier: "DisplayListViewCell") as! DisplayListViewCell
+        // swiftlint:enable force_cast
         displayListViewCell.configure(index: String(indexPath.row + 1), item: templateListItems?[indexPath.row])
         return displayListViewCell
     }
@@ -77,4 +81,3 @@ extension DisplayListView: UITableViewDelegate {
         onItemSelect?(templateListItems?[indexPath.row].token)
     }
 }
-

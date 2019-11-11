@@ -39,8 +39,8 @@ final public class NuguButton: UIButton {
     // MARK: AnimationKey
     
     private enum AnimationKey: String {
-        case gradation = "gradation"
-        case flip = "flip"
+        case gradation
+        case flip
     }
     
     // MARK: Private Properties
@@ -115,7 +115,9 @@ public extension NuguButton {
 
 extension NuguButton {
     private func loadFromXib() {
+        // swiftlint:disable force_cast
         let view = Bundle(for: NuguButton.self).loadNibNamed("NuguButton", owner: self)?.first as! UIView
+        // swiftlint:enable force_cast
         view.frame = bounds
         addSubview(view)
         
@@ -146,8 +148,8 @@ extension NuguButton {
         gradientLayer.frame = containerView.bounds
         gradientLayer.cornerRadius = containerView.layer.cornerRadius
         
-        gradientLayer.startPoint = CGPoint(x:0.5, y:0.0)
-        gradientLayer.endPoint = CGPoint(x:0.5, y:1.0)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         gradientLayer.colors = isEnabled ? [startColor.cgColor, endColor.cgColor] : [disabledColor.cgColor, disabledColor.cgColor]
         gradientLayer.locations =  [0, 1.0]
         
