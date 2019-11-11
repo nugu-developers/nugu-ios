@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'JadeMarble'
-  s.version = '0.4.0'
+  s.version = '0.4.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'End Point Detector for NUGU ASR'
   s.homepage = 'https://github.com/nugu-developers/nugu-ios'
@@ -12,14 +12,14 @@ Pod::Spec.new do |s|
 
   s.swift_version = '5.0'
 
-  s.source_files = 'JadeMarble/Classes/**/*.swift', 'JadeMarble/Libraries/**/*.h'
+  s.source_files = 'JadeMarble/Sources/**/*.swift', 'JadeMarble/Libraries/**/*.h'
   s.public_header_files = 'JadeMarble/Libraries/include/*.h'
   s.vendored_libraries = 'JadeMarble/Libraries/libTycheEpdCommon.a', 'JadeMarble/Libraries/libTycheEpd.a', 'JadeMarble/Libraries/libTycheEpdSpeex.a'
   s.preserve_paths = 'JadeMarble/Libraries/**'
   s.libraries = 'c++'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/JadeMarble/JadeMarble/Libraries/**' }
 
-  s.dependency 'NattyLog'
-  s.dependency 'NuguInterface'
+  s.dependency 'NattyLog', '~> 1'
+  s.dependency 'NuguInterface', '~> 0'
   
 end

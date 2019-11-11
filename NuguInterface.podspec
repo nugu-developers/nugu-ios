@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguInterface'
-  s.version = '0.4.0'
+  s.version = '0.4.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Interface'
   s.description = <<-DESC
@@ -16,5 +16,5 @@ This framework offers protocols for Nugu service and coordinating instances
 
   s.swift_version = '5.1'
   
-  s.source_files = 'NuguInterface/Classes/**/*'
+  s.source_files = 'NuguInterface/Sources/**/*'
 end
