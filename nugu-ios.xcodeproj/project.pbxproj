@@ -314,7 +314,6 @@
 		1FFFF505237672F100C9A177 /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4D9237672F100C9A177 /* asrStart.wav */; };
 		1FFFF506237672F100C9A177 /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DA237672F100C9A177 /* asrSuccess.wav */; };
 		1FFFF507237672F100C9A177 /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DB237672F100C9A177 /* asrFail.wav */; };
-		1FFFF508237672F100C9A177 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DC237672F100C9A177 /* GoogleService-Info.plist */; };
 		1FFFF50E237674DF00C9A177 /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
 		1FFFF50F237674DF00C9A177 /* KeenSense.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFF512237674DF00C9A177 /* NuguClientKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF00A23753F3100C9A177 /* NuguClientKit.framework */; };
@@ -476,6 +475,7 @@
 		1F1008C62376925C00D90FEE /* CODEOWNERS */ = {isa = PBXFileReference; lastKnownFileType = text; name = CODEOWNERS; path = .github/CODEOWNERS; sourceTree = "<group>"; };
 		1F1008C92376925C00D90FEE /* feature-request.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "feature-request.md"; sourceTree = "<group>"; };
 		1F1008CA2376925C00D90FEE /* bug-report.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "bug-report.md"; sourceTree = "<group>"; };
+		1F1008CD23791F5400D90FEE /* SampleApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SampleApp.entitlements; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -785,8 +785,6 @@
 		1FFFF4D9237672F100C9A177 /* asrStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrStart.wav; sourceTree = "<group>"; };
 		1FFFF4DA237672F100C9A177 /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
 		1FFFF4DB237672F100C9A177 /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
-		1FFFF4DC237672F100C9A177 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		1FFFF4DD237672F100C9A177 /* SampleApp-iOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "SampleApp-iOS.entitlements"; sourceTree = "<group>"; };
 		1FFFF50C2376748E00C9A177 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1FFFF523237676BE00C9A177 /* NuguTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NuguTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFF525237676BE00C9A177 /* NuguTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguTests.swift; sourceTree = "<group>"; };
@@ -2071,8 +2069,7 @@
 			children = (
 				1FFFF4D8237672F100C9A177 /* SoundResource */,
 				1FFFF50C2376748E00C9A177 /* Info.plist */,
-				1FFFF4DC237672F100C9A177 /* GoogleService-Info.plist */,
-				1FFFF4DD237672F100C9A177 /* SampleApp-iOS.entitlements */,
+				1F1008CD23791F5400D90FEE /* SampleApp.entitlements */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -2568,7 +2565,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF508237672F100C9A177 /* GoogleService-Info.plist in Resources */,
 				1FFFF505237672F100C9A177 /* asrStart.wav in Resources */,
 				1FFFF4E4237672F100C9A177 /* DisplayBodyView.xib in Resources */,
 				1FFFF503237672F100C9A177 /* LaunchScreen.storyboard in Resources */,
@@ -3513,9 +3509,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "SampleApp/Supporting Files/SampleApp.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QUEYTE2JMS;
 				INFOPLIST_FILE = "SampleApp/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3535,9 +3532,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "SampleApp/Supporting Files/SampleApp.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QUEYTE2JMS;
 				INFOPLIST_FILE = "SampleApp/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (

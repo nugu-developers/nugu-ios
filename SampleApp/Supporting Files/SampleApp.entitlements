@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.skt.Romaine</string>
+		<string>group.com.sktelecom.romaine</string>
 	</array>
 </dict>
 </plist>

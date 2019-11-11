@@ -38,5 +38,5 @@ struct UserDefault<T> {
 // MARK: - Custom
 
 extension UserDefaults {
-    static let romaine = UserDefaults(suiteName: "group.com.skt.Romaine")!
+    static let romaine = UserDefaults(suiteName: "group.com.sktelecom.romaine")!
 }
