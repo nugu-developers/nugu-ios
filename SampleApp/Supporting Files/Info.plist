@@ -24,7 +24,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.skt.Romaine.SampleApp-iOS</string>
+			<string>com.sktelecom.romaine.SampleApp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>nugu.public.sample</string>

@@ -3,10 +3,37 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F1008CE2379221500D90FEE /* NuguClientKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF00A23753F3100C9A177 /* NuguClientKit.framework */; };
+		1F1008CF2379221500D90FEE /* NuguClientKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF00A23753F3100C9A177 /* NuguClientKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F1008D02379221700D90FEE /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
+		1F1008D12379221700D90FEE /* KeenSense.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F1008E22379237B00D90FEE /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
+		1F1008E52379237E00D90FEE /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
+		1F1008E82379237F00D90FEE /* NuguCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFFD23753F1800C9A177 /* NuguCore.framework */; };
+		1F1008EA2379238000D90FEE /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
+		1F1008EC2379242000D90FEE /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
+		1F1008EF2379242200D90FEE /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
+		1F1008F22379247800D90FEE /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
+		1F1008F32379247800D90FEE /* JadeMarble.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F1008F62379247800D90FEE /* NuguCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFFD23753F1800C9A177 /* NuguCore.framework */; };
+		1F1008F72379247800D90FEE /* NuguCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFFD23753F1800C9A177 /* NuguCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F1008FA2379247800D90FEE /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
+		1F1008FB2379247800D90FEE /* NuguInterface.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F100902237929DC00D90FEE /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100901237929DC00D90FEE /* Lottie.framework */; };
+		1F100905237929F500D90FEE /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100901237929DC00D90FEE /* Lottie.framework */; };
+		1F100908237929FB00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
+		1F10090B23792A0000D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
+		1F10090D23792A0A00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
+		1F10091023792A1000D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
+		1F10091323792A1F00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
+		1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
+		1F10091923792A4900D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
+		1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
+		1F10091D23792A7500D90FEE /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFEFF423753EFD00C9A177 /* NuguInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFF223753EFD00C9A177 /* NuguInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -19,10 +46,6 @@
 		1FFFF1F12375486F00C9A177 /* opus_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E72375486F00C9A177 /* opus_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF1F22375486F00C9A177 /* opus_defines.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E82375486F00C9A177 /* opus_defines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF1F32375486F00C9A177 /* opus_projection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E92375486F00C9A177 /* opus_projection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF21C2375690400C9A177 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFFF21B2375690400C9A177 /* Lottie */; };
-		1FFFF21F2375695600C9A177 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFFF21E2375695600C9A177 /* RxSwift */; };
-		1FFFF2222375699400C9A177 /* NattyLog in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFFF2212375699400C9A177 /* NattyLog */; };
-		1FFFF22423756C0500C9A177 /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
 		1FFFF22923756D1700C9A177 /* libopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF1EA2375486F00C9A177 /* libopus.a */; };
 		1FFFF2A52375703000C9A177 /* MediaPlayableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22C2375703000C9A177 /* MediaPlayableType.swift */; };
 		1FFFF2A62375703000C9A177 /* MediaPlayableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */; };
@@ -210,9 +233,6 @@
 		1FFFF3DF2375735E00C9A177 /* MediaPlayerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3DA2375735E00C9A177 /* MediaPlayerFactory.swift */; };
 		1FFFF3E02375735E00C9A177 /* FocusChannelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3DB2375735E00C9A177 /* FocusChannelConfiguration.swift */; };
 		1FFFF3E12375735E00C9A177 /* NuguClient+Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3DC2375735E00C9A177 /* NuguClient+Builder.swift */; };
-		1FFFF3E22375737A00C9A177 /* NuguCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFFD23753F1800C9A177 /* NuguCore.framework */; };
-		1FFFF3E62375737A00C9A177 /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
-		1FFFF3EC2375738D00C9A177 /* NattyLog in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFFF3EB2375738D00C9A177 /* NattyLog */; };
 		1FFFF3FD2375740600C9A177 /* libSpeexApi.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF3EF2375740600C9A177 /* libSpeexApi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF3FE2375740600C9A177 /* debugLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF3F02375740600C9A177 /* debugLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF3FF2375740600C9A177 /* libdefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF3F12375740600C9A177 /* libdefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -225,8 +245,6 @@
 		1FFFF4062375740600C9A177 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3F92375740600C9A177 /* EndPointDetector.swift */; };
 		1FFFF4072375740600C9A177 /* EndPointDetectorState+Tyche.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3FA2375740600C9A177 /* EndPointDetectorState+Tyche.swift */; };
 		1FFFF4092375740600C9A177 /* JadeMarble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3FC2375740600C9A177 /* JadeMarble.swift */; };
-		1FFFF40B2375744400C9A177 /* NattyLog in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFFF40A2375744400C9A177 /* NattyLog */; };
-		1FFFF40C2375749200C9A177 /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
 		1FFFF41B23757DF800C9A177 /* KeenSense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF41423757DF800C9A177 /* KeenSense.swift */; };
 		1FFFF41C23757DF800C9A177 /* SpeexEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF41623757DF800C9A177 /* SpeexEncoder.swift */; };
 		1FFFF41D23757DF800C9A177 /* DetectedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF41823757DF800C9A177 /* DetectedData.swift */; };
@@ -241,9 +259,6 @@
 		1FFFF43123757E0000C9A177 /* libWakeupApi.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF42823757E0000C9A177 /* libWakeupApi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF43223757E0000C9A177 /* libTycheWakeup.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF42923757E0000C9A177 /* libTycheWakeup.a */; };
 		1FFFF43323757E0000C9A177 /* libTycheWakeupCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF42A23757E0000C9A177 /* libTycheWakeupCommon.a */; };
-		1FFFF43523757E9500C9A177 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFFF43423757E9500C9A177 /* RxSwift */; };
-		1FFFF43723757E9500C9A177 /* NattyLog in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFFF43623757E9500C9A177 /* NattyLog */; };
-		1FFFF43823757E9A00C9A177 /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
 		1FFFF44F23757F6600C9A177 /* Type2Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF44023757F6600C9A177 /* Type2Api.swift */; };
 		1FFFF45023757F6600C9A177 /* Type1Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF44123757F6600C9A177 /* Type1Api.swift */; };
 		1FFFF45123757F6600C9A177 /* OAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF44323757F6600C9A177 /* OAuthManager.swift */; };
@@ -271,8 +286,6 @@
 		1FFFF481237580F500C9A177 /* SP_03_final.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF470237580F500C9A177 /* SP_03_final.json */; };
 		1FFFF482237580F500C9A177 /* PC_01_start.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF472237580F500C9A177 /* PC_01_start.json */; };
 		1FFFF483237580F500C9A177 /* PC_02.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF473237580F500C9A177 /* PC_02.json */; };
-		1FFFF48523766E6700C9A177 /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
-		1FFFF4A22376722F00C9A177 /* NattyLog in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFFF4A12376722F00C9A177 /* NattyLog */; };
 		1FFFF4DF237672F100C9A177 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A5237672F100C9A177 /* SettingViewController.swift */; };
 		1FFFF4E0237672F100C9A177 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A6237672F100C9A177 /* IntroViewController.swift */; };
 		1FFFF4E1237672F100C9A177 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A7237672F100C9A177 /* MainViewController.swift */; };
@@ -314,10 +327,6 @@
 		1FFFF505237672F100C9A177 /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4D9237672F100C9A177 /* asrStart.wav */; };
 		1FFFF506237672F100C9A177 /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DA237672F100C9A177 /* asrSuccess.wav */; };
 		1FFFF507237672F100C9A177 /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DB237672F100C9A177 /* asrFail.wav */; };
-		1FFFF50E237674DF00C9A177 /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
-		1FFFF50F237674DF00C9A177 /* KeenSense.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1FFFF512237674DF00C9A177 /* NuguClientKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF00A23753F3100C9A177 /* NuguClientKit.framework */; };
-		1FFFF513237674DF00C9A177 /* NuguClientKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF00A23753F3100C9A177 /* NuguClientKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFF516237674DF00C9A177 /* NuguLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF01723753F7D00C9A177 /* NuguLoginKit.framework */; };
 		1FFFF517237674DF00C9A177 /* NuguLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF01723753F7D00C9A177 /* NuguLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFF51A237674DF00C9A177 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
@@ -326,6 +335,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1F1008F42379247800D90FEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FFFF03023753FA200C9A177;
+			remoteInfo = JadeMarble;
+		};
+		1F1008F82379247800D90FEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FFFEFFC23753F1800C9A177;
+			remoteInfo = NuguCore;
+		};
+		1F1008FC2379247800D90FEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FFFEFEF23753EFD00C9A177;
+			remoteInfo = NuguInterface;
+		};
 		1FFFF22623756C0500C9A177 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D9C428722745894000A6585 /* Project object */;
@@ -448,15 +478,29 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		1F10091E23792A7500D90FEE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1F10091D23792A7500D90FEE /* RxSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1FFFF51E237674E000C9A177 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				1F1008D12379221700D90FEE /* KeenSense.framework in Embed Frameworks */,
+				1F1008CF2379221500D90FEE /* NuguClientKit.framework in Embed Frameworks */,
+				1F1008F32379247800D90FEE /* JadeMarble.framework in Embed Frameworks */,
+				1F1008FB2379247800D90FEE /* NuguInterface.framework in Embed Frameworks */,
 				1FFFF51B237674DF00C9A177 /* NuguUIKit.framework in Embed Frameworks */,
-				1FFFF50F237674DF00C9A177 /* KeenSense.framework in Embed Frameworks */,
-				1FFFF513237674DF00C9A177 /* NuguClientKit.framework in Embed Frameworks */,
+				1F1008F72379247800D90FEE /* NuguCore.framework in Embed Frameworks */,
 				1FFFF517237674DF00C9A177 /* NuguLoginKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -476,6 +520,9 @@
 		1F1008C92376925C00D90FEE /* feature-request.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "feature-request.md"; sourceTree = "<group>"; };
 		1F1008CA2376925C00D90FEE /* bug-report.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "bug-report.md"; sourceTree = "<group>"; };
 		1F1008CD23791F5400D90FEE /* SampleApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SampleApp.entitlements; sourceTree = "<group>"; };
+		1F100901237929DC00D90FEE /* Lottie.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lottie.framework; path = Carthage/Build/iOS/Lottie.framework; sourceTree = "<group>"; };
+		1F100907237929FB00D90FEE /* NattyLog.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NattyLog.framework; path = Carthage/Build/iOS/NattyLog.framework; sourceTree = "<group>"; };
+		1F10090A23792A0000D90FEE /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -813,10 +860,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF22423756C0500C9A177 /* NuguInterface.framework in Frameworks */,
+				1F10091923792A4900D90FEE /* RxSwift.framework in Frameworks */,
 				1FFFF22923756D1700C9A177 /* libopus.a in Frameworks */,
-				1FFFF21F2375695600C9A177 /* RxSwift in Frameworks */,
-				1FFFF2222375699400C9A177 /* NattyLog in Frameworks */,
+				1F10091323792A1F00D90FEE /* NattyLog.framework in Frameworks */,
+				1F1008E22379237B00D90FEE /* NuguInterface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -824,10 +871,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF3E22375737A00C9A177 /* NuguCore.framework in Frameworks */,
-				1FFFF3EC2375738D00C9A177 /* NattyLog in Frameworks */,
-				1FFFF3E62375737A00C9A177 /* NuguInterface.framework in Frameworks */,
-				1FFFF48523766E6700C9A177 /* JadeMarble.framework in Frameworks */,
+				1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */,
+				1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */,
+				1F1008E82379237F00D90FEE /* NuguCore.framework in Frameworks */,
+				1F1008E52379237E00D90FEE /* JadeMarble.framework in Frameworks */,
+				1F1008EA2379238000D90FEE /* NuguInterface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,7 +890,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF21C2375690400C9A177 /* Lottie in Frameworks */,
+				1F100902237929DC00D90FEE /* Lottie.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -852,9 +900,9 @@
 			files = (
 				1FFFF4032375740600C9A177 /* libTycheEpdCommon.a in Frameworks */,
 				1FFFF4052375740600C9A177 /* libTycheEpdSpeex.a in Frameworks */,
-				1FFFF40B2375744400C9A177 /* NattyLog in Frameworks */,
+				1F10091023792A1000D90FEE /* NattyLog.framework in Frameworks */,
 				1FFFF4042375740600C9A177 /* libTycheEpd.a in Frameworks */,
-				1FFFF40C2375749200C9A177 /* NuguInterface.framework in Frameworks */,
+				1F1008EC2379242000D90FEE /* NuguInterface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -863,10 +911,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FFFF43323757E0000C9A177 /* libTycheWakeupCommon.a in Frameworks */,
-				1FFFF43823757E9A00C9A177 /* NuguInterface.framework in Frameworks */,
+				1F1008EF2379242200D90FEE /* NuguInterface.framework in Frameworks */,
+				1F10090D23792A0A00D90FEE /* NattyLog.framework in Frameworks */,
 				1FFFF43223757E0000C9A177 /* libTycheWakeup.a in Frameworks */,
-				1FFFF43523757E9500C9A177 /* RxSwift in Frameworks */,
-				1FFFF43723757E9500C9A177 /* NattyLog in Frameworks */,
 				1FFFF42B23757E0000C9A177 /* libTycheWakeupSpeex.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -875,11 +922,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF512237674DF00C9A177 /* NuguClientKit.framework in Frameworks */,
+				1F10090B23792A0000D90FEE /* RxSwift.framework in Frameworks */,
 				1FFFF51A237674DF00C9A177 /* NuguUIKit.framework in Frameworks */,
-				1FFFF50E237674DF00C9A177 /* KeenSense.framework in Frameworks */,
+				1F1008CE2379221500D90FEE /* NuguClientKit.framework in Frameworks */,
+				1F1008F62379247800D90FEE /* NuguCore.framework in Frameworks */,
+				1F1008FA2379247800D90FEE /* NuguInterface.framework in Frameworks */,
+				1F100908237929FB00D90FEE /* NattyLog.framework in Frameworks */,
+				1F1008D02379221700D90FEE /* KeenSense.framework in Frameworks */,
+				1F100905237929F500D90FEE /* Lottie.framework in Frameworks */,
 				1FFFF516237674DF00C9A177 /* NuguLoginKit.framework in Frameworks */,
-				1FFFF4A22376722F00C9A177 /* NattyLog in Frameworks */,
+				1F1008F22379247800D90FEE /* JadeMarble.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1033,6 +1085,9 @@
 		1FFFF22323756C0500C9A177 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F10090A23792A0000D90FEE /* RxSwift.framework */,
+				1F100907237929FB00D90FEE /* NattyLog.framework */,
+				1F100901237929DC00D90FEE /* Lottie.framework */,
 				1FFFF41123757C9600C9A177 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -2261,8 +2316,6 @@
 			);
 			name = NuguCore;
 			packageProductDependencies = (
-				1FFFF21E2375695600C9A177 /* RxSwift */,
-				1FFFF2212375699400C9A177 /* NattyLog */,
 			);
 			productName = NuguCore;
 			productReference = 1FFFEFFD23753F1800C9A177 /* NuguCore.framework */;
@@ -2277,6 +2330,7 @@
 				1FFFF00723753F3100C9A177 /* Frameworks */,
 				1FFFF00823753F3100C9A177 /* Resources */,
 				1F1008CB2379025600D90FEE /* ShellScript */,
+				1F10091E23792A7500D90FEE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2287,7 +2341,6 @@
 			);
 			name = NuguClientKit;
 			packageProductDependencies = (
-				1FFFF3EB2375738D00C9A177 /* NattyLog */,
 			);
 			productName = NuguClientKit;
 			productReference = 1FFFF00A23753F3100C9A177 /* NuguClientKit.framework */;
@@ -2326,7 +2379,6 @@
 			);
 			name = NuguUIKit;
 			packageProductDependencies = (
-				1FFFF21B2375690400C9A177 /* Lottie */,
 			);
 			productName = NuguUIKit;
 			productReference = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */;
@@ -2348,7 +2400,6 @@
 			);
 			name = JadeMarble;
 			packageProductDependencies = (
-				1FFFF40A2375744400C9A177 /* NattyLog */,
 			);
 			productName = JadeMarble;
 			productReference = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */;
@@ -2370,8 +2421,6 @@
 			);
 			name = KeenSense;
 			packageProductDependencies = (
-				1FFFF43423757E9500C9A177 /* RxSwift */,
-				1FFFF43623757E9500C9A177 /* NattyLog */,
 			);
 			productName = KeenSense;
 			productReference = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */;
@@ -2386,6 +2435,7 @@
 				1FFFF48B237671F500C9A177 /* Resources */,
 				1FFFF51E237674E000C9A177 /* Embed Frameworks */,
 				1F1008CC2379028900D90FEE /* ShellScript */,
+				1F10092C237939E300D90FEE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2394,10 +2444,12 @@
 				1FFFF515237674DF00C9A177 /* PBXTargetDependency */,
 				1FFFF519237674DF00C9A177 /* PBXTargetDependency */,
 				1FFFF51D237674DF00C9A177 /* PBXTargetDependency */,
+				1F1008F52379247800D90FEE /* PBXTargetDependency */,
+				1F1008F92379247800D90FEE /* PBXTargetDependency */,
+				1F1008FD2379247800D90FEE /* PBXTargetDependency */,
 			);
 			name = SampleApp;
 			packageProductDependencies = (
-				1FFFF4A12376722F00C9A177 /* NattyLog */,
 			);
 			productName = SampleApp;
 			productReference = 1FFFF48D237671F500C9A177 /* SampleApp.app */;
@@ -2476,9 +2528,6 @@
 			);
 			mainGroup = 3D9C428622745894000A6585;
 			packageReferences = (
-				1FFFF21A2375690400C9A177 /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				1FFFF21D2375695600C9A177 /* XCRemoteSwiftPackageReference "RxSwift" */,
-				1FFFF2202375699400C9A177 /* XCRemoteSwiftPackageReference "natty-log-ios" */,
 			);
 			productRefGroup = 3D9C429122745894000A6585 /* Products */;
 			projectDirPath = "";
@@ -2623,6 +2672,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		1F10092C237939E300D90FEE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/NattyLog.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Lottie.framework",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2928,6 +2997,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1F1008F52379247800D90FEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FFFF03023753FA200C9A177 /* JadeMarble */;
+			targetProxy = 1F1008F42379247800D90FEE /* PBXContainerItemProxy */;
+		};
+		1F1008F92379247800D90FEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FFFEFFC23753F1800C9A177 /* NuguCore */;
+			targetProxy = 1F1008F82379247800D90FEE /* PBXContainerItemProxy */;
+		};
+		1F1008FD2379247800D90FEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FFFEFEF23753EFD00C9A177 /* NuguInterface */;
+			targetProxy = 1F1008FC2379247800D90FEE /* PBXContainerItemProxy */;
+		};
 		1FFFF22723756C0500C9A177 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FFFEFEF23753EFD00C9A177 /* NuguInterface */;
@@ -3109,6 +3193,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3145,6 +3233,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3178,6 +3270,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguClientKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3207,6 +3303,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguClientKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3294,6 +3394,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguUIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3323,6 +3427,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguUIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3353,6 +3461,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = JadeMarble/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3394,6 +3506,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = JadeMarble/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3434,6 +3550,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = KeenSense/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3474,6 +3594,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = KeenSense/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -3513,7 +3637,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QUEYTE2JMS;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "SampleApp/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3536,7 +3665,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QUEYTE2JMS;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "SampleApp/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3813,76 +3947,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		1FFFF21A2375690400C9A177 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
-		1FFFF21D2375695600C9A177 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
-		1FFFF2202375699400C9A177 /* XCRemoteSwiftPackageReference "natty-log-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nugu-developers/natty-log-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		1FFFF21B2375690400C9A177 /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1FFFF21A2375690400C9A177 /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = Lottie;
-		};
-		1FFFF21E2375695600C9A177 /* RxSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1FFFF21D2375695600C9A177 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
-		1FFFF2212375699400C9A177 /* NattyLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1FFFF2202375699400C9A177 /* XCRemoteSwiftPackageReference "natty-log-ios" */;
-			productName = NattyLog;
-		};
-		1FFFF3EB2375738D00C9A177 /* NattyLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1FFFF2202375699400C9A177 /* XCRemoteSwiftPackageReference "natty-log-ios" */;
-			productName = NattyLog;
-		};
-		1FFFF40A2375744400C9A177 /* NattyLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1FFFF2202375699400C9A177 /* XCRemoteSwiftPackageReference "natty-log-ios" */;
-			productName = NattyLog;
-		};
-		1FFFF43423757E9500C9A177 /* RxSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1FFFF21D2375695600C9A177 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
-		1FFFF43623757E9500C9A177 /* NattyLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1FFFF2202375699400C9A177 /* XCRemoteSwiftPackageReference "natty-log-ios" */;
-			productName = NattyLog;
-		};
-		1FFFF4A12376722F00C9A177 /* NattyLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1FFFF2202375699400C9A177 /* XCRemoteSwiftPackageReference "natty-log-ios" */;
-			productName = NattyLog;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D9C428722745894000A6585 /* Project object */;
 }
