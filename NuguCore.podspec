@@ -16,8 +16,8 @@ Nugu framework for AI Service
 
   s.swift_version = '5.1'
 
-  s.source_files = 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/**/*.{h,m}'
-  s.public_header_files = 'NuguCore/Libraries/**/*.h', 'NuguCore/Sources-ObjC/**/*.h'
+  s.source_files = 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/*.{h,m}', 'NuguCore/Libraries/**/*.h',
+  s.public_header_files = 'NuguCore/**/*.h'
   s.vendored_libraries = 'NuguCore/Libraries/**/*.a'
   s.preserve_paths = 'NuguCore/Libraries/**'
   s.libraries = 'c++'
