@@ -451,13 +451,13 @@ extension MainViewController: DialogStateDelegate {
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking(let expectingSpeech):
-            refreshWakeUpDetector()
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .speaking)
                 guard expectingSpeech == false else {
                     self?.nuguVoiceChrome.minimize()
                     return
                 }
+                self?.refreshWakeUpDetector()
                 self?.dismissVoiceChrome()
             }
         case .listening:
@@ -467,7 +467,6 @@ extension MainViewController: DialogStateDelegate {
                 SoundPlayer.playSound(soundType: .start)
             }
         case .recognizing:
-            refreshWakeUpDetector()
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .listeningActive)
                 self?.nuguVoiceChrome.maximize()

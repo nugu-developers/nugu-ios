@@ -511,6 +511,8 @@
 		1F100901237929DC00D90FEE /* Lottie.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lottie.framework; path = Carthage/Build/iOS/Lottie.framework; sourceTree = "<group>"; };
 		1F100907237929FB00D90FEE /* NattyLog.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NattyLog.framework; path = Carthage/Build/iOS/NattyLog.framework; sourceTree = "<group>"; };
 		1F10090A23792A0000D90FEE /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
+		1F10094E237A886100D90FEE /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		1F100953237A8AE800D90FEE /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -936,13 +938,8 @@
 		1F1008B82376873C00D90FEE /* Dependency */ = {
 			isa = PBXGroup;
 			children = (
-				1F1008BC237688E200D90FEE /* NuguInterface.podspec */,
-				1F1008BE237688E200D90FEE /* NuguCore.podspec */,
-				1F1008BD237688E200D90FEE /* NuguClientKit.podspec */,
-				1F1008BB237688E200D90FEE /* NuguLoginKit.podspec */,
-				1F1008C2237688E300D90FEE /* NuguUIKit.podspec */,
-				1F1008C1237688E300D90FEE /* JadeMarble.podspec */,
-				1F1008BF237688E300D90FEE /* KeenSense.podspec */,
+				1F100951237A887A00D90FEE /* Cocoapods */,
+				1F100950237A886600D90FEE /* Carthage */,
 			);
 			name = Dependency;
 			sourceTree = "<group>";
@@ -963,6 +960,29 @@
 				1F1008CA2376925C00D90FEE /* bug-report.md */,
 			);
 			path = ISSUE_TEMPLATE;
+			sourceTree = "<group>";
+		};
+		1F100950237A886600D90FEE /* Carthage */ = {
+			isa = PBXGroup;
+			children = (
+				1F10094E237A886100D90FEE /* Cartfile */,
+				1F100953237A8AE800D90FEE /* Cartfile.resolved */,
+			);
+			name = Carthage;
+			sourceTree = "<group>";
+		};
+		1F100951237A887A00D90FEE /* Cocoapods */ = {
+			isa = PBXGroup;
+			children = (
+				1F1008BC237688E200D90FEE /* NuguInterface.podspec */,
+				1F1008BE237688E200D90FEE /* NuguCore.podspec */,
+				1F1008BD237688E200D90FEE /* NuguClientKit.podspec */,
+				1F1008BB237688E200D90FEE /* NuguLoginKit.podspec */,
+				1F1008C2237688E300D90FEE /* NuguUIKit.podspec */,
+				1F1008C1237688E300D90FEE /* JadeMarble.podspec */,
+				1F1008BF237688E300D90FEE /* KeenSense.podspec */,
+			);
+			name = Cocoapods;
 			sourceTree = "<group>";
 		};
 		1FFFEFF123753EFD00C9A177 /* NuguInterface */ = {
@@ -1139,20 +1159,20 @@
 		1FFFF23B2375703000C9A177 /* Capability */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */,
 				1FFFF23D2375703000C9A177 /* Extension */,
 				1FFFF2402375703000C9A177 /* Speaker */,
 				1FFFF2452375703000C9A177 /* AudioPlayer */,
 				1FFFF24D2375703000C9A177 /* Location */,
 				1FFFF2512375703000C9A177 /* AutomaticSpeechRecognition */,
-				1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */,
 				1FFFF2592375703000C9A177 /* System */,
-				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
-				1FFFF25D2375703000C9A177 /* CapabilityEventSendable.swift */,
 				1FFFF25E2375703000C9A177 /* TextToSpeech */,
 				1FFFF2632375703000C9A177 /* Display */,
-				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
 				1FFFF2682375703000C9A177 /* Text */,
+				1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */,
+				1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */,
+				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
+				1FFFF25D2375703000C9A177 /* CapabilityEventSendable.swift */,
+				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
 			);
 			path = Capability;
 			sourceTree = "<group>";
@@ -1180,8 +1200,8 @@
 		1FFFF2452375703000C9A177 /* AudioPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF2462375703000C9A177 /* AudioPlayerAgentDelegate.swift */,
 				1FFFF2472375703000C9A177 /* Display */,
+				1FFFF2462375703000C9A177 /* AudioPlayerAgentDelegate.swift */,
 				1FFFF24B2375703000C9A177 /* AudioPlayerAgentProtocol.swift */,
 				1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */,
 			);
@@ -1266,12 +1286,12 @@
 		1FFFF26E2375703000C9A177 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF2742375703000C9A177 /* Model */,
 				1FFFF26F2375703000C9A177 /* SendMessageStatus.swift */,
 				1FFFF2702375703000C9A177 /* NetworkStatusDelegate.swift */,
 				1FFFF2712375703000C9A177 /* NetworkStatus.swift */,
 				1FFFF2722375703000C9A177 /* SendMessageError.swift */,
 				1FFFF2732375703000C9A177 /* MessageSendable.swift */,
-				1FFFF2742375703000C9A177 /* Model */,
 				1FFFF27C2375703000C9A177 /* MessageReceivable.swift */,
 				1FFFF27D2375703000C9A177 /* NetworkError.swift */,
 				1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */,
@@ -1543,9 +1563,9 @@
 		1FFFF3372375707000C9A177 /* AudioPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF33A2375707000C9A177 /* Display */,
 				1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */,
 				1FFFF3392375707000C9A177 /* AudioPlayerAgent+Event.swift */,
-				1FFFF33A2375707000C9A177 /* Display */,
 				1FFFF33E2375707000C9A177 /* AudioPlayerAgent+Directive.swift */,
 				1FFFF33F2375707000C9A177 /* AudioPlayerAgent.swift */,
 			);
@@ -1630,9 +1650,9 @@
 		1FFFF35D2375707000C9A177 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF3602375707000C9A177 /* HTTP */,
 				1FFFF35E2375707000C9A177 /* NetworkConst.swift */,
 				1FFFF35F2375707000C9A177 /* NetworkManager.swift */,
-				1FFFF3602375707000C9A177 /* HTTP */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1640,11 +1660,11 @@
 		1FFFF3602375707000C9A177 /* HTTP */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF3652375707000C9A177 /* Model */,
 				1FFFF3612375707000C9A177 /* HTTPConst.swift */,
 				1FFFF3622375707000C9A177 /* MultiPartParserError.swift */,
 				1FFFF3632375707000C9A177 /* NuguApiProvider.swift */,
 				1FFFF3642375707000C9A177 /* NuguApi.swift */,
-				1FFFF3652375707000C9A177 /* Model */,
 				1FFFF3682375707000C9A177 /* MultiPartParser.swift */,
 			);
 			path = HTTP;
@@ -1979,11 +1999,11 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF4CC237672F100C9A177 /* AppDelegate.swift */,
+				1FFFF4C8237672F100C9A177 /* Manager */,
 				1FFFF4A4237672F100C9A177 /* UI */,
 				1FFFF4C0237672F100C9A177 /* Util */,
 				1FFFF4C3237672F100C9A177 /* Network */,
 				1FFFF4C5237672F100C9A177 /* Const */,
-				1FFFF4C8237672F100C9A177 /* Manager */,
 				1FFFF4CD237672F100C9A177 /* Store */,
 			);
 			path = Sources;
@@ -2004,8 +2024,8 @@
 		1FFFF4A9237672F100C9A177 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF4AA237672F100C9A177 /* NuguWebView.swift */,
 				1FFFF4AB237672F100C9A177 /* DisplayViews */,
+				1FFFF4AA237672F100C9A177 /* NuguWebView.swift */,
 				1FFFF4BF237672F100C9A177 /* NuguToastManager.swift */,
 			);
 			path = Views;

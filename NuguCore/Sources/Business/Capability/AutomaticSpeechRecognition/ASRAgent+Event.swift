@@ -85,7 +85,7 @@ extension ASRAgent.Event: Eventable {
         case .responseTimeout:
             return "ResponseTimeout"
         case .listenTimeout:
-            return "ExpectSpeechTimeout"
+            return "ListenTimeout"
         case .stopRecognize:
             return "StopRecognize"
         case .listenFailed:
