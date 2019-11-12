@@ -180,9 +180,12 @@ extension TycheEpd: StreamDelegate {
                     try inputData.write(to: epdInputFileName)
                     
                     let speexFileName = FileManager.default.urls(for: .documentDirectory,
-                                                                 in: .userDomainMask)[0].appendingPathComponent("jade_marble_output.raw")
+                                                                 in: .userDomainMask)[0].appendingPathComponent("jade_marble_output.speex")
                     log.debug("speex data to file :\(speexFileName)")
                     try outputData.write(to: speexFileName)
+                    
+                    inputData.removeAll()
+                    outputData.removeAll()
                 } catch {
                     log.debug(error)
                 }
