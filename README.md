@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/nugu-developers/nugu-ios.svg?branch=master)](https://travis-ci.org/nugu-developers/nugu-ios)
 ![Platform](https://img.shields.io/badge/platform-iOS-999999)
 [![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguClientKit)](https://github.com/nugu-developers/nugu-ios)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
 
 ## Requirements
@@ -11,11 +12,73 @@
 
 ## Components
 NUGU SDK for iOS is composed of following Libraries 
-- [NuguUIKit](NuguUIKit/) - Library for user interface components
-- [NuguLoginKit](NuguLoginKit/) - Library for user authentication with OAuth2.0
-- [NuguClientKit](NuguClientKit/) - Library for initializing essential components and inject dependency between components to use NUGU SDK
 - [NuguInterface](NuguInterface/) - Library which includes protocols, enums, structs of public components of NUGU SDK 
 - [NuguCore](NuguCore/) - Main library of NUGU SDK, which has implementation of core functions such as network management, data transmission, media control, etc
+- [NuguClientKit](NuguClientKit/) - Library for initializing essential components and inject dependency between components to use NUGU SDK
+- [NuguLoginKit](NuguLoginKit/) - Library for user authentication with OAuth2.0
+- [NuguUIKit](NuguUIKit/) - Library for user interface components
+
+## Sample Application
+
+### Run
+We have sample application in `nugu-ios.xcodeproj`.  
+To use it download or clone this repository, and run `carthage update --platform iOS` to install required frameworks.  
+Open `nugu-ios.xcodeproj` and you can run it through `SampleApp` scheme.
+
+### See also
+Unfortunately, we still have some step to use sample application.
+For more information, See the [How to use sample application](https://github.com/nugu-developers/nugu-ios/wiki/How-to-use-sample-application).
+
+## Installation
+
+### CocoaPods
+Each components of `NUGU SDK for iOS` is available through [CocoaPods](https://cocoapods.org).  
+To install it for easy use, simply add the following line to your `Podfile`:  
+
+```ruby
+pod 'NuguClientKit'
+pod 'NuguLoginKit'
+pod 'NuguUIKit'
+```
+
+### Carthage
+NUGU SDK for iOS is available through [Carthage](https://github.com/Carthage/Carthage).  
+To install it, add the following line to your `Cartfile`:  
+
+```
+github "nugu-developers/nugu-ios"
+```
+
+Then run `carthage update --platform iOS`.  
+If your application is first time adopting carthage, you'll need to set additional steps.  
+For more information, See the [Carthage for Application](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application)  
+
+## Usage
+
+### Get Started
+Using `NUGU SDK for iOS` is easy after some setup.
+Here are some basic examples for some capability agent.
+#### Initialize & Connect
+Before using `NUGU SDK for iOS`, connect to nugu when using NuguClientKit. like this:
+```swift
+let client = NuguClient.Builder().build()
+
+client.accessToken = "{access-token}"
+client.networkManager.connect()
+```
+
+#### Using ASRAgent (Automatic Speech Recognition agent)
+```swift
+client.asrAgent.startRecognition()
+```
+
+#### Using TTSAgent(Text to Speech agent)
+```swift
+client.ttsAgent.requestTTS("Hello world")
+```
+
+### See also
+For more information, See the [How to use NUGU SDK for iOS](https://github.com/nugu-developers/nugu-ios/wiki/How-to-use-NUGU-SDK-for-iOS)
 
 ## License
 The contents of this repository is licensed under the
