@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import NuguInterface
 
 /// <#Description#>
 public enum WakeUpDetectorState {

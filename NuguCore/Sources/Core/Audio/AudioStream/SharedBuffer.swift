@@ -32,7 +32,7 @@ public class SharedBuffer<Element> {
 
     weak var writer: Writer?
     let writeQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.write")
-    var writeSubject: PublishSubject<Element>?
+    var writeSubject: PublishSubject<Element> = PublishSubject<Element>()
     private var readers: NSHashTable<Reader> = NSHashTable.weakObjects()
     private let disposeBag = DisposeBag()
     
@@ -48,7 +48,7 @@ public class SharedBuffer<Element> {
             self.array[self.lastIndex.value] = element
             self.lastIndex += 1
             
-            self.writeSubject?.onNext(element)
+            self.writeSubject.onNext(element)
         }
     }
     
@@ -58,15 +58,11 @@ public class SharedBuffer<Element> {
             
             guard let self = self else { return disposable }
             guard index < self.lastIndex, let value = self.array[index.value] else {
-                guard let writeSubject = self.writeSubject, writeSubject.isDisposed == false else {
-                    observer.onError(SharedBufferError.writerFinished)
-                    return disposable
-                }
-                
-                writeSubject
+                self.writeSubject
                     .take(1)
                     .subscribe(onNext: { (element) in
                         observer.onNext(element)
+                        observer.onCompleted()
                     }).disposed(by: self.disposeBag)
                 
                 return disposable
@@ -97,7 +93,6 @@ extension SharedBuffer {
         
         init(buffer: SharedBuffer) {
             self.buffer = buffer
-            buffer.writeSubject = PublishSubject<Element>()
         }
 
         public func write(_ element: Element) throws {
@@ -110,7 +105,6 @@ extension SharedBuffer {
         
         public func finish() {
             buffer.writeQueue.async { [weak self] in
-                self?.buffer.writeSubject?.dispose()
                 self?.buffer.readers.allObjects.forEach { (reader) in
                     reader.readDisposable?.dispose()
                 }

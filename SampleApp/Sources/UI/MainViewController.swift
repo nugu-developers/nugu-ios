@@ -22,6 +22,7 @@ import UIKit
 import MediaPlayer
 
 import NuguInterface
+import NuguClientKit
 import NuguUIKit
 
 final class MainViewController: UIViewController {

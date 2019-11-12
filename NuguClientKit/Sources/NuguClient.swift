@@ -24,7 +24,6 @@ import NuguCore
 import NuguInterface
 
 import NattyLog
-import RxSwift
 
 let log = NuguClient.natty
 
@@ -102,11 +101,7 @@ public class NuguClient {
     /// <#Description#>
     public let endPointDetector: EndPointDetectable?
     /// <#Description#>
-    public var wakeUpDetector: WakeUpDetectable? {
-        didSet {
-            setupWakeUpDetectorDependency()
-        }
-    }
+    public let wakeUpDetector: KeyWordDetector?
     
     // MARK: - Capability Agents
     
@@ -127,13 +122,13 @@ public class NuguClient {
     /// <#Description#>
     public let systemAgent: SystemAgentProtocol
     
-    private var inputProviderStopDisposable: Disposable?
-    private let disposeBag = DisposeBag()
+    private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
+    private var inputControlWorkItem: DispatchWorkItem?
 
     init(inputProvider: AudioProvidable?,
          sharedAudioStream: AudioStreamable?,
          endPointDetector: EndPointDetectable?,
-         wakeUpDetector: WakeUpDetectable?,
+         wakeUpDetector: KeyWordDetector?,
          asrAgent: ASRAgentProtocol?,
          ttsAgent: TTSAgentProtocol?,
          audioPlayerAgent: AudioPlayerAgentProtocol?,
@@ -182,38 +177,43 @@ public extension NuguClient {
 
 extension NuguClient: AudioStreamDelegate {
     public func audioStreamWillStart() {
-        inputProviderStopDisposable?.dispose()
-        
-        guard let sharedAudioStream = sharedAudioStream,
-            inputProvider?.isRunning == false else {
-                log.debug("input provider is already started.")
-                return
+        inputControlWorkItem?.cancel()
+        inputControlQueue.async { [weak self] in
+            guard let sharedAudioStream = self?.sharedAudioStream,
+                self?.inputProvider?.isRunning == false else {
+                    log.debug("input provider is already started.")
+                    return
+            }
+            
+            do {
+                try self?.inputProvider?.start(streamWriter: sharedAudioStream.makeAudioStreamWriter())
+                log.debug("input provider is started.")
+            } catch {
+                log.debug("input provider failed to start: \(error)")
+            }
         }
-        
-        do {
-            try inputProvider?.start(streamWriter: sharedAudioStream.makeAudioStreamWriter())
-            log.debug("input provider is started.")
-        } catch {
-            log.debug("input provider failed to start: \(error)")
-        }
-
     }
     
     public func audioStreamDidStop() {
-        inputProviderStopDisposable?.dispose()
-        inputProviderStopDisposable = Observable<Int>.timer(.seconds(3), scheduler: ConcurrentDispatchQueueScheduler(qos: .background))
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                
-                guard self.inputProvider?.isRunning == true else {
-                    log.debug("input provider is not running")
-                    return
-                }
-                
-                self.inputProvider?.stop()
-                log.debug("input provider is stopped.")
-            })
-
-        inputProviderStopDisposable?.disposed(by: self.disposeBag)
+        inputControlWorkItem?.cancel()
+        inputControlWorkItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            
+            guard self.inputControlWorkItem?.isCancelled == false else {
+                log.debug("Stopping input provider is cancelled")
+                return
+            }
+            
+            guard self.inputProvider?.isRunning == true else {
+                log.debug("input provider is not running")
+                return
+            }
+            
+            self.inputProvider?.stop()
+            log.debug("input provider is stopped.")
+            
+        }
+        
+        inputControlQueue.asyncAfter(deadline: .now() + 3, execute: inputControlWorkItem!)
     }
 }
