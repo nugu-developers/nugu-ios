@@ -115,7 +115,6 @@
 		1FFFF2E72375703100C9A177 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27D2375703000C9A177 /* NetworkError.swift */; };
 		1FFFF2E82375703100C9A177 /* ReceiveMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */; };
 		1FFFF2E92375703100C9A177 /* NetworkManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27F2375703000C9A177 /* NetworkManageable.swift */; };
-		1FFFF2EA2375703100C9A177 /* WakeUpDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */; };
 		1FFFF2EB2375703100C9A177 /* PlaySyncDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */; };
 		1FFFF2EC2375703100C9A177 /* PlaySyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2842375703000C9A177 /* PlaySyncState.swift */; };
 		1FFFF2ED2375703100C9A177 /* PlaySyncManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */; };
@@ -336,6 +335,7 @@
 		7330CD8A237A77F900FCD6E9 /* TycheEpd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD87237A77F900FCD6E9 /* TycheEpd.swift */; };
 		7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */; };
 		7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKwd.swift */; };
+		7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1099,7 +1099,6 @@
 				1FFFF2382375703000C9A177 /* Util */,
 				1FFFF23B2375703000C9A177 /* Capability */,
 				1FFFF26E2375703000C9A177 /* Network */,
-				1FFFF2802375703000C9A177 /* WakeUpDetector */,
 				1FFFF2822375703000C9A177 /* PlaySync */,
 				1FFFF2862375703000C9A177 /* Focus */,
 				1FFFF28C2375703000C9A177 /* Dialog */,
@@ -1302,14 +1301,6 @@
 				1FFFF27B2375703000C9A177 /* CrashReport.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		1FFFF2802375703000C9A177 /* WakeUpDetector */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */,
-			);
-			path = WakeUpDetector;
 			sourceTree = "<group>";
 		};
 		1FFFF2822375703000C9A177 /* PlaySync */ = {
@@ -1735,6 +1726,7 @@
 		1FFFF3D72375735E00C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */,
 				7330CD80237A77D800FCD6E9 /* BoundStreams.swift */,
 				7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */,
 				7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */,
@@ -2759,7 +2751,6 @@
 				1FFFF2BD2375703000C9A177 /* AudioPlayerAgentProtocol.swift in Sources */,
 				1FFFF3012375703100C9A177 /* AuthorizationStateDelegate.swift in Sources */,
 				1FFFF2E02375703100C9A177 /* UpstreamEventMessage.swift in Sources */,
-				1FFFF2EA2375703100C9A177 /* WakeUpDetectorProtocol.swift in Sources */,
 				1FFFF2F02375703100C9A177 /* FocusChannelConfigurable.swift in Sources */,
 				1FFFF2C22375703000C9A177 /* ASRAgentDelegate.swift in Sources */,
 				1FFFF2B92375703000C9A177 /* AudioPlayerAgentDelegate.swift in Sources */,
@@ -2901,6 +2892,7 @@
 				1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */,
 				7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */,
 				1FFFF3E02375735E00C9A177 /* FocusChannelConfiguration.swift in Sources */,
+				7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */,
 				7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */,
 				7330CD84237A77D800FCD6E9 /* KeyWordDetector.swift in Sources */,
 			);

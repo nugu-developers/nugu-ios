@@ -29,7 +29,6 @@ import JadeMarble
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     let client = NuguClient.default
-    private let keyWordDetector = KeyWordDetector()
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
     
     private init() {
