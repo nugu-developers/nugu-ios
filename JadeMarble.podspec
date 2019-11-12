@@ -20,6 +20,5 @@ Pod::Spec.new do |s|
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/JadeMarble/JadeMarble/Libraries/**' }
 
   s.dependency 'NattyLog', '~> 1'
-  s.dependency 'NuguInterface', '~> 0'
   
 end

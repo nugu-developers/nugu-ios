@@ -30,7 +30,7 @@ extension NuguClient {
         public lazy var inputProvider: AudioProvidable = MicInputProvider()
         public lazy var sharedAudioStream: AudioStreamable = AudioStream(capacity: 300)
         public lazy var endPointDetector: EndPointDetectable = EndPointDetector()
-        public var wakeUpDetector: WakeUpDetectable?
+        public lazy var wakeUpDetector = KeyWordDetector()
         
         // MARK: - Capability Agents
         
@@ -99,7 +99,7 @@ extension NuguClient.Builder {
     
     /// <#Description#>
     /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
-    public func with(wakeUpDetector: WakeUpDetectable?) -> Self {
+    public func with(wakeUpDetector: KeyWordDetector) -> Self {
         self.wakeUpDetector = wakeUpDetector
         return self
     }
