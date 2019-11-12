@@ -44,10 +44,16 @@ extension LocationAgent: ContextInfoDelegate {
             "version": capabilityAgentProperty.version
         ]
         
-        if let locationInfo = delegate?.locationAgentRequestLocation() {
+        let locationContext = delegate?.locationAgentRequestContext()
+        
+        // CHECK-ME: What is the state when delegate isn't implemented.
+        let state = locationContext?.state ?? .unavailable
+        payload["state"] = state.rawValue
+        
+        if let currentInfo = locationContext?.current, state == .available {
             payload["current"] = [
-                "latitude": locationInfo.latitude,
-                "longitude": locationInfo.longitude
+                "latitude" : currentInfo.latitude,
+                "longitude" : currentInfo.longitude
             ]
         }
         

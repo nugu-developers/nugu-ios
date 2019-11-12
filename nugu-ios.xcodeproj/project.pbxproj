@@ -74,7 +74,7 @@
 		1FFFF2BE2375703000C9A177 /* AudioPlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */; };
 		1FFFF2BF2375703000C9A177 /* LocationAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */; };
 		1FFFF2C02375703000C9A177 /* LocationAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */; };
-		1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationInfo.swift */; };
+		1FFFF2C12375703000C9A177 /* LocationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationContext.swift */; };
 		1FFFF2C22375703000C9A177 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */; };
 		1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2532375703000C9A177 /* ASRState.swift */; };
 		1FFFF2C42375703000C9A177 /* ASRExpectSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */; };
@@ -574,7 +574,7 @@
 		1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerState.swift; sourceTree = "<group>"; };
 		1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentDelegate.swift; sourceTree = "<group>"; };
-		1FFFF2502375703000C9A177 /* LocationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationInfo.swift; sourceTree = "<group>"; };
+		1FFFF2502375703000C9A177 /* LocationContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationContext.swift; sourceTree = "<group>"; };
 		1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2532375703000C9A177 /* ASRState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRState.swift; sourceTree = "<group>"; };
 		1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRExpectSpeech.swift; sourceTree = "<group>"; };
@@ -1171,12 +1171,12 @@
 				1FFFF23D2375703000C9A177 /* Extension */,
 				1FFFF2402375703000C9A177 /* Speaker */,
 				1FFFF2452375703000C9A177 /* AudioPlayer */,
-				1FFFF24D2375703000C9A177 /* Location */,
 				1FFFF2512375703000C9A177 /* AutomaticSpeechRecognition */,
 				1FFFF2592375703000C9A177 /* System */,
 				1FFFF25E2375703000C9A177 /* TextToSpeech */,
 				1FFFF2632375703000C9A177 /* Display */,
 				1FFFF2682375703000C9A177 /* Text */,
+				1FFFF24D2375703000C9A177 /* Location */,
 				1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */,
 				1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */,
 				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
@@ -1232,7 +1232,7 @@
 			children = (
 				1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */,
 				1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */,
-				1FFFF2502375703000C9A177 /* LocationInfo.swift */,
+				1FFFF2502375703000C9A177 /* LocationContext.swift */,
 			);
 			path = Location;
 			sourceTree = "<group>";
@@ -1528,12 +1528,12 @@
 				1FFFF32C2375707000C9A177 /* Extension */,
 				1FFFF3312375707000C9A177 /* Speaker */,
 				1FFFF3372375707000C9A177 /* AudioPlayer */,
-				1FFFF3402375707000C9A177 /* Location */,
 				1FFFF3422375707000C9A177 /* AutomaticSpeechRecognition */,
 				1FFFF34A2375707000C9A177 /* System */,
 				1FFFF34F2375707000C9A177 /* TextToSpeech */,
 				1FFFF3542375707000C9A177 /* Display */,
 				1FFFF3592375707000C9A177 /* Text */,
+				1FFFF3402375707000C9A177 /* Location */,
 			);
 			path = Capability;
 			sourceTree = "<group>";
@@ -2806,7 +2806,7 @@
 				1FFFF2AE2375703000C9A177 /* ContextInfoDelegate.swift in Sources */,
 				1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */,
 				1FFFF2A82375703000C9A177 /* MediaPlayerState.swift in Sources */,
-				1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */,
+				1FFFF2C12375703000C9A177 /* LocationContext.swift in Sources */,
 				1FFFF2D12375703100C9A177 /* DisplayAgentProtocol.swift in Sources */,
 				1FFFF2D32375703100C9A177 /* DisplayTemplate.swift in Sources */,
 				1FFFF2E12375703100C9A177 /* DirectiveProtocol.swift in Sources */,
