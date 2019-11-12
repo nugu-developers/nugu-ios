@@ -40,6 +40,8 @@ public enum CapabilityAgentCategory: CaseIterable {
     case `extension`
     /// <#Description#>
     case location
+    /// <#Description#>
+    case permission
 }
 
 public extension CapabilityAgentCategory {
@@ -55,6 +57,7 @@ public extension CapabilityAgentCategory {
         case .text: return "Text"
         case .extension: return "Extension"
         case .location: return "Location"
+        case .permission: return "Permission"
         }
     }
 }
