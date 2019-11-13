@@ -23,7 +23,11 @@ import Foundation
 /// <#Description#>
 public protocol PermissionAgentProtocol:
 CapabilityAgentable,
-ContextInfoDelegate {
+ContextInfoDelegate,
+HandleDirectiveDelegate {
+    /// <#Description#>
+    var messageSender: MessageSendable! { get set }
+    
     /// <#Description#>
     var delegate: PermissionAgentDelegate? { get set }
 }

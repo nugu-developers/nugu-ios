@@ -19,3 +19,37 @@
 //
 
 import Foundation
+
+import NuguInterface
+
+// MARK: - CapabilityEventSendable
+
+extension PermissionAgent: CapabilityEventSendable {
+    public struct Event {
+        let typeInfo: TypeInfo
+        
+        public enum TypeInfo {
+            case requestCompleted
+        }
+    }
+}
+
+// MARK: - Eventable
+
+extension PermissionAgent.Event: Eventable {
+    public var payload: [String: Any] {
+        return [:]
+    }
+    
+    public var name: String {
+        switch typeInfo {
+        case .requestCompleted:
+            return "RequestCompleted"
+        }
+    }
+}
+
+// MARK: - Equatable
+
+extension PermissionAgent.Event.TypeInfo: Equatable {}
+extension PermissionAgent.Event: Equatable {}

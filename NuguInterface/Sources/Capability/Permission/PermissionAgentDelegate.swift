@@ -22,6 +22,10 @@ import Foundation
 
 /// <#Description#>
 public protocol PermissionAgentDelegate: class {
+    
     /// <#Description#>
-    func permissionAgentRequestContext() -> [String: Any]
+    func permissionAgentRequestPermission(completion: @escaping () -> Void)
+    
+    /// <#Description#>
+    func permissionAgentRequestContext() -> PermissionContext
 }

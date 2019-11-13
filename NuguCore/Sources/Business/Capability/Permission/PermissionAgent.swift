@@ -23,13 +23,72 @@ import Foundation
 import NuguInterface
 
 final public class PermissionAgent: PermissionAgentProtocol {
-    public var delegate: PermissionAgentDelegate?
+    public var capabilityAgentProperty = CapabilityAgentProperty(category: .permission, version: "1.0")
     
-    public func contextInfoRequestContext() -> ContextInfo? {
-        <#code#>
+    public var messageSender: MessageSendable!
+    
+    public weak var delegate: PermissionAgentDelegate?
+    
+    public init() {
+        log.info("")
     }
     
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: <#T##CapabilityAgentCategory#>, version: <#T##String#>)
+    deinit {
+        log.info("")
+    }
+}
+
+// MARK: - HandleDirectiveDelegate
+
+extension PermissionAgent: HandleDirectiveDelegate {
+    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
+        return DirectiveTypeInfo.allDictionaryCases
+    }
     
-    
+    public func handleDirective(
+        _ directive: DirectiveProtocol,
+        completionHandler: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
+            completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Unknown directive")))
+            return
+        }
+        
+        switch directiveTypeInfo {
+        case .requestAccess:
+            delegate?.permissionAgentRequestPermission { [weak self] in
+                guard let self = self else { return }
+                self.sendEvent(
+                    PermissionAgent.Event(typeInfo: .requestCompleted),
+                    context: self.contextInfoRequestContext(),
+                    dialogRequestId: TimeUUID().hexString,
+                    by: self.messageSender)
+                
+            }
+            
+            completionHandler(.success(()))
+        }
+    }
+}
+
+// MARK: - ContextInfoDelegate
+
+extension PermissionAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
+        var payload: [String: Any] = ["version": capabilityAgentProperty.version]
+        
+        let permissionContext = delegate?.permissionAgentRequestContext()
+        
+        if let permissions = permissionContext?.permissions {
+            payload["permissions"] = permissions.map { $0.dictionaryValue }
+        } else {
+            payload["permissions"] = []
+        }
+        
+        return ContextInfo(
+            contextType: .capability,
+            name: capabilityAgentProperty.name,
+            payload: payload
+        )
+    }
 }

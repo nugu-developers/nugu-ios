@@ -19,3 +19,35 @@
 //
 
 import Foundation
+
+import NuguInterface
+
+extension PermissionAgent {
+    enum DirectiveTypeInfo: CaseIterable {
+        case requestAccess
+    }
+}
+
+// MARK: - DirectiveTypeInforable
+
+extension PermissionAgent.DirectiveTypeInfo: DirectiveTypeInforable {
+    var namespace: String { "Permission" }
+    
+    var name: String {
+        switch self {
+        case .requestAccess: return "RequestAccess"
+        }
+    }
+
+    var medium: DirectiveMedium {
+        switch self {
+        case .requestAccess: return .none
+        }
+    }
+
+    var isBlocking: Bool {
+        switch self {
+        case .requestAccess: return true
+        }
+    }
+}
