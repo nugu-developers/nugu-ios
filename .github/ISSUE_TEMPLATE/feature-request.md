@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for nugu-ios
+about: Suggest an idea for nugu-ios ⚡️
 title: ''
 labels: ''
 assignees: ''
@@ -8,10 +8,10 @@ assignees: ''
 ---
 
 # Motivation
-> ℹ Please replace this with your motivation. For example if your feature request is related to a problem.
+> Please replace this with your motivation. For example if your feature request is related to a problem.
 
 # Solution
-> ℹ Please replace this with your proposed solution.
+> Please replace this with your proposed solution.
 
 # Additional context 
-> ℹ Please replace this with any other context or screenshots about your feature request (optional).
+> Please replace this with any other context or screenshots about your feature request (optional).
