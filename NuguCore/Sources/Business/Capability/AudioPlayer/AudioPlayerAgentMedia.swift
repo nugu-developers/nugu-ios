@@ -35,9 +35,14 @@ struct AudioPlayerAgentMedia {
     }
     
     struct Payload {
+        let playStackControl: PlayStackControl?
         let sourceType: SourceType
         let audioItem: AudioItem
         let playServiceId: String
+        
+        struct PlayStackControl {
+            let playServiceId: String?
+        }
         
         enum SourceType: String, Decodable {
             case url = "URL"
@@ -84,6 +89,7 @@ extension AudioPlayerAgentMedia.Payload.AudioItem.Stream {
 
 extension AudioPlayerAgentMedia.Payload: Decodable {
     enum CodingKeys: String, CodingKey {
+        case playStackControl
         case sourceType
         case audioItem
         case playServiceId
@@ -91,8 +97,22 @@ extension AudioPlayerAgentMedia.Payload: Decodable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
         sourceType = try container.decodeIfPresent(SourceType.self, forKey: .sourceType) ?? .url
         audioItem = try container.decode(AudioItem.self, forKey: .audioItem)
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+    }
+}
+
+// MARK: - AudioPlayerMedia.Payload.PlayStackControl: Decodable
+
+extension AudioPlayerAgentMedia.Payload.PlayStackControl: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case playServiceId
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
     }
 }

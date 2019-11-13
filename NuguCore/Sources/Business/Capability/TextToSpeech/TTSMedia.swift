@@ -35,10 +35,15 @@ struct TTSMedia {
     }
     
     struct Payload {
+        let playStackControl: PlayStackControl?
         let sourceType: SourceType
         let text: String
         let token: String?
         let playServiceId: String?
+        
+        struct PlayStackControl {
+            let playServiceId: String?
+        }
         
         enum SourceType: String, Decodable {
             case url = "URL"
@@ -51,6 +56,7 @@ struct TTSMedia {
 
 extension TTSMedia.Payload: Decodable {
     enum CodingKeys: String, CodingKey {
+        case playStackControl
         case sourceType
         case text
         case token
@@ -59,9 +65,23 @@ extension TTSMedia.Payload: Decodable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
         sourceType = try container.decodeIfPresent(SourceType.self, forKey: .sourceType) ?? .attachment
         text = try container.decode(String.self, forKey: .text)
         token = try? container.decode(String.self, forKey: .token)
         playServiceId = try? container.decode(String.self, forKey: .playServiceId)
+    }
+}
+
+// MARK: - TTSMedia.Payload.PlayStackControl: Decodable
+
+extension TTSMedia.Payload.PlayStackControl: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case playServiceId
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
     }
 }

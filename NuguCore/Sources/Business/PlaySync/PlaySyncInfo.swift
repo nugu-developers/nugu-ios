@@ -27,12 +27,12 @@ struct PlaySyncInfo {
     weak var delegate: PlaySyncDelegate?
     
     let dialogRequestId: String
-    let playServiceId: String
+    let playServiceId: String?
     let playSyncState: PlaySyncState
     let isDisplay: Bool
     let duration: DisplayTemplate.Duration
     
-    init(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String, playSyncState: PlaySyncState) {
+    init(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
         self.delegate = delegate
         self.dialogRequestId = dialogRequestId
         self.playServiceId = playServiceId
@@ -47,7 +47,7 @@ struct PlaySyncInfo {
 extension PlaySyncInfo: CustomStringConvertible {
     var description: String {
         if let delegate = delegate {
-            return "\nPlaySyncInfo: \(delegate), \(playServiceId), \(playSyncState)"
+            return "\nPlaySyncInfo: \(delegate), \(playServiceId ?? ""), \(playSyncState)"
         } else {
             return ""
         }

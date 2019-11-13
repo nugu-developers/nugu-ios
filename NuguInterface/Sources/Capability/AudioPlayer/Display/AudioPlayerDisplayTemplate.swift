@@ -23,16 +23,16 @@ import Foundation
 public struct AudioPlayerDisplayTemplate {
     public let type: String
     public let typeInfo: TypeInfo
-    public let messageId: String
-    public let dialogRequestId: String
     public let templateId: String
+    public let dialogRequestId: String
+    public let playStackServiceId: String?
     
-    public init(type: String, typeInfo: TypeInfo, messageId: String, dialogRequestId: String, templateId: String) {
+    public init(type: String, typeInfo: TypeInfo, templateId: String, dialogRequestId: String, playStackServiceId: String?) {
         self.type = type
         self.typeInfo = typeInfo
-        self.messageId = messageId
-        self.dialogRequestId = dialogRequestId
         self.templateId = templateId
+        self.dialogRequestId = dialogRequestId
+        self.playStackServiceId = playStackServiceId
     }
     
     /// The player template of the DisplayPlayerAgent.
