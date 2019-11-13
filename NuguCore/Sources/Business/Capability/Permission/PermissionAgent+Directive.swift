@@ -47,7 +47,7 @@ extension PermissionAgent.DirectiveTypeInfo: DirectiveTypeInforable {
 
     var isBlocking: Bool {
         switch self {
-        case .requestAccess: return true
+        case .requestAccess: return false
         }
     }
 }
