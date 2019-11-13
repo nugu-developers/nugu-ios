@@ -25,7 +25,7 @@ public struct PermissionContext {
     /// <#Description#>
     public struct Permission {
         /// <#Description#>
-        public enum Name: String {
+        public enum Category: String, Decodable {
             case location = "LOCATION"
         }
         
@@ -38,17 +38,9 @@ public struct PermissionContext {
         }
         
         /// <#Description#>
-        public let name: Name
+        public let category: Category
         /// <#Description#>
         public let state: State
-        
-        /// <#Description#>
-        public var dictionaryValue: [String: Any] {
-            return [
-                "name": name.rawValue,
-                "state": state.rawValue
-            ]
-        }
     }
     
     /// <#Description#>

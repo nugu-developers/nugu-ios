@@ -56,14 +56,27 @@ extension PermissionAgent: HandleDirectiveDelegate {
         
         switch directiveTypeInfo {
         case .requestAccess:
-            delegate?.permissionAgentRequestPermission { [weak self] in
+            guard let data = directive.payload.data(using: .utf8) else {
+                completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
+                return
+            }
+            
+            let item: PermissionAgentItem
+            do {
+                item = try JSONDecoder().decode(PermissionAgentItem.self, from: data)
+            } catch {
+                completionHandler(.failure(error))
+                return
+            }
+            
+            delegate?.permissionAgentRequestPermissions(categories: Set(item.permissions)) { [weak self] in
                 guard let self = self else { return }
                 self.sendEvent(
                     PermissionAgent.Event(typeInfo: .requestAccessCompleted),
                     context: self.contextInfoRequestContext(),
                     dialogRequestId: TimeUUID().hexString,
-                    by: self.messageSender)
-                
+                    by: self.messageSender
+                )
             }
             
             completionHandler(.success(()))
@@ -76,13 +89,15 @@ extension PermissionAgent: HandleDirectiveDelegate {
 extension PermissionAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         var payload: [String: Any] = ["version": capabilityAgentProperty.version]
-        
         let permissionContext = delegate?.permissionAgentRequestContext()
         
         if let permissions = permissionContext?.permissions {
-            payload["permissions"] = permissions.map { $0.dictionaryValue }
-        } else {
-            payload["permissions"] = []
+            payload["permissions"] = permissions.map {
+                return [
+                    "name": $0.category.rawValue,
+                    "state": $0.state.rawValue
+                ]
+            }
         }
         
         return ContextInfo(

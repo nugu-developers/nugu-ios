@@ -1,8 +1,8 @@
 //
-//  PermissionAgentDelegate.swift
-//  NuguInterface
+//  PermissionAgentItem.swift
+//  NuguCore
 //
-//  Created by yonghoonKwon on 2019/11/12.
+//  Created by yonghoonKwon on 2019/11/13.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,17 +20,9 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol PermissionAgentDelegate: class {
-    
-    /// <#Description#>
-    /// - Parameter names: <#names description#>
-    /// - Parameter completion: <#completion description#>
-    func permissionAgentRequestPermissions(
-        categories: Set<PermissionContext.Permission.Category>,
-        completion: @escaping () -> Void
-    )
-    
-    /// <#Description#>
-    func permissionAgentRequestContext() -> PermissionContext
+import NuguInterface
+
+struct PermissionAgentItem: Decodable {
+    let playServiceId: String
+    let permissions: [PermissionContext.Permission.Category]
 }
