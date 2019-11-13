@@ -52,8 +52,8 @@ extension LocationAgent: ContextInfoDelegate {
         
         if let currentInfo = locationContext?.current, state == .available {
             payload["current"] = [
-                "latitude" : currentInfo.latitude,
-                "longitude" : currentInfo.longitude
+                "latitude": currentInfo.latitude,
+                "longitude": currentInfo.longitude
             ]
         }
         
