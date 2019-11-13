@@ -518,6 +518,7 @@
 		1F10090A23792A0000D90FEE /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		1F10094E237A886100D90FEE /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		1F100953237A8AE800D90FEE /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
+		1F100965237C0D0100D90FEE /* scheduled-feature.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "scheduled-feature.md"; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -966,8 +967,9 @@
 		1F1008C82376925C00D90FEE /* ISSUE_TEMPLATE */ = {
 			isa = PBXGroup;
 			children = (
-				1F1008C92376925C00D90FEE /* feature-request.md */,
 				1F1008CA2376925C00D90FEE /* bug-report.md */,
+				1F1008C92376925C00D90FEE /* feature-request.md */,
+				1F100965237C0D0100D90FEE /* scheduled-feature.md */,
 			);
 			path = ISSUE_TEMPLATE;
 			sourceTree = "<group>";
