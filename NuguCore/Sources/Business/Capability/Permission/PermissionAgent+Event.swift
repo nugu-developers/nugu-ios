@@ -29,7 +29,7 @@ extension PermissionAgent: CapabilityEventSendable {
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case requestCompleted
+            case requestAccessCompleted
         }
     }
 }
@@ -43,8 +43,8 @@ extension PermissionAgent.Event: Eventable {
     
     public var name: String {
         switch typeInfo {
-        case .requestCompleted:
-            return "RequestCompleted"
+        case .requestAccessCompleted:
+            return "RequestAccessCompleted"
         }
     }
 }

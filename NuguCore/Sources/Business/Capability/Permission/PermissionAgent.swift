@@ -59,7 +59,7 @@ extension PermissionAgent: HandleDirectiveDelegate {
             delegate?.permissionAgentRequestPermission { [weak self] in
                 guard let self = self else { return }
                 self.sendEvent(
-                    PermissionAgent.Event(typeInfo: .requestCompleted),
+                    PermissionAgent.Event(typeInfo: .requestAccessCompleted),
                     context: self.contextInfoRequestContext(),
                     dialogRequestId: TimeUUID().hexString,
                     by: self.messageSender)
