@@ -45,9 +45,7 @@ extension LocationAgent: ContextInfoDelegate {
         ]
         
         let locationContext = delegate?.locationAgentRequestContext()
-        
-        // CHECK-ME: What is the state when delegate isn't implemented.
-        let state = locationContext?.state ?? .unavailable
+        let state = locationContext?.state ?? .unknown  // Exception when developer does not implement `LocationAgentDelegate`.
         payload["state"] = state.rawValue
         
         if let currentInfo = locationContext?.current, state == .available {
