@@ -49,7 +49,7 @@ extension NuguClient {
         /// <#Description#>
         public lazy var locationAgent: LocationAgentProtocol? = LocationAgent()
         /// <#Description#>
-        public lazy var permissionAgent: PermissionAgentProtocol? = PermissionAgentProtocol()
+        public lazy var permissionAgent: PermissionAgentProtocol? = PermissionAgent()
         
         /// <#Description#>
         public init() {}
