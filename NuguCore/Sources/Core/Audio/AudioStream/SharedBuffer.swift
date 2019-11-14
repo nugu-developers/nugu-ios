@@ -32,7 +32,7 @@ public class SharedBuffer<Element> {
 
     weak var writer: Writer?
     let writeQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.write")
-    var writeSubject: PublishSubject<Element> = PublishSubject<Element>()
+    let writeSubject: PublishSubject<Element> = PublishSubject<Element>()
     private var readers: NSHashTable<Reader> = NSHashTable.weakObjects()
     private let disposeBag = DisposeBag()
     

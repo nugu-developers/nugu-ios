@@ -60,6 +60,11 @@ public class KeyWordDetector: WakeUpDetectable {
     }
     
     public func start() throws {
+        guard engine.state == .inactive else {
+            log.warning("key word detector is already activated")
+            return
+        }
+
         let boundStreams = BoundStreams(buffer: audioStream.makeAudioStreamReader())
         try engine.start(inputStream: boundStreams.input)
     }

@@ -56,7 +56,10 @@ public class TycheEpd: NSObject {
                       timeout: Int,
                       maxDuration: Int,
                       pauseLength: Int) throws {
-        guard [.listening, .start].contains(state) == false else { return }
+        guard [.listening, .start].contains(state) == false else {
+            log.debug("epd is already running.")
+            throw EndPointDetectorError.alreadyRunning
+        }
         
         do {
             try initDetectorEngine(sampleRate: sampleRate,
@@ -87,6 +90,7 @@ public class TycheEpd: NSObject {
     }
     
     public func stop() {
+        log.debug("epd try to stop")
         epdWorkItem?.cancel()
         
         epdQueue.async { [weak self] in
@@ -198,6 +202,7 @@ extension TycheEpd: StreamDelegate {
             }
             
         case .endEncountered:
+            log.debug("epd stream endEncountered")
             stop()
 
         default:

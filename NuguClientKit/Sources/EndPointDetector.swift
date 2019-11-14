@@ -44,6 +44,11 @@ public class EndPointDetector: EndPointDetectable {
     }
     
     public func start(inputStream: AudioStreamReadable, sampleRate: Double, timeout: Int, maxDuration: Int, pauseLength: Int) throws {
+        guard engine.state == .idle else {
+            log.warning("end point detector is already started")
+            return
+        }
+        
         let boundStreams = BoundStreams(buffer: inputStream)
         try engine.start(inputStream: boundStreams.input, sampleRate: sampleRate, timeout: timeout, maxDuration: maxDuration, pauseLength: pauseLength)
     }
