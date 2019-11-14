@@ -20,8 +20,6 @@
 
 import UIKit
 
-import Lottie
-
 final public class NuguVoiceChrome: UIView {
     
     // MARK: RecommendedHeight for NuguVoiceChrome
