@@ -156,6 +156,7 @@ public extension ASRAgent {
     }
     
     func startRecognition() {
+        log.debug("")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = self.audioStream.makeAudioStreamReader()
         
@@ -188,6 +189,7 @@ public extension ASRAgent {
     ///
     /// This function can only be called in the LISTENING and RECOGNIZING state.
     private func stopSpeech() {
+        log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             switch self.asrState {
@@ -201,6 +203,7 @@ public extension ASRAgent {
     }
     
     func stopRecognition() {
+        log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.asrState != .idle else {
@@ -414,6 +417,7 @@ private extension ASRAgent {
                 self.expectingSpeechTimeout = Observable<Int>
                     .timer(ASRConst.focusTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                     .subscribe(onNext: { [weak self] _ in
+                        log.info("expectingSpeechTimeout")
                         self?.asrResult = .error(.listenFailed)
                     })
                 self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
@@ -581,14 +585,15 @@ private extension ASRAgent {
                                        timeout: timeout,
                                        maxDuration: ASRConst.maxDuration,
                                        pauseLength: ASRConst.pauseLength)
+
+            asrState = .listening
             
             sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
+                guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
                 guard case .success = status else {
                     self?.asrResult = .error(.recognizeFailed)
                     return
                 }
-                
-                self?.asrState = .listening
             }
         } catch {
             log.error(error)
@@ -617,6 +622,7 @@ private extension ASRAgent {
         responseTimeout = Observable<Int>
             .timer(NuguApp.shared.configuration.asrResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { [weak self] _ in
+                log.info("responseTimeout")
                 self?.asrResult = .error(.responseTimeout)
             })
         self.responseTimeout?.disposed(by: self.disposeBag)

@@ -65,7 +65,10 @@ public class TycheKwd: NSObject {
      Start Key Word Detection.
      */
     public func start(inputStream: InputStream) throws {
-        guard state == .inactive else { return }
+        guard state == .inactive else {
+            log.debug("kwd is already running.")
+            return
+        }
         
         do {
             try initTriggerEngine()
@@ -101,6 +104,7 @@ public class TycheKwd: NSObject {
             self.inputStream?.close()
             Wakeup_Destroy(self.engineHandle)
             self.engineHandle = nil
+            self.state = .inactive
         }
     }
 }
@@ -184,11 +188,11 @@ extension TycheKwd: StreamDelegate {
             }
             
             if isDetected {
-                self.state = .inactive
-                self.delegate?.keyWordDetectorDidDetect()
-                
                 inputStream.close()
+                self.state = .inactive
+
                 extractDetectedData()
+                self.delegate?.keyWordDetectorDidDetect()
             }
             
         case .endEncountered:
