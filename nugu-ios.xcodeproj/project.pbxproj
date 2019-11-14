@@ -277,17 +277,6 @@
 		1FFFF476237580F500C9A177 /* NuguButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF45F237580F500C9A177 /* NuguButton.swift */; };
 		1FFFF477237580F500C9A177 /* NuguButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF460237580F500C9A177 /* NuguButton.xib */; };
 		1FFFF478237580F500C9A177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF462237580F500C9A177 /* Assets.xcassets */; };
-		1FFFF479237580F500C9A177 /* ESP_01_start.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF465237580F500C9A177 /* ESP_01_start.json */; };
-		1FFFF47A237580F500C9A177 /* ESP_03_final.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF466237580F500C9A177 /* ESP_03_final.json */; };
-		1FFFF47B237580F500C9A177 /* ESP_02.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF467237580F500C9A177 /* ESP_02.json */; };
-		1FFFF47C237580F500C9A177 /* LA.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF469237580F500C9A177 /* LA.json */; };
-		1FFFF47D237580F500C9A177 /* LP.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF46B237580F500C9A177 /* LP.json */; };
-		1FFFF47E237580F500C9A177 /* SP_none.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF46D237580F500C9A177 /* SP_none.json */; };
-		1FFFF47F237580F500C9A177 /* SP_02.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF46E237580F500C9A177 /* SP_02.json */; };
-		1FFFF480237580F500C9A177 /* SP_01_start.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF46F237580F500C9A177 /* SP_01_start.json */; };
-		1FFFF481237580F500C9A177 /* SP_03_final.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF470237580F500C9A177 /* SP_03_final.json */; };
-		1FFFF482237580F500C9A177 /* PC_01_start.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF472237580F500C9A177 /* PC_01_start.json */; };
-		1FFFF483237580F500C9A177 /* PC_02.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF473237580F500C9A177 /* PC_02.json */; };
 		1FFFF4DF237672F100C9A177 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A5237672F100C9A177 /* SettingViewController.swift */; };
 		1FFFF4E0237672F100C9A177 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A6237672F100C9A177 /* IntroViewController.swift */; };
 		1FFFF4E1237672F100C9A177 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A7237672F100C9A177 /* MainViewController.swift */; };
@@ -343,6 +332,7 @@
 		7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */; };
 		7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKwd.swift */; };
 		7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */; };
+		A1B33EFB237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B33EFA237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -786,17 +776,6 @@
 		1FFFF45F237580F500C9A177 /* NuguButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguButton.swift; sourceTree = "<group>"; };
 		1FFFF460237580F500C9A177 /* NuguButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NuguButton.xib; sourceTree = "<group>"; };
 		1FFFF462237580F500C9A177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		1FFFF465237580F500C9A177 /* ESP_01_start.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ESP_01_start.json; sourceTree = "<group>"; };
-		1FFFF466237580F500C9A177 /* ESP_03_final.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ESP_03_final.json; sourceTree = "<group>"; };
-		1FFFF467237580F500C9A177 /* ESP_02.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ESP_02.json; sourceTree = "<group>"; };
-		1FFFF469237580F500C9A177 /* LA.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LA.json; sourceTree = "<group>"; };
-		1FFFF46B237580F500C9A177 /* LP.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LP.json; sourceTree = "<group>"; };
-		1FFFF46D237580F500C9A177 /* SP_none.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SP_none.json; sourceTree = "<group>"; };
-		1FFFF46E237580F500C9A177 /* SP_02.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SP_02.json; sourceTree = "<group>"; };
-		1FFFF46F237580F500C9A177 /* SP_01_start.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SP_01_start.json; sourceTree = "<group>"; };
-		1FFFF470237580F500C9A177 /* SP_03_final.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SP_03_final.json; sourceTree = "<group>"; };
-		1FFFF472237580F500C9A177 /* PC_01_start.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PC_01_start.json; sourceTree = "<group>"; };
-		1FFFF473237580F500C9A177 /* PC_02.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PC_02.json; sourceTree = "<group>"; };
 		1FFFF48D237671F500C9A177 /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFF4A5237672F100C9A177 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		1FFFF4A6237672F100C9A177 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
@@ -861,6 +840,7 @@
 		7330CD87237A77F900FCD6E9 /* TycheEpd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpd.swift; sourceTree = "<group>"; };
 		7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwdDelegate.swift; sourceTree = "<group>"; };
 		7330CD8C237A784500FCD6E9 /* TycheKwd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwd.swift; sourceTree = "<group>"; };
+		A1B33EFA237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguVoiceChromeAnimationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1949,6 +1929,7 @@
 		1FFFF45B237580F500C9A177 /* VoiceChrome */ = {
 			isa = PBXGroup;
 			children = (
+				A1B33EFA237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift */,
 				1FFFF45C237580F500C9A177 /* NuguVoiceChrome.swift */,
 				1FFFF45D237580F500C9A177 /* NuguVoiceChrome.xib */,
 			);
@@ -1968,67 +1949,8 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF462237580F500C9A177 /* Assets.xcassets */,
-				1FFFF463237580F500C9A177 /* LottieAnimation */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		1FFFF463237580F500C9A177 /* LottieAnimation */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF46A237580F500C9A177 /* 01 Listening-Passive */,
-				1FFFF468237580F500C9A177 /* 02 Listening-Active */,
-				1FFFF471237580F500C9A177 /* 03 Processing */,
-				1FFFF46C237580F500C9A177 /* 04 Speaking */,
-				1FFFF464237580F500C9A177 /* 05 Error-Speaking */,
-			);
-			path = LottieAnimation;
-			sourceTree = "<group>";
-		};
-		1FFFF464237580F500C9A177 /* 05 Error-Speaking */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF465237580F500C9A177 /* ESP_01_start.json */,
-				1FFFF466237580F500C9A177 /* ESP_03_final.json */,
-				1FFFF467237580F500C9A177 /* ESP_02.json */,
-			);
-			path = "05 Error-Speaking";
-			sourceTree = "<group>";
-		};
-		1FFFF468237580F500C9A177 /* 02 Listening-Active */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF469237580F500C9A177 /* LA.json */,
-			);
-			path = "02 Listening-Active";
-			sourceTree = "<group>";
-		};
-		1FFFF46A237580F500C9A177 /* 01 Listening-Passive */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF46B237580F500C9A177 /* LP.json */,
-			);
-			path = "01 Listening-Passive";
-			sourceTree = "<group>";
-		};
-		1FFFF46C237580F500C9A177 /* 04 Speaking */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF46D237580F500C9A177 /* SP_none.json */,
-				1FFFF46E237580F500C9A177 /* SP_02.json */,
-				1FFFF46F237580F500C9A177 /* SP_01_start.json */,
-				1FFFF470237580F500C9A177 /* SP_03_final.json */,
-			);
-			path = "04 Speaking";
-			sourceTree = "<group>";
-		};
-		1FFFF471237580F500C9A177 /* 03 Processing */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF472237580F500C9A177 /* PC_01_start.json */,
-				1FFFF473237580F500C9A177 /* PC_02.json */,
-			);
-			path = "03 Processing";
 			sourceTree = "<group>";
 		};
 		1FFFF48E237671F500C9A177 /* SampleApp */ = {
@@ -2634,17 +2556,6 @@
 			files = (
 				1FFFF477237580F500C9A177 /* NuguButton.xib in Resources */,
 				1FFFF478237580F500C9A177 /* Assets.xcassets in Resources */,
-				1FFFF47F237580F500C9A177 /* SP_02.json in Resources */,
-				1FFFF47C237580F500C9A177 /* LA.json in Resources */,
-				1FFFF483237580F500C9A177 /* PC_02.json in Resources */,
-				1FFFF47D237580F500C9A177 /* LP.json in Resources */,
-				1FFFF480237580F500C9A177 /* SP_01_start.json in Resources */,
-				1FFFF47E237580F500C9A177 /* SP_none.json in Resources */,
-				1FFFF47B237580F500C9A177 /* ESP_02.json in Resources */,
-				1FFFF482237580F500C9A177 /* PC_01_start.json in Resources */,
-				1FFFF47A237580F500C9A177 /* ESP_03_final.json in Resources */,
-				1FFFF479237580F500C9A177 /* ESP_01_start.json in Resources */,
-				1FFFF481237580F500C9A177 /* SP_03_final.json in Resources */,
 				1FFFF475237580F500C9A177 /* NuguVoiceChrome.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2986,6 +2897,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B33EFB237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift in Sources */,
 				1FFFF476237580F500C9A177 /* NuguButton.swift in Sources */,
 				1FFFF474237580F500C9A177 /* NuguVoiceChrome.swift in Sources */,
 			);
