@@ -1,5 +1,5 @@
 //
-//  LocationAgentItem.swift
+//  LocationContext.swift
 //  NuguInterface
 //
 //  Created by yonghoonKwon on 2019/10/30.
@@ -21,9 +21,25 @@
 import Foundation
 
 /// <#Description#>
-public struct LocationInfo {
+public struct LocationContext {
     /// <#Description#>
-    public let latitude: String
+    public struct Current {
+        /// <#Description#>
+        public let latitude: String
+        /// <#Description#>
+        public let longitude: String
+    }
+    
     /// <#Description#>
-    public let longitude: String
+    public enum State: String {
+        case available = "AVAILABLE"
+        case unavailable = "UNAVAILABLE"
+        case timeout = "TIMEOUT"
+        case unknown = "UNKNOWN"
+    }
+    
+    /// <#Description#>
+    public let state: State
+    /// <#Description#>
+    public let current: Current?
 }

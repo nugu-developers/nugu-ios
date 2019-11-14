@@ -23,5 +23,5 @@ import Foundation
 /// <#Description#>
 public protocol LocationAgentDelegate: class {
     /// <#Description#>
-    func locationAgentRequestLocation() -> LocationInfo?
+    func locationAgentRequestContext() -> LocationContext
 }
