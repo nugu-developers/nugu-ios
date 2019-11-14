@@ -65,9 +65,11 @@ public class TycheKwd: NSObject {
      Start Key Word Detection.
      */
     public func start(inputStream: InputStream) throws {
+        log.debug("kwd try to start")
+        
         guard state == .inactive else {
-            log.debug("kwd is already running.")
-            return
+            log.error("kwd is already activated.")
+            throw KeyWordDetectorError.alreadyActivated
         }
         
         do {
@@ -96,6 +98,7 @@ public class TycheKwd: NSObject {
     }
     
     public func stop() {
+        log.debug("kwd try to stop")
         kwdWorkItem?.cancel()
         
         kwdQueue.async { [weak self] in
@@ -196,6 +199,7 @@ extension TycheKwd: StreamDelegate {
             }
             
         case .endEncountered:
+            log.debug("kwd stream endEncountered")
             stop()
             
         default:

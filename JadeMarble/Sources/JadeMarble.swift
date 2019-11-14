@@ -87,4 +87,5 @@ public enum StreamType: Int {
 
 public enum EndPointDetectorError: Error, LocalizedError {
     case initFailed
+    case alreadyRunning
 }

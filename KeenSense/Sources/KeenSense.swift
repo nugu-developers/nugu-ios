@@ -114,6 +114,7 @@ public enum KeyWordDetectorError: Error {
     case initBufferFailed
     case unsupportedAudioFormat
     case noDataAvailable
+    case alreadyActivated
 }
 
 public enum SpeexError: Error {
