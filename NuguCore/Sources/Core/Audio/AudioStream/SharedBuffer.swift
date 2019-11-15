@@ -94,7 +94,7 @@ extension SharedBuffer {
         init(buffer: SharedBuffer) {
             self.buffer = buffer
         }
-
+        
         public func write(_ element: Element) throws {
             guard buffer.writer === self else {
                 throw SharedBufferError.writePermissionDenied
@@ -104,10 +104,9 @@ extension SharedBuffer {
         }
         
         public func finish() {
-            buffer.writeQueue.async { [weak self] in
-                self?.buffer.readers.allObjects.forEach { (reader) in
-                    reader.readDisposable?.dispose()
-                }
+            log.debug("readers cnt: \(buffer.readers.allObjects.count)")
+            buffer.readers.allObjects.forEach { (reader) in
+                reader.readDisposable?.dispose()
             }
         }
     }
@@ -130,9 +129,9 @@ extension SharedBuffer {
             self.readDisposable = self.buffer.read(index: self.readIndex)
                 .take(1)
                 .observeOn(SerialDispatchQueueScheduler(queue: readQueue, internalSerialQueueName: "rx-"+readQueue.label))
-                .subscribe(onNext: { (writtenElement) in
+                .subscribe(onNext: { [weak self] (writtenElement) in
                     isCompleted = true
-                    self.readIndex += 1
+                    self?.readIndex += 1
                     complete(.success(writtenElement))
                 }, onDisposed: {
                     if isCompleted == false {

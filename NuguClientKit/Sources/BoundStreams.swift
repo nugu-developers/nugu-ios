@@ -26,8 +26,9 @@ class BoundStreams: NSObject, StreamDelegate {
     let input: InputStream
     let output: OutputStream
     private let streamQueue = DispatchQueue(label: "com.sktelecom.romaine.bound_stream_queue")
+    private var streamWorkItem: DispatchWorkItem?
     private var buffer: AudioStreamReadable?
-    let streamThreadGroup = DispatchGroup()
+    private let streamThreadGroup = DispatchGroup()
     
     init(buffer: AudioStreamReadable) {
         var inputOrNil: InputStream?
@@ -47,14 +48,26 @@ class BoundStreams: NSObject, StreamDelegate {
         
         super.init()
         
-        streamQueue.async { [weak self] in
+        streamWorkItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
 
             output.delegate = self
             output.schedule(in: .current, forMode: .default)
             output.open()
             
-            while RunLoop.current.run(mode: .default, before: .distantFuture) {}
+            while RunLoop.current.run(mode: .default, before: .distantFuture) && self.streamWorkItem?.isCancelled == false {}
+        }
+        streamQueue.async(execute: streamWorkItem!)
+    }
+    
+    func stop() {
+        log.debug("bound stream try to stop")
+        streamWorkItem?.cancel()
+        
+        streamQueue.async { [weak self] in
+            self?.output.close()
+            self?.buffer = nil
+            log.debug("bound stream is stopped")
         }
     }
     
@@ -66,7 +79,7 @@ class BoundStreams: NSObject, StreamDelegate {
                 guard let self = self else { return }
                 
                 guard case let .success(pcmBuffer) = result else {
-                    self.output.close()
+                    self.stop()
                     self.streamThreadGroup.leave()
                     return
                 }
@@ -86,9 +99,8 @@ class BoundStreams: NSObject, StreamDelegate {
             streamThreadGroup.wait()
             
         case .endEncountered:
-            output.remove(from: .current, forMode: .default)
-            output.close()
-            buffer = nil
+            log.debug("output stream endEncountered")
+            stop()
 
         default:
             break
