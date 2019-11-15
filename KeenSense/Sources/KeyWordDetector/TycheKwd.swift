@@ -197,8 +197,7 @@ extension TycheKwd: StreamDelegate {
             }
             
             if isDetected {
-                inputStream.close()
-                self.state = .inactive
+                stop()
 
                 extractDetectedData()
                 self.delegate?.keyWordDetectorDidDetect()
