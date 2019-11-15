@@ -53,7 +53,7 @@ private extension NuguVoiceChromeAnimationView {
         listeningPassiveAnimation.timingFunctions = [CAMediaTimingFunction(name: .linear)]
         listeningPassiveAnimation.values = [0, 2 * frameRatio, -2 * frameRatio, 0]
         listeningPassiveAnimation.duration = 1.6
-        listeningPassiveAnimation.repeatCount = HUGE
+        listeningPassiveAnimation.repeatCount = .infinity
         for index in 0 ..< 4 {
             let circleRadius: CGFloat = 4.0 * frameRatio
             let circleSize = CGSize(width: circleRadius * 2, height: circleRadius * 2)
@@ -68,8 +68,10 @@ private extension NuguVoiceChromeAnimationView {
             shapeLayer.frame = CGRect(
                 origin: CGPoint(
                     x: centerPoint.x - (4 * circleRadius + 1.5 * space) + (CGFloat(index) * (2 * circleRadius + space)),
-                    y: centerPoint.y - circleRadius),
-                size: circleSize)
+                    y: centerPoint.y - circleRadius
+                ),
+                size: circleSize
+            )
             listeningPassiveAnimation.beginTime = CACurrentMediaTime() + (Double(index) * 0.2)
             shapeLayer.add(listeningPassiveAnimation, forKey: "listeningPassiveAnimation")
             layer.addSublayer(shapeLayer)
@@ -120,7 +122,7 @@ private extension NuguVoiceChromeAnimationView {
             springAnimation.fromValue = expandedPath.cgPath
             springAnimation.toValue = compressedPath.cgPath
             springAnimation.beginTime = 0.1
-            springAnimation.repeatCount = HUGE
+            springAnimation.repeatCount = .infinity
             springAnimation.duration = 0.1
             springAnimation.autoreverses = true
             
@@ -133,7 +135,7 @@ private extension NuguVoiceChromeAnimationView {
             let animations = CAAnimationGroup()
             animations.beginTime = CACurrentMediaTime()
             animations.duration = 0.7
-            animations.repeatCount = HUGE
+            animations.repeatCount = .infinity
             animations.autoreverses = true
             animations.animations = [expandAnimation, springAnimation, backToCircleAnimation]
             
@@ -156,7 +158,7 @@ private extension NuguVoiceChromeAnimationView {
         jumpAnimation.timingFunctions = [CAMediaTimingFunction(name: .easeIn)]
         jumpAnimation.values = [12.5 * frameRatio, -12.5 * frameRatio]
         jumpAnimation.duration = 0.2
-        jumpAnimation.repeatCount = HUGE
+        jumpAnimation.repeatCount = .infinity
         jumpAnimation.autoreverses = true
         
         let verticalStretchAnimation = CAKeyframeAnimation(keyPath: "transform.scale.y")
@@ -164,7 +166,7 @@ private extension NuguVoiceChromeAnimationView {
         verticalStretchAnimation.keyTimes = [0, 0.66, 1]
         verticalStretchAnimation.values = [0.9, 1.1, 1.0]
         verticalStretchAnimation.duration = 0.2
-        verticalStretchAnimation.repeatCount = HUGE
+        verticalStretchAnimation.repeatCount = .infinity
         verticalStretchAnimation.autoreverses = true
         
         let horizontalStretchAnimation = CAKeyframeAnimation(keyPath: "transform.scale.x")
@@ -172,7 +174,7 @@ private extension NuguVoiceChromeAnimationView {
         horizontalStretchAnimation.keyTimes = [0, 1]
         horizontalStretchAnimation.values = [1.1, 0.9]
         horizontalStretchAnimation.duration = 0.2
-        horizontalStretchAnimation.repeatCount = HUGE
+        horizontalStretchAnimation.repeatCount = .infinity
         horizontalStretchAnimation.autoreverses = true
 
         let shapeLayer: CAShapeLayer = CAShapeLayer()
@@ -212,14 +214,14 @@ private extension NuguVoiceChromeAnimationView {
         expandAnimation.toValue = expandedPath.cgPath
         expandAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
         expandAnimation.duration = 0.4
-        expandAnimation.repeatCount = HUGE
+        expandAnimation.repeatCount = .infinity
         
         let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
         opacityAnimation.keyTimes = [0, 1]
         opacityAnimation.values = [0.75, 0.25]
         opacityAnimation.timingFunctions = [CAMediaTimingFunction(name: .easeInEaseOut)]
         opacityAnimation.duration = 0.4
-        opacityAnimation.repeatCount = HUGE
+        opacityAnimation.repeatCount = .infinity
         
         let shapeLayer: CAShapeLayer = CAShapeLayer()
         shapeLayer.fillColor = shapeLayerColor
