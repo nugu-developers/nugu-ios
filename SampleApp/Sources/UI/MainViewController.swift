@@ -459,7 +459,8 @@ extension MainViewController: DialogStateDelegate {
                     self?.nuguVoiceChrome.minimize()
                     return
                 }
-                self?.refreshWakeUpDetector()
+                // TODO: Need AEC
+                // self?.refreshWakeUpDetector()
                 self?.dismissVoiceChrome()
             }
         case .listening:

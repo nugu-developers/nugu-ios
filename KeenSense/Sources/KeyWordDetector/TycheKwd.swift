@@ -64,7 +64,7 @@ public class TycheKwd: NSObject {
     /**
      Start Key Word Detection.
      */
-    public func start(inputStream: InputStream) throws {
+    public func start(inputStream: InputStream) {
         log.debug("kwd try to start")
         
         kwdWorkItem?.cancel()

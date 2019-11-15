@@ -571,35 +571,30 @@ private extension ASRAgent {
             return
         }
         
-        do {
-            attachmentSeq = 0
-            
-            var timeout: Int {
-                guard let expectTimeout = currentExpectSpeech?.timeoutInMilliseconds else {
-                    return ASRConst.timeout
-                }
-                
-                return expectTimeout / 1000
+        attachmentSeq = 0
+        
+        var timeout: Int {
+            guard let expectTimeout = currentExpectSpeech?.timeoutInMilliseconds else {
+                return ASRConst.timeout
             }
             
-            try endPointDetector.start(inputStream: asrRequest.reader,
-                                       sampleRate: ASRConst.sampleRate,
-                                       timeout: timeout,
-                                       maxDuration: ASRConst.maxDuration,
-                                       pauseLength: ASRConst.pauseLength)
-
-            asrState = .listening
-            
-            sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
-                guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
-                guard case .success = status else {
-                    self?.asrResult = .error(.recognizeFailed)
-                    return
-                }
+            return expectTimeout / 1000
+        }
+        
+        endPointDetector.start(inputStream: asrRequest.reader,
+                               sampleRate: ASRConst.sampleRate,
+                               timeout: timeout,
+                               maxDuration: ASRConst.maxDuration,
+                               pauseLength: ASRConst.pauseLength)
+        
+        asrState = .listening
+        
+        sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
+            guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
+            guard case .success = status else {
+                self?.asrResult = .error(.recognizeFailed)
+                return
             }
-        } catch {
-            log.error(error)
-            asrResult = .error(.listenFailed)
         }
     }
     

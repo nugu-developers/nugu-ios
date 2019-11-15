@@ -55,7 +55,7 @@ public class TycheEpd: NSObject {
                       sampleRate: Double,
                       timeout: Int,
                       maxDuration: Int,
-                      pauseLength: Int) throws {
+                      pauseLength: Int) {
         log.debug("")
         epdWorkItem?.cancel()
         
