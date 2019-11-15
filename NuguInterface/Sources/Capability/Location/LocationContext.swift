@@ -22,13 +22,6 @@ import Foundation
 
 /// <#Description#>
 public struct LocationContext {
-    /// <#Description#>
-    public struct Current {
-        /// <#Description#>
-        public let latitude: String
-        /// <#Description#>
-        public let longitude: String
-    }
     
     /// <#Description#>
     public enum State: String {
@@ -39,7 +32,31 @@ public struct LocationContext {
     }
     
     /// <#Description#>
+    public struct Current {
+        /// <#Description#>
+        public let latitude: String
+        /// <#Description#>
+        public let longitude: String
+        
+        /// <#Description#>
+        /// - Parameter latitude: <#latitude description#>
+        /// - Parameter longitude: <#longitude description#>
+        public init(latitude: String, longitude: String) {
+            self.latitude = latitude
+            self.longitude = longitude
+        }
+    }
+    
+    /// <#Description#>
     public let state: State
     /// <#Description#>
     public let current: Current?
+    
+    /// <#Description#>
+    /// - Parameter state: <#state description#>
+    /// - Parameter current: <#current description#>
+    public init(state: State, current: Current?) {
+        self.state = state
+        self.current = current
+    }
 }
