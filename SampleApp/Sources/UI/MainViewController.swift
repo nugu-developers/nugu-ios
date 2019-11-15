@@ -279,7 +279,7 @@ private extension MainViewController {
     
     func dismissVoiceChrome() {
         voiceChromeDismissWorkItem?.cancel()
-        NuguCentralManager.shared.cancelRecognize()()
+        NuguCentralManager.shared.cancelRecognize()
         
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
