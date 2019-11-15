@@ -56,37 +56,46 @@ public class TycheEpd: NSObject {
                       timeout: Int,
                       maxDuration: Int,
                       pauseLength: Int) throws {
-        guard [.listening, .start].contains(state) == false else {
-            log.debug("epd is already running.")
-            throw EndPointDetectorError.alreadyRunning
-        }
-        
-        do {
-            try initDetectorEngine(sampleRate: sampleRate,
-                                   timeout: timeout,
-                                   maxDuration: maxDuration,
-                                   pauseLength: pauseLength)
-        } catch {
-            log.error("epd engine init error: \(error)")
-            throw error
-        }
-        
-        state = .listening
-        self.inputStream = inputStream
-        flushedLength = 0
-        flushLength = Int((Double(flushTime) * sampleRate) / 1000)
         
         epdWorkItem?.cancel()
-        epdWorkItem = DispatchWorkItem { [weak self] in
+        
+        var workItem: DispatchWorkItem!
+        workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
+            
+            do {
+                try self.initDetectorEngine(sampleRate: sampleRate,
+                                       timeout: timeout,
+                                       maxDuration: maxDuration,
+                                       pauseLength: pauseLength)
+            } catch {
+                log.error("epd engine init error: \(error)")
+                self.delegate?.endPointDetectorStateChanged(state: .error)
+                return
+            }
+            
+            self.state = .listening
+            self.inputStream = inputStream
+            self.flushedLength = 0
+            self.flushLength = Int((Double(self.flushTime) * sampleRate) / 1000)
             
             inputStream.delegate = self
             inputStream.schedule(in: .current, forMode: .default)
             inputStream.open()
             
-            while RunLoop.current.run(mode: .default, before: .distantFuture) && self.epdWorkItem?.isCancelled == false {}
+            while RunLoop.current.run(mode: .default, before: .distantFuture) && workItem.isCancelled == false {}
+            
+            if self.epdHandle != nil {
+                self.inputStream?.close()
+                epdClientChannelRELEASE(self.epdHandle)
+                self.epdHandle = nil
+                self.state = .idle
+            }
+            
+            workItem = nil
         }
-        epdQueue.async(execute: epdWorkItem!)
+        epdQueue.async(execute: workItem)
+        epdWorkItem = workItem
     }
     
     public func stop() {

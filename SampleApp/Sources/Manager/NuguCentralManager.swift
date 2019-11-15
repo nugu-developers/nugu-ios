@@ -58,6 +58,7 @@ extension NuguCentralManager {
         client.focusManager.stopForegroundActivity()
         client.networkManager.disconnect()
         client.accessToken = nil
+        client.inputProvider?.stop()
     }
 }
 

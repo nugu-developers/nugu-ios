@@ -67,34 +67,40 @@ public class TycheKwd: NSObject {
     public func start(inputStream: InputStream) throws {
         log.debug("kwd try to start")
         
-        guard state == .inactive else {
-            log.error("kwd is already activated.")
-            throw KeyWordDetectorError.alreadyActivated
-        }
-        
-        do {
-            try initTriggerEngine()
-        } catch {
-            state = .inactive
-            delegate?.keyWordDetectorDidError(error)
-            log.debug("kwd error: \(error)")
-            throw error
-        }
-
-        state = .active
-        self.inputStream = inputStream
-
         kwdWorkItem?.cancel()
-        kwdWorkItem = DispatchWorkItem { [weak self] in
+        
+        var workItem: DispatchWorkItem!
+        workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
+            
+            do {
+                try self.initTriggerEngine()
+            } catch {
+                self.state = .inactive
+                self.delegate?.keyWordDetectorDidError(error)
+                log.debug("kwd error: \(error)")
+            }
+            
+            self.state = .active
+            self.inputStream = inputStream
             
             inputStream.delegate = self
             inputStream.schedule(in: .current, forMode: .default)
             inputStream.open()
             
-            while RunLoop.current.run(mode: .default, before: .distantFuture) && self.kwdWorkItem?.isCancelled == false {}
+            while RunLoop.current.run(mode: .default, before: .distantFuture) && workItem.isCancelled == false {}
+            
+            if self.engineHandle != nil {
+                self.inputStream?.close()
+                Wakeup_Destroy(self.engineHandle)
+                self.engineHandle = nil
+                self.state = .inactive
+            }
+            
+            workItem = nil
         }
-        kwdQueue.async(execute: kwdWorkItem!)
+        kwdQueue.async(execute: workItem!)
+        kwdWorkItem = workItem
     }
     
     public func stop() {
