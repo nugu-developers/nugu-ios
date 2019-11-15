@@ -51,8 +51,8 @@ final class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(didEnterBackground(_:)),
-            name: UIApplication.didEnterBackgroundNotification,
+            selector: #selector(willResignActive(_:)),
+            name: UIApplication.willResignActiveNotification,
             object: nil
         )
         NotificationCenter.default.addObserver(
@@ -113,8 +113,8 @@ final class MainViewController: UIViewController {
     
     /// Catch entering background notification to stop recognizing & wake up detector
     /// It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
-    /// - Parameter notification: UIApplication.didEnterBackgroundNotification
-    func didEnterBackground(_ notification: Notification) {
+    /// - Parameter notification: UIApplication.willResignActiveNotification
+    func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
         NuguCentralManager.shared.stopWakeUpDetector()
         NuguCentralManager.shared.disable()
@@ -280,7 +280,7 @@ private extension MainViewController {
     
     func dismissVoiceChrome() {
         voiceChromeDismissWorkItem?.cancel()
-        NuguCentralManager.shared.stopRecognize()
+        NuguCentralManager.shared.cancelRecognize()
         
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
@@ -477,8 +477,7 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .processing)
             }
-        default:
-            refreshWakeUpDetector()
+        case .expectingSpeech: break
         }
     }
 }
