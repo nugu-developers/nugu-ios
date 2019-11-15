@@ -117,6 +117,7 @@ final class MainViewController: UIViewController {
     func didEnterBackground(_ notification: Notification) {
         dismissVoiceChrome()
         NuguCentralManager.shared.stopWakeUpDetector()
+        NuguCentralManager.shared.disable()
     }
     
     /// Catch becoming active notification to refresh mic status & Nugu button

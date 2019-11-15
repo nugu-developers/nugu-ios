@@ -35,6 +35,7 @@ public class NetworkManager: NetworkManageable {
     public var networkStatus: NetworkStatus = .disconnected() {
         didSet {
             if oldValue != networkStatus {
+                log.info("From:\(oldValue) To:\(networkStatus)")
                 networkStatusDelegates.notify { (delegate) in
                     delegate.networkStatusDidChange(networkStatus)
                 }
@@ -88,6 +89,7 @@ public class NetworkManager: NetworkManageable {
 
     public func disconnect() {
         apiProvider?.disconnect()
+        apiProvider = nil
     }
     
     public func add(statusDelegate: NetworkStatusDelegate) {
