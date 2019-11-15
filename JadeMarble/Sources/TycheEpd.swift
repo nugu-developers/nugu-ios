@@ -56,7 +56,7 @@ public class TycheEpd: NSObject {
                       timeout: Int,
                       maxDuration: Int,
                       pauseLength: Int) throws {
-        
+        log.debug("")
         epdWorkItem?.cancel()
         
         var workItem: DispatchWorkItem!
@@ -206,8 +206,7 @@ extension TycheEpd: StreamDelegate {
             #endif
             
             if [.idle, .listening, .start].contains(state) == false {
-                inputStream.close()
-                state = .idle
+                stop()
             }
             
         case .endEncountered:
