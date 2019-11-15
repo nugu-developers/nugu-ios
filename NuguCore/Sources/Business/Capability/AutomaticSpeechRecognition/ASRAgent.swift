@@ -206,6 +206,8 @@ public extension ASRAgent {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            // TODO: cancelAssociated = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
+            self.currentExpectSpeech = nil
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
                 return
@@ -401,7 +403,7 @@ private extension ASRAgent {
     func expectSpeech(directive: DirectiveProtocol) -> Result<Void, Error> {
         return Result { [weak self] in
             guard currentExpectSpeech != nil else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
             }
             switch asrState {
             case .idle, .busy:
