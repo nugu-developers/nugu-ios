@@ -44,12 +44,14 @@ public class EndPointDetector: EndPointDetectable {
         engine.delegate = self
     }
     
-    public func start(inputStream: AudioStreamReadable, sampleRate: Double, timeout: Int, maxDuration: Int, pauseLength: Int) throws {
+    public func start(inputStream: AudioStreamReadable, sampleRate: Double, timeout: Int, maxDuration: Int, pauseLength: Int) {
+        boundStreams?.stop()
         boundStreams = BoundStreams(buffer: inputStream)
-        try engine.start(inputStream: boundStreams!.input, sampleRate: sampleRate, timeout: timeout, maxDuration: maxDuration, pauseLength: pauseLength)
+        engine.start(inputStream: boundStreams!.input, sampleRate: sampleRate, timeout: timeout, maxDuration: maxDuration, pauseLength: pauseLength)
     }
     
     public func stop() {
+        boundStreams?.stop()
         engine.stop()
     }
 }

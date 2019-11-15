@@ -41,7 +41,7 @@ public protocol WakeUpDetectable: class {
     
     /// <#Description#>
     /// - Parameter input: <#input description#>
-    func start() throws
+    func start()
     /// <#Description#>
     func stop()
 }

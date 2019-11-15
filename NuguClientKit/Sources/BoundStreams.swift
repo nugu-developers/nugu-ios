@@ -28,7 +28,7 @@ class BoundStreams: NSObject, StreamDelegate {
     private let streamQueue = DispatchQueue(label: "com.sktelecom.romaine.bound_stream_queue")
     private var streamWorkItem: DispatchWorkItem?
     private var buffer: AudioStreamReadable?
-    private let streamThreadGroup = DispatchGroup()
+    private let streamSemaphore = DispatchSemaphore(value: 0)
     
     init(buffer: AudioStreamReadable) {
         var inputOrNil: InputStream?
@@ -63,9 +63,9 @@ class BoundStreams: NSObject, StreamDelegate {
     func stop() {
         log.debug("bound stream try to stop")
         streamWorkItem?.cancel()
-        
+        streamSemaphore.signal()
+        output.close()
         streamQueue.async { [weak self] in
-            self?.output.close()
             self?.buffer = nil
             log.debug("bound stream is stopped")
         }
@@ -74,18 +74,17 @@ class BoundStreams: NSObject, StreamDelegate {
     func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch eventCode {
         case .hasSpaceAvailable:
-            streamThreadGroup.enter()
             buffer?.read(complete: { [weak self] (result) in
                 guard let self = self else { return }
                 
                 guard case let .success(pcmBuffer) = result else {
                     self.stop()
-                    self.streamThreadGroup.leave()
+                    self.streamSemaphore.signal()
                     return
                 }
                 
                 guard let data = pcmBuffer.int16ChannelData?.pointee else {
-                    self.streamThreadGroup.leave()
+                    self.streamSemaphore.signal()
                     return
                 }
                 
@@ -93,10 +92,10 @@ class BoundStreams: NSObject, StreamDelegate {
                     self.output.write(ptrData, maxLength: Int(pcmBuffer.frameLength*2))
                 }
                 
-                self.streamThreadGroup.leave()
+                self.streamSemaphore.signal()
             })
             
-            streamThreadGroup.wait()
+            streamSemaphore.wait()
             
         case .endEncountered:
             log.debug("output stream endEncountered")

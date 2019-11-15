@@ -103,7 +103,7 @@ extension NuguCentralManager: ContextInfoDelegate {
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                try self.client.wakeUpDetector?.start()
+                self.client.wakeUpDetector?.start()
             })
             completion?(result)
         }

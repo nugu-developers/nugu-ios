@@ -40,7 +40,7 @@ public protocol EndPointDetectable: class {
                sampleRate: Double,
                timeout: Int,
                maxDuration: Int,
-               pauseLength: Int) throws
+               pauseLength: Int)
 
     /// <#Description#>
     func stop()
