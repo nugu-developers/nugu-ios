@@ -23,5 +23,5 @@ import Foundation
 /// <#Description#>
 public protocol LocationAgentDelegate: class {
     /// <#Description#>
-    func locationAgentRequestContext() -> LocationContext
+    func locationAgentRequestContext(completion: @escaping (LocationContext) -> Void)
 }

@@ -25,5 +25,8 @@ public protocol LocationAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate {
     /// <#Description#>
+    var timeoutSeconds: Double { get set }
+    
+    /// <#Description#>
     var delegate: LocationAgentDelegate? { get set }
 }

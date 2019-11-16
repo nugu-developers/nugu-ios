@@ -25,6 +25,9 @@ import NuguInterface
 final public class LocationAgent: LocationAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .location, version: "1.0")
     
+    private let semaphore = DispatchSemaphore(value: 0)
+    
+    public var timeoutSeconds: Double = 1.0 // default timeout-seconds
     public weak var delegate: LocationAgentDelegate?
     
     public init() {
@@ -44,17 +47,34 @@ extension LocationAgent: ContextInfoDelegate {
             "version": capabilityAgentProperty.version
         ]
         
-        let locationContext = delegate?.locationAgentRequestContext()
-        let state = locationContext?.state ?? .unknown  // Exception when developer does not implement `LocationAgentDelegate`.
-        payload["state"] = state.rawValue
+        var locationContext: LocationContext?
+        let state: LocationContext.State
         
-        if let currentInfo = locationContext?.current, state == .available {
-            payload["current"] = [
-                "latitude": currentInfo.latitude,
-                "longitude": currentInfo.longitude
-            ]
+        if let delegate = delegate {
+            delegate.locationAgentRequestContext { [weak self] (context) in
+                locationContext = context
+                self?.semaphore.signal()
+            }
+            let result = semaphore.wait(timeout: .now() + timeoutSeconds)
+            
+            switch result {
+            case .success:
+                state = locationContext?.state ?? .unknown
+                if let currentInfo = locationContext?.current, state == .available {
+                    payload["current"] = [
+                        "latitude": currentInfo.latitude,
+                        "longitude": currentInfo.longitude
+                    ]
+                }
+            case .timedOut:
+                state = .timeout
+            }
+        } else {
+            state = locationContext?.state ?? .unknown // Exception when developer does not implement `LocationAgentDelegate`.
         }
         
+        payload["state"] = state.rawValue
+
         return ContextInfo(
             contextType: .capability,
             name: capabilityAgentProperty.name,
