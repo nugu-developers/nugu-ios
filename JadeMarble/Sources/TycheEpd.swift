@@ -57,6 +57,7 @@ public class TycheEpd: NSObject {
                       maxDuration: Int,
                       pauseLength: Int) {
         log.debug("")
+        self.inputStream = inputStream
         epdWorkItem?.cancel()
         
         var workItem: DispatchWorkItem!
@@ -75,7 +76,6 @@ public class TycheEpd: NSObject {
             }
             
             self.state = .listening
-            self.inputStream = inputStream
             self.flushedLength = 0
             self.flushLength = Int((Double(self.flushTime) * sampleRate) / 1000)
             
@@ -83,7 +83,9 @@ public class TycheEpd: NSObject {
             inputStream.schedule(in: .current, forMode: .default)
             inputStream.open()
             
-            while RunLoop.current.run(mode: .default, before: .distantFuture) && workItem.isCancelled == false {}
+            while workItem.isCancelled == false {
+                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
+            }
             
             if self.epdHandle != nil {
                 self.inputStream?.close()
@@ -141,12 +143,14 @@ public class TycheEpd: NSObject {
 
 extension TycheEpd: StreamDelegate {
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        guard let inputStream = aStream as? InputStream else { return }
+        guard let inputStream = aStream as? InputStream,
+            inputStream == self.inputStream else { return }
 
         switch eventCode {
         case .hasBytesAvailable:
             let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
             let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
+            guard 0 < inputLength else { return }
             
             let engineState = inputBuffer.withMemoryRebound(to: Int16.self, capacity: inputLength/2) { (ptrPcmData) -> Int32 in
                 // Calculate flusehd audio frame length.
