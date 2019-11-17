@@ -1,0 +1,9 @@
+platform :ios, '10.0'
+
+target 'SampleApp' do
+  use_frameworks!
+
+  pod 'NuguClientKit'
+  pod 'NuguUIKit'
+  pod 'NuguLoginKit'
+end
