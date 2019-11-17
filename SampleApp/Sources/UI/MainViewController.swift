@@ -446,7 +446,6 @@ extension MainViewController: DialogStateDelegate {
     func dialogStateDidChange(_ state: DialogState) {
         switch state {
         case .idle:
-            refreshWakeUpDetector()
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
                 self?.dismissVoiceChrome()
             })
@@ -459,12 +458,9 @@ extension MainViewController: DialogStateDelegate {
                     self?.nuguVoiceChrome.minimize()
                     return
                 }
-                // TODO: Need AEC
-                // self?.refreshWakeUpDetector()
                 self?.dismissVoiceChrome()
             }
         case .listening:
-            NuguCentralManager.shared.stopWakeUpDetector()
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
                 SoundPlayer.playSound(soundType: .start)
@@ -486,6 +482,17 @@ extension MainViewController: DialogStateDelegate {
 // MARK: - AutomaticSpeechRecognitionDelegate
 
 extension MainViewController: ASRAgentDelegate {
+    func asrAgentDidChange(state: ASRState) {
+        switch state {
+        case .idle:
+            refreshWakeUpDetector()
+        case .listening:
+            NuguCentralManager.shared.stopWakeUpDetector()
+        default:
+            break
+        }
+    }
+    
     func asrAgentDidReceive(result: ASRResult) {
         switch result {
         case .complete(let text):
