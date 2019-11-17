@@ -334,6 +334,12 @@
 		1FFFF51A237674DF00C9A177 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
 		1FFFF51B237674DF00C9A177 /* NuguUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF525237676BE00C9A177 /* NuguTests.swift */; };
+		730B1970237EF0EB00C63AD6 /* skt_trigger_search_aria.raw in Resources */ = {isa = PBXBuildFile; fileRef = 730B196A237EF0EB00C63AD6 /* skt_trigger_search_aria.raw */; };
+		730B1971237EF0EB00C63AD6 /* skt_trigger_am_aria.raw in Resources */ = {isa = PBXBuildFile; fileRef = 730B196B237EF0EB00C63AD6 /* skt_trigger_am_aria.raw */; };
+		730B1972237EF0EB00C63AD6 /* skt_trigger_am_tinkerbell.raw in Resources */ = {isa = PBXBuildFile; fileRef = 730B196C237EF0EB00C63AD6 /* skt_trigger_am_tinkerbell.raw */; };
+		730B1973237EF0EB00C63AD6 /* skt_trigger_search_tinkerbell.raw in Resources */ = {isa = PBXBuildFile; fileRef = 730B196D237EF0EB00C63AD6 /* skt_trigger_search_tinkerbell.raw */; };
+		730B1974237EF0EB00C63AD6 /* skt_epd_model.raw in Resources */ = {isa = PBXBuildFile; fileRef = 730B196E237EF0EB00C63AD6 /* skt_epd_model.raw */; };
+		730B1975237EF0EB00C63AD6 /* Nugu-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 730B196F237EF0EB00C63AD6 /* Nugu-Info.plist */; };
 		7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */; };
 		7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD80237A77D800FCD6E9 /* BoundStreams.swift */; };
 		7330CD84237A77D800FCD6E9 /* KeyWordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */; };
@@ -853,6 +859,12 @@
 		3D9C42DB22745DB0000A6585 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		3D9C43012274611B000A6585 /* nugu-ios-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nugu-ios-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D9C431122746198000A6585 /* nugu-ios-macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nugu-ios-macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		730B196A237EF0EB00C63AD6 /* skt_trigger_search_aria.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_search_aria.raw; sourceTree = "<group>"; };
+		730B196B237EF0EB00C63AD6 /* skt_trigger_am_aria.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_am_aria.raw; sourceTree = "<group>"; };
+		730B196C237EF0EB00C63AD6 /* skt_trigger_am_tinkerbell.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_am_tinkerbell.raw; sourceTree = "<group>"; };
+		730B196D237EF0EB00C63AD6 /* skt_trigger_search_tinkerbell.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_search_tinkerbell.raw; sourceTree = "<group>"; };
+		730B196E237EF0EB00C63AD6 /* skt_epd_model.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_epd_model.raw; sourceTree = "<group>"; };
+		730B196F237EF0EB00C63AD6 /* Nugu-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nugu-Info.plist"; sourceTree = "<group>"; };
 		7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetector.swift; sourceTree = "<group>"; };
 		7330CD80237A77D800FCD6E9 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordDetector.swift; sourceTree = "<group>"; };
@@ -2176,6 +2188,8 @@
 		1FFFF4D7237672F100C9A177 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				730B1969237EF0EB00C63AD6 /* AsrFiles */,
+				730B196F237EF0EB00C63AD6 /* Nugu-Info.plist */,
 				1FFFF4D8237672F100C9A177 /* SoundResource */,
 				1FFFF50C2376748E00C9A177 /* Info.plist */,
 				1F1008CD23791F5400D90FEE /* SampleApp.entitlements */,
@@ -2253,6 +2267,18 @@
 				3D9C42D922745DAF000A6585 /* .swiftlint.yml */,
 			);
 			name = Configs;
+			sourceTree = "<group>";
+		};
+		730B1969237EF0EB00C63AD6 /* AsrFiles */ = {
+			isa = PBXGroup;
+			children = (
+				730B196A237EF0EB00C63AD6 /* skt_trigger_search_aria.raw */,
+				730B196B237EF0EB00C63AD6 /* skt_trigger_am_aria.raw */,
+				730B196C237EF0EB00C63AD6 /* skt_trigger_am_tinkerbell.raw */,
+				730B196D237EF0EB00C63AD6 /* skt_trigger_search_tinkerbell.raw */,
+				730B196E237EF0EB00C63AD6 /* skt_epd_model.raw */,
+			);
+			path = AsrFiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2668,15 +2694,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FFFF505237672F100C9A177 /* asrStart.wav in Resources */,
+				730B1975237EF0EB00C63AD6 /* Nugu-Info.plist in Resources */,
 				1FFFF4E4237672F100C9A177 /* DisplayBodyView.xib in Resources */,
+				730B1972237EF0EB00C63AD6 /* skt_trigger_am_tinkerbell.raw in Resources */,
 				1FFFF503237672F100C9A177 /* LaunchScreen.storyboard in Resources */,
 				1FFFF4E6237672F100C9A177 /* DisplayListViewCell.xib in Resources */,
 				1FFFF506237672F100C9A177 /* asrSuccess.wav in Resources */,
+				730B1971237EF0EB00C63AD6 /* skt_trigger_am_aria.raw in Resources */,
 				1FFFF507237672F100C9A177 /* asrFail.wav in Resources */,
 				1FFFF4E7237672F100C9A177 /* DisplayBodyListViewCell.xib in Resources */,
 				1FFFF4EA237672F100C9A177 /* DisplayBodyListView.xib in Resources */,
+				730B1973237EF0EB00C63AD6 /* skt_trigger_search_tinkerbell.raw in Resources */,
 				1FFFF502237672F100C9A177 /* Assets.xcassets in Resources */,
+				730B1970237EF0EB00C63AD6 /* skt_trigger_search_aria.raw in Resources */,
 				1FFFF504237672F100C9A177 /* Main.storyboard in Resources */,
+				730B1974237EF0EB00C63AD6 /* skt_epd_model.raw in Resources */,
 				1FFFF4F1237672F100C9A177 /* DisplayListView.xib in Resources */,
 				1FFFF4F4237672F100C9A177 /* DisplayAudioPlayerView.xib in Resources */,
 			);
@@ -3203,7 +3235,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguInterface;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3234,7 +3266,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguInterface;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3274,7 +3306,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/NuguCore/Libraries/Opus",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3314,7 +3346,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/NuguCore/Libraries/Opus",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3347,7 +3379,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3380,7 +3412,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3409,7 +3441,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3438,7 +3470,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3471,7 +3503,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3504,7 +3536,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3542,7 +3574,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -3587,7 +3619,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -3631,7 +3663,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
@@ -3675,7 +3707,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
