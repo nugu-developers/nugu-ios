@@ -30,22 +30,8 @@ public final class OAuthManager<T: LoginType> {
     public var loginTypeInfo: T?
     
     private lazy var stateController = OAuthStateController() // for type1
-    private let serverBaseUrl: String
     
-    private init() {
-        guard let url = Bundle.main.url(forResource: "Nugu-Info", withExtension: "plist") else {
-            serverBaseUrl = defaultServerBaseUrl
-            return
-        }
-        
-        do {
-            let data = try Data(contentsOf: url)
-            let configuration = try PropertyListDecoder().decode(NuguLoginConfiguration.self, from: data)
-            serverBaseUrl = configuration.serverBaseUrl
-        } catch {
-            serverBaseUrl = defaultServerBaseUrl
-        }
-    }
+    private init() {}
 }
 
 // MARK: - Singleton for type1
@@ -78,7 +64,7 @@ public extension OAuthManager where T: Type1 {
         stateController.completionHandler = completion
         let state = stateController.makeState()
         
-        var urlComponents = URLComponents(string: serverBaseUrl + "/oauth/authorize")
+        var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/oauth/authorize")
         
         var queries = [URLQueryItem]()
         queries.append(URLQueryItem(name: "response_type", value: "code"))
@@ -156,7 +142,7 @@ public extension OAuthManager where T: Type1 {
         
         // Acquire token
         Type1Api().acquireToken(
-            serverBaseUrl: serverBaseUrl,
+            serverBaseUrl: NuguOAuthServerInfo.serverBaseUrl,
             code: authorizationCode,
             redirectUri: loginTypeInfo.redirectUri,
             clientId: loginTypeInfo.clientId,
@@ -186,7 +172,7 @@ public extension OAuthManager where T: Type1 {
         }
         
         Type1Api().refreshToken(
-            serverBaseUrl: serverBaseUrl,
+            serverBaseUrl: NuguOAuthServerInfo.serverBaseUrl,
             refreshToken: refreshToken,
             clientId: loginTypeInfo.clientId,
             clientSecret: loginTypeInfo.clientSecret) { (result) in
@@ -221,7 +207,7 @@ public extension OAuthManager where T: Type2 {
         }
         
         Type2Api().getToken(
-            serverBaseUrl: serverBaseUrl,
+            serverBaseUrl: NuguOAuthServerInfo.serverBaseUrl,
             clientId: loginTypeInfo.clientId,
             clientSecret: loginTypeInfo.clientSecret,
             deviceSerialNumber: loginTypeInfo.deviceUniqueId) { (result) in

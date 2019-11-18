@@ -28,7 +28,7 @@ enum NetworkConst {
 
 private extension NetworkConst {
     static func openSdkVersion() -> String {
-        return "OpenSDK/" + (Bundle(for: NuguApp.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
+        return "OpenSDK/" + (Bundle(for: NuguConfiguration.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
     }
     
     static func clientVersion() -> String {
