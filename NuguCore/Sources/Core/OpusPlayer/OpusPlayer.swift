@@ -23,6 +23,8 @@ import AVFoundation
 
 import NuguInterface
 
+import RxSwift
+
 /**
  Player for Nugu voice (Text To Speech)
  - Nugu server will send a tts message which is encoded opus codec.
@@ -43,7 +45,8 @@ public class OpusPlayer: MediaPlayable {
     private var tempAudioArray = [Float]()
 
     /// hold entire audio buffers for seek function.
-    private var audioBuffers = [AVAudioPCMBuffer]()
+    @Publish private var audioBuffers = [AVAudioPCMBuffer]()
+    private let disposeBag = DisposeBag()
     
     private var audioQueue = DispatchQueue(label: "com.sktelecom.romaine.speech_synthesizer_audio")
     
@@ -57,12 +60,12 @@ public class OpusPlayer: MediaPlayable {
     
     /// current time(seconds)
     public var offset: Int {
-        return Int(Double(chunkSize * curBufferIndex) / audioFormat.sampleRate)
+        return Int((Double(chunkSize * curBufferIndex) / audioFormat.sampleRate) * 1000)
     }
     
-    /// duration(seconds)
+    /// duration(milliseconds)
     public var duration: Int {
-        return Int(Double(chunkSize * audioBuffers.count) / audioFormat.sampleRate)
+        return Int((Double(chunkSize * audioBuffers.count) / audioFormat.sampleRate) * 1000)
     }
     
     public var isMuted: Bool {
@@ -101,7 +104,6 @@ public class OpusPlayer: MediaPlayable {
     }
     
     private func engineInit() throws {
-        // audio session과의 관계에 따라 NSException이 발생할 수 있는데, 이때에 swift에서 catch할 방법이 없고 앱이 종료되므로 OBJC의 Exception을 처리할 꼼수를 적용한다.
         if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
             guard let self = self else {
                 return
@@ -268,9 +270,28 @@ public class OpusPlayer: MediaPlayable {
                         
                         return
                     }
-                
+                    
+                    guard let curBuffer = self.audioBuffers[safe: self.curBufferIndex],
+                        curBuffer != self.lastBuffer else {
+                            return
+                    }
+                    
                     self.curBufferIndex += 1
                     guard let nextBuffer = self.audioBuffers[safe: self.curBufferIndex] else {
+                        log.debug("waiting for next audio data.")
+                        
+                        self.$audioBuffers
+                            .take(1)
+                            .subscribeOn(CurrentThreadScheduler.instance)
+                            .subscribe(onNext: { [weak self] (audioBuffers) in
+                                guard let self = self,
+                                    let nextBuffer = audioBuffers[safe: self.curBufferIndex] else { return }
+                                
+                                log.debug("Try to restart scheduler.")
+                                self.scheduleBuffer(audioBuffer: nextBuffer)
+                        }).disposed(by: self.disposeBag)
+                        
+                        log.debug("waiting for next audio data.")
                         return
                     }
                     
@@ -348,6 +369,10 @@ public class OpusPlayer: MediaPlayable {
         delegate?.mediaPlayerDidChange(state: .stop)
     }
     
+    /**
+     seek
+     - parameter to: seek time (millisecond)
+     */
     public func seek(to offset: Int, completion: ((Result<Void, Error>) -> Void)?) {
         log.debug("try to seek")
 
@@ -359,7 +384,7 @@ public class OpusPlayer: MediaPlayable {
                 return
             }
             
-            let chunkTime = Int(Float(self.chunkSize) / Float(self.audioFormat.sampleRate))
+            let chunkTime = Int((Float(self.chunkSize) / Float(self.audioFormat.sampleRate)) * 1000)
             self.curBufferIndex = offset / chunkTime
             completion?(.success(()))
         }
