@@ -173,7 +173,7 @@ private extension MainViewController {
         NuguCentralManager.shared.displayPlayerController.use()
     }
     
-    /// Show login result webpage after successful login process
+    /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
         guard hasShownGuideWeb == false,
             let url = SampleApp.guideWebUrl else { return }
