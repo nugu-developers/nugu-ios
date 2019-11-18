@@ -34,7 +34,16 @@ struct SampleApp {
     
     fileprivate static let natty = Natty(by: nattyConfiguration)
     
-    static var loginResultURL: String?  // Saved NUGU web-page url by type1 login
+    /// Web page url for NUGU usage guide of own device
+    /// URLQueryItem["poc_id"]: put your own poc_id issued from Nugu Developers site ( https://developers.nugu.co.kr/#/sdk/pocList)
+    static var guideWebUrl: URL? {
+        var urlComponent = URLComponents(string: "https://webview.sktnugu.com/v2/3pp/confirm.html")
+        urlComponent?.queryItems = [
+            URLQueryItem(name: "poc_id", value: "own.poc.id"),
+            URLQueryItem(name: "device_unique_id", value: deviceUniqueId)
+        ]
+        return urlComponent?.url
+    }
     
     /// Intercept open url and replace with redirectUri's scheme
     /// for free pass of Sample app's Oauth validation check
