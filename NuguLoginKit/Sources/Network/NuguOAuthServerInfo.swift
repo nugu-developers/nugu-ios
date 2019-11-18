@@ -1,8 +1,8 @@
 //
-//  NuguLoginKit.swift
+//  NuguOAuthServerInfo.swift
 //  NuguLoginKit
 //
-//  Created by yonghoonKwon on 27/09/2019.
+//  Created by childc on 2019/11/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,5 +19,6 @@
 //
 
 import Foundation
-
-let defaultServerBaseUrl = "https://api.sktnugu.com/v1/auth"
+public enum NuguOAuthServerInfo {
+    public static var serverBaseUrl = "https://api.sktnugu.com/v1/auth"
+}

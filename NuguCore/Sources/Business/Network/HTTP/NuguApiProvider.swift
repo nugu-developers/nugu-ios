@@ -67,7 +67,7 @@ class NuguApiProvider: NSObject {
         return Single<Policy>.create { single -> Disposable in
             let disposable = Disposables.create()
             
-            var urlComponent = URLComponents(string: (NuguApp.shared.configuration.registryAddress + NuguApi.policy.path))
+            var urlComponent = URLComponents(string: (NuguServerInfo.registryAddress + NuguApi.policy.path))
             urlComponent?.queryItems = [
                 URLQueryItem(name: "protocol", value: "H2")
             ]
