@@ -290,8 +290,6 @@ public class OpusPlayer: MediaPlayable {
                                 log.debug("Try to restart scheduler.")
                                 self.scheduleBuffer(audioBuffer: nextBuffer)
                         }).disposed(by: self.disposeBag)
-                        
-                        log.debug("waiting for next audio data.")
                         return
                     }
                     
