@@ -42,6 +42,7 @@ struct Publish<Value> {
         }
     }
     
+    /// The property that can be accessed with the `$` syntax and allows access to the `Publish`
     var projectedValue: Observable<Value> {
         return subject.asObserver()
     }
