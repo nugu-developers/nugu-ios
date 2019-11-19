@@ -27,7 +27,6 @@ public struct LocationContext {
     public enum State: String {
         case available = "AVAILABLE"
         case unavailable = "UNAVAILABLE"
-        case timeout = "TIMEOUT"
         case unknown = "UNKNOWN"
     }
     
