@@ -1,8 +1,8 @@
 //
-//  Atomic.swift
+//  PermissionAgent+Directive.swift
 //  NuguCore
 //
-//  Created by childc on 2019/10/24.
+//  Created by yonghoonKwon on 2019/11/12.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,29 +20,34 @@
 
 import Foundation
 
-@propertyWrapper
-struct Atomic<Value> {
-    private var value: Value
-    private let queue = DispatchQueue(label: "com.sktelecom.romaine.atomic.queue")
+import NuguInterface
 
-    init(wrappedValue value: Value) {
-        self.value = value
+extension PermissionAgent {
+    enum DirectiveTypeInfo: CaseIterable {
+        case requestAccess
     }
+}
 
-    var wrappedValue: Value {
-      get { return load() }
-      set { store(value: newValue) }
-    }
+// MARK: - DirectiveTypeInforable
 
-    func load() -> Value {
-        return queue.sync { () -> Value in
-            return value
+extension PermissionAgent.DirectiveTypeInfo: DirectiveTypeInforable {
+    var namespace: String { "Permission" }
+    
+    var name: String {
+        switch self {
+        case .requestAccess: return "RequestAccess"
         }
     }
 
-    mutating func store(value: Value) {
-        queue.sync {
-            self.value = value
+    var medium: DirectiveMedium {
+        switch self {
+        case .requestAccess: return .none
+        }
+    }
+
+    var isBlocking: Bool {
+        switch self {
+        case .requestAccess: return false
         }
     }
 }

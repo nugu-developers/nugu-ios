@@ -26,14 +26,15 @@ final class WebViewController: UIViewController {
     
     @IBOutlet private weak var webView: NuguWebView!
     
-    var initialURL: String!
+    var initialURL: URL?
     
     // MARK: Override
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webView.load(URLRequest(url: URL(string: initialURL)!))
+        guard let initialURL = initialURL else { return }
+        webView.load(URLRequest(url: initialURL))
     }
 }
 

@@ -23,13 +23,24 @@ import Foundation
 import NuguInterface
 
 class BoundStreams: NSObject, StreamDelegate {
+    private static var id = 0
+    private var id: Int
     let input: InputStream
     let output: OutputStream
     private let streamQueue = DispatchQueue(label: "com.sktelecom.romaine.bound_stream_queue")
+    private var streamWorkItem: DispatchWorkItem?
     private var buffer: AudioStreamReadable?
-    let streamThreadGroup = DispatchGroup()
+    private let streamSemaphore = DispatchSemaphore(value: 0)
     
     init(buffer: AudioStreamReadable) {
+        id = BoundStreams.id
+        
+        if BoundStreams.id == Int.max {
+            BoundStreams.id = 0
+        } else {
+            BoundStreams.id += 1
+        }
+        
         var inputOrNil: InputStream?
         var outputOrNil: OutputStream?
         Stream.getBoundStreams(withBufferSize: 40960,
@@ -46,33 +57,55 @@ class BoundStreams: NSObject, StreamDelegate {
         self.buffer = buffer
         
         super.init()
+        log.debug("[id: \(id)] initiated")
         
-        streamQueue.async { [weak self] in
+        streamWorkItem = DispatchWorkItem { [weak self] in
+            log.debug("[id: \(self?.id ?? -1)] bound stream task start")
             guard let self = self else { return }
+            log.debug("[id: \(self.id)] bound stream task is eligible for running")
 
             output.delegate = self
             output.schedule(in: .current, forMode: .default)
             output.open()
             
-            while RunLoop.current.run(mode: .default, before: .distantFuture) {}
+            while self.streamWorkItem?.isCancelled == false {
+                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
+            }
+
+            log.debug("[id: \(self.id)] bound stream task is going to stop")
+        }
+        streamQueue.async(execute: streamWorkItem!)
+    }
+    
+    func stop() {
+        log.debug("[id: \(id)] bound stream try to stop")
+        streamWorkItem?.cancel()
+        streamSemaphore.signal()
+        output.close()
+        streamQueue.async { [weak self] in
+            guard let self = self else { return }
+
+            self.buffer = nil
+            log.debug("[id: \(self.id)] bound stream is stopped")
         }
     }
     
     func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch eventCode {
         case .hasSpaceAvailable:
-            streamThreadGroup.enter()
             buffer?.read(complete: { [weak self] (result) in
                 guard let self = self else { return }
                 
                 guard case let .success(pcmBuffer) = result else {
-                    self.output.close()
-                    self.streamThreadGroup.leave()
+                    log.debug("[id: \(self.id)] audio stream read failed in hasSpaceAvailable")
+                    self.stop()
+                    self.streamSemaphore.signal()
                     return
                 }
                 
                 guard let data = pcmBuffer.int16ChannelData?.pointee else {
-                    self.streamThreadGroup.leave()
+                    log.debug("[id: \(self.id)] pcm puffer is not suitable in hasSpaceAvailable")
+                    self.streamSemaphore.signal()
                     return
                 }
                 
@@ -80,15 +113,14 @@ class BoundStreams: NSObject, StreamDelegate {
                     self.output.write(ptrData, maxLength: Int(pcmBuffer.frameLength*2))
                 }
                 
-                self.streamThreadGroup.leave()
+                self.streamSemaphore.signal()
             })
             
-            streamThreadGroup.wait()
+            streamSemaphore.wait()
             
         case .endEncountered:
-            output.remove(from: .current, forMode: .default)
-            output.close()
-            buffer = nil
+            log.debug("[id: \(self.id)] output stream endEncountered")
+            stop()
 
         default:
             break

@@ -33,6 +33,13 @@
 		1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
 		1F10091923792A4900D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
+		1F100956237ABF2800D90FEE /* PermissionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */; };
+		1F100958237ABF5400D90FEE /* PermissionAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */; };
+		1F10095B237AC02200D90FEE /* PermissionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095A237AC02200D90FEE /* PermissionAgent.swift */; };
+		1F10095D237AC04000D90FEE /* PermissionAgent+Directive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */; };
+		1F10095F237AC04B00D90FEE /* PermissionAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */; };
+		1F100961237BA7B700D90FEE /* PermissionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100960237BA7B700D90FEE /* PermissionContext.swift */; };
+		1F100964237C09AF00D90FEE /* PermissionAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100962237C07F500D90FEE /* PermissionAgentItem.swift */; };
 		1FFFEFF423753EFD00C9A177 /* NuguInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFF223753EFD00C9A177 /* NuguInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -74,7 +81,7 @@
 		1FFFF2BE2375703000C9A177 /* AudioPlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */; };
 		1FFFF2BF2375703000C9A177 /* LocationAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */; };
 		1FFFF2C02375703000C9A177 /* LocationAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */; };
-		1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationInfo.swift */; };
+		1FFFF2C12375703000C9A177 /* LocationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationContext.swift */; };
 		1FFFF2C22375703000C9A177 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */; };
 		1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2532375703000C9A177 /* ASRState.swift */; };
 		1FFFF2C42375703000C9A177 /* ASRExpectSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */; };
@@ -518,6 +525,14 @@
 		1F10090A23792A0000D90FEE /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		1F10094E237A886100D90FEE /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		1F100953237A8AE800D90FEE /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
+		1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentProtocol.swift; sourceTree = "<group>"; };
+		1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentDelegate.swift; sourceTree = "<group>"; };
+		1F10095A237AC02200D90FEE /* PermissionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgent.swift; sourceTree = "<group>"; };
+		1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PermissionAgent+Directive.swift"; sourceTree = "<group>"; };
+		1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PermissionAgent+Event.swift"; sourceTree = "<group>"; };
+		1F100960237BA7B700D90FEE /* PermissionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionContext.swift; sourceTree = "<group>"; };
+		1F100962237C07F500D90FEE /* PermissionAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentItem.swift; sourceTree = "<group>"; };
+		1F100965237C0D0100D90FEE /* scheduled-feature.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "scheduled-feature.md"; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -574,7 +589,7 @@
 		1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerState.swift; sourceTree = "<group>"; };
 		1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentDelegate.swift; sourceTree = "<group>"; };
-		1FFFF2502375703000C9A177 /* LocationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationInfo.swift; sourceTree = "<group>"; };
+		1FFFF2502375703000C9A177 /* LocationContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationContext.swift; sourceTree = "<group>"; };
 		1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2532375703000C9A177 /* ASRState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRState.swift; sourceTree = "<group>"; };
 		1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRExpectSpeech.swift; sourceTree = "<group>"; };
@@ -966,8 +981,9 @@
 		1F1008C82376925C00D90FEE /* ISSUE_TEMPLATE */ = {
 			isa = PBXGroup;
 			children = (
-				1F1008C92376925C00D90FEE /* feature-request.md */,
 				1F1008CA2376925C00D90FEE /* bug-report.md */,
+				1F1008C92376925C00D90FEE /* feature-request.md */,
+				1F100965237C0D0100D90FEE /* scheduled-feature.md */,
 			);
 			path = ISSUE_TEMPLATE;
 			sourceTree = "<group>";
@@ -993,6 +1009,27 @@
 				1F1008BF237688E300D90FEE /* KeenSense.podspec */,
 			);
 			name = Cocoapods;
+			sourceTree = "<group>";
+		};
+		1F100954237ABEF800D90FEE /* Permission */ = {
+			isa = PBXGroup;
+			children = (
+				1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */,
+				1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */,
+				1F100960237BA7B700D90FEE /* PermissionContext.swift */,
+			);
+			path = Permission;
+			sourceTree = "<group>";
+		};
+		1F100959237ABFF100D90FEE /* Permission */ = {
+			isa = PBXGroup;
+			children = (
+				1F10095A237AC02200D90FEE /* PermissionAgent.swift */,
+				1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */,
+				1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */,
+				1F100962237C07F500D90FEE /* PermissionAgentItem.swift */,
+			);
+			path = Permission;
 			sourceTree = "<group>";
 		};
 		1FFFEFF123753EFD00C9A177 /* NuguInterface */ = {
@@ -1134,12 +1171,12 @@
 		1FFFF22B2375703000C9A177 /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF22C2375703000C9A177 /* MediaPlayableType.swift */,
-				1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */,
+				1FFFF2312375703000C9A177 /* MediaPlayable.swift */,
 				1FFFF22E2375703000C9A177 /* MediaPlayerDelegate.swift */,
+				1FFFF22C2375703000C9A177 /* MediaPlayableType.swift */,
 				1FFFF22F2375703000C9A177 /* MediaPlayerState.swift */,
 				1FFFF2302375703000C9A177 /* MediaPlayableFactory.swift */,
-				1FFFF2312375703000C9A177 /* MediaPlayable.swift */,
+				1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */,
 			);
 			path = MediaPlayer;
 			sourceTree = "<group>";
@@ -1148,9 +1185,9 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF2332375703000C9A177 /* ContextManageable.swift */,
-				1FFFF2342375703000C9A177 /* ContextType.swift */,
-				1FFFF2352375703000C9A177 /* ContextInfo.swift */,
 				1FFFF2362375703000C9A177 /* ContextInfoDelegate.swift */,
+				1FFFF2352375703000C9A177 /* ContextInfo.swift */,
+				1FFFF2342375703000C9A177 /* ContextType.swift */,
 				1FFFF2372375703000C9A177 /* ContextPayload.swift */,
 			);
 			path = Context;
@@ -1171,17 +1208,18 @@
 				1FFFF23D2375703000C9A177 /* Extension */,
 				1FFFF2402375703000C9A177 /* Speaker */,
 				1FFFF2452375703000C9A177 /* AudioPlayer */,
-				1FFFF24D2375703000C9A177 /* Location */,
 				1FFFF2512375703000C9A177 /* AutomaticSpeechRecognition */,
 				1FFFF2592375703000C9A177 /* System */,
 				1FFFF25E2375703000C9A177 /* TextToSpeech */,
 				1FFFF2632375703000C9A177 /* Display */,
 				1FFFF2682375703000C9A177 /* Text */,
-				1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */,
+				1FFFF24D2375703000C9A177 /* Location */,
+				1F100954237ABEF800D90FEE /* Permission */,
+				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
 				1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */,
 				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
+				1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */,
 				1FFFF25D2375703000C9A177 /* CapabilityEventSendable.swift */,
-				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
 			);
 			path = Capability;
 			sourceTree = "<group>";
@@ -1189,8 +1227,8 @@
 		1FFFF23D2375703000C9A177 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF23E2375703000C9A177 /* ExtensionAgentDelegate.swift */,
 				1FFFF23F2375703000C9A177 /* ExtensionAgentProtocol.swift */,
+				1FFFF23E2375703000C9A177 /* ExtensionAgentDelegate.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1198,8 +1236,8 @@
 		1FFFF2402375703000C9A177 /* Speaker */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF2412375703000C9A177 /* SpeakerAgentDelegate.swift */,
 				1FFFF2422375703000C9A177 /* SpeakerAgentProtocol.swift */,
+				1FFFF2412375703000C9A177 /* SpeakerAgentDelegate.swift */,
 				1FFFF2432375703000C9A177 /* SpeakerVolumeType.swift */,
 				1FFFF2442375703000C9A177 /* SpeakerVolumeDelegate.swift */,
 			);
@@ -1210,8 +1248,8 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF2472375703000C9A177 /* Display */,
-				1FFFF2462375703000C9A177 /* AudioPlayerAgentDelegate.swift */,
 				1FFFF24B2375703000C9A177 /* AudioPlayerAgentProtocol.swift */,
+				1FFFF2462375703000C9A177 /* AudioPlayerAgentDelegate.swift */,
 				1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */,
 			);
 			path = AudioPlayer;
@@ -1220,9 +1258,9 @@
 		1FFFF2472375703000C9A177 /* Display */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF2482375703000C9A177 /* AudioPlayerDisplayDelegate.swift */,
-				1FFFF2492375703000C9A177 /* AudioPlayerDisplayTemplate+AudioPlayer.swift */,
 				1FFFF24A2375703000C9A177 /* AudioPlayerDisplayTemplate.swift */,
+				1FFFF2492375703000C9A177 /* AudioPlayerDisplayTemplate+AudioPlayer.swift */,
+				1FFFF2482375703000C9A177 /* AudioPlayerDisplayDelegate.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -1232,7 +1270,7 @@
 			children = (
 				1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */,
 				1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */,
-				1FFFF2502375703000C9A177 /* LocationInfo.swift */,
+				1FFFF2502375703000C9A177 /* LocationContext.swift */,
 			);
 			path = Location;
 			sourceTree = "<group>";
@@ -1240,12 +1278,12 @@
 		1FFFF2512375703000C9A177 /* AutomaticSpeechRecognition */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF2562375703000C9A177 /* ASRAgentProtocol.swift */,
 				1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */,
 				1FFFF2532375703000C9A177 /* ASRState.swift */,
+				1FFFF2572375703000C9A177 /* ASRResult.swift */,
 				1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */,
 				1FFFF2552375703000C9A177 /* ASRError.swift */,
-				1FFFF2562375703000C9A177 /* ASRAgentProtocol.swift */,
-				1FFFF2572375703000C9A177 /* ASRResult.swift */,
 			);
 			path = AutomaticSpeechRecognition;
 			sourceTree = "<group>";
@@ -1262,10 +1300,10 @@
 		1FFFF25E2375703000C9A177 /* TextToSpeech */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF2622375703000C9A177 /* TTSAgentProtocol.swift */,
+				1FFFF2612375703000C9A177 /* TTSAgentDelegate.swift */,
 				1FFFF25F2375703000C9A177 /* TTSState.swift */,
 				1FFFF2602375703000C9A177 /* TTSResult.swift */,
-				1FFFF2612375703000C9A177 /* TTSAgentDelegate.swift */,
-				1FFFF2622375703000C9A177 /* TTSAgentProtocol.swift */,
 			);
 			path = TextToSpeech;
 			sourceTree = "<group>";
@@ -1283,11 +1321,11 @@
 		1FFFF2682375703000C9A177 /* Text */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF2692375703000C9A177 /* TextAgentError.swift */,
-				1FFFF26A2375703000C9A177 /* TextAgentState.swift */,
-				1FFFF26B2375703000C9A177 /* TextAgentResult.swift */,
 				1FFFF26C2375703000C9A177 /* TextAgentProtocol.swift */,
 				1FFFF26D2375703000C9A177 /* TextAgentDelegate.swift */,
+				1FFFF26A2375703000C9A177 /* TextAgentState.swift */,
+				1FFFF26B2375703000C9A177 /* TextAgentResult.swift */,
+				1FFFF2692375703000C9A177 /* TextAgentError.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -1296,15 +1334,15 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF2742375703000C9A177 /* Model */,
-				1FFFF26F2375703000C9A177 /* SendMessageStatus.swift */,
-				1FFFF2702375703000C9A177 /* NetworkStatusDelegate.swift */,
-				1FFFF2712375703000C9A177 /* NetworkStatus.swift */,
-				1FFFF2722375703000C9A177 /* SendMessageError.swift */,
 				1FFFF2732375703000C9A177 /* MessageSendable.swift */,
 				1FFFF27C2375703000C9A177 /* MessageReceivable.swift */,
-				1FFFF27D2375703000C9A177 /* NetworkError.swift */,
-				1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */,
 				1FFFF27F2375703000C9A177 /* NetworkManageable.swift */,
+				1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */,
+				1FFFF2702375703000C9A177 /* NetworkStatusDelegate.swift */,
+				1FFFF26F2375703000C9A177 /* SendMessageStatus.swift */,
+				1FFFF2712375703000C9A177 /* NetworkStatus.swift */,
+				1FFFF27D2375703000C9A177 /* NetworkError.swift */,
+				1FFFF2722375703000C9A177 /* SendMessageError.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1312,12 +1350,12 @@
 		1FFFF2742375703000C9A177 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF2752375703000C9A177 /* MessageHeaderProtocol.swift */,
-				1FFFF2762375703000C9A177 /* UpstreamEventMessage.swift */,
 				1FFFF2772375703000C9A177 /* DirectiveProtocol.swift */,
-				1FFFF2782375703000C9A177 /* UpstreamAttachment.swift */,
+				1FFFF2752375703000C9A177 /* MessageHeaderProtocol.swift */,
 				1FFFF2792375703000C9A177 /* AttachmentProtocol.swift */,
 				1FFFF27A2375703000C9A177 /* UpstreamHeader.swift */,
+				1FFFF2762375703000C9A177 /* UpstreamEventMessage.swift */,
+				1FFFF2782375703000C9A177 /* UpstreamAttachment.swift */,
 				1FFFF27B2375703000C9A177 /* CrashReport.swift */,
 			);
 			path = Model;
@@ -1326,9 +1364,9 @@
 		1FFFF2822375703000C9A177 /* PlaySync */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */,
 				1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */,
 				1FFFF2842375703000C9A177 /* PlaySyncState.swift */,
-				1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */,
 			);
 			path = PlaySync;
 			sourceTree = "<group>";
@@ -1336,11 +1374,11 @@
 		1FFFF2862375703000C9A177 /* Focus */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF2872375703000C9A177 /* FocusDelegate.swift */,
-				1FFFF2882375703000C9A177 /* FocusState.swift */,
-				1FFFF2892375703000C9A177 /* FocusChannelConfigurable.swift */,
-				1FFFF28A2375703000C9A177 /* FocusChannelDelegate.swift */,
 				1FFFF28B2375703000C9A177 /* FocusManageable.swift */,
+				1FFFF2872375703000C9A177 /* FocusDelegate.swift */,
+				1FFFF28A2375703000C9A177 /* FocusChannelDelegate.swift */,
+				1FFFF2892375703000C9A177 /* FocusChannelConfigurable.swift */,
+				1FFFF2882375703000C9A177 /* FocusState.swift */,
 			);
 			path = Focus;
 			sourceTree = "<group>";
@@ -1348,9 +1386,9 @@
 		1FFFF28C2375703000C9A177 /* Dialog */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF28D2375703000C9A177 /* DialogState.swift */,
-				1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */,
 				1FFFF28F2375703000C9A177 /* DialogStateAggregatable.swift */,
+				1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */,
+				1FFFF28D2375703000C9A177 /* DialogState.swift */,
 			);
 			path = Dialog;
 			sourceTree = "<group>";
@@ -1358,9 +1396,9 @@
 		1FFFF2902375703000C9A177 /* Directive */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF2932375703000C9A177 /* DirectiveTypeInfos.swift */,
 				1FFFF2912375703000C9A177 /* DirectiveSequenceable.swift */,
 				1FFFF2922375703000C9A177 /* HandleDirectiveDelegate.swift */,
-				1FFFF2932375703000C9A177 /* DirectiveTypeInfos.swift */,
 				1FFFF2942375703000C9A177 /* HandleDirectiveError.swift */,
 				1FFFF2952375703000C9A177 /* DirectiveTypeInfoError.swift */,
 			);
@@ -1370,8 +1408,8 @@
 		1FFFF2962375703000C9A177 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF2972375703000C9A177 /* AudioStreamProtocol.swift */,
 				1FFFF2982375703000C9A177 /* AudioProvidable.swift */,
+				1FFFF2972375703000C9A177 /* AudioStreamProtocol.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -1379,8 +1417,8 @@
 		1FFFF2992375703000C9A177 /* EndPointDetector */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF29A2375703000C9A177 /* EndPointDetectorDelegate.swift */,
 				1FFFF29B2375703000C9A177 /* EndPointDetectable.swift */,
+				1FFFF29A2375703000C9A177 /* EndPointDetectorDelegate.swift */,
 				1FFFF29C2375703000C9A177 /* EndPointDetectorState.swift */,
 			);
 			path = EndPointDetector;
@@ -1389,11 +1427,11 @@
 		1FFFF29D2375703000C9A177 /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF29E2375703000C9A177 /* AuthorizationPayload.swift */,
-				1FFFF29F2375703000C9A177 /* AuthorizationStateDelegate.swift */,
 				1FFFF2A02375703000C9A177 /* AuthorizationManageable.swift */,
-				1FFFF2A12375703000C9A177 /* AuthorizationError.swift */,
+				1FFFF29F2375703000C9A177 /* AuthorizationStateDelegate.swift */,
+				1FFFF29E2375703000C9A177 /* AuthorizationPayload.swift */,
 				1FFFF2A22375703000C9A177 /* AuthorizationState.swift */,
+				1FFFF2A12375703000C9A177 /* AuthorizationError.swift */,
 			);
 			path = Authorization;
 			sourceTree = "<group>";
@@ -1431,10 +1469,10 @@
 		1FFFF30D2375707000C9A177 /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF3112375707000C9A177 /* MediaPlayer.swift */,
+				1FFFF3102375707000C9A177 /* MediaAVPlayerItem.swift */,
 				1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */,
 				1FFFF30F2375707000C9A177 /* MediaPlayerError.swift */,
-				1FFFF3102375707000C9A177 /* MediaAVPlayerItem.swift */,
-				1FFFF3112375707000C9A177 /* MediaPlayer.swift */,
 			);
 			path = MediaPlayer;
 			sourceTree = "<group>";
@@ -1442,10 +1480,10 @@
 		1FFFF3122375707000C9A177 /* OpusPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3132375707000C9A177 /* OpusPlayerError.swift */,
-				1FFFF3142375707000C9A177 /* OpusPlayer.swift */,
 				1FFFF3152375707000C9A177 /* OpusDecoder.swift */,
+				1FFFF3142375707000C9A177 /* OpusPlayer.swift */,
 				1FFFF3162375707000C9A177 /* OpusPlayerConst.swift */,
+				1FFFF3132375707000C9A177 /* OpusPlayerError.swift */,
 			);
 			path = OpusPlayer;
 			sourceTree = "<group>";
@@ -1471,10 +1509,10 @@
 		1FFFF31B2375707000C9A177 /* AudioStream */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF31F2375707000C9A177 /* AudioStream.swift */,
+				1FFFF31E2375707000C9A177 /* SharedBuffer.swift */,
 				1FFFF31C2375707000C9A177 /* SharedBufferIndex.swift */,
 				1FFFF31D2375707000C9A177 /* SharedBufferError.swift */,
-				1FFFF31E2375707000C9A177 /* SharedBuffer.swift */,
-				1FFFF31F2375707000C9A177 /* AudioStream.swift */,
 			);
 			path = AudioStream;
 			sourceTree = "<group>";
@@ -1482,9 +1520,9 @@
 		1FFFF3202375707000C9A177 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF3232375707000C9A177 /* Array+Equatable.swift */,
 				1FFFF3212375707000C9A177 /* Collection+Convenience.swift */,
 				1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */,
-				1FFFF3232375707000C9A177 /* Array+Equatable.swift */,
 				1FFFF3242375707000C9A177 /* KeyedDecodingContainerExtension.swift */,
 			);
 			path = Extension;
@@ -1528,12 +1566,13 @@
 				1FFFF32C2375707000C9A177 /* Extension */,
 				1FFFF3312375707000C9A177 /* Speaker */,
 				1FFFF3372375707000C9A177 /* AudioPlayer */,
-				1FFFF3402375707000C9A177 /* Location */,
 				1FFFF3422375707000C9A177 /* AutomaticSpeechRecognition */,
 				1FFFF34A2375707000C9A177 /* System */,
 				1FFFF34F2375707000C9A177 /* TextToSpeech */,
 				1FFFF3542375707000C9A177 /* Display */,
 				1FFFF3592375707000C9A177 /* Text */,
+				1FFFF3402375707000C9A177 /* Location */,
+				1F100959237ABFF100D90FEE /* Permission */,
 			);
 			path = Capability;
 			sourceTree = "<group>";
@@ -1541,10 +1580,10 @@
 		1FFFF32C2375707000C9A177 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF32D2375707000C9A177 /* ExtensionAgent+Event.swift */,
 				1FFFF32E2375707000C9A177 /* ExtensionAgent.swift */,
-				1FFFF32F2375707000C9A177 /* ExtensionAgentItem.swift */,
 				1FFFF3302375707000C9A177 /* ExtensionAgent+Directive.swift */,
+				1FFFF32D2375707000C9A177 /* ExtensionAgent+Event.swift */,
+				1FFFF32F2375707000C9A177 /* ExtensionAgentItem.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1552,11 +1591,11 @@
 		1FFFF3312375707000C9A177 /* Speaker */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3322375707000C9A177 /* SpeakerAgentError.swift */,
-				1FFFF3332375707000C9A177 /* SpeakerAgent+Event.swift */,
-				1FFFF3342375707000C9A177 /* SpeakerAgent+Directive.swift */,
-				1FFFF3352375707000C9A177 /* SpeakerMuteInfo.swift */,
 				1FFFF3362375707000C9A177 /* SpeakerAgent.swift */,
+				1FFFF3342375707000C9A177 /* SpeakerAgent+Directive.swift */,
+				1FFFF3332375707000C9A177 /* SpeakerAgent+Event.swift */,
+				1FFFF3352375707000C9A177 /* SpeakerMuteInfo.swift */,
+				1FFFF3322375707000C9A177 /* SpeakerAgentError.swift */,
 			);
 			path = Speaker;
 			sourceTree = "<group>";
@@ -1565,10 +1604,10 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF33A2375707000C9A177 /* Display */,
-				1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */,
-				1FFFF3392375707000C9A177 /* AudioPlayerAgent+Event.swift */,
-				1FFFF33E2375707000C9A177 /* AudioPlayerAgent+Directive.swift */,
 				1FFFF33F2375707000C9A177 /* AudioPlayerAgent.swift */,
+				1FFFF33E2375707000C9A177 /* AudioPlayerAgent+Directive.swift */,
+				1FFFF3392375707000C9A177 /* AudioPlayerAgent+Event.swift */,
+				1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */,
 			);
 			path = AudioPlayer;
 			sourceTree = "<group>";
@@ -1576,9 +1615,9 @@
 		1FFFF33A2375707000C9A177 /* Display */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF33D2375707000C9A177 /* AudioPlayerDisplayManageable.swift */,
 				1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */,
 				1FFFF33C2375707000C9A177 /* AudioPlayerDisplayRenderingInfo.swift */,
-				1FFFF33D2375707000C9A177 /* AudioPlayerDisplayManageable.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -1595,12 +1634,12 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF3432375707000C9A177 /* ASRAgent.swift */,
-				1FFFF3442375707000C9A177 /* ASRRequest.swift */,
-				1FFFF3452375707000C9A177 /* WakeUpInfoDelegate.swift */,
 				1FFFF3462375707000C9A177 /* ASRAgent+Directive.swift */,
-				1FFFF3472375707000C9A177 /* ASRNotifyResult.swift */,
 				1FFFF3482375707000C9A177 /* ASRAgent+Event.swift */,
+				1FFFF3452375707000C9A177 /* WakeUpInfoDelegate.swift */,
 				1FFFF3492375707000C9A177 /* ASRConst.swift */,
+				1FFFF3442375707000C9A177 /* ASRRequest.swift */,
+				1FFFF3472375707000C9A177 /* ASRNotifyResult.swift */,
 			);
 			path = AutomaticSpeechRecognition;
 			sourceTree = "<group>";
@@ -1608,9 +1647,9 @@
 		1FFFF34A2375707000C9A177 /* System */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF34B2375707000C9A177 /* SystemAgent+Event.swift */,
-				1FFFF34C2375707000C9A177 /* SystemAgent+Directive.swift */,
 				1FFFF34D2375707000C9A177 /* SystemAgent.swift */,
+				1FFFF34C2375707000C9A177 /* SystemAgent+Directive.swift */,
+				1FFFF34B2375707000C9A177 /* SystemAgent+Event.swift */,
 				1FFFF34E2375707000C9A177 /* SystemAgentExceptionItem.swift */,
 			);
 			path = System;
@@ -1631,9 +1670,9 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF3552375707000C9A177 /* DisplayAgent.swift */,
-				1FFFF3562375707000C9A177 /* DisplayRenderingInfo.swift */,
 				1FFFF3572375707000C9A177 /* DisplayAgent+Directive.swift */,
 				1FFFF3582375707000C9A177 /* DisplayAgent+Event.swift */,
+				1FFFF3562375707000C9A177 /* DisplayRenderingInfo.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -1641,8 +1680,8 @@
 		1FFFF3592375707000C9A177 /* Text */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF35A2375707000C9A177 /* TextAgent+Event.swift */,
 				1FFFF35B2375707000C9A177 /* TextAgent.swift */,
+				1FFFF35A2375707000C9A177 /* TextAgent+Event.swift */,
 				1FFFF35C2375707000C9A177 /* TextRequest.swift */,
 			);
 			path = Text;
@@ -1652,8 +1691,8 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF3602375707000C9A177 /* HTTP */,
-				1FFFF35E2375707000C9A177 /* NetworkConst.swift */,
 				1FFFF35F2375707000C9A177 /* NetworkManager.swift */,
+				1FFFF35E2375707000C9A177 /* NetworkConst.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1662,11 +1701,11 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF3652375707000C9A177 /* Model */,
-				1FFFF3612375707000C9A177 /* HTTPConst.swift */,
-				1FFFF3622375707000C9A177 /* MultiPartParserError.swift */,
 				1FFFF3632375707000C9A177 /* NuguApiProvider.swift */,
 				1FFFF3642375707000C9A177 /* NuguApi.swift */,
+				1FFFF3612375707000C9A177 /* HTTPConst.swift */,
 				1FFFF3682375707000C9A177 /* MultiPartParser.swift */,
+				1FFFF3622375707000C9A177 /* MultiPartParserError.swift */,
 			);
 			path = HTTP;
 			sourceTree = "<group>";
@@ -1692,10 +1731,10 @@
 		1FFFF36C2375707000C9A177 /* Focus */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF36D2375707000C9A177 /* FocusError.swift */,
-				1FFFF36E2375707000C9A177 /* FocusChannelInfo.swift */,
 				1FFFF36F2375707000C9A177 /* FocusManager.swift */,
+				1FFFF36E2375707000C9A177 /* FocusChannelInfo.swift */,
 				1FFFF3702375707000C9A177 /* FocusConst.swift */,
+				1FFFF36D2375707000C9A177 /* FocusError.swift */,
 			);
 			path = Focus;
 			sourceTree = "<group>";
@@ -1737,8 +1776,8 @@
 		1FFFF3D1237570C900C9A177 /* Sources-ObjC */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3D2237570C900C9A177 /* ObjcExceptionCatcher.m */,
 				1FFFF3D3237570C900C9A177 /* ObjcExceptionCatcher.h */,
+				1FFFF3D2237570C900C9A177 /* ObjcExceptionCatcher.m */,
 			);
 			path = "Sources-ObjC";
 			sourceTree = "<group>";
@@ -1746,15 +1785,15 @@
 		1FFFF3D72375735E00C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF3D92375735E00C9A177 /* NuguClient.swift */,
+				1FFFF3D82375735E00C9A177 /* NuguClient+Coordinator.swift */,
+				1FFFF3DC2375735E00C9A177 /* NuguClient+Builder.swift */,
+				1FFFF3DB2375735E00C9A177 /* FocusChannelConfiguration.swift */,
+				1FFFF3DA2375735E00C9A177 /* MediaPlayerFactory.swift */,
 				1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */,
 				7330CD80237A77D800FCD6E9 /* BoundStreams.swift */,
 				7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */,
 				7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */,
-				1FFFF3D82375735E00C9A177 /* NuguClient+Coordinator.swift */,
-				1FFFF3D92375735E00C9A177 /* NuguClient.swift */,
-				1FFFF3DA2375735E00C9A177 /* MediaPlayerFactory.swift */,
-				1FFFF3DB2375735E00C9A177 /* FocusChannelConfiguration.swift */,
-				1FFFF3DC2375735E00C9A177 /* NuguClient+Builder.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1786,10 +1825,10 @@
 		1FFFF3F82375740600C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF3FC2375740600C9A177 /* JadeMarble.swift */,
 				7330CD87237A77F900FCD6E9 /* TycheEpd.swift */,
 				7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */,
 				7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */,
-				1FFFF3FC2375740600C9A177 /* JadeMarble.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1851,13 +1890,13 @@
 		1FFFF43D23757F6600C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1FFFF44223757F6600C9A177 /* Business */,
 				1FFFF44623757F6600C9A177 /* Model */,
 				1FFFF44823757F6600C9A177 /* LoginType */,
 				1FFFF43F23757F6600C9A177 /* Network */,
-				1FFFF44223757F6600C9A177 /* Business */,
-				1FFFF44523757F6600C9A177 /* NuguLoginError.swift */,
 				1FFFF44C23757F6600C9A177 /* NuguLoginKit.swift */,
 				1FFFF44D23757F6600C9A177 /* NuguLoginConfiguration.swift */,
+				1FFFF44523757F6600C9A177 /* NuguLoginError.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -2041,16 +2080,16 @@
 		1FFFF4AB237672F100C9A177 /* DisplayViews */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF4AC237672F100C9A177 /* DisplayBodyView.xib */,
 				1FFFF4AD237672F100C9A177 /* DisplayViewCell */,
+				1FFFF4B4237672F100C9A177 /* Models */,
+				1FFFF4BC237672F100C9A177 /* DisplayView.swift */,
 				1FFFF4B2237672F100C9A177 /* DisplayBodyListView.swift */,
 				1FFFF4B3237672F100C9A177 /* DisplayBodyListView.xib */,
-				1FFFF4B4237672F100C9A177 /* Models */,
-				1FFFF4B9237672F100C9A177 /* DisplayAudioPlayerView.swift */,
 				1FFFF4BA237672F100C9A177 /* DisplayBodyView.swift */,
-				1FFFF4BB237672F100C9A177 /* DisplayListView.xib */,
-				1FFFF4BC237672F100C9A177 /* DisplayView.swift */,
+				1FFFF4AC237672F100C9A177 /* DisplayBodyView.xib */,
 				1FFFF4BD237672F100C9A177 /* DisplayListView.swift */,
+				1FFFF4BB237672F100C9A177 /* DisplayListView.xib */,
+				1FFFF4B9237672F100C9A177 /* DisplayAudioPlayerView.swift */,
 				1FFFF4BE237672F100C9A177 /* DisplayAudioPlayerView.xib */,
 			);
 			path = DisplayViews;
@@ -2059,10 +2098,10 @@
 		1FFFF4AD237672F100C9A177 /* DisplayViewCell */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF4AE237672F100C9A177 /* DisplayBodyListViewCell.swift */,
-				1FFFF4AF237672F100C9A177 /* DisplayListViewCell.xib */,
-				1FFFF4B0237672F100C9A177 /* DisplayBodyListViewCell.xib */,
 				1FFFF4B1237672F100C9A177 /* DisplayListViewCell.swift */,
+				1FFFF4AF237672F100C9A177 /* DisplayListViewCell.xib */,
+				1FFFF4AE237672F100C9A177 /* DisplayBodyListViewCell.swift */,
+				1FFFF4B0237672F100C9A177 /* DisplayBodyListViewCell.xib */,
 			);
 			path = DisplayViewCell;
 			sourceTree = "<group>";
@@ -2070,10 +2109,10 @@
 		1FFFF4B4237672F100C9A177 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF4B5237672F100C9A177 /* DisplayBodyTemplate.swift */,
-				1FFFF4B6237672F100C9A177 /* DisplayBodyListTemplate.swift */,
 				1FFFF4B7237672F100C9A177 /* DisplayCommonTemplate.swift */,
 				1FFFF4B8237672F100C9A177 /* DisplayListTemplate.swift */,
+				1FFFF4B5237672F100C9A177 /* DisplayBodyTemplate.swift */,
+				1FFFF4B6237672F100C9A177 /* DisplayBodyListTemplate.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2098,8 +2137,8 @@
 		1FFFF4C5237672F100C9A177 /* Const */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF4C6237672F100C9A177 /* SampleAppError.swift */,
 				1FFFF4C7237672F100C9A177 /* SampleApp.swift */,
+				1FFFF4C6237672F100C9A177 /* SampleAppError.swift */,
 			);
 			path = Const;
 			sourceTree = "<group>";
@@ -2735,8 +2774,10 @@
 				1FFFF2B72375703000C9A177 /* SpeakerVolumeType.swift in Sources */,
 				1FFFF2E42375703100C9A177 /* UpstreamHeader.swift in Sources */,
 				1FFFF2BA2375703000C9A177 /* AudioPlayerDisplayDelegate.swift in Sources */,
+				1F100956237ABF2800D90FEE /* PermissionAgentProtocol.swift in Sources */,
 				1FFFF2B32375703000C9A177 /* ExtensionAgentDelegate.swift in Sources */,
 				1FFFF2BB2375703000C9A177 /* AudioPlayerDisplayTemplate+AudioPlayer.swift in Sources */,
+				1F100961237BA7B700D90FEE /* PermissionContext.swift in Sources */,
 				1FFFF2D02375703100C9A177 /* TTSAgentProtocol.swift in Sources */,
 				1FFFF2EE2375703100C9A177 /* FocusDelegate.swift in Sources */,
 				1FFFF2D82375703100C9A177 /* TextAgentProtocol.swift in Sources */,
@@ -2790,6 +2831,7 @@
 				1FFFF2E62375703100C9A177 /* MessageReceivable.swift in Sources */,
 				1FFFF2DA2375703100C9A177 /* SendMessageStatus.swift in Sources */,
 				1FFFF2C62375703000C9A177 /* ASRAgentProtocol.swift in Sources */,
+				1F100958237ABF5400D90FEE /* PermissionAgentDelegate.swift in Sources */,
 				1FFFF2DF2375703100C9A177 /* MessageHeaderProtocol.swift in Sources */,
 				1FFFF2E72375703100C9A177 /* NetworkError.swift in Sources */,
 				1FFFF2E32375703100C9A177 /* AttachmentProtocol.swift in Sources */,
@@ -2806,7 +2848,7 @@
 				1FFFF2AE2375703000C9A177 /* ContextInfoDelegate.swift in Sources */,
 				1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */,
 				1FFFF2A82375703000C9A177 /* MediaPlayerState.swift in Sources */,
-				1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */,
+				1FFFF2C12375703000C9A177 /* LocationContext.swift in Sources */,
 				1FFFF2D12375703100C9A177 /* DisplayAgentProtocol.swift in Sources */,
 				1FFFF2D32375703100C9A177 /* DisplayTemplate.swift in Sources */,
 				1FFFF2E12375703100C9A177 /* DirectiveProtocol.swift in Sources */,
@@ -2858,6 +2900,7 @@
 				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
 				1FFFF3872375707000C9A177 /* MicInputConst.swift in Sources */,
 				1FFFF3B62375707100C9A177 /* DisplayAgent+Event.swift in Sources */,
+				1F10095F237AC04B00D90FEE /* PermissionAgent+Event.swift in Sources */,
 				1FFFF3902375707000C9A177 /* TimeUUID.swift in Sources */,
 				1FFFF3B32375707100C9A177 /* DisplayAgent.swift in Sources */,
 				1FFFF3B22375707100C9A177 /* TTSMedia.swift in Sources */,
@@ -2881,11 +2924,13 @@
 				1FFFF3AB2375707100C9A177 /* SystemAgent+Event.swift in Sources */,
 				1FFFF3A62375707100C9A177 /* WakeUpInfoDelegate.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
+				1F10095D237AC04000D90FEE /* PermissionAgent+Directive.swift in Sources */,
 				1FFFF3AC2375707100C9A177 /* SystemAgent+Directive.swift in Sources */,
 				1FFFF3A12375707100C9A177 /* AudioPlayerAgent+Directive.swift in Sources */,
 				1FFFF3A82375707100C9A177 /* ASRNotifyResult.swift in Sources */,
 				1FFFF3802375707000C9A177 /* MediaAVPlayerItem.swift in Sources */,
 				1FFFF3942375707100C9A177 /* ExtensionAgent.swift in Sources */,
+				1F100964237C09AF00D90FEE /* PermissionAgentItem.swift in Sources */,
 				1FFFF3C32375707100C9A177 /* PlaySyncManager.swift in Sources */,
 				1FFFF3992375707100C9A177 /* SpeakerAgent+Directive.swift in Sources */,
 				1FFFF3BC2375707100C9A177 /* HTTPConst.swift in Sources */,
@@ -2899,6 +2944,7 @@
 				1FFFF3BF2375707100C9A177 /* NuguApi.swift in Sources */,
 				1FFFF3A02375707100C9A177 /* AudioPlayerDisplayManageable.swift in Sources */,
 				1FFFF3B72375707100C9A177 /* TextAgent+Event.swift in Sources */,
+				1F10095B237AC02200D90FEE /* PermissionAgent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3157,7 +3203,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguInterface;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3188,7 +3234,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguInterface;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3228,7 +3274,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/NuguCore/Libraries/Opus",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3268,7 +3314,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/NuguCore/Libraries/Opus",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3301,7 +3347,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3334,7 +3380,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3363,7 +3409,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3392,7 +3438,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3425,7 +3471,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3458,7 +3504,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3496,7 +3542,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -3541,7 +3587,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -3585,7 +3631,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
@@ -3629,7 +3675,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.6.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",

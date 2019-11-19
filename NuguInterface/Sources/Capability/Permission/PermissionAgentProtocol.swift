@@ -1,8 +1,8 @@
 //
-//  LocationAgentItem.swift
+//  PermissionAgentProtocol.swift
 //  NuguInterface
 //
-//  Created by yonghoonKwon on 2019/10/30.
+//  Created by yonghoonKwon on 2019/11/12.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +21,13 @@
 import Foundation
 
 /// <#Description#>
-public struct LocationInfo {
+public protocol PermissionAgentProtocol:
+CapabilityAgentable,
+ContextInfoDelegate,
+HandleDirectiveDelegate {
     /// <#Description#>
-    public let latitude: String
+    var messageSender: MessageSendable! { get set }
+    
     /// <#Description#>
-    public let longitude: String
+    var delegate: PermissionAgentDelegate? { get set }
 }

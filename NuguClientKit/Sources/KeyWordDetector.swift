@@ -25,7 +25,8 @@ import KeenSense
 
 public class KeyWordDetector: WakeUpDetectable {
     public var audioStream: AudioStreamable!
-    
+
+    private var boundStreams: BoundStreams?
     private let engine = TycheKwd()
     public weak var delegate: WakeUpDetectorDelegate?
     
@@ -59,12 +60,14 @@ public class KeyWordDetector: WakeUpDetectable {
         engine.delegate = self
     }
     
-    public func start() throws {
-        let boundStreams = BoundStreams(buffer: audioStream.makeAudioStreamReader())
-        try engine.start(inputStream: boundStreams.input)
+    public func start() {
+        boundStreams?.stop()
+        boundStreams = BoundStreams(buffer: audioStream.makeAudioStreamReader())
+        engine.start(inputStream: boundStreams!.input)
     }
     
     public func stop() {
+        boundStreams?.stop()
         engine.stop()
     }
 }

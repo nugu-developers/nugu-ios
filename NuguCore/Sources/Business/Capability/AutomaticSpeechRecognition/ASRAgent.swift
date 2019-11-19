@@ -156,6 +156,7 @@ public extension ASRAgent {
     }
     
     func startRecognition() {
+        log.debug("")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = self.audioStream.makeAudioStreamReader()
         
@@ -188,6 +189,7 @@ public extension ASRAgent {
     ///
     /// This function can only be called in the LISTENING and RECOGNIZING state.
     private func stopSpeech() {
+        log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             switch self.asrState {
@@ -201,8 +203,11 @@ public extension ASRAgent {
     }
     
     func stopRecognition() {
+        log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            // TODO: cancelAssociated = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
+            self.currentExpectSpeech = nil
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
                 return
@@ -398,7 +403,7 @@ private extension ASRAgent {
     func expectSpeech(directive: DirectiveProtocol) -> Result<Void, Error> {
         return Result { [weak self] in
             guard currentExpectSpeech != nil else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
             }
             switch asrState {
             case .idle, .busy:
@@ -414,6 +419,7 @@ private extension ASRAgent {
                 self.expectingSpeechTimeout = Observable<Int>
                     .timer(ASRConst.focusTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                     .subscribe(onNext: { [weak self] _ in
+                        log.info("expectingSpeechTimeout")
                         self?.asrResult = .error(.listenFailed)
                     })
                 self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
@@ -565,34 +571,30 @@ private extension ASRAgent {
             return
         }
         
-        do {
-            attachmentSeq = 0
-            
-            var timeout: Int {
-                guard let expectTimeout = currentExpectSpeech?.timeoutInMilliseconds else {
-                    return ASRConst.timeout
-                }
-                
-                return expectTimeout / 1000
+        attachmentSeq = 0
+        
+        var timeout: Int {
+            guard let expectTimeout = currentExpectSpeech?.timeoutInMilliseconds else {
+                return ASRConst.timeout
             }
             
-            try endPointDetector.start(inputStream: asrRequest.reader,
-                                       sampleRate: ASRConst.sampleRate,
-                                       timeout: timeout,
-                                       maxDuration: ASRConst.maxDuration,
-                                       pauseLength: ASRConst.pauseLength)
-            
-            sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
-                guard case .success = status else {
-                    self?.asrResult = .error(.recognizeFailed)
-                    return
-                }
-                
-                self?.asrState = .listening
+            return expectTimeout / 1000
+        }
+        
+        endPointDetector.start(inputStream: asrRequest.reader,
+                               sampleRate: ASRConst.sampleRate,
+                               timeout: timeout,
+                               maxDuration: ASRConst.maxDuration,
+                               pauseLength: ASRConst.pauseLength)
+        
+        asrState = .listening
+        
+        sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
+            guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
+            guard case .success = status else {
+                self?.asrResult = .error(.recognizeFailed)
+                return
             }
-        } catch {
-            log.error(error)
-            asrResult = .error(.listenFailed)
         }
     }
     
@@ -617,6 +619,7 @@ private extension ASRAgent {
         responseTimeout = Observable<Int>
             .timer(NuguApp.shared.configuration.asrResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { [weak self] _ in
+                log.info("responseTimeout")
                 self?.asrResult = .error(.responseTimeout)
             })
         self.responseTimeout?.disposed(by: self.disposeBag)

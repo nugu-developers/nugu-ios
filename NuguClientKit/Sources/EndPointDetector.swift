@@ -25,6 +25,7 @@ import JadeMarble
 
 public class EndPointDetector: EndPointDetectable {
     private let engine = TycheEpd()
+    private var boundStreams: BoundStreams?
     public weak var delegate: EndPointDetectorDelegate?
     
     public var state: EndPointDetectorState = .idle {
@@ -43,12 +44,14 @@ public class EndPointDetector: EndPointDetectable {
         engine.delegate = self
     }
     
-    public func start(inputStream: AudioStreamReadable, sampleRate: Double, timeout: Int, maxDuration: Int, pauseLength: Int) throws {
-        let boundStreams = BoundStreams(buffer: inputStream)
-        try engine.start(inputStream: boundStreams.input, sampleRate: sampleRate, timeout: timeout, maxDuration: maxDuration, pauseLength: pauseLength)
+    public func start(inputStream: AudioStreamReadable, sampleRate: Double, timeout: Int, maxDuration: Int, pauseLength: Int) {
+        boundStreams?.stop()
+        boundStreams = BoundStreams(buffer: inputStream)
+        engine.start(inputStream: boundStreams!.input, sampleRate: sampleRate, timeout: timeout, maxDuration: maxDuration, pauseLength: pauseLength)
     }
     
     public func stop() {
+        boundStreams?.stop()
         engine.stop()
     }
 }

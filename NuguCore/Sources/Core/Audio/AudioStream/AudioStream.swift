@@ -42,21 +42,29 @@ extension AudioStream {
         private let delegateQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_stream_delegate")
         private var refCnt = 0 {
             didSet {
-                // When the task below is running, self.refCnt can be different from current value. so we should capture it now.
-                let currentRefCnt = refCnt
-                delegateQueue.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    log.debug("audio reference count: \(oldValue) -> \(currentRefCnt)")
-                    switch (oldValue, currentRefCnt) {
-                    case (_, 0):
-                        self.streamDelegate?.audioStreamDidStop()
-                    case (0, 1):
-                        self.streamDelegate?.audioStreamWillStart()
-                    default:
-                        break
-                    }
+                log.debug("audio reference count: \(oldValue) -> \(refCnt)")
+                switch (oldValue, refCnt) {
+                case (_, 0):
+                    self.streamDelegate?.audioStreamDidStop()
+                case (0, 1):
+                    self.streamDelegate?.audioStreamWillStart()
+                default:
+                    break
                 }
+            }
+        }
+        
+        private func increaseRef() {
+            delegateQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.refCnt += 1
+            }
+        }
+        
+        private func decreaseRef() {
+            delegateQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.refCnt -= 1
             }
         }
         
@@ -90,11 +98,11 @@ extension AudioStream {
             init(buffer: AudioBuffer) {
                 audioBuffer = buffer
                 super.init(buffer: buffer)
-                audioBuffer.refCnt += 1
+                audioBuffer.increaseRef()
             }
             
             deinit {
-                audioBuffer.refCnt -= 1
+                audioBuffer.decreaseRef()
             }
         }
     }

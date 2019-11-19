@@ -40,6 +40,8 @@ final class MainViewController: UIViewController {
     
     private var nuguVoiceChrome = NuguVoiceChrome()
     
+    private var hasShownGuideWeb = false
+    
     // MARK: Override
     
     override func viewDidLoad() {
@@ -51,8 +53,8 @@ final class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(didEnterBackground(_:)),
-            name: UIApplication.didEnterBackgroundNotification,
+            selector: #selector(willResignActive(_:)),
+            name: UIApplication.willResignActiveNotification,
             object: nil
         )
         NotificationCenter.default.addObserver(
@@ -72,7 +74,7 @@ final class MainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        showLoginResultIfNeeded()
+        showGuideWebIfNeeded()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -90,11 +92,11 @@ final class MainViewController: UIViewController {
         }
         
         switch segueId {
-        case "mainToLoginResult":
+        case "mainToGuideWeb":
             guard let webViewController = segue.destination as? WebViewController else { return }
-            webViewController.initialURL = sender as? String
+            webViewController.initialURL = sender as? URL
             
-            SampleApp.loginResultURL = nil
+            hasShownGuideWeb = true
         default:
             return
         }
@@ -113,10 +115,11 @@ final class MainViewController: UIViewController {
     
     /// Catch entering background notification to stop recognizing & wake up detector
     /// It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
-    /// - Parameter notification: UIApplication.didEnterBackgroundNotification
-    func didEnterBackground(_ notification: Notification) {
+    /// - Parameter notification: UIApplication.willResignActiveNotification
+    func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
         NuguCentralManager.shared.stopWakeUpDetector()
+        NuguCentralManager.shared.disable()
     }
     
     /// Catch becoming active notification to refresh mic status & Nugu button
@@ -170,14 +173,12 @@ private extension MainViewController {
         NuguCentralManager.shared.displayPlayerController.use()
     }
     
-    /// Show login result webpage after successful login process
-    func showLoginResultIfNeeded() {
-        guard let url = SampleApp.loginResultURL else {
-            log.debug("loginResultURL is nil")
-            return
-        }
+    /// Show nugu usage guide webpage after successful login process
+    func showGuideWebIfNeeded() {
+        guard hasShownGuideWeb == false,
+            let url = SampleApp.guideWebUrl else { return }
         
-        performSegue(withIdentifier: "mainToLoginResult", sender: url)
+        performSegue(withIdentifier: "mainToGuideWeb", sender: url)
     }
     
     /// Refresh Nugu status
@@ -445,7 +446,6 @@ extension MainViewController: DialogStateDelegate {
     func dialogStateDidChange(_ state: DialogState) {
         switch state {
         case .idle:
-            refreshWakeUpDetector()
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
                 self?.dismissVoiceChrome()
             })
@@ -458,11 +458,9 @@ extension MainViewController: DialogStateDelegate {
                     self?.nuguVoiceChrome.minimize()
                     return
                 }
-                self?.refreshWakeUpDetector()
                 self?.dismissVoiceChrome()
             }
         case .listening:
-            NuguCentralManager.shared.stopWakeUpDetector()
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
                 SoundPlayer.playSound(soundType: .start)
@@ -476,8 +474,7 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .processing)
             }
-        default:
-            refreshWakeUpDetector()
+        case .expectingSpeech: break
         }
     }
 }
@@ -485,6 +482,17 @@ extension MainViewController: DialogStateDelegate {
 // MARK: - AutomaticSpeechRecognitionDelegate
 
 extension MainViewController: ASRAgentDelegate {
+    func asrAgentDidChange(state: ASRState) {
+        switch state {
+        case .idle:
+            refreshWakeUpDetector()
+        case .listening:
+            NuguCentralManager.shared.stopWakeUpDetector()
+        default:
+            break
+        }
+    }
+    
     func asrAgentDidReceive(result: ASRResult) {
         switch result {
         case .complete(let text):

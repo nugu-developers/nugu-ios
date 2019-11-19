@@ -1,8 +1,8 @@
 //
-//  Atomic.swift
-//  NuguCore
+//  PermissionAgentDelegate.swift
+//  NuguInterface
 //
-//  Created by childc on 2019/10/24.
+//  Created by yonghoonKwon on 2019/11/12.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,29 +20,17 @@
 
 import Foundation
 
-@propertyWrapper
-struct Atomic<Value> {
-    private var value: Value
-    private let queue = DispatchQueue(label: "com.sktelecom.romaine.atomic.queue")
-
-    init(wrappedValue value: Value) {
-        self.value = value
-    }
-
-    var wrappedValue: Value {
-      get { return load() }
-      set { store(value: newValue) }
-    }
-
-    func load() -> Value {
-        return queue.sync { () -> Value in
-            return value
-        }
-    }
-
-    mutating func store(value: Value) {
-        queue.sync {
-            self.value = value
-        }
-    }
+/// <#Description#>
+public protocol PermissionAgentDelegate: class {
+    
+    /// <#Description#>
+    /// - Parameter names: <#names description#>
+    /// - Parameter completion: <#completion description#>
+    func permissionAgentRequestPermissions(
+        categories: Set<PermissionContext.Permission.Category>,
+        completion: @escaping () -> Void
+    )
+    
+    /// <#Description#>
+    func permissionAgentRequestContext() -> PermissionContext
 }
