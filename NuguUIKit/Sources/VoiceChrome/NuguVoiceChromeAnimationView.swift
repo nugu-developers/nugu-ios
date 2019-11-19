@@ -23,9 +23,9 @@ import UIKit
 final class NuguVoiceChromeAnimationView: UIView {
     
     private let standardAnimationViewSize = CGSize(width: 128.0, height: 64.0)
-    private let blueColor = UIColor(red: 0, green: 157.0/255.0, blue: 1, alpha: 1.0).cgColor
+    private let blueColor = UIColor(red: 0, green: 158.0/255.0, blue: 1, alpha: 1.0).cgColor
     private let greenColor = UIColor(red: 0, green: 230.0/255.0, blue: 136.0/255.0, alpha: 1.0).cgColor
-    private let redColor = UIColor.red.cgColor
+    private let redColor = UIColor(red: 1, green: 58.0/255.0, blue: 0, alpha: 1.0).cgColor
     private let whiteColor = UIColor.white.cgColor
 
     func setAnimation(state: NuguVoiceChrome.State) {
