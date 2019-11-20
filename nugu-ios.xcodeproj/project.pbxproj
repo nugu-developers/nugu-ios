@@ -343,6 +343,7 @@
 		7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */; };
 		7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKwd.swift */; };
 		7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */; };
+		A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -861,6 +862,7 @@
 		7330CD87237A77F900FCD6E9 /* TycheEpd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpd.swift; sourceTree = "<group>"; };
 		7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwdDelegate.swift; sourceTree = "<group>"; };
 		7330CD8C237A784500FCD6E9 /* TycheKwd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwd.swift; sourceTree = "<group>"; };
+		A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2147,6 +2149,7 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF4C9237672F100C9A177 /* SoundPlayer.swift */,
+				A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */,
 				1FFFF4CA237672F100C9A177 /* NuguCentralManager.swift */,
 				1FFFF4CB237672F100C9A177 /* NuguDisplayPlayerController.swift */,
 			);
@@ -3034,6 +3037,7 @@
 				1FFFF4F0237672F100C9A177 /* DisplayBodyView.swift in Sources */,
 				1FFFF4F5237672F100C9A177 /* NuguToastManager.swift in Sources */,
 				1FFFF4F9237672F100C9A177 /* SampleAppError.swift in Sources */,
+				A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */,
 				1FFFF4FB237672F100C9A177 /* SoundPlayer.swift in Sources */,
 				1FFFF4ED237672F100C9A177 /* DisplayCommonTemplate.swift in Sources */,
 				1FFFF4E3237672F100C9A177 /* NuguWebView.swift in Sources */,
