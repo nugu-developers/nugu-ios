@@ -27,14 +27,4 @@ public enum NetworkStatus: Equatable {
     /// <#Description#>
     /// - Parameter reason: <#reason description#>
     case disconnected(error: NetworkError? = nil)
-    
-    public static func == (lhs: NetworkStatus, rhs: NetworkStatus) -> Bool {
-        switch (lhs, rhs) {
-        case (.connected, connected),
-             (.disconnected, .disconnected):
-            return true
-        default:
-            return false
-        }
-    }
 }
