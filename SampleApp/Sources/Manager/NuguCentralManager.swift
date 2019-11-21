@@ -43,7 +43,7 @@ final class NuguCentralManager {
         client.locationAgent?.delegate = self
         client.permissionAgent?.delegate = self
 
-        NuguLocationManager.shared.requestLocation()
+        NuguLocationManager.shared.startUpdatingLocation()
         
         /// Set Last WakeUp Keyword
         /// If you don't want to use saved wakeup-word, don't need to be implemented

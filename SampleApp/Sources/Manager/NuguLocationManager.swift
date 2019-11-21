@@ -57,7 +57,7 @@ final class NuguLocationManager: NSObject {
 // MARK: - Internal
 
 extension NuguLocationManager {
-    func requestLocation() {
+    func startUpdatingLocation() {
         switch CLLocationManager.authorizationStatus() {
         case .authorizedWhenInUse, .authorizedAlways:
             locationManager.startUpdatingLocation()
@@ -75,20 +75,13 @@ extension NuguLocationManager {
 
 private extension NuguLocationManager {
     func locationState() -> LocationContext.State {
-        switch CLLocationManager.authorizationStatus() {
-        case .authorizedAlways, .authorizedWhenInUse:
-            return .available
-        case .notDetermined:
-            return .unknown
-        case .denied, .restricted:
-            return .unavailable
-        @unknown default:
-            return .unknown
-        }
+        return CLLocationManager.locationServicesEnabled() ? .available : .unavailable
     }
     
     func locationCurrent(locations: [CLLocation]) -> LocationContext.Current? {
-        guard let location = locations.last else {
+        guard let location = locations.last,
+            locationState() == .available,
+            permissionLocationState == .granted else {
             return nil
         }
         return LocationContext.Current(latitude: String(location.coordinate.latitude), longitude: String(location.coordinate.longitude))
@@ -103,14 +96,17 @@ extension NuguLocationManager: CLLocationManagerDelegate {
         requestLocationPermissionCompletion = nil
         switch status {
         case .authorizedWhenInUse, .authorizedAlways:
-            requestLocation()
+            startUpdatingLocation()
         default:
             break
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
+        guard let location = locations.last else {
+            locationContext = LocationContext(state: .unknown, current: nil)
+            return
+        }
         let horizontalAccuracy = location.horizontalAccuracy
         if horizontalAccuracy > 0 && horizontalAccuracy < 10000 {
             locationContext = LocationContext(state: locationState(), current: locationCurrent(locations: locations))
@@ -118,15 +114,6 @@ extension NuguLocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        guard let locationError = error as? CLError else {
-            locationContext = LocationContext(state: .unknown, current: nil)
-            return
-        }
-        switch locationError.code {
-        case .locationUnknown:
-            break
-        default:
-            locationContext = LocationContext(state: .unavailable, current: nil)
-        }
+        locationContext = LocationContext(state: .unknown, current: nil)
     }
 }
