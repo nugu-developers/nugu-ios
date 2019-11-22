@@ -19,43 +19,51 @@
 //
 
 import Foundation
+import NattyLog
+
+let log = NuguConfiguration.natty
 
 /// <#Description#>
-public struct NuguConfiguration: Decodable {
+public class NuguConfiguration {
     /// <#Description#>
-    var asrResponseTimeout: DispatchTimeInterval = .milliseconds(10000)
+    public static var asrResponseTimeout: DispatchTimeInterval = .milliseconds(10000)
     /// <#Description#>
-    var asrEncoding: String = "PARTIAL" // "PARTIAL" or "COMPLETE"
+    public static var asrEncoding: String = "PARTIAL" // "PARTIAL" or "COMPLETE"
     // TODO never 로 설정할 수 있는 방법 제공.
     /// <#Description#>
-    var audioPlayerPauseTimeout: DispatchTimeInterval = .milliseconds(600000)
-    /// <#Description#>
-    var registryAddress: String = "https://reg-http.sktnugu.com:443/v1/"
-
-    enum CodingKeys: String, CodingKey {
-        case asrResponseTimeout = "AutomatedSpeechRecognitionResponseTimeout"
-        case asrEncoding = "AutomatedSpeechRecognitionEncoding"
-        case audioPlayerPauseTimeout = "AudioPlayerPauseTimeout"
-        case nuguServerType = "NuguServerType"
-        case registryAddress = "RegisteryServerBaseUrl"
-    }
-
-    init() {}
+    public static var audioPlayerPauseTimeout: DispatchTimeInterval = .milliseconds(600000)
     
-    public init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        
-        if let value = try values.decodeIfPresent(Int.self, forKey: .asrResponseTimeout) {
-            asrResponseTimeout = .milliseconds(value)
-        }
-        if let value = try values.decodeIfPresent(String.self, forKey: .asrEncoding) {
-            self.asrEncoding = value
-        }
-        if let value = try values.decodeIfPresent(Int.self, forKey: .audioPlayerPauseTimeout) {
-            audioPlayerPauseTimeout = .milliseconds(value)
-        }
-        if let value = try values.decodeIfPresent(String.self, forKey: .registryAddress) {
-            registryAddress = value
+    fileprivate static let natty: Natty = Natty(by: nattyConfiguration)
+    private static var nattyConfiguration: NattyLog.NattyConfiguration {
+        return NattyLog.NattyConfiguration(
+            minLogLevel: .debug,
+            maxDescriptionLevel: .error,
+            showPersona: true,
+            prefix: "Nugu")
+    }
+    
+    /// <#Description#>
+    public static var logEnabled: Bool {
+        set {
+            switch newValue {
+            case true:
+                #if DEBUG
+                natty.configuration.minLogLevel = .debug
+                #else
+                natty.configuration.minLogLevel = .warning
+                #endif
+            case false:
+                natty.configuration.minLogLevel = .nothing
+            }
+        } get {
+            switch nattyConfiguration.minLogLevel {
+            case .nothing:
+                return false
+            default:
+                return true
+            }
         }
     }
+    
+    private init() {}
 }
