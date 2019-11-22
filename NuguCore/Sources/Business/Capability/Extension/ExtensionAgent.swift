@@ -46,7 +46,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
         guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
             completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Unknown directive")))

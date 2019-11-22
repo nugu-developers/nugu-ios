@@ -226,7 +226,7 @@ extension ASRAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirectivePrefetch(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         switch directive.header.type {
@@ -238,7 +238,7 @@ extension ASRAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         let result = Result<DirectiveTypeInfo, Error>(catching: {
@@ -367,15 +367,15 @@ extension ASRAgent: EndPointDetectorDelegate {
     }
 }
 
-// MARK: - ReceiveMessageDelegate
+// MARK: - DownStreamDataDelegate
 
-extension ASRAgent: ReceiveMessageDelegate {
-    public func receiveMessageDidReceive(directive: DirectiveProtocol) {
+extension ASRAgent: DownStreamDataDelegate {
+    public func downStreamDataDidReceive(directive: DownStream.Directive) {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let request = self.asrRequest else { return }
             guard directive.header.type != DirectiveTypeInfo.notifyResult.type else { return }
-            guard request.dialogRequestId == directive.header.dialogRequestID else { return }
+            guard request.dialogRequestId == directive.header.dialogRequestId else { return }
             
             switch self.asrState {
             case .busy, .expectingSpeech:
@@ -390,7 +390,7 @@ extension ASRAgent: ReceiveMessageDelegate {
 // MARK: - Private (Directive)
 
 private extension ASRAgent {
-    func prefetchExpectSpeech(directive: DirectiveProtocol) -> Result<Void, Error> {
+    func prefetchExpectSpeech(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -400,7 +400,7 @@ private extension ASRAgent {
         }
     }
 
-    func expectSpeech(directive: DirectiveProtocol) -> Result<Void, Error> {
+    func expectSpeech(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard currentExpectSpeech != nil else {
                 throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
@@ -429,7 +429,7 @@ private extension ASRAgent {
         }
     }
     
-    func notifyResult(directive: DirectiveProtocol) -> Result<Void, Error> {
+    func notifyResult(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")

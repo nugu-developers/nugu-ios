@@ -99,6 +99,14 @@ public class NetworkManager: NetworkManageable {
     public func remove(statusDelegate: NetworkStatusDelegate) {
         networkStatusDelegates.remove(statusDelegate)
     }
+    
+    public func add(receiveMessageDelegate delegate: ReceiveMessageDelegate) {
+        receiveMessageDelegates.add(delegate)
+    }
+    
+    public func remove(receiveMessageDelegate delegate: ReceiveMessageDelegate) {
+        receiveMessageDelegates.remove(delegate)
+    }
 }
 
 extension NetworkManager: MessageSendable {
@@ -126,37 +134,6 @@ extension NetworkManager: MessageSendable {
     
     public func send(crashReports: [CrashReport]) {
         apiProvider?.crash(reports: crashReports).subscribe().disposed(by: self.disposeBag)
-    }
-}
-
-// MARK: - MessageReceivable
-
-extension NetworkManager: MessageReceivable {
-    public func receive(directive: DirectiveProtocol) {
-        receiveMessageDelegates.notify { delegate in
-            delegate.receiveMessageDidReceive(directive: directive)
-        }
-    }
-    
-    public func receive(attachment: AttachmentProtocol) {
-        receiveMessageDelegates.notify { delegate in
-            delegate.receiveMessageDidReceive(attachment: attachment)
-        }
-    }
-    
-    public func add(receiveMessageDelegate delegate: ReceiveMessageDelegate) {
-        receiveMessageDelegates.add(delegate)
-    }
-    
-    public func remove(receiveMessageDelegate delegate: ReceiveMessageDelegate) {
-        receiveMessageDelegates.remove(delegate)
-    }
-}
-
-// MARK: - AuthorizationStateDelegate
-
-extension NetworkManager: AuthorizationStateDelegate {
-    public func authorizationStateDidChange(_ state: AuthorizationState) {
     }
 }
 
@@ -198,22 +175,13 @@ private extension NetworkManager {
 
         receiveDisposable?.dispose()
         receiveDisposable = apiProvider.directive
-            .subscribe(onNext: { [weak self] part in
-                if let contentType = part.header["Content-Type"], contentType.contains("application/json") {
-                    guard let message = try? JSONDecoder().decode(DownStreamData.Message.self, from: part.body) else {
-                        log.error("DirectiveMessage parse error")
-                        return
+            .subscribe(
+                onNext: { [weak self] part in
+                    self?.receiveMessageDelegates.notify { delegate in
+                        delegate.receiveMessageDidReceive(header: part.header, body: part.body)
                     }
-                    
-                    message.directives.forEach { directive in
-                        self?.receive(directive: directive)
-                    }
-                    return
-                }
-                
-                guard let self = self else { return }
-                self.receive(attachment: self.makeAttachment(part: part))
-                }, onError: { [weak self] error in
+                },
+                onError: { [weak self] error in
                     log.error("directive error: \(error)")
                     
                     guard (error as? NetworkError) != .authError else {
@@ -235,45 +203,6 @@ private extension NetworkManager {
         receiveDisposable?.disposed(by: disposeBag)
     }
     
-    private func makeAttachment(part: MultiPartParser.Part) -> DownStreamData.Attachment {
-        let header = DownStreamData.Header(namespace: part.header["Namespace"] ?? "",
-                                           name: part.header["Name"] ?? "",
-                                           dialogRequestID: part.header["Dialog-Request-Id"] ?? "",
-                                           messageID: part.header["Parent-Message-Id"] ?? "",
-                                           version: part.header["Version"] ?? "")
-        
-        var parentMessageID: String? {
-            return part.header["Parent-Message-Id"]
-        }
-        
-        var seq: (Int, Bool)? {
-            guard let fileName = part.header["Filename"] else {
-                return nil
-            }
-
-            let fileInfo = fileName.split(separator: ";")
-            guard fileInfo.count == 2 else {
-                return nil
-            }
-
-            guard let seq = Int(String(fileInfo[0])) else {
-                return nil
-            }
-
-            return (seq, fileInfo[1] == "end")
-        }
-
-        var contentType: String? {
-            return part.header["Content-Type"]
-        }
-
-        return DownStreamData.Attachment(header: header,
-                                         seq: seq?.0 ?? 0,
-                                         content: part.body,
-                                         isEnd: seq?.1 ?? false,
-                                         parentMessageID: parentMessageID ?? "",
-                                         mediaType: contentType ?? "")
-    }
 }
 
 // MARK: - Private (connect endpoint with policy)

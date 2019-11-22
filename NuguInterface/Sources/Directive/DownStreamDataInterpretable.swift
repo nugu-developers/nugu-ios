@@ -1,8 +1,8 @@
 //
-//  DirectiveProtocol.swift
-//  NuguInterface
+//  DownStreamDataInterpretable.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 14/05/2019.
+//  Created by MinChul Lee on 11/22/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,21 +21,11 @@
 import Foundation
 
 /// <#Description#>
-public protocol DirectiveProtocol {
+public protocol DownStreamDataInterpretable: ReceiveMessageDelegate {
     /// <#Description#>
-    var payload: String { get }
+    /// - Parameter delegate:
+    func add(delegate: DownStreamDataDelegate)
     /// <#Description#>
-    var header: MessageHeaderProtocol { get }
-}
-
-// MARK: - DirectiveProtocol + DirectiveTypeInforable
-
-public extension DirectiveProtocol {
-    /// <#Description#>
-    /// - Parameter Type: <#Type description#>
-    func typeInfo<T: CaseIterable & DirectiveTypeInforable>(for configurationType: T.Type) -> T? {
-        return configurationType.allCases.first { (configuration) -> Bool in
-            return configuration.type == header.type
-        }
-    }
+    /// - Parameter delegate:
+    func remove(delegate: DownStreamDataDelegate)
 }

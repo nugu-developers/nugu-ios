@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol NetworkManageable: MessageSendable, MessageReceivable, AuthorizationStateDelegate {
+public protocol NetworkManageable: MessageSendable {
     /// <#Description#>
     var connected: Bool { get }
     /// <#Description#>
@@ -35,6 +35,14 @@ public protocol NetworkManageable: MessageSendable, MessageReceivable, Authoriza
     /// <#Description#>
     /// - Parameter statusDelegate: <#statusDelegate description#>
     func remove(statusDelegate: NetworkStatusDelegate)
+    
+    /// <#Description#>
+    /// - Parameter receiveMessageDelegate: <#receiveMessageDelegate description#>
+    func add(receiveMessageDelegate: ReceiveMessageDelegate)
+    
+    /// <#Description#>
+    /// - Parameter receiveMessageDelegate: <#receiveMessageDelegate description#>
+    func remove(receiveMessageDelegate: ReceiveMessageDelegate)
 }
 
 public extension NetworkManageable {

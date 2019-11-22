@@ -25,7 +25,7 @@ public protocol ASRAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 FocusChannelDelegate,
-ReceiveMessageDelegate,
+DownStreamDataDelegate,
 EndPointDetectorDelegate,
 HandleDirectiveDelegate {
     var focusManager: FocusManageable! { get set }

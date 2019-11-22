@@ -146,7 +146,7 @@ extension TTSAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirectivePrefetch(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         log.info("\(directive.header.type)")
@@ -160,7 +160,7 @@ extension TTSAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         log.info("\(directive.header.type)")
@@ -179,12 +179,12 @@ extension TTSAgent: HandleDirectiveDelegate {
         }
     }
     
-    public func handleAttachment(_ attachment: AttachmentProtocol) {
-        log.info("\(attachment.header.messageID)")
+    public func handleAttachment(_ attachment: DownStream.Attachment) {
+        log.info("\(attachment.header.messageId)")
         
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let media = self.currentMedia, media.dialogRequestId == attachment.header.dialogRequestID else {
+            guard let media = self.currentMedia, media.dialogRequestId == attachment.header.dialogRequestId else {
                 log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
                 return
             }
@@ -334,7 +334,7 @@ extension TTSAgent: SpeakerVolumeDelegate {
 // MARK: - Private (Directive)
 
 private extension TTSAgent {
-    func prefetchPlay(directive: DirectiveProtocol, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    func prefetchPlay(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -356,10 +356,10 @@ private extension TTSAgent {
                 self.currentMedia = TTSMedia(
                     player: mediaPlayer,
                     payload: payload,
-                    dialogRequestId: directive.header.dialogRequestID
+                    dialogRequestId: directive.header.dialogRequestId
                 )
                 if let playServiceId = payload.playServiceId {
-                    self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestID, playServiceId: playServiceId)
+                    self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestId, playServiceId: playServiceId)
                 }
             })
             
@@ -367,7 +367,7 @@ private extension TTSAgent {
         }
     }
     
-    func play(directive: DirectiveProtocol, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    func play(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }

@@ -28,8 +28,8 @@ import NuguCore
 extension NuguClient {
     func setupDependencies() {
         // Setup managers
-        networkManager.add(receiveMessageDelegate: directiveSequencer)
-        authorizationManager.add(stateDelegate: networkManager)
+        networkManager.add(receiveMessageDelegate: downStreamDataInterpreter)
+        downStreamDataInterpreter.add(delegate: directiveSequencer)
         contextManager.add(provideContextDelegate: playSyncManager)
         
         // Setup capability-agents
@@ -66,7 +66,7 @@ extension NuguClient {
         directiveSequencer.add(handleDirectiveDelegate: agent)
         contextManager.add(provideContextDelegate: agent)
         focusManager.add(channelDelegate: agent)
-        networkManager.add(receiveMessageDelegate: agent)
+        downStreamDataInterpreter.add(delegate: agent)
         agent.add(delegate: dialogStateAggregator)
     }
     
@@ -119,7 +119,7 @@ extension NuguClient {
         agent.dialogStateAggregator = dialogStateAggregator
         
         contextManager.add(provideContextDelegate: agent)
-        networkManager.add(receiveMessageDelegate: agent)
+        downStreamDataInterpreter.add(delegate: agent)
         focusManager.add(channelDelegate: agent)
         agent.add(delegate: dialogStateAggregator)
     }
