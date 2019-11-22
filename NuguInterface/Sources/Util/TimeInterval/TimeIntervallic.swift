@@ -35,29 +35,34 @@ public protocol TimeIntervallic {
 
 extension TimeIntervallic {
     public var milliseconds: Double {
+        return seconds * 1000.0
+    }
+    
+    public var intSeconds: Int {
         guard seconds.isNaN == false else { return 0 }
         
-        return seconds * 1000
+        switch seconds {
+        case .infinity:
+            return Int.max
+        case -.infinity:
+            return Int.min
+        default:
+            return Int(seconds)
+        }
     }
-}
+    
+    public var intMilliSeconds: Int {
+        let secondToMilliseconds = seconds * 1000.0
+        guard secondToMilliseconds.isNaN == false else { return 0 }
 
-// MARK: - TimeInterval + Additional initializer
-
-public extension TimeInterval {
-    init(seconds: Double) {
-        self = seconds
-    }
-
-    init(milliseconds: Double) {
-        self = milliseconds * 1000
-    }
-}
-
-// MARK: - TimeInterval + TimeIntervallic
-
-extension TimeInterval: TimeIntervallic {
-    public var seconds: Double {
-        return self
+        switch secondToMilliseconds {
+        case .infinity:
+            return Int.max
+        case -.infinity:
+            return Int.min
+        default:
+            return Int(secondToMilliseconds)
+        }
     }
 }
 
@@ -82,6 +87,10 @@ extension DispatchTimeInterval: TimeIntervallic {
         }
     }
 }
+
+// MARK: - NuguTimeInterval + TimeIntervallic
+
+extension NuguTimeInterval: TimeIntervallic {}
 
 // MARK: - CMTime + TimeIntervallic
 
