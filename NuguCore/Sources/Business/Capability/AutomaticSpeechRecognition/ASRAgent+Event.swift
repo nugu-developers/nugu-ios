@@ -54,7 +54,7 @@ extension ASRAgent.Event: Eventable {
                 "codec": "SPEEX",
                 "language": "KOR",
                 "endpointing": "CLIENT",
-                "encoding": NuguApp.shared.configuration.asrEncoding,
+                "encoding": NuguConfiguration.asrEncoding,
                 "sessionId": expectSpeech?.sessionId,
                 "playServiceId": expectSpeech?.playServiceId,
                 "property": expectSpeech?.property,

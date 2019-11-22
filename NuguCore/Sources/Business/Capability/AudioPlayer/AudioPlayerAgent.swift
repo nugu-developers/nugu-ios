@@ -524,7 +524,7 @@ private extension AudioPlayerAgent {
             event(.completed)
             return Disposables.create()
         }
-            .delaySubscription(NuguApp.shared.configuration.audioPlayerPauseTimeout, scheduler: audioPlayerScheduler)
+            .delaySubscription(NuguConfiguration.audioPlayerPauseTimeout, scheduler: audioPlayerScheduler)
             .subscribe()
         pauseTimeout?.disposed(by: disposeBag)
     }
