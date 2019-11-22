@@ -43,9 +43,10 @@ SpeakerVolumeDelegate {
     /// - Parameter delegate: The object to remove.
     func remove(delegate: AudioPlayerAgentDelegate)
     
-    /// This function retrieves the offset of the current MediaPlayer the AudioPlayerAgent is handling.
+    /// This function retrieves the offset(seconds) of the current `MediaPlayable` the `AudioPlayerAgent` is handling.
     var offset: Int? { get }
-    /// This function retrieves the duration of the current MediaPlayer the AudioPlayerAgent is handling.
+    
+    /// This function retrieves the duration(seconds) of the current `MediaPlayable` the `AudioPlayerAgent` is handling.
     var duration: Int? { get }
     
     /// Begins playback of the current item.
@@ -65,7 +66,7 @@ SpeakerVolumeDelegate {
     
     /// Sets the current playback time to the specified time.
     ///
-    /// - Parameter offset: The time to which to seek.
+    /// - Parameter offset: The time(seconds) to which to seek.
     func seek(to offset: Int)
     
     /// Adds a delegate to be notified of DisplayPlayerType changes.

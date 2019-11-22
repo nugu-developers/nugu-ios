@@ -47,9 +47,11 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     // AudioPlayerAgentProtocol
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
+    
     public var offset: Int? {
         return currentMedia?.player.offset.intSeconds
     }
+    
     public var duration: Int? {
         return currentMedia?.player.duration.intSeconds
     }

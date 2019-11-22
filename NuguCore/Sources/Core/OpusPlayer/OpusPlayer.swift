@@ -421,7 +421,7 @@ public class OpusPlayer: MediaPlayable {
             if options.contains(.shouldResume) {
                 if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
                     guard let self = self else { return }
-                    log.debug("resume offset: \(self.offset)")
+                    log.debug("resume offset: \(self.offset.intSeconds)")
                     if self.player.isPlaying == false {
                         self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
                     }
@@ -440,7 +440,7 @@ public class OpusPlayer: MediaPlayable {
         if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
             guard let self = self else { return }
             if self.player.isPlaying {
-                log.debug("resume offset: \(self.offset)")
+                log.debug("resume offset: \(self.offset.intSeconds)")
                 if self.player.isPlaying == false {
                     self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
                 }
