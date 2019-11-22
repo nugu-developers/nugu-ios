@@ -76,19 +76,18 @@ public class TycheKwd: NSObject {
             guard let self = self else { return }
             log.debug("kwd task is eligible for running ")
             
+            inputStream.delegate = self
+            inputStream.schedule(in: .current, forMode: .default)
+            inputStream.open()
+            
             do {
                 try self.initTriggerEngine()
+                self.state = .active
             } catch {
                 self.state = .inactive
                 self.delegate?.keyWordDetectorDidError(error)
                 log.debug("kwd error: \(error)")
             }
-            
-            self.state = .active
-            
-            inputStream.delegate = self
-            inputStream.schedule(in: .current, forMode: .default)
-            inputStream.open()
             
             while workItem.isCancelled == false {
                 RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
@@ -198,6 +197,11 @@ extension TycheKwd: StreamDelegate {
         
         switch eventCode {
         case .hasBytesAvailable:
+            guard engineHandle != nil else {
+                stop()
+                return
+            }
+            
             let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
             let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
             guard 0 < inputLength else { return }
