@@ -24,20 +24,27 @@ import AVFoundation
 // MARK: - TimeIntervallic
 
 public protocol TimeIntervallic {
-    /// Required
+    
+    /// <#Description#>
     var seconds: Double { get }
     
-    /// Optional
+    /// <#Description#>
     var milliseconds: Double { get }
 }
 
 // MARK: - TimeIntervallic + Optional
 
 extension TimeIntervallic {
+    /// <#Description#>
     public var milliseconds: Double {
         return seconds * 1000.0
     }
-    
+}
+
+// MARK: - TimeIntervallic + Int
+
+extension TimeIntervallic {
+    /// <#Description#>
     public var intSeconds: Int {
         guard seconds.isNaN == false else { return 0 }
         
@@ -51,6 +58,7 @@ extension TimeIntervallic {
         }
     }
     
+    /// <#Description#>
     public var intMilliSeconds: Int {
         let secondToMilliseconds = seconds * 1000.0
         guard secondToMilliseconds.isNaN == false else { return 0 }
@@ -88,10 +96,28 @@ extension DispatchTimeInterval: TimeIntervallic {
     }
 }
 
+extension TimeIntervallic {
+    public var dispatchTimeInterval: DispatchTimeInterval {
+        return DispatchTimeInterval.milliseconds(self.intMilliSeconds)
+    }
+}
+
 // MARK: - NuguTimeInterval + TimeIntervallic
 
 extension NuguTimeInterval: TimeIntervallic {}
 
+extension TimeIntervallic {
+    public var nuguTimeInterval: NuguTimeInterval {
+        return NuguTimeInterval(milliseconds: milliseconds)
+    }
+}
+
 // MARK: - CMTime + TimeIntervallic
 
 extension CMTime: TimeIntervallic {}
+
+extension TimeIntervallic {
+    public var cmTime: CMTime {
+        return CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+    }
+}

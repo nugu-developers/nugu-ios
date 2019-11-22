@@ -26,8 +26,16 @@ public struct NuguTimeInterval {
     public init(seconds: Double) {
         self.seconds = seconds
     }
+    
+    public init(seconds: Int) {
+        self.seconds = Double(seconds)
+    }
 
     public init(milliseconds: Double) {
         self.seconds = milliseconds / 1000.0
+    }
+    
+    public init(milliseconds: Int) {
+        self.seconds = Double(milliseconds) / 1000.0
     }
 }
