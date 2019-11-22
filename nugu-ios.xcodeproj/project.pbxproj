@@ -344,6 +344,8 @@
 		7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKwd.swift */; };
 		7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */; };
 		73454FBD2382C1E50073AF48 /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
+		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
+		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -863,6 +865,8 @@
 		7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwdDelegate.swift; sourceTree = "<group>"; };
 		7330CD8C237A784500FCD6E9 /* TycheKwd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwd.swift; sourceTree = "<group>"; };
 		73454FBC2382C1E50073AF48 /* Publish.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Publish.swift; sourceTree = "<group>"; };
+		73454FC22387BDF00073AF48 /* NuguServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServerInfo.swift; sourceTree = "<group>"; };
+		73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguOAuthServerInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1788,6 +1792,7 @@
 		1FFFF3782375707000C9A177 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				73454FC22387BDF00073AF48 /* NuguServerInfo.swift */,
 				1FFFF3792375707000C9A177 /* NuguConfiguration.swift */,
 			);
 			path = Common;
@@ -1922,6 +1927,7 @@
 		1FFFF43F23757F6600C9A177 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */,
 				1FFFF44023757F6600C9A177 /* Type2Api.swift */,
 				1FFFF44123757F6600C9A177 /* Type1Api.swift */,
 			);
@@ -2904,6 +2910,7 @@
 				1FFFF3842375707000C9A177 /* OpusDecoder.swift in Sources */,
 				1FFFF3C82375707100C9A177 /* FocusConst.swift in Sources */,
 				1FFFF3C92375707100C9A177 /* DialogStateAggregator.swift in Sources */,
+				73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */,
 				1FFFF3CA2375707100C9A177 /* DialogConst.swift in Sources */,
 				1FFFF3B12375707100C9A177 /* TTSAgent+Event.swift in Sources */,
 				1FFFF3C52375707100C9A177 /* FocusError.swift in Sources */,
@@ -2992,6 +2999,7 @@
 				1FFFF45523757F6600C9A177 /* LoginType.swift in Sources */,
 				1FFFF45023757F6600C9A177 /* Type1Api.swift in Sources */,
 				1FFFF45723757F6600C9A177 /* Type1.swift in Sources */,
+				73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */,
 				1FFFF45623757F6600C9A177 /* Type2.swift in Sources */,
 				1FFFF45423757F6600C9A177 /* AuthorizationInfo.swift in Sources */,
 				1FFFF45323757F6600C9A177 /* NuguLoginError.swift in Sources */,
