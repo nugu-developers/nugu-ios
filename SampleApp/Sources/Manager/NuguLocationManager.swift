@@ -26,9 +26,30 @@ final class NuguLocationManager: NSObject {
     static let shared = NuguLocationManager()
     
     private let locationManager = CLLocationManager()
+    
     private var requestLocationPermissionCompletion: (() -> Void)?
     
-    var locationContext: LocationContext = LocationContext(state: .unknown, current: nil)
+    /// LocationContext.Current value can not be provided in asynchronous way
+    /// So the LocationAgent expects for client to pass lastest cached value of LocationContext.Current
+    private var cachedLocationCurrent: LocationContext.Current?
+    
+    private var locationState: LocationContext.State {
+        return CLLocationManager.locationServicesEnabled() ? .available : .unavailable
+    }
+    
+    /// LocationContext.Current should be set and passed as nil when,
+    /// LocationContext.State != .available
+    /// PermissionContext.Permission.State != .granted
+    var locationContext: LocationContext {
+        let locationState = self.locationState
+        guard locationState == .available,
+            permissionLocationState == .granted else {
+                cachedLocationCurrent = nil
+                return LocationContext(state: locationState, current: nil)
+        }
+        return LocationContext(state: locationState, current: cachedLocationCurrent)
+    }
+    
     var permissionLocationState: PermissionContext.Permission.State {
         switch CLLocationManager.authorizationStatus() {
         case .authorizedAlways, .authorizedWhenInUse:
@@ -47,6 +68,7 @@ final class NuguLocationManager: NSObject {
     override init() {
         super.init()
         
+        // Set your own options for effective CLLocationManager usage
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = 200
         locationManager.pausesLocationUpdatesAutomatically = false
@@ -60,6 +82,7 @@ extension NuguLocationManager {
     func startUpdatingLocation() {
         switch CLLocationManager.authorizationStatus() {
         case .authorizedWhenInUse, .authorizedAlways:
+            locationManager.stopUpdatingLocation()
             locationManager.startUpdatingLocation()
         default: break
         }
@@ -68,23 +91,6 @@ extension NuguLocationManager {
     func requestLocationPermission(completion: @escaping () -> Void) {
         requestLocationPermissionCompletion = completion
         locationManager.requestWhenInUseAuthorization()
-    }
-}
-
-// MARK: - Private
-
-private extension NuguLocationManager {
-    func locationState() -> LocationContext.State {
-        return CLLocationManager.locationServicesEnabled() ? .available : .unavailable
-    }
-    
-    func locationCurrent(locations: [CLLocation]) -> LocationContext.Current? {
-        guard let location = locations.last,
-            locationState() == .available,
-            permissionLocationState == .granted else {
-            return nil
-        }
-        return LocationContext.Current(latitude: String(location.coordinate.latitude), longitude: String(location.coordinate.longitude))
     }
 }
 
@@ -103,17 +109,25 @@ extension NuguLocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else {
-            locationContext = LocationContext(state: .unknown, current: nil)
-            return
-        }
+        guard let location = locations.last else { return }
+        
+        // Filter updated location with your own proper accuracy limit
         let horizontalAccuracy = location.horizontalAccuracy
         if horizontalAccuracy > 0 && horizontalAccuracy < 10000 {
-            locationContext = LocationContext(state: locationState(), current: locationCurrent(locations: locations))
+            cachedLocationCurrent = LocationContext.Current(latitude: String(location.coordinate.latitude), longitude: String(location.coordinate.longitude))
         }
     }
     
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        locationContext = LocationContext(state: .unknown, current: nil)
+        guard let locationError = error as? CLError else { return }
+        switch locationError.code {
+        case .locationUnknown: break
+        case .denied:
+            locationManager.stopUpdatingLocation()
+            cachedLocationCurrent = nil
+        default:
+            cachedLocationCurrent = nil
+        }
     }
 }
