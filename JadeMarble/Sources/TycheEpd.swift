@@ -64,24 +64,23 @@ public class TycheEpd: NSObject {
         workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             
+            inputStream.delegate = self
+            inputStream.schedule(in: .current, forMode: .default)
+            inputStream.open()
+            
             do {
                 try self.initDetectorEngine(sampleRate: sampleRate,
                                        timeout: timeout,
                                        maxDuration: maxDuration,
                                        pauseLength: pauseLength)
+                self.state = .listening
+                self.flushedLength = 0
+                self.flushLength = Int((Double(self.flushTime) * sampleRate) / 1000)
             } catch {
+                self.state = .idle
                 log.error("epd engine init error: \(error)")
                 self.delegate?.endPointDetectorStateChanged(state: .error)
-                return
             }
-            
-            self.state = .listening
-            self.flushedLength = 0
-            self.flushLength = Int((Double(self.flushTime) * sampleRate) / 1000)
-            
-            inputStream.delegate = self
-            inputStream.schedule(in: .current, forMode: .default)
-            inputStream.open()
             
             while workItem.isCancelled == false {
                 RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
@@ -148,6 +147,11 @@ extension TycheEpd: StreamDelegate {
 
         switch eventCode {
         case .hasBytesAvailable:
+            guard epdHandle != nil else {
+                stop()
+                return
+            }
+            
             let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
             let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
             guard 0 < inputLength else { return }
