@@ -58,14 +58,14 @@ public class OpusPlayer: MediaPlayable {
     public var isPaused = false
     public weak var delegate: MediaPlayerDelegate?
     
-    /// current time(seconds)
-    public var offset: Int {
-        return Int((Double(chunkSize * curBufferIndex) / audioFormat.sampleRate) * 1000)
+    /// current time
+    public var offset: TimeIntervallic {
+        return NuguTimeInterval(seconds: Double(chunkSize * curBufferIndex) / audioFormat.sampleRate)
     }
     
-    /// duration(milliseconds)
-    public var duration: Int {
-        return Int((Double(chunkSize * audioBuffers.count) / audioFormat.sampleRate) * 1000)
+    /// duration
+    public var duration: TimeIntervallic {
+        return NuguTimeInterval(seconds: Double(chunkSize * audioBuffers.count) / audioFormat.sampleRate)
     }
     
     public var isMuted: Bool {
@@ -371,19 +371,19 @@ public class OpusPlayer: MediaPlayable {
      seek
      - parameter to: seek time (millisecond)
      */
-    public func seek(to offset: Int, completion: ((Result<Void, Error>) -> Void)?) {
+    public func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
         log.debug("try to seek")
 
         audioQueue.async { [weak self] in
             guard let self = self else { return }
             
-            guard (0..<self.duration).contains(offset) else {
+            guard (0..<self.duration.truncatedSeconds).contains(offset.truncatedSeconds) else {
                 completion?(.failure(OpusPlayerError.seekRangeExceed))
                 return
             }
             
             let chunkTime = Int((Float(self.chunkSize) / Float(self.audioFormat.sampleRate)) * 1000)
-            self.curBufferIndex = offset / chunkTime
+            self.curBufferIndex = offset.truncatedSeconds / chunkTime
             completion?(.success(()))
         }
     }
@@ -392,7 +392,7 @@ public class OpusPlayer: MediaPlayable {
      To get opus data from file or remote repository.
      - You are not supposed to use this method on MainThread for getting data using network
      */
-    public func setSource(url: String, offset: Int) throws {
+    public func setSource(url: String, offset: TimeIntervallic) throws {
         guard audioBuffers.count == 0 else { throw MediaPlayableError.unsupportedOperation }
         guard let resourceURL = URL(string: url) else { throw MediaPlayableError.unsupportedOperation }
         
@@ -421,7 +421,7 @@ public class OpusPlayer: MediaPlayable {
             if options.contains(.shouldResume) {
                 if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
                     guard let self = self else { return }
-                    log.debug("resume offset: \(self.offset)")
+                    log.debug("resume offset: \(self.offset.truncatedSeconds)")
                     if self.player.isPlaying == false {
                         self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
                     }
@@ -439,14 +439,14 @@ public class OpusPlayer: MediaPlayable {
 
         if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
             guard let self = self else { return }
-                if self.player.isPlaying {
-                    log.debug("resume offset: \(self.offset)")
-                    if self.player.isPlaying == false {
-                        self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
-                    }
-                    
-                    try? self.engineInit()
+            if self.player.isPlaying {
+                log.debug("resume offset: \(self.offset.truncatedSeconds)")
+                if self.player.isPlaying == false {
+                    self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
                 }
+                
+                try? self.engineInit()
+            }
         }) {
             delegate?.mediaPlayerDidChange(state: .error(error: objcException))
         }

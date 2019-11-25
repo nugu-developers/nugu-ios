@@ -25,16 +25,16 @@ public protocol MediaPlayable: class {
     /// <#Description#>
     var delegate: MediaPlayerDelegate? { get set }
     /// <#Description#>
-    var offset: Int { get }
+    var offset: TimeIntervallic { get }
     /// <#Description#>
-    var duration: Int { get }
+    var duration: TimeIntervallic { get }
     /// <#Description#>
     var isMuted: Bool { get set }
     
     /// For url source
     /// - Parameter url: <#url description#>
     /// - Parameter offset: <#offset description#>
-    func setSource(url: String, offset: Int) throws
+    func setSource(url: String, offset: TimeIntervallic) throws
     
     /// For data stream source
     /// - Parameter data: <#data description#>
@@ -54,19 +54,19 @@ public protocol MediaPlayable: class {
     /// <#Description#>
     /// - Parameter offset: <#offset description#>
     /// - Parameter completion: <#completion description#>
-    func seek(to offset: Int, completion: ((Result<Void, Error>) -> Void)?)
+    func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?)
 }
 
 public extension MediaPlayable {
     /// <#Description#>
     /// - Parameter url: <#url description#>
     func setSource(url: String) throws {
-        try setSource(url: url, offset: 0)
+        try setSource(url: url, offset: NuguTimeInterval(seconds: 0))
     }
     
     /// <#Description#>
     /// - Parameter offset: <#offset description#>
-    func seek(to offset: Int) {
+    func seek(to offset: TimeIntervallic) {
         seek(to: offset, completion: nil)
     }
 }
