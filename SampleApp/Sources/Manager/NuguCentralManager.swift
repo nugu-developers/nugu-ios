@@ -145,7 +145,7 @@ extension NuguCentralManager {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
                 mode: .default,
-                options: [.defaultToSpeaker, .allowBluetooth]
+                options: [.defaultToSpeaker, .allowBluetoothA2DP]
             )
             try AVAudioSession.sharedInstance().setActive(true)
             return true
