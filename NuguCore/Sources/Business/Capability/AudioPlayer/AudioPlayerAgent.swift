@@ -49,11 +49,11 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
     public var offset: Int? {
-        return currentMedia?.player.offset.intSeconds
+        return currentMedia?.player.offset.truncatedSeconds
     }
     
     public var duration: Int? {
-        return currentMedia?.player.duration.intSeconds
+        return currentMedia?.player.duration.truncatedSeconds
     }
     
     private var focusState: FocusState = .nothing
@@ -502,7 +502,7 @@ private extension AudioPlayerAgent {
         intervalReporter = Observable<Int>
             .interval(.seconds(1), scheduler: audioPlayerScheduler)
             .map({ [weak self] (_) -> Int in
-                return self?.currentMedia?.player.offset.intSeconds ?? -1
+                return self?.currentMedia?.player.offset.truncatedSeconds ?? -1
             })
             .filter { $0 > 0 }
             .filter { $0 != lastOffset}

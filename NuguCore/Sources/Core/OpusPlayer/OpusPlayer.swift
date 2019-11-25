@@ -377,13 +377,13 @@ public class OpusPlayer: MediaPlayable {
         audioQueue.async { [weak self] in
             guard let self = self else { return }
             
-            guard (0..<self.duration.intSeconds).contains(offset.intSeconds) else {
+            guard (0..<self.duration.truncatedSeconds).contains(offset.truncatedSeconds) else {
                 completion?(.failure(OpusPlayerError.seekRangeExceed))
                 return
             }
             
             let chunkTime = Int((Float(self.chunkSize) / Float(self.audioFormat.sampleRate)) * 1000)
-            self.curBufferIndex = offset.intSeconds / chunkTime
+            self.curBufferIndex = offset.truncatedSeconds / chunkTime
             completion?(.success(()))
         }
     }
@@ -421,7 +421,7 @@ public class OpusPlayer: MediaPlayable {
             if options.contains(.shouldResume) {
                 if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
                     guard let self = self else { return }
-                    log.debug("resume offset: \(self.offset.intSeconds)")
+                    log.debug("resume offset: \(self.offset.truncatedSeconds)")
                     if self.player.isPlaying == false {
                         self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
                     }
@@ -440,7 +440,7 @@ public class OpusPlayer: MediaPlayable {
         if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
             guard let self = self else { return }
             if self.player.isPlaying {
-                log.debug("resume offset: \(self.offset.intSeconds)")
+                log.debug("resume offset: \(self.offset.truncatedSeconds)")
                 if self.player.isPlaying == false {
                     self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
                 }

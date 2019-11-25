@@ -45,7 +45,7 @@ extension TimeIntervallic {
 
 extension TimeIntervallic {
     /// <#Description#>
-    public var intSeconds: Int {
+    public var truncatedSeconds: Int {
         guard seconds.isNaN == false else { return 0 }
         
         switch seconds {
@@ -59,7 +59,7 @@ extension TimeIntervallic {
     }
     
     /// <#Description#>
-    public var intMilliSeconds: Int {
+    public var truncatedMilliSeconds: Int {
         let secondToMilliseconds = seconds * 1000.0
         guard secondToMilliseconds.isNaN == false else { return 0 }
 
@@ -97,8 +97,9 @@ extension DispatchTimeInterval: TimeIntervallic {
 }
 
 extension TimeIntervallic {
+    /// <#Description#>
     public var dispatchTimeInterval: DispatchTimeInterval {
-        return DispatchTimeInterval.milliseconds(self.intMilliSeconds)
+        return .milliseconds(self.truncatedMilliSeconds)
     }
 }
 
@@ -107,6 +108,7 @@ extension TimeIntervallic {
 extension NuguTimeInterval: TimeIntervallic {}
 
 extension TimeIntervallic {
+    /// <#Description#>
     public var nuguTimeInterval: NuguTimeInterval {
         return NuguTimeInterval(milliseconds: milliseconds)
     }
@@ -117,6 +119,7 @@ extension TimeIntervallic {
 extension CMTime: TimeIntervallic {}
 
 extension TimeIntervallic {
+    /// <#Description#>
     public var cmTime: CMTime {
         return CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
     }

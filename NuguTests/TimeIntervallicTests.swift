@@ -38,8 +38,8 @@ class TimeIntervallicTests: XCTestCase {
         XCTAssertEqual(NuguTimeInterval(seconds: normalTime).milliseconds, 10534.6, accuracy: 10534.6.nextUp - 10534.6.nextDown) // Check accuracy
         XCTAssertEqual(NuguTimeInterval(milliseconds: normalTime).seconds, 0.0105346)
         XCTAssertEqual(NuguTimeInterval(milliseconds: normalTime).milliseconds, 10.5346)
-        XCTAssertEqual(NuguTimeInterval(seconds: normalTime).intSeconds, 10)
-        XCTAssertEqual(NuguTimeInterval(seconds: normalTime).intMilliSeconds, 10534)
+        XCTAssertEqual(NuguTimeInterval(seconds: normalTime).truncatedSeconds, 10)
+        XCTAssertEqual(NuguTimeInterval(seconds: normalTime).truncatedMilliSeconds, 10534)
         
         /// case: max
         let maxTime = Double.infinity
@@ -47,8 +47,8 @@ class TimeIntervallicTests: XCTestCase {
         XCTAssertEqual(NuguTimeInterval(seconds: maxTime).milliseconds, .infinity)
         XCTAssertEqual(NuguTimeInterval(milliseconds: maxTime).seconds, .infinity)
         XCTAssertEqual(NuguTimeInterval(milliseconds: maxTime).milliseconds, .infinity)
-        XCTAssertEqual(NuguTimeInterval(seconds: maxTime).intSeconds, .max)
-        XCTAssertEqual(NuguTimeInterval(seconds: maxTime).intMilliSeconds, .max)
+        XCTAssertEqual(NuguTimeInterval(seconds: maxTime).truncatedSeconds, .max)
+        XCTAssertEqual(NuguTimeInterval(seconds: maxTime).truncatedMilliSeconds, .max)
         
         
         /// case: min
@@ -57,8 +57,8 @@ class TimeIntervallicTests: XCTestCase {
         XCTAssertEqual(NuguTimeInterval(seconds: minTime).milliseconds, -.infinity)
         XCTAssertEqual(NuguTimeInterval(milliseconds: minTime).seconds, -.infinity)
         XCTAssertEqual(NuguTimeInterval(milliseconds: minTime).milliseconds, -.infinity)
-        XCTAssertEqual(NuguTimeInterval(seconds: minTime).intSeconds, .min)
-        XCTAssertEqual(NuguTimeInterval(seconds: minTime).intMilliSeconds, .min)
+        XCTAssertEqual(NuguTimeInterval(seconds: minTime).truncatedSeconds, .min)
+        XCTAssertEqual(NuguTimeInterval(seconds: minTime).truncatedMilliSeconds, .min)
         
         
         /// case: NaN(Not a number)
@@ -67,8 +67,8 @@ class TimeIntervallicTests: XCTestCase {
         XCTAssertEqual(NuguTimeInterval(seconds: nanTime).milliseconds.isNaN, true)
         XCTAssertEqual(NuguTimeInterval(milliseconds: nanTime).seconds.isNaN, true)
         XCTAssertEqual(NuguTimeInterval(milliseconds: nanTime).milliseconds.isNaN, true)
-        XCTAssertEqual(NuguTimeInterval(seconds: nanTime).intSeconds, 0)
-        XCTAssertEqual(NuguTimeInterval(seconds: nanTime).intMilliSeconds, 0)
+        XCTAssertEqual(NuguTimeInterval(seconds: nanTime).truncatedSeconds, 0)
+        XCTAssertEqual(NuguTimeInterval(seconds: nanTime).truncatedMilliSeconds, 0)
         
         /// case: signalingNaN(Signaling not a number)
         let signalingNaNTime = Double.signalingNaN
@@ -76,7 +76,7 @@ class TimeIntervallicTests: XCTestCase {
         XCTAssertEqual(NuguTimeInterval(seconds: signalingNaNTime).milliseconds.isNaN, true)
         XCTAssertEqual(NuguTimeInterval(milliseconds: signalingNaNTime).seconds.isNaN, true)
         XCTAssertEqual(NuguTimeInterval(milliseconds: signalingNaNTime).milliseconds.isNaN, true)
-        XCTAssertEqual(NuguTimeInterval(seconds: signalingNaNTime).intSeconds, 0)
-        XCTAssertEqual(NuguTimeInterval(seconds: signalingNaNTime).intMilliSeconds, 0)
+        XCTAssertEqual(NuguTimeInterval(seconds: signalingNaNTime).truncatedSeconds, 0)
+        XCTAssertEqual(NuguTimeInterval(seconds: signalingNaNTime).truncatedMilliSeconds, 0)
     }
 }

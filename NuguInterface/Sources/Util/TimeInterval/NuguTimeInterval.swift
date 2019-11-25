@@ -21,20 +21,29 @@
 import Foundation
 
 public struct NuguTimeInterval {
+    /// <#Description#>
     public let seconds: Double
     
+    /// <#Description#>
+    /// - Parameter seconds: <#seconds description#>
     public init(seconds: Double) {
         self.seconds = seconds
     }
     
+    /// <#Description#>
+    /// - Parameter seconds: <#seconds description#>
     public init(seconds: Int) {
         self.seconds = Double(seconds)
     }
-
+    
+    /// <#Description#>
+    /// - Parameter milliseconds: <#milliseconds description#>
     public init(milliseconds: Double) {
         self.seconds = milliseconds / 1000.0
     }
     
+    /// <#Description#>
+    /// - Parameter milliseconds: <#milliseconds description#>
     public init(milliseconds: Int) {
         self.seconds = Double(milliseconds) / 1000.0
     }
