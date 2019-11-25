@@ -25,25 +25,17 @@ import NuguInterface
 
 enum FocusChannelConfiguration: CaseIterable {
     case recognition
-    case infomation
+    case information
     case content
 }
 
 // MARK: - FocusChannelConfigurable
 
 extension FocusChannelConfiguration: FocusChannelConfigurable {
-    var name: String {
-        switch self {
-        case .recognition: return "Recognition"
-        case .infomation: return "Infomation"
-        case .content: return "Content"
-        }
-    }
-
     var priority: Int {
         switch self {
         case .recognition: return 300
-        case .infomation: return 200
+        case .information: return 200
         case .content: return 100
         }
     }
