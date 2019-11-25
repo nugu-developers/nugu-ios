@@ -1,8 +1,8 @@
 //
-//  EndPointDetectable.swift
+//  NuguTimeInterval.swift
 //  NuguInterface
 //
-//  Created by DCs-OfficeMBP on 16/05/2019.
+//  Created by yonghoonKwon on 2019/11/22.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,28 +20,31 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol EndPointDetectable: class {
+public struct NuguTimeInterval {
     /// <#Description#>
-    var state: EndPointDetectorState { get set }
-    /// <#Description#>
-    var epdFile: URL? { get set }
-    /// <#Description#>
-    var delegate: EndPointDetectorDelegate? { get set }
+    public let seconds: Double
     
     /// <#Description#>
-    /// - Parameters:
-    ///   - inputStream: input source.
-    ///   - sampleRate: input source's sample rate.
-    ///   - timeout: Max duration of waiting for speech.
-    ///   - maxDuration: Max duration from speech start to end.
-    ///   - pauseLength: The engine waits this time then consider speech end.
-    func start(inputStream: AudioStreamReadable,
-               sampleRate: Double,
-               timeout: Int,
-               maxDuration: Int,
-               pauseLength: Int)
-
+    /// - Parameter seconds: <#seconds description#>
+    public init(seconds: Double) {
+        self.seconds = seconds
+    }
+    
     /// <#Description#>
-    func stop()
+    /// - Parameter seconds: <#seconds description#>
+    public init(seconds: Int) {
+        self.seconds = Double(seconds)
+    }
+    
+    /// <#Description#>
+    /// - Parameter milliseconds: <#milliseconds description#>
+    public init(milliseconds: Double) {
+        self.seconds = milliseconds / 1000.0
+    }
+    
+    /// <#Description#>
+    /// - Parameter milliseconds: <#milliseconds description#>
+    public init(milliseconds: Int) {
+        self.seconds = Double(milliseconds) / 1000.0
+    }
 }

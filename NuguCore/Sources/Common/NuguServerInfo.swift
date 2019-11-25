@@ -1,8 +1,8 @@
 //
-//  PlaySyncManageable.swift
-//  NuguInterface
+//  NuguServerInfo.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 2019/07/17.
+//  Created by childc on 2019/11/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,6 @@
 
 import Foundation
 
-public protocol PlaySyncManageable: ContextInfoDelegate {
-    var playServiceIds: [String] { get }
-    
-    func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?)
+public enum NuguServerInfo {
+    public static var registryAddress: String = "https://reg-http.sktnugu.com:443/v1/"
 }

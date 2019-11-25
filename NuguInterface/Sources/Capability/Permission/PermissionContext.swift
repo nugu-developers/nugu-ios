@@ -41,8 +41,22 @@ public struct PermissionContext {
         public let category: Category
         /// <#Description#>
         public let state: State
+        
+        /// <#Description#>
+        /// - Parameter category: <#category description#>
+        /// - Parameter state: <#state description#>
+        public init(category: Category, state: State) {
+            self.category = category
+            self.state = state
+        }
     }
     
     /// <#Description#>
     public let permissions: [Permission]
+    
+    /// <#Description#>
+    /// - Parameter permissions: <#permissions description#>
+    public init(permissions: [Permission]) {
+        self.permissions = permissions
+    }
 }

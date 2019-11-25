@@ -1,8 +1,8 @@
 //
-//  NuguLoginConfiguration.swift
-//  NuguLoginKit
+//  DelegateSet.swift
+//  NuguInterface
 //
-//  Created by yonghoonKwon on 14/10/2019.
+//  Created by MinChul Lee on 17/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +20,27 @@
 
 import Foundation
 
-struct NuguLoginConfiguration: Decodable {
-    let serverBaseUrl: String
+public class DelegateSet<T> {
+    private let delegates: NSHashTable<AnyObject> = NSHashTable.weakObjects()
     
-    enum CodingKeys: String, CodingKey {
-        case serverBaseUrl = "OAuthServerBaseUrl"
+    public init() {
     }
     
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        
-        if let value = try values.decodeIfPresent(String.self, forKey: .serverBaseUrl) {
-            serverBaseUrl = value
-        } else {
-            serverBaseUrl = defaultServerBaseUrl
-        }
+    public func add(_ delegate: T) {
+        delegates.add(delegate as AnyObject)
+    }
+    
+    public func remove(_ delegate: T) {
+        delegates.remove(delegate as AnyObject)
+    }
+    
+    public func notify(_ body: (T) -> Void) {
+        allObjects.forEach({ (value) in
+                body(value)
+            })
+    }
+    
+    public var allObjects: [T] {
+        return delegates.allObjects.compactMap { $0 as? T }
     }
 }

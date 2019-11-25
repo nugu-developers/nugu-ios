@@ -1,8 +1,8 @@
 //
-//  DelegateSet.swift
-//  Nugu
+//  NuguOAuthServerInfo.swift
+//  NuguLoginKit
 //
-//  Created by MinChul Lee on 17/04/2019.
+//  Created by childc on 2019/11/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,28 +19,6 @@
 //
 
 import Foundation
-
-public class DelegateSet<T> {
-    private let delegates: NSHashTable<AnyObject> = NSHashTable.weakObjects()
-    
-    public init() {
-    }
-    
-    public func add(_ delegate: T) {
-        delegates.add(delegate as AnyObject)
-    }
-    
-    public func remove(_ delegate: T) {
-        delegates.remove(delegate as AnyObject)
-    }
-    
-    public func notify(_ body: (T) -> Void) {
-        allObjects.forEach({ (value) in
-                body(value)
-            })
-    }
-    
-    public var allObjects: [T] {
-        return delegates.allObjects.compactMap { $0 as? T }
-    }
+public enum NuguOAuthServerInfo {
+    public static var serverBaseUrl = "https://api.sktnugu.com/v1/auth"
 }

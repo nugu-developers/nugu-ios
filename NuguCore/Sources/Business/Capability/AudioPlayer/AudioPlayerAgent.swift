@@ -47,11 +47,13 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     // AudioPlayerAgentProtocol
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
+    
     public var offset: Int? {
-        return currentMedia?.player.offset
+        return currentMedia?.player.offset.truncatedSeconds
     }
+    
     public var duration: Int? {
-        return currentMedia?.player.duration
+        return currentMedia?.player.duration.truncatedSeconds
     }
     
     private var focusState: FocusState = .nothing
@@ -75,12 +77,12 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 stopPauseTimeout()
                 if let media = currentMedia {
                     self.currentMedia = nil
-                    playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playServiceId)
+                    playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
                 }
             case .playing:
                 stopPauseTimeout()
                 if let media = currentMedia {
-                    playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playServiceId)
+                    playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
                 }
             case .paused:
                 startPauseTimeout()
@@ -161,7 +163,7 @@ public extension AudioPlayerAgent {
             guard let self = self, let media = self.currentMedia else { return }
             
             media.player.stop()
-            self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playServiceId)
+            self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
         }
     }
     
@@ -204,7 +206,7 @@ public extension AudioPlayerAgent {
     func seek(to offset: Int) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.currentMedia?.player.seek(to: offset)
+            self.currentMedia?.player.seek(to: NuguTimeInterval(seconds: offset))
         }
     }
     
@@ -418,8 +420,13 @@ private extension AudioPlayerAgent {
                 switch self.currentMedia {
                 case .some(let media) where media.payload.audioItem.stream.token == payload.audioItem.stream.token:
                     // Resume and seek
-                    self.currentMedia = AudioPlayerAgentMedia(dialogRequestId: directive.header.dialogRequestID, player: media.player, payload: payload)
-                    media.player.seek(to: payload.audioItem.stream.offset)
+                    self.currentMedia = AudioPlayerAgentMedia(
+                        dialogRequestId: directive.header.dialogRequestID,
+                        player: media.player,
+                        payload: payload
+                    )
+                    
+                    media.player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
                 case .some:
                     self.stopSilently()
                     try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestID, payload: payload)
@@ -434,7 +441,7 @@ private extension AudioPlayerAgent {
                         metaData: metaData,
                         messageId: directive.header.messageID,
                         dialogRequestId: directive.header.dialogRequestID,
-                        playServiceId: payload.playServiceId
+                        playStackServiceId: payload.playStackControl?.playServiceId
                     )
                 }
             }).flatMapError({ (error) -> Result<Void, Error> in
@@ -491,10 +498,11 @@ private extension AudioPlayerAgent {
         guard delayReportTime > 0 || intervalReportTime > 0 else { return }
         
         var lastOffset: Int = 0
+        
         intervalReporter = Observable<Int>
             .interval(.seconds(1), scheduler: audioPlayerScheduler)
             .map({ [weak self] (_) -> Int in
-                return self?.currentMedia?.player.offset ?? -1
+                return self?.currentMedia?.player.offset.truncatedSeconds ?? -1
             })
             .filter { $0 > 0 }
             .filter { $0 != lastOffset}
@@ -507,7 +515,9 @@ private extension AudioPlayerAgent {
                     self?.sendEvent(typeInfo: .progressReportIntervalElapsed)
                 }
                 lastOffset = offset
-            }).subscribe()
+            })
+            .subscribe()
+        
         intervalReporter?.disposed(by: disposeBag)
     }
     
@@ -519,13 +529,14 @@ private extension AudioPlayerAgent {
         stopPauseTimeout()
         pauseTimeout = Completable.create { [weak self] event -> Disposable in
             if let self = self, let media = self.currentMedia {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playServiceId)
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
             }
             event(.completed)
             return Disposables.create()
         }
-            .delaySubscription(NuguApp.shared.configuration.audioPlayerPauseTimeout, scheduler: audioPlayerScheduler)
-            .subscribe()
+        .delaySubscription(NuguConfiguration.audioPlayerPauseTimeout, scheduler: audioPlayerScheduler)
+        .subscribe()
+        
         pauseTimeout?.disposed(by: disposeBag)
     }
     
@@ -541,13 +552,20 @@ private extension AudioPlayerAgent {
     func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) throws {
         let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer(type: .media)
         mediaPlayer.delegate = self
-        self.currentMedia = AudioPlayerAgentMedia(dialogRequestId: dialogRequestId, player: mediaPlayer, payload: payload)
+        
+        self.currentMedia = AudioPlayerAgentMedia(
+            dialogRequestId: dialogRequestId,
+            player: mediaPlayer,
+            payload: payload
+        )
+        
         try mediaPlayer.setSource(
             url: payload.audioItem.stream.url,
-            offset: payload.audioItem.stream.offset
+            offset: NuguTimeInterval(seconds: payload.audioItem.stream.offset)
         )
+        
         mediaPlayer.isMuted = playerIsMuted
-        playSyncManager.prepareSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: payload.playServiceId)
+        playSyncManager.prepareSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
     }
 }
 
