@@ -158,6 +158,7 @@ extension NuguCentralManager {
     }
     
     func disableMixWithOthers() {
+        guard AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint == true else { return }
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
