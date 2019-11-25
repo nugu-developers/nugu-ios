@@ -22,8 +22,6 @@ import Foundation
 
 /// The configuration used by the FocusManager to create Channel objects. Each configuration object has a name and priority.
 public protocol FocusChannelConfigurable {
-    /// The name of the channel.
-    var name: String { get }
     /// The priority of the channel.
     var priority: Int { get }
 }

@@ -74,7 +74,7 @@ extension NuguClient {
         guard let agent = ttsAgent else { return }
         
         agent.focusManager = focusManager
-        agent.channel = FocusChannelConfiguration.infomation
+        agent.channel = FocusChannelConfiguration.information
         agent.mediaPlayerFactory = mediaPlayerFactory
         agent.messageSender = networkManager
         agent.playSyncManager = playSyncManager
