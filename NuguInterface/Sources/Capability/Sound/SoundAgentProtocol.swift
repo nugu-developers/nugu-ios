@@ -23,10 +23,18 @@ import Foundation
 public protocol SoundAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
-HandleDirectiveDelegate {
-    /// <#Description#>
+FocusChannelDelegate,
+MediaPlayerDelegate,
+HandleDirectiveDelegate,
+SpeakerVolumeDelegate {
+    var focusManager: FocusManageable! { get set }
     var messageSender: MessageSendable! { get set }
+    var channel: FocusChannelConfigurable! { get set }
+    var mediaPlayerFactory: MediaPlayableFactory! { get set }
     
     /// <#Description#>
     var delegate: SoundAgentDelegate? { get set }
+    
+    /// <#Description#>
+    func stop()
 }

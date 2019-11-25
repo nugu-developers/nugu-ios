@@ -26,6 +26,9 @@ final public class SoundAgent: SoundAgentProtocol {
     public var capabilityAgentProperty = CapabilityAgentProperty(category: .sound, version: "1.0")
     
     public var messageSender: MessageSendable!
+    public var focusManager: FocusManageable!
+    public var channel: FocusChannelConfigurable!
+    public var mediaPlayerFactory: MediaPlayableFactory!
     
     public weak var delegate: SoundAgentDelegate?
     
@@ -35,6 +38,10 @@ final public class SoundAgent: SoundAgentProtocol {
     
     deinit {
         log.info("")
+    }
+    
+    public func stop() {
+        // TODO: - Stop
     }
 }
 
@@ -86,5 +93,43 @@ extension SoundAgent: HandleDirectiveDelegate {
             delegate?.soundAgentDidRequestToPlay(beep: beep)
             completionHandler(.success(()))
         }
+    }
+}
+
+// MARK: - FocusChannelDelegate
+
+extension SoundAgent: FocusChannelDelegate {
+    public func focusChannelConfiguration() -> FocusChannelConfigurable {
+        return channel
+    }
+    
+    public func focusChannelDidChange(focusState: FocusState) {
+        // TODO: - Fix it
+    }
+}
+
+// MARK: - SpeakerVolumeDelegate
+
+extension SoundAgent: SpeakerVolumeDelegate {
+    public func speakerVolumeType() -> SpeakerVolumeType {
+        return .nugu
+    }
+    
+    public func speakerVolumeIsMuted() -> Bool {
+        // TODO: - Fix it
+        return true
+    }
+   
+    public func speakerVolumeShouldChange(muted: Bool) -> Bool {
+        // TODO: - Fix it
+        return true
+    }
+}
+
+// MARK: - MediaPlayerDelegate
+
+extension SoundAgent: MediaPlayerDelegate {
+    public func mediaPlayerDidChange(state: MediaPlayerState) {
+        // TODO: - Fix it
     }
 }

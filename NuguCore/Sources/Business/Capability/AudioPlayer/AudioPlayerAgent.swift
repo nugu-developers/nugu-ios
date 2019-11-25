@@ -548,7 +548,6 @@ private extension AudioPlayerAgent {
 // MARK: - Private (Media)
 
 private extension AudioPlayerAgent {
-    /// set mediaplayer
     func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) throws {
         let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer(type: .media)
         mediaPlayer.delegate = self

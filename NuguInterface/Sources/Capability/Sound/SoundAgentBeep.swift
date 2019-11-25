@@ -21,14 +21,9 @@
 import Foundation
 
 /// <#Description#>
-public struct SoundAgentBeep: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case playServiceId
-        case beepType = "beepName"
-    }
-    
+public struct SoundAgentBeep {
     /// <#Description#>
-    public enum BeepType: String, Decodable {
+    public enum BeepType: String {
         case fail = "FAIL"
     }
     
@@ -37,6 +32,15 @@ public struct SoundAgentBeep: Decodable {
     
     /// <#Description#>
     public let beepType: BeepType
+}
+
+// MARK: - SoundAgentBeep + Decodable
+
+extension SoundAgentBeep: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case playServiceId
+        case beepType = "beepName"
+    }
     
     /// <#Description#>
     /// - Parameter decoder: <#decoder description#>
@@ -47,3 +51,7 @@ public struct SoundAgentBeep: Decodable {
         beepType = try container.decode(BeepType.self, forKey: .beepType)
     }
 }
+
+// MARK: - SoundAgentBeep.BeepType + Decodable
+
+extension SoundAgentBeep.BeepType: Decodable {}

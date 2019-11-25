@@ -147,6 +147,19 @@ extension NuguClient {
         directiveSequencer.add(handleDirectiveDelegate: agent)
         contextManager.add(provideContextDelegate: agent)
     }
+    
+    func setupSoundAgentDependency() {
+        guard let agent = soundAgent else { return }
+        
+        agent.focusManager = focusManager
+        agent.messageSender = networkManager
+        agent.channel = FocusChannelConfiguration.content
+        agent.mediaPlayerFactory = mediaPlayerFactory
+        
+        directiveSequencer.add(handleDirectiveDelegate: agent)
+        contextManager.add(provideContextDelegate: agent)
+        focusManager.add(channelDelegate: agent)
+    }
 }
 
 // MARK: - Capability-Agents (Mandatory)

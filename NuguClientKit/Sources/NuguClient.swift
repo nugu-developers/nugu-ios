@@ -122,6 +122,8 @@ public class NuguClient {
     /// <#Description#>
     public let permissionAgent: PermissionAgentProtocol?
     /// <#Description#>
+    public let soundAgent: SoundAgentProtocol?
+    /// <#Description#>
     public let systemAgent: SystemAgentProtocol
     
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
@@ -139,7 +141,8 @@ public class NuguClient {
         textAgent: TextAgentProtocol?,
         extensionAgent: ExtensionAgentProtocol?,
         locationAgent: LocationAgentProtocol?,
-        permissionAgent: PermissionAgentProtocol?
+        permissionAgent: PermissionAgentProtocol?,
+        soundAgent: SoundAgentProtocol?
     ) {
         log.info("with NuguApp")
         
@@ -155,6 +158,7 @@ public class NuguClient {
         self.extensionAgent = extensionAgent
         self.locationAgent = locationAgent
         self.permissionAgent = permissionAgent
+        self.soundAgent = soundAgent
         self.systemAgent = SystemAgent()
         
         setupDependencies()
