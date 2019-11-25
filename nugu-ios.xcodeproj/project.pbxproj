@@ -346,6 +346,7 @@
 		73454FBD2382C1E50073AF48 /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
 		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
 		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
+		A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -867,6 +868,7 @@
 		73454FBC2382C1E50073AF48 /* Publish.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Publish.swift; sourceTree = "<group>"; };
 		73454FC22387BDF00073AF48 /* NuguServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServerInfo.swift; sourceTree = "<group>"; };
 		73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguOAuthServerInfo.swift; sourceTree = "<group>"; };
+		A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2171,6 +2173,7 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF4C9237672F100C9A177 /* SoundPlayer.swift */,
+				A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */,
 				1FFFF4CA237672F100C9A177 /* NuguCentralManager.swift */,
 				1FFFF4CB237672F100C9A177 /* NuguDisplayPlayerController.swift */,
 			);
@@ -3061,6 +3064,7 @@
 				1FFFF4F0237672F100C9A177 /* DisplayBodyView.swift in Sources */,
 				1FFFF4F5237672F100C9A177 /* NuguToastManager.swift in Sources */,
 				1FFFF4F9237672F100C9A177 /* SampleAppError.swift in Sources */,
+				A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */,
 				1FFFF4FB237672F100C9A177 /* SoundPlayer.swift in Sources */,
 				1FFFF4ED237672F100C9A177 /* DisplayCommonTemplate.swift in Sources */,
 				1FFFF4E3237672F100C9A177 /* NuguWebView.swift in Sources */,
