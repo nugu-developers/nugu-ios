@@ -36,7 +36,7 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 // MARK: - AudioPlayerDisplayManageable
 
 extension AudioPlayerDisplayManager {
-    func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playServiceId: String) {
+    func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playStackServiceId: String?) {
         guard let data = try? JSONSerialization.data(withJSONObject: metaData, options: []),
             let displayItem = try? JSONDecoder().decode(AudioPlayerDisplayTemplate.AudioPlayer.self, from: data) else {
                 log.error("Invalid metaData")
@@ -48,12 +48,12 @@ extension AudioPlayerDisplayManager {
             self.currentItem = AudioPlayerDisplayTemplate(
                 type: displayItem.template.type,
                 typeInfo: .audioPlayer(item: displayItem),
-                messageId: messageId,
+                templateId: messageId,
                 dialogRequestId: dialogRequestId,
-                templateId: playServiceId
+                playStackServiceId: playStackServiceId
             )
             if let item = self.currentItem {
-                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.templateId)
+                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
             }
         }
     }
@@ -79,7 +79,7 @@ extension AudioPlayerDisplayManager {
             
             self.removeRenderedTemplate(delegate: delegate)
             if self.hasRenderedDisplay(template: template) == false {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.templateId)
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playStackServiceId)
             }
         }
     }
@@ -115,12 +115,12 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
                 }
                 if rendered == false {
                     self.currentItem = nil
-                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.templateId)
+                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
                 }
             case .releasing:
                 var cleared = true
                 self.renderingInfos
-                    .filter { $0.currentItem?.messageId == item.messageId }
+                    .filter { $0.currentItem?.templateId == item.templateId }
                     .compactMap { $0.delegate }
                     .forEach { delegate in
                         if delegate.audioPlayerDisplayShouldClear(template: item) == false {
@@ -128,13 +128,13 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
                         }
                 }
                 if cleared {
-                    self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.templateId)
+                    self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
                 }
             case .released:
                 if let item = self.currentItem {
                     self.currentItem = nil
                     self.renderingInfos
-                        .filter { $0.currentItem?.messageId == item.messageId }
+                        .filter { $0.currentItem?.templateId == item.templateId }
                         .compactMap { $0.delegate }
                         .forEach { self.removeRenderedTemplate(delegate: $0) }
                 }
@@ -165,6 +165,6 @@ private extension AudioPlayerDisplayManager {
     }
     
     func hasRenderedDisplay(template: AudioPlayerDisplayTemplate) -> Bool {
-        return renderingInfos.contains { $0.currentItem?.messageId == template.messageId }
+        return renderingInfos.contains { $0.currentItem?.templateId == template.templateId }
     }
 }
