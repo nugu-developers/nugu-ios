@@ -35,7 +35,7 @@ public class PlaySyncManager: PlaySyncManageable {
     private var playSyncInfos = [PlaySyncInfo]()
     public var playServiceIds: [String] {
         return playSyncInfos.filter { $0.playSyncState == .synced }
-            .map { $0.playServiceId }
+            .compactMap { $0.playServiceId }
             .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
     }
     
@@ -51,28 +51,28 @@ public class PlaySyncManager: PlaySyncManageable {
 // MARK: - PlaySyncManageable
 
 extension PlaySyncManager {
-    public func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String) {
+    public func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
         log.debug(delegate)
         playSyncDispatchQueue.async { [weak self] in
             self?.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .prepared)
         }
     }
     
-    public func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String) {
+    public func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
         log.debug(delegate)
         playSyncDispatchQueue.async { [weak self] in
             self?.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .synced)
         }
     }
     
-    public func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String) {
+    public func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
         log.debug(delegate)
         playSyncDispatchQueue.async { [weak self] in
             self?.remove(delegate: delegate, dialogRequestId: dialogRequestId)
         }
     }
     
-    public func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String) {
+    public func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
         log.debug(delegate)
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -110,7 +110,7 @@ extension PlaySyncManager {
         }
     }
     
-    public func releaseSyncImmediately(dialogRequestId: String, playServiceId: String) {
+    public func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?) {
         log.debug(playServiceId)
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -132,7 +132,7 @@ extension PlaySyncManager: ContextInfoDelegate {
 // MARK: - Private
 
 private extension PlaySyncManager {
-    func set(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String, playSyncState: PlaySyncState) {
+    func set(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
         // TODO: 0 번으로 옮겨줄 필요는 없는지 확인.
         guard playSyncInfos.first(where: { (info) -> Bool in
             return info.delegate === delegate && info.dialogRequestId == dialogRequestId && info.playSyncState == playSyncState
@@ -155,7 +155,7 @@ private extension PlaySyncManager {
         log.debug(playSyncInfos)
     }
     
-    @discardableResult func update(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String, playSyncState: PlaySyncState) -> Bool {
+    @discardableResult func update(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) -> Bool {
         guard playSyncInfos.first(where: { (info) -> Bool in
             return info.delegate === delegate && info.dialogRequestId == dialogRequestId && info.playSyncState == playSyncState
         }) == nil else {

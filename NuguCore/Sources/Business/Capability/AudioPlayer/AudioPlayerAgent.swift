@@ -75,12 +75,12 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 stopPauseTimeout()
                 if let media = currentMedia {
                     self.currentMedia = nil
-                    playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playServiceId)
+                    playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
                 }
             case .playing:
                 stopPauseTimeout()
                 if let media = currentMedia {
-                    playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playServiceId)
+                    playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
                 }
             case .paused:
                 startPauseTimeout()
@@ -161,7 +161,7 @@ public extension AudioPlayerAgent {
             guard let self = self, let media = self.currentMedia else { return }
             
             media.player.stop()
-            self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playServiceId)
+            self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
         }
     }
     
@@ -434,7 +434,7 @@ private extension AudioPlayerAgent {
                         metaData: metaData,
                         messageId: directive.header.messageID,
                         dialogRequestId: directive.header.dialogRequestID,
-                        playServiceId: payload.playServiceId
+                        playStackServiceId: payload.playStackControl?.playServiceId
                     )
                 }
             }).flatMapError({ (error) -> Result<Void, Error> in
@@ -519,7 +519,7 @@ private extension AudioPlayerAgent {
         stopPauseTimeout()
         pauseTimeout = Completable.create { [weak self] event -> Disposable in
             if let self = self, let media = self.currentMedia {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playServiceId)
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
             }
             event(.completed)
             return Disposables.create()
@@ -547,7 +547,7 @@ private extension AudioPlayerAgent {
             offset: payload.audioItem.stream.offset
         )
         mediaPlayer.isMuted = playerIsMuted
-        playSyncManager.prepareSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: payload.playServiceId)
+        playSyncManager.prepareSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
     }
 }
 

@@ -27,15 +27,17 @@ public struct DisplayTemplate {
     public let dialogRequestId: String
     public let token: String
     public let playServiceId: String
+    public let playStackServiceId: String?
     public let duration: Duration
     
-    public init(type: String, payload: String, templateId: String, dialogRequestId: String, token: String, playServiceId: String, duration: Duration?) {
+    public init(type: String, payload: String, templateId: String, dialogRequestId: String, token: String, playServiceId: String, playStackServiceId: String?, duration: Duration?) {
         self.type = type
         self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
         self.token = token
         self.playServiceId = playServiceId
+        self.playStackServiceId = playStackServiceId
         self.duration = duration ?? .short
     }
 }
