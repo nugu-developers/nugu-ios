@@ -57,6 +57,14 @@ final class MainViewController: UIViewController {
             name: UIApplication.willResignActiveNotification,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didEnterBackground(_:)),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil
+        )
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(didBecomeActive(_:)),
@@ -119,6 +127,9 @@ final class MainViewController: UIViewController {
     func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
         NuguCentralManager.shared.stopWakeUpDetector()
+    }
+    
+    func didEnterBackground(_ notification: Notification) {
         NuguCentralManager.shared.disable()
     }
     
