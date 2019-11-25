@@ -75,6 +75,7 @@ extension NuguCentralManager {
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
+                self.disableMixWithOthers()
                 self.client.asrAgent?.startRecognition()
             })
             completion?(result)
@@ -142,7 +143,8 @@ extension NuguCentralManager: ContextInfoDelegate {
 
 extension NuguCentralManager {
     @discardableResult func setAudioSession() -> Bool {
-        guard AVAudioSession.sharedInstance().category != .playAndRecord else {
+        guard (AVAudioSession.sharedInstance().category != .playAndRecord)
+            || AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == false else {
             return true
         }
         
@@ -150,13 +152,27 @@ extension NuguCentralManager {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
                 mode: .default,
-                options: [.defaultToSpeaker, .allowBluetooth]
+                options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP]
             )
             try AVAudioSession.sharedInstance().setActive(true)
             return true
         } catch {
             log.debug("setCategory failed: \(error)")
             return false
+        }
+    }
+    
+    func disableMixWithOthers() {
+        guard AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint == true else { return }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                .playAndRecord,
+                mode: .default,
+                options: [.defaultToSpeaker, .allowBluetoothA2DP]
+            )
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            log.debug("disableMixWithOthers failed: \(error)")
         }
     }
 }

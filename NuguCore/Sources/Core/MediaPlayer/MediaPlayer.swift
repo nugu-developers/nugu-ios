@@ -23,7 +23,7 @@ import AVFoundation
 
 import NuguInterface
 
-public class MediaPlayer: MediaPlayable {    
+public class MediaPlayer: MediaPlayable {
     public weak var delegate: MediaPlayerDelegate?
     private var player: AVQueuePlayer?
     private var playerItem: MediaAVPlayerItem?
@@ -48,7 +48,7 @@ extension MediaPlayer {
         throw MediaPlayableError.unsupportedOperation
     }
     
-    public func setSource(url: String, offset: Int) throws {
+    public func setSource(url: String, offset: TimeIntervallic) throws {
         guard let urlItem = URL(string: url) else {
             throw MediaPlayerError.invalidURL
         }
@@ -56,12 +56,9 @@ extension MediaPlayer {
         playerItem = MediaAVPlayerItem(url: urlItem)
         playerItem?.delegate = self
         player = AVQueuePlayer(playerItem: playerItem)
-        
-        if offset > 0 {
-            let offsetTime = CMTime(seconds: Double(offset),
-                                    preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-            
-            player?.seek(to: offsetTime)
+                
+        if offset.seconds > 0 {
+            player?.seek(to: offset.cmTime)
         }
     }
     
@@ -121,7 +118,7 @@ extension MediaPlayer {
         delegate?.mediaPlayerDidChange(state: .resume)
     }
     
-    public func seek(to offset: Int, completion: ((Result<Void, Error>) -> Void)?) {
+    public func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
@@ -129,41 +126,26 @@ extension MediaPlayer {
                 return
         }
 
-        let offsetTime = CMTime(seconds: Double(offset),
-                                preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-
-        mediaPlayer.seek(to: offsetTime)
+        mediaPlayer.seek(to: offset.cmTime)
         completion?(.success(()))
     }
     
-    public var offset: Int {
+    public var offset: TimeIntervallic {
         guard let mediaPlayer = player else {
             log.warning("player is nil")
-            return 0
+            return NuguTimeInterval(seconds: 0)
         }
         
-        // CHECK-ME: TimeValue, TimeScale 조합으로 해야할지 검토
-        let seconds = mediaPlayer.currentTime().seconds
-        if seconds.isNaN == false {
-            return Int(seconds)
-        } else {
-            return 0
-        }
+        return mediaPlayer.currentTime()
     }
     
-    public var duration: Int {
+    public var duration: TimeIntervallic {
         guard let asset = player?.currentItem?.asset else {
             log.warning("player is nil")
-            return 0
+            return NuguTimeInterval(seconds: 0)
         }
         
-        // CHECK-ME: TimeValue, TimeScale 조합으로 해야할지 검토
-        let seconds = asset.duration.seconds
-        if seconds.isNaN == false {
-            return Int(seconds)
-        } else {
-            return 0
-        }
+        return asset.duration
     }
     
     public var isMuted: Bool {

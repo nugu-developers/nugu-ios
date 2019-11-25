@@ -26,7 +26,7 @@ import NuguInterface
 protocol AudioPlayerDisplayManageable: PlaySyncDelegate {
     var playSyncManager: PlaySyncManageable! { get set }
     
-    func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playServiceId: String)
+    func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playStackServiceId: String?)
     
     /// Adds a delegate to be notified of DisplayPlayerType changes.
     /// - Parameter delegate: The object to add.

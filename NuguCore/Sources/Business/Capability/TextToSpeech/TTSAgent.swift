@@ -47,13 +47,9 @@ final public class TTSAgent: TTSAgentProtocol {
             switch ttsState {
             case .idle, .stopped, .finished:
                 currentMedia = nil
-                if let playServiceId = media.payload.playServiceId {
-                    playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: playServiceId)
-                }
+                playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
             case .playing:
-                if let playServiceId = media.payload.playServiceId {
-                    playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: playServiceId)
-                }
+                playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
             }
             
             delegates.notify { delegate in
@@ -358,9 +354,7 @@ private extension TTSAgent {
                     payload: payload,
                     dialogRequestId: directive.header.dialogRequestID
                 )
-                if let playServiceId = payload.playServiceId {
-                    self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestID, playServiceId: playServiceId)
-                }
+                self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestID, playServiceId: payload.playStackControl?.playServiceId)
             })
             
             completionHandler(result)
@@ -393,8 +387,8 @@ private extension TTSAgent {
             guard let self = self, let media = self.currentMedia else { return }
 
             media.player.stop()
-            if let playServiceId = media.payload.playServiceId, media.cancelAssociated == true {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: playServiceId)
+            if media.cancelAssociated == true {
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
             }
         }
         return .success(())
