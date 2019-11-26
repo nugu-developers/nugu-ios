@@ -28,12 +28,12 @@ public protocol ASRAgentDelegate: class {
     
     /// Called when received a result of `startRecognition` request.
     /// - Parameter result: A recognized result.
-    func asrAgentDidReceive(result: ASRResult)
+    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String)
 }
 
 // MARK: - Optional
 
 public extension ASRAgentDelegate {
     func asrAgentDidChange(state: ASRState) {}
-    func asrAgentDidReceive(result: ASRResult) {}
+    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {}
 }

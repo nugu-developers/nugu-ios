@@ -174,7 +174,7 @@ extension TextAgent: DownStreamDataDelegate {
             switch self.textAgentState {
             case .busy:
                 self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: .complete)
+                    delegate.textAgentDidReceive(result: .complete, dialogRequestId: request.dialogRequestId)
                 })
                 self.releaseFocus()
             case .idle:
@@ -203,7 +203,7 @@ private extension TextAgent {
                 self.releaseFocus()
                 
                 self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: .error(.responseTimeout))
+                    delegate.textAgentDidReceive(result: .error(.responseTimeout), dialogRequestId: textRequest.dialogRequestId)
                 })
             })
         responseTimeout?.disposed(by: disposeBag)

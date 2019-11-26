@@ -89,8 +89,10 @@ public class NuguClient {
     public let playSyncManager: PlaySyncManageable = PlaySyncManager()
     /// <#Description#>
     public lazy var directiveSequencer: DirectiveSequenceable = DirectiveSequencer(messageSender: networkManager)
-    public let downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter()
-    /// <#Description#>
+    
+    // MARK: - Mandatory(Internal)
+    let downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter()
+    let downStreamDataTimeoutPreprocessor = DownStreamDataTimeoutPreprocessor()
     let mediaPlayerFactory = MediaPlayerFactory()
 
     // MARK: - Audio Related

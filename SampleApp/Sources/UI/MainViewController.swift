@@ -507,7 +507,7 @@ extension MainViewController: ASRAgentDelegate {
         }
     }
     
-    func asrAgentDidReceive(result: ASRResult) {
+    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
         switch result {
         case .complete(let text):
             DispatchQueue.main.async { [weak self] in
@@ -531,7 +531,7 @@ extension MainViewController: ASRAgentDelegate {
 // MARK: - TextAgentDelegate
 
 extension MainViewController: TextAgentDelegate {
-    func textAgentDidReceive(result: TextAgentResult) {
+    func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
         switch result {
         case .complete:
             DispatchQueue.main.async {

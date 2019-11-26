@@ -20,16 +20,12 @@
 
 import Foundation
 
+public protocol DownStreamMessageable {
+    var header: DownStream.Header { get }
+}
+
 public struct DownStream {
-    public struct Message: Decodable {
-        public let directives: [Directive]
-        
-        public init(directives: [Directive]) {
-            self.directives = directives
-        }
-    }
-    
-    public struct Directive: Decodable {
+    public struct Directive: DownStreamMessageable, Decodable {
         public let header: Header
         public let payload: String
         
@@ -39,7 +35,7 @@ public struct DownStream {
         }
     }
     
-    public struct Attachment: Decodable {
+    public struct Attachment: DownStreamMessageable, Decodable {
         public let header: Header
         public let seq: Int
         public let content: Data
