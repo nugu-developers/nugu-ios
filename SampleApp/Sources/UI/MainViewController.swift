@@ -121,7 +121,7 @@ final class MainViewController: UIViewController {
 
 @objc private extension MainViewController {
     
-    /// Catch entering background notification to stop recognizing & wake up detector
+    /// Catch resigning active notification to stop recognizing & wake up detector
     /// It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
     /// - Parameter notification: UIApplication.willResignActiveNotification
     func willResignActive(_ notification: Notification) {
@@ -129,6 +129,9 @@ final class MainViewController: UIViewController {
         NuguCentralManager.shared.stopWakeUpDetector()
     }
     
+    /// Catch entering background notification to disable nugu service
+    /// It is possible to keep connected even on background, but need careful attention for battery issues, audio interruptions and so on
+    /// - Parameter notification: UIApplication.didBecomeActiveNotification
     func didEnterBackground(_ notification: Notification) {
         NuguCentralManager.shared.disable()
     }
