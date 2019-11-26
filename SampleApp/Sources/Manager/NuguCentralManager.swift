@@ -40,6 +40,11 @@ final class NuguCentralManager {
             client.endPointDetector?.epdFile = epdFile
         }
         
+        client.locationAgent?.delegate = self
+        client.permissionAgent?.delegate = self
+
+        NuguLocationManager.shared.startUpdatingLocation()
+        
         /// Set Last WakeUp Keyword
         /// If you don't want to use saved wakeup-word, don't need to be implemented
         setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
@@ -197,4 +202,34 @@ extension NuguCentralManager: FocusDelegate {
     }
     
     func focusDidChange(channel: FocusChannelConfigurable, focusState: FocusState) {}
+}
+
+// MARK: - LocationAgentDelegate
+
+extension NuguCentralManager: LocationAgentDelegate {
+    func locationAgentRequestContext() -> LocationContext {
+        return NuguLocationManager.shared.locationContext
+    }
+}
+
+// MARK: - PermissionAgentDelegate
+
+extension NuguCentralManager: PermissionAgentDelegate {
+    func permissionAgentRequestPermissions(
+        categories: Set<PermissionContext.Permission.Category>,
+        completion: @escaping () -> Void
+    ) {
+        for category in categories {
+            switch category {
+            case .location:
+                NuguLocationManager.shared.requestLocationPermission {
+                    completion()
+                }
+            }
+        }
+    }
+    
+    func permissionAgentRequestContext() -> PermissionContext {
+        return PermissionContext(permissions: [PermissionContext.Permission(category: .location, state: NuguLocationManager.shared.permissionLocationState)])
+    }
 }
