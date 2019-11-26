@@ -29,7 +29,7 @@ public protocol HandleDirectiveDelegate: class {
     /// - Parameter directive: <#directive description#>
     /// - Parameter completionHandler: <#completionHandler description#>
     func handleDirectivePrefetch(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
     )
     
@@ -37,13 +37,13 @@ public protocol HandleDirectiveDelegate: class {
     /// - Parameter directive: <#directive description#>
     /// - Parameter completionHandler: <#completionHandler description#>
     func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
     )
     
     /// <#Description#>
     /// - Parameter attachment: <#attachment description#>
-    func handleAttachment(_ attachment: AttachmentProtocol)
+    func handleAttachment(_ attachment: DownStream.Attachment)
 }
 
 // MARK: - Optional
@@ -53,7 +53,7 @@ public extension HandleDirectiveDelegate {
     /// - Parameter directive: <#directive description#>
     /// - Parameter completionHandler: <#completionHandler description#>
     func handleDirectivePrefetch(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         completionHandler(.success(()))
@@ -61,5 +61,5 @@ public extension HandleDirectiveDelegate {
     
     /// <#Description#>
     /// - Parameter attachment: <#attachment description#>
-    func handleAttachment(_ attachment: AttachmentProtocol) {}
+    func handleAttachment(_ attachment: DownStream.Attachment) {}
 }

@@ -162,14 +162,14 @@ private extension TextAgent {
     }
 }
 
-// MARK: - ReceiveMessageDelegate
+// MARK: - DownStreamDataDelegate
 
-extension TextAgent: ReceiveMessageDelegate {
-    public func receiveMessageDidReceive(directive: DirectiveProtocol) {
+extension TextAgent: DownStreamDataDelegate {
+    public func downStreamDataDidReceive(directive: DownStream.Directive) {
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let request = self.textRequest else { return }
-            guard request.dialogRequestId == directive.header.dialogRequestID else { return }
+            guard request.dialogRequestId == directive.header.dialogRequestId else { return }
             
             switch self.textAgentState {
             case .busy:

@@ -23,17 +23,8 @@ import Foundation
 /// <#Description#>
 public protocol ReceiveMessageDelegate: class {
     /// <#Description#>
-    /// - Parameter directive: <#directive description#>
-    func receiveMessageDidReceive(directive: DirectiveProtocol)
-    /// <#Description#>
-    /// - Parameter attachment: <#attachment description#>
-    func receiveMessageDidReceive(attachment: AttachmentProtocol)
-}
-
-// MARK: - Optional
-
-public extension ReceiveMessageDelegate {
-    /// <#Description#>
-    /// - Parameter attachment: <#attachment description#>
-    func receiveMessageDidReceive(attachment: AttachmentProtocol) {}
+    /// - Parameters:
+    ///   - header: <#header description#>
+    ///   - body: <#body description#>
+    func receiveMessageDidReceive(header: [String: String], body: Data)
 }

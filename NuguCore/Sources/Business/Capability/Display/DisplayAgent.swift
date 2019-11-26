@@ -101,7 +101,7 @@ extension DisplayAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         
@@ -186,7 +186,7 @@ extension DisplayAgent: PlaySyncDelegate {
 // MARK: - Private(Directive, Event)
 
 private extension DisplayAgent {
-    func display(directive: DirectiveProtocol) -> Result<Void, Error> {
+    func display(directive: DownStream.Directive) -> Result<Void, Error> {
         log.info("\(directive.header.type)")
 
         return Result { [weak self] in
@@ -209,8 +209,8 @@ private extension DisplayAgent {
             self.currentItem = DisplayTemplate(
                 type: directiveTypeInfo.type,
                 payload: directive.payload,
-                templateId: directive.header.messageID,
-                dialogRequestId: directive.header.dialogRequestID,
+                templateId: directive.header.messageId,
+                dialogRequestId: directive.header.dialogRequestId,
                 token: token,
                 playServiceId: playServiceId,
                 playStackServiceId: playStackServiceId,

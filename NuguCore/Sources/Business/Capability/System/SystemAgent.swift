@@ -46,7 +46,7 @@ extension SystemAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         let result = Result<DirectiveTypeInfo, Error>(catching: {
@@ -126,7 +126,7 @@ extension SystemAgent: DialogStateDelegate {
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
-    func handOffConnection(directive: DirectiveProtocol) -> Result<Void, Error> {
+    func handOffConnection(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -147,7 +147,7 @@ private extension SystemAgent {
         return .success(())
     }
     
-    func handleException(directive: DirectiveProtocol) -> Result<Void, Error> {
+    func handleException(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")

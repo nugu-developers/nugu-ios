@@ -1,8 +1,8 @@
 //
-//  SendMessageError.swift
+//  DownStreamDataDelegate.swift
 //  NuguInterface
 //
-//  Created by yonghoonKwon on 23/05/2019.
+//  Created by MinChul Lee on 10/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,26 +21,19 @@
 import Foundation
 
 /// <#Description#>
-public enum SendMessageError: Error {
+public protocol DownStreamDataDelegate: class {
     /// <#Description#>
-    case timeout
+    /// - Parameter directive: <#directive description#>
+    func downStreamDataDidReceive(directive: DownStream.Directive)
     /// <#Description#>
-    case refused
-    /// <#Description#>
-    case badRequest
+    /// - Parameter attachment: <#attachment description#>
+    func downStreamDataDidReceive(attachment: DownStream.Attachment)
 }
 
-// MARK: - LocalizedError
+// MARK: - Optional
 
-extension SendMessageError: LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case .timeout:
-            return "Send message timeout"
-        case .refused:
-            return "Send message refused"
-        case .badRequest:
-            return "Send message error(Bad request)"
-        }
-    }
+public extension DownStreamDataDelegate {
+    /// <#Description#>
+    /// - Parameter attachment: <#attachment description#>
+    func downStreamDataDidReceive(attachment: DownStream.Attachment) {}
 }

@@ -231,7 +231,7 @@ extension AudioPlayerAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirectivePrefetch(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
         log.info("\(directive.header.type)")
         
@@ -244,7 +244,7 @@ extension AudioPlayerAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         log.info("\(directive.header.type)")
@@ -404,7 +404,7 @@ extension AudioPlayerAgent: SpeakerVolumeDelegate {
 // MARK: - Private (Directive)
 
 private extension AudioPlayerAgent {
-    func prefetchPlay(directive: DirectiveProtocol, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    func prefetchPlay(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -421,7 +421,7 @@ private extension AudioPlayerAgent {
                 case .some(let media) where media.payload.audioItem.stream.token == payload.audioItem.stream.token:
                     // Resume and seek
                     self.currentMedia = AudioPlayerAgentMedia(
-                        dialogRequestId: directive.header.dialogRequestID,
+                        dialogRequestId: directive.header.dialogRequestId,
                         player: media.player,
                         payload: payload
                     )
@@ -429,18 +429,18 @@ private extension AudioPlayerAgent {
                     media.player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
                 case .some:
                     self.stopSilently()
-                    try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestID, payload: payload)
+                    try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
                 case .none:
                     // Set mediaplayer
-                    try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestID, payload: payload)
+                    try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
                 }
                 
                 if let metaData = payload.audioItem.metadata,
                     ((metaData["disableTemplate"] as? Bool) ?? false) == false {
                     self.audioPlayerDisplayManager.display(
                         metaData: metaData,
-                        messageId: directive.header.messageID,
-                        dialogRequestId: directive.header.dialogRequestID,
+                        messageId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId,
                         playStackServiceId: payload.playStackControl?.playServiceId
                     )
                 }

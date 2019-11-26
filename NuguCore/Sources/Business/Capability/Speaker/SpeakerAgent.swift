@@ -67,7 +67,7 @@ extension SpeakerAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         let result = Result<DirectiveTypeInfo, Error>(catching: {
@@ -103,7 +103,7 @@ extension SpeakerAgent: ContextInfoDelegate {
 // MARK: - Private(Directive)
 
 private extension SpeakerAgent {
-    func setMute(directive: DirectiveProtocol) -> Result<Void, Error> {
+    func setMute(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result<Void, Error> { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
