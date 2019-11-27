@@ -28,6 +28,8 @@ public class FocusManager: FocusManageable {
     private let focusDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.focus_manager", qos: .userInitiated)
     
     private var channelInfos = [FocusChannelInfo]()
+    
+    private var dialogState: DialogState = .idle
 
     public init() {
         log.info("")
@@ -64,7 +66,7 @@ extension FocusManager {
         
         focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard self.delegate?.focusShouldAcquire(channel: channelDelegate.focusChannelConfiguration()) == true else {
+            guard self.delegate?.focusShouldAcquire() == true else {
                 log.warning("Focus should not acquire. \(channelDelegate.focusChannelConfiguration())")
                 self.set(channelDelegate: channelDelegate, focusState: .nothing)
                 return
@@ -114,6 +116,18 @@ extension FocusManager {
     }
 }
 
+// MARK: - DialogStateDelegate
+
+extension FocusManager: DialogStateDelegate {
+    public func dialogStateDidChange(_ state: DialogState) {
+        focusDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.dialogState = state
+            self.notifyFocusReleased()
+        }
+    }
+}
+
 // MARK: - Private
 
 private extension FocusManager {
@@ -129,11 +143,11 @@ private extension FocusManager {
         channelInfos.append(FocusChannelInfo(delegate: channelDelegate, focusState: focusState))
         
         channelDelegate.focusChannelDidChange(focusState: focusState)
-        delegate?.focusDidChange(channel: channelDelegate.focusChannelConfiguration(), focusState: focusState)
         
         switch focusState {
         case .nothing:
             assignForeground()
+            notifyFocusReleased()
         case .foreground, .background:
             break
         }
@@ -150,6 +164,12 @@ private extension FocusManager {
             }
             
             self.set(channelDelegate: backgroundChannelDelegate, focusState: .foreground)
+        }
+    }
+    
+    func notifyFocusReleased() {
+        if self.dialogState == .idle && channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
+            delegate?.focusShouldRelease()
         }
     }
     

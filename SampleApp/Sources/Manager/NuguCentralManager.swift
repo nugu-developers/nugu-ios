@@ -197,11 +197,12 @@ extension NuguCentralManager: AuthorizationStateDelegate {
 // MARK: - FocusDelegate
 
 extension NuguCentralManager: FocusDelegate {
-    func focusShouldAcquire(channel: FocusChannelConfigurable) -> Bool {
+    func focusShouldAcquire() -> Bool {
         return setAudioSession()
     }
     
-    func focusDidChange(channel: FocusChannelConfigurable, focusState: FocusState) {}
+    func focusShouldRelease() {
+    }
 }
 
 // MARK: - LocationAgentDelegate
