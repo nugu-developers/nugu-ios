@@ -123,7 +123,7 @@ extension FocusManager: DialogStateDelegate {
         focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             self.dialogState = state
-            self.notifyFocusReleased()
+            self.notifyIfFocusReleased()
         }
     }
 }
@@ -147,7 +147,7 @@ private extension FocusManager {
         switch focusState {
         case .nothing:
             assignForeground()
-            notifyFocusReleased()
+            notifyIfFocusReleased()
         case .foreground, .background:
             break
         }
@@ -167,7 +167,7 @@ private extension FocusManager {
         }
     }
     
-    func notifyFocusReleased() {
+    func notifyIfFocusReleased() {
         if self.dialogState == .idle && channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
             delegate?.focusShouldRelease()
         }
