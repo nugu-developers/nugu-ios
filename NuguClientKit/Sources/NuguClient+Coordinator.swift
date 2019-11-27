@@ -31,6 +31,7 @@ extension NuguClient {
         networkManager.add(receiveMessageDelegate: downStreamDataInterpreter)
         downStreamDataInterpreter.add(delegate: directiveSequencer)
         contextManager.add(provideContextDelegate: playSyncManager)
+        dialogStateAggregator.add(delegate: focusManager)
         
         // Setup capability-agents
         setupASRAgentDependency()

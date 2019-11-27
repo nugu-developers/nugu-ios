@@ -22,14 +22,11 @@ import Foundation
 
 /// An delegate that appllication can extend to register to observe focus changes.
 public protocol FocusDelegate: class {
-    /// Determines whether the channel should be acquired focus.
+    /// Determines whether the `AVAudioSession` should be activates.
     ///
-    /// This mehthod called When the focus manager receives a requestFocus:channelDelegate:
-    /// - Parameter channel: The channel which requested focus.
-    func focusShouldAcquire(channel: FocusChannelConfigurable) -> Bool
+    /// This mehthod called When the `FocusManager` receives a `requestFocus:channelDelegate:`
+    func focusShouldAcquire() -> Bool
     
-    /// Used to notify the observer of focus changes.  This function should return quickly.
-    /// - Parameter channel: The channel which changed FocusState.
-    /// - Parameter focusState: The new FocusState of channel.
-    func focusDidChange(channel: FocusChannelConfigurable, focusState: FocusState)
+    /// Determines whether the `AVAudioSession` should be deactivates.
+    func focusShouldRelease()
 }
