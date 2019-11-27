@@ -103,22 +103,81 @@ public class OpusPlayer: MediaPlayable {
         return player.isPlaying
     }
     
-    private func engineInit() throws {
-        if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
-            guard let self = self else {
-                return
-            }
-
-            if self.engine.isRunning == false {
-                try? self.engine.start()
-                log.debug("engine started")
-            }
+    /**
+     Play opus data.
+     - You can call this method anytime you want. (this player doesn't care whether entire Opus data was appened or not)
+     */
+    public func play() {
+        log.debug("try to play opus data")
+        
+        do {
+            try self.engineInit()
+        } catch {
+            self.delegate?.mediaPlayerDidChange(state: .error(error: error))
+        }
+        
+        if let objcException = (ObjcExceptionCatcher.objcTry {
+            log.debug("try to start player")
+            self.player.play()
+            self.isPaused = false
+            self.delegate?.mediaPlayerDidChange(state: .start)
+            log.debug("player started")
         }) {
             self.delegate?.mediaPlayerDidChange(state: .error(error: objcException))
-            throw objcException
+            return
         }
+        
+        // when audio session interrupted, audio engine will be stopped automatically. so we have to handle it.
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterruption), name: AVAudioSession.interruptionNotification, object: nil)
+
+        // if audio session is changed and influence AVAudioEngine, we should handle this.
+        NotificationCenter.default.removeObserver(self, name: .AVAudioEngineConfigurationChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(engineConfigurationChange), name: .AVAudioEngineConfigurationChange, object: nil)
     }
     
+    public func pause() {
+        log.debug("try to pause")
+        player.pause()
+        isPaused = true
+        delegate?.mediaPlayerDidChange(state: .pause)
+    }
+    
+    public func resume() {
+        play()
+    }
+    
+    public func stop() {
+        log.debug("try to stop")
+        reset()
+        delegate?.mediaPlayerDidChange(state: .stop)
+    }
+    
+    /**
+     seek
+     - parameter to: seek time (millisecond)
+     */
+    public func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
+        log.debug("try to seek")
+
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            guard (0..<self.duration.truncatedSeconds).contains(offset.truncatedSeconds) else {
+                completion?(.failure(OpusPlayerError.seekRangeExceed))
+                return
+            }
+            
+            let chunkTime = Int((Float(self.chunkSize) / Float(self.audioFormat.sampleRate)) * 1000)
+            self.curBufferIndex = offset.truncatedSeconds / chunkTime
+            completion?(.success(()))
+        }
+    }
+}
+
+// MARK: - OpusPlayer + MediaOpusStreamDataSource
+
+extension OpusPlayer: MediaOpusStreamDataSource {
     /**
      This function should be called If you append last data.
      - Though player has less amount of samples than chunk size, But player will play it when this api is called.
@@ -213,6 +272,46 @@ public class OpusPlayer: MediaPlayable {
             }
         }
     }
+}
+
+// MARK: - OpusPlayer + MediaUrlDataSource
+
+extension OpusPlayer: MediaUrlDataSource {
+    /**
+     To get opus data from file or remote repository.
+     - You are not supposed to use this method on MainThread for getting data using network
+     */
+    public func setSource(url: String, offset: TimeIntervallic) throws {
+        throw MediaPlayableError.unsupportedOperation
+//        guard audioBuffers.count == 0 else { throw MediaPlayableError.unsupportedOperation }
+//        guard let resourceURL = URL(string: url) else { throw MediaPlayableError.unsupportedOperation }
+//
+//        if let resourceData = try? Data(contentsOf: resourceURL) {
+//            try appendData(resourceData)
+//        }
+//
+//        try lastDataAppended()
+    }
+}
+
+// MARK: - OpusPlayer + Private
+
+private extension OpusPlayer {
+    func engineInit() throws {
+        if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
+            guard let self = self else {
+                return
+            }
+
+            if self.engine.isRunning == false {
+                try? self.engine.start()
+                log.debug("engine started")
+            }
+        }) {
+            self.delegate?.mediaPlayerDidChange(state: .error(error: objcException))
+            throw objcException
+        }
+    }
     
     /**
      SpeechSynthesizer must have jitter buffers to play.
@@ -220,7 +319,7 @@ public class OpusPlayer: MediaPlayable {
      When the buffer of index(N)  consumed, buffer of index(N+jitterSize) will be scheduled.
      - seealso: scheduleBuffer()
      */
-    private func prepareBuffer() {
+    func prepareBuffer() {
         if self.curBufferIndex == 0, self.curBufferIndex + OpusPlayerConst.audioJitterSize < self.audioBuffers.count {
             for bufferIndex in self.curBufferIndex..<(self.curBufferIndex + OpusPlayerConst.audioJitterSize) {
                 if let audioBuffer = self.audioBuffers[safe: bufferIndex] {
@@ -233,7 +332,7 @@ public class OpusPlayer: MediaPlayable {
     }
     
     /// schedule buffer and check last data was consumed on it's closure.
-    private func scheduleBuffer(audioBuffer: AVAudioPCMBuffer) {
+    func scheduleBuffer(audioBuffer: AVAudioPCMBuffer) {
         audioQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -304,7 +403,7 @@ public class OpusPlayer: MediaPlayable {
      Or you may face to exception from inside of AVAudioEngine.
      - ex) AVAudioSession is changed when the audio engine is stopped. but this notification is not removed yet.
      */
-    private func reset() {
+    func reset() {
         NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: .AVAudioEngineConfigurationChange, object: nil)
         
@@ -316,94 +415,12 @@ public class OpusPlayer: MediaPlayable {
         self.tempAudioArray.removeAll()
         self.audioBuffers.removeAll()
     }
-    
-    /**
-     Play opus data.
-     - You can call this method anytime you want. (this player doesn't care whether entire Opus data was appened or not)
-     */
-    public func play() {
-        log.debug("try to play opus data")
-        
-        do {
-            try self.engineInit()
-        } catch {
-            self.delegate?.mediaPlayerDidChange(state: .error(error: error))
-        }
-        
-        if let objcException = (ObjcExceptionCatcher.objcTry {
-            log.debug("try to start player")
-            self.player.play()
-            self.isPaused = false
-            self.delegate?.mediaPlayerDidChange(state: .start)
-            log.debug("player started")
-        }) {
-            self.delegate?.mediaPlayerDidChange(state: .error(error: objcException))
-            return
-        }
-        
-        // when audio session interrupted, audio engine will be stopped automatically. so we have to handle it.
-        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterruption), name: AVAudioSession.interruptionNotification, object: nil)
+}
 
-        // if audio session is changed and influence AVAudioEngine, we should handle this.
-        NotificationCenter.default.removeObserver(self, name: .AVAudioEngineConfigurationChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(engineConfigurationChange), name: .AVAudioEngineConfigurationChange, object: nil)
-    }
-    
-    public func pause() {
-        log.debug("try to pause")
-        player.pause()
-        isPaused = true
-        delegate?.mediaPlayerDidChange(state: .pause)
-    }
-    
-    public func resume() {
-        play()
-    }
-    
-    public func stop() {
-        log.debug("try to stop")
-        reset()
-        delegate?.mediaPlayerDidChange(state: .stop)
-    }
-    
-    /**
-     seek
-     - parameter to: seek time (millisecond)
-     */
-    public func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
-        log.debug("try to seek")
+// MARK: - OpusPlayer + Notification
 
-        audioQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            guard (0..<self.duration.truncatedSeconds).contains(offset.truncatedSeconds) else {
-                completion?(.failure(OpusPlayerError.seekRangeExceed))
-                return
-            }
-            
-            let chunkTime = Int((Float(self.chunkSize) / Float(self.audioFormat.sampleRate)) * 1000)
-            self.curBufferIndex = offset.truncatedSeconds / chunkTime
-            completion?(.success(()))
-        }
-    }
-    
-    /**
-     To get opus data from file or remote repository.
-     - You are not supposed to use this method on MainThread for getting data using network
-     */
-    public func setSource(url: String, offset: TimeIntervallic) throws {
-        guard audioBuffers.count == 0 else { throw MediaPlayableError.unsupportedOperation }
-        guard let resourceURL = URL(string: url) else { throw MediaPlayableError.unsupportedOperation }
-        
-        if let resourceData = try? Data(contentsOf: resourceURL) {
-            try appendData(resourceData)
-        }
-        
-        try lastDataAppended()
-    }
-
-    @objc private func audioSessionInterruption(notification: Notification) {
+@objc private extension OpusPlayer {
+    func audioSessionInterruption(notification: Notification) {
         log.debug("audioSessionInterruption")
         
         guard let info = notification.userInfo,
@@ -434,7 +451,7 @@ public class OpusPlayer: MediaPlayable {
         }
     }
 
-    @objc private func engineConfigurationChange(notification: Notification) {
+    func engineConfigurationChange(notification: Notification) {
         log.debug("engineConfigurationChange: \(notification)")
 
         if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in

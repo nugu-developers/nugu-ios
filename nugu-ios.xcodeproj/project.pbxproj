@@ -43,6 +43,8 @@
 		1F100994238568D500D90FEE /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
 		1F100996238795FF00D90FEE /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
 		1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */; };
+		1F2E7FFF238EA6E300569C59 /* MediaUrlDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E7FFE238EA6E300569C59 /* MediaUrlDataSource.swift */; };
+		1F2E8001238EA70400569C59 /* MediaOpusStreamDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E8000238EA70400569C59 /* MediaOpusStreamDataSource.swift */; };
 		1FFFEFF423753EFD00C9A177 /* NuguInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFF223753EFD00C9A177 /* NuguInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -56,7 +58,6 @@
 		1FFFF1F22375486F00C9A177 /* opus_defines.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E82375486F00C9A177 /* opus_defines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF1F32375486F00C9A177 /* opus_projection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E92375486F00C9A177 /* opus_projection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF22923756D1700C9A177 /* libopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF1EA2375486F00C9A177 /* libopus.a */; };
-		1FFFF2A52375703000C9A177 /* MediaPlayableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22C2375703000C9A177 /* MediaPlayableType.swift */; };
 		1FFFF2A62375703000C9A177 /* MediaPlayableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */; };
 		1FFFF2A72375703000C9A177 /* MediaPlayerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22E2375703000C9A177 /* MediaPlayerDelegate.swift */; };
 		1FFFF2A82375703000C9A177 /* MediaPlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22F2375703000C9A177 /* MediaPlayerState.swift */; };
@@ -538,6 +539,8 @@
 		1F100990238529C100D90FEE /* TimeIntervallic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervallic.swift; sourceTree = "<group>"; };
 		1F100995238795FF00D90FEE /* NuguTimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguTimeInterval.swift; sourceTree = "<group>"; };
 		1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervallicTests.swift; sourceTree = "<group>"; };
+		1F2E7FFE238EA6E300569C59 /* MediaUrlDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUrlDataSource.swift; sourceTree = "<group>"; };
+		1F2E8000238EA70400569C59 /* MediaOpusStreamDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaOpusStreamDataSource.swift; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -566,7 +569,6 @@
 		1FFFF1E82375486F00C9A177 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
 		1FFFF1E92375486F00C9A177 /* opus_projection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_projection.h; sourceTree = "<group>"; };
 		1FFFF1EA2375486F00C9A177 /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopus.a; sourceTree = "<group>"; };
-		1FFFF22C2375703000C9A177 /* MediaPlayableType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayableType.swift; sourceTree = "<group>"; };
 		1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayableError.swift; sourceTree = "<group>"; };
 		1FFFF22E2375703000C9A177 /* MediaPlayerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerDelegate.swift; sourceTree = "<group>"; };
 		1FFFF22F2375703000C9A177 /* MediaPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerState.swift; sourceTree = "<group>"; };
@@ -1054,6 +1056,15 @@
 			path = TimeInterval;
 			sourceTree = "<group>";
 		};
+		1F2E7FFD238EA6CA00569C59 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				1F2E7FFE238EA6E300569C59 /* MediaUrlDataSource.swift */,
+				1F2E8000238EA70400569C59 /* MediaOpusStreamDataSource.swift */,
+			);
+			path = DataSource;
+			sourceTree = "<group>";
+		};
 		1FFFEFF123753EFD00C9A177 /* NuguInterface */ = {
 			isa = PBXGroup;
 			children = (
@@ -1193,9 +1204,9 @@
 		1FFFF22B2375703000C9A177 /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				1F2E7FFD238EA6CA00569C59 /* DataSource */,
 				1FFFF2312375703000C9A177 /* MediaPlayable.swift */,
 				1FFFF22E2375703000C9A177 /* MediaPlayerDelegate.swift */,
-				1FFFF22C2375703000C9A177 /* MediaPlayableType.swift */,
 				1FFFF22F2375703000C9A177 /* MediaPlayerState.swift */,
 				1FFFF2302375703000C9A177 /* MediaPlayableFactory.swift */,
 				1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */,
@@ -1500,8 +1511,8 @@
 		1FFFF3122375707000C9A177 /* OpusPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3152375707000C9A177 /* OpusDecoder.swift */,
 				1FFFF3142375707000C9A177 /* OpusPlayer.swift */,
+				1FFFF3152375707000C9A177 /* OpusDecoder.swift */,
 				1FFFF3162375707000C9A177 /* OpusPlayerConst.swift */,
 				1FFFF3132375707000C9A177 /* OpusPlayerError.swift */,
 			);
@@ -2797,7 +2808,6 @@
 				1FFFF2F82375703100C9A177 /* DirectiveTypeInfos.swift in Sources */,
 				1FFFF2B82375703000C9A177 /* SpeakerVolumeDelegate.swift in Sources */,
 				1FFFF2A92375703000C9A177 /* MediaPlayableFactory.swift in Sources */,
-				1FFFF2A52375703000C9A177 /* MediaPlayableType.swift in Sources */,
 				1FFFF2ED2375703100C9A177 /* PlaySyncManageable.swift in Sources */,
 				1FFFF2EF2375703100C9A177 /* FocusState.swift in Sources */,
 				1FFFF2CA2375703100C9A177 /* SystemAgentDelegate.swift in Sources */,
@@ -2853,6 +2863,7 @@
 				1FFFF2BC2375703000C9A177 /* AudioPlayerDisplayTemplate.swift in Sources */,
 				1FFFF2DE2375703100C9A177 /* MessageSendable.swift in Sources */,
 				1FFFF2FA2375703100C9A177 /* DirectiveTypeInfoError.swift in Sources */,
+				1F2E7FFF238EA6E300569C59 /* MediaUrlDataSource.swift in Sources */,
 				1FFFF2FC2375703100C9A177 /* AudioProvidable.swift in Sources */,
 				1FFFF2F72375703100C9A177 /* HandleDirectiveDelegate.swift in Sources */,
 				1FFFF2CE2375703100C9A177 /* TTSResult.swift in Sources */,
@@ -2871,6 +2882,7 @@
 				1FFFF2CF2375703100C9A177 /* TTSAgentDelegate.swift in Sources */,
 				1FFFF2B52375703000C9A177 /* SpeakerAgentDelegate.swift in Sources */,
 				1FFFF2AB2375703000C9A177 /* ContextManageable.swift in Sources */,
+				1F2E8001238EA70400569C59 /* MediaOpusStreamDataSource.swift in Sources */,
 				1FFFF3022375703100C9A177 /* AuthorizationManageable.swift in Sources */,
 				1FFFF2F12375703100C9A177 /* FocusChannelDelegate.swift in Sources */,
 				1FFFF2AA2375703000C9A177 /* MediaPlayable.swift in Sources */,

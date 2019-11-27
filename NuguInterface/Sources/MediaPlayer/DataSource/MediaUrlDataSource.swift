@@ -1,8 +1,8 @@
 //
-//  MediaPlayableType.swift
+//  MediaUrlDataSource.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 2019/07/25.
+//  Created by yonghoonKwon on 2019/11/27.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,19 @@
 
 import Foundation
 
-public enum MediaPlayableType {
-    case voice
-    case media
+public protocol MediaUrlDataSource {
+    /// For url source
+    /// - Parameter url: <#url description#>
+    /// - Parameter offset: <#offset description#>
+    func setSource(url: String, offset: TimeIntervallic) throws
+}
+
+// MARK: - MediaUrlDataSource
+
+public extension MediaUrlDataSource {
+    /// <#Description#>
+    /// - Parameter url: <#url description#>
+    func setSource(url: String) throws {
+        try setSource(url: url, offset: NuguTimeInterval(seconds: 0))
+    }
 }
