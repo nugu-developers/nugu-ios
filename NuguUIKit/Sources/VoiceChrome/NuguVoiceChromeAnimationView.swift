@@ -64,7 +64,7 @@ private extension NuguVoiceChromeAnimationView {
             )
             shapeLayer.fillColor = (index % 2 == 0) ? greenColor : blueColor
             shapeLayer.path = circlePath.cgPath
-            let space = circleRadius * 3
+            let space = circleRadius * 2.8
             shapeLayer.frame = CGRect(
                 origin: CGPoint(
                     x: centerPoint.x - (4 * circleRadius + 1.5 * space) + (CGFloat(index) * (2 * circleRadius + space)),
