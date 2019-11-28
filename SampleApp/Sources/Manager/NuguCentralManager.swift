@@ -40,6 +40,11 @@ final class NuguCentralManager {
             client.endPointDetector?.epdFile = epdFile
         }
         
+        client.locationAgent?.delegate = self
+        client.permissionAgent?.delegate = self
+
+        NuguLocationManager.shared.startUpdatingLocation()
+        
         /// Set Last WakeUp Keyword
         /// If you don't want to use saved wakeup-word, don't need to be implemented
         setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
@@ -70,6 +75,7 @@ extension NuguCentralManager {
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
+                self.disableMixWithOthers()
                 self.client.asrAgent?.startRecognition()
             })
             completion?(result)
@@ -103,7 +109,7 @@ extension NuguCentralManager: ContextInfoDelegate {
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                try self.client.wakeUpDetector?.start()
+                self.client.wakeUpDetector?.start()
             })
             completion?(result)
         }
@@ -137,7 +143,8 @@ extension NuguCentralManager: ContextInfoDelegate {
 
 extension NuguCentralManager {
     @discardableResult func setAudioSession() -> Bool {
-        guard AVAudioSession.sharedInstance().category != .playAndRecord else {
+        guard (AVAudioSession.sharedInstance().category != .playAndRecord)
+            || AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == false else {
             return true
         }
         
@@ -145,13 +152,27 @@ extension NuguCentralManager {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
                 mode: .default,
-                options: [.defaultToSpeaker, .allowBluetooth]
+                options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP]
             )
             try AVAudioSession.sharedInstance().setActive(true)
             return true
         } catch {
             log.debug("setCategory failed: \(error)")
             return false
+        }
+    }
+    
+    func disableMixWithOthers() {
+        guard AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint == true else { return }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                .playAndRecord,
+                mode: .default,
+                options: [.defaultToSpeaker, .allowBluetoothA2DP]
+            )
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            log.debug("disableMixWithOthers failed: \(error)")
         }
     }
 }
@@ -176,9 +197,40 @@ extension NuguCentralManager: AuthorizationStateDelegate {
 // MARK: - FocusDelegate
 
 extension NuguCentralManager: FocusDelegate {
-    func focusShouldAcquire(channel: FocusChannelConfigurable) -> Bool {
+    func focusShouldAcquire() -> Bool {
         return setAudioSession()
     }
     
-    func focusDidChange(channel: FocusChannelConfigurable, focusState: FocusState) {}
+    func focusShouldRelease() {
+    }
+}
+
+// MARK: - LocationAgentDelegate
+
+extension NuguCentralManager: LocationAgentDelegate {
+    func locationAgentRequestContext() -> LocationContext {
+        return NuguLocationManager.shared.locationContext
+    }
+}
+
+// MARK: - PermissionAgentDelegate
+
+extension NuguCentralManager: PermissionAgentDelegate {
+    func permissionAgentRequestPermissions(
+        categories: Set<PermissionContext.Permission.Category>,
+        completion: @escaping () -> Void
+    ) {
+        for category in categories {
+            switch category {
+            case .location:
+                NuguLocationManager.shared.requestLocationPermission {
+                    completion()
+                }
+            }
+        }
+    }
+    
+    func permissionAgentRequestContext() -> PermissionContext {
+        return PermissionContext(permissions: [PermissionContext.Permission(category: .location, state: NuguLocationManager.shared.permissionLocationState)])
+    }
 }

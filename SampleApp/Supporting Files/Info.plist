@@ -40,6 +40,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>현재 위치 정보를 사용합니다.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>For Speech Recognition</string>
 	<key>UILaunchStoryboardName</key>

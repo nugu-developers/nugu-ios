@@ -1,8 +1,8 @@
 //
-//  NuguLoginConfiguration.swift
-//  NuguLoginKit
+//  NuguServerInfo.swift
+//  NuguCore
 //
-//  Created by yonghoonKwon on 14/10/2019.
+//  Created by childc on 2019/11/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +20,6 @@
 
 import Foundation
 
-struct NuguLoginConfiguration: Decodable {
-    let serverBaseUrl: String
-    
-    enum CodingKeys: String, CodingKey {
-        case serverBaseUrl = "OAuthServerBaseUrl"
-    }
-    
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        
-        if let value = try values.decodeIfPresent(String.self, forKey: .serverBaseUrl) {
-            serverBaseUrl = value
-        } else {
-            serverBaseUrl = defaultServerBaseUrl
-        }
-    }
+public enum NuguServerInfo {
+    public static var registryAddress: String = "https://reg-http.sktnugu.com:443/v1/"
 }

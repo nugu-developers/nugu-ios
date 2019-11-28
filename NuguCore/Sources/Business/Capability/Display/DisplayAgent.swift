@@ -87,7 +87,7 @@ public extension DisplayAgent {
             
             self.removeRenderedTemplate(delegate: delegate)
             if self.hasRenderedDisplay(template: template) == false {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playServiceId)
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playStackServiceId)
             }
         }
     }
@@ -101,7 +101,7 @@ extension DisplayAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DirectiveProtocol,
+        _ directive: DownStream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         
@@ -153,7 +153,7 @@ extension DisplayAgent: PlaySyncDelegate {
                 }
                 if rendered == false {
                     self.currentItem = nil
-                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playServiceId)
+                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
                 }
             case .releasing:
                 var cleared = true
@@ -166,7 +166,7 @@ extension DisplayAgent: PlaySyncDelegate {
                         }
                 }
                 if cleared {
-                    self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playServiceId)
+                    self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
                 }
             case .released:
                 if let item = self.currentItem {
@@ -186,7 +186,7 @@ extension DisplayAgent: PlaySyncDelegate {
 // MARK: - Private(Directive, Event)
 
 private extension DisplayAgent {
-    func display(directive: DirectiveProtocol) -> Result<Void, Error> {
+    func display(directive: DownStream.Directive) -> Result<Void, Error> {
         log.info("\(directive.header.type)")
 
         return Result { [weak self] in
@@ -202,19 +202,23 @@ private extension DisplayAgent {
                 let playServiceId = payloadDictionary["playServiceId"] as? String else {
                     throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
             }
+            
+            let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
+            let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
                         
             self.currentItem = DisplayTemplate(
                 type: directiveTypeInfo.type,
                 payload: directive.payload,
-                templateId: directive.header.messageID,
-                dialogRequestId: directive.header.dialogRequestID,
+                templateId: directive.header.messageId,
+                dialogRequestId: directive.header.dialogRequestId,
                 token: token,
                 playServiceId: playServiceId,
-                duration: DisplayTemplate.Duration(rawValue: payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue)
+                playStackServiceId: playStackServiceId,
+                duration: DisplayTemplate.Duration(rawValue: duration)
             )
         
             if let item = self.currentItem {
-                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playServiceId)
+                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
             }
         }
     }

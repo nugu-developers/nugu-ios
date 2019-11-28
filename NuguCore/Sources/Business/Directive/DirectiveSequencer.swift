@@ -29,10 +29,10 @@ public class DirectiveSequencer: DirectiveSequenceable {
     
     private var handleDirectiveDelegates = DelegateDictionary<String, HandleDirectiveDelegate>()
 
-    private let prefetchDirectiveSubject = PublishSubject<DirectiveProtocol>()
-    private let handleDirectiveSubject = PublishSubject<DirectiveProtocol>()
+    private let prefetchDirectiveSubject = PublishSubject<DownStream.Directive>()
+    private let handleDirectiveSubject = PublishSubject<DownStream.Directive>()
     
-    private var blockedDirectives = [DirectiveMedium: [DirectiveProtocol]]()
+    private var blockedDirectives = [DirectiveMedium: [DownStream.Directive]]()
     
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
 
@@ -75,25 +75,25 @@ extension DirectiveSequencer {
     }
 }
 
-// MARK: - ReceiveMessageDelegate
+// MARK: - DownStreamDataDelegate
 
-extension DirectiveSequencer: ReceiveMessageDelegate {
-    public func receiveMessageDidReceive(directive: DirectiveProtocol) {
-        log.info("\(directive.header.messageID)")
+extension DirectiveSequencer: DownStreamDataDelegate {
+    public func downStreamDataDidReceive(directive: DownStream.Directive) {
+        log.info("\(directive.header.messageId)")
         guard handleDirectiveDelegates[directive.header.type] != nil else {
             messageSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: directive.header.type))
-            log.warning("No handler registered \(directive.header.messageID)")
+            log.warning("No handler registered \(directive.header.messageId)")
             return
         }
 
         prefetchDirectiveSubject.onNext(directive)
     }
     
-    public func receiveMessageDidReceive(attachment: AttachmentProtocol) {
-        log.info("\(attachment.header.messageID)")
+    public func downStreamDataDidReceive(attachment: DownStream.Attachment) {
+        log.info("\(attachment.header.messageId)")
         guard let handler = handleDirectiveDelegates[attachment.header.type] else {
             messageSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: attachment.header.type))
-            log.warning("No handler registered \(attachment.header.messageID)")
+            log.warning("No handler registered \(attachment.header.messageId)")
             return
         }
         
@@ -179,13 +179,13 @@ private extension DirectiveSequencer {
                 guard
                     let handler = self.handleDirectiveDelegates[directive.header.type],
                     let typeInfo = handler.handleDirectiveTypeInfos()[directive.header.type] else {
-                    log.warning("No handler registered \(directive.header.messageID)")
+                    log.warning("No handler registered \(directive.header.messageId)")
                     return
                 }
 
                 // Block 되어야 하는 Directive 인지 확인
                 guard handlingTypeInfos.isBlock(medium: typeInfo.medium) == false else {
-                    log.debug("Block directive \(directive.header.messageID)")
+                    log.debug("Block directive \(directive.header.messageId)")
                     self.blockedDirectives[typeInfo.medium]?.append(directive)
                     return
                 }

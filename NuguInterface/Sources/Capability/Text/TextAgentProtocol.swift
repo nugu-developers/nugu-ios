@@ -25,7 +25,7 @@ public protocol TextAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 FocusChannelDelegate,
-ReceiveMessageDelegate {
+DownStreamDataDelegate {
     var contextManager: ContextManageable! { get set }
     var messageSender: MessageSendable! { get set }
     var focusManager: FocusManageable! { get set }

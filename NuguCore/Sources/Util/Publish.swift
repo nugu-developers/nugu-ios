@@ -1,8 +1,8 @@
 //
-//  DirectiveProtocol.swift
-//  NuguInterface
+//  Publish.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 14/05/2019.
+//  Created by childc on 2019/11/18.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,22 +20,30 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol DirectiveProtocol {
-    /// <#Description#>
-    var payload: String { get }
-    /// <#Description#>
-    var header: MessageHeaderProtocol { get }
-}
+import RxSwift
 
-// MARK: - DirectiveProtocol + DirectiveTypeInforable
-
-public extension DirectiveProtocol {
-    /// <#Description#>
-    /// - Parameter Type: <#Type description#>
-    func typeInfo<T: CaseIterable & DirectiveTypeInforable>(for configurationType: T.Type) -> T? {
-        return configurationType.allCases.first { (configuration) -> Bool in
-            return configuration.type == header.type
+@propertyWrapper
+struct Publish<Value> {
+    private var value: Value
+    private let subject = PublishSubject<Value>()
+    
+    init(wrappedValue value: Value) {
+        self.value = value
+    }
+    
+    var wrappedValue: Value {
+        get {
+            return value
         }
+        
+        set {
+            value = newValue
+            subject.onNext(value)
+        }
+    }
+    
+    /// The property that can be accessed with the `$` syntax and allows access to the `Publish`
+    var projectedValue: Observable<Value> {
+        return subject.asObserver()
     }
 }

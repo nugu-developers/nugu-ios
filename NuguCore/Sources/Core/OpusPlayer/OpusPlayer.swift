@@ -23,6 +23,8 @@ import AVFoundation
 
 import NuguInterface
 
+import RxSwift
+
 /**
  Player for Nugu voice (Text To Speech)
  - Nugu server will send a tts message which is encoded opus codec.
@@ -43,7 +45,8 @@ public class OpusPlayer: MediaPlayable {
     private var tempAudioArray = [Float]()
 
     /// hold entire audio buffers for seek function.
-    private var audioBuffers = [AVAudioPCMBuffer]()
+    @Publish private var audioBuffers = [AVAudioPCMBuffer]()
+    private let disposeBag = DisposeBag()
     
     private var audioQueue = DispatchQueue(label: "com.sktelecom.romaine.speech_synthesizer_audio")
     
@@ -55,14 +58,14 @@ public class OpusPlayer: MediaPlayable {
     public var isPaused = false
     public weak var delegate: MediaPlayerDelegate?
     
-    /// current time(seconds)
-    public var offset: Int {
-        return Int(Double(chunkSize * curBufferIndex) / audioFormat.sampleRate)
+    /// current time
+    public var offset: TimeIntervallic {
+        return NuguTimeInterval(seconds: Double(chunkSize * curBufferIndex) / audioFormat.sampleRate)
     }
     
-    /// duration(seconds)
-    public var duration: Int {
-        return Int(Double(chunkSize * audioBuffers.count) / audioFormat.sampleRate)
+    /// duration
+    public var duration: TimeIntervallic {
+        return NuguTimeInterval(seconds: Double(chunkSize * audioBuffers.count) / audioFormat.sampleRate)
     }
     
     public var isMuted: Bool {
@@ -101,7 +104,6 @@ public class OpusPlayer: MediaPlayable {
     }
     
     private func engineInit() throws {
-        // audio session과의 관계에 따라 NSException이 발생할 수 있는데, 이때에 swift에서 catch할 방법이 없고 앱이 종료되므로 OBJC의 Exception을 처리할 꼼수를 적용한다.
         if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
             guard let self = self else {
                 return
@@ -268,9 +270,26 @@ public class OpusPlayer: MediaPlayable {
                         
                         return
                     }
-                
+                    
+                    guard let curBuffer = self.audioBuffers[safe: self.curBufferIndex],
+                        curBuffer != self.lastBuffer else {
+                            return
+                    }
+                    
                     self.curBufferIndex += 1
                     guard let nextBuffer = self.audioBuffers[safe: self.curBufferIndex] else {
+                        log.debug("waiting for next audio data.")
+                        
+                        self.$audioBuffers
+                            .take(1)
+                            .subscribeOn(CurrentThreadScheduler.instance)
+                            .subscribe(onNext: { [weak self] (audioBuffers) in
+                                guard let self = self,
+                                    let nextBuffer = audioBuffers[safe: self.curBufferIndex] else { return }
+                                
+                                log.debug("Try to restart scheduler.")
+                                self.scheduleBuffer(audioBuffer: nextBuffer)
+                        }).disposed(by: self.disposeBag)
                         return
                     }
                     
@@ -348,19 +367,23 @@ public class OpusPlayer: MediaPlayable {
         delegate?.mediaPlayerDidChange(state: .stop)
     }
     
-    public func seek(to offset: Int, completion: ((Result<Void, Error>) -> Void)?) {
+    /**
+     seek
+     - parameter to: seek time (millisecond)
+     */
+    public func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
         log.debug("try to seek")
 
         audioQueue.async { [weak self] in
             guard let self = self else { return }
             
-            guard (0..<self.duration).contains(offset) else {
+            guard (0..<self.duration.truncatedSeconds).contains(offset.truncatedSeconds) else {
                 completion?(.failure(OpusPlayerError.seekRangeExceed))
                 return
             }
             
-            let chunkTime = Int(Float(self.chunkSize) / Float(self.audioFormat.sampleRate))
-            self.curBufferIndex = offset / chunkTime
+            let chunkTime = Int((Float(self.chunkSize) / Float(self.audioFormat.sampleRate)) * 1000)
+            self.curBufferIndex = offset.truncatedSeconds / chunkTime
             completion?(.success(()))
         }
     }
@@ -369,7 +392,7 @@ public class OpusPlayer: MediaPlayable {
      To get opus data from file or remote repository.
      - You are not supposed to use this method on MainThread for getting data using network
      */
-    public func setSource(url: String, offset: Int) throws {
+    public func setSource(url: String, offset: TimeIntervallic) throws {
         guard audioBuffers.count == 0 else { throw MediaPlayableError.unsupportedOperation }
         guard let resourceURL = URL(string: url) else { throw MediaPlayableError.unsupportedOperation }
         
@@ -398,7 +421,7 @@ public class OpusPlayer: MediaPlayable {
             if options.contains(.shouldResume) {
                 if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
                     guard let self = self else { return }
-                    log.debug("resume offset: \(self.offset)")
+                    log.debug("resume offset: \(self.offset.truncatedSeconds)")
                     if self.player.isPlaying == false {
                         self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
                     }
@@ -416,14 +439,14 @@ public class OpusPlayer: MediaPlayable {
 
         if let objcException = (ObjcExceptionCatcher.objcTry { [weak self] in
             guard let self = self else { return }
-                if self.player.isPlaying {
-                    log.debug("resume offset: \(self.offset)")
-                    if self.player.isPlaying == false {
-                        self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
-                    }
-                    
-                    try? self.engineInit()
+            if self.player.isPlaying {
+                log.debug("resume offset: \(self.offset.truncatedSeconds)")
+                if self.player.isPlaying == false {
+                    self.engine.connect(self.player, to: self.engine.mainMixerNode, format: self.audioFormat)
                 }
+                
+                try? self.engineInit()
+            }
         }) {
             delegate?.mediaPlayerDidChange(state: .error(error: objcException))
         }

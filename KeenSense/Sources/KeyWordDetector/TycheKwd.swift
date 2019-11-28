@@ -64,33 +64,38 @@ public class TycheKwd: NSObject {
     /**
      Start Key Word Detection.
      */
-    public func start(inputStream: InputStream) throws {
+    public func start(inputStream: InputStream) {
         log.debug("kwd try to start")
-        
+        self.inputStream = inputStream
         kwdWorkItem?.cancel()
         
         var workItem: DispatchWorkItem!
         workItem = DispatchWorkItem { [weak self] in
+            log.debug("kwd task start")
+            
             guard let self = self else { return }
+            log.debug("kwd task is eligible for running ")
+            
+            inputStream.delegate = self
+            inputStream.schedule(in: .current, forMode: .default)
+            inputStream.open()
             
             do {
                 try self.initTriggerEngine()
+                self.state = .active
             } catch {
                 self.state = .inactive
                 self.delegate?.keyWordDetectorDidError(error)
                 log.debug("kwd error: \(error)")
             }
             
-            self.state = .active
-            self.inputStream = inputStream
+            while workItem.isCancelled == false {
+                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
+            }
             
-            inputStream.delegate = self
-            inputStream.schedule(in: .current, forMode: .default)
-            inputStream.open()
-            
-            while RunLoop.current.run(mode: .default, before: .distantFuture) && workItem.isCancelled == false {}
-            
+            log.debug("kwd task is going to stop")
             if self.engineHandle != nil {
+                log.debug("kwd task stops engine and stream.")
                 self.inputStream?.close()
                 Wakeup_Destroy(self.engineHandle)
                 self.engineHandle = nil
@@ -101,6 +106,7 @@ public class TycheKwd: NSObject {
         }
         kwdQueue.async(execute: workItem!)
         kwdWorkItem = workItem
+        log.debug("kwd tried to start")
     }
     
     public func stop() {
@@ -108,8 +114,10 @@ public class TycheKwd: NSObject {
         kwdWorkItem?.cancel()
         
         kwdQueue.async { [weak self] in
+            log.debug("kwd stop task is started")
             guard let self = self else { return }
-            
+
+            log.debug("kwd stop task stops engine and stream.")
             self.inputStream?.close()
             Wakeup_Destroy(self.engineHandle)
             self.engineHandle = nil
@@ -184,12 +192,20 @@ extension TycheKwd {
 
 extension TycheKwd: StreamDelegate {
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        guard let inputStream = aStream as? InputStream else { return }
+        guard let inputStream = aStream as? InputStream,
+            inputStream == self.inputStream else { return }
         
         switch eventCode {
         case .hasBytesAvailable:
+            guard engineHandle != nil else {
+                stop()
+                return
+            }
+            
             let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
             let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
+            guard 0 < inputLength else { return }
+
             detectingData.append(Data(bytes: inputBuffer, count: inputLength))
             
             let isDetected = inputBuffer.withMemoryRebound(to: Int16.self, capacity: inputLength/2) { (ptrPcmData) -> Bool in
@@ -197,8 +213,8 @@ extension TycheKwd: StreamDelegate {
             }
             
             if isDetected {
-                inputStream.close()
-                self.state = .inactive
+                log.debug("kwd hasBytesAvailable detected")
+                stop()
 
                 extractDetectedData()
                 self.delegate?.keyWordDetectorDidDetect()

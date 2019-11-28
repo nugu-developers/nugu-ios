@@ -60,12 +60,14 @@ public class KeyWordDetector: WakeUpDetectable {
         engine.delegate = self
     }
     
-    public func start() throws {
+    public func start() {
+        boundStreams?.stop()
         boundStreams = BoundStreams(buffer: audioStream.makeAudioStreamReader())
-        try engine.start(inputStream: boundStreams!.input)
+        engine.start(inputStream: boundStreams!.input)
     }
     
     public func stop() {
+        boundStreams?.stop()
         engine.stop()
     }
 }

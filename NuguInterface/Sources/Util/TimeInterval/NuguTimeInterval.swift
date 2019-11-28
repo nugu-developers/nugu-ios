@@ -1,8 +1,8 @@
 //
-//  AttachmentProtocol.swift
+//  NuguTimeInterval.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 21/05/2019.
+//  Created by yonghoonKwon on 2019/11/22.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,14 +20,31 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol AttachmentProtocol {
+public struct NuguTimeInterval {
     /// <#Description#>
-    var seq: Int { get }
+    public let seconds: Double
+    
     /// <#Description#>
-    var content: Data { get }
+    /// - Parameter seconds: <#seconds description#>
+    public init(seconds: Double) {
+        self.seconds = seconds
+    }
+    
     /// <#Description#>
-    var isEnd: Bool { get }
+    /// - Parameter seconds: <#seconds description#>
+    public init(seconds: Int) {
+        self.seconds = Double(seconds)
+    }
+    
     /// <#Description#>
-    var header: MessageHeaderProtocol { get }
+    /// - Parameter milliseconds: <#milliseconds description#>
+    public init(milliseconds: Double) {
+        self.seconds = milliseconds / 1000.0
+    }
+    
+    /// <#Description#>
+    /// - Parameter milliseconds: <#milliseconds description#>
+    public init(milliseconds: Int) {
+        self.seconds = Double(milliseconds) / 1000.0
+    }
 }
