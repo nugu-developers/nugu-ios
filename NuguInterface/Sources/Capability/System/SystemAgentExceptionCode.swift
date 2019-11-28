@@ -21,16 +21,16 @@
 import Foundation
 
 /// <#Description#>
-public enum SystemAgentExceptionCode {
+public enum SystemAgentExceptionCode: Equatable {
     /// <#Description#>
-    public enum Extra: String, Decodable {
+    public enum Extra: String, Decodable, Equatable {
         case unauthorizedRequestException = "UNAUTHORIZED_REQUEST_EXCEPTION"
         case playRouterProcessingException = "PLAY_ROUTER_PROCESSING_EXCEPTION"
         case ttsSpeakingException = "TTS_SPEAKING_EXCEPTION"
     }
     
     /// <#Description#>
-    public enum Inside: String, Decodable {
+    public enum Inside: String, Decodable, Equatable {
         case asrRecognizingException = "ASR_RECOGNIZING_EXCEPTION"
         case internalServiceException = "INTERNAL_SERVICE_EXCEPTION"
     }
