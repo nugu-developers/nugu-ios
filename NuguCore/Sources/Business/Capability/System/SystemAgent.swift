@@ -156,12 +156,12 @@ private extension SystemAgent {
             let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
             self?.systemDispatchQueue.async { [weak self] in
                 switch exceptionItem.code {
-                case .unauthorizedRequestException:
+                case .extra(let code):
                     self?.delegates.notify { delegate in
-                        delegate.systemAgentDidReceiveAuthorizationError()
+                        delegate.systemAgentDidReceiveExceptionExtra(code: code)
                     }
-                default:
-                    break
+                case .inside(let code):
+                    log.debug("received inside code: \(code)")
                 }
             }
         }

@@ -1,8 +1,8 @@
 //
-//  SystemAgentDelegate.swift
+//  SystemAgentExceptionCode.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 2019/09/17.
+//  Created by yonghoonKwon on 2019/11/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,21 @@
 
 import Foundation
 
-/// The `SystemAgentDelegate` protocol defines methods that action when `SystemAgent` receives a directive.
-public protocol SystemAgentDelegate: class {
+/// <#Description#>
+public enum SystemAgentExceptionCode {
     /// <#Description#>
-    /// - Parameter code: <#code description#>
-    func systemAgentDidReceiveExceptionExtra(code: SystemAgentExceptionCode.Extra)
+    public enum Extra: String, Decodable {
+        case unauthorizedRequestException = "UNAUTHORIZED_REQUEST_EXCEPTION"
+        case playRouterProcessingException = "PLAY_ROUTER_PROCESSING_EXCEPTION"
+        case ttsSpeakingException = "TTS_SPEAKING_EXCEPTION"
+    }
+    
+    /// <#Description#>
+    public enum Inside: String, Decodable {
+        case asrRecognizingException = "ASR_RECOGNIZING_EXCEPTION"
+        case internalServiceException = "INTERNAL_SERVICE_EXCEPTION"
+    }
+    
+    case extra(code: Extra)
+    case inside(code: Inside)
 }

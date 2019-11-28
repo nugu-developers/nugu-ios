@@ -43,6 +43,7 @@
 		1F100994238568D500D90FEE /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
 		1F100996238795FF00D90FEE /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
 		1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */; };
+		1F2E8003238F96CD00569C59 /* SystemAgentExceptionCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */; };
 		1FFFEFF423753EFD00C9A177 /* NuguInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFF223753EFD00C9A177 /* NuguInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -538,6 +539,7 @@
 		1F100990238529C100D90FEE /* TimeIntervallic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervallic.swift; sourceTree = "<group>"; };
 		1F100995238795FF00D90FEE /* NuguTimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguTimeInterval.swift; sourceTree = "<group>"; };
 		1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervallicTests.swift; sourceTree = "<group>"; };
+		1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentExceptionCode.swift; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1315,6 +1317,7 @@
 			children = (
 				1FFFF25A2375703000C9A177 /* SystemAgentProtocol.swift */,
 				1FFFF25B2375703000C9A177 /* SystemAgentDelegate.swift */,
+				1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -2835,6 +2838,7 @@
 				1FFFF2FE2375703100C9A177 /* EndPointDetectable.swift in Sources */,
 				1FFFF2B12375703000C9A177 /* DelegateSet.swift in Sources */,
 				1FFFF2B02375703000C9A177 /* DelegateDictionary.swift in Sources */,
+				1F2E8003238F96CD00569C59 /* SystemAgentExceptionCode.swift in Sources */,
 				1FFFF2C52375703000C9A177 /* ASRError.swift in Sources */,
 				1FFFF2EC2375703100C9A177 /* PlaySyncState.swift in Sources */,
 				7EB6D0D82387B19600E65FDC /* DownStream.swift in Sources */,

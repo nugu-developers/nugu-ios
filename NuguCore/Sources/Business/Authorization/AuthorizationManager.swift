@@ -73,9 +73,13 @@ extension AuthorizationManager {
 // MARK: - SystemAgentDelegate
 
 extension AuthorizationManager: SystemAgentDelegate {
-    public func systemAgentDidReceiveAuthorizationError() {
-        authorizationDispatchQueue.async { [weak self] in
-            self?.authorizationState = .error(.authorizationFailed)
+    public func systemAgentDidReceiveExceptionExtra(code: SystemAgentExceptionCode.Extra) {
+        switch code {
+        case .unauthorizedRequestException:
+            authorizationDispatchQueue.async { [weak self] in
+                self?.authorizationState = .error(.authorizationFailed)
+            }
+        default: break
         }
     }
 }
