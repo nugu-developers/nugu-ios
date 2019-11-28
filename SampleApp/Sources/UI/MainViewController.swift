@@ -467,8 +467,8 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking(let expectingSpeech):
             DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.changeState(state: .speaking)
                 guard expectingSpeech == false else {
+                    self?.nuguVoiceChrome.changeState(state: .speaking)
                     self?.nuguVoiceChrome.minimize()
                     return
                 }
@@ -518,10 +518,14 @@ extension MainViewController: ASRAgentDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
             }
-        case .error:
+        case .error(let asrError):
             DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.changeState(state: .speakingError)
                 SoundPlayer.playSound(soundType: .fail)
+                switch asrError {
+                case .listenFailed, .recognizeFailed:
+                    self?.nuguVoiceChrome.changeState(state: .speakingError)
+                default: break
+                }
             }
         default: break
         }
@@ -540,8 +544,7 @@ extension MainViewController: TextAgentDelegate {
         case .error(let textAgentError):
             switch textAgentError {
             case .responseTimeout:
-                DispatchQueue.main.async { [weak self] in
-                    self?.nuguVoiceChrome.changeState(state: .speakingError)
+                DispatchQueue.main.async {
                     SoundPlayer.playSound(soundType: .fail)
                 }
             }
