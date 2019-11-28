@@ -20,8 +20,6 @@
 
 import UIKit
 
-import Lottie
-
 final public class NuguVoiceChrome: UIView {
     
     // MARK: RecommendedHeight for NuguVoiceChrome
@@ -43,7 +41,7 @@ final public class NuguVoiceChrome: UIView {
     @IBOutlet private weak var topContainerView: UIView!
     @IBOutlet private weak var recognizedTextLabel: UILabel!
     
-    @IBOutlet private weak var asrStatusView: AnimationView!
+    @IBOutlet private weak var animationView: NuguVoiceChromeAnimationView!
     
     private let speechGuideText = "말씀해주세요"
     private let guideTextColor = UIColor(red: 112.0/255.0, green: 118.0/255.0, blue: 125.0/255.0, alpha: 1.0)
@@ -78,8 +76,6 @@ final public class NuguVoiceChrome: UIView {
         layer.shadowOpacity = 0.15
         layer.shadowOffset = CGSize(width: 0, height: -1)
         layer.shadowRadius = 10
-        
-        asrStatusView.loopMode = .loop
     }
 }
 
@@ -92,21 +88,6 @@ public extension NuguVoiceChrome {
         case processing
         case speaking
         case speakingError
-        
-        var animationFileName: String {
-            switch self {
-            case .listeningPassive:
-                return "LP"
-            case .listeningActive:
-                return "LA"
-            case .processing:
-                return "PC_02"
-            case .speaking:
-                return "SP_02"
-            case .speakingError:
-                return "ESP_02"
-            }
-        }
     }
 }
 
@@ -114,7 +95,7 @@ public extension NuguVoiceChrome {
 
 public extension NuguVoiceChrome {
     func changeState(state: NuguVoiceChrome.State) {
-        playAnimationByState(state: state)
+        animationView.setAnimation(state: state)
         switch state {
         case .listeningPassive:
             showSpeechGuideText()
@@ -160,11 +141,6 @@ public extension NuguVoiceChrome {
 // MARK: - Private
 
 private extension NuguVoiceChrome {
-    func playAnimationByState(state: NuguVoiceChrome.State) {
-        asrStatusView.animation = Animation.named(state.animationFileName, bundle: Bundle(for: NuguVoiceChrome.self))
-        asrStatusView.play()
-    }
-    
     func showSpeechGuideText() {
         recognizedTextLabel.text = speechGuideText
         recognizedTextLabel.textColor = guideTextColor
