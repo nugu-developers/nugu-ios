@@ -67,20 +67,21 @@ struct NuguAudioSessionManager {
         // to determine secondaryAudio has been interrupted or not
         // if not, calling notifyOthersOnDeactivation is unnecessary
         guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == false else { return }
-        // need delay for audioPlayer to be 'really' stopped
-        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0, execute: {
-            if NuguCentralManager.shared.client.inputProvider?.isRunning == true {
-                NuguCentralManager.shared.client.inputProvider?.stop()
+        
+        // clean up all I/O before deactivating audioSession
+        NuguCentralManager.shared.stopWakeUpDetector()
+        if NuguCentralManager.shared.client.inputProvider?.isRunning == true {
+            NuguCentralManager.shared.client.inputProvider?.stop()
+        }
+        
+        do {
+            defer {
+                self.allowMixWithOthers()
+                NuguCentralManager.shared.refreshWakeUpDetector()
             }
-            do {
-                defer {
-                    self.allowMixWithOthers()
-                    NuguCentralManager.shared.refreshWakeUpDetector()
-                }
-                try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-            } catch {
-                log.debug("notifyOthersOnDeactivation failed: \(error)")
-            }
-        })
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            log.debug("notifyOthersOnDeactivation failed: \(error)")
+        }
     }
 }
