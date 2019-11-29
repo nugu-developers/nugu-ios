@@ -103,21 +103,17 @@ extension NuguCentralManager: ContextInfoDelegate {
     }
     
     func refreshWakeUpDetector() {
-        DispatchQueue.main.async { [weak self] in
-            // Should check application state, because iOS audio input can not be start using in background state
-            guard UIApplication.shared.applicationState == .active else { return }
-            switch UserDefaults.Standard.useWakeUpDetector {
-            case true:
-                self?.startWakeUpDetector(completion: { (result) in
-                    switch result {
-                    case .success: return
-                    case .failure(let error):
-                        log.debug("Failed to start WakeUp-Detector with reason: \(error)")
-                    }
-                })
-            case false:
-                self?.stopWakeUpDetector()
-            }
+        switch UserDefaults.Standard.useWakeUpDetector {
+        case true:
+            startWakeUpDetector(completion: { (result) in
+                switch result {
+                case .success: return
+                case .failure(let error):
+                    log.debug("Failed to start WakeUp-Detector with reason: \(error)")
+                }
+            })
+        case false:
+            stopWakeUpDetector()
         }
     }
     

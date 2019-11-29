@@ -229,7 +229,11 @@ private extension MainViewController {
     }
     
     func refreshWakeUpDetector() {
-        NuguCentralManager.shared.refreshWakeUpDetector()
+        DispatchQueue.main.async {
+            // Should check application state, because iOS audio input can not be start using in background state
+            guard UIApplication.shared.applicationState == .active else { return }
+            NuguCentralManager.shared.refreshWakeUpDetector()
+        }
     }
 }
 
