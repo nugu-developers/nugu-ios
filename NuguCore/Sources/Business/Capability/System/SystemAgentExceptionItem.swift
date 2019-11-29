@@ -38,10 +38,10 @@ extension SystemAgentExceptionItem: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        if let publicCode = try? container.decode(SystemAgentExceptionCode.Extra.self, forKey: .code) {
-            code = .extra(code: publicCode)
+        if let failCode = try? container.decode(SystemAgentExceptionCode.Fail.self, forKey: .code) {
+            code = .fail(code: failCode)
         } else {
-            code = .inside(code: try container.decode(SystemAgentExceptionCode.Inside.self, forKey: .code))
+            code = .warning(code: try container.decode(SystemAgentExceptionCode.Warning.self, forKey: .code))
         }
         description = try container.decode(String.self, forKey: .description)
     }

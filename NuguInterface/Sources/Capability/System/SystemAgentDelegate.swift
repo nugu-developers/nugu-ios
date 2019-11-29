@@ -24,5 +24,5 @@ import Foundation
 public protocol SystemAgentDelegate: class {
     /// <#Description#>
     /// - Parameter code: <#code description#>
-    func systemAgentDidReceiveExceptionExtra(code: SystemAgentExceptionCode.Extra)
+    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail)
 }

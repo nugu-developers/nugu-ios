@@ -37,30 +37,30 @@ class SystemAgentTests: XCTestCase {
     }
     
     func testException() {
-        // Extra
+        // Fail exception
         exceptionPayload["code"] = "UNAUTHORIZED_REQUEST_EXCEPTION"
         
         do {
             let data = try JSONSerialization.data(withJSONObject: exceptionPayload, options: [])
             let item = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
             
-            XCTAssertEqual(item.code, .extra(code: .unauthorizedRequestException))
-            XCTAssertNotEqual(item.code, .extra(code: .playRouterProcessingException))
-            XCTAssertNotEqual(item.code, .inside(code: .internalServiceException))
+            XCTAssertEqual(item.code, .fail(code: .unauthorizedRequestException))
+            XCTAssertNotEqual(item.code, .fail(code: .playRouterProcessingException))
+            XCTAssertNotEqual(item.code, .warning(code: .internalServiceException))
         } catch {
             XCTFail()
         }
         
-        // Inside
+        // Warning exception
         exceptionPayload["code"] = "INTERNAL_SERVICE_EXCEPTION"
         
         do {
             let data = try JSONSerialization.data(withJSONObject: exceptionPayload, options: [])
             let item = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
             
-            XCTAssertEqual(item.code, .inside(code: .internalServiceException))
-            XCTAssertNotEqual(item.code, .inside(code: .asrRecognizingException))
-            XCTAssertNotEqual(item.code, .extra(code: .unauthorizedRequestException))
+            XCTAssertEqual(item.code, .warning(code: .internalServiceException))
+            XCTAssertNotEqual(item.code, .warning(code: .asrRecognizingException))
+            XCTAssertNotEqual(item.code, .fail(code: .unauthorizedRequestException))
         } catch {
             XCTFail()
         }

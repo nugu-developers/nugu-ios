@@ -23,18 +23,18 @@ import Foundation
 /// <#Description#>
 public enum SystemAgentExceptionCode: Equatable {
     /// <#Description#>
-    public enum Extra: String, Decodable, Equatable {
+    public enum Fail: String, Decodable, Equatable {
         case unauthorizedRequestException = "UNAUTHORIZED_REQUEST_EXCEPTION"
         case playRouterProcessingException = "PLAY_ROUTER_PROCESSING_EXCEPTION"
         case ttsSpeakingException = "TTS_SPEAKING_EXCEPTION"
     }
     
     /// <#Description#>
-    public enum Inside: String, Decodable, Equatable {
+    public enum Warning: String, Decodable, Equatable {
         case asrRecognizingException = "ASR_RECOGNIZING_EXCEPTION"
         case internalServiceException = "INTERNAL_SERVICE_EXCEPTION"
     }
     
-    case extra(code: Extra)
-    case inside(code: Inside)
+    case fail(code: Fail)
+    case warning(code: Warning)
 }
