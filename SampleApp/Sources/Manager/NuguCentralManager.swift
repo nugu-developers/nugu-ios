@@ -19,7 +19,6 @@
 //
 
 import Foundation
-import AVFoundation
 
 import NuguInterface
 import NuguClientKit
@@ -71,11 +70,10 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startRecognize(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        AVAudioSession.sharedInstance().requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.disableMixWithOthers()
                 self.client.asrAgent?.startRecognition()
             })
             completion?(result)
@@ -104,8 +102,27 @@ extension NuguCentralManager: ContextInfoDelegate {
         return ContextInfo(contextType: .client, name: "wakeupWord", payload: keyWord.description)
     }
     
+    func refreshWakeUpDetector() {
+        DispatchQueue.main.async { [weak self] in
+            // Should check application state, because iOS audio input can not be start using in background state
+            guard UIApplication.shared.applicationState == .active else { return }
+            switch UserDefaults.Standard.useWakeUpDetector {
+            case true:
+                self?.startWakeUpDetector(completion: { (result) in
+                    switch result {
+                    case .success: return
+                    case .failure(let error):
+                        log.debug("Failed to start WakeUp-Detector with reason: \(error)")
+                    }
+                })
+            case false:
+                self?.stopWakeUpDetector()
+            }
+        }
+    }
+    
     func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        AVAudioSession.sharedInstance().requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
@@ -139,44 +156,6 @@ extension NuguCentralManager: ContextInfoDelegate {
     }
 }
 
-// MARK: - Internal (AudioSession)
-
-extension NuguCentralManager {
-    @discardableResult func setAudioSession() -> Bool {
-        guard (AVAudioSession.sharedInstance().category != .playAndRecord)
-            || AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == false else {
-            return true
-        }
-        
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-            return true
-        } catch {
-            log.debug("setCategory failed: \(error)")
-            return false
-        }
-    }
-    
-    func disableMixWithOthers() {
-        guard AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint == true else { return }
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            log.debug("disableMixWithOthers failed: \(error)")
-        }
-    }
-}
-
 // MARK: - AuthorizationStateDelegate
 
 extension NuguCentralManager: AuthorizationStateDelegate {
@@ -198,10 +177,11 @@ extension NuguCentralManager: AuthorizationStateDelegate {
 
 extension NuguCentralManager: FocusDelegate {
     func focusShouldAcquire() -> Bool {
-        return setAudioSession()
+        return NuguAudioSessionManager.setAudioSession()
     }
     
     func focusShouldRelease() {
+        NuguAudioSessionManager.nofifyAudioSessionDeactivationAndRecover()
     }
 }
 
