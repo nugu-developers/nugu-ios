@@ -65,6 +65,7 @@ extension TTSMedia.Payload: Decodable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
         sourceType = try container.decodeIfPresent(SourceType.self, forKey: .sourceType) ?? .attachment
         text = try container.decode(String.self, forKey: .text)
@@ -82,6 +83,7 @@ extension TTSMedia.Payload.PlayStackControl: Decodable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
     }
 }

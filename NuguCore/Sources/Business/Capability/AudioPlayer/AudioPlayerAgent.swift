@@ -126,7 +126,7 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     }
 }
 
-// MARK: - AudioPlayerAgentProtocol
+// MARK: - AudioPlayerAgent + AudioPlayerAgentProtocol
 
 public extension AudioPlayerAgent {
     func add(delegate: AudioPlayerAgentDelegate) {
@@ -466,8 +466,7 @@ private extension AudioPlayerAgent {
         sendEvent(
             Event(
                 token: media.payload.audioItem.stream.token,
-                // This is a mandatory in Play kit.
-                offsetInMilliseconds: (offset ?? 0) * 1000,
+                offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
             ),
@@ -550,7 +549,7 @@ private extension AudioPlayerAgent {
 private extension AudioPlayerAgent {
     /// set mediaplayer
     func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) throws {
-        let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer(type: .media)
+        let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer()
         mediaPlayer.delegate = self
         
         self.currentMedia = AudioPlayerAgentMedia(

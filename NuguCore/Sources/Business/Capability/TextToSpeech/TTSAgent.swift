@@ -185,11 +185,12 @@ extension TTSAgent: HandleDirectiveDelegate {
                 return
             }
             
+            let player = media.player as? MediaOpusStreamDataSource
             do {
-                try media.player.appendData(attachment.content)
+                try player?.appendData(attachment.content)
                 
                 if attachment.isEnd {
-                    try media.player.lastDataAppended()
+                    try player?.lastDataAppended()
                 }
             } catch {
                 self.messageSender.sendCrashReport(error: error)
@@ -346,15 +347,21 @@ private extension TTSAgent {
                 
                 self.stopSilently()
                 
-                let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer(type: .voice)
+                let mediaPlayer = self.mediaPlayerFactory.makeOpusPlayer()
                 mediaPlayer.delegate = self
                 mediaPlayer.isMuted = self.playerIsMuted
+                
                 self.currentMedia = TTSMedia(
                     player: mediaPlayer,
                     payload: payload,
                     dialogRequestId: directive.header.dialogRequestId
                 )
-                self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
+                
+                self.playSyncManager.prepareSync(
+                    delegate: self,
+                    dialogRequestId: directive.header.dialogRequestId,
+                    playServiceId: payload.playStackControl?.playServiceId
+                )
             })
             
             completionHandler(result)
