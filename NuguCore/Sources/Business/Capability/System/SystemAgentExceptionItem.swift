@@ -20,15 +20,29 @@
 
 import Foundation
 
-struct SystemAgentExceptionItem: Decodable {
-    let code: Code
+import NuguInterface
+
+struct SystemAgentExceptionItem {
+    let code: SystemAgentExceptionCode
     let description: String
-    
-    enum Code: String, Decodable {
-        case unauthorizedRequestException = "UNAUTHORIZED_REQUEST_EXCEPTION"
-        case asrRecognizingException = "ASR_RECOGNIZING_EXCEPTION"
-        case playRouterProcessingException = "PLAY_ROUTER_PROCESSING_EXCEPTION"
-        case ttsSpeakingException = "TTS_SPEAKING_EXCEPTION"
-        case internalServiceException = "INTERNAL_SERVICE_EXCEPTION"
+}
+
+// MARK: - SystemAgentExceptionItem + Decodable
+
+extension SystemAgentExceptionItem: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case code
+        case description
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let failCode = try? container.decode(SystemAgentExceptionCode.Fail.self, forKey: .code) {
+            code = .fail(code: failCode)
+        } else {
+            code = .warning(code: try container.decode(SystemAgentExceptionCode.Warning.self, forKey: .code))
+        }
+        description = try container.decode(String.self, forKey: .description)
     }
 }
