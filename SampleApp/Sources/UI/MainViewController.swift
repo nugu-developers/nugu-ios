@@ -168,7 +168,7 @@ private extension MainViewController {
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
         // Set AudioSession
-        NuguCentralManager.shared.setAudioSession()
+        NuguAudioSessionManager.allowMixWithOthers()
         
         // Add delegates
         NuguCentralManager.shared.client.networkManager.add(statusDelegate: self)
@@ -229,22 +229,7 @@ private extension MainViewController {
     }
     
     func refreshWakeUpDetector() {
-        DispatchQueue.main.async {
-            // Should check application state, because iOS audio input can not be start using in background state
-            guard UIApplication.shared.applicationState == .active else { return }
-            switch UserDefaults.Standard.useWakeUpDetector {
-            case true:
-                NuguCentralManager.shared.startWakeUpDetector(completion: { (result) in
-                    switch result {
-                    case .success: return
-                    case .failure(let error):
-                        log.debug("Failed to start WakeUp-Detector with reason: \(error)")
-                    }
-                })
-            case false:
-                NuguCentralManager.shared.stopWakeUpDetector()
-            }
-        }
+        NuguCentralManager.shared.refreshWakeUpDetector()
     }
 }
 
