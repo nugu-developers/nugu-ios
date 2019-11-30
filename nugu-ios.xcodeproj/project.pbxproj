@@ -41,6 +41,17 @@
 		1F100994238568D500D90FEE /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
 		1F100996238795FF00D90FEE /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
 		1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */; };
+		1F2E8003238F96CD00569C59 /* SystemAgentExceptionCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */; };
+		1F2E8006238FC21900569C59 /* SystemAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E8005238FC21900569C59 /* SystemAgentTests.swift */; };
+		1F2E8007238FCCDB00569C59 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
+		1F2E8008238FCCE100569C59 /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
+		1F2E8009238FCD4400569C59 /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
+		1F2E800A238FCD4400569C59 /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
+		1F2E800B238FCD4400569C59 /* NuguClientKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF00A23753F3100C9A177 /* NuguClientKit.framework */; };
+		1F2E800C238FCD4400569C59 /* NuguCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFFD23753F1800C9A177 /* NuguCore.framework */; };
+		1F2E800D238FCD4400569C59 /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
+		1F2E800E238FCD4400569C59 /* NuguLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF01723753F7D00C9A177 /* NuguLoginKit.framework */; };
+		1F2E800F238FCD4400569C59 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
 		1FFFEFF423753EFD00C9A177 /* NuguInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFF223753EFD00C9A177 /* NuguInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -526,6 +537,8 @@
 		1F100990238529C100D90FEE /* TimeIntervallic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervallic.swift; sourceTree = "<group>"; };
 		1F100995238795FF00D90FEE /* NuguTimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguTimeInterval.swift; sourceTree = "<group>"; };
 		1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervallicTests.swift; sourceTree = "<group>"; };
+		1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentExceptionCode.swift; sourceTree = "<group>"; };
+		1F2E8005238FC21900569C59 /* SystemAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
 		1F2E8011238FD43C00569C59 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
@@ -936,6 +949,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F2E8009238FCD4400569C59 /* JadeMarble.framework in Frameworks */,
+				1F2E800A238FCD4400569C59 /* KeenSense.framework in Frameworks */,
+				1F2E800B238FCD4400569C59 /* NuguClientKit.framework in Frameworks */,
+				1F2E800C238FCD4400569C59 /* NuguCore.framework in Frameworks */,
+				1F2E800D238FCD4400569C59 /* NuguInterface.framework in Frameworks */,
+				1F2E800E238FCD4400569C59 /* NuguLoginKit.framework in Frameworks */,
+				1F2E800F238FCD4400569C59 /* NuguUIKit.framework in Frameworks */,
+				1F2E8007238FCCDB00569C59 /* RxSwift.framework in Frameworks */,
+				1F2E8008238FCCE100569C59 /* NattyLog.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1030,6 +1052,14 @@
 				1F100990238529C100D90FEE /* TimeIntervallic.swift */,
 			);
 			path = TimeInterval;
+			sourceTree = "<group>";
+		};
+		1F2E8004238FC20000569C59 /* Capability */ = {
+			isa = PBXGroup;
+			children = (
+				1F2E8005238FC21900569C59 /* SystemAgentTests.swift */,
+			);
+			path = Capability;
 			sourceTree = "<group>";
 		};
 		1FFFEFF123753EFD00C9A177 /* NuguInterface */ = {
@@ -1292,6 +1322,7 @@
 			children = (
 				1FFFF25A2375703000C9A177 /* SystemAgentProtocol.swift */,
 				1FFFF25B2375703000C9A177 /* SystemAgentDelegate.swift */,
+				1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -2137,6 +2168,7 @@
 		1FFFF524237676BE00C9A177 /* NuguTests */ = {
 			isa = PBXGroup;
 			children = (
+				1F2E8004238FC20000569C59 /* Capability */,
 				1FFFF525237676BE00C9A177 /* NuguTests.swift */,
 				1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */,
 				1FFFF527237676BE00C9A177 /* Info.plist */,
@@ -2466,6 +2498,7 @@
 				1FFFF51F237676BE00C9A177 /* Sources */,
 				1FFFF520237676BE00C9A177 /* Frameworks */,
 				1FFFF521237676BE00C9A177 /* Resources */,
+				1F2E8010238FCD8E00569C59 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2685,6 +2718,25 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
+		1F2E8010238FCD8E00569C59 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/NattyLog.framework",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2744,6 +2796,7 @@
 				1FFFF2FE2375703100C9A177 /* EndPointDetectable.swift in Sources */,
 				1FFFF2B12375703000C9A177 /* DelegateSet.swift in Sources */,
 				1FFFF2B02375703000C9A177 /* DelegateDictionary.swift in Sources */,
+				1F2E8003238F96CD00569C59 /* SystemAgentExceptionCode.swift in Sources */,
 				1FFFF2C52375703000C9A177 /* ASRError.swift in Sources */,
 				1FFFF2EC2375703100C9A177 /* PlaySyncState.swift in Sources */,
 				7EB6D0D82387B19600E65FDC /* DownStream.swift in Sources */,
@@ -2998,6 +3051,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */,
+				1F2E8006238FC21900569C59 /* SystemAgentTests.swift in Sources */,
 				1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3698,6 +3752,10 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3719,6 +3777,10 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
