@@ -67,7 +67,7 @@ public enum KeenSenseConfiguration {
     }
 }
 
-// MARK: - KeywordDetector
+// MARK: - Keyword
 
 public enum Keyword: Int, CustomStringConvertible, CaseIterable {
     case aria = 0 // ɑriɑ

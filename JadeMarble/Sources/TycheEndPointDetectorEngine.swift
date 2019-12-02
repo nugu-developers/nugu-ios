@@ -1,5 +1,5 @@
 //
-//  TycheEpd.swift
+//  TycheEndPointDetectorEngine.swift
 //  JadeMarble
 //
 //  Created by DCs-OfficeMBP on 15/05/2019.
@@ -22,23 +22,23 @@ import Foundation
 
 import NattyLog
 
-public class TycheEpd: NSObject {
-    public var state: TycheEpdState = .idle {
+public class TycheEndPointDetectorEngine: NSObject {
+    public var state: State = .idle {
         didSet {
             if oldValue != state {
-                delegate?.endPointDetectorStateChanged(state: state)
+                delegate?.tycheKeywordDetectorEngineDidChange(state: state)
                 log.debug("epd state changed: \(state)")
             }
         }
     }
     
-    public weak var delegate: TycheEpdDelegate?
+    public weak var delegate: TycheEndPointDetectorEngineDelegate?
     
     /// The flush time for reverb removal.
     public var flushTime: Int = 100
     
     private var epdHandle: EpdHandle?
-    private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.end_point_detector")
+    private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.jademarble.tyche_end_point_detector")
     private var epdWorkItem: DispatchWorkItem?
     public var epdFile: URL?
     
@@ -51,11 +51,13 @@ public class TycheEpd: NSObject {
     private var outputData = Data()
     #endif
     
-    public func start(inputStream: InputStream,
-                      sampleRate: Double,
-                      timeout: Int,
-                      maxDuration: Int,
-                      pauseLength: Int) {
+    public func start(
+        inputStream: InputStream,
+        sampleRate: Double,
+        timeout: Int,
+        maxDuration: Int,
+        pauseLength: Int
+    ) {
         log.debug("")
         self.inputStream = inputStream
         epdWorkItem?.cancel()
@@ -69,17 +71,20 @@ public class TycheEpd: NSObject {
             inputStream.open()
             
             do {
-                try self.initDetectorEngine(sampleRate: sampleRate,
-                                       timeout: timeout,
-                                       maxDuration: maxDuration,
-                                       pauseLength: pauseLength)
+                try self.initDetectorEngine(
+                    sampleRate: sampleRate,
+                    timeout: timeout,
+                    maxDuration: maxDuration,
+                    pauseLength: pauseLength
+                )
+                
                 self.state = .listening
                 self.flushedLength = 0
                 self.flushLength = Int((Double(self.flushTime) * sampleRate) / 1000)
             } catch {
                 self.state = .idle
                 log.error("epd engine init error: \(error)")
-                self.delegate?.endPointDetectorStateChanged(state: .error)
+                self.delegate?.tycheKeywordDetectorEngineDidChange(state: .error)
             }
             
             while workItem.isCancelled == false {
@@ -113,10 +118,12 @@ public class TycheEpd: NSObject {
         }
     }
     
-    private func initDetectorEngine(sampleRate: Double,
-                                    timeout: Int,
-                                    maxDuration: Int,
-                                    pauseLength: Int) throws {
+    private func initDetectorEngine(
+        sampleRate: Double,
+        timeout: Int,
+        maxDuration: Int,
+        pauseLength: Int
+    ) throws {
         if epdHandle != nil {
             epdClientChannelRELEASE(epdHandle)
         }
@@ -140,7 +147,7 @@ public class TycheEpd: NSObject {
     }
 }
 
-extension TycheEpd: StreamDelegate {
+extension TycheEndPointDetectorEngine: StreamDelegate {
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         guard let inputStream = aStream as? InputStream,
             inputStream == self.inputStream else { return }
@@ -182,7 +189,7 @@ extension TycheEpd: StreamDelegate {
                 let result = epdClientChannelGetOutputData(epdHandle, detectedBytes, length)
                 if 0 < result {
                     let detectedData = Data(bytes: detectedBytes, count: Int(result))
-                    delegate?.endPointDetectorSpeechDataExtracted(speechData: detectedData)
+                    delegate?.tycheEndPointDetectorEngineExtracted(speechData: detectedData)
                     
                     #if DEBUG
                     outputData.append(detectedData)
@@ -190,7 +197,7 @@ extension TycheEpd: StreamDelegate {
                 }
             }
             
-            state = TycheEpdState(engineState: engineState)
+            state = TycheEndPointDetectorEngine.State(engineState: engineState)
             
             #if DEBUG
             if state == .end {

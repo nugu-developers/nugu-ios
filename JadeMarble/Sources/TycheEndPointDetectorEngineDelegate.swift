@@ -1,5 +1,5 @@
 //
-//  TycheEpdDelegate.swift
+//  TycheEndPointDetectorEngineDelegate.swift
 //  JadeMarble
 //
 //  Created by childc on 2019/11/06.
@@ -21,12 +21,12 @@
 import Foundation
 
 /// <#Description#>
-public protocol TycheEpdDelegate: class {
+public protocol TycheEndPointDetectorEngineDelegate: class {
     /// <#Description#>
     /// - Parameter state: <#state description#>
-    func endPointDetectorStateChanged(state: TycheEpdState)
+    func tycheKeywordDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State)
 
     /// <#Description#>
     /// - Parameter speechData: <#speechData description#>
-    func endPointDetectorSpeechDataExtracted(speechData: Data)
+    func tycheEndPointDetectorEngineExtracted(speechData: Data)
 }
