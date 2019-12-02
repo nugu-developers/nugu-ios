@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct DetectedData {
-    public let data: Data
-    public let padding: Int
+struct DetectedData {
+    let data: Data
+    let padding: Int
 }

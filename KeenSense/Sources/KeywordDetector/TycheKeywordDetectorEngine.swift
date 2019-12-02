@@ -27,14 +27,19 @@ import AVFoundation
  When the key word detected, you can take PCM data of user's voice.
  so you can do Speaker Recognition, enhance the recognizing rate and so on using this data.
  */
-public class TycheKeywordDetectorEngine: NSObject {    
-    private var engineHandle: WakeupHandle?
-    public var netFile: URL?
-    public var searchFile: URL?
+public class TycheKeywordDetectorEngine: NSObject {
     private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keensense.tyche_key_word_detector")
     private var kwdWorkItem: DispatchWorkItem?
-
-    public var detectedData: DetectedData? // User's voice data of speaking key word.
+    private var engineHandle: WakeupHandle?
+    
+    /// User's voice data of speaking keyword
+    private var detectedData: DetectedData?
+    
+    /// Window buffer for user's voice. This will help extract certain section of speaking keyword
+    private var detectingData = ShiftingData(capacity: Int(KeywordDetectorConst.sampleRate*5*2))
+    
+    public var netFile: URL?
+    public var searchFile: URL?
     public var inputStream: InputStream?
     public weak var delegate: TycheKeywordDetectorEngineDelegate?
     public var state: TycheKeywordDetectorEngine.State = .inactive {
@@ -45,11 +50,6 @@ public class TycheKeywordDetectorEngine: NSObject {
             }
         }
     }
-    
-    /**
-     Window buffer for user's voice. This will help extract certain section of speaking key word
-     */
-    private var detectingData = ShiftingData(capacity: Int(KeywordDetectorConst.sampleRate*5*2))
     
     #if DEBUG
     let filename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("detecting.raw")
