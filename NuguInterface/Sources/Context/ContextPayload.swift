@@ -26,7 +26,7 @@ public struct ContextPayload {
     public let supportedInterfaces: [ContextInfo]
     /// The states of the client.
     ///
-    /// "wakeupWord" The keyword currently set in the KeyWordDetector.
+    /// "wakeupWord" The keyword currently set in the KeywordDetector.
     /// "playStack" Play list managed by PlaySyncManager.
     public let client: [ContextInfo]?
     

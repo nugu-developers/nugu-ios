@@ -476,7 +476,7 @@ private extension ASRAgent {
 //            }
 //
 //            /**
-//             KeyWordDetector's use 16k mono (bit depth: 16).
+//             KeywordDetector's use 16k mono (bit depth: 16).
 //             so, You can calculate sample count by (dataCount / 2)
 //             */
 //            let totalFrameCount = data.count / 2

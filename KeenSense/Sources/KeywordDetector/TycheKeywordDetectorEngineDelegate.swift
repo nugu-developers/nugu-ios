@@ -1,8 +1,8 @@
 //
-//  TycheEpdDelegate.swift
-//  JadeMarble
+//  TycheKeywordDetectorEngineDelegate.swift
+//  KeenSense
 //
-//  Created by childc on 2019/11/06.
+//  Created by childc on 2019/11/11.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,13 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol TycheEpdDelegate: class {
+public protocol TycheKeywordDetectorEngineDelegate: class {
+    /// <#Description#>
+    func tycheKeywordDetectorEngineDidDetect()
+    /// <#Description#>
+    /// - Parameter error: <#error description#>
+    func tycheKeywordDetectorEngineDidError(_ error: Error)
     /// <#Description#>
     /// - Parameter state: <#state description#>
-    func endPointDetectorStateChanged(state: TycheEpdState)
-
-    /// <#Description#>
-    /// - Parameter speechData: <#speechData description#>
-    func endPointDetectorSpeechDataExtracted(speechData: Data)
+    func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State)
 }

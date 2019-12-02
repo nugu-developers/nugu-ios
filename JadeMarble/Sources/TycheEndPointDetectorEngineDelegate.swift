@@ -1,8 +1,8 @@
 //
-//  DetectedData.swift
-//  KeenSense
+//  TycheEndPointDetectorEngineDelegate.swift
+//  JadeMarble
 //
-//  Created by DCs-OfficeMBP on 19/06/2019.
+//  Created by childc on 2019/11/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,13 @@
 
 import Foundation
 
-public struct DetectedData {
-    public let data: Data
-    public let padding: Int
+/// <#Description#>
+public protocol TycheEndPointDetectorEngineDelegate: class {
+    /// <#Description#>
+    /// - Parameter state: state description
+    func tycheEndPointDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State)
+
+    /// <#Description#>
+    /// - Parameter speechData: <#speechData description#>
+    func tycheEndPointDetectorEngineDidExtract(speechData: Data)
 }

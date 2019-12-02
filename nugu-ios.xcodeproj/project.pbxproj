@@ -54,6 +54,7 @@
 		1F2E800D238FCD4400569C59 /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
 		1F2E800E238FCD4400569C59 /* NuguLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF01723753F7D00C9A177 /* NuguLoginKit.framework */; };
 		1F2E800F238FCD4400569C59 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
+		1F2E80142394E60100569C59 /* TycheKeywordDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */; };
 		1FFFEFF423753EFD00C9A177 /* NuguInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFF223753EFD00C9A177 /* NuguInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -329,12 +330,12 @@
 		1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF525237676BE00C9A177 /* NuguTests.swift */; };
 		7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */; };
 		7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD80237A77D800FCD6E9 /* BoundStreams.swift */; };
-		7330CD84237A77D800FCD6E9 /* KeyWordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */; };
-		7330CD88237A77F900FCD6E9 /* TycheEpdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */; };
-		7330CD89237A77F900FCD6E9 /* TycheEpdState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */; };
-		7330CD8A237A77F900FCD6E9 /* TycheEpd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD87237A77F900FCD6E9 /* TycheEpd.swift */; };
-		7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */; };
-		7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKwd.swift */; };
+		7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */; };
+		7330CD88237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */; };
+		7330CD89237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */; };
+		7330CD8A237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */; };
+		7330CD8D237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */; };
+		7330CD8E237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift */; };
 		7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */; };
 		73454FBD2382C1E50073AF48 /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
 		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
@@ -543,6 +544,7 @@
 		1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentExceptionCode.swift; sourceTree = "<group>"; };
 		1F2E8005238FC21900569C59 /* SystemAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
 		1F2E8011238FD43C00569C59 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TycheKeywordDetectorEngine+State.swift"; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -845,12 +847,12 @@
 		3D9C431122746198000A6585 /* nugu-ios-macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nugu-ios-macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetector.swift; sourceTree = "<group>"; };
 		7330CD80237A77D800FCD6E9 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
-		7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordDetector.swift; sourceTree = "<group>"; };
-		7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpdDelegate.swift; sourceTree = "<group>"; };
-		7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpdState.swift; sourceTree = "<group>"; };
-		7330CD87237A77F900FCD6E9 /* TycheEpd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpd.swift; sourceTree = "<group>"; };
-		7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwdDelegate.swift; sourceTree = "<group>"; };
-		7330CD8C237A784500FCD6E9 /* TycheKwd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwd.swift; sourceTree = "<group>"; };
+		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
+		7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngineDelegate.swift; sourceTree = "<group>"; };
+		7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TycheEndpointDetectorEngine+State.swift"; sourceTree = "<group>"; };
+		7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngine.swift; sourceTree = "<group>"; };
+		7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKeywordDetectorEngineDelegate.swift; sourceTree = "<group>"; };
+		7330CD8C237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKeywordDetectorEngine.swift; sourceTree = "<group>"; };
 		73454FBC2382C1E50073AF48 /* Publish.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Publish.swift; sourceTree = "<group>"; };
 		73454FC22387BDF00073AF48 /* NuguServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServerInfo.swift; sourceTree = "<group>"; };
 		73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguOAuthServerInfo.swift; sourceTree = "<group>"; };
@@ -1063,8 +1065,8 @@
 				1F2E8000238EA70400569C59 /* MediaOpusStreamDataSource.swift */,
 			);
 			path = DataSource;
-      sourceTree = "<group>";
-    };
+			sourceTree = "<group>";
+		};
 		1F2E8004238FC20000569C59 /* Capability */ = {
 			isa = PBXGroup;
 			children = (
@@ -1833,7 +1835,7 @@
 				1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */,
 				7330CD80237A77D800FCD6E9 /* BoundStreams.swift */,
 				7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */,
-				7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */,
+				7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1866,9 +1868,9 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF3FC2375740600C9A177 /* JadeMarble.swift */,
-				7330CD87237A77F900FCD6E9 /* TycheEpd.swift */,
-				7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */,
-				7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */,
+				7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */,
+				7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */,
+				7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1878,7 +1880,7 @@
 			children = (
 				1FFFF41423757DF800C9A177 /* KeenSense.swift */,
 				1FFFF41523757DF800C9A177 /* SpeexCodec */,
-				1FFFF41723757DF800C9A177 /* KeyWordDetector */,
+				1FFFF41723757DF800C9A177 /* KeywordDetector */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1891,15 +1893,16 @@
 			path = SpeexCodec;
 			sourceTree = "<group>";
 		};
-		1FFFF41723757DF800C9A177 /* KeyWordDetector */ = {
+		1FFFF41723757DF800C9A177 /* KeywordDetector */ = {
 			isa = PBXGroup;
 			children = (
-				7330CD8C237A784500FCD6E9 /* TycheKwd.swift */,
-				7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */,
+				7330CD8C237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift */,
+				1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */,
+				7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */,
 				1FFFF41823757DF800C9A177 /* DetectedData.swift */,
 				1FFFF41A23757DF800C9A177 /* ShiftingData.swift */,
 			);
-			path = KeyWordDetector;
+			path = KeywordDetector;
 			sourceTree = "<group>";
 		};
 		1FFFF42023757E0000C9A177 /* Libraries */ = {
@@ -2965,7 +2968,7 @@
 				1FFFF3E02375735E00C9A177 /* FocusChannelConfiguration.swift in Sources */,
 				7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */,
 				7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */,
-				7330CD84237A77D800FCD6E9 /* KeyWordDetector.swift in Sources */,
+				7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3000,10 +3003,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7330CD89237A77F900FCD6E9 /* TycheEpdState.swift in Sources */,
+				7330CD89237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift in Sources */,
 				1FFFF4092375740600C9A177 /* JadeMarble.swift in Sources */,
-				7330CD88237A77F900FCD6E9 /* TycheEpdDelegate.swift in Sources */,
-				7330CD8A237A77F900FCD6E9 /* TycheEpd.swift in Sources */,
+				7330CD88237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift in Sources */,
+				7330CD8A237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3013,9 +3016,10 @@
 			files = (
 				1FFFF41D23757DF800C9A177 /* DetectedData.swift in Sources */,
 				1FFFF41C23757DF800C9A177 /* SpeexEncoder.swift in Sources */,
-				7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */,
+				7330CD8D237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift in Sources */,
+				1F2E80142394E60100569C59 /* TycheKeywordDetectorEngine+State.swift in Sources */,
 				1FFFF41B23757DF800C9A177 /* KeenSense.swift in Sources */,
-				7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */,
+				7330CD8E237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift in Sources */,
 				1FFFF41F23757DF800C9A177 /* ShiftingData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

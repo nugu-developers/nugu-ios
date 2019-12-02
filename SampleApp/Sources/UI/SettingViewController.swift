@@ -42,7 +42,7 @@ final class SettingViewController: UIViewController {
         wakeupWordSwitch.isOn = UserDefaults.Standard.useWakeUpDetector
         
         let wakeupWordValue = UserDefaults.Standard.wakeUpWord
-        wakeupWordButton.setTitle(KeyWord(rawValue: wakeupWordValue)?.description, for: .normal)
+        wakeupWordButton.setTitle(Keyword(rawValue: wakeupWordValue)?.description, for: .normal)
         speechStartBeepSwitch.isOn = UserDefaults.Standard.useAsrStartSound
         speechSuccessBeepSwitch.isOn = UserDefaults.Standard.useAsrSuccessSound
         speechFailBeepSwitch.isOn = UserDefaults.Standard.useAsrFailSound
@@ -82,7 +82,7 @@ private extension SettingViewController {
             preferredStyle: .actionSheet
         )
         
-        KeyWord.allCases.forEach { [weak self] (keyword) in
+        Keyword.allCases.forEach { [weak self] (keyword) in
             let action = UIAlertAction(
                 title: keyword.description,
                 style: .default) { [weak self] _ in
