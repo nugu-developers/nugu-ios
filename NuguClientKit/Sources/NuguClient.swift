@@ -102,7 +102,7 @@ public class NuguClient {
     /// <#Description#>
     public let endPointDetector: EndPointDetectable?
     /// <#Description#>
-    public let wakeUpDetector: KeyWordDetector?
+    public let wakeUpDetector: KeywordDetector?
     
     // MARK: - Capability Agents
     
@@ -132,7 +132,7 @@ public class NuguClient {
         inputProvider: AudioProvidable?,
         sharedAudioStream: AudioStreamable?,
         endPointDetector: EndPointDetectable?,
-        wakeUpDetector: KeyWordDetector?,
+        wakeUpDetector: KeywordDetector?,
         asrAgent: ASRAgentProtocol?,
         ttsAgent: TTSAgentProtocol?,
         audioPlayerAgent: AudioPlayerAgentProtocol?,

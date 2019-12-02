@@ -1,5 +1,5 @@
 //
-//  TycheKwd.swift
+//  TycheKeywordDetectorEngine.swift
 //  KeenSense
 //
 //  Created by DCs-OfficeMBP on 26/04/2019.
@@ -27,20 +27,30 @@ import AVFoundation
  When the key word detected, you can take PCM data of user's voice.
  so you can do Speaker Recognition, enhance the recognizing rate and so on using this data.
  */
-public class TycheKwd: NSObject {
+public class TycheKeywordDetectorEngine: NSObject {
+    
+    // MARK: TycheKeywordDetectorEngine.State
+    
+    public enum State {
+        /// <#Description#>
+        case active
+        /// <#Description#>
+        case inactive
+    }
+    
     private var engineHandle: WakeupHandle?
     public var netFile: URL?
     public var searchFile: URL?
-    private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.key_word_detector")
+    private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keensense.tyche_key_word_detector")
     private var kwdWorkItem: DispatchWorkItem?
 
     public var detectedData: DetectedData? // User's voice data of speaking key word.
     public var inputStream: InputStream?
-    public weak var delegate: TycheKwdDelegate?
-    public var state: KeyWordDetectorState = .inactive {
+    public weak var delegate: TycheKeywordDetectorEngineDelegate?
+    public var state: TycheKeywordDetectorEngine.State = .inactive {
         didSet {
             if oldValue != state {
-                delegate?.keyWordDetectorStateDidChange(state)
+                delegate?.tycheKeywordDetectorEngineDidChange(state)
                 log.debug("kwd state changed: \(state)")
             }
         }
@@ -49,7 +59,7 @@ public class TycheKwd: NSObject {
     /**
      Window buffer for user's voice. This will help extract certain section of speaking key word
      */
-    private var detectingData = ShiftingData(capacity: Int(KeyWordDetectorConst.sampleRate*5*2))
+    private var detectingData = ShiftingData(capacity: Int(KeywordDetectorConst.sampleRate*5*2))
     
     #if DEBUG
     let filename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("detecting.raw")
@@ -85,7 +95,7 @@ public class TycheKwd: NSObject {
                 self.state = .active
             } catch {
                 self.state = .inactive
-                self.delegate?.keyWordDetectorDidError(error)
+                self.delegate?.tycheKeywordDetectorEngineDidError(error)
                 log.debug("kwd error: \(error)")
             }
             
@@ -128,7 +138,7 @@ public class TycheKwd: NSObject {
 
 // MARK: - Legacy Trigger Engine
 
-extension TycheKwd {
+extension TycheKeywordDetectorEngine {
     
     /**
      Initialize Key Word Detec engine.
@@ -142,13 +152,13 @@ extension TycheKwd {
         
         guard let netFile = netFile,
             let searchFile = searchFile else {
-                throw KeyWordDetectorError.initEngineFailed
+                throw KeywordDetectorError.initEngineFailed
         }
         
         try netFile.path.withCString { cstringNetFile -> Void in
             try searchFile.path.withCString({ cstringSearchFile -> Void in
                 guard let wakeUpHandle = Wakeup_Create(cstringNetFile, cstringSearchFile, 0) else {
-                    throw KeyWordDetectorError.initEngineFailed
+                    throw KeywordDetectorError.initEngineFailed
                 }
                 engineHandle = wakeUpHandle
             })
@@ -157,16 +167,16 @@ extension TycheKwd {
 }
 
 // MARK: - ETC
-extension TycheKwd {
+extension TycheKeywordDetectorEngine {
     private func extractDetectedData() {
         let startTime = Int(Wakeup_GetStartTime(engineHandle))
         let endTime = Int(Wakeup_GetEndTime(engineHandle))
         let paddingTime = Int(Wakeup_GetDelayTime(engineHandle))
         
         // convert time to frame count
-        let startIndex = (startTime * KeyWordDetectorConst.sampleRate * 2) / 1000
-        let endIndex = (endTime * KeyWordDetectorConst.sampleRate * 2) / 1000
-        let paddingSize = (paddingTime * KeyWordDetectorConst.sampleRate * 2) / 1000
+        let startIndex = (startTime * KeywordDetectorConst.sampleRate * 2) / 1000
+        let endIndex = (endTime * KeywordDetectorConst.sampleRate * 2) / 1000
+        let paddingSize = (paddingTime * KeywordDetectorConst.sampleRate * 2) / 1000
         log.debug("startTime: \(startTime),(\(startIndex)), endTime: \(endTime),(\(endIndex)), paddingTime: \(paddingTime)")
         
         let size = (endIndex - startIndex) + paddingSize
@@ -190,7 +200,7 @@ extension TycheKwd {
     }
 }
 
-extension TycheKwd: StreamDelegate {
+extension TycheKeywordDetectorEngine: StreamDelegate {
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         guard let inputStream = aStream as? InputStream,
             inputStream == self.inputStream else { return }
@@ -217,7 +227,7 @@ extension TycheKwd: StreamDelegate {
                 stop()
 
                 extractDetectedData()
-                self.delegate?.keyWordDetectorDidDetect()
+                self.delegate?.tycheKeywordDetectorEngineDidDetect()
             }
             
         case .endEncountered:

@@ -1,6 +1,6 @@
 //
 //  SpeexEncoder.swift
-//  JadeMarble
+//  KeenSense
 //
 //  Created by DCs-OfficeMBP on 18/06/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

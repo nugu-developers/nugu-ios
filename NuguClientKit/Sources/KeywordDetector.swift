@@ -1,5 +1,5 @@
 //
-//  WakeUpDetector.swift
+//  KeywordDetector.swift
 //  NuguClientKit
 //
 //  Created by childc on 2019/11/11.
@@ -23,11 +23,11 @@ import Foundation
 import NuguInterface
 import KeenSense
 
-public class KeyWordDetector: WakeUpDetectable {
+public class KeywordDetector: WakeUpDetectable {
     public var audioStream: AudioStreamable!
 
     private var boundStreams: BoundStreams?
-    private let engine = TycheKwd()
+    private let engine = TycheKeywordDetectorEngine()
     public weak var delegate: WakeUpDetectorDelegate?
     
     public var state: WakeUpDetectorState = .inactive {
@@ -36,21 +36,19 @@ public class KeyWordDetector: WakeUpDetectable {
         }
     }
     
-    public var netFile: URL? {
+    public var netFilePath: URL? {
         get {
             engine.netFile
         }
-        
         set {
             engine.netFile = newValue
         }
     }
     
-    public var searchFile: URL? {
+    public var searchFilePath: URL? {
         get {
             engine.searchFile
         }
-        
         set {
             engine.searchFile = newValue
         }
@@ -72,16 +70,18 @@ public class KeyWordDetector: WakeUpDetectable {
     }
 }
 
-extension KeyWordDetector: TycheKwdDelegate {
-    public func keyWordDetectorDidDetect() {
+// MARK: - TycheKeywordDetectorEngineDelegate
+
+extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
+    public func tycheKeywordDetectorEngineDidDetect() {
         delegate?.wakeUpDetectorDidDetect()
     }
     
-    public func keyWordDetectorDidError(_ error: Error) {
+    public func tycheKeywordDetectorEngineDidError(_ error: Error) {
         delegate?.wakeUpDetectorDidError(error)
     }
     
-    public func keyWordDetectorStateDidChange(_ state: KeyWordDetectorState) {
+    public func tycheKeywordDetectorEngineDidChange(_ state: TycheKeywordDetectorEngine.State) {
         switch state {
         case .active:
             delegate?.wakeUpDetectorStateDidChange(.active)

@@ -94,7 +94,8 @@ extension ContextManager {
                     completionHandler(self.contextPayload)
                 }
             )
-            .subscribe().disposed(by: disposeBag)
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 }
 

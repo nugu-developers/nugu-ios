@@ -95,7 +95,7 @@ extension NuguCentralManager {
 
 extension NuguCentralManager: ContextInfoDelegate {
     func contextInfoRequestContext() -> ContextInfo? {
-        guard let keyWord = KeyWord(rawValue: UserDefaults.Standard.wakeUpWord) else {
+        guard let keyWord = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) else {
             return nil
         }
 
@@ -138,17 +138,17 @@ extension NuguCentralManager: ContextInfoDelegate {
     
     func setWakeUpWord(rawValue wakeUpWord: Int) {
         switch wakeUpWord {
-        case KeyWord.aria.rawValue:
+        case Keyword.aria.rawValue:
             if let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
                 let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") {
-                client.wakeUpDetector?.netFile = netFile
-                client.wakeUpDetector?.searchFile = searchFile
+                client.wakeUpDetector?.netFilePath = netFile
+                client.wakeUpDetector?.searchFilePath = searchFile
             }
-        case KeyWord.tinkerbell.rawValue:
+        case Keyword.tinkerbell.rawValue:
             if let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
                 let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") {
-                client.wakeUpDetector?.netFile = netFile
-                client.wakeUpDetector?.searchFile = searchFile
+                client.wakeUpDetector?.netFilePath = netFile
+                client.wakeUpDetector?.searchFilePath = searchFile
             }
         default:
             return
