@@ -54,6 +54,7 @@
 		1F2E800D238FCD4400569C59 /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
 		1F2E800E238FCD4400569C59 /* NuguLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF01723753F7D00C9A177 /* NuguLoginKit.framework */; };
 		1F2E800F238FCD4400569C59 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
+		1F2E80142394E60100569C59 /* TycheKeywordDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */; };
 		1FFFEFF423753EFD00C9A177 /* NuguInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFF223753EFD00C9A177 /* NuguInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -543,6 +544,7 @@
 		1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentExceptionCode.swift; sourceTree = "<group>"; };
 		1F2E8005238FC21900569C59 /* SystemAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
 		1F2E8011238FD43C00569C59 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TycheKeywordDetectorEngine+State.swift"; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1895,6 +1897,7 @@
 			isa = PBXGroup;
 			children = (
 				7330CD8C237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift */,
+				1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */,
 				7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */,
 				1FFFF41823757DF800C9A177 /* DetectedData.swift */,
 				1FFFF41A23757DF800C9A177 /* ShiftingData.swift */,
@@ -3014,6 +3017,7 @@
 				1FFFF41D23757DF800C9A177 /* DetectedData.swift in Sources */,
 				1FFFF41C23757DF800C9A177 /* SpeexEncoder.swift in Sources */,
 				7330CD8D237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift in Sources */,
+				1F2E80142394E60100569C59 /* TycheKeywordDetectorEngine+State.swift in Sources */,
 				1FFFF41B23757DF800C9A177 /* KeenSense.swift in Sources */,
 				7330CD8E237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift in Sources */,
 				1FFFF41F23757DF800C9A177 /* ShiftingData.swift in Sources */,

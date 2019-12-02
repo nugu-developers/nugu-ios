@@ -27,17 +27,7 @@ import AVFoundation
  When the key word detected, you can take PCM data of user's voice.
  so you can do Speaker Recognition, enhance the recognizing rate and so on using this data.
  */
-public class TycheKeywordDetectorEngine: NSObject {
-    
-    // MARK: TycheKeywordDetectorEngine.State
-    
-    public enum State {
-        /// <#Description#>
-        case active
-        /// <#Description#>
-        case inactive
-    }
-    
+public class TycheKeywordDetectorEngine: NSObject {    
     private var engineHandle: WakeupHandle?
     public var netFile: URL?
     public var searchFile: URL?
