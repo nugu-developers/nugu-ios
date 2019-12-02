@@ -81,7 +81,7 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
         delegate?.wakeUpDetectorDidError(error)
     }
     
-    public func tycheKeywordDetectorEngineDidChange(_ state: TycheKeywordDetectorEngine.State) {
+    public func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State) {
         switch state {
         case .active:
             delegate?.wakeUpDetectorStateDidChange(.active)

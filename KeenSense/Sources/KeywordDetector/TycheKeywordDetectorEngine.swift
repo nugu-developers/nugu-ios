@@ -45,7 +45,7 @@ public class TycheKeywordDetectorEngine: NSObject {
     public var state: TycheKeywordDetectorEngine.State = .inactive {
         didSet {
             if oldValue != state {
-                delegate?.tycheKeywordDetectorEngineDidChange(state)
+                delegate?.tycheKeywordDetectorEngineDidChange(state: state)
                 log.debug("kwd state changed: \(state)")
             }
         }

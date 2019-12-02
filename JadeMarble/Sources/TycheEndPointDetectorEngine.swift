@@ -39,7 +39,7 @@ public class TycheEndPointDetectorEngine: NSObject {
     public var state: State = .idle {
         didSet {
             if oldValue != state {
-                delegate?.tycheKeywordDetectorEngineDidChange(state: state)
+                delegate?.tycheEndPointDetectorEngineDidChange(state: state)
                 log.debug("epd state changed: \(state)")
             }
         }
@@ -85,7 +85,7 @@ public class TycheEndPointDetectorEngine: NSObject {
             } catch {
                 self.state = .idle
                 log.error("epd engine init error: \(error)")
-                self.delegate?.tycheKeywordDetectorEngineDidChange(state: .error)
+                self.delegate?.tycheEndPointDetectorEngineDidChange(state: .error)
             }
             
             while workItem.isCancelled == false {
@@ -197,7 +197,7 @@ extension TycheEndPointDetectorEngine: StreamDelegate {
                 let result = epdClientChannelGetOutputData(engineHandle, detectedBytes, length)
                 if 0 < result {
                     let detectedData = Data(bytes: detectedBytes, count: Int(result))
-                    delegate?.tycheEndPointDetectorEngineExtracted(speechData: detectedData)
+                    delegate?.tycheEndPointDetectorEngineDidExtract(speechData: detectedData)
                     
                     #if DEBUG
                     outputData.append(detectedData)

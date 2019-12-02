@@ -69,7 +69,7 @@ public class EndPointDetector: EndPointDetectable {
 }
 
 extension EndPointDetector: TycheEndPointDetectorEngineDelegate {
-    public func tycheKeywordDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State) {
+    public func tycheEndPointDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State) {
         switch state {
         case .idle:
             self.state = .idle
@@ -92,7 +92,7 @@ extension EndPointDetector: TycheEndPointDetectorEngineDelegate {
         }
     }
     
-    public func tycheEndPointDetectorEngineExtracted(speechData: Data) {
+    public func tycheEndPointDetectorEngineDidExtract(speechData: Data) {
         delegate?.endPointDetectorSpeechDataExtracted(speechData: speechData)
     }
 }

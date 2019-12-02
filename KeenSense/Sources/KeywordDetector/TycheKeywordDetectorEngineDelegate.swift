@@ -28,5 +28,5 @@ public protocol TycheKeywordDetectorEngineDelegate: class {
     func tycheKeywordDetectorEngineDidError(_ error: Error)
     /// <#Description#>
     /// - Parameter state: <#state description#>
-    func tycheKeywordDetectorEngineDidChange(_ state: TycheKeywordDetectorEngine.State)
+    func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State)
 }

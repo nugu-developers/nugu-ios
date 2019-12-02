@@ -23,10 +23,10 @@ import Foundation
 /// <#Description#>
 public protocol TycheEndPointDetectorEngineDelegate: class {
     /// <#Description#>
-    /// - Parameter state: <#state description#>
-    func tycheKeywordDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State)
+    /// - Parameter state: state description
+    func tycheEndPointDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State)
 
     /// <#Description#>
     /// - Parameter speechData: <#speechData description#>
-    func tycheEndPointDetectorEngineExtracted(speechData: Data)
+    func tycheEndPointDetectorEngineDidExtract(speechData: Data)
 }
