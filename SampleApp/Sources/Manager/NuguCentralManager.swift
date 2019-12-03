@@ -18,12 +18,10 @@
 //  limitations under the License.
 //
 
-import Foundation
+import UIKit
 
 import NuguInterface
 import NuguClientKit
-import KeenSense
-import JadeMarble
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
@@ -33,7 +31,6 @@ final class NuguCentralManager {
     private init() {
         client.focusManager.delegate = self
         client.authorizationManager.add(stateDelegate: self)
-        client.contextManager.add(provideContextDelegate: self)
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
             client.endPointDetector?.epdFile = epdFile
@@ -93,15 +90,7 @@ extension NuguCentralManager {
 
 // MARK: - Internal (WakeUpDetector)
 
-extension NuguCentralManager: ContextInfoDelegate {
-    func contextInfoRequestContext() -> ContextInfo? {
-        guard let keyWord = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) else {
-            return nil
-        }
-
-        return ContextInfo(contextType: .client, name: "wakeupWord", payload: keyWord.description)
-    }
-    
+extension NuguCentralManager {
     func refreshWakeUpDetector() {
         DispatchQueue.main.async { [weak self] in
             // Should check application state, because iOS audio input can not be start using in background state
@@ -139,17 +128,31 @@ extension NuguCentralManager: ContextInfoDelegate {
     func setWakeUpWord(rawValue wakeUpWord: Int) {
         switch wakeUpWord {
         case Keyword.aria.rawValue:
-            if let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") {
-                client.wakeUpDetector?.netFilePath = netFile
-                client.wakeUpDetector?.searchFilePath = searchFile
+            guard
+                let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
+                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") else {
+                    log.debug("keywordSource is invalid")
+                    return
             }
+            
+            client.wakeUpDetector?.keywordSource = KeywordSource(
+                keyword: .aria,
+                netFileUrl: netFile,
+                searchFileUrl: searchFile
+            )
         case Keyword.tinkerbell.rawValue:
-            if let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") {
-                client.wakeUpDetector?.netFilePath = netFile
-                client.wakeUpDetector?.searchFilePath = searchFile
+            guard
+                let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
+                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") else {
+                    log.debug("keywordSource is invalid")
+                    return
             }
+            
+            client.wakeUpDetector?.keywordSource = KeywordSource(
+                keyword: .tinkerbell,
+                netFileUrl: netFile,
+                searchFileUrl: searchFile
+            )
         default:
             return
         }

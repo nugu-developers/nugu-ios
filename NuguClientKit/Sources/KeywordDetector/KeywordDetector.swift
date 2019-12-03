@@ -36,21 +36,12 @@ public class KeywordDetector: WakeUpDetectable {
         }
     }
     
-    public var netFilePath: URL? {
-        get {
-            engine.netFile
-        }
-        set {
-            engine.netFile = newValue
-        }
-    }
-    
-    public var searchFilePath: URL? {
-        get {
-            engine.searchFile
-        }
-        set {
-            engine.searchFile = newValue
+    public var keywordSource: KeywordSource? {
+        didSet {
+            guard let source = keywordSource else { return }
+            
+            engine.netFile = source.netFileUrl
+            engine.searchFile = source.searchFileUrl
         }
     }
     
@@ -88,5 +79,21 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
         case .inactive:
             delegate?.wakeUpDetectorStateDidChange(.inactive)
         }
+    }
+}
+
+// MARK: - ContextInfoDelegate
+
+extension KeywordDetector: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
+        guard let keyword = keywordSource?.keyword else {
+            return nil
+        }
+        
+        return ContextInfo(
+            contextType: .client,
+            name: "wakeupWord",
+            payload: keyword.description
+        )
     }
 }
