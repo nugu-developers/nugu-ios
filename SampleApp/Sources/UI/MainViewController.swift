@@ -293,7 +293,7 @@ private extension MainViewController {
 // MARK: - Private (DisplayView)
 
 private extension MainViewController {
-    func addDisplayView(displayTemplate: DisplayTemplate) {
+    func addDisplayView(displayTemplate: DisplayTemplate) -> UIView? {
         displayView?.removeFromSuperview()
         
         switch displayTemplate.type {
@@ -310,12 +310,11 @@ private extension MainViewController {
             break
         }
         
-        guard let displayView = displayView else { return }
+        guard let displayView = displayView else { return nil }
         
         displayView.displayPayload = displayTemplate.payload
         displayView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
-            NuguCentralManager.shared.client.displayAgent?.clearDisplay(delegate: self)
             self.dismissDisplayView()
         }
         displayView.onItemSelect = { (selectedItemToken) in
@@ -327,6 +326,8 @@ private extension MainViewController {
         UIView.animate(withDuration: 0.3) {
             displayView.alpha = 1.0
         }
+        
+        return displayView
     }
     
     func dismissDisplayView() {
@@ -540,23 +541,16 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentShouldRender(template: DisplayTemplate) -> Bool {
-        return true
+    func displayAgentDidRender(template: DisplayTemplate) -> NSObject? {
+        return addDisplayView(displayTemplate: template)
     }
     
-    func displayAgentDidRender(template: DisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.addDisplayView(displayTemplate: template)
-        }   
-    }
-    
-    func displayAgentShouldClear(template: DisplayTemplate) -> Bool {
-        return true
-    }
-    
-    func displayAgentDidClear(template: DisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.dismissDisplayView()
+    func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason) {
+        switch reason {
+        case .timer:
+            dismissDisplayView()
+        case .directive:
+            dismissDisplayView()
         }
     }
 }

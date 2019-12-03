@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguInterface
+import RxSwift
 
 final public class DisplayAgent: DisplayAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.0")
@@ -31,9 +32,12 @@ final public class DisplayAgent: DisplayAgentProtocol {
     public var playSyncManager: PlaySyncManageable!
     
     private var renderingInfos = [DisplayRenderingInfo]()
+    private var timerInfos = [String: Bool]()
     
     // Current display info
     private var currentItem: DisplayTemplate?
+    
+    private var disposeBag = DisposeBag()
     
     public init() {
         log.info("")
@@ -60,6 +64,12 @@ public extension DisplayAgent {
         }
     }
     
+    private func replace(delegate: DisplayAgentDelegate, template: DisplayTemplate?) {
+        remove(delegate: delegate)
+        let info = DisplayRenderingInfo(delegate: delegate, currentItem: template)
+        renderingInfos.append(info)
+    }
+    
     func elementDidSelect(templateId: String, token: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -79,17 +89,8 @@ public extension DisplayAgent {
         }
     }
     
-    func clearDisplay(delegate: DisplayAgentDelegate) {
-        displayDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let info = self.renderingInfos.first(where: { $0.delegate === delegate }),
-                let template = info.currentItem else { return }
-            
-            self.removeRenderedTemplate(delegate: delegate)
-            if self.hasRenderedDisplay(template: template) == false {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playStackServiceId)
-            }
-        }
+    func stopRenderingTimer(templateId: String) {
+        timerInfos[templateId] = false
     }
 }
 
@@ -146,35 +147,32 @@ extension DisplayAgent: PlaySyncDelegate {
                 self.renderingInfos
                     .compactMap { $0.delegate }
                     .forEach { delegate in
-                        if delegate.displayAgentShouldRender(template: item) {
-                            rendered = true
-                            self.setRenderedTemplate(delegate: delegate, template: item)
-                        }
+                        rendered = self.setRenderedTemplate(delegate: delegate, template: item) || rendered
                 }
                 if rendered == false {
                     self.currentItem = nil
                     self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
                 }
             case .releasing:
-                var cleared = true
+                if self.timerInfos[item.templateId] != false {
+                    self.renderingInfos
+                        .filter { $0.currentItem?.templateId == item.templateId }
+                        .compactMap { $0.delegate }
+                        .forEach { delegate in
+                            DispatchQueue.main.sync {
+                                delegate.displayAgentShouldClear(template: item, reason: .timer)
+                            }
+                    }
+                }
+            case .released:
+                self.currentItem = nil
                 self.renderingInfos
                     .filter { $0.currentItem?.templateId == item.templateId }
                     .compactMap { $0.delegate }
                     .forEach { delegate in
-                        if delegate.displayAgentShouldClear(template: item) == false {
-                            cleared = false
+                        DispatchQueue.main.sync {
+                            delegate.displayAgentShouldClear(template: item, reason: .directive)
                         }
-                }
-                if cleared {
-                    self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
-                }
-            case .released:
-                if let item = self.currentItem {
-                    self.currentItem = nil
-                    self.renderingInfos
-                        .filter { $0.currentItem?.templateId == item.templateId }
-                        .compactMap { $0.delegate }
-                        .forEach { self.removeRenderedTemplate(delegate: $0) }
                 }
             case .prepared:
                 break
@@ -216,7 +214,7 @@ private extension DisplayAgent {
                 playStackServiceId: playStackServiceId,
                 duration: DisplayTemplate.Duration(rawValue: duration)
             )
-        
+            
             if let item = self.currentItem {
                 self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
             }
@@ -227,20 +225,34 @@ private extension DisplayAgent {
 // MARK: - Private
 
 private extension DisplayAgent {
-    func setRenderedTemplate(delegate: DisplayAgentDelegate, template: DisplayTemplate) {
-        remove(delegate: delegate)
-        let info = DisplayRenderingInfo(delegate: delegate, currentItem: template)
-        renderingInfos.append(info)
-        delegate.displayAgentDidRender(template: template)
+    func setRenderedTemplate(delegate: DisplayAgentDelegate, template: DisplayTemplate) -> Bool {
+        return DispatchQueue.main.sync {
+            if let object = delegate.displayAgentDidRender(template: template) {
+                replace(delegate: delegate, template: template)
+                
+                object.rx.deallocated.subscribe({ [weak self] _ in
+                    self?.removeRenderedTemplate(delegate: delegate, template: template)
+                }).disposed(by: disposeBag)
+                return true
+            } else {
+                return false
+            }
+        }
     }
     
-    func removeRenderedTemplate(delegate: DisplayAgentDelegate) {
-        guard let template = self.renderingInfos.first(where: { $0.delegate === delegate })?.currentItem else { return }
-        
-        remove(delegate: delegate)
-        let info = DisplayRenderingInfo(delegate: delegate, currentItem: nil)
-        renderingInfos.append(info)
-        delegate.displayAgentDidClear(template: template)
+    func removeRenderedTemplate(delegate: DisplayAgentDelegate, template: DisplayTemplate) {
+        displayDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard self.renderingInfos.contains(
+                where: { $0.delegate === delegate && $0.currentItem?.templateId == template.templateId }
+                ) else { return }
+
+            self.replace(delegate: delegate, template: nil)
+            self.timerInfos.removeValue(forKey: template.templateId)
+            if self.hasRenderedDisplay(template: template) == false {
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playStackServiceId)
+            }
+        }
     }
     
     func hasRenderedDisplay(template: DisplayTemplate) -> Bool {

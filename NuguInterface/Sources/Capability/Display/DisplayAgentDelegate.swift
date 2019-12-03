@@ -20,26 +20,16 @@
 
 import Foundation
 
-/// The DisplayAgent delegate is used to notify observers when a template directive is received.
+/// The `DisplayAgent` delegate is used to notify observers when a template directive is received.
 public protocol DisplayAgentDelegate: class {
-    /// Determines whether the template should be displayed to user.
-    /// - Parameter template: The template to display.
-    /// - Returns: Application 의 시나리오에 따라 디스플레이를 원하지 않는 경우 false 를 반환해야 합니다.
-    func displayAgentShouldRender(template: DisplayTemplate) -> Bool
-    
     /// Tells the delegate that the specified template should be displayed.
-    /// - Parameter template: The template to display.
-    func displayAgentDidRender(template: DisplayTemplate)
-    
-    /// Determines whether the template should be remove from the screen.
     ///
-    /// DialogState 가 expectingSpeech 이거나 template 요소에 대해 사용자 touch 가 발생하는 등
-    /// template 이 지속적으로 노출되어야 한다고 판단될 경우, completion block 이 false 를 반환하도록 해야합니다.
-    /// - Parameter template: The template to remove from the screen.
-    /// - Returns: Application 의 시나리오에 따라 template 을 지속적으로 노출해야 하는 경우 false 를 반환해야 합니다.
-    func displayAgentShouldClear(template: DisplayTemplate) -> Bool
+    /// - Parameter template: The template to display.
+    func displayAgentDidRender(template: DisplayTemplate) -> NSObject?
     
     /// Tells the delegate that the specified template should be removed from the screen.
+    ///
     /// - Parameter template: The template to remove from the screen.
-    func displayAgentDidClear(template: DisplayTemplate)
+    /// - Parameter reason: Reason to clear the template.
+    func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason)
 }
