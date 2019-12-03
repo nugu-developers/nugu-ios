@@ -33,15 +33,6 @@ public class ContextManager: ContextManageable {
     
     private let provideContextDelegates = DelegateSet<ContextInfoDelegate>()
     
-    private var capabilityContextInfos = [String: ContextInfo]()
-    private var clientContextInfos = [String: ContextInfo]()
-    private var contextPayload: ContextPayload {
-        return ContextPayload(
-            supportedInterfaces: Array(capabilityContextInfos.values),
-            client: Array(clientContextInfos.values)
-        )
-    }
-    
     private let disposeBag = DisposeBag()
 
     public init() {
@@ -64,36 +55,27 @@ extension ContextManager {
         provideContextDelegates.remove(delegate)
     }
 
-    public func set(context: ContextInfo) {
-        switch context.contextType {
-        case .capability:
-            capabilityContextInfos[context.name] = context
-        case .client:
-            clientContextInfos[context.name] = context
-        }
-    }
-
     public func getContexts(completionHandler: @escaping (ContextPayload) -> Void) {
-        var requests = [Completable]()
+        var requests = [Single<ContextInfo?>]()
         provideContextDelegates.notify { delegate in
             requests.append(getContext(delegate: delegate))
         }
         
-        Completable.zip(requests)
+        Single<ContextInfo?>.zip(requests)
             .subscribeOn(contextScheduler)
+            .map({ (contextInfos) -> [ContextInfo] in
+                return contextInfos.compactMap({ $0 })
+            })
             .do(
-                onError: { [weak self] error in
-                    guard let self = self else { return }
-                    
-                    log.error(error)
-                    completionHandler(self.contextPayload)
-                },
-                onCompleted: { [weak self] in
-                    guard let self = self else { return }
-                    
-                    completionHandler(self.contextPayload)
-                }
-            )
+                onSuccess: { (contextInfos) in
+                let contextDictionary = Dictionary(grouping: contextInfos, by: { $0.contextType })
+                let payload = ContextPayload(
+                    supportedInterfaces: contextDictionary[.capability] ?? [],
+                    client: contextDictionary[.client]
+                )
+                
+                completionHandler(payload)
+            })
             .subscribe()
             .disposed(by: disposeBag)
     }
@@ -102,13 +84,10 @@ extension ContextManager {
 // MARK: - Private
 
 private extension ContextManager {
-    func getContext(delegate: ContextInfoDelegate) -> Completable {
-        return Completable.create { [weak self] event -> Disposable in
-            if let context = delegate.contextInfoRequestContext() {
-                self?.set(context: context)
-            }
-
-            event(.completed)
+    func getContext(delegate: ContextInfoDelegate) -> Single<ContextInfo?> {
+        return Single<ContextInfo?>.create { event -> Disposable in
+            event(.success(delegate.contextInfoRequestContext()))
+            
             return Disposables.create()
         }
     }

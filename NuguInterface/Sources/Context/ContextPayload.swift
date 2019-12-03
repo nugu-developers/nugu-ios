@@ -30,7 +30,7 @@ public struct ContextPayload {
     /// "playStack" Play list managed by PlaySyncManager.
     public let client: [ContextInfo]?
     
-    public init(supportedInterfaces: [ContextInfo], client: [ContextInfo]?) {
+    public init(supportedInterfaces: [ContextInfo], client: [ContextInfo]? = nil) {
         self.supportedInterfaces = supportedInterfaces
         self.client = client
     }

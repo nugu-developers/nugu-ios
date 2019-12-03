@@ -49,7 +49,7 @@ public extension CapabilityEventSendable {
                    dialogRequestId: String,
                    by messageSender: MessageSendable,
                    completion: ((SendMessageStatus) -> Void)? = nil) {
-        let contextPayload = ContextPayload(supportedInterfaces: context != nil ? [context!] : [], client: [])
+        let contextPayload = ContextPayload(supportedInterfaces: context != nil ? [context!] : [])
         
         sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, by: messageSender, completion: completion)
     }
