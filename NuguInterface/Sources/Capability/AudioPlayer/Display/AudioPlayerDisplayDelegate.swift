@@ -22,21 +22,14 @@ import Foundation
 
 /// The DisplayPlayerAgent delegate is used to notify observers when a player template directive is received.
 public protocol AudioPlayerDisplayDelegate: class {
-    /// Determines whether the player template should be displayed to user.
+    /// Tells the delegate that the specified template should be displayed.
+    ///
     /// - Parameter template: The player template to display.
-    /// - Returns: Application 의 시나리오에 따라 디스플레이를 원하지 않는 경우 false 를 반환해야 합니다.
-    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> Bool
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject?
     
-    /// Tells the delegate that the specified player template should be displayed.
-    /// - Parameter template: The player template to display.
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate)
-    
-    /// Determines whether the player template should be remove from the screen.
-    /// - Parameter template: The player template to remove from the screen.
-    /// - Returns: Application 의 시나리오에 따라 player 을 지속적으로 노출해야 하는 경우 false 를 반환해야 합니다.
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) -> Bool
-    
-    /// Tells the delegate that the specified player template should be removed from the screen.
-    /// - Parameter template: The player template to remove from the screen.
-    func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate)
+    /// Tells the delegate that the specified template should be removed from the screen.
+    ///
+    /// - Parameter template: The template to remove from the screen.
+    /// - Parameter reason: Reason to clear the template.
+    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason)
 }

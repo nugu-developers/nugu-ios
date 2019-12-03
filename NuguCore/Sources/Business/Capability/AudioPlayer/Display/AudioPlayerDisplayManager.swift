@@ -22,15 +22,20 @@ import Foundation
 
 import NuguInterface
 
+import RxSwift
+
 final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_player_display", qos: .userInitiated)
     
     var playSyncManager: PlaySyncManageable!
     
     private var renderingInfos = [AudioPlayerDisplayRenderingInfo]()
+    private var timerInfos = [String: Bool]()
     
     // Current display info
     private var currentItem: AudioPlayerDisplayTemplate?
+    
+    private var disposeBag = DisposeBag()
 }
 
 // MARK: - AudioPlayerDisplayManageable
@@ -47,7 +52,7 @@ extension AudioPlayerDisplayManager {
             guard let self = self else { return }
             self.currentItem = AudioPlayerDisplayTemplate(
                 type: displayItem.template.type,
-                typeInfo: .audioPlayer(item: displayItem),
+                payload: displayItem,
                 templateId: messageId,
                 dialogRequestId: dialogRequestId,
                 playStackServiceId: playStackServiceId
@@ -71,17 +76,14 @@ extension AudioPlayerDisplayManager {
         }
     }
     
-    func clearDisplay(delegate: AudioPlayerDisplayDelegate) {
-        displayDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let info = self.renderingInfos.first(where: { $0.delegate === delegate }),
-                let template = info.currentItem else { return }
-            
-            self.removeRenderedTemplate(delegate: delegate)
-            if self.hasRenderedDisplay(template: template) == false {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playStackServiceId)
-            }
-        }
+    private func replace(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate?) {
+        remove(delegate: delegate)
+        let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: template)
+        renderingInfos.append(info)
+    }
+    
+    func stopRenderingTimer(templateId: String) {
+        timerInfos[templateId] = false
     }
 }
 
@@ -108,35 +110,32 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
                 self.renderingInfos
                     .compactMap { $0.delegate }
                     .forEach { delegate in
-                        if delegate.audioPlayerDisplayShouldRender(template: item) {
-                            rendered = true
-                            self.setRenderedTemplate(delegate: delegate, template: item)
-                        }
+                        rendered = self.setRenderedTemplate(delegate: delegate, template: item) || rendered
                 }
                 if rendered == false {
                     self.currentItem = nil
                     self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
                 }
             case .releasing:
-                var cleared = true
+                if self.timerInfos[item.templateId] != false {
+                    self.renderingInfos
+                        .filter { $0.currentItem?.templateId == item.templateId }
+                        .compactMap { $0.delegate }
+                        .forEach { delegate in
+                            DispatchQueue.main.sync {
+                                delegate.audioPlayerDisplayShouldClear(template: item, reason: .timer)
+                            }
+                    }
+                }
+            case .released:
+                self.currentItem = nil
                 self.renderingInfos
                     .filter { $0.currentItem?.templateId == item.templateId }
                     .compactMap { $0.delegate }
                     .forEach { delegate in
-                        if delegate.audioPlayerDisplayShouldClear(template: item) == false {
-                            cleared = false
+                        DispatchQueue.main.sync {
+                            delegate.audioPlayerDisplayShouldClear(template: item, reason: .directive)
                         }
-                }
-                if cleared {
-                    self.playSyncManager.releaseSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
-                }
-            case .released:
-                if let item = self.currentItem {
-                    self.currentItem = nil
-                    self.renderingInfos
-                        .filter { $0.currentItem?.templateId == item.templateId }
-                        .compactMap { $0.delegate }
-                        .forEach { self.removeRenderedTemplate(delegate: $0) }
                 }
             case .prepared:
                 break
@@ -148,20 +147,34 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
 // MARK: - Private
 
 private extension AudioPlayerDisplayManager {
-    func setRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) {
-        remove(delegate: delegate)
-        let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: template)
-        renderingInfos.append(info)
-        delegate.audioPlayerDisplayDidRender(template: template)
+    func setRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
+        return DispatchQueue.main.sync {
+            if let object = delegate.audioPlayerDisplayDidRender(template: template) {
+                replace(delegate: delegate, template: template)
+                
+                object.rx.deallocated.subscribe({ [weak self] _ in
+                    self?.removeRenderedTemplate(delegate: delegate, template: template)
+                }).disposed(by: disposeBag)
+                return true
+            } else {
+                return false
+            }
+        }
     }
     
-    func removeRenderedTemplate(delegate: AudioPlayerDisplayDelegate) {
-        guard let template = self.renderingInfos.first(where: { $0.delegate === delegate })?.currentItem else { return }
-        
-        remove(delegate: delegate)
-        let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: nil)
-        renderingInfos.append(info)
-        delegate.audioPlayerDisplayDidClear(template: template)
+    func removeRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) {
+        displayDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard self.renderingInfos.contains(
+                where: { $0.delegate === delegate && $0.currentItem?.templateId == template.templateId }
+                ) else { return }
+
+            self.replace(delegate: delegate, template: nil)
+            self.timerInfos.removeValue(forKey: template.templateId)
+            if self.hasRenderedDisplay(template: template) == false {
+                self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playStackServiceId)
+            }
+        }
     }
     
     func hasRenderedDisplay(template: AudioPlayerDisplayTemplate) -> Bool {

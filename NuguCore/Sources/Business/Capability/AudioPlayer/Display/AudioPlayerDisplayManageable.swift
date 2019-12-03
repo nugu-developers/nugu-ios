@@ -22,23 +22,24 @@ import Foundation
 
 import NuguInterface
 
-/// The DisplayPlayerAgent handles directives for controlling player template display.
+/// The `AudioPlayerAgent` handles directives for controlling player template display.
 protocol AudioPlayerDisplayManageable: PlaySyncDelegate {
     var playSyncManager: PlaySyncManageable! { get set }
     
     func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playStackServiceId: String?)
     
-    /// Adds a delegate to be notified of DisplayPlayerType changes.
-    /// - Parameter delegate: The object to add.
+    /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
+    ///
+    /// - Parameter displayDelegate: The object to add.
     func add(delegate: AudioPlayerDisplayDelegate)
     
-    /// Removes a delegate from DisplayPlayerAgent.
-    /// - Parameter delegate: The object to remove.
+    /// Removes a delegate from `AudioPlayerDisplayManager`.
+    ///
+    /// - Parameter displayDelegate: The object to remove.
     func remove(delegate: AudioPlayerDisplayDelegate)
     
-    /// This function notifies the DisplayPlayerAgent that a player template has been cleared from the screen.
+    /// Stops the timer for deleting template by timeout.
     ///
-    /// This function should be called if the player template is no longer exposed to the user.
-    /// - Parameter delegate: The player template removed from the screen.
-    func clearDisplay(delegate: AudioPlayerDisplayDelegate)
+    /// - Parameter templateId: The unique identifier for the template.
+    func stopRenderingTimer(templateId: String)
 }

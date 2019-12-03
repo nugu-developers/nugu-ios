@@ -39,6 +39,7 @@ final class NuguDisplayPlayerController {
     
     private var currentItem: AudioPlayerDisplayTemplate?
     private var currentState: AudioPlayerState = .idle
+    private var nowPlayingInfoCenter: MPNowPlayingInfoCenter?
     
     // MARK: Initialize
     
@@ -54,6 +55,13 @@ final class NuguDisplayPlayerController {
     func unuse() {
         client.audioPlayerAgent?.remove(displayDelegate: self)
         client.audioPlayerAgent?.remove(delegate: self)
+    }
+    
+    func remove() {
+        removeRemoteCommands()
+        currentItem = nil
+        nowPlayingInfoCenter?.nowPlayingInfo = nil
+        nowPlayingInfoCenter = nil
     }
 }
 
@@ -76,12 +84,6 @@ private extension NuguDisplayPlayerController {
         removeChangePlaybackPositionCommand()
     }
     
-    func remove() {
-        currentItem = nil
-        
-        update()
-    }
-    
     func update(
         newItem: AudioPlayerDisplayTemplate? = nil,
         newState: AudioPlayerState? = nil
@@ -95,26 +97,23 @@ private extension NuguDisplayPlayerController {
         }
         
         guard let playerItem = currentItem else {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-            removeRemoteCommands()
+            remove()
             return
         }
+        nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
         
         let duration: Int
         let title: String
         let albumTitle: String
         let imageUrl: String?
         
-        switch playerItem.typeInfo {
-        case .audioPlayer(let item):
-            duration = client.audioPlayerAgent?.duration ?? 0
-            title = item.template.title.text
-            albumTitle = item.template.content.title
-            imageUrl = item.template.content.imageUrl
-        }
+        duration = client.audioPlayerAgent?.duration ?? 0
+        title = playerItem.payload.template.title.text
+        albumTitle = playerItem.payload.template.content.title
+        imageUrl = playerItem.payload.template.content.imageUrl
         
         // Set nowPlayingInfo display properties
-        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+        var nowPlayingInfo = nowPlayingInfoCenter?.nowPlayingInfo ?? [:]
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = albumTitle
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
@@ -139,7 +138,7 @@ private extension NuguDisplayPlayerController {
         
         // Set MPMediaItemArtwork if imageUrl exists
         if let imageUrl = imageUrl, let artWorkUrl = URL(string: imageUrl) {
-            ImageDataLoader.shared.load(imageUrl: artWorkUrl) { (result) in
+            ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
                 switch result {
                 case .success(let imageData):
                     guard let artWorkImage = UIImage(data: imageData) else { return }
@@ -148,13 +147,13 @@ private extension NuguDisplayPlayerController {
                     })
                     
                     nowPlayingInfo[MPMediaItemPropertyArtwork] = artWork
-                    MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+                    self?.nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
                 case .failure:
-                    MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+                    self?.nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
                 }
             }
         } else {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
         }
     }
 }
@@ -249,23 +248,17 @@ private extension NuguDisplayPlayerController {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> Bool {
-        return true
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+        update(newItem: template)
+        return nowPlayingInfoCenter
     }
     
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.update(newItem: template)
-        }
-    }
-    
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) -> Bool {
-        return true
-    }
-    
-    func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.remove()
+    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
+        switch reason {
+        case .timer:
+            remove()
+        case .directive:
+            remove()
         }
     }
 }

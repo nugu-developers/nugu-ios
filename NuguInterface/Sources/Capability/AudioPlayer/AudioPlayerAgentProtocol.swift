@@ -69,17 +69,18 @@ SpeakerVolumeDelegate {
     /// - Parameter offset: The time(seconds) to which to seek.
     func seek(to offset: Int)
     
-    /// Adds a delegate to be notified of DisplayPlayerType changes.
+    /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
+    ///
     /// - Parameter displayDelegate: The object to add.
     func add(displayDelegate: AudioPlayerDisplayDelegate)
     
-    /// Removes a delegate from DisplayPlayerAgent.
+    /// Removes a delegate from AudioPlayerAgent.
+    ///
     /// - Parameter displayDelegate: The object to remove.
     func remove(displayDelegate: AudioPlayerDisplayDelegate)
     
-    /// This function notifies the DisplayPlayerAgent that a player template has been cleared from the screen.
+    /// Stops the timer for deleting template by timeout.
     ///
-    /// This function should be called if the player template is no longer exposed to the user.
-    /// - Parameter displayDelegate: The player template removed from the screen.
-    func clearDisplay(displayDelegate: AudioPlayerDisplayDelegate)
+    /// - Parameter templateId: The unique identifier for the template.
+    func stopRenderingTimer(templateId: String)
 }

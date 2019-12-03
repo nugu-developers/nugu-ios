@@ -346,22 +346,21 @@ private extension MainViewController {
 // MARK: - Private (DisplayAudioPlayerView)
 
 private extension MainViewController {
-    func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) {
+    func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> UIView? {
         displayAudioPlayerView?.removeFromSuperview()
-        
-        switch audioPlayerDisplayTemplate.typeInfo {
-        case .audioPlayer(let item):
-            let audioPlayerView = DisplayAudioPlayerView(frame: view.frame)
-            audioPlayerView.displayItem = item
-            audioPlayerView.onCloseButtonClick = { [weak self] in
-                guard let self = self else { return }
-                NuguCentralManager.shared.client.audioPlayerAgent?.clearDisplay(displayDelegate: self)
-                self.dismissDisplayAudioPlayerView()
-            }
-            displayAudioPlayerView = audioPlayerView
+
+        let audioPlayerView = DisplayAudioPlayerView(frame: view.frame)
+        audioPlayerView.displayItem = audioPlayerDisplayTemplate.payload
+        audioPlayerView.onCloseButtonClick = { [weak self] in
+            guard let self = self else { return }
+            self.dismissDisplayAudioPlayerView()
+            NuguCentralManager.shared.displayPlayerController.remove()
         }
-        guard let displayAudioPlayerView = displayAudioPlayerView else { return }
-        view.insertSubview(displayAudioPlayerView, belowSubview: nuguButton)
+
+        view.insertSubview(audioPlayerView, belowSubview: nuguButton)
+        displayAudioPlayerView = audioPlayerView
+        
+        return audioPlayerView
     }
     
     func dismissDisplayAudioPlayerView() {
@@ -558,23 +557,16 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> Bool {
-        return true
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+        return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
-        }
-    }
-    
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) -> Bool {
-        return true
-    }
-    
-    func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.dismissDisplayAudioPlayerView()
+    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
+        switch reason {
+        case .timer:
+            dismissDisplayAudioPlayerView()
+        case .directive:
+            dismissDisplayAudioPlayerView()
         }
     }
 }
