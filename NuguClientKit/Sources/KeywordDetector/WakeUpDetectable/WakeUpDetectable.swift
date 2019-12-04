@@ -1,8 +1,8 @@
 //
-//  AudioStreamProtocol.swift
-//  NuguInterface
+//  WakeUpDetectable.swift
+//  NuguClientKit
 //
-//  Created by DCs-OfficeMBP on 03/05/2019.
+//  Created by yonghoonKwon on 2019/12/04.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,33 +19,20 @@
 //
 
 import Foundation
-import AVFoundation
+
+import NuguInterface
 
 /// <#Description#>
-public protocol AudioStreamable {
+public protocol WakeUpDetectable: class {
     /// <#Description#>
-    func makeAudioStreamWriter() -> AudioStreamWritable
+    var state: WakeUpDetectorState { get }
     /// <#Description#>
-    func makeAudioStreamReader() -> AudioStreamReadable
-}
-
-/// <#Description#>
-public protocol AudioStreamReadable {
+    var audioStream: AudioStreamable! { get set }
     /// <#Description#>
-    /// - Parameter complete: <#complete description#>
-    func read(complete: @escaping (Result<AVAudioPCMBuffer, Error>) -> Void)
-}
-
-/// <#Description#>
-public protocol AudioStreamWritable {
+    var delegate: WakeUpDetectorDelegate? { get set }
+    
     /// <#Description#>
-    /// - Parameter element: <#element description#>
-    func write(_ element: AVAudioPCMBuffer) throws
+    func start()
     /// <#Description#>
-    func finish()
-}
-
-public protocol AudioStreamDelegate: class {
-    func audioStreamWillStart()
-    func audioStreamDidStop()
+    func stop()
 }
