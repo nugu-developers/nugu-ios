@@ -30,12 +30,12 @@ protocol AudioPlayerDisplayManageable: PlaySyncDelegate {
     
     /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
     ///
-    /// - Parameter displayDelegate: The object to add.
+    /// - Parameter delegate: The object to add.
     func add(delegate: AudioPlayerDisplayDelegate)
     
     /// Removes a delegate from `AudioPlayerDisplayManager`.
     ///
-    /// - Parameter displayDelegate: The object to remove.
+    /// - Parameter delegate: The object to remove.
     func remove(delegate: AudioPlayerDisplayDelegate)
     
     /// Stops the timer for deleting template by timeout.

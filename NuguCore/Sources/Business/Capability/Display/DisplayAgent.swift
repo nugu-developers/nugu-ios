@@ -65,12 +65,6 @@ public extension DisplayAgent {
         }
     }
     
-    private func replace(delegate: DisplayAgentDelegate, template: DisplayTemplate?) {
-        remove(delegate: delegate)
-        let info = DisplayRenderingInfo(delegate: delegate, currentItem: template)
-        renderingInfos.append(info)
-    }
-    
     func elementDidSelect(templateId: String, token: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -226,18 +220,22 @@ private extension DisplayAgent {
 // MARK: - Private
 
 private extension DisplayAgent {
+    func replace(delegate: DisplayAgentDelegate, template: DisplayTemplate?) {
+        remove(delegate: delegate)
+        let info = DisplayRenderingInfo(delegate: delegate, currentItem: template)
+        renderingInfos.append(info)
+    }
+    
     func setRenderedTemplate(delegate: DisplayAgentDelegate, template: DisplayTemplate) -> Bool {
         return DispatchQueue.main.sync {
-            if let object = delegate.displayAgentDidRender(template: template) {
-                replace(delegate: delegate, template: template)
-                
-                object.rx.deallocated.subscribe({ [weak self] _ in
-                    self?.removeRenderedTemplate(delegate: delegate, template: template)
-                }).disposed(by: disposeBag)
-                return true
-            } else {
-                return false
-            }
+            guard let displayObject = delegate.displayAgentDidRender(template: template) else { return false }
+            
+            replace(delegate: delegate, template: template)
+            
+            displayObject.rx.deallocated.subscribe({ [weak self] _ in
+                self?.removeRenderedTemplate(delegate: delegate, template: template)
+            }).disposed(by: disposeBag)
+            return true
         }
     }
     

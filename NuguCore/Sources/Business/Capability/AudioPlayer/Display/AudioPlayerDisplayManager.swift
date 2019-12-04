@@ -76,12 +76,6 @@ extension AudioPlayerDisplayManager {
         }
     }
     
-    private func replace(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate?) {
-        remove(delegate: delegate)
-        let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: template)
-        renderingInfos.append(info)
-    }
-    
     func stopRenderingTimer(templateId: String) {
         timerInfos[templateId] = false
     }
@@ -147,18 +141,22 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
 // MARK: - Private
 
 private extension AudioPlayerDisplayManager {
+    func replace(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate?) {
+        remove(delegate: delegate)
+        let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: template)
+        renderingInfos.append(info)
+    }
+    
     func setRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
         return DispatchQueue.main.sync {
-            if let object = delegate.audioPlayerDisplayDidRender(template: template) {
-                replace(delegate: delegate, template: template)
-                
-                object.rx.deallocated.subscribe({ [weak self] _ in
-                    self?.removeRenderedTemplate(delegate: delegate, template: template)
-                }).disposed(by: disposeBag)
-                return true
-            } else {
-                return false
-            }
+            guard let displayObject = delegate.audioPlayerDisplayDidRender(template: template) else { return false }
+            
+            replace(delegate: delegate, template: template)
+            
+            displayObject.rx.deallocated.subscribe({ [weak self] _ in
+                self?.removeRenderedTemplate(delegate: delegate, template: template)
+            }).disposed(by: disposeBag)
+            return true
         }
     }
     
