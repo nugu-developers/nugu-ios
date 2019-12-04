@@ -39,10 +39,8 @@ public class KeywordDetector: WakeUpDetectable {
     // Must set `keywordSource` for using `KeywordDetector`
     public var keywordSource: KeywordSource? {
         didSet {
-            guard let source = keywordSource else { return }
-            
-            engine.netFile = source.netFileUrl
-            engine.searchFile = source.searchFileUrl
+            engine.netFile = keywordSource?.netFileUrl
+            engine.searchFile = keywordSource?.searchFileUrl
         }
     }
     
