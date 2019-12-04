@@ -68,13 +68,13 @@ extension ContextManager {
             })
             .do(
                 onSuccess: { (contextInfos) in
-                let contextDictionary = Dictionary(grouping: contextInfos, by: { $0.contextType })
-                let payload = ContextPayload(
-                    supportedInterfaces: contextDictionary[.capability] ?? [],
-                    client: contextDictionary[.client]
-                )
-                
-                completionHandler(payload)
+                    let contextDictionary = Dictionary(grouping: contextInfos, by: { $0.contextType })
+                    let payload = ContextPayload(
+                        supportedInterfaces: contextDictionary[.capability] ?? [],
+                        client: contextDictionary[.client] ?? []
+                    )
+                    
+                    completionHandler(payload)
             })
             .subscribe()
             .disposed(by: disposeBag)

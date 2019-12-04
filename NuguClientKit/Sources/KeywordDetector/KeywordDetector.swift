@@ -24,10 +24,10 @@ import NuguInterface
 import KeenSense
 
 public class KeywordDetector: WakeUpDetectable {
-    public var audioStream: AudioStreamable!
-
     private var boundStreams: BoundStreams?
     private let engine = TycheKeywordDetectorEngine()
+    
+    public var audioStream: AudioStreamable!
     public weak var delegate: WakeUpDetectorDelegate?
     
     public var state: WakeUpDetectorState = .inactive {
@@ -36,6 +36,7 @@ public class KeywordDetector: WakeUpDetectable {
         }
     }
     
+    // Must set `keywordSource` for using `KeywordDetector`
     public var keywordSource: KeywordSource? {
         didSet {
             guard let source = keywordSource else { return }

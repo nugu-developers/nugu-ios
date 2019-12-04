@@ -28,9 +28,9 @@ public struct ContextPayload {
     ///
     /// "wakeupWord" The keyword currently set in the KeywordDetector.
     /// "playStack" Play list managed by PlaySyncManager.
-    public let client: [ContextInfo]?
+    public let client: [ContextInfo]
     
-    public init(supportedInterfaces: [ContextInfo], client: [ContextInfo]? = nil) {
+    public init(supportedInterfaces: [ContextInfo], client: [ContextInfo]) {
         self.supportedInterfaces = supportedInterfaces
         self.client = client
     }
