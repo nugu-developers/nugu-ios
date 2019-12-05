@@ -383,30 +383,34 @@ extension MainViewController: NetworkStatusDelegate {
                 self?.nuguButton.isEnabled = true
                 self?.nuguButton.isHidden = false
             }
-        case .disconnected(let networkError):
-            switch networkError {
-            case .authError:
-                DispatchQueue.main.async {
-                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                        let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
-                    NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                    NuguCentralManager.shared.disable()
-                    UserDefaults.Standard.clear()
-                    rootNavigationViewController.popToRootViewController(animated: true)
-                }
-            default:
-                // Stop wakeup-detector
-                NuguCentralManager.shared.stopWakeUpDetector()
-                
-                // Update UI
-                DispatchQueue.main.async { [weak self] in
-                    self?.nuguButton.isEnabled = false
-                    if UserDefaults.Standard.useNuguService == true {
-                        self?.nuguButton.isHidden = false
-                    } else {
-                        self?.nuguButton.isHidden = true
+        case .disconnected(let error):
+            if let networkError = error as? NetworkError {
+                switch networkError {
+                case .authError:
+                    DispatchQueue.main.async {
+                        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
+                        NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
+                        NuguCentralManager.shared.disable()
+                        UserDefaults.Standard.clear()
+                        rootNavigationViewController.popToRootViewController(animated: true)
+                    }
+                default:
+                    // Stop wakeup-detector
+                    NuguCentralManager.shared.stopWakeUpDetector()
+                    
+                    // Update UI
+                    DispatchQueue.main.async { [weak self] in
+                        self?.nuguButton.isEnabled = false
+                        if UserDefaults.Standard.useNuguService == true {
+                            self?.nuguButton.isHidden = false
+                        } else {
+                            self?.nuguButton.isHidden = true
+                        }
                     }
                 }
+            } else {
+                // TODO: error handling
             }
         }
     }
