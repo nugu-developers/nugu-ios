@@ -370,8 +370,15 @@ private extension TTSAgent {
     
     func play(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         ttsDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let media = self.currentMedia else { return }
+            guard let self = self else {
+                completionHandler(.success(()))
+                return
+            }
+            guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
+                log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
+                completionHandler(.success(()))
+                return
+            }
             
             self.delegates.notify { delegate in
                 delegate.ttsAgentDidReceive(text: media.payload.text, dialogRequestId: media.dialogRequestId)
@@ -403,7 +410,7 @@ private extension TTSAgent {
     
     /// Stop previously playing TTS
     func stopSilently() {
-        guard let media = currentMedia, case .playing = ttsState else { return }
+        guard let media = currentMedia else { return }
         media.player.delegate = nil
         media.player.stop()
         sendEvent(info: .speechStopped)

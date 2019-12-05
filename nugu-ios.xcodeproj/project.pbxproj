@@ -31,13 +31,6 @@
 		1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
 		1F10091923792A4900D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
-		1F100956237ABF2800D90FEE /* PermissionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */; };
-		1F100958237ABF5400D90FEE /* PermissionAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */; };
-		1F10095B237AC02200D90FEE /* PermissionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095A237AC02200D90FEE /* PermissionAgent.swift */; };
-		1F10095D237AC04000D90FEE /* PermissionAgent+Directive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */; };
-		1F10095F237AC04B00D90FEE /* PermissionAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */; };
-		1F100961237BA7B700D90FEE /* PermissionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100960237BA7B700D90FEE /* PermissionContext.swift */; };
-		1F100964237C09AF00D90FEE /* PermissionAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100962237C07F500D90FEE /* PermissionAgentItem.swift */; };
 		1F100994238568D500D90FEE /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
 		1F100996238795FF00D90FEE /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
 		1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */; };
@@ -531,13 +524,6 @@
 		1F10090A23792A0000D90FEE /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		1F10094E237A886100D90FEE /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		1F100953237A8AE800D90FEE /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
-		1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentProtocol.swift; sourceTree = "<group>"; };
-		1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentDelegate.swift; sourceTree = "<group>"; };
-		1F10095A237AC02200D90FEE /* PermissionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgent.swift; sourceTree = "<group>"; };
-		1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PermissionAgent+Directive.swift"; sourceTree = "<group>"; };
-		1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PermissionAgent+Event.swift"; sourceTree = "<group>"; };
-		1F100960237BA7B700D90FEE /* PermissionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionContext.swift; sourceTree = "<group>"; };
-		1F100962237C07F500D90FEE /* PermissionAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentItem.swift; sourceTree = "<group>"; };
 		1F100965237C0D0100D90FEE /* scheduled-feature.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "scheduled-feature.md"; sourceTree = "<group>"; };
 		1F100990238529C100D90FEE /* TimeIntervallic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervallic.swift; sourceTree = "<group>"; };
 		1F100995238795FF00D90FEE /* NuguTimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguTimeInterval.swift; sourceTree = "<group>"; };
@@ -1025,27 +1011,6 @@
 			name = Cocoapods;
 			sourceTree = "<group>";
 		};
-		1F100954237ABEF800D90FEE /* Permission */ = {
-			isa = PBXGroup;
-			children = (
-				1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */,
-				1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */,
-				1F100960237BA7B700D90FEE /* PermissionContext.swift */,
-			);
-			path = Permission;
-			sourceTree = "<group>";
-		};
-		1F100959237ABFF100D90FEE /* Permission */ = {
-			isa = PBXGroup;
-			children = (
-				1F10095A237AC02200D90FEE /* PermissionAgent.swift */,
-				1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */,
-				1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */,
-				1F100962237C07F500D90FEE /* PermissionAgentItem.swift */,
-			);
-			path = Permission;
-			sourceTree = "<group>";
-		};
 		1F1009972387968D00D90FEE /* Delegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1300,7 +1265,6 @@
 				1FFFF2632375703000C9A177 /* Display */,
 				1FFFF2682375703000C9A177 /* Text */,
 				1FFFF24D2375703000C9A177 /* Location */,
-				1F100954237ABEF800D90FEE /* Permission */,
 				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
 				1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */,
 				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
@@ -1658,7 +1622,6 @@
 				1FFFF3542375707000C9A177 /* Display */,
 				1FFFF3592375707000C9A177 /* Text */,
 				1FFFF3402375707000C9A177 /* Location */,
-				1F100959237ABFF100D90FEE /* Permission */,
 			);
 			path = Capability;
 			sourceTree = "<group>";
@@ -2819,10 +2782,8 @@
 				1FFFF2B72375703000C9A177 /* SpeakerVolumeType.swift in Sources */,
 				1FFFF2E42375703100C9A177 /* UpstreamHeader.swift in Sources */,
 				1FFFF2BA2375703000C9A177 /* AudioPlayerDisplayDelegate.swift in Sources */,
-				1F100956237ABF2800D90FEE /* PermissionAgentProtocol.swift in Sources */,
 				1FFFF2B32375703000C9A177 /* ExtensionAgentDelegate.swift in Sources */,
 				1FFFF2BB2375703000C9A177 /* AudioPlayerDisplayTemplate+AudioPlayer.swift in Sources */,
-				1F100961237BA7B700D90FEE /* PermissionContext.swift in Sources */,
 				1FFFF2D02375703100C9A177 /* TTSAgentProtocol.swift in Sources */,
 				1FFFF2EE2375703100C9A177 /* FocusDelegate.swift in Sources */,
 				1FFFF2D82375703100C9A177 /* TextAgentProtocol.swift in Sources */,
@@ -2881,7 +2842,6 @@
 				7EDCF2A8238529CC006F96B6 /* DownStreamDataInterpretable.swift in Sources */,
 				1FFFF2DA2375703100C9A177 /* SendMessageStatus.swift in Sources */,
 				1FFFF2C62375703000C9A177 /* ASRAgentProtocol.swift in Sources */,
-				1F100958237ABF5400D90FEE /* PermissionAgentDelegate.swift in Sources */,
 				1FFFF2E72375703100C9A177 /* NetworkError.swift in Sources */,
 				1FFFF2C42375703000C9A177 /* ASRExpectSpeech.swift in Sources */,
 				1FFFF2EB2375703100C9A177 /* PlaySyncDelegate.swift in Sources */,
@@ -2947,7 +2907,6 @@
 				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
 				1FFFF3872375707000C9A177 /* MicInputConst.swift in Sources */,
 				1FFFF3B62375707100C9A177 /* DisplayAgent+Event.swift in Sources */,
-				1F10095F237AC04B00D90FEE /* PermissionAgent+Event.swift in Sources */,
 				1FFFF3902375707000C9A177 /* TimeUUID.swift in Sources */,
 				1FFFF3B32375707100C9A177 /* DisplayAgent.swift in Sources */,
 				1FFFF3B22375707100C9A177 /* TTSMedia.swift in Sources */,
@@ -2972,13 +2931,11 @@
 				1FFFF3AB2375707100C9A177 /* SystemAgent+Event.swift in Sources */,
 				1FFFF3A62375707100C9A177 /* WakeUpInfoDelegate.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
-				1F10095D237AC04000D90FEE /* PermissionAgent+Directive.swift in Sources */,
 				1FFFF3AC2375707100C9A177 /* SystemAgent+Directive.swift in Sources */,
 				1FFFF3A12375707100C9A177 /* AudioPlayerAgent+Directive.swift in Sources */,
 				1FFFF3A82375707100C9A177 /* ASRNotifyResult.swift in Sources */,
 				1FFFF3802375707000C9A177 /* MediaAVPlayerItem.swift in Sources */,
 				1FFFF3942375707100C9A177 /* ExtensionAgent.swift in Sources */,
-				1F100964237C09AF00D90FEE /* PermissionAgentItem.swift in Sources */,
 				1FFFF3C32375707100C9A177 /* PlaySyncManager.swift in Sources */,
 				1FFFF3992375707100C9A177 /* SpeakerAgent+Directive.swift in Sources */,
 				1FFFF3BC2375707100C9A177 /* HTTPConst.swift in Sources */,
@@ -2993,7 +2950,6 @@
 				1FFFF3BF2375707100C9A177 /* NuguApi.swift in Sources */,
 				1FFFF3A02375707100C9A177 /* AudioPlayerDisplayManageable.swift in Sources */,
 				1FFFF3B72375707100C9A177 /* TextAgent+Event.swift in Sources */,
-				1F10095B237AC02200D90FEE /* PermissionAgent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

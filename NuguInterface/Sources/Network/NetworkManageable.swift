@@ -26,7 +26,7 @@ public protocol NetworkManageable: MessageSendable {
     var connected: Bool { get }
     /// <#Description#>
     /// - Parameter completion: <#completion description#>
-    func connect(completion: ((Result<Void, NetworkError>) -> Void)?)
+    func connect(completion: ((Result<Void, Error>) -> Void)?)
     /// <#Description#>
     func disconnect()
     /// <#Description#>

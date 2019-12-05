@@ -42,7 +42,6 @@ extension NuguClient {
         setupTextAgentDependency()
         setupExtensionAgentDependency()
         setupLocationAgentDependency()
-        setupPermissionAgentDependency()
         
         // Setup core
         setupAudioStreamDependency()
@@ -137,15 +136,6 @@ extension NuguClient {
     func setupLocationAgentDependency() {
         guard let agent = locationAgent else { return }
         
-        contextManager.add(provideContextDelegate: agent)
-    }
-    
-    func setupPermissionAgentDependency() {
-        guard let agent = permissionAgent else { return }
-        
-        agent.messageSender = networkManager
-        
-        directiveSequencer.add(handleDirectiveDelegate: agent)
         contextManager.add(provideContextDelegate: agent)
     }
 }
