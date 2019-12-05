@@ -88,7 +88,7 @@
 		1FFFF2BE2375703000C9A177 /* AudioPlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */; };
 		1FFFF2BF2375703000C9A177 /* LocationAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */; };
 		1FFFF2C02375703000C9A177 /* LocationAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */; };
-		1FFFF2C12375703000C9A177 /* LocationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationContext.swift */; };
+		1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationInfo.swift */; };
 		1FFFF2C22375703000C9A177 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */; };
 		1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2532375703000C9A177 /* ASRState.swift */; };
 		1FFFF2C42375703000C9A177 /* ASRExpectSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */; };
@@ -586,7 +586,7 @@
 		1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerState.swift; sourceTree = "<group>"; };
 		1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentDelegate.swift; sourceTree = "<group>"; };
-		1FFFF2502375703000C9A177 /* LocationContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationContext.swift; sourceTree = "<group>"; };
+		1FFFF2502375703000C9A177 /* LocationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationInfo.swift; sourceTree = "<group>"; };
 		1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2532375703000C9A177 /* ASRState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRState.swift; sourceTree = "<group>"; };
 		1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRExpectSpeech.swift; sourceTree = "<group>"; };
@@ -1276,7 +1276,7 @@
 			children = (
 				1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */,
 				1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */,
-				1FFFF2502375703000C9A177 /* LocationContext.swift */,
+				1FFFF2502375703000C9A177 /* LocationInfo.swift */,
 			);
 			path = Location;
 			sourceTree = "<group>";
@@ -2816,7 +2816,7 @@
 				1FFFF2AE2375703000C9A177 /* ContextInfoDelegate.swift in Sources */,
 				1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */,
 				1FFFF2A82375703000C9A177 /* MediaPlayerState.swift in Sources */,
-				1FFFF2C12375703000C9A177 /* LocationContext.swift in Sources */,
+				1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */,
 				1FFFF2D12375703100C9A177 /* DisplayAgentProtocol.swift in Sources */,
 				1FFFF2D32375703100C9A177 /* DisplayTemplate.swift in Sources */,
 			);

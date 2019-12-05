@@ -187,7 +187,7 @@ extension NuguCentralManager: FocusDelegate {
 // MARK: - LocationAgentDelegate
 
 extension NuguCentralManager: LocationAgentDelegate {
-    func locationAgentRequestContext() -> LocationContext {
-        return NuguLocationManager.shared.locationContext
+    func locationAgentRequestLocationInfo() -> LocationInfo? {
+        return NuguLocationManager.shared.cachedLocationInfo
     }
 }
