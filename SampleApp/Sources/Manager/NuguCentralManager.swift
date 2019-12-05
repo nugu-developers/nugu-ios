@@ -41,6 +41,8 @@ final class NuguCentralManager {
         
         client.locationAgent?.delegate = self
         client.permissionAgent?.delegate = self
+        
+        client.systemAgent.add(systemAgentDelegate: self)
 
         NuguLocationManager.shared.startUpdatingLocation()
         
@@ -212,5 +214,20 @@ extension NuguCentralManager: PermissionAgentDelegate {
     
     func permissionAgentRequestContext() -> PermissionContext {
         return PermissionContext(permissions: [PermissionContext.Permission(category: .location, state: NuguLocationManager.shared.permissionLocationState)])
+    }
+}
+
+// MARK: - SystemAgentDelegate
+
+extension NuguCentralManager: SystemAgentDelegate {
+    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail) {
+        switch code {
+        case .playRouterProcessingException:
+            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayPlayRouterConnectionError))
+        case .ttsSpeakingException:
+            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTtsConnectionError))
+        case .unauthorizedRequestException:
+            break
+        }
     }
 }

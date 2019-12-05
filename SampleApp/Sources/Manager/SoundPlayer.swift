@@ -20,25 +20,69 @@
 
 import AVFoundation
 
-final class SoundPlayer {
+struct SoundPlayer {
+    
+    // MARK: SoundPlayer
+    
+    private static var player: AVAudioPlayer?
     
     // MARK: SoundType
     
-    enum SoundType: String {
-        case start
-        case success
-        case fail
+    enum SoundType {
+        case asrBeep(type: BeepType)
+        case localTts(type: TtsType)
+        
+        enum BeepType: String {
+            case start
+            case success
+            case fail
+        }
+        
+        enum TtsType: Int {
+            case deviceGatewayNetworkError = 1
+            case deviceGatewayAuthServerError
+            case deviceGatewayAuthError
+            case deviceGatewayTimeout
+            case deviceGatewayRequestUnacceptable
+            case deviceGatewayTtsConnectionError
+            case deviceGatewayPlayRouterConnectionError
+            case playRouterFallbackServerConnectionError
+            case pocStateServiceTerminated
+        }
         
         fileprivate var isEnabled: Bool {
             switch self {
-            case .start: return UserDefaults.Standard.useAsrStartSound
-            case .success: return UserDefaults.Standard.useAsrSuccessSound
-            case .fail: return UserDefaults.Standard.useAsrFailSound
+            case .asrBeep(let type):
+                switch type {
+                case .start: return UserDefaults.Standard.useAsrStartSound
+                case .success: return UserDefaults.Standard.useAsrSuccessSound
+                case .fail: return UserDefaults.Standard.useAsrFailSound
+                }
+            case .localTts:
+                return true
             }
         }
         
         fileprivate var fileName: String {
-            return "asr\(self.rawValue.capitalized)"
+            switch self {
+            case .asrBeep(let type):
+                return "asr\(type.rawValue.capitalized)"
+            case .localTts(let type):
+                switch type {
+                case .deviceGatewayNetworkError,
+                     .deviceGatewayAuthServerError,
+                     .deviceGatewayAuthError,
+                     .deviceGatewayTimeout,
+                     .deviceGatewayRequestUnacceptable:
+                    return "device_GW_error_00\(String(type.rawValue))"
+                case .deviceGatewayTtsConnectionError,
+                     .deviceGatewayPlayRouterConnectionError,
+                     .playRouterFallbackServerConnectionError:
+                    return "device_GW_error_006"
+                case .pocStateServiceTerminated:
+                    return "poc_end_error"
+                }
+            }
         }
         
         fileprivate var extention: String {
@@ -50,13 +94,9 @@ final class SoundPlayer {
         }
     }
     
-    // MARK: SoundPlayer
-    
-    private static var player: AVAudioPlayer?
-    
-    class func playSound(soundType: SoundType) {
+    static func playSound(soundType: SoundType) {
         guard let url = Bundle.main.url(forResource: soundType.fileName, withExtension: soundType.extention) else {
-            log.info("Can't find sound file")
+            log.error("Can't find sound file")
             return
         }
         
@@ -69,7 +109,8 @@ final class SoundPlayer {
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: soundType.fileTypeHint)
             player?.play()
         } catch {
-            log.error(error.localizedDescription)
+            log.error("Can't find sound file")
+            log.error("Failed to play sound file : \(error.localizedDescription)")
         }
     }
 }
