@@ -20,32 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
-/// <#Description#>
-public enum WakeUpDetectorState {
-    /// <#Description#>
-    case active
-    /// <#Description#>
-    case inactive
-}
-
-/// <#Description#>
-public protocol WakeUpDetectable: class {
-    /// <#Description#>
-    var state: WakeUpDetectorState { get }
-    /// <#Description#>
-    var audioStream: AudioStreamable! { get set }
-    /// <#Description#>
-    var delegate: WakeUpDetectorDelegate? { get set }
-    
-    /// <#Description#>
-    /// - Parameter input: <#input description#>
-    func start()
-    /// <#Description#>
-    func stop()
-}
-
 /// <#Description#>
 public protocol WakeUpDetectorDelegate: class {
     /// <#Description#>

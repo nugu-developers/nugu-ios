@@ -24,10 +24,10 @@ import NuguInterface
 import KeenSense
 
 public class KeywordDetector: WakeUpDetectable {
-    public var audioStream: AudioStreamable!
-
     private var boundStreams: BoundStreams?
     private let engine = TycheKeywordDetectorEngine()
+    
+    public var audioStream: AudioStreamable!
     public weak var delegate: WakeUpDetectorDelegate?
     
     public var state: WakeUpDetectorState = .inactive {
@@ -36,21 +36,11 @@ public class KeywordDetector: WakeUpDetectable {
         }
     }
     
-    public var netFilePath: URL? {
-        get {
-            engine.netFile
-        }
-        set {
-            engine.netFile = newValue
-        }
-    }
-    
-    public var searchFilePath: URL? {
-        get {
-            engine.searchFile
-        }
-        set {
-            engine.searchFile = newValue
+    // Must set `keywordSource` for using `KeywordDetector`
+    public var keywordSource: KeywordSource? {
+        didSet {
+            engine.netFile = keywordSource?.netFileUrl
+            engine.searchFile = keywordSource?.searchFileUrl
         }
     }
     
@@ -88,5 +78,21 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
         case .inactive:
             delegate?.wakeUpDetectorStateDidChange(.inactive)
         }
+    }
+}
+
+// MARK: - ContextInfoDelegate
+
+extension KeywordDetector: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
+        guard let keyword = keywordSource?.keyword else {
+            return nil
+        }
+        
+        return ContextInfo(
+            contextType: .client,
+            name: "wakeupWord",
+            payload: keyword.description
+        )
     }
 }

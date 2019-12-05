@@ -168,5 +168,7 @@ extension NuguClient {
         guard let wakeUpDetector = wakeUpDetector else { return }
         
         wakeUpDetector.audioStream = sharedAudioStream
+        
+        contextManager.add(provideContextDelegate: wakeUpDetector)
     }
 }
