@@ -42,27 +42,11 @@ final class NuguLocationManager: NSObject {
     /// PermissionContext.Permission.State != .granted
     var locationContext: LocationContext {
         let locationState = self.locationState
-        guard locationState == .available,
-            permissionLocationState == .granted else {
-                cachedLocationCurrent = nil
-                return LocationContext(state: locationState, current: nil)
+        guard locationState == .available else {
+            cachedLocationCurrent = nil
+            return LocationContext(state: locationState, current: nil)
         }
         return LocationContext(state: locationState, current: cachedLocationCurrent)
-    }
-    
-    var permissionLocationState: PermissionContext.Permission.State {
-        switch CLLocationManager.authorizationStatus() {
-        case .authorizedAlways, .authorizedWhenInUse:
-            return .granted
-        case .notDetermined:
-            return .undetermined
-        case .denied:
-            return .denied
-        case .restricted:
-            return .notSupported
-        @unknown default:
-            return .notSupported
-        }
     }
     
     override init() {
@@ -117,7 +101,6 @@ extension NuguLocationManager: CLLocationManagerDelegate {
             cachedLocationCurrent = LocationContext.Current(latitude: String(location.coordinate.latitude), longitude: String(location.coordinate.longitude))
         }
     }
-    
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         guard let locationError = error as? CLError else { return }

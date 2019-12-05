@@ -40,7 +40,6 @@ final class NuguCentralManager {
         }
         
         client.locationAgent?.delegate = self
-        client.permissionAgent?.delegate = self
 
         NuguLocationManager.shared.startUpdatingLocation()
         
@@ -190,27 +189,5 @@ extension NuguCentralManager: FocusDelegate {
 extension NuguCentralManager: LocationAgentDelegate {
     func locationAgentRequestContext() -> LocationContext {
         return NuguLocationManager.shared.locationContext
-    }
-}
-
-// MARK: - PermissionAgentDelegate
-
-extension NuguCentralManager: PermissionAgentDelegate {
-    func permissionAgentRequestPermissions(
-        categories: Set<PermissionContext.Permission.Category>,
-        completion: @escaping () -> Void
-    ) {
-        for category in categories {
-            switch category {
-            case .location:
-                NuguLocationManager.shared.requestLocationPermission {
-                    completion()
-                }
-            }
-        }
-    }
-    
-    func permissionAgentRequestContext() -> PermissionContext {
-        return PermissionContext(permissions: [PermissionContext.Permission(category: .location, state: NuguLocationManager.shared.permissionLocationState)])
     }
 }
