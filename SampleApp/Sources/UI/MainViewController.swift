@@ -384,43 +384,40 @@ extension MainViewController: NetworkStatusDelegate {
                 self?.nuguButton.isHidden = false
             }
         case .disconnected(let networkError):
-            let commonDisconnectionHandle = {
-                // Stop wakeup-detector
-                NuguCentralManager.shared.stopWakeUpDetector()
-                
-                // Update UI
-                DispatchQueue.main.async { [weak self] in
-                    self?.nuguButton.isEnabled = false
-                    if UserDefaults.Standard.useNuguService == true {
-                        self?.nuguButton.isHidden = false
-                    } else {
-                        self?.nuguButton.isHidden = true
-                    }
+            // Stop wakeup-detector
+            NuguCentralManager.shared.stopWakeUpDetector()
+            
+            // Update UI
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguButton.isEnabled = false
+                if UserDefaults.Standard.useNuguService == true {
+                    self?.nuguButton.isHidden = false
+                } else {
+                    self?.nuguButton.isHidden = true
                 }
             }
-            if let reachability = try? Reachability(),
-                reachability.connection == .unavailable {
-                SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayNetworkError))
-                commonDisconnectionHandle()
-                return
-            }
+            
+            guard let networkError = networkError else { return }
+            
             switch networkError {
             case .authError:
-                DispatchQueue.main.async {
-                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
-                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                        let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
-                    NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                    NuguCentralManager.shared.disable()
-                    UserDefaults.Standard.clear()
-                    rootNavigationViewController.popToRootViewController(animated: true)
+                switch SampleApp.loginMethod {
+                case .type1:
+                    NuguCentralManager.shared.tokenRefresh()
+                case .type2:
+                    DispatchQueue.main.async {
+                        SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
+                        NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
+                        NuguCentralManager.shared.logout()
+                    }
+                default:
+                    break
                 }
+                
             case .timeout:
                 SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTimeout))
-                commonDisconnectionHandle()
             default:
                 SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthServerError))
-                commonDisconnectionHandle()
             }
         }
     }

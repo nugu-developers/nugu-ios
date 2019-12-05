@@ -111,17 +111,8 @@ private extension SettingViewController {
     }
     
     @IBAction func logoutButtonDidClick(_ button: UIButton) {
-        guard
-            let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController
-            else {
-                return
-        }
-        
         dismiss(animated: true, completion: {
-            NuguCentralManager.shared.disable()
-            UserDefaults.Standard.clear()
-            rootNavigationViewController.popToRootViewController(animated: true)
+            NuguCentralManager.shared.logout()
         })
     }
 }
