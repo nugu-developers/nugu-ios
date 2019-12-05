@@ -397,6 +397,7 @@ extension MainViewController: NetworkStatusDelegate {
                 }
             }
             
+            // Handle Nugu's predefined NetworkError
             if let networkError = error as? NetworkError {
                 switch networkError {
                 case .authError:
@@ -418,8 +419,14 @@ extension MainViewController: NetworkStatusDelegate {
                 default:
                     SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthServerError))
                 }
-            } else {
-                
+            } else { // Handle URLError
+                guard let urlError = error as? URLError else { return }
+                switch urlError.code {
+                case .networkConnectionLost, .notConnectedToInternet:
+                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayNetworkError))
+                default:
+                    break
+                }
             }
         }
     }
