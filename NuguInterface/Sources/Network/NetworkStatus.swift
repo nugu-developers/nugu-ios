@@ -22,9 +22,21 @@ import Foundation
 
 /// <#Description#>
 public enum NetworkStatus: Equatable {
-    /// <#Description#>
     case connected
-    /// <#Description#>
-    /// - Parameter reason: <#reason description#>
-    case disconnected(error: NetworkError? = nil)
+    /// Connection closed.
+    /// - Parameter error: If Connection closed because of the error.
+    case disconnected(error: Error? = nil)
+    
+    public static func == (lhs: NetworkStatus, rhs: NetworkStatus) -> Bool {
+        switch (lhs, rhs) {
+        case (.connected, .connected):
+            return true
+
+        case (.disconnected(let lhsError), .disconnected(let rhsError)):
+            return (lhsError as NSError?)?.code == (rhsError as NSError?)?.code
+
+        default:
+            return false
+        }
+    }
 }

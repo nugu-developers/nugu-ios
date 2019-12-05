@@ -56,7 +56,7 @@ public class NetworkManager: NetworkManageable {
     
     public init() {}
     
-    public func connect(completion: ((Result<Void, NetworkError>) -> Void)? = nil) {
+    public func connect(completion: ((Result<Void, Error>) -> Void)? = nil) {
         NuguApiProvider
             .policies
             .flatMapCompletable { [weak self] (policy) -> Completable in
@@ -70,20 +70,21 @@ public class NetworkManager: NetworkManageable {
                 self.networkStatus = .connected
                 completion?(.success(()))
             }, onError: { [weak self] (error) in
-                completion?(.failure((error as? NetworkError) ?? NetworkError.badRequest))
-                self?.networkStatus = .disconnected(error: (error as? NetworkError) ?? NetworkError.badRequest)
+                completion?(.failure(error))
+                self?.networkStatus = .disconnected(error: error)
             }).disposed(by: disposeBag)
     }
     
     // TODO: NetworkManageable 에 추가? 중복코드 제거.
-    func connect(serverPolicies: [Policy.ServerPolicy], completion: ((Result<Void, NetworkError>) -> Void)? = nil) {
+    func connect(serverPolicies: [Policy.ServerPolicy], completion: ((Result<Void, Error>) -> Void)? = nil) {
         self.iterateSetEndPoint(with: serverPolicies)
             .subscribe(onCompleted: {
                 self.receiveMessage()
                 self.networkStatus = .connected
                 completion?(.success(()))
-            }, onError: { (error) in
-                completion?(.failure((error as? NetworkError) ?? NetworkError.badRequest))
+            }, onError: { [weak self] (error) in
+                completion?(.failure(error))
+                self?.networkStatus = .disconnected(error: error)
             }).disposed(by: disposeBag)
     }
 
