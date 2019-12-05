@@ -1,8 +1,8 @@
 //
-//  PermissionAgent+Directive.swift
-//  NuguCore
+//  WakeUpDetectable.swift
+//  NuguClientKit
 //
-//  Created by yonghoonKwon on 2019/11/12.
+//  Created by yonghoonKwon on 2019/12/04.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,32 +22,17 @@ import Foundation
 
 import NuguInterface
 
-extension PermissionAgent {
-    enum DirectiveTypeInfo: CaseIterable {
-        case requestAccess
-    }
-}
-
-// MARK: - DirectiveTypeInforable
-
-extension PermissionAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "Permission" }
+/// <#Description#>
+public protocol WakeUpDetectable: class {
+    /// <#Description#>
+    var state: WakeUpDetectorState { get }
+    /// <#Description#>
+    var audioStream: AudioStreamable! { get set }
+    /// <#Description#>
+    var delegate: WakeUpDetectorDelegate? { get set }
     
-    var name: String {
-        switch self {
-        case .requestAccess: return "RequestAccess"
-        }
-    }
-
-    var medium: DirectiveMedium {
-        switch self {
-        case .requestAccess: return .none
-        }
-    }
-
-    var isBlocking: Bool {
-        switch self {
-        case .requestAccess: return false
-        }
-    }
+    /// <#Description#>
+    func start()
+    /// <#Description#>
+    func stop()
 }

@@ -1,8 +1,8 @@
 //
-//  PermissionAgentItem.swift
-//  NuguCore
+//  TycheKeywordDetectorEngine+State.swift
+//  KeenSense
 //
-//  Created by yonghoonKwon on 2019/11/13.
+//  Created by yonghoonKwon on 2019/12/02.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,11 @@
 
 import Foundation
 
-import NuguInterface
-
-struct PermissionAgentItem: Decodable {
-    let playServiceId: String
-    let permissions: [PermissionContext.Permission.Category]
+public extension TycheKeywordDetectorEngine {
+    enum State {
+        /// <#Description#>
+        case active
+        /// <#Description#>
+        case inactive
+    }
 }

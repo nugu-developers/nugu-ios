@@ -49,7 +49,7 @@ Released on 2019-11-13
 
 #### Fixed
 - Fixes a bug where `ASRState` doesn't change to listening when network condition is bad. (#62)
-- Fixes a bug that `KeyWordDetector` should change it's state when it stopped.
+- Fixes a bug that `KeywordDetector` should change it's state when it stopped.
 
 #### Updated
 - Separate `JadeMarble` & `KeenSense` from `NUGU` echo system. (#56)

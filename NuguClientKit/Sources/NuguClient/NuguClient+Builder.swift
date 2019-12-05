@@ -30,7 +30,7 @@ extension NuguClient {
         public lazy var inputProvider: AudioProvidable = MicInputProvider()
         public lazy var sharedAudioStream: AudioStreamable = AudioStream(capacity: 300)
         public lazy var endPointDetector: EndPointDetectable = EndPointDetector()
-        public lazy var wakeUpDetector = KeyWordDetector()
+        public lazy var wakeUpDetector = KeywordDetector()
         
         // MARK: - Capability Agents
         
@@ -48,8 +48,6 @@ extension NuguClient {
         public lazy var extensionAgent: ExtensionAgentProtocol? = ExtensionAgent()
         /// <#Description#>
         public lazy var locationAgent: LocationAgentProtocol? = LocationAgent()
-        /// <#Description#>
-        public lazy var permissionAgent: PermissionAgentProtocol? = PermissionAgent()
         
         /// <#Description#>
         public init() {}
@@ -67,8 +65,7 @@ extension NuguClient {
                 displayAgent: displayAgent,
                 textAgent: textAgent,
                 extensionAgent: extensionAgent,
-                locationAgent: locationAgent,
-                permissionAgent: permissionAgent
+                locationAgent: locationAgent
             )
         }
     }
@@ -102,7 +99,7 @@ extension NuguClient.Builder {
     
     /// <#Description#>
     /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
-    public func with(wakeUpDetector: KeyWordDetector) -> Self {
+    public func with(wakeUpDetector: KeywordDetector) -> Self {
         self.wakeUpDetector = wakeUpDetector
         return self
     }
@@ -155,13 +152,6 @@ extension NuguClient.Builder {
     /// - Parameter extensionAgent: <#extensionAgent description#>
     public func with(locationAgent: LocationAgentProtocol?) -> Self {
         self.locationAgent = locationAgent
-        return self
-    }
-    
-    /// <#Description#>
-    /// - Parameter permissionAgent: <#extensionAgent description#>
-    public func with(permissionAgent: PermissionAgentProtocol?) -> Self {
-        self.permissionAgent = permissionAgent
         return self
     }
 }

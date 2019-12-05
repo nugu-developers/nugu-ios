@@ -1,8 +1,8 @@
 //
-//  PermissionAgentProtocol.swift
-//  NuguInterface
+//  TycheEndPointDetectorEngineDelegate.swift
+//  JadeMarble
 //
-//  Created by yonghoonKwon on 2019/11/12.
+//  Created by childc on 2019/11/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +21,12 @@
 import Foundation
 
 /// <#Description#>
-public protocol PermissionAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-HandleDirectiveDelegate {
+public protocol TycheEndPointDetectorEngineDelegate: class {
     /// <#Description#>
-    var messageSender: MessageSendable! { get set }
-    
+    /// - Parameter state: state description
+    func tycheEndPointDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State)
+
     /// <#Description#>
-    var delegate: PermissionAgentDelegate? { get set }
+    /// - Parameter speechData: <#speechData description#>
+    func tycheEndPointDetectorEngineDidExtract(speechData: Data)
 }

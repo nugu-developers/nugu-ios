@@ -34,7 +34,6 @@ public protocol AudioStreamReadable {
     /// <#Description#>
     /// - Parameter complete: <#complete description#>
     func read(complete: @escaping (Result<AVAudioPCMBuffer, Error>) -> Void)
-    
 }
 
 /// <#Description#>

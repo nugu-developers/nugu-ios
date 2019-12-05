@@ -67,9 +67,9 @@ public enum KeenSenseConfiguration {
     }
 }
 
-// MARK: - KeyWordDetector
+// MARK: - Keyword
 
-public enum KeyWord: Int, CustomStringConvertible, CaseIterable {
+public enum Keyword: Int, CustomStringConvertible, CaseIterable {
     case aria = 0 // ɑriɑ
     case tinkerbell = 3 // tɪŋkəbel
     
@@ -83,14 +83,6 @@ public enum KeyWord: Int, CustomStringConvertible, CaseIterable {
     }
 }
 
-/// <#Description#>
-public enum KeyWordDetectorState {
-    /// <#Description#>
-    case active
-    /// <#Description#>
-    case inactive
-}
-
 // MARK: - Stream Type
 
 public enum StreamType: Int {
@@ -102,14 +94,14 @@ public enum StreamType: Int {
 
 // MARK: - KeywordDetectorConst
 
-enum KeyWordDetectorConst {
+enum KeywordDetectorConst {
     static let sampleRate = 16000
     static let channel = 1
 }
 
 // MARK: - Error
 
-public enum KeyWordDetectorError: Error {
+public enum KeywordDetectorError: Error {
     case initEngineFailed
     case initBufferFailed
     case unsupportedAudioFormat

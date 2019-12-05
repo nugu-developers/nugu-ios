@@ -1,5 +1,5 @@
 //
-//  WakeUpDetector.swift
+//  KeywordDetector.swift
 //  NuguClientKit
 //
 //  Created by childc on 2019/11/11.
@@ -23,11 +23,11 @@ import Foundation
 import NuguInterface
 import KeenSense
 
-public class KeyWordDetector: WakeUpDetectable {
-    public var audioStream: AudioStreamable!
-
+public class KeywordDetector: WakeUpDetectable {
     private var boundStreams: BoundStreams?
-    private let engine = TycheKwd()
+    private let engine = TycheKeywordDetectorEngine()
+    
+    public var audioStream: AudioStreamable!
     public weak var delegate: WakeUpDetectorDelegate?
     
     public var state: WakeUpDetectorState = .inactive {
@@ -36,23 +36,11 @@ public class KeyWordDetector: WakeUpDetectable {
         }
     }
     
-    public var netFile: URL? {
-        get {
-            engine.netFile
-        }
-        
-        set {
-            engine.netFile = newValue
-        }
-    }
-    
-    public var searchFile: URL? {
-        get {
-            engine.searchFile
-        }
-        
-        set {
-            engine.searchFile = newValue
+    // Must set `keywordSource` for using `KeywordDetector`
+    public var keywordSource: KeywordSource? {
+        didSet {
+            engine.netFile = keywordSource?.netFileUrl
+            engine.searchFile = keywordSource?.searchFileUrl
         }
     }
     
@@ -72,21 +60,39 @@ public class KeyWordDetector: WakeUpDetectable {
     }
 }
 
-extension KeyWordDetector: TycheKwdDelegate {
-    public func keyWordDetectorDidDetect() {
+// MARK: - TycheKeywordDetectorEngineDelegate
+
+extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
+    public func tycheKeywordDetectorEngineDidDetect() {
         delegate?.wakeUpDetectorDidDetect()
     }
     
-    public func keyWordDetectorDidError(_ error: Error) {
+    public func tycheKeywordDetectorEngineDidError(_ error: Error) {
         delegate?.wakeUpDetectorDidError(error)
     }
     
-    public func keyWordDetectorStateDidChange(_ state: KeyWordDetectorState) {
+    public func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State) {
         switch state {
         case .active:
             delegate?.wakeUpDetectorStateDidChange(.active)
         case .inactive:
             delegate?.wakeUpDetectorStateDidChange(.inactive)
         }
+    }
+}
+
+// MARK: - ContextInfoDelegate
+
+extension KeywordDetector: ContextInfoDelegate {
+    public func contextInfoRequestContext() -> ContextInfo? {
+        guard let keyword = keywordSource?.keyword else {
+            return nil
+        }
+        
+        return ContextInfo(
+            contextType: .client,
+            name: "wakeupWord",
+            payload: keyword.description
+        )
     }
 }

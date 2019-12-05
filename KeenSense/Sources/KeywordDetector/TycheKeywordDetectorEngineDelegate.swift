@@ -1,8 +1,8 @@
 //
-//  DetectedData.swift
+//  TycheKeywordDetectorEngineDelegate.swift
 //  KeenSense
 //
-//  Created by DCs-OfficeMBP on 19/06/2019.
+//  Created by childc on 2019/11/11.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,13 @@
 
 import Foundation
 
-public struct DetectedData {
-    public let data: Data
-    public let padding: Int
+public protocol TycheKeywordDetectorEngineDelegate: class {
+    /// <#Description#>
+    func tycheKeywordDetectorEngineDidDetect()
+    /// <#Description#>
+    /// - Parameter error: <#error description#>
+    func tycheKeywordDetectorEngineDidError(_ error: Error)
+    /// <#Description#>
+    /// - Parameter state: <#state description#>
+    func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State)
 }

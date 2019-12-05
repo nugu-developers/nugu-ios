@@ -1,8 +1,8 @@
 //
-//  TycheEpdDelegate.swift
-//  JadeMarble
+//  WakeUpDetectorProtocol.swift
+//  NuguInterface
 //
-//  Created by childc on 2019/11/06.
+//  Created by DCs-OfficeMBP on 14/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +21,13 @@
 import Foundation
 
 /// <#Description#>
-public protocol TycheEpdDelegate: class {
+public protocol WakeUpDetectorDelegate: class {
+    /// <#Description#>
+    func wakeUpDetectorDidDetect()
+    /// <#Description#>
+    /// - Parameter error: <#error description#>
+    func wakeUpDetectorDidError(_ error: Error)
     /// <#Description#>
     /// - Parameter state: <#state description#>
-    func endPointDetectorStateChanged(state: TycheEpdState)
-
-    /// <#Description#>
-    /// - Parameter speechData: <#speechData description#>
-    func endPointDetectorSpeechDataExtracted(speechData: Data)
+    func wakeUpDetectorStateDidChange(_ state: WakeUpDetectorState)
 }

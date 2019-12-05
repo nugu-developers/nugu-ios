@@ -46,6 +46,8 @@
 		73F2850223815CC9004EBBDF /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 73F284D423815CC9004EBBDF /* asrStart.wav */; };
 		73F2850323815CC9004EBBDF /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 73F284D523815CC9004EBBDF /* asrSuccess.wav */; };
 		73F2850423815CC9004EBBDF /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 73F284D623815CC9004EBBDF /* asrFail.wav */; };
+		7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */; };
+		7EBD76292391130100CA9C9C /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD76272391130100CA9C9C /* NuguLocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +94,8 @@
 		73F284D523815CC9004EBBDF /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
 		73F284D623815CC9004EBBDF /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
 		73F284D823815CC9004EBBDF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguAudioSessionManager.swift; sourceTree = "<group>"; };
+		7EBD76272391130100CA9C9C /* NuguLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
 		970814E73D7C771F9B37F9A1 /* Pods-SampleApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleApp.debug.xcconfig"; path = "Target Support Files/Pods-SampleApp/Pods-SampleApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -256,6 +260,8 @@
 		73F284C823815CC9004EBBDF /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */,
+				7EBD76272391130100CA9C9C /* NuguLocationManager.swift */,
 				73F284C923815CC9004EBBDF /* SoundPlayer.swift */,
 				73F284CA23815CC9004EBBDF /* NuguCentralManager.swift */,
 				73F284CB23815CC9004EBBDF /* NuguDisplayPlayerController.swift */,
@@ -418,6 +424,8 @@
 				73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */,
 				73F284E523815CC9004EBBDF /* DisplayBodyListViewCell.swift in Sources */,
 				73F284FD23815CC9004EBBDF /* NuguDisplayPlayerController.swift in Sources */,
+				7EBD76292391130100CA9C9C /* NuguLocationManager.swift in Sources */,
+				7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */,
 				73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */,
 				73F284EE23815CC9004EBBDF /* DisplayListTemplate.swift in Sources */,
 				73F284F223815CC9004EBBDF /* DisplayView.swift in Sources */,

@@ -19,29 +19,31 @@
 //
 
 import Foundation
-/// <#Description#>
-public enum TycheEpdState {
-    /// <#Description#>
-    case idle
-    /// <#Description#>
-    case listening
-    /// <#Description#>
-    case start
-    /// <#Description#>
-    case end
-    /// <#Description#>
-    case timeout
-    /// <#Description#>
-    case reachToMaxLength
-    /// <#Description#>
-    case finish
-    /// <#Description#>
-    case unknown
-    /// <#Description#>
-    case error
+
+public extension TycheEndPointDetectorEngine {
+    enum State {
+        /// <#Description#>
+        case idle
+        /// <#Description#>
+        case listening
+        /// <#Description#>
+        case start
+        /// <#Description#>
+        case end
+        /// <#Description#>
+        case timeout
+        /// <#Description#>
+        case reachToMaxLength
+        /// <#Description#>
+        case finish
+        /// <#Description#>
+        case unknown
+        /// <#Description#>
+        case error
+    }
 }
 
-extension TycheEpdState {
+extension TycheEndPointDetectorEngine.State {
     init(engineState: Int32) {
         switch engineState {
         case 0:

@@ -24,7 +24,7 @@ import NuguInterface
 import JadeMarble
 
 public class EndPointDetector: EndPointDetectable {
-    private let engine = TycheEpd()
+    private let engine = TycheEndPointDetectorEngine()
     private var boundStreams: BoundStreams?
     public weak var delegate: EndPointDetectorDelegate?
     
@@ -44,10 +44,22 @@ public class EndPointDetector: EndPointDetectable {
         engine.delegate = self
     }
     
-    public func start(inputStream: AudioStreamReadable, sampleRate: Double, timeout: Int, maxDuration: Int, pauseLength: Int) {
+    public func start(
+        inputStream: AudioStreamReadable,
+        sampleRate: Double,
+        timeout: Int,
+        maxDuration: Int,
+        pauseLength: Int
+    ) {
         boundStreams?.stop()
         boundStreams = BoundStreams(buffer: inputStream)
-        engine.start(inputStream: boundStreams!.input, sampleRate: sampleRate, timeout: timeout, maxDuration: maxDuration, pauseLength: pauseLength)
+        engine.start(
+            inputStream: boundStreams!.input,
+            sampleRate: sampleRate,
+            timeout: timeout,
+            maxDuration: maxDuration,
+            pauseLength: pauseLength
+        )
     }
     
     public func stop() {
@@ -56,8 +68,8 @@ public class EndPointDetector: EndPointDetectable {
     }
 }
 
-extension EndPointDetector: TycheEpdDelegate {
-    public func endPointDetectorStateChanged(state: TycheEpdState) {
+extension EndPointDetector: TycheEndPointDetectorEngineDelegate {
+    public func tycheEndPointDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State) {
         switch state {
         case .idle:
             self.state = .idle
@@ -80,7 +92,7 @@ extension EndPointDetector: TycheEpdDelegate {
         }
     }
     
-    public func endPointDetectorSpeechDataExtracted(speechData: Data) {
+    public func tycheEndPointDetectorEngineDidExtract(speechData: Data) {
         delegate?.endPointDetectorSpeechDataExtracted(speechData: speechData)
     }
 }

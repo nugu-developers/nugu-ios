@@ -31,13 +31,6 @@
 		1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
 		1F10091923792A4900D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
-		1F100956237ABF2800D90FEE /* PermissionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */; };
-		1F100958237ABF5400D90FEE /* PermissionAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */; };
-		1F10095B237AC02200D90FEE /* PermissionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095A237AC02200D90FEE /* PermissionAgent.swift */; };
-		1F10095D237AC04000D90FEE /* PermissionAgent+Directive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */; };
-		1F10095F237AC04B00D90FEE /* PermissionAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */; };
-		1F100961237BA7B700D90FEE /* PermissionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100960237BA7B700D90FEE /* PermissionContext.swift */; };
-		1F100964237C09AF00D90FEE /* PermissionAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100962237C07F500D90FEE /* PermissionAgentItem.swift */; };
 		1F100994238568D500D90FEE /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
 		1F100996238795FF00D90FEE /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
 		1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */; };
@@ -54,6 +47,11 @@
 		1F2E800D238FCD4400569C59 /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
 		1F2E800E238FCD4400569C59 /* NuguLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF01723753F7D00C9A177 /* NuguLoginKit.framework */; };
 		1F2E800F238FCD4400569C59 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
+		1F2E80142394E60100569C59 /* TycheKeywordDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */; };
+		1F2E803923966D9D00569C59 /* KeywordSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803823966D9D00569C59 /* KeywordSource.swift */; };
+		1F2E803C2397A26300569C59 /* WakeUpDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803B2397A26300569C59 /* WakeUpDetectable.swift */; };
+		1F2E803E2397A27300569C59 /* WakeUpDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803D2397A27300569C59 /* WakeUpDetectorState.swift */; };
+		1F2E80402397A2E500569C59 /* WakeUpDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* WakeUpDetectorDelegate.swift */; };
 		1FFFEFF423753EFD00C9A177 /* NuguInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFF223753EFD00C9A177 /* NuguInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -94,7 +92,7 @@
 		1FFFF2BE2375703000C9A177 /* AudioPlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */; };
 		1FFFF2BF2375703000C9A177 /* LocationAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */; };
 		1FFFF2C02375703000C9A177 /* LocationAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */; };
-		1FFFF2C12375703000C9A177 /* LocationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationContext.swift */; };
+		1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationInfo.swift */; };
 		1FFFF2C22375703000C9A177 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */; };
 		1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2532375703000C9A177 /* ASRState.swift */; };
 		1FFFF2C42375703000C9A177 /* ASRExpectSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */; };
@@ -329,13 +327,12 @@
 		1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF525237676BE00C9A177 /* NuguTests.swift */; };
 		7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */; };
 		7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD80237A77D800FCD6E9 /* BoundStreams.swift */; };
-		7330CD84237A77D800FCD6E9 /* KeyWordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */; };
-		7330CD88237A77F900FCD6E9 /* TycheEpdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */; };
-		7330CD89237A77F900FCD6E9 /* TycheEpdState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */; };
-		7330CD8A237A77F900FCD6E9 /* TycheEpd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD87237A77F900FCD6E9 /* TycheEpd.swift */; };
-		7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */; };
-		7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKwd.swift */; };
-		7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */; };
+		7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */; };
+		7330CD88237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */; };
+		7330CD89237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */; };
+		7330CD8A237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */; };
+		7330CD8D237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */; };
+		7330CD8E237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift */; };
 		73454FBD2382C1E50073AF48 /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
 		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
 		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
@@ -534,13 +531,6 @@
 		1F10090A23792A0000D90FEE /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		1F10094E237A886100D90FEE /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		1F100953237A8AE800D90FEE /* Cartfile.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
-		1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentProtocol.swift; sourceTree = "<group>"; };
-		1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentDelegate.swift; sourceTree = "<group>"; };
-		1F10095A237AC02200D90FEE /* PermissionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgent.swift; sourceTree = "<group>"; };
-		1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PermissionAgent+Directive.swift"; sourceTree = "<group>"; };
-		1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PermissionAgent+Event.swift"; sourceTree = "<group>"; };
-		1F100960237BA7B700D90FEE /* PermissionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionContext.swift; sourceTree = "<group>"; };
-		1F100962237C07F500D90FEE /* PermissionAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentItem.swift; sourceTree = "<group>"; };
 		1F100965237C0D0100D90FEE /* scheduled-feature.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "scheduled-feature.md"; sourceTree = "<group>"; };
 		1F100990238529C100D90FEE /* TimeIntervallic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervallic.swift; sourceTree = "<group>"; };
 		1F100995238795FF00D90FEE /* NuguTimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguTimeInterval.swift; sourceTree = "<group>"; };
@@ -550,6 +540,11 @@
 		1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentExceptionCode.swift; sourceTree = "<group>"; };
 		1F2E8005238FC21900569C59 /* SystemAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
 		1F2E8011238FD43C00569C59 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TycheKeywordDetectorEngine+State.swift"; sourceTree = "<group>"; };
+		1F2E803823966D9D00569C59 /* KeywordSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSource.swift; sourceTree = "<group>"; };
+		1F2E803B2397A26300569C59 /* WakeUpDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpDetectable.swift; sourceTree = "<group>"; };
+		1F2E803D2397A27300569C59 /* WakeUpDetectorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorState.swift; sourceTree = "<group>"; };
+		1F2E803F2397A2E500569C59 /* WakeUpDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorDelegate.swift; sourceTree = "<group>"; };
 		1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguInterface.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFF223753EFD00C9A177 /* NuguInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguInterface.h; sourceTree = "<group>"; };
 		1FFFEFF323753EFD00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -605,7 +600,7 @@
 		1FFFF24C2375703000C9A177 /* AudioPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerState.swift; sourceTree = "<group>"; };
 		1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentDelegate.swift; sourceTree = "<group>"; };
-		1FFFF2502375703000C9A177 /* LocationContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationContext.swift; sourceTree = "<group>"; };
+		1FFFF2502375703000C9A177 /* LocationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationInfo.swift; sourceTree = "<group>"; };
 		1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2532375703000C9A177 /* ASRState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRState.swift; sourceTree = "<group>"; };
 		1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRExpectSpeech.swift; sourceTree = "<group>"; };
@@ -641,7 +636,6 @@
 		1FFFF27D2375703000C9A177 /* NetworkError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiveMessageDelegate.swift; sourceTree = "<group>"; };
 		1FFFF27F2375703000C9A177 /* NetworkManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManageable.swift; sourceTree = "<group>"; };
-		1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorProtocol.swift; sourceTree = "<group>"; };
 		1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2842375703000C9A177 /* PlaySyncState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncState.swift; sourceTree = "<group>"; };
 		1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncManageable.swift; sourceTree = "<group>"; };
@@ -852,12 +846,12 @@
 		3D9C431122746198000A6585 /* nugu-ios-macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nugu-ios-macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetector.swift; sourceTree = "<group>"; };
 		7330CD80237A77D800FCD6E9 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
-		7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyWordDetector.swift; sourceTree = "<group>"; };
-		7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpdDelegate.swift; sourceTree = "<group>"; };
-		7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpdState.swift; sourceTree = "<group>"; };
-		7330CD87237A77F900FCD6E9 /* TycheEpd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEpd.swift; sourceTree = "<group>"; };
-		7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwdDelegate.swift; sourceTree = "<group>"; };
-		7330CD8C237A784500FCD6E9 /* TycheKwd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKwd.swift; sourceTree = "<group>"; };
+		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
+		7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngineDelegate.swift; sourceTree = "<group>"; };
+		7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TycheEndpointDetectorEngine+State.swift"; sourceTree = "<group>"; };
+		7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngine.swift; sourceTree = "<group>"; };
+		7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKeywordDetectorEngineDelegate.swift; sourceTree = "<group>"; };
+		7330CD8C237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKeywordDetectorEngine.swift; sourceTree = "<group>"; };
 		73454FBC2382C1E50073AF48 /* Publish.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Publish.swift; sourceTree = "<group>"; };
 		73454FC22387BDF00073AF48 /* NuguServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServerInfo.swift; sourceTree = "<group>"; };
 		73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguOAuthServerInfo.swift; sourceTree = "<group>"; };
@@ -1031,27 +1025,6 @@
 			name = Cocoapods;
 			sourceTree = "<group>";
 		};
-		1F100954237ABEF800D90FEE /* Permission */ = {
-			isa = PBXGroup;
-			children = (
-				1F100955237ABF2800D90FEE /* PermissionAgentProtocol.swift */,
-				1F100957237ABF5400D90FEE /* PermissionAgentDelegate.swift */,
-				1F100960237BA7B700D90FEE /* PermissionContext.swift */,
-			);
-			path = Permission;
-			sourceTree = "<group>";
-		};
-		1F100959237ABFF100D90FEE /* Permission */ = {
-			isa = PBXGroup;
-			children = (
-				1F10095A237AC02200D90FEE /* PermissionAgent.swift */,
-				1F10095C237AC04000D90FEE /* PermissionAgent+Directive.swift */,
-				1F10095E237AC04A00D90FEE /* PermissionAgent+Event.swift */,
-				1F100962237C07F500D90FEE /* PermissionAgentItem.swift */,
-			);
-			path = Permission;
-			sourceTree = "<group>";
-		};
 		1F1009972387968D00D90FEE /* Delegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1085,6 +1058,44 @@
 				1F2E8005238FC21900569C59 /* SystemAgentTests.swift */,
 			);
 			path = Capability;
+			sourceTree = "<group>";
+		};
+		1F2E803523966B1900569C59 /* NuguClient */ = {
+			isa = PBXGroup;
+			children = (
+				1FFFF3D92375735E00C9A177 /* NuguClient.swift */,
+				1FFFF3D82375735E00C9A177 /* NuguClient+Coordinator.swift */,
+				1FFFF3DC2375735E00C9A177 /* NuguClient+Builder.swift */,
+			);
+			path = NuguClient;
+			sourceTree = "<group>";
+		};
+		1F2E803623966B2900569C59 /* KeywordDetector */ = {
+			isa = PBXGroup;
+			children = (
+				1F2E803A2397A22D00569C59 /* WakeUpDetectable */,
+				7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */,
+				1F2E803823966D9D00569C59 /* KeywordSource.swift */,
+			);
+			path = KeywordDetector;
+			sourceTree = "<group>";
+		};
+		1F2E803723966B3A00569C59 /* EndPointDetector */ = {
+			isa = PBXGroup;
+			children = (
+				7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */,
+			);
+			path = EndPointDetector;
+			sourceTree = "<group>";
+		};
+		1F2E803A2397A22D00569C59 /* WakeUpDetectable */ = {
+			isa = PBXGroup;
+			children = (
+				1F2E803B2397A26300569C59 /* WakeUpDetectable.swift */,
+				1F2E803F2397A2E500569C59 /* WakeUpDetectorDelegate.swift */,
+				1F2E803D2397A27300569C59 /* WakeUpDetectorState.swift */,
+			);
+			path = WakeUpDetectable;
 			sourceTree = "<group>";
 		};
 		1FFFEFF123753EFD00C9A177 /* NuguInterface */ = {
@@ -1268,7 +1279,6 @@
 				1FFFF2632375703000C9A177 /* Display */,
 				1FFFF2682375703000C9A177 /* Text */,
 				1FFFF24D2375703000C9A177 /* Location */,
-				1F100954237ABEF800D90FEE /* Permission */,
 				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
 				1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */,
 				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
@@ -1324,7 +1334,7 @@
 			children = (
 				1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */,
 				1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */,
-				1FFFF2502375703000C9A177 /* LocationContext.swift */,
+				1FFFF2502375703000C9A177 /* LocationInfo.swift */,
 			);
 			path = Location;
 			sourceTree = "<group>";
@@ -1626,7 +1636,6 @@
 				1FFFF3542375707000C9A177 /* Display */,
 				1FFFF3592375707000C9A177 /* Text */,
 				1FFFF3402375707000C9A177 /* Location */,
-				1F100959237ABFF100D90FEE /* Permission */,
 			);
 			path = Capability;
 			sourceTree = "<group>";
@@ -1839,15 +1848,12 @@
 		1FFFF3D72375735E00C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3D92375735E00C9A177 /* NuguClient.swift */,
-				1FFFF3D82375735E00C9A177 /* NuguClient+Coordinator.swift */,
-				1FFFF3DC2375735E00C9A177 /* NuguClient+Builder.swift */,
+				1F2E803523966B1900569C59 /* NuguClient */,
+				1F2E803723966B3A00569C59 /* EndPointDetector */,
+				1F2E803623966B2900569C59 /* KeywordDetector */,
 				1FFFF3DB2375735E00C9A177 /* FocusChannelConfiguration.swift */,
 				1FFFF3DA2375735E00C9A177 /* MediaPlayerFactory.swift */,
-				1FFFF2812375703000C9A177 /* WakeUpDetectorProtocol.swift */,
 				7330CD80237A77D800FCD6E9 /* BoundStreams.swift */,
-				7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */,
-				7330CD81237A77D800FCD6E9 /* KeyWordDetector.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1880,9 +1886,9 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF3FC2375740600C9A177 /* JadeMarble.swift */,
-				7330CD87237A77F900FCD6E9 /* TycheEpd.swift */,
-				7330CD85237A77F900FCD6E9 /* TycheEpdDelegate.swift */,
-				7330CD86237A77F900FCD6E9 /* TycheEpdState.swift */,
+				7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */,
+				7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */,
+				7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1892,7 +1898,7 @@
 			children = (
 				1FFFF41423757DF800C9A177 /* KeenSense.swift */,
 				1FFFF41523757DF800C9A177 /* SpeexCodec */,
-				1FFFF41723757DF800C9A177 /* KeyWordDetector */,
+				1FFFF41723757DF800C9A177 /* KeywordDetector */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1905,15 +1911,16 @@
 			path = SpeexCodec;
 			sourceTree = "<group>";
 		};
-		1FFFF41723757DF800C9A177 /* KeyWordDetector */ = {
+		1FFFF41723757DF800C9A177 /* KeywordDetector */ = {
 			isa = PBXGroup;
 			children = (
-				7330CD8C237A784500FCD6E9 /* TycheKwd.swift */,
-				7330CD8B237A784500FCD6E9 /* TycheKwdDelegate.swift */,
+				7330CD8C237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift */,
+				1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */,
+				7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */,
 				1FFFF41823757DF800C9A177 /* DetectedData.swift */,
 				1FFFF41A23757DF800C9A177 /* ShiftingData.swift */,
 			);
-			path = KeyWordDetector;
+			path = KeywordDetector;
 			sourceTree = "<group>";
 		};
 		1FFFF42023757E0000C9A177 /* Libraries */ = {
@@ -2819,10 +2826,8 @@
 				1FFFF2B72375703000C9A177 /* SpeakerVolumeType.swift in Sources */,
 				1FFFF2E42375703100C9A177 /* UpstreamHeader.swift in Sources */,
 				1FFFF2BA2375703000C9A177 /* AudioPlayerDisplayDelegate.swift in Sources */,
-				1F100956237ABF2800D90FEE /* PermissionAgentProtocol.swift in Sources */,
 				1FFFF2B32375703000C9A177 /* ExtensionAgentDelegate.swift in Sources */,
 				1FFFF2BB2375703000C9A177 /* AudioPlayerDisplayTemplate+AudioPlayer.swift in Sources */,
-				1F100961237BA7B700D90FEE /* PermissionContext.swift in Sources */,
 				1FFFF2D02375703100C9A177 /* TTSAgentProtocol.swift in Sources */,
 				1FFFF2EE2375703100C9A177 /* FocusDelegate.swift in Sources */,
 				1FFFF2D82375703100C9A177 /* TextAgentProtocol.swift in Sources */,
@@ -2881,7 +2886,6 @@
 				7EDCF2A8238529CC006F96B6 /* DownStreamDataInterpretable.swift in Sources */,
 				1FFFF2DA2375703100C9A177 /* SendMessageStatus.swift in Sources */,
 				1FFFF2C62375703000C9A177 /* ASRAgentProtocol.swift in Sources */,
-				1F100958237ABF5400D90FEE /* PermissionAgentDelegate.swift in Sources */,
 				1FFFF2E72375703100C9A177 /* NetworkError.swift in Sources */,
 				1FFFF2C42375703000C9A177 /* ASRExpectSpeech.swift in Sources */,
 				1FFFF2EB2375703100C9A177 /* PlaySyncDelegate.swift in Sources */,
@@ -2897,7 +2901,7 @@
 				1FFFF2AE2375703000C9A177 /* ContextInfoDelegate.swift in Sources */,
 				1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */,
 				1FFFF2A82375703000C9A177 /* MediaPlayerState.swift in Sources */,
-				1FFFF2C12375703000C9A177 /* LocationContext.swift in Sources */,
+				1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */,
 				1FFFF2D12375703100C9A177 /* DisplayAgentProtocol.swift in Sources */,
 				1FFFF2D32375703100C9A177 /* DisplayTemplate.swift in Sources */,
 			);
@@ -2947,7 +2951,6 @@
 				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
 				1FFFF3872375707000C9A177 /* MicInputConst.swift in Sources */,
 				1FFFF3B62375707100C9A177 /* DisplayAgent+Event.swift in Sources */,
-				1F10095F237AC04B00D90FEE /* PermissionAgent+Event.swift in Sources */,
 				1FFFF3902375707000C9A177 /* TimeUUID.swift in Sources */,
 				1FFFF3B32375707100C9A177 /* DisplayAgent.swift in Sources */,
 				1FFFF3B22375707100C9A177 /* TTSMedia.swift in Sources */,
@@ -2972,13 +2975,11 @@
 				1FFFF3AB2375707100C9A177 /* SystemAgent+Event.swift in Sources */,
 				1FFFF3A62375707100C9A177 /* WakeUpInfoDelegate.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
-				1F10095D237AC04000D90FEE /* PermissionAgent+Directive.swift in Sources */,
 				1FFFF3AC2375707100C9A177 /* SystemAgent+Directive.swift in Sources */,
 				1FFFF3A12375707100C9A177 /* AudioPlayerAgent+Directive.swift in Sources */,
 				1FFFF3A82375707100C9A177 /* ASRNotifyResult.swift in Sources */,
 				1FFFF3802375707000C9A177 /* MediaAVPlayerItem.swift in Sources */,
 				1FFFF3942375707100C9A177 /* ExtensionAgent.swift in Sources */,
-				1F100964237C09AF00D90FEE /* PermissionAgentItem.swift in Sources */,
 				1FFFF3C32375707100C9A177 /* PlaySyncManager.swift in Sources */,
 				1FFFF3992375707100C9A177 /* SpeakerAgent+Directive.swift in Sources */,
 				1FFFF3BC2375707100C9A177 /* HTTPConst.swift in Sources */,
@@ -2993,7 +2994,6 @@
 				1FFFF3BF2375707100C9A177 /* NuguApi.swift in Sources */,
 				1FFFF3A02375707100C9A177 /* AudioPlayerDisplayManageable.swift in Sources */,
 				1FFFF3B72375707100C9A177 /* TextAgent+Event.swift in Sources */,
-				1F10095B237AC02200D90FEE /* PermissionAgent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3003,13 +3003,16 @@
 			files = (
 				1FFFF3E12375735E00C9A177 /* NuguClient+Builder.swift in Sources */,
 				1FFFF3DD2375735E00C9A177 /* NuguClient+Coordinator.swift in Sources */,
+				1F2E803C2397A26300569C59 /* WakeUpDetectable.swift in Sources */,
+				1F2E803923966D9D00569C59 /* KeywordSource.swift in Sources */,
+				1F2E803E2397A27300569C59 /* WakeUpDetectorState.swift in Sources */,
+				1F2E80402397A2E500569C59 /* WakeUpDetectorDelegate.swift in Sources */,
 				1FFFF3DF2375735E00C9A177 /* MediaPlayerFactory.swift in Sources */,
 				1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */,
 				7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */,
 				1FFFF3E02375735E00C9A177 /* FocusChannelConfiguration.swift in Sources */,
-				7330CD95237A86E300FCD6E9 /* WakeUpDetectorProtocol.swift in Sources */,
 				7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */,
-				7330CD84237A77D800FCD6E9 /* KeyWordDetector.swift in Sources */,
+				7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3044,10 +3047,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7330CD89237A77F900FCD6E9 /* TycheEpdState.swift in Sources */,
+				7330CD89237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift in Sources */,
 				1FFFF4092375740600C9A177 /* JadeMarble.swift in Sources */,
-				7330CD88237A77F900FCD6E9 /* TycheEpdDelegate.swift in Sources */,
-				7330CD8A237A77F900FCD6E9 /* TycheEpd.swift in Sources */,
+				7330CD88237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift in Sources */,
+				7330CD8A237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3057,9 +3060,10 @@
 			files = (
 				1FFFF41D23757DF800C9A177 /* DetectedData.swift in Sources */,
 				1FFFF41C23757DF800C9A177 /* SpeexEncoder.swift in Sources */,
-				7330CD8D237A784500FCD6E9 /* TycheKwdDelegate.swift in Sources */,
+				7330CD8D237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift in Sources */,
+				1F2E80142394E60100569C59 /* TycheKeywordDetectorEngine+State.swift in Sources */,
 				1FFFF41B23757DF800C9A177 /* KeenSense.swift in Sources */,
-				7330CD8E237A784500FCD6E9 /* TycheKwd.swift in Sources */,
+				7330CD8E237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift in Sources */,
 				1FFFF41F23757DF800C9A177 /* ShiftingData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,8 +1,8 @@
 //
-//  LocationAgentDelegate.swift
-//  NuguInterface
+//  WakeUpDetectorState.swift
+//  NuguClientKit
 //
-//  Created by yonghoonKwon on 2019/10/30.
+//  Created by yonghoonKwon on 2019/12/04.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,10 @@
 
 import Foundation
 
-/// The methods that you use to receive location information from an associated `LocationAgent` object.
-public protocol LocationAgentDelegate: class {
-    
-    /// It called when need location information for using nugu service.
-    ///
-    /// It is used as `ContextInfo`, thus must be get `LocationInfo` quickly and synchronous.
-    /// Mostly used when every a request through `ASRAgent` or `TextAgent`.
-    /// Best to use cached value or constant value when possible.
-    func locationAgentRequestLocationInfo() -> LocationInfo?
+/// <#Description#>
+public enum WakeUpDetectorState {
+    /// <#Description#>
+    case active
+    /// <#Description#>
+    case inactive
 }

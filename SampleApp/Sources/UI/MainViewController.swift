@@ -383,7 +383,7 @@ extension MainViewController: NetworkStatusDelegate {
                 self?.nuguButton.isEnabled = true
                 self?.nuguButton.isHidden = false
             }
-        case .disconnected(let networkError):
+        case .disconnected(let error):
             // Stop wakeup-detector
             NuguCentralManager.shared.stopWakeUpDetector()
             
@@ -397,27 +397,29 @@ extension MainViewController: NetworkStatusDelegate {
                 }
             }
             
-            guard let networkError = networkError else { return }
-            
-            switch networkError {
-            case .authError:
-                switch SampleApp.loginMethod {
-                case .type1:
-                    NuguCentralManager.shared.tokenRefresh()
-                case .type2:
-                    DispatchQueue.main.async {
-                        SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
-                        NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                        NuguCentralManager.shared.logout()
+            if let networkError = error as? NetworkError {
+                switch networkError {
+                case .authError:
+                    switch SampleApp.loginMethod {
+                    case .type1:
+                        NuguCentralManager.shared.tokenRefresh()
+                    case .type2:
+                        DispatchQueue.main.async {
+                            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
+                            NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
+                            NuguCentralManager.shared.logout()
+                        }
+                    default:
+                        break
                     }
+                    
+                case .timeout:
+                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTimeout))
                 default:
-                    break
+                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthServerError))
                 }
+            } else {
                 
-            case .timeout:
-                SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTimeout))
-            default:
-                SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthServerError))
             }
         }
     }

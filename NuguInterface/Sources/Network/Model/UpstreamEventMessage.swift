@@ -72,13 +72,13 @@ public struct UpstreamEventMessage {
         ) { result, context in
             result[context.name] = context.payload
         }
-        let client = contextPayload.client?.reduce(
+        let client = contextPayload.client.reduce(
             into: [String: Any]()
         ) { result, context in
             result[context.name] = context.payload
         }
         
-        let contextDict: [String: Any?] = [
+        let contextDict: [String: Any] = [
             "supportedInterfaces": supportedInterfaces,
             "client": client
         ]
