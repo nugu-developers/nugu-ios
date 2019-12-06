@@ -293,7 +293,7 @@ private extension MainViewController {
 // MARK: - Private (DisplayView)
 
 private extension MainViewController {
-    func addDisplayView(displayTemplate: DisplayTemplate) {
+    func addDisplayView(displayTemplate: DisplayTemplate) -> UIView? {
         displayView?.removeFromSuperview()
         
         switch displayTemplate.type {
@@ -310,12 +310,11 @@ private extension MainViewController {
             break
         }
         
-        guard let displayView = displayView else { return }
+        guard let displayView = displayView else { return nil }
         
         displayView.displayPayload = displayTemplate.payload
         displayView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
-            NuguCentralManager.shared.client.displayAgent?.clearDisplay(delegate: self)
             self.dismissDisplayView()
         }
         displayView.onItemSelect = { (selectedItemToken) in
@@ -327,6 +326,8 @@ private extension MainViewController {
         UIView.animate(withDuration: 0.3) {
             displayView.alpha = 1.0
         }
+        
+        return displayView
     }
     
     func dismissDisplayView() {
@@ -345,22 +346,21 @@ private extension MainViewController {
 // MARK: - Private (DisplayAudioPlayerView)
 
 private extension MainViewController {
-    func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) {
+    func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> UIView? {
         displayAudioPlayerView?.removeFromSuperview()
-        
-        switch audioPlayerDisplayTemplate.typeInfo {
-        case .audioPlayer(let item):
-            let audioPlayerView = DisplayAudioPlayerView(frame: view.frame)
-            audioPlayerView.displayItem = item
-            audioPlayerView.onCloseButtonClick = { [weak self] in
-                guard let self = self else { return }
-                NuguCentralManager.shared.client.audioPlayerAgent?.clearDisplay(displayDelegate: self)
-                self.dismissDisplayAudioPlayerView()
-            }
-            displayAudioPlayerView = audioPlayerView
+
+        let audioPlayerView = DisplayAudioPlayerView(frame: view.frame)
+        audioPlayerView.displayItem = audioPlayerDisplayTemplate.payload
+        audioPlayerView.onCloseButtonClick = { [weak self] in
+            guard let self = self else { return }
+            self.dismissDisplayAudioPlayerView()
+            NuguCentralManager.shared.displayPlayerController.remove()
         }
-        guard let displayAudioPlayerView = displayAudioPlayerView else { return }
-        view.insertSubview(displayAudioPlayerView, belowSubview: nuguButton)
+
+        view.insertSubview(audioPlayerView, belowSubview: nuguButton)
+        displayAudioPlayerView = audioPlayerView
+        
+        return audioPlayerView
     }
     
     func dismissDisplayAudioPlayerView() {
@@ -544,23 +544,16 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentShouldRender(template: DisplayTemplate) -> Bool {
-        return true
+    func displayAgentDidRender(template: DisplayTemplate) -> NSObject? {
+        return addDisplayView(displayTemplate: template)
     }
     
-    func displayAgentDidRender(template: DisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.addDisplayView(displayTemplate: template)
-        }   
-    }
-    
-    func displayAgentShouldClear(template: DisplayTemplate) -> Bool {
-        return true
-    }
-    
-    func displayAgentDidClear(template: DisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.dismissDisplayView()
+    func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason) {
+        switch reason {
+        case .timer:
+            dismissDisplayView()
+        case .directive:
+            dismissDisplayView()
         }
     }
 }
@@ -568,23 +561,16 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> Bool {
-        return true
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+        return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
-        }
-    }
-    
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) -> Bool {
-        return true
-    }
-    
-    func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.dismissDisplayAudioPlayerView()
+    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
+        switch reason {
+        case .timer:
+            dismissDisplayAudioPlayerView()
+        case .directive:
+            dismissDisplayAudioPlayerView()
         }
     }
 }
