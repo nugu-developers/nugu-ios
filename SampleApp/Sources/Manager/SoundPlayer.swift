@@ -109,7 +109,6 @@ struct SoundPlayer {
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: soundType.fileTypeHint)
             player?.play()
         } catch {
-            log.error("Can't find sound file")
             log.error("Failed to play sound file : \(error.localizedDescription)")
         }
     }
