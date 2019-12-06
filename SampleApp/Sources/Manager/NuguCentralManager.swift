@@ -87,27 +87,25 @@ extension NuguCentralManager {
                 deviceUniqueId: SampleApp.deviceUniqueId
             )
             
-            switch UserDefaults.Standard.refreshToken {
-            case .some(let refreshToken):
-                loginWithRefreshToken(refreshToken: refreshToken) { (result) in
-                    switch result {
-                    case .success:
-                        completion(.success(()))
-                    case .failure:
-                        completion(.failure(SampleAppError.loginWithRefreshTokenFailedError))
-                    }
-                }
-            case .none:
+            guard let refreshToken = UserDefaults.Standard.refreshToken else {
                 OAuthManager<Type1>.shared.loginBySafariViewController(from: viewController) { (result) in
-                    switch result {
-                    case .success(let response):
-                        UserDefaults.Standard.accessToken = response.accessToken
-                        UserDefaults.Standard.refreshToken = response.refreshToken
-                        completion(.success(()))
-                    case .failure:
+                    guard case .success(let authorizationInfo) = result else {
                         completion(.failure(SampleAppError.loginFailedError(loginMethod: .type1)))
+                        return
                     }
+                    UserDefaults.Standard.accessToken = authorizationInfo.accessToken
+                    UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
+                    completion(.success(()))
                 }
+                return
+            }
+            
+            loginWithRefreshToken(refreshToken: refreshToken) { (result) in
+                guard case .success = result else {
+                    completion(.failure(SampleAppError.loginWithRefreshTokenFailedError))
+                    return
+                }
+                completion(.success(()))
             }
         case .type2:
             guard let clientId = SampleApp.clientId,
@@ -123,13 +121,12 @@ extension NuguCentralManager {
             )
             
             OAuthManager<Type2>.shared.login(completion: { (result) in
-                switch result {
-                case .success(let response):
-                    UserDefaults.Standard.accessToken = response.accessToken
-                    completion(.success(()))
-                case .failure:
+                guard case .success(let authorizationInfo) = result else {
                     completion(.failure(SampleAppError.loginFailedError(loginMethod: .type2)))
+                    return
                 }
+                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
+                completion(.success(()))
             })
         }
     }
@@ -143,12 +140,11 @@ extension NuguCentralManager {
                 return
             }
             loginWithRefreshToken(refreshToken: refreshToken) { [weak self] (result) in
-                switch result {
-                case .success:
-                    self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
-                case .failure:
+                guard case .success = result else {
                     self?.logoutAfterErrorHandling()
+                    return
                 }
+                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
             }
         case .type2:
             logoutAfterErrorHandling()
