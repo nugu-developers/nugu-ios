@@ -31,7 +31,6 @@ final class NuguCentralManager {
     
     private init() {
         client.focusManager.delegate = self
-        client.authorizationManager.add(stateDelegate: self)
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
             client.endPointDetector?.epdFile = epdFile
@@ -48,7 +47,7 @@ final class NuguCentralManager {
     }
 }
 
-// MARK: - Internal
+// MARK: - Internal (Enable / Disable)
 
 extension NuguCentralManager {
     func enable(accessToken: String) {
@@ -62,14 +61,37 @@ extension NuguCentralManager {
         client.accessToken = nil
         client.inputProvider?.stop()
     }
+}
+
+// MARK: - Internal (Auth)
+
+extension NuguCentralManager {
+    func handleAuthError() {
+        switch SampleApp.loginMethod {
+        case .type1:
+            tokenRefresh()
+        case .type2:
+            logoutAfterErrorHandling()
+        default:
+            break
+        }
+    }
     
+    func logout() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
+        disable()
+        UserDefaults.Standard.clear()
+        rootNavigationViewController.popToRootViewController(animated: true)
+    }
+}
+
+// MARK: - Private (Auth)
+
+private extension NuguCentralManager {
     func tokenRefresh() {
         guard let refreshToken = UserDefaults.Standard.refreshToken else {
-            DispatchQueue.main.async { [weak self] in
-                SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
-                NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                self?.logout()
-            }
+            logoutAfterErrorHandling()
             return
         }
         
@@ -78,23 +100,18 @@ extension NuguCentralManager {
             case .success(let authorizationInfo):
                 UserDefaults.Standard.accessToken = authorizationInfo.accessToken
                 UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
+                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
             case .failure:
-                DispatchQueue.main.async { [weak self] in
-                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
-                    NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                    self?.logout()
-                }
+                self?.logoutAfterErrorHandling()
             }
         }
     }
     
-    func logout() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
-        DispatchQueue.main.async {
-            NuguCentralManager.shared.disable()
-            UserDefaults.Standard.clear()
-            rootNavigationViewController.popToRootViewController(animated: true)
+    func logoutAfterErrorHandling() {
+        DispatchQueue.main.async { [weak self] in
+            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
+            NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
+            self?.logout()
         }
     }
 }
@@ -119,7 +136,6 @@ extension NuguCentralManager {
     
     func cancelRecognize() {
         client.asrAgent?.stopRecognition()
-        
         client.focusManager.stopForegroundActivity()
     }
 }
@@ -195,23 +211,6 @@ extension NuguCentralManager {
     }
 }
 
-// MARK: - AuthorizationStateDelegate
-
-extension NuguCentralManager: AuthorizationStateDelegate {
-    func authorizationStateDidChange(_ state: AuthorizationState) {
-        switch state {
-        case .error(let authorizationError):
-            switch authorizationError {
-            case .authorizationFailed:
-                // TODO: - refresh token logic
-                break
-            default: break
-            }
-        default: break
-        }
-    }
-}
-
 // MARK: - FocusDelegate
 
 extension NuguCentralManager: FocusDelegate {
@@ -242,7 +241,7 @@ extension NuguCentralManager: SystemAgentDelegate {
         case .ttsSpeakingException:
             SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTtsConnectionError))
         case .unauthorizedRequestException:
-            break
+            handleAuthError()
         }
     }
 }

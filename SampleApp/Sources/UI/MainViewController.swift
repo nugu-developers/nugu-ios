@@ -401,19 +401,7 @@ extension MainViewController: NetworkStatusDelegate {
             if let networkError = error as? NetworkError {
                 switch networkError {
                 case .authError:
-                    switch SampleApp.loginMethod {
-                    case .type1:
-                        NuguCentralManager.shared.tokenRefresh()
-                    case .type2:
-                        DispatchQueue.main.async {
-                            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
-                            NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                            NuguCentralManager.shared.logout()
-                        }
-                    default:
-                        break
-                    }
-                    
+                    NuguCentralManager.shared.handleAuthError()
                 case .timeout:
                     SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTimeout))
                 default:
