@@ -74,26 +74,27 @@ public class NuguClient {
     }
 
     // MARK: - Mandatory
-
+    
     /// <#Description#>
-    public let authorizationManager = AuthorizationManager.shared
+    public let authorizationManager: AuthorizationManager
     /// <#Description#>
-    public let focusManager: FocusManageable = FocusManager()
+    public let focusManager: FocusManageable
     /// <#Description#>
-    public let networkManager: NetworkManageable = NetworkManager()
+    public let networkManager: NetworkManageable
     /// <#Description#>
-    public let dialogStateAggregator: DialogStateAggregatable = DialogStateAggregator()
+    public let dialogStateAggregator: DialogStateAggregatable
     /// <#Description#>
-    public let contextManager: ContextManageable = ContextManager()
+    public let contextManager: ContextManageable
     /// <#Description#>
-    public let playSyncManager: PlaySyncManageable = PlaySyncManager()
+    public let playSyncManager: PlaySyncManageable
     /// <#Description#>
-    public lazy var directiveSequencer: DirectiveSequenceable = DirectiveSequencer(messageSender: networkManager)
-    public let downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter()
+    public let directiveSequencer: DirectiveSequenceable
     /// <#Description#>
-    let mediaPlayerFactory = MediaPlayerFactory()
-
-    // MARK: - Audio Related
+    public let downStreamDataInterpreter: DownStreamDataInterpretable
+    /// <#Description#>
+    public let mediaPlayerFactory: MediaPlayableFactory
+    
+    // MARK: - Related Audio
 
     /// <#Description#>
     public let inputProvider: AudioProvidable?
@@ -106,6 +107,8 @@ public class NuguClient {
     
     // MARK: - Capability Agents
     
+    /// <#Description#>
+    public let systemAgent: SystemAgentProtocol
     /// <#Description#>
     public let asrAgent: ASRAgentProtocol?
     /// <#Description#>
@@ -120,17 +123,25 @@ public class NuguClient {
     public let extensionAgent: ExtensionAgentProtocol?
     /// <#Description#>
     public let locationAgent: LocationAgentProtocol?
-    /// <#Description#>
-    public let systemAgent: SystemAgentProtocol
     
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
 
     init(
+        authorizationManager: AuthorizationManager,
+        focusManager: FocusManageable,
+        networkManager: NetworkManageable,
+        dialogStateAggregator: DialogStateAggregatable,
+        contextManager: ContextManageable,
+        playSyncManager: PlaySyncManageable,
+        directiveSequencer: DirectiveSequenceable,
+        downStreamDataInterpreter: DownStreamDataInterpretable,
+        mediaPlayerFactory: MediaPlayableFactory,
         inputProvider: AudioProvidable?,
         sharedAudioStream: AudioStreamable?,
         endPointDetector: EndPointDetectable?,
         wakeUpDetector: KeywordDetector?,
+        systemAgent: SystemAgentProtocol,
         asrAgent: ASRAgentProtocol?,
         ttsAgent: TTSAgentProtocol?,
         audioPlayerAgent: AudioPlayerAgentProtocol?,
@@ -141,10 +152,20 @@ public class NuguClient {
     ) {
         log.info("with NuguApp")
         
+        self.authorizationManager = authorizationManager
+        self.focusManager = focusManager
+        self.networkManager = networkManager
+        self.dialogStateAggregator = dialogStateAggregator
+        self.contextManager = contextManager
+        self.playSyncManager = playSyncManager
+        self.directiveSequencer = directiveSequencer
+        self.downStreamDataInterpreter = downStreamDataInterpreter
+        self.mediaPlayerFactory = mediaPlayerFactory
         self.inputProvider = inputProvider
         self.sharedAudioStream = sharedAudioStream
         self.endPointDetector = endPointDetector
         self.wakeUpDetector = wakeUpDetector
+        self.systemAgent = systemAgent
         self.asrAgent = asrAgent
         self.ttsAgent = ttsAgent
         self.audioPlayerAgent = audioPlayerAgent
@@ -152,7 +173,6 @@ public class NuguClient {
         self.textAgent = textAgent
         self.extensionAgent = extensionAgent
         self.locationAgent = locationAgent
-        self.systemAgent = SystemAgent()
         
         setupDependencies()
     }

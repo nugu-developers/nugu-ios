@@ -25,7 +25,9 @@ public protocol SpeakerAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 HandleDirectiveDelegate {
-    var messageSender: MessageSendable! { get set }
+    /// <#Description#>
+    /// - Parameter messageSender: <#messageSender description#>
+    init(messageSender: MessageSendable)
     
     /// <#Description#>
     var delegate: SpeakerAgentDelegate? { get set }

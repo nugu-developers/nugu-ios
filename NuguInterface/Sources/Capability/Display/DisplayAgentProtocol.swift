@@ -26,8 +26,13 @@ CapabilityAgentable,
 ContextInfoDelegate,
 HandleDirectiveDelegate,
 PlaySyncDelegate {
-    var messageSender: MessageSendable! { get set }
-    var playSyncManager: PlaySyncManageable! { get set }
+    /// <#Description#>
+    /// - Parameter messageSender: <#messageSender description#>
+    /// - Parameter playSyncManager: <#playSyncManager description#>
+    init(
+        messageSender: MessageSendable,
+        playSyncManager: PlaySyncManageable
+    )
     
     /// Adds a delegate to be notified of DisplayTemplateType changes.
     ///

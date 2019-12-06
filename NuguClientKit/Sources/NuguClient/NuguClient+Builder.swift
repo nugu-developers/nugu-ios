@@ -32,20 +32,82 @@ extension NuguClient {
         public lazy var endPointDetector: EndPointDetectable = EndPointDetector()
         public lazy var wakeUpDetector = KeywordDetector()
         
+        /// <#Description#>
+        public let authorizationManager = AuthorizationManager.shared
+        /// <#Description#>
+        public let focusManager: FocusManageable = FocusManager()
+        /// <#Description#>
+        public let networkManager: NetworkManageable = NetworkManager()
+        /// <#Description#>
+        public let dialogStateAggregator: DialogStateAggregatable = DialogStateAggregator()
+        /// <#Description#>
+        public let contextManager: ContextManageable = ContextManager()
+        /// <#Description#>
+        public let playSyncManager: PlaySyncManageable = PlaySyncManager()
+        /// <#Description#>
+        public let downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter()
+        /// <#Description#>
+        let mediaPlayerFactory = MediaPlayerFactory()
+        
+        public lazy var directiveSequencer: DirectiveSequenceable = DirectiveSequencer(messageSender: networkManager)
+        
         // MARK: - Capability Agents
         
         /// <#Description#>
-        public lazy var asrAgent: ASRAgentProtocol? = ASRAgent()
+        public lazy var systemAgent: SystemAgentProtocol = SystemAgent(
+            contextManager: contextManager,
+            networkManager: networkManager
+        )
+        
         /// <#Description#>
-        public lazy var ttsAgent: TTSAgentProtocol? = TTSAgent()
+        public lazy var asrAgent: ASRAgentProtocol? = ASRAgent(
+            focusManager: focusManager,
+            channel: FocusChannelConfiguration.recognition,
+            messageSender: networkManager,
+            contextManager: contextManager,
+            audioStream: sharedAudioStream,
+            endPointDetector: endPointDetector,
+            dialogStateAggregator: dialogStateAggregator
+        )
+        
         /// <#Description#>
-        public lazy var audioPlayerAgent: AudioPlayerAgentProtocol? = AudioPlayerAgent()
+        public lazy var ttsAgent: TTSAgentProtocol? = TTSAgent(
+            focusManager: focusManager,
+            channel: FocusChannelConfiguration.information,
+            mediaPlayerFactory: mediaPlayerFactory,
+            messageSender: networkManager,
+            playSyncManager: playSyncManager
+        )
+        
         /// <#Description#>
-        public lazy var displayAgent: DisplayAgentProtocol? = DisplayAgent()
+        public lazy var audioPlayerAgent: AudioPlayerAgentProtocol? = AudioPlayerAgent(
+            focusManager: focusManager,
+            channel: FocusChannelConfiguration.content,
+            mediaPlayerFactory: mediaPlayerFactory,
+            messageSender: networkManager,
+            playSyncManager: playSyncManager
+        )
+        
         /// <#Description#>
-        public lazy var textAgent: TextAgentProtocol? = TextAgent()
+        public lazy var displayAgent: DisplayAgentProtocol? = DisplayAgent(
+            messageSender: networkManager,
+            playSyncManager: playSyncManager
+        )
+        
         /// <#Description#>
-        public lazy var extensionAgent: ExtensionAgentProtocol? = ExtensionAgent()
+        public lazy var textAgent: TextAgentProtocol? = TextAgent(
+            contextManager: contextManager,
+            messageSender: networkManager,
+            focusManager: focusManager,
+            channel: FocusChannelConfiguration.recognition,
+            dialogStateAggregator: dialogStateAggregator
+        )
+        
+        /// <#Description#>
+        public lazy var extensionAgent: ExtensionAgentProtocol? = ExtensionAgent(
+            messageSender: networkManager
+        )
+        
         /// <#Description#>
         public lazy var locationAgent: LocationAgentProtocol? = LocationAgent()
         
@@ -54,11 +116,21 @@ extension NuguClient {
         
         /// <#Description#>
         public func build() -> NuguClient {
-            return NuguClient(
+            let client = NuguClient(
+                authorizationManager: authorizationManager,
+                focusManager: focusManager,
+                networkManager: networkManager,
+                dialogStateAggregator: dialogStateAggregator,
+                contextManager: contextManager,
+                playSyncManager: playSyncManager,
+                directiveSequencer: directiveSequencer,
+                downStreamDataInterpreter: downStreamDataInterpreter,
+                mediaPlayerFactory: mediaPlayerFactory,
                 inputProvider: inputProvider,
                 sharedAudioStream: sharedAudioStream,
                 endPointDetector: endPointDetector,
                 wakeUpDetector: wakeUpDetector,
+                systemAgent: systemAgent,
                 asrAgent: asrAgent,
                 ttsAgent: ttsAgent,
                 audioPlayerAgent: audioPlayerAgent,
@@ -67,6 +139,8 @@ extension NuguClient {
                 extensionAgent: extensionAgent,
                 locationAgent: locationAgent
             )
+            
+            return client
         }
     }
 }

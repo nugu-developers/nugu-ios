@@ -25,7 +25,9 @@ public protocol ExtensionAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 HandleDirectiveDelegate {
-    var messageSender: MessageSendable! { get set }
+    /// <#Description#>
+    /// - Parameter messageSender: <#messageSender description#>
+    init(messageSender: MessageSendable)
     
     /// The object that acts as the delegate of extension-agent
     var delegate: ExtensionAgentDelegate? { get set }

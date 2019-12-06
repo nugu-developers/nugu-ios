@@ -29,12 +29,20 @@ final public class SpeakerAgent: SpeakerAgentProtocol {
     
     private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     
-    public var messageSender: MessageSendable!
+    private let messageSender: MessageSendable
     
     public weak var delegate: SpeakerAgentDelegate?
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
-    public init() {}
+    public init(messageSender: MessageSendable) {
+        log.info("")
+        
+        self.messageSender = messageSender
+    }
+    
+    deinit {
+        log.info("")
+    }
 }
 
 // MARK: - SpeakerAgentProtocol

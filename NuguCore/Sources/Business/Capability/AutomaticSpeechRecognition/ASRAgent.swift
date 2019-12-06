@@ -29,17 +29,13 @@ final public class ASRAgent: ASRAgentProtocol {
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
-    public var focusManager: FocusManageable!
-    public var channel: FocusChannelConfigurable!
-    public var messageSender: MessageSendable!
-    public var contextManager: ContextManageable!
-    public var audioStream: AudioStreamable!
-    public var endPointDetector: EndPointDetectable! {
-        didSet {
-            endPointDetector?.delegate = self
-        }
-    }
-    public var dialogStateAggregator: DialogStateAggregatable!
+    private let focusManager: FocusManageable
+    private let channel: FocusChannelConfigurable
+    private let messageSender: MessageSendable
+    private let contextManager: ContextManageable
+    private let audioStream: AudioStreamable
+    private let endPointDetector: EndPointDetectable
+    private let dialogStateAggregator: DialogStateAggregatable
     
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
     public weak var wakeUpInfoDelegate: WakeUpInfoDelegate?
@@ -135,8 +131,26 @@ final public class ASRAgent: ASRAgentProtocol {
     private var expectingSpeechTimeout: Disposable?
     private var responseTimeout: Disposable?
     
-    public init() {
+    public init(
+        focusManager: FocusManageable,
+        channel: FocusChannelConfigurable,
+        messageSender: MessageSendable,
+        contextManager: ContextManageable,
+        audioStream: AudioStreamable,
+        endPointDetector: EndPointDetectable,
+        dialogStateAggregator: DialogStateAggregatable
+    ) {
         log.info("")
+        
+        self.focusManager = focusManager
+        self.channel = channel
+        self.messageSender = messageSender
+        self.contextManager = contextManager
+        self.audioStream = audioStream
+        self.endPointDetector = endPointDetector
+        self.dialogStateAggregator = dialogStateAggregator
+        
+        self.endPointDetector.delegate = self
     }
     
     deinit {
