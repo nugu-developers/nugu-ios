@@ -65,3 +65,13 @@ public extension DisplayTemplate.Duration {
         }
     }
 }
+
+public extension DisplayTemplate {
+    /// An enum class used to specify the reason to clear the template.
+    enum ClearReason {
+        /// Clear request due to `DisplayTemplate.Duration`.
+        case timer
+        /// Clear request due to directive.
+        case directive
+    }
+}
