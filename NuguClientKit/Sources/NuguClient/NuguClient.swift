@@ -48,9 +48,6 @@ public class NuguClient {
     }
     
     /// <#Description#>
-    public static let `default` = NuguClient.Builder().build()
-    
-    /// <#Description#>
     public static var logEnabled: Bool {
         set {
             switch newValue {
@@ -72,8 +69,11 @@ public class NuguClient {
             }
         }
     }
+    
+    /// <#Description#>
+    public static let `default` = NuguClient.Builder().build()
 
-    // MARK: - Mandatory
+    // MARK: - Core
     
     /// <#Description#>
     public let authorizationManager: AuthorizationManager
@@ -84,28 +84,65 @@ public class NuguClient {
     /// <#Description#>
     public let dialogStateAggregator: DialogStateAggregatable
     /// <#Description#>
-    public let contextManager: ContextManageable
+    let contextManager: ContextManageable
     /// <#Description#>
-    public let playSyncManager: PlaySyncManageable
+    let playSyncManager: PlaySyncManageable
     /// <#Description#>
-    public let directiveSequencer: DirectiveSequenceable
+    let directiveSequencer: DirectiveSequenceable
     /// <#Description#>
-    public let downStreamDataInterpreter: DownStreamDataInterpretable
+    let downStreamDataInterpreter: DownStreamDataInterpretable
     /// <#Description#>
-    public let mediaPlayerFactory: MediaPlayableFactory
+    let mediaPlayerFactory: MediaPlayableFactory
     
-    // MARK: - Related Audio
-
+    // MARK: Audio
+    
+    /// <#Description#>
+    let sharedAudioStream: AudioStreamable?
     /// <#Description#>
     public let inputProvider: AudioProvidable?
-    /// <#Description#>
-    public let sharedAudioStream: AudioStreamable?
+    
+    // MARK: EndPointDetector
+    
     /// <#Description#>
     public let endPointDetector: EndPointDetectable?
+    
+    //MARK: WakeUpDetector
+    
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
     
     // MARK: - Capability Agents
+    
+    struct CapabilityAgents {
+        let system: SystemAgentProtocol
+        let asr: ASRAgentProtocol?
+        let tts: TTSAgentProtocol?
+        let audioPlayer: AudioPlayerAgentProtocol?
+        let display: DisplayAgentProtocol?
+        let text: TextAgentProtocol?
+        let `extension`: ExtensionAgentProtocol?
+        let location: LocationAgentProtocol?
+        
+        init(
+            system: SystemAgentProtocol,
+            asr: ASRAgentProtocol?,
+            tts: TTSAgentProtocol?,
+            audioPlayer: AudioPlayerAgentProtocol?,
+            display: DisplayAgentProtocol?,
+            text: TextAgentProtocol?,
+            `extension`: ExtensionAgentProtocol?,
+            location: LocationAgentProtocol?
+        ) {
+            self.system = system
+            self.asr = asr
+            self.tts = tts
+            self.audioPlayer = audioPlayer
+            self.display = display
+            self.text = text
+            self.extension = `extension`
+            self.location = location
+        }
+    }
     
     /// <#Description#>
     public let systemAgent: SystemAgentProtocol
@@ -141,14 +178,7 @@ public class NuguClient {
         sharedAudioStream: AudioStreamable?,
         endPointDetector: EndPointDetectable?,
         wakeUpDetector: KeywordDetector?,
-        systemAgent: SystemAgentProtocol,
-        asrAgent: ASRAgentProtocol?,
-        ttsAgent: TTSAgentProtocol?,
-        audioPlayerAgent: AudioPlayerAgentProtocol?,
-        displayAgent: DisplayAgentProtocol?,
-        textAgent: TextAgentProtocol?,
-        extensionAgent: ExtensionAgentProtocol?,
-        locationAgent: LocationAgentProtocol?
+        capabilityAgents: CapabilityAgents
     ) {
         log.info("with NuguApp")
         
@@ -165,14 +195,15 @@ public class NuguClient {
         self.sharedAudioStream = sharedAudioStream
         self.endPointDetector = endPointDetector
         self.wakeUpDetector = wakeUpDetector
-        self.systemAgent = systemAgent
-        self.asrAgent = asrAgent
-        self.ttsAgent = ttsAgent
-        self.audioPlayerAgent = audioPlayerAgent
-        self.displayAgent = displayAgent
-        self.textAgent = textAgent
-        self.extensionAgent = extensionAgent
-        self.locationAgent = locationAgent
+        
+        self.systemAgent = capabilityAgents.system
+        self.asrAgent = capabilityAgents.asr
+        self.ttsAgent = capabilityAgents.tts
+        self.audioPlayerAgent = capabilityAgents.audioPlayer
+        self.displayAgent = capabilityAgents.display
+        self.textAgent = capabilityAgents.text
+        self.extensionAgent = capabilityAgents.extension
+        self.locationAgent = capabilityAgents.location
         
         setupDependencies()
     }

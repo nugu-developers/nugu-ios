@@ -27,10 +27,8 @@ import JadeMarble
 extension NuguClient {
     /// <#Description#>
     public class Builder {
-        public lazy var inputProvider: AudioProvidable = MicInputProvider()
-        public lazy var sharedAudioStream: AudioStreamable = AudioStream(capacity: 300)
-        public lazy var endPointDetector: EndPointDetectable = EndPointDetector()
-        public lazy var wakeUpDetector = KeywordDetector()
+        
+        // MARK: Core
         
         /// <#Description#>
         public let authorizationManager = AuthorizationManager.shared
@@ -47,11 +45,24 @@ extension NuguClient {
         /// <#Description#>
         public let downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter()
         /// <#Description#>
-        let mediaPlayerFactory = MediaPlayerFactory()
+        public let directiveSequencer: DirectiveSequenceable
+        /// <#Description#>
+        public let mediaPlayerFactory: MediaPlayableFactory = MediaPlayerFactory()
         
-        public lazy var directiveSequencer: DirectiveSequenceable = DirectiveSequencer(messageSender: networkManager)
+        // MARK: Audio
         
-        // MARK: - Capability Agents
+        public lazy var inputProvider: AudioProvidable = MicInputProvider()
+        public lazy var sharedAudioStream: AudioStreamable = AudioStream(capacity: 300)
+        
+        // MARK: EndPointDetector
+        
+        public lazy var endPointDetector: EndPointDetectable = EndPointDetector()
+        
+        // MARK: WakeUpDetector
+        
+        public lazy var wakeUpDetector = KeywordDetector()
+        
+        // MARK: Capability Agents
         
         /// <#Description#>
         public lazy var systemAgent: SystemAgentProtocol = SystemAgent(
@@ -112,10 +123,23 @@ extension NuguClient {
         public lazy var locationAgent: LocationAgentProtocol? = LocationAgent()
         
         /// <#Description#>
-        public init() {}
+        public init() {
+            self.directiveSequencer = DirectiveSequencer(messageSender: networkManager)
+        }
         
         /// <#Description#>
         public func build() -> NuguClient {
+            let capabilityAgents = NuguClient.CapabilityAgents(
+                system: systemAgent,
+                asr: asrAgent,
+                tts: ttsAgent,
+                audioPlayer: audioPlayerAgent,
+                display: displayAgent,
+                text: textAgent,
+                extension: extensionAgent,
+                location: locationAgent
+            )
+            
             let client = NuguClient(
                 authorizationManager: authorizationManager,
                 focusManager: focusManager,
@@ -130,14 +154,7 @@ extension NuguClient {
                 sharedAudioStream: sharedAudioStream,
                 endPointDetector: endPointDetector,
                 wakeUpDetector: wakeUpDetector,
-                systemAgent: systemAgent,
-                asrAgent: asrAgent,
-                ttsAgent: ttsAgent,
-                audioPlayerAgent: audioPlayerAgent,
-                displayAgent: displayAgent,
-                textAgent: textAgent,
-                extensionAgent: extensionAgent,
-                locationAgent: locationAgent
+                capabilityAgents: capabilityAgents
             )
             
             return client
@@ -148,7 +165,8 @@ extension NuguClient {
 // MARK: - Chaining for builder
 
 extension NuguClient.Builder {
-    // MARK: - Base
+    
+    // MARK: Audio
     
     /// <#Description#>
     /// - Parameter inputProvider: <#inputProvider description#>
@@ -164,12 +182,16 @@ extension NuguClient.Builder {
         return self
     }
     
+    // MARK: EndPointDetector
+    
     /// <#Description#>
     /// - Parameter endPointDetector: <#endPointDetector description#>
     public func with(endPointDetector: EndPointDetectable) -> Self {
         self.endPointDetector = endPointDetector
         return self
     }
+    
+    // MARK: WakeUpDetector
     
     /// <#Description#>
     /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
@@ -178,7 +200,7 @@ extension NuguClient.Builder {
         return self
     }
     
-    // MARK: - Capability Agents
+    // MARK: Capability Agents
     
     /// <#Description#>
     /// - Parameter asrAgent: <#asrAgent description#>
@@ -223,7 +245,7 @@ extension NuguClient.Builder {
     }
     
     /// <#Description#>
-    /// - Parameter extensionAgent: <#extensionAgent description#>
+    /// - Parameter locationAgent: <#locationAgent description#>
     public func with(locationAgent: LocationAgentProtocol?) -> Self {
         self.locationAgent = locationAgent
         return self
