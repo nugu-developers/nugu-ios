@@ -48,9 +48,9 @@ extension TTSAgent.Event: Eventable {
         
         switch typeInfo {
         case .speechPlay(let text):
-            eventPayload = ["text": text]
+            eventPayload["text"] = text
         default:
-            eventPayload = [:]
+            break
         }
         
         return eventPayload.compactMapValues { $0 }
