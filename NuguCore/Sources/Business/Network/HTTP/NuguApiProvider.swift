@@ -241,7 +241,7 @@ class NuguApiProvider: NSObject {
                     return disposable
                 }
                 
-                var downstreamRequest = URLRequest(url: downstreamUrl, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 600.0)
+                var downstreamRequest = URLRequest(url: downstreamUrl, cachePolicy: .useProtocolCachePolicy, timeoutInterval: Double.infinity)
                 downstreamRequest.httpMethod = NuguApi.directives.method.rawValue
                 downstreamRequest.allHTTPHeaderFields = NuguApi.directives.header
                 self.directiveTask = self.session.dataTask(with: downstreamRequest)
