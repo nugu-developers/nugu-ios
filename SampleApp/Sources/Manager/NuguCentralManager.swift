@@ -66,10 +66,90 @@ extension NuguCentralManager {
 // MARK: - Internal (Auth)
 
 extension NuguCentralManager {
+    func login(viewController: UIViewController, completion: @escaping (Result<Void, SampleAppError>) -> Void) {
+        guard let loginMethod = SampleApp.loginMethod else {
+            completion(.failure(SampleAppError.nilValue(description: "loginMethod is nil")))
+            return
+        }
+        switch loginMethod {
+        case .type1:
+            guard let clientId = SampleApp.clientId,
+                let clientSecret = SampleApp.clientSecret,
+                let redirectUri = SampleApp.redirectUri else {
+                    completion(.failure(SampleAppError.nilValue(description: "clientId, clientSecret, redirectUri is nil")))
+                    return
+            }
+
+            OAuthManager<Type1>.shared.loginTypeInfo = Type1(
+                clientId: clientId,
+                clientSecret: clientSecret,
+                redirectUri: redirectUri,
+                deviceUniqueId: SampleApp.deviceUniqueId
+            )
+            
+            switch UserDefaults.Standard.refreshToken {
+            case .some(let refreshToken):
+                loginWithRefreshToken(refreshToken: refreshToken) { (result) in
+                    switch result {
+                    case .success:
+                        completion(.success(()))
+                    case .failure:
+                        completion(.failure(SampleAppError.loginWithRefreshTokenFailedError))
+                    }
+                }
+            case .none:
+                OAuthManager<Type1>.shared.loginBySafariViewController(from: viewController) { (result) in
+                    switch result {
+                    case .success(let response):
+                        UserDefaults.Standard.accessToken = response.accessToken
+                        UserDefaults.Standard.refreshToken = response.refreshToken
+                        completion(.success(()))
+                    case .failure:
+                        completion(.failure(SampleAppError.loginFailedError(loginMethod: .type1)))
+                    }
+                }
+            }
+        case .type2:
+            guard let clientId = SampleApp.clientId,
+                let clientSecret = SampleApp.clientSecret else {
+                    completion(.failure(SampleAppError.nilValue(description: "clientId, clientSecret is nil")))
+                    return
+            }
+            
+            OAuthManager<Type2>.shared.loginTypeInfo = Type2(
+                clientId: clientId,
+                clientSecret: clientSecret,
+                deviceUniqueId: SampleApp.deviceUniqueId
+            )
+            
+            OAuthManager<Type2>.shared.login(completion: { (result) in
+                switch result {
+                case .success(let response):
+                    UserDefaults.Standard.accessToken = response.accessToken
+                    completion(.success(()))
+                case .failure:
+                    completion(.failure(SampleAppError.loginFailedError(loginMethod: .type2)))
+                }
+            })
+        }
+    }
+    
     func handleAuthError() {
         switch SampleApp.loginMethod {
         case .type1:
-            tokenRefresh()
+            guard let refreshToken = UserDefaults.Standard.refreshToken else {
+                log.debug("Try to login with refresh token when refresh token is nil")
+                logoutAfterErrorHandling()
+                return
+            }
+            loginWithRefreshToken(refreshToken: refreshToken) { [weak self] (result) in
+                switch result {
+                case .success:
+                    self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+                case .failure:
+                    self?.logoutAfterErrorHandling()
+                }
+            }
         case .type2:
             logoutAfterErrorHandling()
         default:
@@ -89,20 +169,15 @@ extension NuguCentralManager {
 // MARK: - Private (Auth)
 
 private extension NuguCentralManager {
-    func tokenRefresh() {
-        guard let refreshToken = UserDefaults.Standard.refreshToken else {
-            logoutAfterErrorHandling()
-            return
-        }
-        
-        OAuthManager<Type1>.shared.loginSilently(by: refreshToken) { [weak self] result in
+    func loginWithRefreshToken(refreshToken: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        OAuthManager<Type1>.shared.loginSilently(by: refreshToken) { result in
             switch result {
             case .success(let authorizationInfo):
                 UserDefaults.Standard.accessToken = authorizationInfo.accessToken
                 UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
-                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
-            case .failure:
-                self?.logoutAfterErrorHandling()
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }
