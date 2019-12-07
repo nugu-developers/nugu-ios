@@ -63,7 +63,7 @@ final class IntroViewController: UIViewController {
 // MARK: - IBAction
 
 private extension IntroViewController {
-    @IBAction func nuguAppLinkButtonDidClick(_ button: UIButton) {
+    @IBAction func nuguLoginButtonDidClick(_ button: UIButton) {
         guard SampleApp.loginMethod != nil else {
             presentNoDataPopup()
             return
