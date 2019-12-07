@@ -228,8 +228,9 @@ public extension AudioPlayerAgent {
         audioPlayerDisplayManager.remove(delegate: displayDelegate)
     }
     
-    func clearDisplay(displayDelegate: AudioPlayerDisplayDelegate) {
-        audioPlayerDisplayManager.clearDisplay(delegate: displayDelegate)
+    func stopRenderingTimer(templateId: String) {
+        audioPlayerDisplayManager.stopRenderingTimer(templateId: templateId)
+        
     }
 }
 
@@ -444,6 +445,7 @@ private extension AudioPlayerAgent {
                     // Set mediaplayer
                     try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
                 }
+                self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
                 
                 if let metaData = payload.audioItem.metadata,
                     ((metaData["disableTemplate"] as? Bool) ?? false) == false {
@@ -574,7 +576,6 @@ private extension AudioPlayerAgent {
         )
         
         mediaPlayer.isMuted = playerIsMuted
-        playSyncManager.prepareSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
     }
 }
 

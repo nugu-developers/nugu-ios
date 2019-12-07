@@ -34,7 +34,7 @@ public class PlaySyncManager: PlaySyncManageable {
     private let disposeBag = DisposeBag()
     private var playSyncInfos = [PlaySyncInfo]()
     public var playServiceIds: [String] {
-        return playSyncInfos.filter { $0.playSyncState == .synced }
+        return playSyncInfos.filter { $0.playSyncState != .released }
             .compactMap { $0.playServiceId }
             .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
     }
