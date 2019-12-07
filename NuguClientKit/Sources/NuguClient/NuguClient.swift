@@ -76,7 +76,7 @@ public class NuguClient {
     // MARK: - Core
     
     /// <#Description#>
-    public let authorizationManager: AuthorizationManager
+    public let authorizationManager: AuthorizationManageable
     /// <#Description#>
     public let focusManager: FocusManageable
     /// <#Description#>
@@ -165,7 +165,7 @@ public class NuguClient {
     private var inputControlWorkItem: DispatchWorkItem?
 
     init(
-        authorizationManager: AuthorizationManager,
+        authorizationManager: AuthorizationManageable,
         focusManager: FocusManageable,
         networkManager: NetworkManageable,
         dialogStateAggregator: DialogStateAggregatable,
