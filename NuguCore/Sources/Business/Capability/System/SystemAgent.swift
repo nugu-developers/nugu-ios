@@ -27,15 +27,27 @@ final public class SystemAgent: SystemAgentProtocol {
     
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
-    public var contextManager: ContextManageable!
-    public var networkManager: NetworkManageable!
+    private let contextManager: ContextManageable
+    private let networkManager: NetworkManageable
     
     private var serverPolicy: Policy.ServerPolicy?
     private var dialogState: DialogState = .idle
     
     private let delegates = DelegateSet<SystemAgentDelegate>()
     
-    public init() {}
+    public init(
+        contextManager: ContextManageable,
+        networkManager: NetworkManageable
+    ) {
+        log.info("")
+        
+        self.contextManager = contextManager
+        self.networkManager = networkManager
+    }
+    
+    deinit {
+        log.info("")
+    }
 }
 
 // MARK: - HandleDirectiveDelegate
