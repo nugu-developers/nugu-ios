@@ -180,7 +180,7 @@ private extension NuguCentralManager {
     
     func logoutAfterErrorHandling() {
         DispatchQueue.main.async { [weak self] in
-            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
+            LocalTtsPlayer.shared.playLocalTts(type: .deviceGatewayAuthError)
             NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
             self?.logout()
         }
@@ -308,9 +308,9 @@ extension NuguCentralManager: SystemAgentDelegate {
     func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail) {
         switch code {
         case .playRouterProcessingException:
-            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayPlayRouterConnectionError))
+            LocalTtsPlayer.shared.playLocalTts(type: .deviceGatewayPlayRouterConnectionError)
         case .ttsSpeakingException:
-            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTtsConnectionError))
+            LocalTtsPlayer.shared.playLocalTts(type: .deviceGatewayTtsConnectionError)
         case .unauthorizedRequestException:
             handleAuthError()
         }
