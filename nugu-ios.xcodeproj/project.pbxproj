@@ -341,6 +341,13 @@
 		7EDCF2A72384FE88006F96B6 /* DownStreamDataInterpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* DownStreamDataInterpreter.swift */; };
 		7EDCF2A8238529CC006F96B6 /* DownStreamDataInterpretable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A42384FE7A006F96B6 /* DownStreamDataInterpretable.swift */; };
 		7EDCF2AB23852AEA006F96B6 /* DownStreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2AA23852AEA006F96B6 /* DownStreamDataDelegate.swift */; };
+		A17B065E2394D22800D739E9 /* device_GW_error_002.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06572394D22700D739E9 /* device_GW_error_002.wav */; };
+		A17B065F2394D22800D739E9 /* device_GW_error_001.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06582394D22700D739E9 /* device_GW_error_001.wav */; };
+		A17B06602394D22800D739E9 /* device_GW_error_005.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06592394D22700D739E9 /* device_GW_error_005.wav */; };
+		A17B06612394D22800D739E9 /* device_GW_error_003.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065A2394D22700D739E9 /* device_GW_error_003.wav */; };
+		A17B06622394D22800D739E9 /* device_GW_error_004.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065B2394D22700D739E9 /* device_GW_error_004.wav */; };
+		A17B06632394D22800D739E9 /* poc_end_error.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065C2394D22800D739E9 /* poc_end_error.wav */; };
+		A17B06642394D22800D739E9 /* device_GW_error_006.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065D2394D22800D739E9 /* device_GW_error_006.wav */; };
 		A1B33EFB237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B33EFA237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift */; };
 		A1B86FF82390B3C100F6BD11 /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */; };
 		A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */; };
@@ -853,6 +860,13 @@
 		7EDCF2A42384FE7A006F96B6 /* DownStreamDataInterpretable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownStreamDataInterpretable.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* DownStreamDataInterpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownStreamDataInterpreter.swift; sourceTree = "<group>"; };
 		7EDCF2AA23852AEA006F96B6 /* DownStreamDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownStreamDataDelegate.swift; sourceTree = "<group>"; };
+		A17B06572394D22700D739E9 /* device_GW_error_002.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_002.wav; sourceTree = "<group>"; };
+		A17B06582394D22700D739E9 /* device_GW_error_001.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_001.wav; sourceTree = "<group>"; };
+		A17B06592394D22700D739E9 /* device_GW_error_005.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_005.wav; sourceTree = "<group>"; };
+		A17B065A2394D22700D739E9 /* device_GW_error_003.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_003.wav; sourceTree = "<group>"; };
+		A17B065B2394D22700D739E9 /* device_GW_error_004.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_004.wav; sourceTree = "<group>"; };
+		A17B065C2394D22800D739E9 /* poc_end_error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = poc_end_error.wav; sourceTree = "<group>"; };
+		A17B065D2394D22800D739E9 /* device_GW_error_006.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_006.wav; sourceTree = "<group>"; };
 		A1B33EFA237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguVoiceChromeAnimationView.swift; sourceTree = "<group>"; };
 		A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAudioSessionManager.swift; sourceTree = "<group>"; };
 		A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
@@ -2179,9 +2193,8 @@
 		1FFFF4D8237672F100C9A177 /* SoundResource */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF4D9237672F100C9A177 /* asrStart.wav */,
-				1FFFF4DA237672F100C9A177 /* asrSuccess.wav */,
-				1FFFF4DB237672F100C9A177 /* asrFail.wav */,
+				A17B06562394D20200D739E9 /* LocalTts */,
+				A17B06552394D1EF00D739E9 /* AsrBeep */,
 			);
 			path = SoundResource;
 			sourceTree = "<group>";
@@ -2257,6 +2270,30 @@
 				1FFFF3662375707000C9A177 /* DownStream.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		A17B06552394D1EF00D739E9 /* AsrBeep */ = {
+			isa = PBXGroup;
+			children = (
+				1FFFF4D9237672F100C9A177 /* asrStart.wav */,
+				1FFFF4DA237672F100C9A177 /* asrSuccess.wav */,
+				1FFFF4DB237672F100C9A177 /* asrFail.wav */,
+			);
+			path = AsrBeep;
+			sourceTree = "<group>";
+		};
+		A17B06562394D20200D739E9 /* LocalTts */ = {
+			isa = PBXGroup;
+			children = (
+				A17B06582394D22700D739E9 /* device_GW_error_001.wav */,
+				A17B06572394D22700D739E9 /* device_GW_error_002.wav */,
+				A17B065A2394D22700D739E9 /* device_GW_error_003.wav */,
+				A17B065B2394D22700D739E9 /* device_GW_error_004.wav */,
+				A17B06592394D22700D739E9 /* device_GW_error_005.wav */,
+				A17B065D2394D22800D739E9 /* device_GW_error_006.wav */,
+				A17B065C2394D22800D739E9 /* poc_end_error.wav */,
+			);
+			path = LocalTts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2667,10 +2704,17 @@
 				1FFFF4E6237672F100C9A177 /* DisplayListViewCell.xib in Resources */,
 				1FFFF506237672F100C9A177 /* asrSuccess.wav in Resources */,
 				1FFFF507237672F100C9A177 /* asrFail.wav in Resources */,
+				A17B06612394D22800D739E9 /* device_GW_error_003.wav in Resources */,
 				1FFFF4E7237672F100C9A177 /* DisplayBodyListViewCell.xib in Resources */,
 				1FFFF4EA237672F100C9A177 /* DisplayBodyListView.xib in Resources */,
+				A17B065F2394D22800D739E9 /* device_GW_error_001.wav in Resources */,
 				1FFFF502237672F100C9A177 /* Assets.xcassets in Resources */,
+				A17B06642394D22800D739E9 /* device_GW_error_006.wav in Resources */,
+				A17B06602394D22800D739E9 /* device_GW_error_005.wav in Resources */,
 				1FFFF504237672F100C9A177 /* Main.storyboard in Resources */,
+				A17B06632394D22800D739E9 /* poc_end_error.wav in Resources */,
+				A17B065E2394D22800D739E9 /* device_GW_error_002.wav in Resources */,
+				A17B06622394D22800D739E9 /* device_GW_error_004.wav in Resources */,
 				1FFFF4F1237672F100C9A177 /* DisplayListView.xib in Resources */,
 				1FFFF4F4237672F100C9A177 /* DisplayAudioPlayerView.xib in Resources */,
 			);

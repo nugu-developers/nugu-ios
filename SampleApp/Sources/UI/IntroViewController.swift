@@ -19,7 +19,6 @@
 //
 
 import UIKit
-import NuguLoginKit
 
 final class IntroViewController: UIViewController {
     
@@ -64,118 +63,24 @@ final class IntroViewController: UIViewController {
 // MARK: - IBAction
 
 private extension IntroViewController {
-    @IBAction func nuguAppLinkButtonDidClick(_ button: UIButton) {
-        login()
-    }
-}
-
-// MARK: - Private (Login)
-
-private extension IntroViewController {
-    func login() {
-        switch SampleApp.loginMethod {
-        case .type1?:
-            guard let clientId = SampleApp.clientId,
-                let clientSecret = SampleApp.clientSecret,
-                let redirectUri = SampleApp.redirectUri else {
-                    log.debug("clientId, clientSecret, redirectUri is nil")
-                    return
-            }
-
-            OAuthManager<Type1>.shared.loginTypeInfo = Type1(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                redirectUri: redirectUri,
-                deviceUniqueId: SampleApp.deviceUniqueId
-            )
-            
-            switch UserDefaults.Standard.refreshToken {
-            case .some(let refreshToken):
-                loginSilently(refreshToken: refreshToken)
-            case .none:
-                loginType1()
-            }
-        case .type2?:
-            guard let clientId = SampleApp.clientId,
-                let clientSecret = SampleApp.clientSecret else {
-                    log.debug("clientId, clientSecret, redirectUri is nil")
-                    return
-            }
-            
-            OAuthManager<Type2>.shared.loginTypeInfo = Type2(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                deviceUniqueId: SampleApp.deviceUniqueId
-            )
-            
-            loginType2()
-        default:
-            // No mandatory data
+    @IBAction func nuguLoginButtonDidClick(_ button: UIButton) {
+        guard SampleApp.loginMethod != nil else {
             presentNoDataPopup()
+            return
         }
-    }
-}
-
-// MARK: Private (Type1)
-
-private extension IntroViewController {
-    func loginSilently(refreshToken: String) {
-        OAuthManager<Type1>.shared.loginSilently(by: refreshToken) { [weak self] (result) in
+        NuguCentralManager.shared.login(viewController: self, completion: { [weak self] result in
             switch result {
-            case .success(let response):
-                UserDefaults.Standard.accessToken = response.accessToken
-                UserDefaults.Standard.refreshToken = response.refreshToken
-                
-                // Save login method (not necessary)
-                UserDefaults.Standard.currentloginMethod = SampleApp.LoginMethod.type1.rawValue
-                
+            case .success:
                 DispatchQueue.main.async { [weak self] in
                     self?.performSegue(withIdentifier: "introToMain", sender: nil)
                 }
-            case .failure:
-                // TODO: - present popup when only invalid refreshToken issue
-                self?.presentLoginType1ErrorPopup()
-            }
-        }
-    }
-    
-    func loginType1() {
-        OAuthManager<Type1>.shared.loginBySafariViewController(from: self) { (result) in
-            switch result {
-            case .success(let response):
-                UserDefaults.Standard.accessToken = response.accessToken
-                UserDefaults.Standard.refreshToken = response.refreshToken
-                
-                // Save login method (not necessary)
-                UserDefaults.Standard.currentloginMethod = SampleApp.LoginMethod.type1.rawValue
-                
-                DispatchQueue.main.async { [weak self] in
-                    self?.performSegue(withIdentifier: "introToMain", sender: nil)
+            case .failure(let sampleAppError):
+                log.debug(sampleAppError.errorDescription)
+                switch sampleAppError {
+                case .loginWithRefreshTokenFailedError:
+                    self?.presentLoginWithRefreshTokenErrorPopup()
+                default: break
                 }
-            case .failure(let error):
-                log.info("failed to login with error: \(error)")
-            }
-        }
-    }
-}
-
-// MARK: Private (Type2)
-
-private extension IntroViewController {
-    func loginType2() {
-        OAuthManager<Type2>.shared.login(completion: { (result) in
-            switch result {
-            case .success(let response):
-                UserDefaults.Standard.accessToken = response.accessToken
-                
-               // Save login method (not necessary)
-                UserDefaults.Standard.currentloginMethod = SampleApp.LoginMethod.type2.rawValue
-                
-                DispatchQueue.main.async { [weak self] in
-                    self?.performSegue(withIdentifier: "introToMain", sender: nil)
-                }
-            case .failure(let error):
-                log.info("failed to login with error: \(error)")
             }
         })
     }
@@ -194,7 +99,7 @@ private extension IntroViewController {
     
     // MARK: AlertController
     
-    func presentLoginType1ErrorPopup() {
+    func presentLoginWithRefreshTokenErrorPopup() {
         let alertController = UIAlertController(
             title: "Warning",
             message: "Try to login with refreshToken that saved in userdefaults, but refreshToken is invalid. If you want to clear saved data, click \"Confirm\".",

@@ -23,6 +23,8 @@ import Foundation
 enum SampleAppError: Error {
     case nilValue(description: String?)
     case recordPermissionError
+    case loginFailedError(loginMethod: SampleApp.LoginMethod)
+    case loginWithRefreshTokenFailedError
 }
 
 // MARK: - LocalizedError
@@ -34,6 +36,10 @@ extension SampleAppError: LocalizedError {
             return description
         case .recordPermissionError:
             return "Record permission denied"
+        case .loginFailedError(let loginMethod):
+            return "\(loginMethod.name) has failed"
+        case .loginWithRefreshTokenFailedError:
+            return "Login with refresh token has failed"
         }
     }
 }
