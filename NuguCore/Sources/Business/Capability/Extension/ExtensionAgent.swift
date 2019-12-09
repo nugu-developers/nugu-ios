@@ -25,12 +25,14 @@ import NuguInterface
 final public class ExtensionAgent: ExtensionAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
     
-    public var messageSender: MessageSendable!
+    private let messageSender: MessageSendable
     
     public weak var delegate: ExtensionAgentDelegate?
     
-    public init() {
+    public init(messageSender: MessageSendable) {
         log.info("")
+        
+        self.messageSender = messageSender
     }
     
     deinit {

@@ -28,8 +28,13 @@ ContextInfoDelegate,
 NetworkStatusDelegate,
 HandleDirectiveDelegate,
 DialogStateDelegate {
-    var contextManager: ContextManageable! { get set }
-    var networkManager: NetworkManageable! { get set }
+    /// <#Description#>
+    /// - Parameter contextManager: <#contextManager description#>
+    /// - Parameter networkManager: <#networkManager description#>
+    init(
+        contextManager: ContextManageable,
+        networkManager: NetworkManageable
+    )
     
     /// <#Description#>
     /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>

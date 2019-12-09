@@ -29,11 +29,11 @@ final public class TTSAgent: TTSAgentProtocol {
     
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
-    public var focusManager: FocusManageable!
-    public var channel: FocusChannelConfigurable!
-    public var mediaPlayerFactory: MediaPlayableFactory!
-    public var messageSender: MessageSendable!
-    public var playSyncManager: PlaySyncManageable!
+    private let focusManager: FocusManageable
+    private let channel: FocusChannelConfigurable
+    private let mediaPlayerFactory: MediaPlayableFactory
+    private let messageSender: MessageSendable
+    private let playSyncManager: PlaySyncManageable
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
     
@@ -76,8 +76,21 @@ final public class TTSAgent: TTSAgentProtocol {
     
     private let disposeBag = DisposeBag()
     
-    public init() {
+    public init(
+        focusManager: FocusManageable,
+        channel: FocusChannelConfigurable,
+        mediaPlayerFactory: MediaPlayableFactory,
+        messageSender: MessageSendable,
+        playSyncManager: PlaySyncManageable
+    ) {
         log.info("")
+        
+        self.focusManager = focusManager
+        self.channel = channel
+        self.mediaPlayerFactory = mediaPlayerFactory
+        self.messageSender = messageSender
+        self.playSyncManager = playSyncManager
+        
         ttsResultSubject.subscribe(onNext: { [weak self] (_, result) in
             // Send error
             switch result {

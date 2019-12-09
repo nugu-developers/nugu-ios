@@ -28,13 +28,23 @@ FocusChannelDelegate,
 DownStreamDataDelegate,
 EndPointDetectorDelegate,
 HandleDirectiveDelegate {
-    var focusManager: FocusManageable! { get set }
-    var channel: FocusChannelConfigurable! { get set }
-    var messageSender: MessageSendable! { get set }
-    var contextManager: ContextManageable! { get set }
-    var audioStream: AudioStreamable! { get set }
-    var endPointDetector: EndPointDetectable! { get set }
-    var dialogStateAggregator: DialogStateAggregatable! { get set }
+    /// <#Description#>
+    /// - Parameter focusManager: <#focusManager description#>
+    /// - Parameter channel: <#channel description#>
+    /// - Parameter messageSender: <#messageSender description#>
+    /// - Parameter contextManager: <#contextManager description#>
+    /// - Parameter audioStream: <#audioStream description#>
+    /// - Parameter endPointDetector: <#endPointDetector description#>
+    /// - Parameter dialogStateAggregator: <#dialogStateAggregator description#>
+    init(
+        focusManager: FocusManageable,
+        channel: FocusChannelConfigurable,
+        messageSender: MessageSendable,
+        contextManager: ContextManageable,
+        audioStream: AudioStreamable,
+        endPointDetector: EndPointDetectable,
+        dialogStateAggregator: DialogStateAggregatable
+    )
     
     /// Adds a delegate to be notified of `ASRAgent` state changes.
     /// - Parameter delegate: The object to add.

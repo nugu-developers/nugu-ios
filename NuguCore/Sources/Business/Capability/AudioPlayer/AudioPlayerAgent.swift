@@ -33,15 +33,11 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
         internalSerialQueueName: "com.sktelecom.romaine.audioplayer_agent_timer"
     )
     
-    public var focusManager: FocusManageable!
-    public var channel: FocusChannelConfigurable!
-    public var mediaPlayerFactory: MediaPlayableFactory!
-    public var messageSender: MessageSendable!
-    public var playSyncManager: PlaySyncManageable! {
-        didSet {
-            audioPlayerDisplayManager.playSyncManager = playSyncManager
-        }
-    }
+    private let focusManager: FocusManageable
+    private let channel: FocusChannelConfigurable
+    private let mediaPlayerFactory: MediaPlayableFactory
+    private let messageSender: MessageSendable
+    private let playSyncManager: PlaySyncManageable
     
     private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
     
@@ -117,8 +113,22 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     private lazy var disposeBag = DisposeBag()
     
-    public init() {
+    public init(
+        focusManager: FocusManageable,
+        channel: FocusChannelConfigurable,
+        mediaPlayerFactory: MediaPlayableFactory,
+        messageSender: MessageSendable,
+        playSyncManager: PlaySyncManageable
+    ) {
         log.info("")
+        
+        self.focusManager = focusManager
+        self.channel = channel
+        self.mediaPlayerFactory = mediaPlayerFactory
+        self.messageSender = messageSender
+        self.playSyncManager = playSyncManager
+        
+        audioPlayerDisplayManager.playSyncManager = playSyncManager
     }
 
     deinit {
