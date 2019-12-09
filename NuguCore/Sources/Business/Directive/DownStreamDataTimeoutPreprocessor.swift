@@ -44,12 +44,8 @@ public class DownStreamDataTimeoutPreprocessor: DownStreamDataPreprocessable {
 
 extension DownStreamDataTimeoutPreprocessor: ASRAgentDelegate {
     public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        switch result {
-        case .error(let error) where error == .responseTimeout:
-            appendTimeoutDialogRequestId(dialogRequestId)
-        default:
-            break
-        }
+        guard case .error(let error) = result, error == .responseTimeout else { return }
+        appendTimeoutDialogRequestId(dialogRequestId)
     }
 }
 
@@ -57,12 +53,8 @@ extension DownStreamDataTimeoutPreprocessor: ASRAgentDelegate {
 
 extension DownStreamDataTimeoutPreprocessor: TextAgentDelegate {
     public func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
-        switch result {
-        case .error(let error) where error == .responseTimeout:
-            appendTimeoutDialogRequestId(dialogRequestId)
-        default:
-            break
-        }
+        guard case .error(let error) = result, error == .responseTimeout else { return }
+        appendTimeoutDialogRequestId(dialogRequestId)
     }
 }
 
@@ -74,7 +66,7 @@ private extension DownStreamDataTimeoutPreprocessor {
             guard let self = self else { return }
             self.timeoutDialogRequestIds.append(dialogRequestId)
             if self.timeoutDialogRequestIds.count > 100 {
-                self.timeoutDialogRequestIds.removeLast()
+                self.timeoutDialogRequestIds.removeFirst()
             }
         }
     }
