@@ -29,8 +29,8 @@ final class NuguCentralManager {
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
     
     private init() {
+        client.authorizationStore.delegate = self
         client.focusManager.delegate = self
-        client.authorizationManager.add(stateDelegate: self)
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
             client.endPointDetector?.epdFile = epdFile
@@ -50,14 +50,12 @@ final class NuguCentralManager {
 
 extension NuguCentralManager {
     func enable(accessToken: String) {
-        client.accessToken = accessToken
         client.networkManager.connect()
     }
     
     func disable() {
         client.focusManager.stopForegroundActivity()
         client.networkManager.disconnect()
-        client.accessToken = nil
         client.inputProvider?.stop()
     }
 }
@@ -158,23 +156,6 @@ extension NuguCentralManager {
     }
 }
 
-// MARK: - AuthorizationStateDelegate
-
-extension NuguCentralManager: AuthorizationStateDelegate {
-    func authorizationStateDidChange(_ state: AuthorizationState) {
-        switch state {
-        case .error(let authorizationError):
-            switch authorizationError {
-            case .authorizationFailed:
-                // TODO: - refresh token logic
-                break
-            default: break
-            }
-        default: break
-        }
-    }
-}
-
 // MARK: - FocusDelegate
 
 extension NuguCentralManager: FocusDelegate {
@@ -192,5 +173,13 @@ extension NuguCentralManager: FocusDelegate {
 extension NuguCentralManager: LocationAgentDelegate {
     func locationAgentRequestLocationInfo() -> LocationInfo? {
         return NuguLocationManager.shared.cachedLocationInfo
+    }
+}
+
+// MARK: - AuthorizationStoreDelegate
+
+extension NuguCentralManager: AuthorizationStoreDelegate {
+    func authorizationStoreRequestAccessToken() -> String? {
+        return UserDefaults.Standard.accessToken
     }
 }

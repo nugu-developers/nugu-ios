@@ -74,9 +74,9 @@ public class NuguClient {
     }
 
     // MARK: - Mandatory
-
+    
     /// <#Description#>
-    public let authorizationManager = AuthorizationManager.shared
+    public let authorizationStore = AuthorizationStore.shared
     /// <#Description#>
     public let focusManager: FocusManageable = FocusManager()
     /// <#Description#>
@@ -155,24 +155,6 @@ public class NuguClient {
         self.systemAgent = SystemAgent()
         
         setupDependencies()
-    }
-}
-
-// MARK: - Authorization
-
-public extension NuguClient {
-    /// <#Description#>
-    var accessToken: String? {
-        get {
-            return authorizationManager.authorizationPayload?.accessToken
-        } set {
-            guard let newAccessToken = newValue else {
-                authorizationManager.authorizationPayload = nil
-                return
-            }
-            
-            authorizationManager.authorizationPayload = AuthorizationPayload(accessToken: newAccessToken)
-        }
     }
 }
 
