@@ -185,11 +185,12 @@ extension TTSAgent: HandleDirectiveDelegate {
                 return
             }
             
+            let player = media.player as? MediaOpusStreamDataSource
             do {
-                try media.player.appendData(attachment.content)
+                try player?.appendData(attachment.content)
                 
                 if attachment.isEnd {
-                    try media.player.lastDataAppended()
+                    try player?.lastDataAppended()
                 }
             } catch {
                 self.messageSender.sendCrashReport(error: error)
@@ -346,15 +347,21 @@ private extension TTSAgent {
                 
                 self.stopSilently()
                 
-                let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer(type: .voice)
+                let mediaPlayer = self.mediaPlayerFactory.makeOpusPlayer()
                 mediaPlayer.delegate = self
                 mediaPlayer.isMuted = self.playerIsMuted
+                
                 self.currentMedia = TTSMedia(
                     player: mediaPlayer,
                     payload: payload,
                     dialogRequestId: directive.header.dialogRequestId
                 )
-                self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
+                
+                self.playSyncManager.prepareSync(
+                    delegate: self,
+                    dialogRequestId: directive.header.dialogRequestId,
+                    playServiceId: payload.playStackControl?.playServiceId
+                )
             })
             
             completionHandler(result)
@@ -363,8 +370,15 @@ private extension TTSAgent {
     
     func play(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         ttsDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let media = self.currentMedia else { return }
+            guard let self = self else {
+                completionHandler(.success(()))
+                return
+            }
+            guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
+                log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
+                completionHandler(.success(()))
+                return
+            }
             
             self.delegates.notify { delegate in
                 delegate.ttsAgentDidReceive(text: media.payload.text, dialogRequestId: media.dialogRequestId)
@@ -396,7 +410,7 @@ private extension TTSAgent {
     
     /// Stop previously playing TTS
     func stopSilently() {
-        guard let media = currentMedia, case .playing = ttsState else { return }
+        guard let media = currentMedia else { return }
         media.player.delegate = nil
         media.player.stop()
         sendEvent(info: .speechStopped)

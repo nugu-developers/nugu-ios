@@ -20,7 +20,7 @@
 
 import Foundation
 
-/// The DisplayAgent handles directives for controlling template display.
+/// The `DisplayAgent` handles directives for controlling template display.
 public protocol DisplayAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
@@ -29,7 +29,7 @@ PlaySyncDelegate {
     var messageSender: MessageSendable! { get set }
     var playSyncManager: PlaySyncManageable! { get set }
     
-    /// Adds a delegate to be notified of DisplayTemplateType changes.
+    /// Adds a delegate to be notified of `DisplayTemplate` changes.
     ///
     /// - Parameter delegate: The object to add.
     func add(delegate: DisplayAgentDelegate)
@@ -39,16 +39,15 @@ PlaySyncDelegate {
     /// - Parameter delegate: The object to remove.
     func remove(delegate: DisplayAgentDelegate)
     
-    /// All of template has a playSericeId and all of element has a token.
+    /// All of template has a templateId and all of element has a token.
     ///
     /// The Client should call this when element(view) selected(clicked).
     /// - Parameter templateId: The unique identifier for the template.
     /// - Parameter token: The unique identifier for the element.
     func elementDidSelect(templateId: String, token: String)
     
-    /// This function notifies the DisplayAgent that a template has been cleared from the screen.
+    /// Stops the timer for deleting template by `DisplayTemplate.Duration`.
     ///
-    /// This function should be called if the template is no longer exposed to the user.
-    /// - Parameter template: The template removed from the screen.
-    func clearDisplay(delegate: DisplayAgentDelegate)
+    /// - Parameter templateId: The unique identifier for the template.
+    func stopRenderingTimer(templateId: String)
 }

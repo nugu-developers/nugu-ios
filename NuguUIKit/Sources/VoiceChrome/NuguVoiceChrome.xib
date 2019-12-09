@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NuguVoiceChrome" customModule="NuguUIKit" customModuleProvider="target">
             <connections>
-                <outlet property="asrStatusView" destination="DVj-zi-J4i" id="H9s-3p-CNU"/>
+                <outlet property="animationView" destination="DVj-zi-J4i" id="O2b-w7-8Hz"/>
                 <outlet property="backgroundView" destination="0dC-Hy-Gs2" id="heg-aq-TTK"/>
                 <outlet property="recognizedTextLabel" destination="vQ2-Dk-UQG" id="uXC-Fe-wBR"/>
                 <outlet property="stackView" destination="oa9-sm-wuS" id="BAC-kU-R6b"/>
@@ -75,7 +75,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k8h-c2-K0e">
                             <rect key="frame" x="0.0" y="164" width="375" height="92"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DVj-zi-J4i" customClass="AnimationView" customModule="Lottie">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DVj-zi-J4i" customClass="NuguVoiceChromeAnimationView" customModule="NuguUIKit" customModuleProvider="target">
                                     <rect key="frame" x="123.66666666666669" y="14" width="128" height="64"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>

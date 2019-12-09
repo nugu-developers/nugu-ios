@@ -97,6 +97,7 @@ extension AudioPlayerAgentMedia.Payload: Decodable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
         sourceType = try container.decodeIfPresent(SourceType.self, forKey: .sourceType) ?? .url
         audioItem = try container.decode(AudioItem.self, forKey: .audioItem)
@@ -113,6 +114,7 @@ extension AudioPlayerAgentMedia.Payload.PlayStackControl: Decodable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
     }
 }
@@ -127,6 +129,7 @@ extension AudioPlayerAgentMedia.Payload.AudioItem: Decodable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         stream = try container.decode(Stream.self, forKey: .stream)
         metadata = try container.decode([String: Any].self, forKey: .metadata)
     }

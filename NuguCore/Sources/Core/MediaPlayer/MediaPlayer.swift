@@ -25,6 +25,7 @@ import NuguInterface
 
 public class MediaPlayer: MediaPlayable {
     public weak var delegate: MediaPlayerDelegate?
+    
     private var player: AVQueuePlayer?
     private var playerItem: MediaAVPlayerItem?
     
@@ -40,28 +41,6 @@ public class MediaPlayer: MediaPlayable {
 // MARK: - MediaPlayable
 
 extension MediaPlayer {
-    public func appendData(_ data: Data) throws {
-        throw MediaPlayableError.unsupportedOperation
-    }
-    
-    public func lastDataAppended() throws {
-        throw MediaPlayableError.unsupportedOperation
-    }
-    
-    public func setSource(url: String, offset: TimeIntervallic) throws {
-        guard let urlItem = URL(string: url) else {
-            throw MediaPlayerError.invalidURL
-        }
-        
-        playerItem = MediaAVPlayerItem(url: urlItem)
-        playerItem?.delegate = self
-        player = AVQueuePlayer(playerItem: playerItem)
-                
-        if offset.seconds > 0 {
-            player?.seek(to: offset.cmTime)
-        }
-    }
-    
     public func play() {
         guard
             let mediaPlayer = player,
@@ -154,6 +133,24 @@ extension MediaPlayer {
         }
         set {
             player?.isMuted = newValue
+        }
+    }
+}
+
+// MARK: - MediaPlayer + MediaUrlDataSource
+
+extension MediaPlayer: MediaUrlDataSource {
+    public func setSource(url: String, offset: TimeIntervallic) throws {
+        guard let urlItem = URL(string: url) else {
+            throw MediaPlayerError.invalidURL
+        }
+        
+        playerItem = MediaAVPlayerItem(url: urlItem)
+        playerItem?.delegate = self
+        player = AVQueuePlayer(playerItem: playerItem)
+                
+        if offset.seconds > 0 {
+            player?.seek(to: offset.cmTime)
         }
     }
 }

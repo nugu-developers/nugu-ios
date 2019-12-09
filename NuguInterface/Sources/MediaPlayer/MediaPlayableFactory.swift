@@ -23,6 +23,8 @@ import Foundation
 /// <#Description#>
 public protocol MediaPlayableFactory {
     /// <#Description#>
-    /// - Parameter channel: <#channel description#>
-    func makeMediaPlayer(type: MediaPlayableType) -> MediaPlayable
+    func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource
+    
+    /// <#Description#>
+    func makeMediaPlayer() -> MediaPlayable & MediaUrlDataSource
 }

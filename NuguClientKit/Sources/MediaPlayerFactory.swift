@@ -24,10 +24,11 @@ import NuguCore
 import NuguInterface
 
 class MediaPlayerFactory: MediaPlayableFactory {
-    func makeMediaPlayer(type: MediaPlayableType) -> MediaPlayable {
-        switch type {
-        case .voice: return OpusPlayer()
-        case .media: return MediaPlayer()
-        }
+    func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource {
+        return OpusPlayer()
+    }
+    
+    func makeMediaPlayer() -> MediaPlayable & MediaUrlDataSource {
+        return MediaPlayer()
     }
 }

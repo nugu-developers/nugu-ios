@@ -36,6 +36,13 @@ final public class NuguButton: UIButton {
     @IBInspectable
     public var endColor: UIColor = UIColor(red: 0.0, green: 157.0/255.0, blue: 1.0, alpha: 1.0)
     
+    @IBInspectable
+    public var imageTintColor: UIColor = .white {
+        didSet {
+            applyImageViewTintColor()
+        }
+    }
+    
     // MARK: AnimationKey
     
     private enum AnimationKey: String {
@@ -77,19 +84,19 @@ final public class NuguButton: UIButton {
         loadFromXib()
     }
     
-    override public func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         refreshViews()
     }
     
-    override public var isHighlighted: Bool {
+    public override var isHighlighted: Bool {
         didSet {
             highlightedLayer.isHidden = !isHighlighted
         }
     }
     
-    override public var isEnabled: Bool {
+    public override var isEnabled: Bool {
         didSet {
             refreshViews()
         }
@@ -113,8 +120,8 @@ public extension NuguButton {
 
 // MARK: - Private (View)
 
-extension NuguButton {
-    private func loadFromXib() {
+private extension NuguButton {
+    func loadFromXib() {
         // swiftlint:disable force_cast
         let view = Bundle(for: NuguButton.self).loadNibNamed("NuguButton", owner: self)?.first as! UIView
         // swiftlint:enable force_cast
@@ -139,6 +146,14 @@ extension NuguButton {
         
         backgroundView.layer.addSublayer(gradientLayer)
         backgroundView.layer.addSublayer(highlightedLayer)
+    }
+    
+    func applyImageViewTintColor() {
+        micImageView.image = UIImage(named: "nugu_btn_mic", in: Bundle(for: NuguButton.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        micImageView.tintColor = imageTintColor
+        
+        nuguLogoImageView.image = UIImage(named: "nugu_btn_nugu", in: Bundle(for: NuguButton.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        nuguLogoImageView.tintColor = imageTintColor
     }
     
     func refreshViews() {

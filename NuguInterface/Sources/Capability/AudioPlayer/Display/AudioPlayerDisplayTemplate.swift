@@ -22,23 +22,26 @@ import Foundation
 
 public struct AudioPlayerDisplayTemplate {
     public let type: String
-    public let typeInfo: TypeInfo
+    public let payload: AudioPlayerDisplayTemplate.AudioPlayer
     public let templateId: String
     public let dialogRequestId: String
     public let playStackServiceId: String?
     
-    public init(type: String, typeInfo: TypeInfo, templateId: String, dialogRequestId: String, playStackServiceId: String?) {
+    public init(type: String, payload: AudioPlayerDisplayTemplate.AudioPlayer, templateId: String, dialogRequestId: String, playStackServiceId: String?) {
         self.type = type
-        self.typeInfo = typeInfo
+        self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
         self.playStackServiceId = playStackServiceId
     }
-    
-    /// The player template of the DisplayPlayerAgent.
-    public enum TypeInfo {
-        /// A player template for metadata associated with a media item
-        /// - Parameter item: Information of the player template.
-        case audioPlayer(item: AudioPlayerDisplayTemplate.AudioPlayer)
+}
+
+public extension AudioPlayerDisplayTemplate {
+    /// An enum class used to specify the reason to clear the template.
+    enum ClearReason {
+        /// Clear request due to timeout.
+        case timer
+        /// Clear request due to directive.
+        case directive
     }
 }

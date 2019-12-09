@@ -41,18 +41,16 @@ extension TTSAgent: CapabilityEventSendable {
 
 extension TTSAgent.Event: Eventable {
     public var payload: [String: Any] {
-        var eventPayload: [String: Any?]
+        var eventPayload: [String: Any?] = [
+            "playServiceId": playServiceId,
+            "token": token
+        ]
         
         switch typeInfo {
         case .speechPlay(let text):
-            eventPayload = ["text": text]
+            eventPayload["text"] = text
         default:
-            eventPayload = [:]
-        }
-        
-        eventPayload["playServiceId"] = playServiceId
-        if let token = token {
-            eventPayload["token"] = token
+            break
         }
         
         return eventPayload.compactMapValues { $0 }

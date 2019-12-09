@@ -87,26 +87,20 @@ extension TextAgent {
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
-            switch self.textAgentState {
-            case .idle:
-                break
-            case .busy:
+            guard self.textAgentState != .busy else {
                 log.warning("Not permitted in current state \(self.textAgentState)")
                 return
             }
             
-        }
-        
-        contextManager.getContexts { [weak self] (contextPayload) in
-            guard let self = self else { return }
-            
-            self.textRequest = TextRequest(
-                contextPayload: contextPayload,
-                text: text,
-                dialogRequestId: TimeUUID().hexString
-            )
-            
-            self.focusManager.requestFocus(channelDelegate: self)
+            self.contextManager.getContexts { (contextPayload) in
+                self.textRequest = TextRequest(
+                    contextPayload: contextPayload,
+                    text: text,
+                    dialogRequestId: TimeUUID().hexString
+                )
+                
+                self.focusManager.requestFocus(channelDelegate: self)
+            }
         }
     }
 }

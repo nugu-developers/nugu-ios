@@ -165,10 +165,7 @@ public extension ASRAgent {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
-            switch self.asrState {
-            case .idle, .expectingSpeech:
-                break
-            case .listening, .recognizing, .busy:
+            guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
                 log.warning("Not permitted in current state \(self.asrState)")
                 return
             }
@@ -478,7 +475,7 @@ private extension ASRAgent {
 //            }
 //
 //            /**
-//             KeyWordDetector's use 16k mono (bit depth: 16).
+//             KeywordDetector's use 16k mono (bit depth: 16).
 //             so, You can calculate sample count by (dataCount / 2)
 //             */
 //            let totalFrameCount = data.count / 2

@@ -18,13 +18,10 @@
 //  limitations under the License.
 //
 
-import Foundation
-import AVFoundation
+import UIKit
 
 import NuguInterface
 import NuguClientKit
-import KeenSense
-import JadeMarble
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
@@ -34,14 +31,12 @@ final class NuguCentralManager {
     private init() {
         client.focusManager.delegate = self
         client.authorizationManager.add(stateDelegate: self)
-        client.contextManager.add(provideContextDelegate: self)
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
             client.endPointDetector?.epdFile = epdFile
         }
         
         client.locationAgent?.delegate = self
-        client.permissionAgent?.delegate = self
 
         NuguLocationManager.shared.startUpdatingLocation()
         
@@ -71,11 +66,10 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startRecognize(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        AVAudioSession.sharedInstance().requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.disableMixWithOthers()
                 self.client.asrAgent?.startRecognition()
             })
             completion?(result)
@@ -95,17 +89,28 @@ extension NuguCentralManager {
 
 // MARK: - Internal (WakeUpDetector)
 
-extension NuguCentralManager: ContextInfoDelegate {
-    func contextInfoRequestContext() -> ContextInfo? {
-        guard let keyWord = KeyWord(rawValue: UserDefaults.Standard.wakeUpWord) else {
-            return nil
+extension NuguCentralManager {
+    func refreshWakeUpDetector() {
+        DispatchQueue.main.async { [weak self] in
+            // Should check application state, because iOS audio input can not be start using in background state
+            guard UIApplication.shared.applicationState == .active else { return }
+            switch UserDefaults.Standard.useWakeUpDetector {
+            case true:
+                self?.startWakeUpDetector(completion: { (result) in
+                    switch result {
+                    case .success: return
+                    case .failure(let error):
+                        log.debug("Failed to start WakeUp-Detector with reason: \(error)")
+                    }
+                })
+            case false:
+                self?.stopWakeUpDetector()
+            }
         }
-
-        return ContextInfo(contextType: .client, name: "wakeupWord", payload: keyWord.description)
     }
     
     func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        AVAudioSession.sharedInstance().requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
@@ -121,58 +126,34 @@ extension NuguCentralManager: ContextInfoDelegate {
     
     func setWakeUpWord(rawValue wakeUpWord: Int) {
         switch wakeUpWord {
-        case KeyWord.aria.rawValue:
-            if let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") {
-                client.wakeUpDetector?.netFile = netFile
-                client.wakeUpDetector?.searchFile = searchFile
+        case Keyword.aria.rawValue:
+            guard
+                let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
+                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") else {
+                    log.debug("keywordSource is invalid")
+                    return
             }
-        case KeyWord.tinkerbell.rawValue:
-            if let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") {
-                client.wakeUpDetector?.netFile = netFile
-                client.wakeUpDetector?.searchFile = searchFile
+            
+            client.wakeUpDetector?.keywordSource = KeywordSource(
+                keyword: .aria,
+                netFileUrl: netFile,
+                searchFileUrl: searchFile
+            )
+        case Keyword.tinkerbell.rawValue:
+            guard
+                let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
+                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") else {
+                    log.debug("keywordSource is invalid")
+                    return
             }
+            
+            client.wakeUpDetector?.keywordSource = KeywordSource(
+                keyword: .tinkerbell,
+                netFileUrl: netFile,
+                searchFileUrl: searchFile
+            )
         default:
             return
-        }
-    }
-}
-
-// MARK: - Internal (AudioSession)
-
-extension NuguCentralManager {
-    @discardableResult func setAudioSession() -> Bool {
-        guard (AVAudioSession.sharedInstance().category != .playAndRecord)
-            || AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == false else {
-            return true
-        }
-        
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-            return true
-        } catch {
-            log.debug("setCategory failed: \(error)")
-            return false
-        }
-    }
-    
-    func disableMixWithOthers() {
-        guard AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint == true else { return }
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            log.debug("disableMixWithOthers failed: \(error)")
         }
     }
 }
@@ -197,39 +178,19 @@ extension NuguCentralManager: AuthorizationStateDelegate {
 // MARK: - FocusDelegate
 
 extension NuguCentralManager: FocusDelegate {
-    func focusShouldAcquire(channel: FocusChannelConfigurable) -> Bool {
-        return setAudioSession()
+    func focusShouldAcquire() -> Bool {
+        return NuguAudioSessionManager.setAudioSession()
     }
     
-    func focusDidChange(channel: FocusChannelConfigurable, focusState: FocusState) {}
+    func focusShouldRelease() {
+        NuguAudioSessionManager.nofifyAudioSessionDeactivationAndRecover()
+    }
 }
 
 // MARK: - LocationAgentDelegate
 
 extension NuguCentralManager: LocationAgentDelegate {
-    func locationAgentRequestContext() -> LocationContext {
-        return NuguLocationManager.shared.locationContext
-    }
-}
-
-// MARK: - PermissionAgentDelegate
-
-extension NuguCentralManager: PermissionAgentDelegate {
-    func permissionAgentRequestPermissions(
-        categories: Set<PermissionContext.Permission.Category>,
-        completion: @escaping () -> Void
-    ) {
-        for category in categories {
-            switch category {
-            case .location:
-                NuguLocationManager.shared.requestLocationPermission {
-                    completion()
-                }
-            }
-        }
-    }
-    
-    func permissionAgentRequestContext() -> PermissionContext {
-        return PermissionContext(permissions: [PermissionContext.Permission(category: .location, state: NuguLocationManager.shared.permissionLocationState)])
+    func locationAgentRequestLocationInfo() -> LocationInfo? {
+        return NuguLocationManager.shared.cachedLocationInfo
     }
 }

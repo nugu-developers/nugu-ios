@@ -126,7 +126,7 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     }
 }
 
-// MARK: - AudioPlayerAgentProtocol
+// MARK: - AudioPlayerAgent + AudioPlayerAgentProtocol
 
 public extension AudioPlayerAgent {
     func add(delegate: AudioPlayerAgentDelegate) {
@@ -218,8 +218,9 @@ public extension AudioPlayerAgent {
         audioPlayerDisplayManager.remove(delegate: displayDelegate)
     }
     
-    func clearDisplay(displayDelegate: AudioPlayerDisplayDelegate) {
-        audioPlayerDisplayManager.clearDisplay(delegate: displayDelegate)
+    func stopRenderingTimer(templateId: String) {
+        audioPlayerDisplayManager.stopRenderingTimer(templateId: templateId)
+        
     }
 }
 
@@ -434,6 +435,7 @@ private extension AudioPlayerAgent {
                     // Set mediaplayer
                     try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
                 }
+                self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
                 
                 if let metaData = payload.audioItem.metadata,
                     ((metaData["disableTemplate"] as? Bool) ?? false) == false {
@@ -466,8 +468,7 @@ private extension AudioPlayerAgent {
         sendEvent(
             Event(
                 token: media.payload.audioItem.stream.token,
-                // This is a mandatory in Play kit.
-                offsetInMilliseconds: (offset ?? 0) * 1000,
+                offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
             ),
@@ -550,7 +551,7 @@ private extension AudioPlayerAgent {
 private extension AudioPlayerAgent {
     /// set mediaplayer
     func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) throws {
-        let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer(type: .media)
+        let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer()
         mediaPlayer.delegate = self
         
         self.currentMedia = AudioPlayerAgentMedia(
@@ -565,7 +566,6 @@ private extension AudioPlayerAgent {
         )
         
         mediaPlayer.isMuted = playerIsMuted
-        playSyncManager.prepareSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
     }
 }
 
