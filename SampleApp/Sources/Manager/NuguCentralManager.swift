@@ -88,13 +88,11 @@ extension NuguCentralManager {
             )
             
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
-                OAuthManager<Type1>.shared.loginBySafariViewController(from: viewController) { (result) in
-                    guard case .success(let authorizationInfo) = result else {
+                loginBySafariViewController(presentingViewController: viewController) { (result) in
+                    guard case .success = result else {
                         completion(.failure(SampleAppError.loginFailedError(loginMethod: .type1)))
                         return
                     }
-                    UserDefaults.Standard.accessToken = authorizationInfo.accessToken
-                    UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
                     completion(.success(()))
                 }
                 return
@@ -120,14 +118,13 @@ extension NuguCentralManager {
                 deviceUniqueId: SampleApp.deviceUniqueId
             )
             
-            OAuthManager<Type2>.shared.login(completion: { (result) in
-                guard case .success(let authorizationInfo) = result else {
+            loginType2 { (result) in
+                guard case .success = result else {
                     completion(.failure(SampleAppError.loginFailedError(loginMethod: .type2)))
                     return
                 }
-                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
                 completion(.success(()))
-            })
+            }
         }
     }
     
@@ -147,7 +144,13 @@ extension NuguCentralManager {
                 self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
             }
         case .type2:
-            logoutAfterErrorHandling()
+            loginType2 { [weak self] (result) in
+                guard case .success = result else {
+                    self?.logoutAfterErrorHandling()
+                    return
+                }
+                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+            }
         default:
             break
         }
@@ -165,6 +168,19 @@ extension NuguCentralManager {
 // MARK: - Private (Auth)
 
 private extension NuguCentralManager {
+    func loginBySafariViewController(presentingViewController: UIViewController, completion: @escaping (Result<Void, Error>) -> Void) {
+        OAuthManager<Type1>.shared.loginBySafariViewController(from: presentingViewController) { (result) in
+            switch result {
+            case .success(let authorizationInfo):
+                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
+                UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func loginWithRefreshToken(refreshToken: String, completion: @escaping (Result<Void, Error>) -> Void) {
         OAuthManager<Type1>.shared.loginSilently(by: refreshToken) { result in
             switch result {
@@ -176,6 +192,18 @@ private extension NuguCentralManager {
                 completion(.failure(error))
             }
         }
+    }
+    
+    func loginType2(completion: @escaping (Result<Void, Error>) -> Void) {
+        OAuthManager<Type2>.shared.login(completion: { (result) in
+            switch result {
+            case .success(let authorizationInfo):
+                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        })
     }
     
     func logoutAfterErrorHandling() {
