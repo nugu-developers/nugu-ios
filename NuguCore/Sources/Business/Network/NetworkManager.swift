@@ -25,7 +25,10 @@ import NuguInterface
 import RxSwift
 
 public class NetworkManager: NetworkManageable {
-    private var apiProvider: NuguApiProvider?
+    public var apiProvider: NuguApiProvideable? {
+        return nuguApiProvider
+    }
+    private var nuguApiProvider: NuguApiProvider?
     private let disposeBag = DisposeBag()
     private let receiveMessageDelegates = DelegateSet<ReceiveMessageDelegate>()
     private let networkStatusDelegates = DelegateSet<NetworkStatusDelegate>()
@@ -89,8 +92,8 @@ public class NetworkManager: NetworkManageable {
     }
 
     public func disconnect() {
-        apiProvider?.disconnect()
-        apiProvider = nil
+        nuguApiProvider?.disconnect()
+        nuguApiProvider = nil
     }
     
     public func add(statusDelegate: NetworkStatusDelegate) {
@@ -110,34 +113,6 @@ public class NetworkManager: NetworkManageable {
     }
 }
 
-extension NetworkManager: MessageSendable {
-    public func send(upstreamEventMessage: UpstreamEventMessage, completion: ((SendMessageStatus) -> Void)?) {
-        apiProvider?.event(upstreamEventMessage)
-            .subscribe(onCompleted: {
-                log.debug("message was sent successfully")
-                completion?(.success)
-            }, onError: { error in
-                log.error(error)
-                completion?(.error(error: error))
-            }).disposed(by: disposeBag)
-    }
-    
-    public func send(upstreamAttachment: UpstreamAttachment, completion: ((SendMessageStatus) -> Void)?) {
-        apiProvider?.eventAttachment(upstreamAttachment)
-            .subscribe(onCompleted: {
-                log.debug("attachment was sent successfully")
-                completion?(.success)
-            }, onError: { error in
-                log.error(error)
-                completion?(.error(error: error))
-            }).disposed(by: self.disposeBag)
-    }
-    
-    public func send(crashReports: [CrashReport]) {
-        apiProvider?.crash(reports: crashReports).subscribe().disposed(by: self.disposeBag)
-    }
-}
-
 private extension NetworkManager {
     func startPing() {
         let randomPingTime = Int.random(in: 180..<300)
@@ -145,7 +120,7 @@ private extension NetworkManager {
         pingDisposable?.dispose()
         pingDisposable = Observable<Int>.interval(.seconds(randomPingTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .flatMap { [weak self] _ -> Completable in
-                guard let apiProvider = self?.apiProvider else {
+                guard let apiProvider = self?.nuguApiProvider else {
                     return Completable.error(NetworkError.badRequest)
                 }
                 
@@ -172,7 +147,7 @@ private extension NetworkManager {
     }
     
     func receiveMessage() {
-        guard let apiProvider = apiProvider else { return }
+        guard let apiProvider = nuguApiProvider else { return }
 
         receiveDisposable?.dispose()
         receiveDisposable = apiProvider.directive
@@ -221,7 +196,7 @@ private extension NetworkManager {
                 .filter { $0 != nil }
                 .take(1)
                 .subscribe(onNext: { apiProvider in
-                    self.apiProvider = apiProvider
+                    self.nuguApiProvider = apiProvider
                     complete(.completed)
                 }, onError: { error in
                     complete(.error(error))
@@ -237,7 +212,7 @@ private extension NetworkManager {
     }
     
     func setEndPoint(policy: Policy.ServerPolicy) -> Single<NuguApiProvider?> {
-        let apiProvider = NuguApiProvider(url: "https://" + "\(policy.address):\(policy.port)")
+        let apiProvider = NuguApiProvider(url: "https://" + "\(policy.hostname):\(policy.port)")
         return Completable.create { (completer) -> Disposable in
             let disposable = Disposables.create()
             

@@ -1,5 +1,5 @@
 //
-//  NuguCoreApi.swift
+//  NuguApi.swift
 //  NuguCore
 //
 //  Created by DCs-OfficeMBP on 08/07/2019.

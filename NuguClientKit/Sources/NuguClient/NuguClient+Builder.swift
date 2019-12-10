@@ -43,7 +43,7 @@ extension NuguClient {
         /// <#Description#>
         public let playSyncManager: PlaySyncManageable = PlaySyncManager()
         /// <#Description#>
-        public let downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter()
+        public let streamDataRouter: StreamDataRoutable
         /// <#Description#>
         public let directiveSequencer: DirectiveSequenceable
         /// <#Description#>
@@ -67,14 +67,15 @@ extension NuguClient {
         /// <#Description#>
         public lazy var systemAgent: SystemAgentProtocol = SystemAgent(
             contextManager: contextManager,
-            networkManager: networkManager
+            networkManager: networkManager,
+            upstreamDataSender: streamDataRouter
         )
         
         /// <#Description#>
         public lazy var asrAgent: ASRAgentProtocol? = ASRAgent(
             focusManager: focusManager,
             channel: FocusChannelConfiguration.recognition,
-            messageSender: networkManager,
+            upstreamDataSender: streamDataRouter,
             contextManager: contextManager,
             audioStream: sharedAudioStream,
             endPointDetector: endPointDetector,
@@ -86,7 +87,7 @@ extension NuguClient {
             focusManager: focusManager,
             channel: FocusChannelConfiguration.information,
             mediaPlayerFactory: mediaPlayerFactory,
-            messageSender: networkManager,
+            upstreamDataSender: streamDataRouter,
             playSyncManager: playSyncManager
         )
         
@@ -95,20 +96,20 @@ extension NuguClient {
             focusManager: focusManager,
             channel: FocusChannelConfiguration.content,
             mediaPlayerFactory: mediaPlayerFactory,
-            messageSender: networkManager,
+            upstreamDataSender: streamDataRouter,
             playSyncManager: playSyncManager
         )
         
         /// <#Description#>
         public lazy var displayAgent: DisplayAgentProtocol? = DisplayAgent(
-            messageSender: networkManager,
+            upstreamDataSender: streamDataRouter,
             playSyncManager: playSyncManager
         )
         
         /// <#Description#>
         public lazy var textAgent: TextAgentProtocol? = TextAgent(
             contextManager: contextManager,
-            messageSender: networkManager,
+            upstreamDataSender: streamDataRouter,
             focusManager: focusManager,
             channel: FocusChannelConfiguration.recognition,
             dialogStateAggregator: dialogStateAggregator
@@ -116,7 +117,7 @@ extension NuguClient {
         
         /// <#Description#>
         public lazy var extensionAgent: ExtensionAgentProtocol? = ExtensionAgent(
-            messageSender: networkManager
+            upstreamDataSender: streamDataRouter
         )
         
         /// <#Description#>
@@ -124,7 +125,8 @@ extension NuguClient {
         
         /// <#Description#>
         public init() {
-            self.directiveSequencer = DirectiveSequencer(messageSender: networkManager)
+            self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
+            self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
         }
         
         /// <#Description#>
@@ -148,7 +150,7 @@ extension NuguClient {
                 contextManager: contextManager,
                 playSyncManager: playSyncManager,
                 directiveSequencer: directiveSequencer,
-                downStreamDataInterpreter: downStreamDataInterpreter,
+                streamDataRouter: streamDataRouter,
                 mediaPlayerFactory: mediaPlayerFactory,
                 inputProvider: inputProvider,
                 sharedAudioStream: sharedAudioStream,

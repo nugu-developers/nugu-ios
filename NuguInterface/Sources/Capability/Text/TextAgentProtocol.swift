@@ -25,16 +25,16 @@ public protocol TextAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 FocusChannelDelegate,
-DownStreamDataDelegate {
+DownstreamDataDelegate {
     /// <#Description#>
     /// - Parameter contextManager: <#contextManager description#>
-    /// - Parameter messageSender: <#messageSender description#>
+    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter focusManager: <#focusManager description#>
     /// - Parameter channel: <#channel description#>
     /// - Parameter dialogStateAggregator: <#dialogStateAggregator description#>
     init(
         contextManager: ContextManageable,
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         focusManager: FocusManageable,
         channel: FocusChannelConfigurable,
         dialogStateAggregator: DialogStateAggregatable

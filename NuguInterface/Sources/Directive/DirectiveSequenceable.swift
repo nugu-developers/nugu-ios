@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol DirectiveSequenceable: DownStreamDataDelegate {
+public protocol DirectiveSequenceable: DownstreamDataDelegate {
     /// <#Description#>
     /// - Parameter handleDirectiveDelegate: <#handleDirectiveDelegate description#>
     func add(handleDirectiveDelegate: HandleDirectiveDelegate)

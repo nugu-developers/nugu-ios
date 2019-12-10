@@ -32,22 +32,12 @@ class NuguApiProvider: NSObject {
                                                       delegate: self,
                                                       delegateQueue: sessionQueue)
     
-    private var recvBoundary: String? {
-        didSet {
-            guard let boundary = recvBoundary else {
-                parser = nil
-                return
-            }
-            
-            parser = MultiPartParser(boundary: boundary)
-        }
-    }
     private var recvData = Data()
     private var parser: MultiPartParser?
     private var directiveTask: URLSessionDataTask?
-    private let directiveQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_queue")
-    private let disposeBag = DisposeBag()
     private var directiveSubject: PublishSubject<MultiPartParser.Part>?
+    
+    private var disposeBag = DisposeBag()
     
     init(url: String, timeout: TimeInterval = 30.0) {
         self.url = url + "/v1"
@@ -64,163 +54,27 @@ class NuguApiProvider: NSObject {
     static var policies: Single<Policy> {
         var urlSession: URLSession! = URLSession(configuration: .default)
         
-        return Single<Policy>.create { single -> Disposable in
-            let disposable = Disposables.create()
-            
-            var urlComponent = URLComponents(string: (NuguServerInfo.registryAddress + NuguApi.policy.path))
-            urlComponent?.queryItems = [
-                URLQueryItem(name: "protocol", value: "H2")
-            ]
-            
-            guard let url = urlComponent?.url else {
-                log.error(NetworkError.invalidParameter)
-                single(.error(NetworkError.invalidParameter))
-                return disposable
-            }
-            
-            var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 30.0)
-            request.httpMethod = NuguApi.policy.method.rawValue
-            request.allHTTPHeaderFields = NuguApi.policy.header
-            
-            log.debug("url: \(request.url?.absoluteString ?? "")")
-            urlSession.dataTask(with: request) { (data, response, error) in
-                guard error == nil else {
-                    log.error("get policies error: \(error!)")
-                    single(.error(error!))
-                    return
-                }
-
-                guard let recvData = data, 0 < recvData.count,
-                    let policy = try? JSONDecoder().decode(Policy.self, from: recvData) else {
-                        log.error("get policies data parsing failed:\n\(String(data: (data ?? Data()), encoding: .utf8) ?? "")\n")
-                        single(.error(NetworkError.invalidMessageReceived))
-                        urlSession = nil
-                        return
-                }
-                
-                log.debug("response:\n\(response?.description ?? "")\n")
-                log.debug("data:\n\(String(data: recvData, encoding: .utf8) ?? "")\n")
-                single(.success(policy))
-                urlSession = nil
-            }.resume()
-            
-            return disposable
-        }
-    }
-    
-    private func urlTaskResponseParser(data: Data?, response: URLResponse?, error: Error?) -> Result<Data, Error> {
-        guard error == nil else {
-            log.error(error!)
-            return .failure(error!)
+        var urlComponent = URLComponents(string: (NuguServerInfo.registryAddress + NuguApi.policy.path))
+        urlComponent?.queryItems = [
+            URLQueryItem(name: "protocol", value: "H2")
+        ]
+        
+        guard let url = urlComponent?.url else {
+            log.error(NetworkError.invalidParameter)
+            return Single.error(NetworkError.invalidParameter)
         }
         
-        log.debug("response:\n\(response?.description ?? "")\n")
-        guard let response = response as? HTTPURLResponse else {
-            return .failure(NetworkError.nilResponse)
-        }
+        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 30.0)
+        request.httpMethod = NuguApi.policy.method.rawValue
+        request.allHTTPHeaderFields = NuguApi.policy.header
         
-        switch HTTPStatusCode(rawValue: response.statusCode) {
-        case .ok:
-            guard let data = data else {
-                return .failure(NetworkError.invalidMessageReceived)
-            }
-            
-            return .success(data)
-        case .serverError:
-            return .failure(NetworkError.serverError)
-        case .unauthorized:
-            return .failure(NetworkError.authError)
-        default:
-            return .failure(NetworkError.invalidMessageReceived)
+        return request.rxDataTask(urlSession: urlSession)
+            .map { data -> Policy in
+                try JSONDecoder().decode(Policy.self, from: data)
         }
-    }
-    
-    func event(_ upstream: UpstreamEventMessage) -> Completable {
-        return Completable.create { [weak self] (complete) -> Disposable in
-            let disposable = Disposables.create()
-            
-            guard let self = self else { return disposable }
-
-            guard let url = URL(string: self.url+"/"+NuguApi.event.path) else {
-                log.error("invailid url: \(self.url+"/"+NuguApi.event.path)")
-                complete(.error(NetworkError.badRequest))
-                return disposable
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = NuguApi.event.method.rawValue
-            request.allHTTPHeaderFields = NuguApi.event.header
-
-            // body
-            guard let bodyData = ("{ \"context\": \(upstream.contextString)"
-                + ",\"event\": {"
-                + "\"header\": \(upstream.headerString)"
-                + ",\"payload\": \(upstream.payloadString) }"
-                + " }").data(using: .utf8) else {
-                    complete(.error(NetworkError.invalidParameter))
-                    return disposable
-            }
-
-            log.debug("request header:\n\(request.allHTTPHeaderFields ?? [:])\n")
-            log.debug("body:\n\(String(data: bodyData, encoding: .utf8) ?? "")\n")
-            self.session.uploadTask(with: request, from: bodyData) { (data, response, error) in
-                switch self.urlTaskResponseParser(data: data, response: response, error: error) {
-                case .success:
-                    complete(.completed)
-                case .failure(let error):
-                    complete(.error(error))
-                }
-            }.resume()
-
-            return disposable
-        }
-    }
-    
-    func eventAttachment(_ upstream: UpstreamAttachment) -> Completable {
-        return Completable.create { [weak self] (complete) -> Disposable in
-            let disposable = Disposables.create()
-            
-            guard let self = self else { return disposable }
-            
-            var urlComponent = URLComponents(string: self.url+"/"+NuguApi.eventAttachment.path)
-            urlComponent?.queryItems = [
-                URLQueryItem(name: "User-Agent", value: NetworkConst.userAgent),
-                URLQueryItem(name: "Content-Type", value: "application/octet-stream"),
-                URLQueryItem(name: "namespace", value: upstream.header.namespace),
-                URLQueryItem(name: "name", value: upstream.header.name),
-                URLQueryItem(name: "dialogRequestId", value: upstream.header.dialogRequestId),
-                URLQueryItem(name: "messageId", value: upstream.header.messageId),
-                URLQueryItem(name: "version", value: upstream.header.version),
-                URLQueryItem(name: "parentMessageId", value: upstream.header.messageId),
-                URLQueryItem(name: "seq", value: String(upstream.seq)),
-                URLQueryItem(name: "isEnd", value: upstream.isEnd ? "true" : "false")
-            ]
-            
-            guard let url = urlComponent?.url else {
-                log.error("invailid parameter: \(urlComponent?.queryItems ?? [])")
-                complete(.error(NetworkError.invalidParameter))
-                return disposable
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = NuguApi.eventAttachment.method.rawValue
-            request.allHTTPHeaderFields = NuguApi.eventAttachment.header
-            
-            // body
-            log.debug("event request header:\n\(upstream.header)\n")
-            log.debug("body:\n\(String(data: upstream.content, encoding: .ascii) ?? "")\n")
-            
-            self.session.uploadTask(with: request, from: upstream.content) { (data, response, error) in
-                switch self.urlTaskResponseParser(data: data, response: response, error: error) {
-                case .success:
-                    complete(.completed)
-                case .failure(let error):
-                    complete(.error(error))
-                }
-            }.resume()
-            
-            return disposable
-        }
+        .do(onDispose: {
+            urlSession = nil
+        })
     }
     
     var directive: Observable<MultiPartParser.Part> {
@@ -256,63 +110,54 @@ class NuguApiProvider: NSObject {
         .flatMap { $0 }
     }
     
-    func crash(reports: [CrashReport]) -> Completable {
-        return Completable.create { [weak self] (complete) -> Disposable in
-            let disposable = Disposables.create()
-            
-            guard let self = self, let reportsData = try? JSONEncoder().encode(reports) else { return disposable }
-
-            guard let url = URL(string: self.url+"/"+NuguApi.crashReport.path) else {
-                log.error("invailid url: \(self.url+"/"+NuguApi.crashReport.path)")
-                complete(.error(NetworkError.badRequest))
-                return disposable
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = NuguApi.crashReport.method.rawValue
-            request.allHTTPHeaderFields = NuguApi.crashReport.header
-            self.session.uploadTask(with: request, from: reportsData) { (data, response, error) in
-                switch self.urlTaskResponseParser(data: data, response: response, error: error) {
-                case .success:
-                    complete(.completed)
-                case .failure(let error):
-                    complete(.error(error))
-                }
-            }.resume()
-            
-            return disposable
-        }
-    }
-    
     var ping: Completable {
-        return Completable.create { [weak self] (complete) -> Disposable in
-            let disposable = Disposables.create()
-            
-            guard let self = self else { return disposable }
-            
-            guard let url = URL(string: self.url+"/"+NuguApi.ping.path) else {
-                log.error("invailid url: \(self.url+"/"+NuguApi.ping.path)")
-                complete(.error(NetworkError.badRequest))
-                return disposable
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = NuguApi.ping.method.rawValue
-            request.allHTTPHeaderFields = NuguApi.ping.header
-            self.session.dataTask(with: request) { (data, response, error) in
-                switch self.urlTaskResponseParser(data: data, response: response, error: error) {
-                case .success:
-                    complete(.completed)
-                case .failure(let error):
-                    complete(.error(error))
-                }
-            }.resume()
-            return disposable
+        guard let url = URL(string: self.url+"/"+NuguApi.ping.path) else {
+            log.error("invailid url: \(self.url+"/"+NuguApi.ping.path)")
+            return Completable.error(NetworkError.badRequest)
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = NuguApi.ping.method.rawValue
+        request.allHTTPHeaderFields = NuguApi.ping.header
+        
+        return request.rxDataTask(urlSession: session)
+            .asCompletable()
     }
     
     func disconnect() {
         session.invalidateAndCancel()
+    }
+}
+
+// MARK: - NuguApiProvider
+
+extension NuguApiProvider: NuguApiProvideable {
+    func request(with nuguApiRequest: NuguApiRequest, completion: ((Result<Data, Error>) -> Void)?) {
+        guard var urlComponent = URLComponents(string: self.url+"/"+nuguApiRequest.path) else {
+            log.error("invailid url: \(self.url+"/"+nuguApiRequest.path)")
+            completion?(.failure(NetworkError.badRequest))
+            return
+        }
+        urlComponent.queryItems = nuguApiRequest.queryItems.map({ (key, value) -> URLQueryItem in
+            URLQueryItem(name: key, value: value)
+        })
+        guard let url = urlComponent.url else {
+            log.error("invailid parameter: \(urlComponent.queryItems ?? [])")
+            completion?(.failure(NetworkError.invalidParameter))
+            return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = nuguApiRequest.method
+        request.allHTTPHeaderFields = nuguApiRequest.header
+        
+        request.rxUploadTask(urlSession: session, data: nuguApiRequest.bodyData)
+            .subscribe(onSuccess: { data in
+                log.debug("message was sent successfully")
+                completion?(.success(data))
+            }, onError: { error in
+                log.error(error)
+                completion?(.failure(error))
+            }).disposed(by: disposeBag)
     }
 }
 
@@ -338,7 +183,7 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
                     return
             }
             
-            recvBoundary = String(boundary)
+            parser = MultiPartParser(boundary: String(boundary))
             completionHandler(.allow)
         case .unauthorized: // help the app. to re-authorize.
             directiveSubject?.onError(NetworkError.authError)
@@ -355,10 +200,8 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
     }
     
     private func parseRecvData() {
-        guard let recvBoundary = recvBoundary,
-            recvBoundary.count+2 < recvData.count,
-            let parser = parser else {
-                return
+        guard let parser = parser else {
+            return
         }
         
         do {
@@ -390,27 +233,4 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
         log.debug("directive channel didOccurError: \(error)")
         directiveSubject?.onError(error)
     }
-}
-
-// MARK: - ToBeDeleted
-
-extension NuguApiProvider: URLSessionDelegate {
-    func urlSession(_ session: URLSession,
-                    didReceive challenge: URLAuthenticationChallenge,
-                    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-           let protectionSpace = challenge.protectionSpace
-           guard protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
-               let trustedURL = URL(string: url), let trustedHost = trustedURL.host,
-               protectionSpace.host.contains(trustedHost) else {
-                   completionHandler(.performDefaultHandling, nil)
-                   return
-           }
-           
-           guard let serverTrust = protectionSpace.serverTrust else {
-               completionHandler(.performDefaultHandling, nil)
-               return
-           }
-           
-           completionHandler(.useCredential, URLCredential(trust: serverTrust))
-       }
 }

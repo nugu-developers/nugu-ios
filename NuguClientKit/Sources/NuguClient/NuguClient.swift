@@ -90,9 +90,9 @@ public class NuguClient {
     /// <#Description#>
     let directiveSequencer: DirectiveSequenceable
     /// <#Description#>
-    let downStreamDataInterpreter: DownStreamDataInterpretable
+    let streamDataRouter: StreamDataRoutable
     /// <#Description#>
-    let downStreamDataTimeoutPreprocessor = DownStreamDataTimeoutPreprocessor()
+    let downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
     /// <#Description#>
     let mediaPlayerFactory: MediaPlayableFactory
     
@@ -174,7 +174,7 @@ public class NuguClient {
         contextManager: ContextManageable,
         playSyncManager: PlaySyncManageable,
         directiveSequencer: DirectiveSequenceable,
-        downStreamDataInterpreter: DownStreamDataInterpretable,
+        streamDataRouter: StreamDataRoutable,
         mediaPlayerFactory: MediaPlayableFactory,
         inputProvider: AudioProvidable?,
         sharedAudioStream: AudioStreamable?,
@@ -191,7 +191,7 @@ public class NuguClient {
         self.contextManager = contextManager
         self.playSyncManager = playSyncManager
         self.directiveSequencer = directiveSequencer
-        self.downStreamDataInterpreter = downStreamDataInterpreter
+        self.streamDataRouter = streamDataRouter
         self.mediaPlayerFactory = mediaPlayerFactory
         self.inputProvider = inputProvider
         self.sharedAudioStream = sharedAudioStream

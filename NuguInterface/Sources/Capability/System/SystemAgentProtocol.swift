@@ -31,9 +31,11 @@ DialogStateDelegate {
     /// <#Description#>
     /// - Parameter contextManager: <#contextManager description#>
     /// - Parameter networkManager: <#networkManager description#>
+    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     init(
         contextManager: ContextManageable,
-        networkManager: NetworkManageable
+        networkManager: NetworkManageable,
+        upstreamDataSender: UpstreamDataSendable
     )
     
     /// <#Description#>

@@ -32,13 +32,13 @@ SpeakerVolumeDelegate {
     /// - Parameter focusManager: <#focusManager description#>
     /// - Parameter channel: <#channel description#>
     /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
-    /// - Parameter messageSender: <#messageSender description#>
+    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter playSyncManager: <#playSyncManager description#>
     init(
         focusManager: FocusManageable,
         channel: FocusChannelConfigurable,
         mediaPlayerFactory: MediaPlayableFactory,
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable
     )
     

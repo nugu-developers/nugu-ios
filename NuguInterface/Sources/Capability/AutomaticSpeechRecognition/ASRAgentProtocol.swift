@@ -25,13 +25,13 @@ public protocol ASRAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 FocusChannelDelegate,
-DownStreamDataDelegate,
+DownstreamDataDelegate,
 EndPointDetectorDelegate,
 HandleDirectiveDelegate {
     /// <#Description#>
     /// - Parameter focusManager: <#focusManager description#>
     /// - Parameter channel: <#channel description#>
-    /// - Parameter messageSender: <#messageSender description#>
+    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter contextManager: <#contextManager description#>
     /// - Parameter audioStream: <#audioStream description#>
     /// - Parameter endPointDetector: <#endPointDetector description#>
@@ -39,7 +39,7 @@ HandleDirectiveDelegate {
     init(
         focusManager: FocusManageable,
         channel: FocusChannelConfigurable,
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
         endPointDetector: EndPointDetectable,

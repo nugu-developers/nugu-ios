@@ -26,8 +26,8 @@ CapabilityAgentable,
 ContextInfoDelegate,
 HandleDirectiveDelegate {
     /// <#Description#>
-    /// - Parameter messageSender: <#messageSender description#>
-    init(messageSender: MessageSendable)
+    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
+    init(upstreamDataSender: UpstreamDataSendable)
     
     /// <#Description#>
     var delegate: SpeakerAgentDelegate? { get set }

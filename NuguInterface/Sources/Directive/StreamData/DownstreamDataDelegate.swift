@@ -1,8 +1,8 @@
 //
-//  ExtensionAgentProtocol.swift
+//  DownstreamDataDelegate.swift
 //  NuguInterface
 //
-//  Created by yonghoonKwon on 25/07/2019.
+//  Created by MinChul Lee on 10/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,15 +20,20 @@
 
 import Foundation
 
-/// Extension-agent handles directives that not defined by other capability-agents
-public protocol ExtensionAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-HandleDirectiveDelegate {
+/// <#Description#>
+public protocol DownstreamDataDelegate: class {
     /// <#Description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
-    init(upstreamDataSender: UpstreamDataSendable)
-    
-    /// The object that acts as the delegate of extension-agent
-    var delegate: ExtensionAgentDelegate? { get set }
+    /// - Parameter directive: <#directive description#>
+    func downstreamDataDidReceive(directive: Downstream.Directive)
+    /// <#Description#>
+    /// - Parameter attachment: <#attachment description#>
+    func downstreamDataDidReceive(attachment: Downstream.Attachment)
+}
+
+// MARK: - Optional
+
+public extension DownstreamDataDelegate {
+    /// <#Description#>
+    /// - Parameter attachment: <#attachment description#>
+    func downstreamDataDidReceive(attachment: Downstream.Attachment) {}
 }

@@ -27,10 +27,10 @@ ContextInfoDelegate,
 HandleDirectiveDelegate,
 PlaySyncDelegate {
     /// <#Description#>
-    /// - Parameter messageSender: <#messageSender description#>
+    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter playSyncManager: <#playSyncManager description#>
     init(
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable
     )
     

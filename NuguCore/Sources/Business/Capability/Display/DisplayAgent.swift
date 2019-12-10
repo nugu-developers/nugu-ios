@@ -29,7 +29,7 @@ final public class DisplayAgent: DisplayAgentProtocol {
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     
-    private let messageSender: MessageSendable
+    private let upstreamDataSender: UpstreamDataSendable
     private let playSyncManager: PlaySyncManageable
     
     private var renderingInfos = [DisplayRenderingInfo]()
@@ -41,12 +41,12 @@ final public class DisplayAgent: DisplayAgentProtocol {
     private var disposeBag = DisposeBag()
   
     public init(
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable
     ) {
         log.info("")
         
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
     }
     
@@ -85,7 +85,7 @@ public extension DisplayAgent {
                     )),
                 context: self.contextInfoRequestContext(),
                 dialogRequestId: TimeUUID().hexString,
-                by: self.messageSender
+                by: self.upstreamDataSender
             )
         }
     }
@@ -103,7 +103,7 @@ extension DisplayAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         
@@ -185,7 +185,7 @@ extension DisplayAgent: PlaySyncDelegate {
 // MARK: - Private(Directive, Event)
 
 private extension DisplayAgent {
-    func display(directive: DownStream.Directive) -> Result<Void, Error> {
+    func display(directive: Downstream.Directive) -> Result<Void, Error> {
         log.info("\(directive.header.type)")
 
         return Result { [weak self] in
