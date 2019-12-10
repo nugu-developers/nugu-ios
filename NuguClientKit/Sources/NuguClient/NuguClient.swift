@@ -92,6 +92,8 @@ public class NuguClient {
     /// <#Description#>
     let downStreamDataInterpreter: DownStreamDataInterpretable
     /// <#Description#>
+    let downStreamDataTimeoutPreprocessor = DownStreamDataTimeoutPreprocessor()
+    /// <#Description#>
     let mediaPlayerFactory: MediaPlayableFactory
     
     // MARK: Audio
@@ -106,7 +108,7 @@ public class NuguClient {
     /// <#Description#>
     public let endPointDetector: EndPointDetectable?
     
-    //MARK: WakeUpDetector
+    // MARK: WakeUpDetector
     
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
@@ -163,7 +165,7 @@ public class NuguClient {
     
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
-
+    
     init(
         authorizationManager: AuthorizationManageable,
         focusManager: FocusManageable,

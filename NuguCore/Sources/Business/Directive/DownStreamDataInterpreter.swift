@@ -24,8 +24,13 @@ import NuguInterface
 
 public class DownStreamDataInterpreter: DownStreamDataInterpretable {
     private let delegates = DelegateSet<DownStreamDataDelegate>()
+    private var preprocessors = [DownStreamDataPreprocessable]()
     
     public init() {}
+    
+    public func add(preprocessor: DownStreamDataPreprocessable) {
+        preprocessors.append(preprocessor)
+    }
     
     public func add(delegate: DownStreamDataDelegate) {
         delegates.add(delegate)
@@ -37,19 +42,25 @@ public class DownStreamDataInterpreter: DownStreamDataInterpretable {
     
     public func receiveMessageDidReceive(header: [String: String], body: Data) {
         if let contentType = header["Content-Type"], contentType.contains("application/json") {
-            guard let message = DownStream.Message(messageData: body) else {
-                log.error("Decode Message failed")
+            guard let directivesDictionary = try? JSONSerialization.jsonObject(with: body, options: []) as? [String: Any],
+                let directivesArray = directivesDictionary["directives"] as? [[String: Any]] else {
+                    log.error("Decode Message failed")
                 return
             }
-        
-            message.directives.forEach { directive in
+            let directivies = directivesArray
+                .compactMap { DownStream.Directive(directiveDictionary: $0) }
+                .compactMap { preprocess(message: $0) }
+            
+            directivies.forEach { directive in
                 delegates.notify { delegate in
                     delegate.downStreamDataDidReceive(directive: directive)
                 }
             }
         } else if let attachment = DownStream.Attachment(headerDictionary: header, body: body) {
-            delegates.notify { delegate in
-                delegate.downStreamDataDidReceive(attachment: attachment)
+            if let attachment = preprocess(message: attachment) {
+                delegates.notify { delegate in
+                    delegate.downStreamDataDidReceive(attachment: attachment)
+                }
             }
         } else {
             log.error("Invalid data \(header)")
@@ -57,17 +68,14 @@ public class DownStreamDataInterpreter: DownStreamDataInterpretable {
     }
 }
 
-// MARK: - DownStream.Message initializer
+// MARK: - Private
 
-extension DownStream.Message {
-    init?(messageData: Data) {
-        guard let messageDictionary = try? JSONSerialization.jsonObject(with: messageData, options: []) as? [String: Any],
-            let messageArray = messageDictionary["directives"] as? [[String: Any]] else {
-            return nil
+extension DownStreamDataInterpreter {
+    func preprocess<T>(message: T) -> T? where T: DownStreamMessageable {
+        return preprocessors.reduce(message) { (result, preprocessor) -> T? in
+            guard let result = result else { return nil}
+            return preprocessor.preprocess(message: result)
         }
-        
-        let directivies = messageArray.compactMap { DownStream.Directive(directiveDictionary: $0) }
-        self.init(directives: directivies)
     }
 }
 
