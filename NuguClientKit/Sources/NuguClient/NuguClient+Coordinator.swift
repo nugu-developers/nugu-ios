@@ -117,7 +117,6 @@ extension NuguClient {
         contextManager.add(provideContextDelegate: systemAgent)
         networkManager.add(statusDelegate: systemAgent)
         dialogStateAggregator.add(delegate: systemAgent)
-        systemAgent.add(systemAgentDelegate: authorizationManager)
     }
 }
 

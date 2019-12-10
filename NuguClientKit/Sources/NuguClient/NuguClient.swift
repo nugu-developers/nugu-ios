@@ -76,7 +76,7 @@ public class NuguClient {
     // MARK: - Core
     
     /// <#Description#>
-    public let authorizationManager: AuthorizationManageable
+    public let authorizationStore: AuthorizationStoreable
     /// <#Description#>
     public let focusManager: FocusManageable
     /// <#Description#>
@@ -165,7 +165,7 @@ public class NuguClient {
     private var inputControlWorkItem: DispatchWorkItem?
 
     init(
-        authorizationManager: AuthorizationManageable,
+        authorizationStore: AuthorizationStoreable,
         focusManager: FocusManageable,
         networkManager: NetworkManageable,
         dialogStateAggregator: DialogStateAggregatable,
@@ -182,7 +182,7 @@ public class NuguClient {
     ) {
         log.info("with NuguApp")
         
-        self.authorizationManager = authorizationManager
+        self.authorizationStore = authorizationStore
         self.focusManager = focusManager
         self.networkManager = networkManager
         self.dialogStateAggregator = dialogStateAggregator
@@ -206,24 +206,6 @@ public class NuguClient {
         self.locationAgent = capabilityAgents.location
         
         setupDependencies()
-    }
-}
-
-// MARK: - Authorization
-
-public extension NuguClient {
-    /// <#Description#>
-    var accessToken: String? {
-        get {
-            return authorizationManager.authorizationPayload?.accessToken
-        } set {
-            guard let newAccessToken = newValue else {
-                authorizationManager.authorizationPayload = nil
-                return
-            }
-            
-            authorizationManager.authorizationPayload = AuthorizationPayload(accessToken: newAccessToken)
-        }
     }
 }
 

@@ -31,7 +31,7 @@ extension NuguClient {
         // MARK: Core
         
         /// <#Description#>
-        public let authorizationManager = AuthorizationManager.shared
+        public let authorizationStore = AuthorizationStore.shared
         /// <#Description#>
         public let focusManager: FocusManageable = FocusManager()
         /// <#Description#>
@@ -141,7 +141,7 @@ extension NuguClient {
             )
             
             let client = NuguClient(
-                authorizationManager: authorizationManager,
+                authorizationStore: authorizationStore,
                 focusManager: focusManager,
                 networkManager: networkManager,
                 dialogStateAggregator: dialogStateAggregator,
