@@ -29,8 +29,8 @@ final public class DisplayAgent: DisplayAgentProtocol {
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     
-    public var messageSender: MessageSendable!
-    public var playSyncManager: PlaySyncManageable!
+    private let messageSender: MessageSendable
+    private let playSyncManager: PlaySyncManageable
     
     private var renderingInfos = [DisplayRenderingInfo]()
     private var timerInfos = [String: Bool]()
@@ -39,9 +39,15 @@ final public class DisplayAgent: DisplayAgentProtocol {
     private var currentItem: DisplayTemplate?
     
     private var disposeBag = DisposeBag()
-    
-    public init() {
+  
+    public init(
+        messageSender: MessageSendable,
+        playSyncManager: PlaySyncManageable
+    ) {
         log.info("")
+        
+        self.messageSender = messageSender
+        self.playSyncManager = playSyncManager
     }
     
     deinit {

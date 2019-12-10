@@ -27,46 +27,137 @@ import JadeMarble
 extension NuguClient {
     /// <#Description#>
     public class Builder {
+        
+        // MARK: Core
+        
+        /// <#Description#>
+        public let authorizationManager = AuthorizationManager.shared
+        /// <#Description#>
+        public let focusManager: FocusManageable = FocusManager()
+        /// <#Description#>
+        public let networkManager: NetworkManageable = NetworkManager()
+        /// <#Description#>
+        public let dialogStateAggregator: DialogStateAggregatable = DialogStateAggregator()
+        /// <#Description#>
+        public let contextManager: ContextManageable = ContextManager()
+        /// <#Description#>
+        public let playSyncManager: PlaySyncManageable = PlaySyncManager()
+        /// <#Description#>
+        public let downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter()
+        /// <#Description#>
+        public let directiveSequencer: DirectiveSequenceable
+        /// <#Description#>
+        public let mediaPlayerFactory: MediaPlayableFactory = MediaPlayerFactory()
+        
+        // MARK: Audio
+        
         public lazy var inputProvider: AudioProvidable = MicInputProvider()
         public lazy var sharedAudioStream: AudioStreamable = AudioStream(capacity: 300)
+        
+        // MARK: EndPointDetector
+        
         public lazy var endPointDetector: EndPointDetectable = EndPointDetector()
+        
+        // MARK: WakeUpDetector
+        
         public lazy var wakeUpDetector = KeywordDetector()
         
-        // MARK: - Capability Agents
+        // MARK: Capability Agents
         
         /// <#Description#>
-        public lazy var asrAgent: ASRAgentProtocol? = ASRAgent()
+        public lazy var systemAgent: SystemAgentProtocol = SystemAgent(
+            contextManager: contextManager,
+            networkManager: networkManager
+        )
+        
         /// <#Description#>
-        public lazy var ttsAgent: TTSAgentProtocol? = TTSAgent()
+        public lazy var asrAgent: ASRAgentProtocol? = ASRAgent(
+            focusManager: focusManager,
+            channel: FocusChannelConfiguration.recognition,
+            messageSender: networkManager,
+            contextManager: contextManager,
+            audioStream: sharedAudioStream,
+            endPointDetector: endPointDetector,
+            dialogStateAggregator: dialogStateAggregator
+        )
+        
         /// <#Description#>
-        public lazy var audioPlayerAgent: AudioPlayerAgentProtocol? = AudioPlayerAgent()
+        public lazy var ttsAgent: TTSAgentProtocol? = TTSAgent(
+            focusManager: focusManager,
+            channel: FocusChannelConfiguration.information,
+            mediaPlayerFactory: mediaPlayerFactory,
+            messageSender: networkManager,
+            playSyncManager: playSyncManager
+        )
+        
         /// <#Description#>
-        public lazy var displayAgent: DisplayAgentProtocol? = DisplayAgent()
+        public lazy var audioPlayerAgent: AudioPlayerAgentProtocol? = AudioPlayerAgent(
+            focusManager: focusManager,
+            channel: FocusChannelConfiguration.content,
+            mediaPlayerFactory: mediaPlayerFactory,
+            messageSender: networkManager,
+            playSyncManager: playSyncManager
+        )
+        
         /// <#Description#>
-        public lazy var textAgent: TextAgentProtocol? = TextAgent()
+        public lazy var displayAgent: DisplayAgentProtocol? = DisplayAgent(
+            messageSender: networkManager,
+            playSyncManager: playSyncManager
+        )
+        
         /// <#Description#>
-        public lazy var extensionAgent: ExtensionAgentProtocol? = ExtensionAgent()
+        public lazy var textAgent: TextAgentProtocol? = TextAgent(
+            contextManager: contextManager,
+            messageSender: networkManager,
+            focusManager: focusManager,
+            channel: FocusChannelConfiguration.recognition,
+            dialogStateAggregator: dialogStateAggregator
+        )
+        
+        /// <#Description#>
+        public lazy var extensionAgent: ExtensionAgentProtocol? = ExtensionAgent(
+            messageSender: networkManager
+        )
+        
         /// <#Description#>
         public lazy var locationAgent: LocationAgentProtocol? = LocationAgent()
         
         /// <#Description#>
-        public init() {}
+        public init() {
+            self.directiveSequencer = DirectiveSequencer(messageSender: networkManager)
+        }
         
         /// <#Description#>
         public func build() -> NuguClient {
-            return NuguClient(
+            let capabilityAgents = NuguClient.CapabilityAgents(
+                system: systemAgent,
+                asr: asrAgent,
+                tts: ttsAgent,
+                audioPlayer: audioPlayerAgent,
+                display: displayAgent,
+                text: textAgent,
+                extension: extensionAgent,
+                location: locationAgent
+            )
+            
+            let client = NuguClient(
+                authorizationManager: authorizationManager,
+                focusManager: focusManager,
+                networkManager: networkManager,
+                dialogStateAggregator: dialogStateAggregator,
+                contextManager: contextManager,
+                playSyncManager: playSyncManager,
+                directiveSequencer: directiveSequencer,
+                downStreamDataInterpreter: downStreamDataInterpreter,
+                mediaPlayerFactory: mediaPlayerFactory,
                 inputProvider: inputProvider,
                 sharedAudioStream: sharedAudioStream,
                 endPointDetector: endPointDetector,
                 wakeUpDetector: wakeUpDetector,
-                asrAgent: asrAgent,
-                ttsAgent: ttsAgent,
-                audioPlayerAgent: audioPlayerAgent,
-                displayAgent: displayAgent,
-                textAgent: textAgent,
-                extensionAgent: extensionAgent,
-                locationAgent: locationAgent
+                capabilityAgents: capabilityAgents
             )
+            
+            return client
         }
     }
 }
@@ -74,7 +165,8 @@ extension NuguClient {
 // MARK: - Chaining for builder
 
 extension NuguClient.Builder {
-    // MARK: - Base
+    
+    // MARK: Audio
     
     /// <#Description#>
     /// - Parameter inputProvider: <#inputProvider description#>
@@ -90,12 +182,16 @@ extension NuguClient.Builder {
         return self
     }
     
+    // MARK: EndPointDetector
+    
     /// <#Description#>
     /// - Parameter endPointDetector: <#endPointDetector description#>
     public func with(endPointDetector: EndPointDetectable) -> Self {
         self.endPointDetector = endPointDetector
         return self
     }
+    
+    // MARK: WakeUpDetector
     
     /// <#Description#>
     /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
@@ -104,7 +200,7 @@ extension NuguClient.Builder {
         return self
     }
     
-    // MARK: - Capability Agents
+    // MARK: Capability Agents
     
     /// <#Description#>
     /// - Parameter asrAgent: <#asrAgent description#>
@@ -149,7 +245,7 @@ extension NuguClient.Builder {
     }
     
     /// <#Description#>
-    /// - Parameter extensionAgent: <#extensionAgent description#>
+    /// - Parameter locationAgent: <#locationAgent description#>
     public func with(locationAgent: LocationAgentProtocol?) -> Self {
         self.locationAgent = locationAgent
         return self

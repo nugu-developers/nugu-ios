@@ -29,11 +29,11 @@ final public class TextAgent: TextAgentProtocol {
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
-    public var contextManager: ContextManageable!
-    public var messageSender: MessageSendable!
-    public var focusManager: FocusManageable!
-    public var channel: FocusChannelConfigurable!
-    public var dialogStateAggregator: DialogStateAggregatable!
+    private let contextManager: ContextManageable
+    private let messageSender: MessageSendable
+    private let focusManager: FocusManageable
+    private let channel: FocusChannelConfigurable
+    private let dialogStateAggregator: DialogStateAggregatable
     
     private let delegates = DelegateSet<TextAgentDelegate>()
     
@@ -63,8 +63,20 @@ final public class TextAgent: TextAgentProtocol {
     private lazy var disposeBag = DisposeBag()
     private var responseTimeout: Disposable?
     
-    public init() {
+    public init(
+        contextManager: ContextManageable,
+        messageSender: MessageSendable,
+        focusManager: FocusManageable,
+        channel: FocusChannelConfigurable,
+        dialogStateAggregator: DialogStateAggregatable
+    ) {
         log.info("")
+        
+        self.contextManager = contextManager
+        self.messageSender = messageSender
+        self.focusManager = focusManager
+        self.channel = channel
+        self.dialogStateAggregator = dialogStateAggregator
     }
     
     deinit {

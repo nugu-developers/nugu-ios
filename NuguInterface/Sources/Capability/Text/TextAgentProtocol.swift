@@ -26,11 +26,19 @@ CapabilityAgentable,
 ContextInfoDelegate,
 FocusChannelDelegate,
 DownStreamDataDelegate {
-    var contextManager: ContextManageable! { get set }
-    var messageSender: MessageSendable! { get set }
-    var focusManager: FocusManageable! { get set }
-    var channel: FocusChannelConfigurable! { get set }
-    var dialogStateAggregator: DialogStateAggregatable! { get set }
+    /// <#Description#>
+    /// - Parameter contextManager: <#contextManager description#>
+    /// - Parameter messageSender: <#messageSender description#>
+    /// - Parameter focusManager: <#focusManager description#>
+    /// - Parameter channel: <#channel description#>
+    /// - Parameter dialogStateAggregator: <#dialogStateAggregator description#>
+    init(
+        contextManager: ContextManageable,
+        messageSender: MessageSendable,
+        focusManager: FocusManageable,
+        channel: FocusChannelConfigurable,
+        dialogStateAggregator: DialogStateAggregatable
+    )
     
     /// Adds a delegate to be notified of `TextAgentState` and `TextAgentResult` changes.
     /// - Parameter delegate: The delegate object to add.

@@ -48,9 +48,6 @@ public class NuguClient {
     }
     
     /// <#Description#>
-    public static let `default` = NuguClient.Builder().build()
-    
-    /// <#Description#>
     public static var logEnabled: Bool {
         set {
             switch newValue {
@@ -72,42 +69,85 @@ public class NuguClient {
             }
         }
     }
-
-    // MARK: - Mandatory
-
-    /// <#Description#>
-    public let authorizationManager = AuthorizationManager.shared
-    /// <#Description#>
-    public let focusManager: FocusManageable = FocusManager()
-    /// <#Description#>
-    public let networkManager: NetworkManageable = NetworkManager()
-    /// <#Description#>
-    public let dialogStateAggregator: DialogStateAggregatable = DialogStateAggregator()
-    /// <#Description#>
-    public let contextManager: ContextManageable = ContextManager()
-    /// <#Description#>
-    public let playSyncManager: PlaySyncManageable = PlaySyncManager()
-    /// <#Description#>
-    public lazy var directiveSequencer: DirectiveSequenceable = DirectiveSequencer(messageSender: networkManager)
     
-    // MARK: - Mandatory(Internal)
-    let downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter()
+    /// <#Description#>
+    public static let `default` = NuguClient.Builder().build()
+
+    // MARK: - Core
+    
+    /// <#Description#>
+    public let authorizationManager: AuthorizationManageable
+    /// <#Description#>
+    public let focusManager: FocusManageable
+    /// <#Description#>
+    public let networkManager: NetworkManageable
+    /// <#Description#>
+    public let dialogStateAggregator: DialogStateAggregatable
+    /// <#Description#>
+    let contextManager: ContextManageable
+    /// <#Description#>
+    let playSyncManager: PlaySyncManageable
+    /// <#Description#>
+    let directiveSequencer: DirectiveSequenceable
+    /// <#Description#>
+    let downStreamDataInterpreter: DownStreamDataInterpretable
+    /// <#Description#>
     let downStreamDataTimeoutPreprocessor = DownStreamDataTimeoutPreprocessor()
-    let mediaPlayerFactory = MediaPlayerFactory()
-
-    // MARK: - Audio Related
-
+    /// <#Description#>
+    let mediaPlayerFactory: MediaPlayableFactory
+    
+    // MARK: Audio
+    
+    /// <#Description#>
+    let sharedAudioStream: AudioStreamable?
     /// <#Description#>
     public let inputProvider: AudioProvidable?
-    /// <#Description#>
-    public let sharedAudioStream: AudioStreamable?
+    
+    // MARK: EndPointDetector
+    
     /// <#Description#>
     public let endPointDetector: EndPointDetectable?
+    
+    // MARK: WakeUpDetector
+    
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
     
     // MARK: - Capability Agents
     
+    struct CapabilityAgents {
+        let system: SystemAgentProtocol
+        let asr: ASRAgentProtocol?
+        let tts: TTSAgentProtocol?
+        let audioPlayer: AudioPlayerAgentProtocol?
+        let display: DisplayAgentProtocol?
+        let text: TextAgentProtocol?
+        let `extension`: ExtensionAgentProtocol?
+        let location: LocationAgentProtocol?
+        
+        init(
+            system: SystemAgentProtocol,
+            asr: ASRAgentProtocol?,
+            tts: TTSAgentProtocol?,
+            audioPlayer: AudioPlayerAgentProtocol?,
+            display: DisplayAgentProtocol?,
+            text: TextAgentProtocol?,
+            `extension`: ExtensionAgentProtocol?,
+            location: LocationAgentProtocol?
+        ) {
+            self.system = system
+            self.asr = asr
+            self.tts = tts
+            self.audioPlayer = audioPlayer
+            self.display = display
+            self.text = text
+            self.extension = `extension`
+            self.location = location
+        }
+    }
+    
+    /// <#Description#>
+    public let systemAgent: SystemAgentProtocol
     /// <#Description#>
     public let asrAgent: ASRAgentProtocol?
     /// <#Description#>
@@ -122,39 +162,50 @@ public class NuguClient {
     public let extensionAgent: ExtensionAgentProtocol?
     /// <#Description#>
     public let locationAgent: LocationAgentProtocol?
-    /// <#Description#>
-    public let systemAgent: SystemAgentProtocol
     
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
-
+    
     init(
+        authorizationManager: AuthorizationManageable,
+        focusManager: FocusManageable,
+        networkManager: NetworkManageable,
+        dialogStateAggregator: DialogStateAggregatable,
+        contextManager: ContextManageable,
+        playSyncManager: PlaySyncManageable,
+        directiveSequencer: DirectiveSequenceable,
+        downStreamDataInterpreter: DownStreamDataInterpretable,
+        mediaPlayerFactory: MediaPlayableFactory,
         inputProvider: AudioProvidable?,
         sharedAudioStream: AudioStreamable?,
         endPointDetector: EndPointDetectable?,
         wakeUpDetector: KeywordDetector?,
-        asrAgent: ASRAgentProtocol?,
-        ttsAgent: TTSAgentProtocol?,
-        audioPlayerAgent: AudioPlayerAgentProtocol?,
-        displayAgent: DisplayAgentProtocol?,
-        textAgent: TextAgentProtocol?,
-        extensionAgent: ExtensionAgentProtocol?,
-        locationAgent: LocationAgentProtocol?
+        capabilityAgents: CapabilityAgents
     ) {
         log.info("with NuguApp")
         
+        self.authorizationManager = authorizationManager
+        self.focusManager = focusManager
+        self.networkManager = networkManager
+        self.dialogStateAggregator = dialogStateAggregator
+        self.contextManager = contextManager
+        self.playSyncManager = playSyncManager
+        self.directiveSequencer = directiveSequencer
+        self.downStreamDataInterpreter = downStreamDataInterpreter
+        self.mediaPlayerFactory = mediaPlayerFactory
         self.inputProvider = inputProvider
         self.sharedAudioStream = sharedAudioStream
         self.endPointDetector = endPointDetector
         self.wakeUpDetector = wakeUpDetector
-        self.asrAgent = asrAgent
-        self.ttsAgent = ttsAgent
-        self.audioPlayerAgent = audioPlayerAgent
-        self.displayAgent = displayAgent
-        self.textAgent = textAgent
-        self.extensionAgent = extensionAgent
-        self.locationAgent = locationAgent
-        self.systemAgent = SystemAgent()
+        
+        self.systemAgent = capabilityAgents.system
+        self.asrAgent = capabilityAgents.asr
+        self.ttsAgent = capabilityAgents.tts
+        self.audioPlayerAgent = capabilityAgents.audioPlayer
+        self.displayAgent = capabilityAgents.display
+        self.textAgent = capabilityAgents.text
+        self.extensionAgent = capabilityAgents.extension
+        self.locationAgent = capabilityAgents.location
         
         setupDependencies()
     }

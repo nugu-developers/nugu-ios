@@ -56,14 +56,6 @@ extension NuguClient {
     func setupASRAgentDependency() {
         guard let agent = asrAgent else { return }
         
-        agent.focusManager = focusManager
-        agent.channel = FocusChannelConfiguration.recognition
-        agent.messageSender = networkManager
-        agent.contextManager = contextManager
-        agent.audioStream = sharedAudioStream
-        agent.dialogStateAggregator = dialogStateAggregator
-        agent.endPointDetector = endPointDetector
-        
         directiveSequencer.add(handleDirectiveDelegate: agent)
         contextManager.add(provideContextDelegate: agent)
         focusManager.add(channelDelegate: agent)
@@ -75,26 +67,14 @@ extension NuguClient {
     func setupTTSAgentDependency() {
         guard let agent = ttsAgent else { return }
         
-        agent.focusManager = focusManager
-        agent.channel = FocusChannelConfiguration.information
-        agent.mediaPlayerFactory = mediaPlayerFactory
-        agent.messageSender = networkManager
-        agent.playSyncManager = playSyncManager
-        
         directiveSequencer.add(handleDirectiveDelegate: agent)
-        agent.add(delegate: dialogStateAggregator)
         contextManager.add(provideContextDelegate: agent)
         focusManager.add(channelDelegate: agent)
+        agent.add(delegate: dialogStateAggregator)
     }
     
     func setupAudioPlayerAgentDependency() {
         guard let agent = audioPlayerAgent else { return }
-        
-        agent.focusManager = focusManager
-        agent.channel = FocusChannelConfiguration.content
-        agent.mediaPlayerFactory = mediaPlayerFactory
-        agent.messageSender = networkManager
-        agent.playSyncManager = playSyncManager
 
         directiveSequencer.add(handleDirectiveDelegate: agent)
         contextManager.add(provideContextDelegate: agent)
@@ -103,22 +83,13 @@ extension NuguClient {
     
     func setupDisplayAgentDependency() {
         guard let agent = displayAgent else { return }
-        
-        agent.messageSender = networkManager
-        agent.playSyncManager = playSyncManager
-        
+
         directiveSequencer.add(handleDirectiveDelegate: agent)
         contextManager.add(provideContextDelegate: agent)
     }
     
     func setupTextAgentDependency() {
         guard let agent = textAgent else { return }
-        
-        agent.channel = FocusChannelConfiguration.recognition
-        agent.contextManager = contextManager
-        agent.messageSender = networkManager
-        agent.focusManager = focusManager
-        agent.dialogStateAggregator = dialogStateAggregator
         
         contextManager.add(provideContextDelegate: agent)
         downStreamDataInterpreter.add(delegate: agent)
@@ -129,8 +100,6 @@ extension NuguClient {
     
     func setupExtensionAgentDependency() {
         guard let agent = extensionAgent else { return }
-        
-        agent.messageSender = networkManager
         
         directiveSequencer.add(handleDirectiveDelegate: agent)
         contextManager.add(provideContextDelegate: agent)
@@ -147,9 +116,6 @@ extension NuguClient {
 
 extension NuguClient {
     func setupSystemAgentDependency() {
-        systemAgent.contextManager = contextManager
-        systemAgent.networkManager = networkManager
-        
         directiveSequencer.add(handleDirectiveDelegate: systemAgent)
         contextManager.add(provideContextDelegate: systemAgent)
         networkManager.add(statusDelegate: systemAgent)

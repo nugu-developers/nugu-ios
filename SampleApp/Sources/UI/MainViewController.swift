@@ -384,33 +384,37 @@ extension MainViewController: NetworkStatusDelegate {
                 self?.nuguButton.isHidden = false
             }
         case .disconnected(let error):
+            // Stop wakeup-detector
+            NuguCentralManager.shared.stopWakeUpDetector()
+            
+            // Update UI
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguButton.isEnabled = false
+                if UserDefaults.Standard.useNuguService == true {
+                    self?.nuguButton.isHidden = false
+                } else {
+                    self?.nuguButton.isHidden = true
+                }
+            }
+            
+            // Handle Nugu's predefined NetworkError
             if let networkError = error as? NetworkError {
                 switch networkError {
                 case .authError:
-                    DispatchQueue.main.async {
-                        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
-                        NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                        NuguCentralManager.shared.disable()
-                        UserDefaults.Standard.clear()
-                        rootNavigationViewController.popToRootViewController(animated: true)
-                    }
+                    NuguCentralManager.shared.handleAuthError()
+                case .timeout:
+                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTimeout))
                 default:
-                    // Stop wakeup-detector
-                    NuguCentralManager.shared.stopWakeUpDetector()
-                    
-                    // Update UI
-                    DispatchQueue.main.async { [weak self] in
-                        self?.nuguButton.isEnabled = false
-                        if UserDefaults.Standard.useNuguService == true {
-                            self?.nuguButton.isHidden = false
-                        } else {
-                            self?.nuguButton.isHidden = true
-                        }
-                    }
+                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthServerError))
                 }
-            } else {
-                // TODO: error handling
+            } else { // Handle URLError
+                guard let urlError = error as? URLError else { return }
+                switch urlError.code {
+                case .networkConnectionLost, .notConnectedToInternet:
+                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayNetworkError))
+                default:
+                    break
+                }
             }
         }
     }
@@ -466,7 +470,7 @@ extension MainViewController: DialogStateDelegate {
         case .listening:
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
-                SoundPlayer.playSound(soundType: .start)
+                SoundPlayer.playSound(soundType: .asrBeep(type: .start))
             }
         case .recognizing:
             DispatchQueue.main.async { [weak self] in
@@ -501,7 +505,7 @@ extension MainViewController: ASRAgentDelegate {
         case .complete(let text):
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
-                SoundPlayer.playSound(soundType: .success)
+                SoundPlayer.playSound(soundType: .asrBeep(type: .success))
             }
         case .partial(let text):
             DispatchQueue.main.async { [weak self] in
@@ -509,11 +513,14 @@ extension MainViewController: ASRAgentDelegate {
             }
         case .error(let asrError):
             DispatchQueue.main.async { [weak self] in
-                SoundPlayer.playSound(soundType: .fail)
                 switch asrError {
-                case .listenFailed, .recognizeFailed:
+                case .listenFailed:
+                    SoundPlayer.playSound(soundType: .asrBeep(type: .fail))
                     self?.nuguVoiceChrome.changeState(state: .speakingError)
-                default: break
+                case .recognizeFailed:
+                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayRequestUnacceptable))
+                default:
+                    SoundPlayer.playSound(soundType: .asrBeep(type: .fail))
                 }
             }
         default: break
@@ -528,13 +535,13 @@ extension MainViewController: TextAgentDelegate {
         switch result {
         case .complete:
             DispatchQueue.main.async {
-                SoundPlayer.playSound(soundType: .success)
+                SoundPlayer.playSound(soundType: .asrBeep(type: .success))
             }
         case .error(let textAgentError):
             switch textAgentError {
             case .responseTimeout:
                 DispatchQueue.main.async {
-                    SoundPlayer.playSound(soundType: .fail)
+                    SoundPlayer.playSound(soundType: .asrBeep(type: .fail))
                 }
             }
         }
