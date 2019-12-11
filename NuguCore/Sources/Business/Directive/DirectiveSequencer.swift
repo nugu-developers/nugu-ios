@@ -32,8 +32,6 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private let prefetchDirectiveSubject = PublishSubject<DownStream.Directive>()
     private let handleDirectiveSubject = PublishSubject<DownStream.Directive>()
     
-    private var blockedDirectives = [DirectiveMedium: [DownStream.Directive]]()
-    
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
 
     private let disposeBag = DisposeBag()
@@ -153,6 +151,7 @@ private extension DirectiveSequencer {
         )
         
         var handlingTypeInfos = [DirectiveTypeInforable]()
+        var blockedDirectives = [DirectiveMedium: [DownStream.Directive]]()
         for medium in DirectiveMedium.allCases {
             blockedDirectives[medium] = []
         }
@@ -163,8 +162,8 @@ private extension DirectiveSequencer {
                 
                 // Block 된 Directive 다시시도.
                 if typeInfo.isBlocking {
-                    let directivies = self?.blockedDirectives[typeInfo.medium]
-                    self?.blockedDirectives[typeInfo.medium]?.removeAll()
+                    let directivies = blockedDirectives[typeInfo.medium]
+                    blockedDirectives[typeInfo.medium]?.removeAll()
                     directivies?.forEach({ [weak self] directive in
                         self?.handleDirectiveSubject.onNext(directive)
                     })
@@ -186,7 +185,7 @@ private extension DirectiveSequencer {
                 // Block 되어야 하는 Directive 인지 확인
                 guard handlingTypeInfos.isBlock(medium: typeInfo.medium) == false else {
                     log.debug("Block directive \(directive.header.messageId)")
-                    self.blockedDirectives[typeInfo.medium]?.append(directive)
+                    blockedDirectives[typeInfo.medium]?.append(directive)
                     return
                 }
 

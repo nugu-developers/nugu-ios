@@ -337,6 +337,8 @@
 		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
 		7E5237F9239649940058F0B9 /* NSObject+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5237F8239649940058F0B9 /* NSObject+Rx.swift */; };
 		7EB6D0D82387B19600E65FDC /* DownStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3662375707000C9A177 /* DownStream.swift */; };
+		7EB6D0DF238B755A00E65FDC /* DownStreamDataTimeoutPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB6D0DE238B755A00E65FDC /* DownStreamDataTimeoutPreprocessor.swift */; };
+		7EB6D0E1238BAB2000E65FDC /* DownStreamDataPreprocessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB6D0E0238BAB2000E65FDC /* DownStreamDataPreprocessable.swift */; };
 		7EDCF2A72384FE88006F96B6 /* DownStreamDataInterpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* DownStreamDataInterpreter.swift */; };
 		7EDCF2A8238529CC006F96B6 /* DownStreamDataInterpretable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A42384FE7A006F96B6 /* DownStreamDataInterpretable.swift */; };
 		7EDCF2AB23852AEA006F96B6 /* DownStreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2AA23852AEA006F96B6 /* DownStreamDataDelegate.swift */; };
@@ -856,6 +858,8 @@
 		73454FBC2382C1E50073AF48 /* Publish.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Publish.swift; sourceTree = "<group>"; };
 		73454FC22387BDF00073AF48 /* NuguServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServerInfo.swift; sourceTree = "<group>"; };
 		73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguOAuthServerInfo.swift; sourceTree = "<group>"; };
+		7EB6D0DE238B755A00E65FDC /* DownStreamDataTimeoutPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownStreamDataTimeoutPreprocessor.swift; sourceTree = "<group>"; };
+		7EB6D0E0238BAB2000E65FDC /* DownStreamDataPreprocessable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownStreamDataPreprocessable.swift; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
 		7EDCF2A42384FE7A006F96B6 /* DownStreamDataInterpretable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownStreamDataInterpretable.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* DownStreamDataInterpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownStreamDataInterpreter.swift; sourceTree = "<group>"; };
@@ -1463,6 +1467,7 @@
 				7EDCF2AE23879E80006F96B6 /* Model */,
 				7EDCF2A42384FE7A006F96B6 /* DownStreamDataInterpretable.swift */,
 				7EDCF2AA23852AEA006F96B6 /* DownStreamDataDelegate.swift */,
+				7EB6D0E0238BAB2000E65FDC /* DownStreamDataPreprocessable.swift */,
 				1FFFF2932375703000C9A177 /* DirectiveTypeInfos.swift */,
 				1FFFF2912375703000C9A177 /* DirectiveSequenceable.swift */,
 				1FFFF2922375703000C9A177 /* HandleDirectiveDelegate.swift */,
@@ -1819,6 +1824,7 @@
 			isa = PBXGroup;
 			children = (
 				7EDCF2A62384FE88006F96B6 /* DownStreamDataInterpreter.swift */,
+				7EB6D0DE238B755A00E65FDC /* DownStreamDataTimeoutPreprocessor.swift */,
 				1FFFF3752375707000C9A177 /* DirectiveSequencer.swift */,
 			);
 			path = Directive;
@@ -2887,6 +2893,7 @@
 				1F100994238568D500D90FEE /* TimeIntervallic.swift in Sources */,
 				1FFFF2BC2375703000C9A177 /* AudioPlayerDisplayTemplate.swift in Sources */,
 				1FFFF2DE2375703100C9A177 /* MessageSendable.swift in Sources */,
+				7EB6D0E1238BAB2000E65FDC /* DownStreamDataPreprocessable.swift in Sources */,
 				1FFFF2FA2375703100C9A177 /* DirectiveTypeInfoError.swift in Sources */,
 				1F2E7FFF238EA6E300569C59 /* MediaUrlDataSource.swift in Sources */,
 				1FFFF2FC2375703100C9A177 /* AudioProvidable.swift in Sources */,
@@ -2964,6 +2971,7 @@
 				1FFFF3A92375707100C9A177 /* ASRAgent+Event.swift in Sources */,
 				1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */,
 				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
+				7EB6D0DF238B755A00E65FDC /* DownStreamDataTimeoutPreprocessor.swift in Sources */,
 				1FFFF3872375707000C9A177 /* MicInputConst.swift in Sources */,
 				1FFFF3B62375707100C9A177 /* DisplayAgent+Event.swift in Sources */,
 				1FFFF3902375707000C9A177 /* TimeUUID.swift in Sources */,

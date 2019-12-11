@@ -30,12 +30,12 @@ public protocol TextAgentDelegate: class {
     
     /// Tells the delegate that `TextAgent` received result.
     /// - Parameter result: The result of text recognition.
-    func textAgentDidReceive(result: TextAgentResult)
+    func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String)
 }
 
 // MARK: - Optional
 
 public extension TextAgentDelegate {
     func textAgentDidChange(state: TextAgentState) {}
-    func textAgentDidReceive(result: TextAgentResult) {}
+    func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {}
 }

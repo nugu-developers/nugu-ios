@@ -59,6 +59,7 @@ final public class ASRAgent: ASRAgentProtocol {
             // release asrRequest
             if asrState == .idle {
                 asrRequest = nil
+                releaseFocus()
             }
             
             // Stop EPD
@@ -79,6 +80,11 @@ final public class ASRAgent: ASRAgentProtocol {
     private var asrResult: ASRResult = .none {
         didSet {
             log.info("\(asrResult)")
+            guard let asrRequest = asrRequest else {
+                asrState = .idle
+                log.error("ASRRequest not exist")
+                return
+            }
             
             switch asrResult {
             case .none:
@@ -91,8 +97,8 @@ final public class ASRAgent: ASRAgentProtocol {
                 currentExpectSpeech = nil
             case .cancel:
                 sendEvent(event: .stopRecognize)
-                releaseFocus()
                 currentExpectSpeech = nil
+                asrState = .idle
             case .error(let error):
                 switch error {
                 case .responseTimeout:
@@ -100,20 +106,16 @@ final public class ASRAgent: ASRAgentProtocol {
                 case .listeningTimeout:
                     sendEvent(event: .listenTimeout)
                 case .listenFailed:
-                    if let asrRequest = asrRequest {
-                        sendEvent(event: .listenFailed, dialogRequestId: asrRequest.dialogRequestId)
-                    } else {
-                        self.sendEvent(event: .listenFailed, dialogRequestId: TimeUUID().hexString)
-                    }
+                    sendEvent(event: .listenFailed, dialogRequestId: asrRequest.dialogRequestId)
                 case .recognizeFailed:
                     break
                 }
-                releaseFocus()
                 currentExpectSpeech = nil
+                asrState = .idle
             }
             
             self.asrDelegates.notify({ (delegate) in
-                delegate.asrAgentDidReceive(result: asrResult)
+                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.dialogRequestId)
             })
         }
     }
@@ -292,10 +294,10 @@ extension ASRAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Background 허용 안함.
-            case (.background, _):
+            case (_, let asrState) where asrState != .idle:
                 self.asrResult = .cancel
-            case (.nothing, _):
-                self.asrState = .idle
+            default:
+                break
             }
         }
     }
@@ -577,7 +579,7 @@ private extension ASRAgent {
     /// asrDispatchQueue
     func executeStartCapture() {
         guard let asrRequest = asrRequest else {
-            log.warning("ASRRequest not exist")
+            log.error("ASRRequest not exist")
             asrResult = .cancel
             return
         }
@@ -612,7 +614,7 @@ private extension ASRAgent {
     /// asrDispatchQueue
     func executeStopSpeech() {
         guard let asrRequest = asrRequest else {
-            log.warning("ASRRequest not exist")
+            log.error("ASRRequest not exist")
             asrResult = .cancel
             return
         }

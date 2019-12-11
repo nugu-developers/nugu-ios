@@ -1,8 +1,8 @@
 //
-//  DownStreamDataInterpretable.swift
-//  NuguCore
+//  DownStreamDataPreprocessable.swift
+//  NuguInterface
 //
-//  Created by MinChul Lee on 11/22/2019.
+//  Created by MinChul Lee on 2019/11/25.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,17 +20,6 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol DownStreamDataInterpretable: ReceiveMessageDelegate {
-    /// <#Description#>
-    /// - Parameter preprocessor: <#preprocessor description#>
-    func add(preprocessor: DownStreamDataPreprocessable)
-    
-    /// <#Description#>
-    /// - Parameter delegate:
-    func add(delegate: DownStreamDataDelegate)
-    
-    /// <#Description#>
-    /// - Parameter delegate:
-    func remove(delegate: DownStreamDataDelegate)
+public protocol DownStreamDataPreprocessable {
+    func preprocess<T>(message: T) -> T? where T: DownStreamMessageable
 }
