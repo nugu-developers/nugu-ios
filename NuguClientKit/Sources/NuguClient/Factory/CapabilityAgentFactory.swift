@@ -1,8 +1,8 @@
 //
-//  MediaPlayerFactory.swift
+//  CapabilityAgentFactory.swift
 //  NuguClientKit
 //
-//  Created by MinChul Lee on 27/05/2019.
+//  Created by yonghoonKwon on 2019/12/11.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,15 +20,14 @@
 
 import Foundation
 
-import NuguCore
 import NuguInterface
 
-class MediaPlayerFactory: MediaPlayableFactory {
-    func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource {
-        return OpusPlayer()
-    }
-    
-    func makeMediaPlayer() -> MediaPlayable & MediaUrlDataSource {
-        return MediaPlayer()
-    }
+public protocol CapabilityAgentFactory {
+    func makeASRAgent(container: NuguClientContainer) -> ASRAgentProtocol?
+    func makeTTSAgent(container: NuguClientContainer) -> TTSAgentProtocol?
+    func makeAudioPlayerAgent(container: NuguClientContainer) -> AudioPlayerAgentProtocol?
+    func makeDisplayAgent(container: NuguClientContainer) -> DisplayAgentProtocol?
+    func makeTextAgent(container: NuguClientContainer) -> TextAgentProtocol?
+    func makeExtensionAgent(container: NuguClientContainer) -> ExtensionAgentProtocol?
+    func makeLocationAgent(container: NuguClientContainer) -> LocationAgentProtocol?
 }

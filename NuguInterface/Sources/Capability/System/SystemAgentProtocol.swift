@@ -27,15 +27,7 @@ CapabilityAgentable,
 ContextInfoDelegate,
 NetworkStatusDelegate,
 HandleDirectiveDelegate,
-DialogStateDelegate {
-    /// <#Description#>
-    /// - Parameter contextManager: <#contextManager description#>
-    /// - Parameter networkManager: <#networkManager description#>
-    init(
-        contextManager: ContextManageable,
-        networkManager: NetworkManageable
-    )
-    
+DialogStateDelegate {    
     /// <#Description#>
     /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
     func add(systemAgentDelegate: SystemAgentDelegate)

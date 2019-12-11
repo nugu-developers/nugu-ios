@@ -1,8 +1,8 @@
 //
-//  ExtensionAgentProtocol.swift
-//  NuguInterface
+//  BuiltInMediaPlayerFactory.swift
+//  NuguClientKit
 //
-//  Created by yonghoonKwon on 25/07/2019.
+//  Created by MinChul Lee on 27/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,17 @@
 
 import Foundation
 
-/// Extension-agent handles directives that not defined by other capability-agents
-public protocol ExtensionAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-HandleDirectiveDelegate {
-    /// The object that acts as the delegate of extension-agent
-    var delegate: ExtensionAgentDelegate? { get set }
+import NuguInterface
+import NuguCore
+
+public class BuiltInMediaPlayerFactory: MediaPlayableFactory {
+    public init() {}
+    
+    public func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource {
+        return OpusPlayer()
+    }
+    
+    public func makeMediaPlayer() -> MediaPlayable & MediaUrlDataSource {
+        return MediaPlayer()
+    }
 }
