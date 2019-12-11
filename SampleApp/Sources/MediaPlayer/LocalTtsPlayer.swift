@@ -53,8 +53,8 @@ final class LocalTtsPlayer: NSObject {
     
     private var channel = LocalTtsPlayerChannel()
     
-    enum TtsType: Int {
-        case deviceGatewayNetworkError = 1
+    enum TtsType {
+        case deviceGatewayNetworkError
         case deviceGatewayAuthServerError
         case deviceGatewayAuthError
         case deviceGatewayTimeout
@@ -66,12 +66,16 @@ final class LocalTtsPlayer: NSObject {
         
         fileprivate var fileName: String {
             switch self {
-            case .deviceGatewayNetworkError,
-                 .deviceGatewayAuthServerError,
-                 .deviceGatewayAuthError,
-                 .deviceGatewayTimeout,
-                 .deviceGatewayRequestUnacceptable:
-                return "device_GW_error_00\(String(rawValue))"
+            case .deviceGatewayNetworkError:
+                return "device_GW_error_001"
+            case .deviceGatewayAuthServerError:
+                return "device_GW_error_002"
+            case .deviceGatewayAuthError:
+                return "device_GW_error_003"
+            case .deviceGatewayTimeout:
+                return "device_GW_error_004"
+            case .deviceGatewayRequestUnacceptable:
+                return "device_GW_error_005"
             case .deviceGatewayTtsConnectionError,
                  .deviceGatewayPlayRouterConnectionError,
                  .playRouterFallbackServerConnectionError:
