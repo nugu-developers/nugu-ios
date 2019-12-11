@@ -22,18 +22,6 @@ import AVFoundation
 
 import NuguInterface
 
-// MARK: LocalTTSPlayerChannel - FocusChannelConfigurable
-
-final class LocalTTSPlayerChannel: FocusChannelConfigurable {
-    /// Refer to FocusChannelConfiguration's priority level
-    /// FocusChannelConfiguration.recognition: 300
-    /// FocusChannelConfiguration.information: 200
-    /// FocusChannelConfiguration.content:       100
-    var priority: Int {
-        return 400
-    }
-}
-
 // MARK: LocalTTSPlayer
 
 final class LocalTTSPlayer: NSObject {
@@ -51,7 +39,7 @@ final class LocalTTSPlayer: NSObject {
     
     // MARK: FocusChannelConfigurable
     
-    private var channel = LocalTTSPlayerChannel()
+    private var channel = AppFocusChannelConfiguration.localTTS
     
     // MARK: CurrentTTSType
     
