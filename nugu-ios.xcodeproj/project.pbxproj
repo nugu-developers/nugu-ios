@@ -72,7 +72,7 @@
 		1FFFF2A62375703000C9A177 /* MediaPlayableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */; };
 		1FFFF2A72375703000C9A177 /* MediaPlayerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22E2375703000C9A177 /* MediaPlayerDelegate.swift */; };
 		1FFFF2A82375703000C9A177 /* MediaPlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22F2375703000C9A177 /* MediaPlayerState.swift */; };
-		1FFFF2A92375703000C9A177 /* MediaPlayableFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2302375703000C9A177 /* MediaPlayableFactory.swift */; };
+		1FFFF2A92375703000C9A177 /* MediaPlayerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2302375703000C9A177 /* MediaPlayerFactory.swift */; };
 		1FFFF2AA2375703000C9A177 /* MediaPlayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2312375703000C9A177 /* MediaPlayable.swift */; };
 		1FFFF2AB2375703000C9A177 /* ContextManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2332375703000C9A177 /* ContextManageable.swift */; };
 		1FFFF2AC2375703000C9A177 /* ContextType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2342375703000C9A177 /* ContextType.swift */; };
@@ -586,7 +586,7 @@
 		1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayableError.swift; sourceTree = "<group>"; };
 		1FFFF22E2375703000C9A177 /* MediaPlayerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerDelegate.swift; sourceTree = "<group>"; };
 		1FFFF22F2375703000C9A177 /* MediaPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerState.swift; sourceTree = "<group>"; };
-		1FFFF2302375703000C9A177 /* MediaPlayableFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayableFactory.swift; sourceTree = "<group>"; };
+		1FFFF2302375703000C9A177 /* MediaPlayerFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerFactory.swift; sourceTree = "<group>"; };
 		1FFFF2312375703000C9A177 /* MediaPlayable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayable.swift; sourceTree = "<group>"; };
 		1FFFF2332375703000C9A177 /* ContextManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextManageable.swift; sourceTree = "<group>"; };
 		1FFFF2342375703000C9A177 /* ContextType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextType.swift; sourceTree = "<group>"; };
@@ -1273,7 +1273,7 @@
 				1FFFF2312375703000C9A177 /* MediaPlayable.swift */,
 				1FFFF22E2375703000C9A177 /* MediaPlayerDelegate.swift */,
 				1FFFF22F2375703000C9A177 /* MediaPlayerState.swift */,
-				1FFFF2302375703000C9A177 /* MediaPlayableFactory.swift */,
+				1FFFF2302375703000C9A177 /* MediaPlayerFactory.swift */,
 				1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */,
 			);
 			path = MediaPlayer;
@@ -2853,7 +2853,7 @@
 				1FFFF2FF2375703100C9A177 /* EndPointDetectorState.swift in Sources */,
 				1FFFF2F82375703100C9A177 /* DirectiveTypeInfos.swift in Sources */,
 				1FFFF2B82375703000C9A177 /* SpeakerVolumeDelegate.swift in Sources */,
-				1FFFF2A92375703000C9A177 /* MediaPlayableFactory.swift in Sources */,
+				1FFFF2A92375703000C9A177 /* MediaPlayerFactory.swift in Sources */,
 				1FFFF2ED2375703100C9A177 /* PlaySyncManageable.swift in Sources */,
 				1FFFF2EF2375703100C9A177 /* FocusState.swift in Sources */,
 				1FFFF2CA2375703100C9A177 /* SystemAgentDelegate.swift in Sources */,

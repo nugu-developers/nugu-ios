@@ -47,7 +47,7 @@ public class NuguClient: NuguClientContainer {
     /// <#Description#>
     public let downStreamDataInterpreter: DownStreamDataInterpretable
     /// <#Description#>
-    public let mediaPlayerFactory: MediaPlayableFactory
+    public let mediaPlayerFactory: MediaPlayerFactory
     /// <#Description#>
     public let sharedAudioStream: AudioStreamable
     /// <#Description#>
@@ -106,7 +106,7 @@ public class NuguClient: NuguClientContainer {
         contextManager: ContextManageable = ContextManager(),
         playSyncManager: PlaySyncManageable = PlaySyncManager(),
         downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter(),
-        mediaPlayerFactory: MediaPlayableFactory = BuiltInMediaPlayerFactory(),
+        mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
         sharedAudioStream: AudioStreamable = AudioStream(capacity: 300),
         inputProvider: AudioProvidable = MicInputProvider(),
         endPointDetector: EndPointDetectable = EndPointDetector(),

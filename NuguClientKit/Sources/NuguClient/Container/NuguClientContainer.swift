@@ -41,7 +41,7 @@ public protocol NuguClientContainer {
     /// <#Description#>
     var downStreamDataInterpreter: DownStreamDataInterpretable { get }
     /// <#Description#>
-    var mediaPlayerFactory: MediaPlayableFactory { get }
+    var mediaPlayerFactory: MediaPlayerFactory { get }
     /// <#Description#>
     var sharedAudioStream: AudioStreamable { get }
     /// <#Description#>

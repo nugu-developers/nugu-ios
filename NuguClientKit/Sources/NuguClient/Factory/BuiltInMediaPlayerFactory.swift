@@ -23,7 +23,7 @@ import Foundation
 import NuguInterface
 import NuguCore
 
-public class BuiltInMediaPlayerFactory: MediaPlayableFactory {
+public class BuiltInMediaPlayerFactory: MediaPlayerFactory {
     public init() {}
     
     public func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource {
