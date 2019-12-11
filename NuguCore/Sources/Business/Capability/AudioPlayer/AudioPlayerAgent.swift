@@ -1,5 +1,5 @@
 //
-//  BuiltInAudioPlayerAgent.swift
+//  AudioPlayerAgent.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 11/04/2019.
@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class BuiltInAudioPlayerAgent: AudioPlayerAgentProtocol {
+final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
     
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
@@ -136,9 +136,9 @@ final public class BuiltInAudioPlayerAgent: AudioPlayerAgentProtocol {
     }
 }
 
-// MARK: - BuiltInAudioPlayerAgent + AudioPlayerAgentProtocol
+// MARK: - AudioPlayerAgent + AudioPlayerAgentProtocol
 
-public extension BuiltInAudioPlayerAgent {
+public extension AudioPlayerAgent {
     func add(delegate: AudioPlayerAgentDelegate) {
         delegates.add(delegate)
     }
@@ -236,7 +236,7 @@ public extension BuiltInAudioPlayerAgent {
 
 // MARK: - HandleDirectiveDelegate
 
-extension BuiltInAudioPlayerAgent: HandleDirectiveDelegate {
+extension AudioPlayerAgent: HandleDirectiveDelegate {
     public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
         return DirectiveTypeInfo.allDictionaryCases
     }
@@ -283,7 +283,7 @@ extension BuiltInAudioPlayerAgent: HandleDirectiveDelegate {
 
 // MARK: - FocusChannelDelegate
 
-extension BuiltInAudioPlayerAgent: FocusChannelDelegate {
+extension AudioPlayerAgent: FocusChannelDelegate {
     public func focusChannelConfiguration() -> FocusChannelConfigurable {
         return channel
     }
@@ -323,7 +323,7 @@ extension BuiltInAudioPlayerAgent: FocusChannelDelegate {
 
 // MARK: - MediaPlayerDelegate
 
-extension BuiltInAudioPlayerAgent: MediaPlayerDelegate {
+extension AudioPlayerAgent: MediaPlayerDelegate {
     public func mediaPlayerDidChange(state: MediaPlayerState) {
         audioPlayerDispatchQueue.async { [weak self] in
             log.info("\(state)")
@@ -354,7 +354,7 @@ extension BuiltInAudioPlayerAgent: MediaPlayerDelegate {
 
 // MARK: - ContextInfoDelegate
 
-extension BuiltInAudioPlayerAgent: ContextInfoDelegate {
+extension AudioPlayerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
@@ -372,7 +372,7 @@ extension BuiltInAudioPlayerAgent: ContextInfoDelegate {
 
 // MARK: - PlaySyncDelegate
 
-extension BuiltInAudioPlayerAgent: PlaySyncDelegate {
+extension AudioPlayerAgent: PlaySyncDelegate {
     public func playSyncIsDisplay() -> Bool {
         return false
     }
@@ -397,7 +397,7 @@ extension BuiltInAudioPlayerAgent: PlaySyncDelegate {
 
 // MARK: - SpeakerVolumeDelegate
 
-extension BuiltInAudioPlayerAgent: SpeakerVolumeDelegate {
+extension AudioPlayerAgent: SpeakerVolumeDelegate {
     public func speakerVolumeType() -> SpeakerVolumeType {
         return .nugu
     }
@@ -414,7 +414,7 @@ extension BuiltInAudioPlayerAgent: SpeakerVolumeDelegate {
 
 // MARK: - Private (Directive)
 
-private extension BuiltInAudioPlayerAgent {
+private extension AudioPlayerAgent {
     func prefetchPlay(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -468,7 +468,7 @@ private extension BuiltInAudioPlayerAgent {
 
 // MARK: - Private (Event)
 
-private extension BuiltInAudioPlayerAgent {
+private extension AudioPlayerAgent {
     func sendEvent(typeInfo: Event.TypeInfo) {
         guard let media = currentMedia else {
             log.info("audioPlayerItem is nil")
@@ -491,7 +491,7 @@ private extension BuiltInAudioPlayerAgent {
 
 // MARK: - Private(FocusManager)
 
-private extension BuiltInAudioPlayerAgent {
+private extension AudioPlayerAgent {
     func releaseFocus() {
         guard focusState != .nothing else { return }
         focusManager.releaseFocus(channelDelegate: self)
@@ -500,7 +500,7 @@ private extension BuiltInAudioPlayerAgent {
 
 // MARK: - Private (Timer)
 
-private extension BuiltInAudioPlayerAgent {
+private extension AudioPlayerAgent {
     func startProgressReport() {
         stopProgressReport()
         guard let media = currentMedia else { return }
@@ -558,7 +558,7 @@ private extension BuiltInAudioPlayerAgent {
 
 // MARK: - Private (Media)
 
-private extension BuiltInAudioPlayerAgent {
+private extension AudioPlayerAgent {
     /// set mediaplayer
     func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) throws {
         let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer()
@@ -582,7 +582,7 @@ private extension BuiltInAudioPlayerAgent {
 // MARK: - MediaPlayerState + EventInfo
 
 private extension MediaPlayerState {
-    var eventTypeInfo: BuiltInAudioPlayerAgent.Event.TypeInfo? {
+    var eventTypeInfo: AudioPlayerAgent.Event.TypeInfo? {
         switch self {
         case .bufferRefilled, .bufferUnderrun:
             return nil

@@ -1,5 +1,5 @@
 //
-//  BuiltInTextAgent.swift
+//  TextAgent.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 17/06/2019.
@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class BuiltInTextAgent: TextAgentProtocol {
+final public class TextAgent: TextAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
@@ -86,7 +86,7 @@ final public class BuiltInTextAgent: TextAgentProtocol {
 
 // MARK: - TextAgentProtocol
 
-extension BuiltInTextAgent {
+extension TextAgent {
     public func add(delegate: TextAgentDelegate) {
         delegates.add(delegate)
     }
@@ -119,7 +119,7 @@ extension BuiltInTextAgent {
 
 // MARK: - ContextInfoDelegate
 
-extension BuiltInTextAgent: ContextInfoDelegate {
+extension TextAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = ["version": capabilityAgentProperty.version]
         
@@ -129,7 +129,7 @@ extension BuiltInTextAgent: ContextInfoDelegate {
 
 // MARK: - FocusChannelDelegate
 
-extension BuiltInTextAgent: FocusChannelDelegate {
+extension TextAgent: FocusChannelDelegate {
     public func focusChannelConfiguration() -> FocusChannelConfigurable {
         return channel
     }
@@ -159,7 +159,7 @@ extension BuiltInTextAgent: FocusChannelDelegate {
 
 // MARK: - Private(FocusManager)
 
-private extension BuiltInTextAgent {
+private extension TextAgent {
     func releaseFocus() {
         guard focusState != .nothing else { return }
         
@@ -170,7 +170,7 @@ private extension BuiltInTextAgent {
 
 // MARK: - DownStreamDataDelegate
 
-extension BuiltInTextAgent: DownStreamDataDelegate {
+extension TextAgent: DownStreamDataDelegate {
     public func downStreamDataDidReceive(directive: DownStream.Directive) {
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -192,7 +192,7 @@ extension BuiltInTextAgent: DownStreamDataDelegate {
 
 // MARK: - Private(Event)
 
-private extension BuiltInTextAgent {
+private extension TextAgent {
     func sendRecognize() {
         guard let textRequest = textRequest else {
             log.warning("TextRequest not exist")

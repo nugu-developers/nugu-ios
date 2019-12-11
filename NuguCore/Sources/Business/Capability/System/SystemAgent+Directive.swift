@@ -1,5 +1,5 @@
 //
-//  BuiltInSystemAgent+Directive.swift
+//  SystemAgent+Directive.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 24/05/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-extension BuiltInSystemAgent {
+extension SystemAgent {
     enum DirectiveTypeInfo: CaseIterable {
         case handoffConnection
         case updateState
@@ -33,7 +33,7 @@ extension BuiltInSystemAgent {
 
 // MARK: - DirectiveConfigurable
 
-extension BuiltInSystemAgent.DirectiveTypeInfo: DirectiveTypeInforable {
+extension SystemAgent.DirectiveTypeInfo: DirectiveTypeInforable {
     var namespace: String { "System" }
     
     var name: String {

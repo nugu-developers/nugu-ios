@@ -1,5 +1,5 @@
 //
-//  BuiltInSystemAgent.swift
+//  SystemAgent.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 24/05/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-final public class BuiltInSystemAgent: SystemAgentProtocol {
+final public class SystemAgent: SystemAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.0")
     
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
@@ -52,7 +52,7 @@ final public class BuiltInSystemAgent: SystemAgentProtocol {
 
 // MARK: - HandleDirectiveDelegate
 
-extension BuiltInSystemAgent: HandleDirectiveDelegate {
+extension SystemAgent: HandleDirectiveDelegate {
     public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
         return DirectiveTypeInfo.allDictionaryCases
     }
@@ -87,7 +87,7 @@ extension BuiltInSystemAgent: HandleDirectiveDelegate {
 
 // MARK: - SystemAgentProtocol
 
-public extension BuiltInSystemAgent {
+public extension SystemAgent {
     func add(systemAgentDelegate: SystemAgentDelegate) {
         delegates.add(systemAgentDelegate)
     }
@@ -99,7 +99,7 @@ public extension BuiltInSystemAgent {
 
 // MARK: - ContextInfoDelegate
 
-extension BuiltInSystemAgent: ContextInfoDelegate {
+extension SystemAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version
@@ -111,7 +111,7 @@ extension BuiltInSystemAgent: ContextInfoDelegate {
 
 // MARK: - NetworkStatusDelegate
 
-extension BuiltInSystemAgent: NetworkStatusDelegate {
+extension SystemAgent: NetworkStatusDelegate {
     public func networkStatusDidChange(_ status: NetworkStatus) {
         switch status {
         case .connected:
@@ -124,7 +124,7 @@ extension BuiltInSystemAgent: NetworkStatusDelegate {
 
 // MARK: - DialogStateDelegate
 
-extension BuiltInSystemAgent: DialogStateDelegate {
+extension SystemAgent: DialogStateDelegate {
     public func dialogStateDidChange(_ state: DialogState) {
         systemDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -137,7 +137,7 @@ extension BuiltInSystemAgent: DialogStateDelegate {
 
 // MARK: - Private (handle directive)
 
-private extension BuiltInSystemAgent {
+private extension SystemAgent {
     func handOffConnection(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
@@ -180,7 +180,7 @@ private extension BuiltInSystemAgent {
     }
 }
 
-private extension BuiltInSystemAgent {
+private extension SystemAgent {
     func sendSynchronizeStateEvent() {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }

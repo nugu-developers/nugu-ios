@@ -20,16 +20,16 @@
 
 import Foundation
 
-/// Identifies the `ASRAgent` state.
+/// Identifies the ASRAgent state.
 public enum ASRState {
-    /// In this state, the `ASRAgent` is not waiting for or transmitting speech.
+    /// In this state, the ASRAgent is not waiting for or transmitting speech.
     case idle
-    /// In this state, the `ASRAgent` is waiting for a call to `recognize()`.
+    /// In this state, the ASRAgent is waiting for a call to recognize().
     case expectingSpeech
-    /// In this state, the `ASRAgent` is passively streaming speech.
+    /// In this state, the ASRAgent is passively streaming speech.
     case listening
-    /// In this state, the `ASRAgent` is actively streaming speech.
+    /// In this state, the ASRAgent is actively streaming speech.
     case recognizing
-    /// In this state, the `ASRAgent` has finished streaming and is waiting for completion of an Event.
+    /// In this state, the ASRAgent has finished streaming and is waiting for completion of an Event.
     case busy
 }

@@ -1,5 +1,5 @@
 //
-//  BuiltInLocationAgent.swift
+//  LocationAgent.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 2019/10/31.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-final public class BuiltInLocationAgent: LocationAgentProtocol {
+final public class LocationAgent: LocationAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .location, version: "1.0")
     
     public weak var delegate: LocationAgentDelegate?
@@ -38,7 +38,7 @@ final public class BuiltInLocationAgent: LocationAgentProtocol {
 
 // MARK: - ContextInfoDelegate
 
-extension BuiltInLocationAgent: ContextInfoDelegate {
+extension LocationAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version

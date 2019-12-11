@@ -1,5 +1,5 @@
 //
-//  BuiltInExtensionAgent+Event.swift
+//  ExtensionAgent+Event.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 25/07/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-extension BuiltInExtensionAgent: CapabilityEventSendable {
+extension ExtensionAgent: CapabilityEventSendable {
     public struct Event {
         let playServiceId: String
         let typeInfo: TypeInfo
@@ -36,7 +36,7 @@ extension BuiltInExtensionAgent: CapabilityEventSendable {
 
 // MARK: - Eventable
 
-extension BuiltInExtensionAgent.Event: Eventable {
+extension ExtensionAgent.Event: Eventable {
     public var payload: [String: Any] {
         let payload: [String: Any] = [
             "playServiceId": playServiceId
@@ -56,5 +56,5 @@ extension BuiltInExtensionAgent.Event: Eventable {
 
 // MARK: - Equatable
 
-extension BuiltInExtensionAgent.Event.TypeInfo: Equatable {}
-extension BuiltInExtensionAgent.Event: Equatable {}
+extension ExtensionAgent.Event.TypeInfo: Equatable {}
+extension ExtensionAgent.Event: Equatable {}

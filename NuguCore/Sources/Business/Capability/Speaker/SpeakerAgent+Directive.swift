@@ -1,8 +1,8 @@
 //
-//  BuiltInASRAgent+Directive.swift
+//  SpeakerAgent+Directive.swift
 //  NuguCore
 //
-//  Created by yonghoonKwon on 24/04/2019.
+//  Created by yonghoonKwon on 23/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,36 +22,32 @@ import Foundation
 
 import NuguInterface
 
-extension BuiltInASRAgent {
+extension SpeakerAgent {
     enum DirectiveTypeInfo: CaseIterable {
-        case expectSpeech
-        case notifyResult
+        case setMute
     }
 }
 
 // MARK: - DirectiveTypeInforable
 
-extension BuiltInASRAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "ASR" }
+extension SpeakerAgent.DirectiveTypeInfo: DirectiveTypeInforable {
+    var namespace: String { "Speaker" }
     
     var name: String {
         switch self {
-        case .expectSpeech: return "ExpectSpeech"
-        case .notifyResult: return "NotifyResult"
+        case .setMute: return "SetMute"
         }
     }
-
+    
     var medium: DirectiveMedium {
         switch self {
-        case .expectSpeech: return .audio
-        case .notifyResult: return .none
+        case .setMute: return .audio
         }
     }
-
+    
     var isBlocking: Bool {
         switch self {
-        case .expectSpeech: return true
-        case .notifyResult: return false
+        case .setMute: return false
         }
     }
 }

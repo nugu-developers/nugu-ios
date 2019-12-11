@@ -1,8 +1,8 @@
 //
-//  BuiltInAudioPlayerAgent+Directive.swift
+//  ExtensionAgent+Directive.swift
 //  NuguCore
 //
-//  Created by yonghoonKwon on 24/04/2019.
+//  Created by yonghoonKwon on 25/07/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,40 +22,32 @@ import Foundation
 
 import NuguInterface
 
-extension BuiltInAudioPlayerAgent {
+extension ExtensionAgent {
     enum DirectiveTypeInfo: CaseIterable {
-        case play
-        case stop
-        case pause
+        case action
     }
 }
 
 // MARK: - DirectiveTypeInforable
 
-extension BuiltInAudioPlayerAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "AudioPlayer" }
+extension ExtensionAgent.DirectiveTypeInfo: DirectiveTypeInforable {
+    var namespace: String { "Extension" }
     
     var name: String {
         switch self {
-        case .play: return "Play"
-        case .stop: return "Stop"
-        case .pause: return "Pause"
+        case .action: return "Action"
         }
     }
     
     var medium: DirectiveMedium {
         switch self {
-        case .play: return .audio
-        case .stop: return .audio
-        case .pause: return .audio
+        case .action: return .none
         }
     }
-
+    
     var isBlocking: Bool {
         switch self {
-        case .play: return false
-        case .stop: return false
-        case .pause: return false
+        case .action: return false
         }
     }
 }

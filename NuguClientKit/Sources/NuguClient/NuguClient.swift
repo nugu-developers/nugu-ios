@@ -23,81 +23,39 @@ import Foundation
 import NuguCore
 import NuguInterface
 
-/// <#Description#>
 public class NuguClient: NuguClientContainer {
-    
-    // MARK: NuguClientContainer
-    
-    /// <#Description#>
     public let authorizationManager: AuthorizationManageable
-    /// <#Description#>
     public let focusManager: FocusManageable
-    /// <#Description#>
     public let networkManager: NetworkManageable
-    /// <#Description#>
     public let dialogStateAggregator: DialogStateAggregatable
-    /// <#Description#>
     public let contextManager: ContextManageable
-    /// <#Description#>
     public let playSyncManager: PlaySyncManageable
-    /// <#Description#>
     public let directiveSequencer: DirectiveSequenceable
-    /// <#Description#>
     public let downStreamDataTimeoutPreprocessor: DownStreamDataTimeoutPreprocessor
-    /// <#Description#>
     public let downStreamDataInterpreter: DownStreamDataInterpretable
-    /// <#Description#>
     public let mediaPlayerFactory: MediaPlayableFactory
-    /// <#Description#>
     public let sharedAudioStream: AudioStreamable
-    /// <#Description#>
     public let inputProvider: AudioProvidable
-    /// <#Description#>
     public let endPointDetector: EndPointDetectable
-    /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
     
     private let capabilityAgentFactory: CapabilityAgentFactory
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
     
-    // MARK: CapabilityAgents
-    
-    /// <#Description#>
-    public private(set) lazy var systemAgent: SystemAgentProtocol = BuiltInSystemAgent(
+    public private(set) lazy var systemAgent: SystemAgentProtocol = SystemAgent(
         contextManager: contextManager,
         networkManager: networkManager
     )
     
-    /// <#Description#>
     public private(set) lazy var asrAgent: ASRAgentProtocol? = capabilityAgentFactory.makeASRAgent(container: self)
-    /// <#Description#>
     public private(set) lazy var ttsAgent: TTSAgentProtocol? = capabilityAgentFactory.makeTTSAgent(container: self)
-    /// <#Description#>
     public private(set) lazy var audioPlayerAgent: AudioPlayerAgentProtocol? = capabilityAgentFactory.makeAudioPlayerAgent(container: self)
-    /// <#Description#>
     public private(set) lazy var displayAgent: DisplayAgentProtocol? = capabilityAgentFactory.makeDisplayAgent(container: self)
-    /// <#Description#>
     public private(set) lazy var textAgent: TextAgentProtocol? = capabilityAgentFactory.makeTextAgent(container: self)
-    /// <#Description#>
     public private(set) lazy var extensionAgent: ExtensionAgentProtocol? = capabilityAgentFactory.makeExtensionAgent(container: self)
-    /// <#Description#>
     public private(set) lazy var locationAgent: LocationAgentProtocol? = capabilityAgentFactory.makeLocationAgent(container: self)
     
-    /// <#Description#>
-    /// - Parameter authorizationManager: <#authorizationManager description#>
-    /// - Parameter focusManager: <#focusManager description#>
-    /// - Parameter networkManager: <#networkManager description#>
-    /// - Parameter dialogStateAggregator: <#dialogStateAggregator description#>
-    /// - Parameter contextManager: <#contextManager description#>
-    /// - Parameter playSyncManager: <#playSyncManager description#>
-    /// - Parameter downStreamDataInterpreter: <#downStreamDataInterpreter description#>
-    /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
-    /// - Parameter sharedAudioStream: <#sharedAudioStream description#>
-    /// - Parameter inputProvider: <#inputProvider description#>
-    /// - Parameter endPointDetector: <#endPointDetector description#>
-    /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
-    /// - Parameter capabilityAgentFactory: <#capabilityAgentFactory description#>
     public init(
         authorizationManager: AuthorizationManageable = AuthorizationManager.shared,
         focusManager: FocusManageable = FocusManager(),

@@ -1,5 +1,5 @@
 //
-//  BuiltInASRAgent+Event.swift
+//  ASRAgent+Event.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 11/06/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-extension BuiltInASRAgent: CapabilityEventSendable {
+extension ASRAgent: CapabilityEventSendable {
     public struct Event {
         let typeInfo: TypeInfo
         let expectSpeech: ASRExpectSpeech?
@@ -45,7 +45,7 @@ extension BuiltInASRAgent: CapabilityEventSendable {
 
 // MARK: - Eventable
 
-extension BuiltInASRAgent.Event: Eventable {
+extension ASRAgent.Event: Eventable {
     public var payload: [String: Any] {
         var payload: [String: Any?]
         switch typeInfo {
@@ -96,6 +96,6 @@ extension BuiltInASRAgent.Event: Eventable {
 
 // MARK: - Equatable
 
-extension BuiltInASRAgent.Event.TypeInfo: Equatable {}
-extension BuiltInASRAgent.Event.WakeUpInfo: Equatable {}
-extension BuiltInASRAgent.Event: Equatable {}
+extension ASRAgent.Event.TypeInfo: Equatable {}
+extension ASRAgent.Event.WakeUpInfo: Equatable {}
+extension ASRAgent.Event: Equatable {}

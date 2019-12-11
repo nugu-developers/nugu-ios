@@ -1,5 +1,5 @@
 //
-//  BuiltInExtensionAgent.swift
+//  ExtensionAgent.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 25/07/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-final public class BuiltInExtensionAgent: ExtensionAgentProtocol {
+final public class ExtensionAgent: ExtensionAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
     
     private let messageSender: MessageSendable
@@ -42,7 +42,7 @@ final public class BuiltInExtensionAgent: ExtensionAgentProtocol {
 
 // MARK: - HandleDirectiveDelegate
 
-extension BuiltInExtensionAgent: HandleDirectiveDelegate {
+extension ExtensionAgent: HandleDirectiveDelegate {
     public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
         return DirectiveTypeInfo.allDictionaryCases
     }
@@ -76,8 +76,8 @@ extension BuiltInExtensionAgent: HandleDirectiveDelegate {
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    let eventTypeInfo: BuiltInExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
-                    let event = BuiltInExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
+                    let eventTypeInfo: ExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
+                    let event = ExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
                     
                     self.sendEvent(
                         event,
@@ -94,7 +94,7 @@ extension BuiltInExtensionAgent: HandleDirectiveDelegate {
 
 // MARK: - ContextInfoDelegate
 
-extension BuiltInExtensionAgent: ContextInfoDelegate {
+extension ExtensionAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
