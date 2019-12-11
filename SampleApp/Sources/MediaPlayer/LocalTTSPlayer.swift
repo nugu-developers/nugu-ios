@@ -1,5 +1,5 @@
 //
-//  LocalTtsPlayer.swift
+//  LocalTTSPlayer.swift
 //  SampleApp
 //
 //  Created by jin kim on 2019/12/09.
@@ -22,9 +22,9 @@ import AVFoundation
 
 import NuguInterface
 
-// MARK: LocalTtsPlayerChannel - FocusChannelConfigurable
+// MARK: LocalTTSPlayerChannel - FocusChannelConfigurable
 
-final class LocalTtsPlayerChannel: FocusChannelConfigurable {
+final class LocalTTSPlayerChannel: FocusChannelConfigurable {
     /// Refer to FocusChannelConfiguration's priority level
     /// FocusChannelConfiguration.recognition: 300
     /// FocusChannelConfiguration.information: 200
@@ -34,10 +34,10 @@ final class LocalTtsPlayerChannel: FocusChannelConfigurable {
     }
 }
 
-// MARK: LocalTtsPlayer
+// MARK: LocalTTSPlayer
 
-final class LocalTtsPlayer: NSObject {
-    static let shared = LocalTtsPlayer()
+final class LocalTTSPlayer: NSObject {
+    static let shared = LocalTTSPlayer()
     
     override init() {
         super.init()
@@ -45,21 +45,25 @@ final class LocalTtsPlayer: NSObject {
         NuguCentralManager.shared.client.focusManager.add(channelDelegate: self)
     }
     
-    // MARK: TtsPlayer
+    // MARK: TTSPlayer
     
     private var player: AVAudioPlayer?
     
     // MARK: FocusChannelConfigurable
     
-    private var channel = LocalTtsPlayerChannel()
+    private var channel = LocalTTSPlayerChannel()
     
-    enum TtsType {
+    // MARK: CurrentTTSType
+    
+    private var requestedTTSType: TTSType?
+    
+    enum TTSType {
         case deviceGatewayNetworkError
         case deviceGatewayAuthServerError
         case deviceGatewayAuthError
         case deviceGatewayTimeout
         case deviceGatewayRequestUnacceptable
-        case deviceGatewayTtsConnectionError
+        case deviceGatewayTTSConnectionError
         case deviceGatewayPlayRouterConnectionError
         case playRouterFallbackServerConnectionError
         case pocStateServiceTerminated
@@ -76,7 +80,7 @@ final class LocalTtsPlayer: NSObject {
                 return "device_GW_error_004"
             case .deviceGatewayRequestUnacceptable:
                 return "device_GW_error_005"
-            case .deviceGatewayTtsConnectionError,
+            case .deviceGatewayTTSConnectionError,
                  .deviceGatewayPlayRouterConnectionError,
                  .playRouterFallbackServerConnectionError:
                 return "device_GW_error_006"
@@ -94,22 +98,74 @@ final class LocalTtsPlayer: NSObject {
         }
     }
 }
+
+// MARK: Internal (play)
     
+extension LocalTTSPlayer {
+    func playLocalTTS(type: TTSType) {
+        requestedTTSType = type
+        NuguCentralManager.shared.client.focusManager.requestFocus(channelDelegate: self)
+    }
+}
+
+// MARK: Private
+
+private extension LocalTTSPlayer {
+    func play(type: TTSType) {
+        // when ttsPlayer has been paused, just resuming the player is enough
+        if player != nil && player?.isPlaying == false {
+            player?.play()
+            return
+        }
+        guard let url = Bundle.main.url(forResource: type.fileName, withExtension: type.extention) else {
+            log.error("Can't find sound file")
+            NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
+            return
+        }
+        do {
+            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: type.fileTypeHint)
+            player?.delegate = self
+            player?.play()
+        } catch {
+            log.error("Failed to play local tts file : \(error.localizedDescription)")
+            NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
+        }
+    }
+    
+    func stop() {
+        player?.stop()
+        player = nil
+        requestedTTSType = nil
+    }
+}
+
 // MARK: FocusChannelDelegate
 
-extension LocalTtsPlayer: FocusChannelDelegate {
+extension LocalTTSPlayer: FocusChannelDelegate {
     func focusChannelConfiguration() -> FocusChannelConfigurable {
         return channel
     }
     
     func focusChannelDidChange(focusState: FocusState) {
         log.debug("focusChannelDidChange = \(focusState)")
+        guard let requestedTTSType = requestedTTSType else {
+            log.error("focus channel has been changed while requested tts is nil")
+            return
+        }
+        switch focusState {
+        case .foreground:
+            play(type: requestedTTSType)
+        case .background:
+            player?.pause()
+        case .nothing:
+            stop()
+        }
     }
 }
 
 // MARK: AVAudioPlayerDelegate
 
-extension LocalTtsPlayer: AVAudioPlayerDelegate {
+extension LocalTTSPlayer: AVAudioPlayerDelegate {
     /* audioPlayerDidFinishPlaying:successfully: is called when a sound has finished playing. This method is NOT called if the player is stopped due to an interruption. */
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
@@ -118,26 +174,5 @@ extension LocalTtsPlayer: AVAudioPlayerDelegate {
     /* if an error occurs while decoding it will be reported to the delegate. */
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
-    }
-}
-
-// MARK: Internal (play)
-    
-extension LocalTtsPlayer {
-    func playLocalTts(type: TtsType) {
-        guard let url = Bundle.main.url(forResource: type.fileName, withExtension: type.extention) else {
-            log.error("Can't find sound file")
-            return
-        }
-        
-        do {
-            NuguCentralManager.shared.client.focusManager.requestFocus(channelDelegate: self)
-            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: type.fileTypeHint)
-            player?.delegate = self
-            player?.play()
-        } catch {
-            log.error("Failed to play local tts file : \(error.localizedDescription)")
-            NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
-        }
     }
 }

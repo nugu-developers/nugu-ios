@@ -66,7 +66,7 @@ extension NuguCentralManager {
 // MARK: - Internal (Auth)
 
 extension NuguCentralManager {
-    func login(from: UIViewController, completion: @escaping (Result<Void, SampleAppError>) -> Void) {
+    func login(from viewController: UIViewController, completion: @escaping (Result<Void, SampleAppError>) -> Void) {
         guard let loginMethod = SampleApp.loginMethod else {
             completion(.failure(SampleAppError.nilValue(description: "loginMethod is nil")))
             return
@@ -88,7 +88,7 @@ extension NuguCentralManager {
             )
             
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
-                loginBySafariViewController(from: from) { (result) in
+                loginBySafariViewController(presentingViewController: viewController) { (result) in
                     guard case .success = result else {
                         completion(.failure(SampleAppError.loginFailedError(loginMethod: .type1)))
                         return
@@ -168,8 +168,8 @@ extension NuguCentralManager {
 // MARK: - Private (Auth)
 
 private extension NuguCentralManager {
-    func loginBySafariViewController(from: UIViewController, completion: @escaping (Result<Void, Error>) -> Void) {
-        OAuthManager<Type1>.shared.loginBySafariViewController(from: from) { (result) in
+    func loginBySafariViewController(presentingViewController: UIViewController, completion: @escaping (Result<Void, Error>) -> Void) {
+        OAuthManager<Type1>.shared.loginBySafariViewController(from: presentingViewController) { (result) in
             switch result {
             case .success(let authorizationInfo):
                 UserDefaults.Standard.accessToken = authorizationInfo.accessToken
@@ -208,7 +208,7 @@ private extension NuguCentralManager {
     
     func logoutAfterErrorHandling() {
         DispatchQueue.main.async { [weak self] in
-            LocalTtsPlayer.shared.playLocalTts(type: .deviceGatewayAuthError)
+            LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayAuthError)
             NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
             self?.logout()
         }
@@ -336,9 +336,9 @@ extension NuguCentralManager: SystemAgentDelegate {
     func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail) {
         switch code {
         case .playRouterProcessingException:
-            LocalTtsPlayer.shared.playLocalTts(type: .deviceGatewayPlayRouterConnectionError)
+            LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
         case .ttsSpeakingException:
-            LocalTtsPlayer.shared.playLocalTts(type: .deviceGatewayTtsConnectionError)
+            LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayTTSConnectionError)
         case .unauthorizedRequestException:
             handleAuthError()
         }

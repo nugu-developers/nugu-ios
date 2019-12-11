@@ -1,5 +1,5 @@
 //
-//  AsrBeepPlayer.swift
+//  ASRBeepPlayer.swift
 //  SampleApp
 //
 //  Created by jin kim on 2019/12/09.
@@ -20,11 +20,12 @@
 
 import AVFoundation
 
-struct AsrBeepPlayer {
+final class ASRBeepPlayer {
+    static let shared = ASRBeepPlayer()
     
-    // MARK: AsrBeepPlayer
+    // MARK: ASRBeepPlayer
     
-    private static var player: AVAudioPlayer?
+    private var player: AVAudioPlayer?
     
     // MARK: BeepType
     
@@ -56,7 +57,7 @@ struct AsrBeepPlayer {
     
     // MARK: Internal (beep)
     
-    static func beep(type: BeepType) {
+    func beep(type: BeepType) {
         guard let url = Bundle.main.url(forResource: type.fileName, withExtension: type.extention) else {
             log.error("Can't find sound file")
             return
