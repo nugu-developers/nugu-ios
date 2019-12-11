@@ -1,8 +1,8 @@
 //
-//  SpeakerAgent+Event.swift
+//  BuiltInTTSAgent+Event.swift
 //  NuguCore
 //
-//  Created by yonghoonKwon on 10/06/2019.
+//  Created by yonghoonKwon on 11/06/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,40 +22,55 @@ import Foundation
 
 import NuguInterface
 
-extension SpeakerAgent: CapabilityEventSendable {
+extension BuiltInTTSAgent: CapabilityEventSendable {
     public struct Event {
+        let token: String?
+        let playServiceId: String?
         let typeInfo: TypeInfo
-        let volumes: [SpeakerMuteInfo.Volume]
-        let playServiceId: String
         
         public enum TypeInfo {
-            case setMuteSucceeded
-            case setMuteFailed
+            case speechStarted
+            case speechFinished
+            case speechStopped
+            case speechPlay(text: String)
         }
     }
 }
 
 // MARK: - Eventable
 
-extension SpeakerAgent.Event: Eventable {
+extension BuiltInTTSAgent.Event: Eventable {
     public var payload: [String: Any] {
-        return [
+        var eventPayload: [String: Any?] = [
             "playServiceId": playServiceId,
-            "volumes": volumes.values
+            "token": token
         ]
+        
+        switch typeInfo {
+        case .speechPlay(let text):
+            eventPayload["text"] = text
+        default:
+            break
+        }
+        
+        return eventPayload.compactMapValues { $0 }
     }
     
     public var name: String {
         switch typeInfo {
-        case .setMuteSucceeded:
-            return "SetMuteSucceeded"
-        case .setMuteFailed:
-            return "SetMuteFailed"
+        case .speechStarted:
+            return "SpeechStarted"
+        case .speechFinished:
+            return "SpeechFinished"
+        case .speechStopped:
+            return "SpeechStopped"
+        case .speechPlay:
+            return "SpeechPlay"
         }
     }
 }
 
 // MARK: - Equatable
 
-extension SpeakerAgent.Event.TypeInfo: Equatable {}
-extension SpeakerAgent.Event: Equatable {}
+extension BuiltInTTSAgent.Event.TypeInfo: Equatable {}
+extension BuiltInTTSAgent.Event: Equatable {}

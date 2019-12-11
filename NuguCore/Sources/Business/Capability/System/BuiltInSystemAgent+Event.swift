@@ -1,5 +1,5 @@
 //
-//  DisplayAgent+Event.swift
+//  BuiltInSystemAgent+Event.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 10/06/2019.
@@ -22,40 +22,35 @@ import Foundation
 
 import NuguInterface
 
-extension DisplayAgent: CapabilityEventSendable {
+extension BuiltInSystemAgent: CapabilityEventSendable {    
     public struct Event {
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case elementSelected(playServiceId: String, token: String)
+            case synchronizeState
         }
     }
 }
 
 // MARK: - Eventable
 
-extension DisplayAgent.Event: Eventable {
+extension BuiltInSystemAgent.Event: Eventable {
     public var payload: [String: Any] {
         switch typeInfo {
-        case .elementSelected(let playServiceId, let token):
-            let payload: [String: Any] = [
-                "token": token,
-                "playServiceId": playServiceId
-            ]
-            
-            return payload
+        default:
+            return [:]
         }
     }
     
     public var name: String {
         switch typeInfo {
-        case .elementSelected:
-            return "ElementSelected"
+        case .synchronizeState:
+            return "SynchronizeState"
         }
     }
 }
 
 // MARK: - Equatable
 
-extension DisplayAgent.Event.TypeInfo: Equatable {}
-extension DisplayAgent.Event: Equatable {}
+extension BuiltInSystemAgent.Event.TypeInfo: Equatable {}
+extension BuiltInSystemAgent.Event: Equatable {}

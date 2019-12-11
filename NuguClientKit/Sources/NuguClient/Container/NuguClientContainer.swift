@@ -22,18 +22,32 @@ import Foundation
 
 import NuguInterface
 
+/// <#Description#>
 public protocol NuguClientContainer {
+    /// <#Description#>
     var authorizationManager: AuthorizationManageable { get }
+    /// <#Description#>
     var focusManager: FocusManageable { get }
+    /// <#Description#>
     var networkManager: NetworkManageable { get }
+    /// <#Description#>
     var dialogStateAggregator: DialogStateAggregatable { get }
+    /// <#Description#>
     var contextManager: ContextManageable { get }
+    /// <#Description#>
     var playSyncManager: PlaySyncManageable { get }
+    /// <#Description#>
     var directiveSequencer: DirectiveSequenceable { get }
+    /// <#Description#>
     var downStreamDataInterpreter: DownStreamDataInterpretable { get }
+    /// <#Description#>
     var mediaPlayerFactory: MediaPlayableFactory { get }
+    /// <#Description#>
     var sharedAudioStream: AudioStreamable { get }
+    /// <#Description#>
     var inputProvider: AudioProvidable { get }
+    /// <#Description#>
     var endPointDetector: EndPointDetectable { get }
+    /// <#Description#>
     var wakeUpDetector: KeywordDetector? { get }
 }

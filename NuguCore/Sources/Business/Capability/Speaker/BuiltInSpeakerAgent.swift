@@ -1,5 +1,5 @@
 //
-//  SpeakerAgent.swift
+//  BuiltInSpeakerAgent.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 23/05/2019.
@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class SpeakerAgent: SpeakerAgentProtocol {
+final public class BuiltInSpeakerAgent: SpeakerAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .speaker, version: "1.0")
     
     private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
@@ -47,7 +47,7 @@ final public class SpeakerAgent: SpeakerAgentProtocol {
 
 // MARK: - SpeakerAgentProtocol
 
-public extension SpeakerAgent {
+public extension BuiltInSpeakerAgent {
     func add(speakerVolumeDelegate: SpeakerVolumeDelegate) {
         speakerVolumeDelegates.add(speakerVolumeDelegate)
     }
@@ -69,7 +69,7 @@ public extension SpeakerAgent {
 
 // MARK: - HandleDirectiveDelegate
 
-extension SpeakerAgent: HandleDirectiveDelegate {
+extension BuiltInSpeakerAgent: HandleDirectiveDelegate {
     public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
         return DirectiveTypeInfo.allDictionaryCases
     }
@@ -97,7 +97,7 @@ extension SpeakerAgent: HandleDirectiveDelegate {
 
 // MARK: - ContextInfoDelegate
 
-extension SpeakerAgent: ContextInfoDelegate {
+extension BuiltInSpeakerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
@@ -110,7 +110,7 @@ extension SpeakerAgent: ContextInfoDelegate {
 
 // MARK: - Private(Directive)
 
-private extension SpeakerAgent {
+private extension BuiltInSpeakerAgent {
     func setMute(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result<Void, Error> { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
@@ -133,7 +133,7 @@ private extension SpeakerAgent {
                 })
 
                 let succeeded = results.allSatisfy { $0 }
-                let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
+                let typeInfo: BuiltInSpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
                 self.sendEvent(
                     Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
                     context: self.contextInfoRequestContext(),
@@ -147,7 +147,7 @@ private extension SpeakerAgent {
 
 // MARK: - Private
 
-private extension SpeakerAgent {
+private extension BuiltInSpeakerAgent {
     var controllerVolumes: [SpeakerMuteInfo.Volume] {
         let controllers = speakerVolumeDelegates.allObjects
         return SpeakerVolumeType.allCases

@@ -1,5 +1,5 @@
 //
-//  TTSAgent.swift
+//  BuiltInTTSAgent.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 11/04/2019.
@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class TTSAgent: TTSAgentProtocol {
+final public class BuiltInTTSAgent: TTSAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
     
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
@@ -108,7 +108,7 @@ final public class TTSAgent: TTSAgentProtocol {
 
 // MARK: - TTSAgentProtocol
 
-public extension TTSAgent {
+public extension BuiltInTTSAgent {
     func add(delegate: TTSAgentDelegate) {
         delegates.add(delegate)
     }
@@ -149,7 +149,7 @@ public extension TTSAgent {
 
 // MARK: - HandleDirectiveDelegate
 
-extension TTSAgent: HandleDirectiveDelegate {
+extension BuiltInTTSAgent: HandleDirectiveDelegate {
     public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
         return DirectiveTypeInfo.allDictionaryCases
     }
@@ -215,7 +215,7 @@ extension TTSAgent: HandleDirectiveDelegate {
 
 // MARK: - FocusChannelDelegate
 
-extension TTSAgent: FocusChannelDelegate {
+extension BuiltInTTSAgent: FocusChannelDelegate {
     public func focusChannelConfiguration() -> FocusChannelConfigurable {
         return channel
     }
@@ -250,7 +250,7 @@ extension TTSAgent: FocusChannelDelegate {
 
 // MARK: - ContextInfoDelegate
 
-extension TTSAgent: ContextInfoDelegate {
+extension BuiltInTTSAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "ttsActivity": ttsState.value,
@@ -264,7 +264,7 @@ extension TTSAgent: ContextInfoDelegate {
 
 // MARK: - MediaPlayerDelegate
 
-extension TTSAgent: MediaPlayerDelegate {
+extension BuiltInTTSAgent: MediaPlayerDelegate {
     public func mediaPlayerDidChange(state: MediaPlayerState) {
         log.info(state)
         
@@ -301,7 +301,7 @@ extension TTSAgent: MediaPlayerDelegate {
 
 // MARK: - PlaySyncDelegate
 
-extension TTSAgent: PlaySyncDelegate {
+extension BuiltInTTSAgent: PlaySyncDelegate {
     public func playSyncIsDisplay() -> Bool {
         return false
     }
@@ -326,7 +326,7 @@ extension TTSAgent: PlaySyncDelegate {
 
 // MARK: - SpeakerVolumeDelegate
 
-extension TTSAgent: SpeakerVolumeDelegate {
+extension BuiltInTTSAgent: SpeakerVolumeDelegate {
     public func speakerVolumeType() -> SpeakerVolumeType {
         return .nugu
     }
@@ -343,7 +343,7 @@ extension TTSAgent: SpeakerVolumeDelegate {
 
 // MARK: - Private (Directive)
 
-private extension TTSAgent {
+private extension BuiltInTTSAgent {
     func prefetchPlay(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -436,7 +436,7 @@ private extension TTSAgent {
 
 // MARK: - Private (Event)
 
-private extension TTSAgent {
+private extension BuiltInTTSAgent {
     func sendEvent(info: Event.TypeInfo) {
         guard let media = currentMedia,
             let playServiceId = media.payload.playServiceId else {
@@ -459,7 +459,7 @@ private extension TTSAgent {
 
 // MARK: - Private(FocusManager)
 
-private extension TTSAgent {
+private extension BuiltInTTSAgent {
     func releaseFocus() {
         guard focusState != .nothing else { return }
         focusManager.releaseFocus(channelDelegate: self)
@@ -469,7 +469,7 @@ private extension TTSAgent {
 // MARK: - MediaPlayerState + EventTypeInfo
 
 private extension MediaPlayerState {
-    var eventTypeInfo: TTSAgent.Event.TypeInfo? {
+    var eventTypeInfo: BuiltInTTSAgent.Event.TypeInfo? {
         switch self {
         case .bufferRefilled, .bufferUnderrun:
             return nil

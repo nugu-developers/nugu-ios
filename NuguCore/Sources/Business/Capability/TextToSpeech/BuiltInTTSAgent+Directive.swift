@@ -1,5 +1,5 @@
 //
-//  TTSAgent+Directive.swift
+//  BuiltInTTSAgent+Directive.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 24/04/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-extension TTSAgent {
+extension BuiltInTTSAgent {
     enum DirectiveTypeInfo: CaseIterable {
         case speak
         case stop
@@ -31,7 +31,7 @@ extension TTSAgent {
 
 // MARK: - DirectiveTypeInforable
 
-extension TTSAgent.DirectiveTypeInfo: DirectiveTypeInforable {
+extension BuiltInTTSAgent.DirectiveTypeInfo: DirectiveTypeInforable {
     var namespace: String { "TTS" }
     
     var name: String {

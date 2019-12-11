@@ -1,5 +1,5 @@
 //
-//  ASRAgent.swift
+//  BuiltInASRAgent.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 17/04/2019.
@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class ASRAgent: ASRAgentProtocol {
+final public class BuiltInASRAgent: ASRAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
@@ -162,7 +162,7 @@ final public class ASRAgent: ASRAgentProtocol {
 
 // MARK: - ASRAgentProtocol
 
-public extension ASRAgent {
+public extension BuiltInASRAgent {
     func add(delegate: ASRAgentDelegate) {
         asrDelegates.add(delegate)
     }
@@ -198,23 +198,6 @@ public extension ASRAgent {
         }
     }
     
-    /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
-    ///
-    /// This function can only be called in the LISTENING and RECOGNIZING state.
-    private func stopSpeech() {
-        log.debug("")
-        asrDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            switch self.asrState {
-            case .listening, .recognizing:
-                self.executeStopSpeech()
-            case .idle, .expectingSpeech, .busy:
-                log.warning("Not permitted in current state \(self.asrState)")
-                return
-            }
-        }
-    }
-    
     func stopRecognition() {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
@@ -231,9 +214,30 @@ public extension ASRAgent {
     }
 }
 
+// MARK: - Private
+
+private extension BuiltInASRAgent {
+    /// This function asks the `ASRAgent` to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
+    ///
+    /// This function can only be called in the LISTENING and RECOGNIZING state.
+    func stopSpeech() {
+        log.debug("")
+        asrDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            switch self.asrState {
+            case .listening, .recognizing:
+                self.executeStopSpeech()
+            case .idle, .expectingSpeech, .busy:
+                log.warning("Not permitted in current state \(self.asrState)")
+                return
+            }
+        }
+    }
+}
+
 // MARK: - HandleDirectiveDelegate
 
-extension ASRAgent: HandleDirectiveDelegate {
+extension BuiltInASRAgent: HandleDirectiveDelegate {
     public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
         return DirectiveTypeInfo.allDictionaryCases
     }
@@ -275,7 +279,7 @@ extension ASRAgent: HandleDirectiveDelegate {
 
 // MARK: - FocusChannelDelegate
 
-extension ASRAgent: FocusChannelDelegate {
+extension BuiltInASRAgent: FocusChannelDelegate {
     public func focusChannelConfiguration() -> FocusChannelConfigurable {
         return channel
     }
@@ -305,7 +309,7 @@ extension ASRAgent: FocusChannelDelegate {
 
 // MARK: - ContextInfoDelegate
 
-extension ASRAgent: ContextInfoDelegate {
+extension BuiltInASRAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
@@ -318,7 +322,7 @@ extension ASRAgent: ContextInfoDelegate {
 
 // MARK: - EndPointDetectorDelegate
 
-extension ASRAgent: EndPointDetectorDelegate {
+extension BuiltInASRAgent: EndPointDetectorDelegate {
     public func endPointDetectorDidError() {
         asrDispatchQueue.async { [weak self] in
             self?.asrResult = .error(.listenFailed)
@@ -382,7 +386,7 @@ extension ASRAgent: EndPointDetectorDelegate {
 
 // MARK: - DownStreamDataDelegate
 
-extension ASRAgent: DownStreamDataDelegate {
+extension BuiltInASRAgent: DownStreamDataDelegate {
     public func downStreamDataDidReceive(directive: DownStream.Directive) {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -402,7 +406,7 @@ extension ASRAgent: DownStreamDataDelegate {
 
 // MARK: - Private (Directive)
 
-private extension ASRAgent {
+private extension BuiltInASRAgent {
     func prefetchExpectSpeech(directive: DownStream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
@@ -473,7 +477,7 @@ private extension ASRAgent {
 
 // MARK: - Private (Event, Attachment)
 
-private extension ASRAgent {
+private extension BuiltInASRAgent {
     func sendRequestEvent(asrRequest: ASRRequest, completion: ((SendMessageStatus) -> Void)? = nil) {
         // TODO: 추후 server epd 구현되면 활성화
 //        let wakeUpInfo: (Data, Int)?
@@ -483,7 +487,7 @@ private extension ASRAgent {
 //            wakeUpInfo = nil
 //        }
 //
-//        var eventWakeUpInfo: ASRAgent.Event.WakeUpInfo? {
+//        var eventWakeUpInfo: BuiltInASRAgent.Event.WakeUpInfo? {
 //            guard let (data, padding) = wakeUpInfo else {
 //                return nil
 //            }
@@ -545,7 +549,7 @@ private extension ASRAgent {
         messageSender.send(upstreamAttachment: attachment)
     }
     
-    func sendEvent(event: ASRAgent.Event.TypeInfo) {
+    func sendEvent(event: BuiltInASRAgent.Event.TypeInfo) {
         guard let asrRequest = asrRequest else {
             log.warning("ASRRequest not exist")
             return
@@ -554,7 +558,7 @@ private extension ASRAgent {
         sendEvent(event: event, dialogRequestId: asrRequest.dialogRequestId)
     }
     
-    func sendEvent(event: ASRAgent.Event.TypeInfo, dialogRequestId: String) {
+    func sendEvent(event: BuiltInASRAgent.Event.TypeInfo, dialogRequestId: String) {
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
             context: contextInfoRequestContext(),
@@ -566,7 +570,7 @@ private extension ASRAgent {
 
 // MARK: - Private(FocusManager)
 
-private extension ASRAgent {
+private extension BuiltInASRAgent {
     func releaseFocus() {
         guard focusState != .nothing else { return }
         focusManager.releaseFocus(channelDelegate: self)
@@ -575,7 +579,7 @@ private extension ASRAgent {
 
 // MARK: - Private(EndPointDetector)
 
-private extension ASRAgent {
+private extension BuiltInASRAgent {
     /// asrDispatchQueue
     func executeStartCapture() {
         guard let asrRequest = asrRequest else {

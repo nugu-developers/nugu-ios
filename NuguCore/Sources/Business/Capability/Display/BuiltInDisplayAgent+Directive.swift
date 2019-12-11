@@ -1,5 +1,5 @@
 //
-//  DisplayAgent+Directive.swift
+//  BuiltInDisplayAgent+Directive.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 16/05/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-extension DisplayAgent {
+extension BuiltInDisplayAgent {
     enum DirectiveTypeInfo: CaseIterable {
         case fullText1
         case fullText2
@@ -43,7 +43,7 @@ extension DisplayAgent {
 
 // MARK: - DirectiveTypeInforable
 
-extension DisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
+extension BuiltInDisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
     var namespace: String { "Display" }
     
     var name: String {

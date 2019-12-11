@@ -1,5 +1,5 @@
 //
-//  DisplayAgent.swift
+//  BuiltInDisplayAgent.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 16/05/2019.
@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class DisplayAgent: DisplayAgentProtocol {
+final public class BuiltInDisplayAgent: DisplayAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.0")
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
@@ -57,7 +57,7 @@ final public class DisplayAgent: DisplayAgentProtocol {
 
 // MARK: - DisplayAgentProtocol
 
-public extension DisplayAgent {
+public extension BuiltInDisplayAgent {
     func add(delegate: DisplayAgentDelegate) {
         remove(delegate: delegate)
         
@@ -97,7 +97,7 @@ public extension DisplayAgent {
 
 // MARK: - HandleDirectiveDelegate
 
-extension DisplayAgent: HandleDirectiveDelegate {
+extension BuiltInDisplayAgent: HandleDirectiveDelegate {
     public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
         return DirectiveTypeInfo.allDictionaryCases
     }
@@ -113,7 +113,7 @@ extension DisplayAgent: HandleDirectiveDelegate {
 
 // MARK: - ContextInfoDelegate
 
-extension DisplayAgent: ContextInfoDelegate {
+extension BuiltInDisplayAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
@@ -127,7 +127,7 @@ extension DisplayAgent: ContextInfoDelegate {
 
 // MARK: - PlaySyncDelegate
 
-extension DisplayAgent: PlaySyncDelegate {
+extension BuiltInDisplayAgent: PlaySyncDelegate {
     public func playSyncIsDisplay() -> Bool {
         return true
     }
@@ -184,7 +184,7 @@ extension DisplayAgent: PlaySyncDelegate {
 
 // MARK: - Private(Directive, Event)
 
-private extension DisplayAgent {
+private extension BuiltInDisplayAgent {
     func display(directive: DownStream.Directive) -> Result<Void, Error> {
         log.info("\(directive.header.type)")
 
@@ -225,7 +225,7 @@ private extension DisplayAgent {
 
 // MARK: - Private
 
-private extension DisplayAgent {
+private extension BuiltInDisplayAgent {
     func replace(delegate: DisplayAgentDelegate, template: DisplayTemplate?) {
         remove(delegate: delegate)
         let info = DisplayRenderingInfo(delegate: delegate, currentItem: template)

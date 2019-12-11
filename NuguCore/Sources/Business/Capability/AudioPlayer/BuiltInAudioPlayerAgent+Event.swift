@@ -1,5 +1,5 @@
 //
-//  AudioPlayerAgent+Event.swift
+//  BuiltInAudioPlayerAgent+Event.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 11/06/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-extension AudioPlayerAgent: CapabilityEventSendable {
+extension BuiltInAudioPlayerAgent: CapabilityEventSendable {
     public struct Event {
         let token: String
         let offsetInMilliseconds: Int
@@ -49,7 +49,7 @@ extension AudioPlayerAgent: CapabilityEventSendable {
 
 // MARK: - Eventable
 
-extension AudioPlayerAgent.Event: Eventable {
+extension BuiltInAudioPlayerAgent.Event: Eventable {
     public var payload: [String: Any] {
         var eventPayload: [String: Any] = [
             "token": token,
@@ -119,8 +119,8 @@ extension AudioPlayerAgent.Event: Eventable {
 
 // MARK: - Equatable
 
-extension AudioPlayerAgent.Event.TypeInfo: Equatable {
-    public static func == (lhs: AudioPlayerAgent.Event.TypeInfo, rhs: AudioPlayerAgent.Event.TypeInfo) -> Bool {
+extension BuiltInAudioPlayerAgent.Event.TypeInfo: Equatable {
+    public static func == (lhs: BuiltInAudioPlayerAgent.Event.TypeInfo, rhs: BuiltInAudioPlayerAgent.Event.TypeInfo) -> Bool {
         switch (lhs, rhs) {
         case (.playbackFailed(let lhsParam), .playbackFailed(let rhsParam)):
             return lhsParam.localizedDescription == rhsParam.localizedDescription
@@ -130,4 +130,4 @@ extension AudioPlayerAgent.Event.TypeInfo: Equatable {
     }
 }
 
-extension AudioPlayerAgent.Event: Equatable {}
+extension BuiltInAudioPlayerAgent.Event: Equatable {}

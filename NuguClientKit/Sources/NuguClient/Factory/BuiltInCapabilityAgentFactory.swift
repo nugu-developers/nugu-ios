@@ -27,7 +27,7 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
     public init() {}
     
     public func makeASRAgent(container: NuguClientContainer) -> ASRAgentProtocol? {
-        return ASRAgent(
+        return BuiltInASRAgent(
             focusManager: container.focusManager,
             channel: FocusChannelConfiguration.recognition,
             messageSender: container.networkManager,
@@ -39,7 +39,7 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
     }
     
     public func makeTTSAgent(container: NuguClientContainer) -> TTSAgentProtocol? {
-        return TTSAgent(
+        return BuiltInTTSAgent(
             focusManager: container.focusManager,
             channel: FocusChannelConfiguration.information,
             mediaPlayerFactory: container.mediaPlayerFactory,
@@ -49,7 +49,7 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
     }
     
     public func makeAudioPlayerAgent(container: NuguClientContainer) -> AudioPlayerAgentProtocol? {
-        return AudioPlayerAgent(
+        return BuiltInAudioPlayerAgent(
             focusManager: container.focusManager,
             channel: FocusChannelConfiguration.content,
             mediaPlayerFactory: container.mediaPlayerFactory,
@@ -59,7 +59,7 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
     }
     
     public func makeTextAgent(container: NuguClientContainer) -> TextAgentProtocol? {
-        return TextAgent(
+        return BuiltInTextAgent(
             contextManager: container.contextManager,
             messageSender: container.networkManager,
             focusManager: container.focusManager,
@@ -69,15 +69,15 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
     }
     
     public func makeExtensionAgent(container: NuguClientContainer) -> ExtensionAgentProtocol? {
-        return ExtensionAgent(messageSender: container.networkManager)
+        return BuiltInExtensionAgent(messageSender: container.networkManager)
     }
     
     public func makeLocationAgent(container: NuguClientContainer) -> LocationAgentProtocol? {
-        return LocationAgent()
+        return BuiltInLocationAgent()
     }
     
     public func makeDisplayAgent(container: NuguClientContainer) -> DisplayAgentProtocol? {
-        return DisplayAgent(
+        return BuiltInDisplayAgent(
             messageSender: container.networkManager,
             playSyncManager: container.playSyncManager
         )

@@ -1,5 +1,5 @@
 //
-//  TextAgent+Event.swift
+//  BuiltInTextAgent+Event.swift
 //  NuguCore
 //
 //  Created by yonghoonKwon on 17/06/2019.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-extension TextAgent: CapabilityEventSendable {
+extension BuiltInTextAgent: CapabilityEventSendable {
     public struct Event {
         let typeInfo: TypeInfo
         let expectSpeech: ASRExpectSpeech?
@@ -35,7 +35,7 @@ extension TextAgent: CapabilityEventSendable {
 
 // MARK: - Eventable
 
-extension TextAgent.Event: Eventable {
+extension BuiltInTextAgent.Event: Eventable {
     public var payload: [String: Any] {
         var payload: [String: Any?]
         switch typeInfo {
@@ -62,5 +62,5 @@ extension TextAgent.Event: Eventable {
 
 // MARK: - Equatable
 
-extension TextAgent.Event.TypeInfo: Equatable {}
-extension TextAgent.Event: Equatable {}
+extension BuiltInTextAgent.Event.TypeInfo: Equatable {}
+extension BuiltInTextAgent.Event: Equatable {}
