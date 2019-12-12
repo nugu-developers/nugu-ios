@@ -55,7 +55,7 @@
                                         <rect key="frame" x="0.0" y="51" width="180" height="30"/>
                                         <state key="normal" title="로그인"/>
                                         <connections>
-                                            <action selector="nuguAppLinkButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="koH-l8-oJj"/>
+                                            <action selector="nuguLoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="tVD-ah-W4Y"/>
                                         </connections>
                                     </button>
                                 </subviews>

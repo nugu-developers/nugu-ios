@@ -20,9 +20,9 @@
 
 import Foundation
 
-/// An delegate that appllication can extend to register to observe AudioPlayerState changes.
+/// An delegate that appllication can extend to register to observe `AudioPlayerState` changes.
 public protocol AudioPlayerAgentDelegate: class {
     ///  Used to notify the observer of state changes.
-    /// - Parameter state: The new AudioPlayerState of the AudioPlayerAgent
+    /// - Parameter state: The new AudioPlayerState of the `AudioPlayerAgent`
     func audioPlayerAgentDidChange(state: AudioPlayerState)
 }

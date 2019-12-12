@@ -33,7 +33,7 @@ public enum DialogState {
     /// Waiting for a response from the server.
     case thinking
     /// Responding to a request with speech.
-    /// - Parameter expectingSpeech: ASRAgent 가 연속발화로 인한 요청을 기다리는 상태인지를 나타냅니다.
+    /// - Parameter expectingSpeech: `ASRAgent` 가 연속발화로 인한 요청을 기다리는 상태인지를 나타냅니다.
     case speaking(expectingSpeech: Bool)
 }
 

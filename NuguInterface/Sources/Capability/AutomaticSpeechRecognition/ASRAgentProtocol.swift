@@ -28,24 +28,6 @@ FocusChannelDelegate,
 DownStreamDataDelegate,
 EndPointDetectorDelegate,
 HandleDirectiveDelegate {
-    /// <#Description#>
-    /// - Parameter focusManager: <#focusManager description#>
-    /// - Parameter channel: <#channel description#>
-    /// - Parameter messageSender: <#messageSender description#>
-    /// - Parameter contextManager: <#contextManager description#>
-    /// - Parameter audioStream: <#audioStream description#>
-    /// - Parameter endPointDetector: <#endPointDetector description#>
-    /// - Parameter dialogStateAggregator: <#dialogStateAggregator description#>
-    init(
-        focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
-        messageSender: MessageSendable,
-        contextManager: ContextManageable,
-        audioStream: AudioStreamable,
-        endPointDetector: EndPointDetectable,
-        dialogStateAggregator: DialogStateAggregatable
-    )
-    
     /// Adds a delegate to be notified of `ASRAgent` state changes.
     /// - Parameter delegate: The object to add.
     func add(delegate: ASRAgentDelegate)

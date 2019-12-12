@@ -26,14 +26,14 @@ import NuguLoginKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
-    let client = NuguClient.default
+    let client = NuguClient(capabilityAgentFactory: BuiltInCapabilityAgentFactory())
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
     
     private init() {
         client.focusManager.delegate = self
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.endPointDetector?.epdFile = epdFile
+            client.endPointDetector.epdFile = epdFile
         }
         
         client.locationAgent?.delegate = self
@@ -59,14 +59,14 @@ extension NuguCentralManager {
         client.focusManager.stopForegroundActivity()
         client.networkManager.disconnect()
         client.accessToken = nil
-        client.inputProvider?.stop()
+        client.inputProvider.stop()
     }
 }
 
 // MARK: - Internal (Auth)
 
 extension NuguCentralManager {
-    func login(viewController: UIViewController, completion: @escaping (Result<Void, SampleAppError>) -> Void) {
+    func login(from viewController: UIViewController, completion: @escaping (Result<Void, SampleAppError>) -> Void) {
         guard let loginMethod = SampleApp.loginMethod else {
             completion(.failure(SampleAppError.nilValue(description: "loginMethod is nil")))
             return
@@ -88,13 +88,11 @@ extension NuguCentralManager {
             )
             
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
-                OAuthManager<Type1>.shared.loginBySafariViewController(from: viewController) { (result) in
-                    guard case .success(let authorizationInfo) = result else {
+                loginBySafariViewController(from: viewController) { (result) in
+                    guard case .success = result else {
                         completion(.failure(SampleAppError.loginFailedError(loginMethod: .type1)))
                         return
                     }
-                    UserDefaults.Standard.accessToken = authorizationInfo.accessToken
-                    UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
                     completion(.success(()))
                 }
                 return
@@ -120,14 +118,13 @@ extension NuguCentralManager {
                 deviceUniqueId: SampleApp.deviceUniqueId
             )
             
-            OAuthManager<Type2>.shared.login(completion: { (result) in
-                guard case .success(let authorizationInfo) = result else {
+            loginType2 { (result) in
+                guard case .success = result else {
                     completion(.failure(SampleAppError.loginFailedError(loginMethod: .type2)))
                     return
                 }
-                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
                 completion(.success(()))
-            })
+            }
         }
     }
     
@@ -147,7 +144,13 @@ extension NuguCentralManager {
                 self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
             }
         case .type2:
-            logoutAfterErrorHandling()
+            loginType2 { [weak self] (result) in
+                guard case .success = result else {
+                    self?.logoutAfterErrorHandling()
+                    return
+                }
+                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+            }
         default:
             break
         }
@@ -165,6 +168,19 @@ extension NuguCentralManager {
 // MARK: - Private (Auth)
 
 private extension NuguCentralManager {
+    func loginBySafariViewController(from viewController: UIViewController, completion: @escaping (Result<Void, Error>) -> Void) {
+        OAuthManager<Type1>.shared.loginBySafariViewController(from: viewController) { (result) in
+            switch result {
+            case .success(let authorizationInfo):
+                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
+                UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func loginWithRefreshToken(refreshToken: String, completion: @escaping (Result<Void, Error>) -> Void) {
         OAuthManager<Type1>.shared.loginSilently(by: refreshToken) { result in
             switch result {
@@ -178,9 +194,21 @@ private extension NuguCentralManager {
         }
     }
     
+    func loginType2(completion: @escaping (Result<Void, Error>) -> Void) {
+        OAuthManager<Type2>.shared.login(completion: { (result) in
+            switch result {
+            case .success(let authorizationInfo):
+                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        })
+    }
+    
     func logoutAfterErrorHandling() {
         DispatchQueue.main.async { [weak self] in
-            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthError))
+            LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayAuthError)
             NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
             self?.logout()
         }
@@ -308,9 +336,9 @@ extension NuguCentralManager: SystemAgentDelegate {
     func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail) {
         switch code {
         case .playRouterProcessingException:
-            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayPlayRouterConnectionError))
+            LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
         case .ttsSpeakingException:
-            SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTtsConnectionError))
+            LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayTTSConnectionError)
         case .unauthorizedRequestException:
             handleAuthError()
         }

@@ -26,10 +26,6 @@ CapabilityAgentable,
 ContextInfoDelegate,
 HandleDirectiveDelegate {
     /// <#Description#>
-    /// - Parameter messageSender: <#messageSender description#>
-    init(messageSender: MessageSendable)
-    
-    /// <#Description#>
     var delegate: SpeakerAgentDelegate? { get set }
     
     /// <#Description#>
