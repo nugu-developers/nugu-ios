@@ -26,14 +26,14 @@ import NuguLoginKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
-    let client = NuguClient.default
+    let client = NuguClient(capabilityAgentFactory: BuiltInCapabilityAgentFactory())
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
     
     private init() {
         client.focusManager.delegate = self
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.endPointDetector?.epdFile = epdFile
+            client.endPointDetector.epdFile = epdFile
         }
         
         client.locationAgent?.delegate = self
@@ -59,7 +59,7 @@ extension NuguCentralManager {
         client.focusManager.stopForegroundActivity()
         client.networkManager.disconnect()
         client.accessToken = nil
-        client.inputProvider?.stop()
+        client.inputProvider.stop()
     }
 }
 

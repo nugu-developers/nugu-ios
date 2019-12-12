@@ -31,7 +31,7 @@ final public class TTSAgent: TTSAgentProtocol {
     
     private let focusManager: FocusManageable
     private let channel: FocusChannelConfigurable
-    private let mediaPlayerFactory: MediaPlayableFactory
+    private let mediaPlayerFactory: MediaPlayerFactory
     private let messageSender: MessageSendable
     private let playSyncManager: PlaySyncManageable
     
@@ -79,7 +79,7 @@ final public class TTSAgent: TTSAgentProtocol {
     public init(
         focusManager: FocusManageable,
         channel: FocusChannelConfigurable,
-        mediaPlayerFactory: MediaPlayableFactory,
+        mediaPlayerFactory: MediaPlayerFactory,
         messageSender: MessageSendable,
         playSyncManager: PlaySyncManageable
     ) {

@@ -1,5 +1,5 @@
 //
-//  MediaPlayerFactory.swift
+//  BuiltInMediaPlayerFactory.swift
 //  NuguClientKit
 //
 //  Created by MinChul Lee on 27/05/2019.
@@ -20,15 +20,17 @@
 
 import Foundation
 
-import NuguCore
 import NuguInterface
+import NuguCore
 
-class MediaPlayerFactory: MediaPlayableFactory {
-    func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource {
+public class BuiltInMediaPlayerFactory: MediaPlayerFactory {
+    public init() {}
+    
+    public func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource {
         return OpusPlayer()
     }
     
-    func makeMediaPlayer() -> MediaPlayable & MediaUrlDataSource {
+    public func makeMediaPlayer() -> MediaPlayable & MediaUrlDataSource {
         return MediaPlayer()
     }
 }
