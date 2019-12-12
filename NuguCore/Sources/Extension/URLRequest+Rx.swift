@@ -48,6 +48,11 @@ extension URLRequest {
     func rxUploadTask(urlSession: URLSession, data: Data) -> Single<Data> {
         return Single<Data>.create { event -> Disposable in
             log.debug("url: \(self.url?.absoluteString ?? "")")
+            if let headers = self.allHTTPHeaderFields {
+                log.debug("request header:\n\(headers)\n")
+            }
+            log.debug("body(\(data.count)):\n\(String(data: data, encoding: .utf8) ?? "")\n")
+
             let task = urlSession.uploadTask(with: self, from: data) { (data, response, error) in
                 guard error == nil else {
                     log.error("response error: \(error!)")
