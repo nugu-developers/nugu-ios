@@ -1,8 +1,8 @@
 //
-//  NuguCoreConfiguration.swift
-//  NuguCore
+//  AppFocusChannelConfiguration.swift
+//  SampleApp
 //
-//  Created by MinChul Lee on 16/04/2019.
+//  Created by jin kim on 2019/12/11.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,17 +18,19 @@
 //  limitations under the License.
 //
 
-import Foundation
+import NuguInterface
 
-/// <#Description#>
-public class NuguConfiguration {
-    /// <#Description#>
-    public static var asrResponseTimeout: DispatchTimeInterval = .milliseconds(10000)
-    /// <#Description#>
-    public static var asrEncoding: String = "PARTIAL" // "PARTIAL" or "COMPLETE"
-    // TODO never 로 설정할 수 있는 방법 제공.
-    /// <#Description#>
-    public static var audioPlayerPauseTimeout: DispatchTimeInterval = .milliseconds(600000)
-
-    private init() {}
+enum AppFocusChannelConfiguration: FocusChannelConfigurable {
+    case localTTS
+    
+    /// Refer to FocusChannelConfiguration's priority level
+    /// FocusChannelConfiguration.recognition: 300
+    /// FocusChannelConfiguration.information: 200
+    /// FocusChannelConfiguration.content:       100
+    var priority: Int {
+        switch self {
+        case .localTTS:
+            return 400
+        }
+    }
 }
