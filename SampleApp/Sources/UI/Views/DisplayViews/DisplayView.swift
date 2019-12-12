@@ -29,6 +29,8 @@ class DisplayView: UIView {
     
     var onItemSelect: ((String?) -> Void)?
     
+    var onUserInteraction: (() -> Void)?
+    
     var displayPayload: String?
     
     override init(frame: CGRect) {
@@ -51,5 +53,10 @@ class DisplayView: UIView {
     
     @IBAction func closeButtonDidClick(_ button: UIButton) {
         onCloseButtonClick?()
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        onUserInteraction?()
+        return super.hitTest(point, with: event)
     }
 }
