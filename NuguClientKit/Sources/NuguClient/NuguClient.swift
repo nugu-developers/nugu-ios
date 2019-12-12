@@ -64,7 +64,7 @@ public class NuguClient: NuguClientContainer {
     // MARK: CapabilityAgents
     
     /// <#Description#>
-    public private(set) lazy var systemAgent: SystemAgentProtocol = BuiltInSystemAgent(
+    public private(set) lazy var systemAgent: SystemAgentProtocol = SystemAgent(
         contextManager: contextManager,
         networkManager: networkManager
     )
