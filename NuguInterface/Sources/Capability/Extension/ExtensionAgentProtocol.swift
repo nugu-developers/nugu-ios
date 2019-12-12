@@ -25,10 +25,6 @@ public protocol ExtensionAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 HandleDirectiveDelegate {
-    /// <#Description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
-    init(upstreamDataSender: UpstreamDataSendable)
-    
     /// The object that acts as the delegate of extension-agent
     var delegate: ExtensionAgentDelegate? { get set }
 }

@@ -1,5 +1,5 @@
 //
-//  MediaPlayableFactory.swift
+//  MediaPlayerFactory.swift
 //  NuguInterface
 //
 //  Created by MinChul Lee on 27/05/2019.
@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol MediaPlayableFactory {
+public protocol MediaPlayerFactory {
     /// <#Description#>
     func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource
     

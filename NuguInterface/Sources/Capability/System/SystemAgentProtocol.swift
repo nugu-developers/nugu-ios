@@ -29,16 +29,6 @@ NetworkStatusDelegate,
 HandleDirectiveDelegate,
 DialogStateDelegate {
     /// <#Description#>
-    /// - Parameter contextManager: <#contextManager description#>
-    /// - Parameter networkManager: <#networkManager description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
-    init(
-        contextManager: ContextManageable,
-        networkManager: NetworkManageable,
-        upstreamDataSender: UpstreamDataSendable
-    )
-    
-    /// <#Description#>
     /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
     func add(systemAgentDelegate: SystemAgentDelegate)
     /// <#Description#>

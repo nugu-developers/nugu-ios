@@ -26,14 +26,6 @@ CapabilityAgentable,
 ContextInfoDelegate,
 HandleDirectiveDelegate,
 PlaySyncDelegate {
-    /// <#Description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
-    /// - Parameter playSyncManager: <#playSyncManager description#>
-    init(
-        upstreamDataSender: UpstreamDataSendable,
-        playSyncManager: PlaySyncManageable
-    )
-    
     /// Adds a delegate to be notified of `DisplayTemplate` changes.
     ///
     /// - Parameter delegate: The object to add.
