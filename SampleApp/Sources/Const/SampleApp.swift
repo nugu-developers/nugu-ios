@@ -22,18 +22,22 @@ import UIKit
 
 import NattyLog
 
-let log = SampleApp.natty
+// MARK: - NattyLog
+
+let log = Natty(by: nattyConfiguration)
+
+private var nattyConfiguration: NattyConfiguration {
+    return NattyConfiguration(
+        minLogLevel: .debug,
+        maxDescriptionLevel: .error,
+        showPersona: true,
+        prefix: "SampleApp"
+    )
+}
+
+// MARK: - Url
 
 struct SampleApp {
-    private static var nattyConfiguration: NattyConfiguration {
-        return NattyConfiguration(minLogLevel: .debug,
-                                  maxDescriptionLevel: .error,
-                                  showPersona: true,
-                                  prefix: "SampleApp")
-    }
-    
-    fileprivate static let natty = Natty(by: nattyConfiguration)
-    
     /// Web page url for NUGU usage guide of own device
     /// URLQueryItem["poc_id"]: put your own poc_id issued from Nugu Developers site ( https://developers.nugu.co.kr/#/sdk/pocList)
     static var guideWebUrl: URL? {

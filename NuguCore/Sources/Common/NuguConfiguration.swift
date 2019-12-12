@@ -19,9 +19,6 @@
 //
 
 import Foundation
-import NattyLog
-
-let log = NuguConfiguration.natty
 
 /// <#Description#>
 public class NuguConfiguration {
@@ -32,38 +29,6 @@ public class NuguConfiguration {
     // TODO never 로 설정할 수 있는 방법 제공.
     /// <#Description#>
     public static var audioPlayerPauseTimeout: DispatchTimeInterval = .milliseconds(600000)
-    
-    fileprivate static let natty: Natty = Natty(by: nattyConfiguration)
-    private static var nattyConfiguration: NattyLog.NattyConfiguration {
-        return NattyLog.NattyConfiguration(
-            minLogLevel: .debug,
-            maxDescriptionLevel: .error,
-            showPersona: true,
-            prefix: "Nugu")
-    }
-    
-    /// <#Description#>
-    public static var logEnabled: Bool {
-        set {
-            switch newValue {
-            case true:
-                #if DEBUG
-                natty.configuration.minLogLevel = .debug
-                #else
-                natty.configuration.minLogLevel = .warning
-                #endif
-            case false:
-                natty.configuration.minLogLevel = .nothing
-            }
-        } get {
-            switch nattyConfiguration.minLogLevel {
-            case .nothing:
-                return false
-            default:
-                return true
-            }
-        }
-    }
-    
+
     private init() {}
 }
