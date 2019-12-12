@@ -68,7 +68,7 @@ private extension IntroViewController {
             presentNoDataPopup()
             return
         }
-        NuguCentralManager.shared.login(viewController: self, completion: { [weak self] result in
+        NuguCentralManager.shared.login(from: self, completion: { [weak self] result in
             switch result {
             case .success:
                 DispatchQueue.main.async { [weak self] in

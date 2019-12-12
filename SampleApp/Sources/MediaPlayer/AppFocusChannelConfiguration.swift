@@ -1,8 +1,8 @@
 //
-//  MediaPlayerFactory.swift
-//  NuguClientKit
+//  AppFocusChannelConfiguration.swift
+//  SampleApp
 //
-//  Created by MinChul Lee on 27/05/2019.
+//  Created by jin kim on 2019/12/11.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,17 +18,19 @@
 //  limitations under the License.
 //
 
-import Foundation
-
-import NuguCore
 import NuguInterface
 
-class MediaPlayerFactory: MediaPlayableFactory {
-    func makeOpusPlayer() -> MediaPlayable & MediaOpusStreamDataSource {
-        return OpusPlayer()
-    }
+enum AppFocusChannelConfiguration: FocusChannelConfigurable {
+    case localTTS
     
-    func makeMediaPlayer() -> MediaPlayable & MediaUrlDataSource {
-        return MediaPlayer()
+    /// Refer to FocusChannelConfiguration's priority level
+    /// FocusChannelConfiguration.recognition: 300
+    /// FocusChannelConfiguration.information: 200
+    /// FocusChannelConfiguration.content:       100
+    var priority: Int {
+        switch self {
+        case .localTTS:
+            return 400
+        }
     }
 }

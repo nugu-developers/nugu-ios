@@ -436,16 +436,16 @@ extension MainViewController: NetworkStatusDelegate {
                 case .authError:
                     NuguCentralManager.shared.handleAuthError()
                 case .timeout:
-                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayTimeout))
+                    LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayTimeout)
                 default:
-                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayAuthServerError))
+                    LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayAuthServerError)
                 }
             } else { // Handle URLError
                 guard let urlError = error as? URLError else { return }
                 switch urlError.code {
-                case .networkConnectionLost, .notConnectedToInternet:
-                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayNetworkError))
-                default:
+                case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
+                    LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayNetworkError)
+                default: // Handle other URLErrors with your own way
                     break
                 }
             }
@@ -503,7 +503,7 @@ extension MainViewController: DialogStateDelegate {
         case .listening:
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
-                SoundPlayer.playSound(soundType: .asrBeep(type: .start))
+                ASRBeepPlayer.shared.beep(type: .start)
             }
         case .recognizing:
             DispatchQueue.main.async { [weak self] in
@@ -538,7 +538,7 @@ extension MainViewController: ASRAgentDelegate {
         case .complete(let text):
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
-                SoundPlayer.playSound(soundType: .asrBeep(type: .success))
+                ASRBeepPlayer.shared.beep(type: .success)
             }
         case .partial(let text):
             DispatchQueue.main.async { [weak self] in
@@ -548,12 +548,12 @@ extension MainViewController: ASRAgentDelegate {
             DispatchQueue.main.async { [weak self] in
                 switch asrError {
                 case .listenFailed:
-                    SoundPlayer.playSound(soundType: .asrBeep(type: .fail))
+                    ASRBeepPlayer.shared.beep(type: .fail)
                     self?.nuguVoiceChrome.changeState(state: .speakingError)
                 case .recognizeFailed:
-                    SoundPlayer.playSound(soundType: .localTts(type: .deviceGatewayRequestUnacceptable))
+                    LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
                 default:
-                    SoundPlayer.playSound(soundType: .asrBeep(type: .fail))
+                    ASRBeepPlayer.shared.beep(type: .fail)
                 }
             }
         default: break
@@ -568,13 +568,13 @@ extension MainViewController: TextAgentDelegate {
         switch result {
         case .complete:
             DispatchQueue.main.async {
-                SoundPlayer.playSound(soundType: .asrBeep(type: .success))
+                ASRBeepPlayer.shared.beep(type: .success)
             }
         case .error(let textAgentError):
             switch textAgentError {
             case .responseTimeout:
                 DispatchQueue.main.async {
-                    SoundPlayer.playSound(soundType: .asrBeep(type: .fail))
+                    ASRBeepPlayer.shared.beep(type: .fail)
                 }
             }
         }

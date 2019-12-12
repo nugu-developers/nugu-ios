@@ -24,9 +24,6 @@ import Foundation
 public protocol LocationAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate {
-    /// <#Description#>
-    init()
-    
     /// The object that acts as the delegate of `LocationAgent`
     var delegate: LocationAgentDelegate? { get set }
 }

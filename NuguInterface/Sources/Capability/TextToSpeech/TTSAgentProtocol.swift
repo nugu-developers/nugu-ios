@@ -27,21 +27,7 @@ ContextInfoDelegate,
 FocusChannelDelegate,
 HandleDirectiveDelegate,
 PlaySyncDelegate,
-SpeakerVolumeDelegate {
-    /// <#Description#>
-    /// - Parameter focusManager: <#focusManager description#>
-    /// - Parameter channel: <#channel description#>
-    /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
-    /// - Parameter messageSender: <#messageSender description#>
-    /// - Parameter playSyncManager: <#playSyncManager description#>
-    init(
-        focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
-        mediaPlayerFactory: MediaPlayableFactory,
-        messageSender: MessageSendable,
-        playSyncManager: PlaySyncManageable
-    )
-    
+SpeakerVolumeDelegate {    
     /// Adds a delegate to be notified of `TTSState` changes.
     ///
     /// - Parameter delegate: The object to add.
