@@ -29,7 +29,7 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
     public func makeASRAgent(container: NuguClientContainer) -> ASRAgentProtocol? {
         return ASRAgent(
             focusManager: container.focusManager,
-            channel: FocusChannelConfiguration.recognition,
+            channelPriority: .recognition,
             messageSender: container.networkManager,
             contextManager: container.contextManager,
             audioStream: container.sharedAudioStream,
@@ -41,7 +41,7 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
     public func makeTTSAgent(container: NuguClientContainer) -> TTSAgentProtocol? {
         return TTSAgent(
             focusManager: container.focusManager,
-            channel: FocusChannelConfiguration.information,
+            channelPriority: .information,
             mediaPlayerFactory: container.mediaPlayerFactory,
             messageSender: container.networkManager,
             playSyncManager: container.playSyncManager
@@ -51,7 +51,7 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
     public func makeAudioPlayerAgent(container: NuguClientContainer) -> AudioPlayerAgentProtocol? {
         return AudioPlayerAgent(
             focusManager: container.focusManager,
-            channel: FocusChannelConfiguration.content,
+            channelPriority: .content,
             mediaPlayerFactory: container.mediaPlayerFactory,
             messageSender: container.networkManager,
             playSyncManager: container.playSyncManager
@@ -63,7 +63,7 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
             contextManager: container.contextManager,
             messageSender: container.networkManager,
             focusManager: container.focusManager,
-            channel: FocusChannelConfiguration.recognition,
+            channelPriority: .recognition,
             dialogStateAggregator: container.dialogStateAggregator
         )
     }

@@ -32,7 +32,7 @@ final public class TextAgent: TextAgentProtocol {
     private let contextManager: ContextManageable
     private let messageSender: MessageSendable
     private let focusManager: FocusManageable
-    private let channel: FocusChannelConfigurable
+    private let channelPriority: FocusChannelPriority
     private let dialogStateAggregator: DialogStateAggregatable
     
     private let delegates = DelegateSet<TextAgentDelegate>()
@@ -67,7 +67,7 @@ final public class TextAgent: TextAgentProtocol {
         contextManager: ContextManageable,
         messageSender: MessageSendable,
         focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
+        channelPriority: FocusChannelPriority,
         dialogStateAggregator: DialogStateAggregatable
     ) {
         log.info("")
@@ -75,7 +75,7 @@ final public class TextAgent: TextAgentProtocol {
         self.contextManager = contextManager
         self.messageSender = messageSender
         self.focusManager = focusManager
-        self.channel = channel
+        self.channelPriority = channelPriority
         self.dialogStateAggregator = dialogStateAggregator
     }
     
@@ -130,8 +130,8 @@ extension TextAgent: ContextInfoDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TextAgent: FocusChannelDelegate {
-    public func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return channelPriority
     }
     
     public func focusChannelDidChange(focusState: FocusState) {

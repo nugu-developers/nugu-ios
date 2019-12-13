@@ -30,7 +30,7 @@ final public class ASRAgent: ASRAgentProtocol {
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
     private let focusManager: FocusManageable
-    private let channel: FocusChannelConfigurable
+    private let channelPriority: FocusChannelPriority
     private let messageSender: MessageSendable
     private let contextManager: ContextManageable
     private let audioStream: AudioStreamable
@@ -135,7 +135,7 @@ final public class ASRAgent: ASRAgentProtocol {
     
     public init(
         focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
+        channelPriority: FocusChannelPriority,
         messageSender: MessageSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
@@ -145,7 +145,7 @@ final public class ASRAgent: ASRAgentProtocol {
         log.info("")
         
         self.focusManager = focusManager
-        self.channel = channel
+        self.channelPriority = channelPriority
         self.messageSender = messageSender
         self.contextManager = contextManager
         self.audioStream = audioStream
@@ -276,8 +276,8 @@ extension ASRAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension ASRAgent: FocusChannelDelegate {
-    public func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return channelPriority
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
