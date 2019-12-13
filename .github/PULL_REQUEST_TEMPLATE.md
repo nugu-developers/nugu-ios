@@ -1,6 +1,7 @@
 ## Check before PR
 
 - [ ] PR Title
+- [ ] Link issue or no issue to link
 - [ ] README.md
 - [ ] Code-level documentation
 
