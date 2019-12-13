@@ -1,5 +1,5 @@
 //
-//  NuguApiRequestable.swift
+//  NuguApiProvidable.swift
 //  NuguInterface
 //
 //  Created by MinChul Lee on 2019/12/10.
@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol NuguApiProvideable {
+public protocol NuguApiProvidable {
     /// <#Description#>
     /// - Parameters:
     ///   - request: <#request description#>

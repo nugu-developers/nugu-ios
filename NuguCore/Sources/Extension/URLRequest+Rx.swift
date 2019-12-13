@@ -69,8 +69,12 @@ extension URLRequest {
             }
         }
     }
-    
-    private func urlTaskResponseParser(data: Data?, response: URLResponse?, error: Error?) -> SingleEvent<Data> {
+}
+
+// MARK: - Private
+
+private extension URLRequest {
+    func urlTaskResponseParser(data: Data?, response: URLResponse?, error: Error?) -> SingleEvent<Data> {
         guard error == nil else {
             log.error(error!)
             return .error(error!)

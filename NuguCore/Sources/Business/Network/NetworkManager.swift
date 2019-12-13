@@ -25,7 +25,7 @@ import NuguInterface
 import RxSwift
 
 public class NetworkManager: NetworkManageable {
-    public var apiProvider: NuguApiProvideable? {
+    public var apiProvider: NuguApiProvidable? {
         return nuguApiProvider
     }
     private var nuguApiProvider: NuguApiProvider?

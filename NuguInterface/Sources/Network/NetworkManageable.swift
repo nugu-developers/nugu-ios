@@ -22,7 +22,7 @@ import Foundation
 
 /// <#Description#>
 public protocol NetworkManageable: class {
-    var apiProvider: NuguApiProvideable? { get }
+    var apiProvider: NuguApiProvidable? { get }
     /// <#Description#>
     var connected: Bool { get }
     /// <#Description#>

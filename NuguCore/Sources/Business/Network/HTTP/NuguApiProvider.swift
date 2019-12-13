@@ -131,7 +131,7 @@ class NuguApiProvider: NSObject {
 
 // MARK: - NuguApiProvider
 
-extension NuguApiProvider: NuguApiProvideable {
+extension NuguApiProvider: NuguApiProvidable {
     func request(with nuguApiRequest: NuguApiRequest, completion: ((Result<Data, Error>) -> Void)?) {
         guard var urlComponent = URLComponents(string: self.url+"/"+nuguApiRequest.path) else {
             log.error("invailid url: \(self.url+"/"+nuguApiRequest.path)")

@@ -340,7 +340,7 @@
 		7E26C57F239FC2E300716E44 /* NuguApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3642375707000C9A177 /* NuguApi.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
 		7E5237F9239649940058F0B9 /* NSObject+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5237F8239649940058F0B9 /* NSObject+Rx.swift */; };
-		7E98BAD7239FA43B00B9582D /* NuguApiProvideable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BAD6239FA43B00B9582D /* NuguApiProvideable.swift */; };
+		7E98BAD7239FA43B00B9582D /* NuguApiProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BAD6239FA43B00B9582D /* NuguApiProvidable.swift */; };
 		7EB6D0D82387B19600E65FDC /* Downstream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3662375707000C9A177 /* Downstream.swift */; };
 		7EB6D0DF238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB6D0DE238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift */; };
 		7EB6D0E1238BAB2000E65FDC /* DownstreamDataPreprocessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB6D0E0238BAB2000E65FDC /* DownstreamDataPreprocessable.swift */; };
@@ -869,7 +869,7 @@
 		7E26C57D239FBF1300716E44 /* NuguApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguApiRequest.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
-		7E98BAD6239FA43B00B9582D /* NuguApiProvideable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguApiProvideable.swift; sourceTree = "<group>"; };
+		7E98BAD6239FA43B00B9582D /* NuguApiProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguApiProvidable.swift; sourceTree = "<group>"; };
 		7EB6D0DE238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownstreamDataTimeoutPreprocessor.swift; sourceTree = "<group>"; };
 		7EB6D0E0238BAB2000E65FDC /* DownstreamDataPreprocessable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownstreamDataPreprocessable.swift; sourceTree = "<group>"; };
 		7EDCF2A42384FE7A006F96B6 /* StreamDataRoutable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRoutable.swift; sourceTree = "<group>"; };
@@ -2299,7 +2299,7 @@
 		7E98BAD3239F997C00B9582D /* Api */ = {
 			isa = PBXGroup;
 			children = (
-				7E98BAD6239FA43B00B9582D /* NuguApiProvideable.swift */,
+				7E98BAD6239FA43B00B9582D /* NuguApiProvidable.swift */,
 				7E26C57D239FBF1300716E44 /* NuguApiRequest.swift */,
 			);
 			path = Api;
@@ -2947,7 +2947,7 @@
 				1FFFF2FA2375703100C9A177 /* DirectiveTypeInfoError.swift in Sources */,
 				1F2E7FFF238EA6E300569C59 /* MediaUrlDataSource.swift in Sources */,
 				1FFFF2FC2375703100C9A177 /* AudioProvidable.swift in Sources */,
-				7E98BAD7239FA43B00B9582D /* NuguApiProvideable.swift in Sources */,
+				7E98BAD7239FA43B00B9582D /* NuguApiProvidable.swift in Sources */,
 				1FFFF2F72375703100C9A177 /* HandleDirectiveDelegate.swift in Sources */,
 				1FFFF2CE2375703100C9A177 /* TTSResult.swift in Sources */,
 				1FFFF2D52375703100C9A177 /* TextAgentError.swift in Sources */,
