@@ -37,9 +37,9 @@ final class LocalTTSPlayer: NSObject {
     
     private var player: AVAudioPlayer?
     
-    // MARK: FocusChannelConfigurable
+    // MARK: FocusChannelPriority
     
-    private var channel = AppFocusChannelConfiguration.localTTS
+    private let channelPriority = FocusChannelPriority(rawValue: 400)
     
     // MARK: CurrentTTSType
     
@@ -130,8 +130,8 @@ private extension LocalTTSPlayer {
 // MARK: FocusChannelDelegate
 
 extension LocalTTSPlayer: FocusChannelDelegate {
-    func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
+    func focusChannelPriority() -> FocusChannelPriority {
+        return channelPriority
     }
     
     func focusChannelDidChange(focusState: FocusState) {

@@ -22,7 +22,7 @@ import Foundation
 
 /// FocusChannelDelegate may be capability agent whose needs to be registered with the ContextManager.
 public protocol FocusChannelDelegate: class {
-    func focusChannelConfiguration() -> FocusChannelConfigurable
+    func focusChannelPriority() -> FocusChannelPriority
     
     /// Used to notify the observer of the Channel of focus changes. Once called, the client should make a user
     /// observable change only and return immediately.
