@@ -22,47 +22,44 @@ import Foundation
 
 import NattyLog
 
-let log = JadeMarbleConfiguration.natty
+// MARK: - NattyLog
 
-// MARK: - JadeMarbleConfiguration
+let log: Natty = Natty(by: nattyConfiguration)
+private var nattyConfiguration: NattyConfiguration {
+    #if DEBUG
+    return NattyConfiguration(
+        minLogLevel: .debug,
+        maxDescriptionLevel: .error,
+        showPersona: true,
+        prefix: "JadeMarble")
+    #else
+    return NattyConfiguration(
+        minLogLevel: .warning,
+        maxDescriptionLevel: .warning,
+        showPersona: true,
+        prefix: "JadeMarble")
+    #endif
+}
 
-public enum JadeMarbleConfiguration {
-    fileprivate static let natty: Natty = Natty(by: nattyConfiguration)
-    private static var nattyConfiguration: NattyLog.NattyConfiguration {
+/// Turn the log enable and disable in `JadeMarble`.
+public var logEnabled: Bool {
+    set {
+        guard newValue == true else {
+            log.configuration.minLogLevel = .nothing
+            return
+        }
+        
         #if DEBUG
-        return NattyLog.NattyConfiguration(
-            minLogLevel: .debug,
-            maxDescriptionLevel: .error,
-            showPersona: true,
-            prefix: "JadeMarble")
+        log.configuration.minLogLevel = .debug
         #else
-        return NattyLog.NattyConfiguration(
-            minLogLevel: .warning,
-            maxDescriptionLevel: .warning,
-            showPersona: true,
-            prefix: "JadeMarble")
+        log.configuration.minLogLevel = .warning
         #endif
-    }
-    
-    public static var logEnabled: Bool {
-        set {
-            switch newValue {
-            case true:
-                #if DEBUG
-                natty.configuration.minLogLevel = .debug
-                #else
-                natty.configuration.minLogLevel = .warning
-                #endif
-            case false:
-                natty.configuration.minLogLevel = .nothing
-            }
-        } get {
-            switch nattyConfiguration.minLogLevel {
-            case .nothing:
-                return false
-            default:
-                return true
-            }
+    } get {
+        switch log.configuration.minLogLevel {
+        case .nothing:
+            return false
+        default:
+            return true
         }
     }
 }
