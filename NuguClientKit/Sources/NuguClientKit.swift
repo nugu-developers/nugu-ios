@@ -1,8 +1,8 @@
 //
-//  KeenSense.swift
-//  KeenSense
+//  NuguClient+NattyLog.swift
+//  NuguClientKit
 //
-//  Created by DCs-OfficeMBP on 26/04/2019.
+//  Created by yonghoonKwon on 2019/12/11.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,24 +24,25 @@ import NattyLog
 
 // MARK: - NattyLog
 
-let log: Natty = Natty(by: nattyConfiguration)
+let log: Natty = NattyLog.Natty(by: nattyConfiguration)
+
 private var nattyConfiguration: NattyConfiguration {
     #if DEBUG
     return NattyConfiguration(
         minLogLevel: .debug,
         maxDescriptionLevel: .error,
         showPersona: true,
-        prefix: "KeenSense")
+        prefix: "NuguClientKit")
     #else
     return NattyConfiguration(
         minLogLevel: .warning,
         maxDescriptionLevel: .warning,
         showPersona: true,
-        prefix: "KeenSense")
+        prefix: "NuguClientKit")
     #endif
 }
 
-/// Turn the log enable and disable in `KeenSense`.
+/// Turn the log enable and disable in `NuguClientKit`.
 public var logEnabled: Bool {
     set {
         guard newValue == true else {
@@ -62,50 +63,4 @@ public var logEnabled: Bool {
             return true
         }
     }
-}
-
-// MARK: - Keyword
-
-public enum Keyword: Int, CustomStringConvertible, CaseIterable {
-    case aria = 0 // ɑriɑ
-    case tinkerbell = 3 // tɪŋkəbel
-    
-    public var description: String {
-        switch self {
-        case .aria:
-            return "아리아"
-        case .tinkerbell:
-            return "팅커벨"
-        }
-    }
-}
-
-// MARK: - Stream Type
-
-public enum StreamType: Int {
-    case linearPcm16 = 0
-    case linearPcm8
-    case speex = 4
-    case feature = 5
-}
-
-// MARK: - KeywordDetectorConst
-
-enum KeywordDetectorConst {
-    static let sampleRate = 16000
-    static let channel = 1
-}
-
-// MARK: - Error
-
-public enum KeywordDetectorError: Error {
-    case initEngineFailed
-    case initBufferFailed
-    case unsupportedAudioFormat
-    case noDataAvailable
-    case alreadyActivated
-}
-
-public enum SpeexError: Error {
-    case encodeFailed
 }

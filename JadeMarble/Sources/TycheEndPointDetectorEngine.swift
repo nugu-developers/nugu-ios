@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NattyLog
-
 public class TycheEndPointDetectorEngine: NSObject {
     private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.jademarble.tyche_end_point_detector")
     private var epdWorkItem: DispatchWorkItem?
