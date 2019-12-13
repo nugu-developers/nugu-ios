@@ -34,7 +34,7 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     )
     
     private let focusManager: FocusManageable
-    private let channel: FocusChannelConfigurable
+    private let channelPriority: FocusChannelPriority
     private let mediaPlayerFactory: MediaPlayerFactory
     private let upstreamDataSender: UpstreamDataSendable
     private let playSyncManager: PlaySyncManageable
@@ -115,7 +115,7 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     public init(
         focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
+        channelPriority: FocusChannelPriority,
         mediaPlayerFactory: MediaPlayerFactory,
         upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable
@@ -123,7 +123,7 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
         log.info("")
         
         self.focusManager = focusManager
-        self.channel = channel
+        self.channelPriority = channelPriority
         self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
@@ -284,8 +284,8 @@ extension AudioPlayerAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension AudioPlayerAgent: FocusChannelDelegate {
-    public func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return channelPriority
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
