@@ -554,6 +554,7 @@
 		1F2E803B2397A26300569C59 /* WakeUpDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpDetectable.swift; sourceTree = "<group>"; };
 		1F2E803D2397A27300569C59 /* WakeUpDetectorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorState.swift; sourceTree = "<group>"; };
 		1F2E803F2397A2E500569C59 /* WakeUpDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorDelegate.swift; sourceTree = "<group>"; };
+		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD4A97723A0C1DF002EB56D /* NuguClientContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguClientContainer.swift; sourceTree = "<group>"; };
 		1FD4A97923A0C297002EB56D /* CapabilityAgentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityAgentFactory.swift; sourceTree = "<group>"; };
 		1FD4A97B23A0C2FD002EB56D /* NuguClientKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguClientKit.swift; sourceTree = "<group>"; };
@@ -1006,6 +1007,7 @@
 			children = (
 				1F1008C82376925C00D90FEE /* ISSUE_TEMPLATE */,
 				1F1008C62376925C00D90FEE /* CODEOWNERS */,
+				1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */,
 			);
 			path = .github;
 			sourceTree = "<group>";
