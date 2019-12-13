@@ -52,6 +52,7 @@
 		1F2E803C2397A26300569C59 /* WakeUpDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803B2397A26300569C59 /* WakeUpDetectable.swift */; };
 		1F2E803E2397A27300569C59 /* WakeUpDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803D2397A27300569C59 /* WakeUpDetectorState.swift */; };
 		1F2E80402397A2E500569C59 /* WakeUpDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* WakeUpDetectorDelegate.swift */; };
+		1FD1CFD423A3506C0000FB8C /* KeyChainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeyChainHelper.swift */; };
 		1FD4A97823A0C1DF002EB56D /* NuguClientContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4A97723A0C1DF002EB56D /* NuguClientContainer.swift */; };
 		1FD4A97A23A0C297002EB56D /* CapabilityAgentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4A97923A0C297002EB56D /* CapabilityAgentFactory.swift */; };
 		1FD4A97C23A0C2FD002EB56D /* NuguClientKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4A97B23A0C2FD002EB56D /* NuguClientKit.swift */; };
@@ -554,6 +555,7 @@
 		1F2E803B2397A26300569C59 /* WakeUpDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpDetectable.swift; sourceTree = "<group>"; };
 		1F2E803D2397A27300569C59 /* WakeUpDetectorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorState.swift; sourceTree = "<group>"; };
 		1F2E803F2397A2E500569C59 /* WakeUpDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorDelegate.swift; sourceTree = "<group>"; };
+		1FD1CFD323A3506C0000FB8C /* KeyChainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChainHelper.swift; sourceTree = "<group>"; };
 		1FD4A97723A0C1DF002EB56D /* NuguClientContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguClientContainer.swift; sourceTree = "<group>"; };
 		1FD4A97923A0C297002EB56D /* CapabilityAgentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityAgentFactory.swift; sourceTree = "<group>"; };
 		1FD4A97B23A0C2FD002EB56D /* NuguClientKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguClientKit.swift; sourceTree = "<group>"; };
@@ -1116,6 +1118,14 @@
 				1F2E803D2397A27300569C59 /* WakeUpDetectorState.swift */,
 			);
 			path = WakeUpDetectable;
+			sourceTree = "<group>";
+		};
+		1FD1CFD523A388570000FB8C /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1FD1CFD323A3506C0000FB8C /* KeyChainHelper.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		1FD4A97D23A0D026002EB56D /* Container */ = {
@@ -1900,8 +1910,8 @@
 		1FFFF3D72375735E00C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				1FD4A98223A22302002EB56D /* Audio */,
 				1F2E803523966B1900569C59 /* Client */,
+				1FD4A98223A22302002EB56D /* Audio */,
 				1FD4A97B23A0C2FD002EB56D /* NuguClientKit.swift */,
 			);
 			path = Sources;
@@ -2000,6 +2010,7 @@
 		1FFFF43D23757F6600C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1FD1CFD523A388570000FB8C /* Helper */,
 				1FFFF44223757F6600C9A177 /* Business */,
 				1FFFF44623757F6600C9A177 /* Model */,
 				1FFFF44823757F6600C9A177 /* LoginType */,
@@ -3091,6 +3102,7 @@
 				1FFFF45723757F6600C9A177 /* Type1.swift in Sources */,
 				73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */,
 				1FFFF45623757F6600C9A177 /* Type2.swift in Sources */,
+				1FD1CFD423A3506C0000FB8C /* KeyChainHelper.swift in Sources */,
 				1FFFF45423757F6600C9A177 /* AuthorizationInfo.swift in Sources */,
 				1FFFF45323757F6600C9A177 /* NuguLoginError.swift in Sources */,
 				1FFFF45123757F6600C9A177 /* OAuthManager.swift in Sources */,
