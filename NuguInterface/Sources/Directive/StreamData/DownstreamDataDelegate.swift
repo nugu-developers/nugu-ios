@@ -1,8 +1,8 @@
 //
-//  DownStreamDataPreprocessable.swift
+//  DownstreamDataDelegate.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 2019/11/25.
+//  Created by MinChul Lee on 10/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,20 @@
 
 import Foundation
 
-public protocol DownStreamDataPreprocessable {
-    func preprocess<T>(message: T) -> T? where T: DownStreamMessageable
+/// <#Description#>
+public protocol DownstreamDataDelegate: class {
+    /// <#Description#>
+    /// - Parameter directive: <#directive description#>
+    func downstreamDataDidReceive(directive: Downstream.Directive)
+    /// <#Description#>
+    /// - Parameter attachment: <#attachment description#>
+    func downstreamDataDidReceive(attachment: Downstream.Attachment)
+}
+
+// MARK: - Optional
+
+public extension DownstreamDataDelegate {
+    /// <#Description#>
+    /// - Parameter attachment: <#attachment description#>
+    func downstreamDataDidReceive(attachment: Downstream.Attachment) {}
 }

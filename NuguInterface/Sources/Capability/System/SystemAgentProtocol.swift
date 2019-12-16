@@ -27,7 +27,7 @@ CapabilityAgentable,
 ContextInfoDelegate,
 NetworkStatusDelegate,
 HandleDirectiveDelegate,
-DialogStateDelegate {    
+DialogStateDelegate {
     /// <#Description#>
     /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
     func add(systemAgentDelegate: SystemAgentDelegate)

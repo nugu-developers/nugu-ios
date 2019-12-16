@@ -1,8 +1,8 @@
 //
-//  DownStreamDataDelegate.swift
+//  NuguApiProvidable.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 10/04/2019.
+//  Created by MinChul Lee on 2019/12/10.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,19 +21,10 @@
 import Foundation
 
 /// <#Description#>
-public protocol DownStreamDataDelegate: class {
+public protocol NuguApiProvidable {
     /// <#Description#>
-    /// - Parameter directive: <#directive description#>
-    func downStreamDataDidReceive(directive: DownStream.Directive)
-    /// <#Description#>
-    /// - Parameter attachment: <#attachment description#>
-    func downStreamDataDidReceive(attachment: DownStream.Attachment)
-}
-
-// MARK: - Optional
-
-public extension DownStreamDataDelegate {
-    /// <#Description#>
-    /// - Parameter attachment: <#attachment description#>
-    func downStreamDataDidReceive(attachment: DownStream.Attachment) {}
+    /// - Parameters:
+    ///   - request: <#request description#>
+    ///   - completion: <#completion description#>
+    func request(with request: NuguApiRequest, completion: ((Result<Data, Error>) -> Void)?)
 }

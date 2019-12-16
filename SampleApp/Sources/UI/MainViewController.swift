@@ -42,6 +42,9 @@ final class MainViewController: UIViewController {
     
     private var hasShownGuideWeb = false
     
+    private var displayContextReleaseTimer: DispatchSourceTimer?
+    private let displayContextReleaseTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.MainViewController.displayContextReleaseTimer")
+    
     // MARK: Override
     
     override func viewDidLoad() {
@@ -305,6 +308,8 @@ private extension MainViewController {
             displayView = DisplayListView(frame: view.frame)
         case "Display.TextList3", "Display.TextList4":
             displayView = DisplayBodyListView(frame: view.frame)
+        case "Display.Weather1":
+            displayView = DisplayWeatherView(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break
@@ -321,6 +326,10 @@ private extension MainViewController {
             guard let selectedItemToken = selectedItemToken else { return }
             NuguCentralManager.shared.client.displayAgent?.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
         }
+        displayView.onUserInteraction = { [weak self] in
+            guard let self = self else { return }
+            self.startDisplayContextReleaseTimer(templateId: displayTemplate.templateId, duration: displayTemplate.duration.time)
+        }
         displayView.alpha = 0
         view.insertSubview(displayView, belowSubview: nuguButton)
         UIView.animate(withDuration: 0.3) {
@@ -331,6 +340,7 @@ private extension MainViewController {
     }
     
     func dismissDisplayView() {
+        stopDisplayContextReleaseTimer()
         UIView.animate(
             withDuration: 0.3,
             animations: { [weak self] in
@@ -366,6 +376,31 @@ private extension MainViewController {
     func dismissDisplayAudioPlayerView() {
         displayAudioPlayerView?.removeFromSuperview()
         displayAudioPlayerView = nil
+    }
+}
+
+// MARK: - Private (DisplayTimer)
+
+private extension MainViewController {
+    func startDisplayContextReleaseTimer(templateId: String, duration: DispatchTimeInterval) {
+        // Inform sdk to stop displayRendering timer
+        NuguCentralManager.shared.client.displayAgent?.stopRenderingTimer(templateId: templateId)
+        
+        // Start application side's displayContextReleaseTimer
+        displayContextReleaseTimer?.cancel()
+        displayContextReleaseTimer = DispatchSource.makeTimerSource(queue: displayContextReleaseTimerQueue)
+        displayContextReleaseTimer?.schedule(deadline: .now() + duration)
+        displayContextReleaseTimer?.setEventHandler(handler: {
+            DispatchQueue.main.async { [weak self] in
+                self?.dismissDisplayView()
+            }
+        })
+        displayContextReleaseTimer?.resume()
+    }
+    
+    func stopDisplayContextReleaseTimer() {
+        displayContextReleaseTimer?.cancel()
+        displayContextReleaseTimer = nil
     }
 }
 

@@ -29,15 +29,15 @@ final public class SpeakerAgent: SpeakerAgentProtocol {
     
     private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     
-    private let messageSender: MessageSendable
+    private let upstreamDataSender: UpstreamDataSendable
     
     public weak var delegate: SpeakerAgentDelegate?
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
-    public init(messageSender: MessageSendable) {
+    public init(upstreamDataSender: UpstreamDataSendable) {
         log.info("")
         
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
     }
     
     deinit {
@@ -75,7 +75,7 @@ extension SpeakerAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         let result = Result<DirectiveTypeInfo, Error>(catching: {
@@ -111,7 +111,7 @@ extension SpeakerAgent: ContextInfoDelegate {
 // MARK: - Private(Directive)
 
 private extension SpeakerAgent {
-    func setMute(directive: DownStream.Directive) -> Result<Void, Error> {
+    func setMute(directive: Downstream.Directive) -> Result<Void, Error> {
         return Result<Void, Error> { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -138,7 +138,7 @@ private extension SpeakerAgent {
                     Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
                     context: self.contextInfoRequestContext(),
                     dialogRequestId: TimeUUID().hexString,
-                    by: self.messageSender
+                    by: self.upstreamDataSender
                 )
             }
         }

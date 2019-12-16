@@ -25,7 +25,7 @@ public protocol TextAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 FocusChannelDelegate,
-DownStreamDataDelegate {
+DownstreamDataDelegate {
     /// Adds a delegate to be notified of `TextAgentState` and `TextAgentResult` changes.
     /// - Parameter delegate: The delegate object to add.
     func add(delegate: TextAgentDelegate)

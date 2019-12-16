@@ -34,9 +34,9 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     )
     
     private let focusManager: FocusManageable
-    private let channel: FocusChannelConfigurable
+    private let channelPriority: FocusChannelPriority
     private let mediaPlayerFactory: MediaPlayerFactory
-    private let messageSender: MessageSendable
+    private let upstreamDataSender: UpstreamDataSendable
     private let playSyncManager: PlaySyncManageable
     
     private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
@@ -115,17 +115,17 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     public init(
         focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
+        channelPriority: FocusChannelPriority,
         mediaPlayerFactory: MediaPlayerFactory,
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable
     ) {
         log.info("")
         
         self.focusManager = focusManager
-        self.channel = channel
+        self.channelPriority = channelPriority
         self.mediaPlayerFactory = mediaPlayerFactory
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         
         audioPlayerDisplayManager.playSyncManager = playSyncManager
@@ -242,7 +242,7 @@ extension AudioPlayerAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirectivePrefetch(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
         log.info("\(directive.header.type)")
         
@@ -255,7 +255,7 @@ extension AudioPlayerAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         log.info("\(directive.header.type)")
@@ -284,8 +284,8 @@ extension AudioPlayerAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension AudioPlayerAgent: FocusChannelDelegate {
-    public func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return channelPriority
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
@@ -415,7 +415,7 @@ extension AudioPlayerAgent: SpeakerVolumeDelegate {
 // MARK: - Private (Directive)
 
 private extension AudioPlayerAgent {
-    func prefetchPlay(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    func prefetchPlay(directive: Downstream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -484,7 +484,7 @@ private extension AudioPlayerAgent {
             ),
             context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
-            by: messageSender
+            by: upstreamDataSender
         )
     }
 }

@@ -1,8 +1,8 @@
 //
-//  SendMessageStatus.swift
+//  DownstreamDataPreprocessable.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 01/05/2019.
+//  Created by MinChul Lee on 2019/11/25.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,6 @@
 
 import Foundation
 
-/// <#Description#>
-public enum SendMessageStatus {
-    /// <#Description#>
-    case success
-    /// <#Description#>
-    case error(error: Error)
+public protocol DownstreamDataPreprocessable {
+    func preprocess<T>(message: T) -> T? where T: DownstreamMessageable
 }

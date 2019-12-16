@@ -1,8 +1,8 @@
 //
-//  FocusChannelConfigurable.swift
-//  NuguInterface
+//  StreamDataRoutable.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 11/04/2019.
+//  Created by MinChul Lee on 11/22/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,17 @@
 
 import Foundation
 
-/// The configuration used by the FocusManager to create Channel objects. Each configuration object has a name and priority.
-public protocol FocusChannelConfigurable {
-    /// The priority of the channel.
-    var priority: Int { get }
+/// <#Description#>
+public protocol StreamDataRoutable: ReceiveMessageDelegate, UpstreamDataSendable {
+    /// <#Description#>
+    /// - Parameter preprocessor: <#preprocessor description#>
+    func add(preprocessor: DownstreamDataPreprocessable)
+    
+    /// <#Description#>
+    /// - Parameter delegate:
+    func add(delegate: DownstreamDataDelegate)
+    
+    /// <#Description#>
+    /// - Parameter delegate:
+    func remove(delegate: DownstreamDataDelegate)
 }

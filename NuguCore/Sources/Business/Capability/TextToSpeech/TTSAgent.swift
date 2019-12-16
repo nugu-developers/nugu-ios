@@ -30,9 +30,9 @@ final public class TTSAgent: TTSAgentProtocol {
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let focusManager: FocusManageable
-    private let channel: FocusChannelConfigurable
+    private let channelPriority: FocusChannelPriority
     private let mediaPlayerFactory: MediaPlayerFactory
-    private let messageSender: MessageSendable
+    private let upstreamDataSender: UpstreamDataSendable
     private let playSyncManager: PlaySyncManageable
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
@@ -78,24 +78,24 @@ final public class TTSAgent: TTSAgentProtocol {
     
     public init(
         focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
+        channelPriority: FocusChannelPriority,
         mediaPlayerFactory: MediaPlayerFactory,
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable
     ) {
         log.info("")
         
         self.focusManager = focusManager
-        self.channel = channel
+        self.channelPriority = channelPriority
         self.mediaPlayerFactory = mediaPlayerFactory
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         
         ttsResultSubject.subscribe(onNext: { [weak self] (_, result) in
             // Send error
             switch result {
             case .error(let error):
-                self?.messageSender.sendCrashReport(error: error)
+                self?.upstreamDataSender.sendCrashReport(error: error)
             default: break
             }
         }).disposed(by: disposeBag)
@@ -128,7 +128,7 @@ public extension TTSAgent {
                 event,
                 context: self.contextInfoRequestContext(),
                 dialogRequestId: dialogRequestId,
-                by: self.messageSender
+                by: self.upstreamDataSender
             )
             
             self.ttsResultSubject
@@ -155,7 +155,7 @@ extension TTSAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirectivePrefetch(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         log.info("\(directive.header.type)")
@@ -169,7 +169,7 @@ extension TTSAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         log.info("\(directive.header.type)")
@@ -188,7 +188,7 @@ extension TTSAgent: HandleDirectiveDelegate {
         }
     }
     
-    public func handleAttachment(_ attachment: DownStream.Attachment) {
+    public func handleAttachment(_ attachment: Downstream.Attachment) {
         log.info("\(attachment.header.messageId)")
         
         ttsDispatchQueue.async { [weak self] in
@@ -206,7 +206,7 @@ extension TTSAgent: HandleDirectiveDelegate {
                     try player?.lastDataAppended()
                 }
             } catch {
-                self.messageSender.sendCrashReport(error: error)
+                self.upstreamDataSender.sendCrashReport(error: error)
                 log.error(error)
             }
         }
@@ -216,8 +216,8 @@ extension TTSAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TTSAgent: FocusChannelDelegate {
-    public func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return channelPriority
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
@@ -344,7 +344,7 @@ extension TTSAgent: SpeakerVolumeDelegate {
 // MARK: - Private (Directive)
 
 private extension TTSAgent {
-    func prefetchPlay(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    func prefetchPlay(directive: Downstream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -381,7 +381,7 @@ private extension TTSAgent {
         }
     }
     
-    func play(directive: DownStream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    func play(directive: Downstream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else {
                 completionHandler(.success(()))
@@ -452,7 +452,7 @@ private extension TTSAgent {
             ),
             context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
-            by: messageSender
+            by: upstreamDataSender
         )
     }
 }

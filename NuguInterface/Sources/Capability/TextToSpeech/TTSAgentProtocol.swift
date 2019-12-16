@@ -27,7 +27,7 @@ ContextInfoDelegate,
 FocusChannelDelegate,
 HandleDirectiveDelegate,
 PlaySyncDelegate,
-SpeakerVolumeDelegate {    
+SpeakerVolumeDelegate {
     /// Adds a delegate to be notified of `TTSState` changes.
     ///
     /// - Parameter delegate: The object to add.

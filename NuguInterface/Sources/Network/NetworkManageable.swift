@@ -21,7 +21,8 @@
 import Foundation
 
 /// <#Description#>
-public protocol NetworkManageable: MessageSendable {
+public protocol NetworkManageable: class {
+    var apiProvider: NuguApiProvidable? { get }
     /// <#Description#>
     var connected: Bool { get }
     /// <#Description#>

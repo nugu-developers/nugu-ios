@@ -30,9 +30,9 @@ final public class TextAgent: TextAgentProtocol {
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
     private let contextManager: ContextManageable
-    private let messageSender: MessageSendable
+    private let upstreamDataSender: UpstreamDataSendable
     private let focusManager: FocusManageable
-    private let channel: FocusChannelConfigurable
+    private let channelPriority: FocusChannelPriority
     private let dialogStateAggregator: DialogStateAggregatable
     
     private let delegates = DelegateSet<TextAgentDelegate>()
@@ -65,17 +65,17 @@ final public class TextAgent: TextAgentProtocol {
     
     public init(
         contextManager: ContextManageable,
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
+        channelPriority: FocusChannelPriority,
         dialogStateAggregator: DialogStateAggregatable
     ) {
         log.info("")
         
         self.contextManager = contextManager
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
         self.focusManager = focusManager
-        self.channel = channel
+        self.channelPriority = channelPriority
         self.dialogStateAggregator = dialogStateAggregator
     }
     
@@ -130,8 +130,8 @@ extension TextAgent: ContextInfoDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TextAgent: FocusChannelDelegate {
-    public func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return channelPriority
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
@@ -168,10 +168,10 @@ private extension TextAgent {
     }
 }
 
-// MARK: - DownStreamDataDelegate
+// MARK: - DownstreamDataDelegate
 
-extension TextAgent: DownStreamDataDelegate {
-    public func downStreamDataDidReceive(directive: DownStream.Directive) {
+extension TextAgent: DownstreamDataDelegate {
+    public func downstreamDataDidReceive(directive: Downstream.Directive) {
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let request = self.textRequest else { return }
@@ -218,7 +218,7 @@ private extension TextAgent {
             Event(typeInfo: .textInput(text: textRequest.text), expectSpeech: dialogStateAggregator.expectSpeech),
             contextPayload: textRequest.contextPayload,
             dialogRequestId: textRequest.dialogRequestId,
-            by: messageSender
+            by: upstreamDataSender
         )
     }
 }
