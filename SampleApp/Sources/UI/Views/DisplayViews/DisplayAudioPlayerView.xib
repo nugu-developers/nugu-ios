@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayAudioPlayerView" customModule="SampleApp_iOS" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayAudioPlayerView" customModule="SampleApp" customModuleProvider="target">
             <connections>
                 <outlet property="albumImageContainerView" destination="vQg-4e-67G" id="svE-lF-xir"/>
                 <outlet property="albumImageView" destination="jgw-DZ-X1U" id="M9O-Zj-30Z"/>
@@ -50,10 +50,10 @@
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Quc-cN-wWV">
-                    <rect key="frame" x="140.33333333333334" y="80" width="94.333333333333343" height="28"/>
+                    <rect key="frame" x="134" y="80" width="107" height="28"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="5e2-KB-vwx">
-                            <rect key="frame" x="16.000000000000004" y="5" width="62.333333333333343" height="18"/>
+                            <rect key="frame" x="16" y="5" width="75" height="18"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UUu-xX-dQZ">
                                     <rect key="frame" x="0.0" y="0.0" width="19" height="18"/>
@@ -61,8 +61,8 @@
                                         <constraint firstAttribute="width" secondItem="UUu-xX-dQZ" secondAttribute="height" multiplier="1:1" constant="1" id="II3-d5-85g"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vrK-6u-rCU">
-                                    <rect key="frame" x="25.000000000000004" y="0.0" width="37.333333333333343" height="18"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vrK-6u-rCU">
+                                    <rect key="frame" x="25" y="0.0" width="50" height="18"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                     <color key="textColor" name="TextColor"/>
                                     <nil key="highlightedColor"/>
@@ -82,7 +82,7 @@
                     </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="8gZ-jl-VKn">
-                    <rect key="frame" x="32" y="127.99999999999997" width="311" height="301.33333333333326"/>
+                    <rect key="frame" x="32" y="128" width="311" height="390"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vQg-4e-67G">
                             <rect key="frame" x="0.0" y="0.0" width="311" height="180"/>
@@ -102,20 +102,20 @@
                                 <constraint firstAttribute="bottom" secondItem="jgw-DZ-X1U" secondAttribute="bottom" id="jap-cP-rru"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="오늘도 빛나는 너에게" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wHY-V6-LU7">
-                            <rect key="frame" x="0.0" y="200" width="311" height="26.333333333333343"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wHY-V6-LU7">
+                            <rect key="frame" x="0.0" y="200" width="311" height="50"/>
                             <fontDescription key="fontDescription" type="system" pointSize="22"/>
                             <color key="textColor" red="0.13333333333333333" green="0.13333333333333333" blue="0.13333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="마크튭 (MARKTUB)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KwX-8u-bh2">
-                            <rect key="frame" x="0.0" y="246.33333333333331" width="311" height="18"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KwX-8u-bh2">
+                            <rect key="frame" x="0.0" y="270" width="311" height="50"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Feat.이라온" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqG-SH-ouy">
-                            <rect key="frame" x="0.0" y="284.33333333333331" width="311" height="17"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqG-SH-ouy">
+                            <rect key="frame" x="0.0" y="340" width="311" height="50"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -123,7 +123,7 @@
                     </subviews>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N04-jy-oMW">
-                    <rect key="frame" x="32" y="459.33333333333331" width="311" height="48"/>
+                    <rect key="frame" x="32" y="548" width="311" height="48"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OMR-Lr-pEC">
                             <rect key="frame" x="63.666666666666671" y="0.0" width="48" height="48"/>
@@ -174,19 +174,19 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wcZ-Mi-A9G">
-                    <rect key="frame" x="50" y="542.33333333333337" width="0.0" height="0.0"/>
+                    <rect key="frame" x="50" y="631" width="0.0" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" red="0.0" green="0.61568627450000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tgx-GX-vDG">
-                    <rect key="frame" x="325" y="542.33333333333337" width="0.0" height="0.0"/>
+                    <rect key="frame" x="325" y="631" width="0.0" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" red="0.13333333333333333" green="0.13333333333333333" blue="0.13333333333333333" alpha="0.5" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="49G-na-mEq">
-                    <rect key="frame" x="50" y="546.33333333333337" width="275" height="2"/>
+                    <rect key="frame" x="50" y="635" width="275" height="2"/>
                     <color key="progressTintColor" red="0.0" green="0.61568627450000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="trackTintColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
                 </progressView>
