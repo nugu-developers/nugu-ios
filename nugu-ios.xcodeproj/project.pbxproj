@@ -356,6 +356,9 @@
 		A17B06D4239E28EB00D739E9 /* LocalTTSPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17B06D3239E28EB00D739E9 /* LocalTTSPlayer.swift */; };
 		A1B33EFB237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B33EFA237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift */; };
 		A1B86FF82390B3C100F6BD11 /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */; };
+		A1DAC4E523A371B600F8D638 /* DisplayWeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DAC4E423A371B600F8D638 /* DisplayWeatherView.swift */; };
+		A1DAC4E723A371CE00F8D638 /* DisplayWeatherView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1DAC4E623A371CE00F8D638 /* DisplayWeatherView.xib */; };
+		A1DAC4E923A3722700F8D638 /* DisplayWeatherTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DAC4E823A3722700F8D638 /* DisplayWeatherTemplate.swift */; };
 		A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -882,6 +885,9 @@
 		A17B06D3239E28EB00D739E9 /* LocalTTSPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTTSPlayer.swift; sourceTree = "<group>"; };
 		A1B33EFA237D47D800CD4DE0 /* NuguVoiceChromeAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguVoiceChromeAnimationView.swift; sourceTree = "<group>"; };
 		A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAudioSessionManager.swift; sourceTree = "<group>"; };
+		A1DAC4E423A371B600F8D638 /* DisplayWeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayWeatherView.swift; sourceTree = "<group>"; };
+		A1DAC4E623A371CE00F8D638 /* DisplayWeatherView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayWeatherView.xib; sourceTree = "<group>"; };
+		A1DAC4E823A3722700F8D638 /* DisplayWeatherTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayWeatherTemplate.swift; sourceTree = "<group>"; };
 		A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2138,6 +2144,8 @@
 				1FFFF4AC237672F100C9A177 /* DisplayBodyView.xib */,
 				1FFFF4BD237672F100C9A177 /* DisplayListView.swift */,
 				1FFFF4BB237672F100C9A177 /* DisplayListView.xib */,
+				A1DAC4E423A371B600F8D638 /* DisplayWeatherView.swift */,
+				A1DAC4E623A371CE00F8D638 /* DisplayWeatherView.xib */,
 				1FFFF4B9237672F100C9A177 /* DisplayAudioPlayerView.swift */,
 				1FFFF4BE237672F100C9A177 /* DisplayAudioPlayerView.xib */,
 			);
@@ -2162,6 +2170,7 @@
 				1FFFF4B8237672F100C9A177 /* DisplayListTemplate.swift */,
 				1FFFF4B5237672F100C9A177 /* DisplayBodyTemplate.swift */,
 				1FFFF4B6237672F100C9A177 /* DisplayBodyListTemplate.swift */,
+				A1DAC4E823A3722700F8D638 /* DisplayWeatherTemplate.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2768,6 +2777,7 @@
 				A17B065E2394D22800D739E9 /* device_GW_error_002.wav in Resources */,
 				A17B06622394D22800D739E9 /* device_GW_error_004.wav in Resources */,
 				1FFFF4F1237672F100C9A177 /* DisplayListView.xib in Resources */,
+				A1DAC4E723A371CE00F8D638 /* DisplayWeatherView.xib in Resources */,
 				1FFFF4F4237672F100C9A177 /* DisplayAudioPlayerView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3143,6 +3153,8 @@
 				1FFFF4F2237672F100C9A177 /* DisplayView.swift in Sources */,
 				1FFFF4EC237672F100C9A177 /* DisplayBodyListTemplate.swift in Sources */,
 				A1B86FF82390B3C100F6BD11 /* NuguAudioSessionManager.swift in Sources */,
+				A1DAC4E523A371B600F8D638 /* DisplayWeatherView.swift in Sources */,
+				A1DAC4E923A3722700F8D638 /* DisplayWeatherTemplate.swift in Sources */,
 				1FFFF4EF237672F100C9A177 /* DisplayAudioPlayerView.swift in Sources */,
 				1FFFF4DF237672F100C9A177 /* SettingViewController.swift in Sources */,
 				1FFFF4FE237672F100C9A177 /* AppDelegate.swift in Sources */,
