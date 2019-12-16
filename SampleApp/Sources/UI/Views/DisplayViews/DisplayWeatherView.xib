@@ -11,24 +11,24 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayWeatherView" customModule="SampleApp" customModuleProvider="target">
             <connections>
-                <outlet property="bodyLabel" destination="tZ4-dE-JPR" id="kY5-kj-rZb"/>
-                <outlet property="contentImageView" destination="xVI-tY-ljL" id="NGC-YN-Hpr"/>
+                <outlet property="additionalWeatherInfoLabel" destination="tZ4-dE-JPR" id="Ziz-8Y-W2s"/>
                 <outlet property="currentTemperatureLabel" destination="WJk-Ad-c9c" id="oiF-CJ-wbl"/>
-                <outlet property="headerLabel" destination="xyw-vr-C6o" id="osS-4A-Qae"/>
                 <outlet property="locationButton" destination="ZGR-s5-OkC" id="yC1-6a-TS8"/>
                 <outlet property="logoImageView" destination="Asj-Qd-6Dh" id="0nf-Yr-LvX"/>
                 <outlet property="maxTemperatureLabel" destination="mhI-ng-geK" id="yiU-J7-jpE"/>
                 <outlet property="minTemperatureLabel" destination="teI-fX-9uI" id="9FM-fH-Arw"/>
                 <outlet property="titleContainerView" destination="bLg-Jg-EjO" id="XHC-TR-E0a"/>
                 <outlet property="titleLabel" destination="7HS-gD-H5x" id="yBb-DA-s4w"/>
-                <outletCollection property="weathersLabels" destination="kpT-xj-QT6" collectionClass="NSMutableArray" id="Ru1-cY-qVu"/>
-                <outletCollection property="weathersLabels" destination="8vf-Cz-BQr" collectionClass="NSMutableArray" id="igi-c7-aI0"/>
-                <outletCollection property="weathersLabels" destination="N8x-z4-EGh" collectionClass="NSMutableArray" id="WJc-TZ-JMG"/>
-                <outletCollection property="weathersLabels" destination="3Vn-AS-bSY" collectionClass="NSMutableArray" id="Z2K-R2-geX"/>
-                <outletCollection property="weathersImageViews" destination="rpZ-0x-aAI" collectionClass="NSMutableArray" id="VWG-2q-DSp"/>
-                <outletCollection property="weathersImageViews" destination="K9M-zW-1oj" collectionClass="NSMutableArray" id="dFi-13-11P"/>
-                <outletCollection property="weathersImageViews" destination="2ZU-1Y-Qei" collectionClass="NSMutableArray" id="6ex-OS-mL0"/>
-                <outletCollection property="weathersImageViews" destination="taS-aa-Jn7" collectionClass="NSMutableArray" id="eZg-08-rud"/>
+                <outlet property="weatherImageView" destination="xVI-tY-ljL" id="HI5-fA-PxW"/>
+                <outlet property="weatherLabel" destination="xyw-vr-C6o" id="gop-VL-zh3"/>
+                <outletCollection property="furtherWeatherImageViews" destination="rpZ-0x-aAI" collectionClass="NSMutableArray" id="WUi-Ca-rue"/>
+                <outletCollection property="furtherWeatherImageViews" destination="K9M-zW-1oj" collectionClass="NSMutableArray" id="57F-61-9Ag"/>
+                <outletCollection property="furtherWeatherImageViews" destination="2ZU-1Y-Qei" collectionClass="NSMutableArray" id="jNl-z8-XId"/>
+                <outletCollection property="furtherWeatherImageViews" destination="taS-aa-Jn7" collectionClass="NSMutableArray" id="oRm-cD-uVH"/>
+                <outletCollection property="furtherWeatherLabels" destination="kpT-xj-QT6" collectionClass="NSMutableArray" id="OaP-0Q-dyF"/>
+                <outletCollection property="furtherWeatherLabels" destination="8vf-Cz-BQr" collectionClass="NSMutableArray" id="XN4-8N-FlK"/>
+                <outletCollection property="furtherWeatherLabels" destination="N8x-z4-EGh" collectionClass="NSMutableArray" id="0mT-d6-dBV"/>
+                <outletCollection property="furtherWeatherLabels" destination="3Vn-AS-bSY" collectionClass="NSMutableArray" id="8l9-ar-DRm"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

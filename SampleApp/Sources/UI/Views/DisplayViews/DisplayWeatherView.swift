@@ -24,17 +24,17 @@ final class DisplayWeatherView: DisplayView {
     
     @IBOutlet private weak var locationButton: UIButton!
     
-    @IBOutlet private weak var headerLabel: UILabel!
-    @IBOutlet private weak var contentImageView: UIImageView!
+    @IBOutlet private weak var weatherLabel: UILabel!
+    @IBOutlet private weak var weatherImageView: UIImageView!
     
     @IBOutlet private weak var currentTemperatureLabel: UILabel!
     @IBOutlet private weak var minTemperatureLabel: UILabel!
     @IBOutlet private weak var maxTemperatureLabel: UILabel!
     
-    @IBOutlet private weak var bodyLabel: UILabel!
+    @IBOutlet private weak var additionalWeatherInfoLabel: UILabel!
     
-    @IBOutlet private var weathersLabels: [UILabel]!
-    @IBOutlet private var weathersImageViews: [UIImageView]!
+    @IBOutlet private var furtherWeatherLabels: [UILabel]!
+    @IBOutlet private var furtherWeatherImageViews: [UIImageView]!
     
     override var displayPayload: String? {
         didSet {
@@ -55,13 +55,13 @@ final class DisplayWeatherView: DisplayView {
                 logoImageView.isHidden = true
             }
 
-            headerLabel.text = displayItem.content.header?.text ?? "-"
-            headerLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.header?.color)
+            weatherLabel.text = displayItem.content.header?.text ?? "-"
+            weatherLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.header?.color)
             
             if let contentUrl = displayItem.content.image?.sources.first?.url {
-                contentImageView.loadImage(from: contentUrl)
+                weatherImageView.loadImage(from: contentUrl)
             } else {
-                contentImageView.image = nil
+                weatherImageView.image = nil
             }
             
             if let currentTemperature = displayItem.content.temperature?.current {
@@ -84,21 +84,25 @@ final class DisplayWeatherView: DisplayView {
                     options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
                     documentAttributes: nil
                 ) {
-                bodyLabel.attributedText = attributedBodyText
-                bodyLabel.textAlignment = .center
+                additionalWeatherInfoLabel.attributedText = attributedBodyText
+                additionalWeatherInfoLabel.textAlignment = .center
             } else {
-                bodyLabel.text = displayItem.content.body.text
-                bodyLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.body.color)
+                additionalWeatherInfoLabel.text = displayItem.content.body.text
+                additionalWeatherInfoLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.body.color)
             }
             
             displayItem.content.listItems?.enumerated().forEach({ (index, item) in
-                weathersLabels[index].text = item.header?.text
-                weathersLabels[index].textColor = UIColor.textColor(rgbHexString: item.header?.color)
+                if furtherWeatherLabels.indices.contains(index) {
+                    furtherWeatherLabels[index].text = item.header?.text
+                    furtherWeatherLabels[index].textColor = UIColor.textColor(rgbHexString: item.header?.color)
+                }
                 
-                if let weatherIconUrl = item.image?.sources.first?.url {
-                    weathersImageViews[index].loadImage(from: weatherIconUrl)
-                } else {
-                    weathersImageViews[index].image = nil
+                if furtherWeatherImageViews.indices.contains(index) {
+                    if let weatherIconUrl = item.image?.sources.first?.url {
+                        furtherWeatherImageViews[index].loadImage(from: weatherIconUrl)
+                    } else {
+                        furtherWeatherImageViews[index].image = nil
+                    }
                 }
             })
         }
@@ -111,7 +115,7 @@ final class DisplayWeatherView: DisplayView {
         view.frame = bounds
         addSubview(view)
         addBorderToTitleContainerView()
-        contentImageView.layer.cornerRadius = 4.0
-        contentImageView.clipsToBounds = true
+        weatherImageView.layer.cornerRadius = 4.0
+        weatherImageView.clipsToBounds = true
     }
 }
