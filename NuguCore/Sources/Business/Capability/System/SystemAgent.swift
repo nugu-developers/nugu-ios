@@ -29,6 +29,7 @@ final public class SystemAgent: SystemAgentProtocol {
     
     private let contextManager: ContextManageable
     private let networkManager: NetworkManageable
+    private let upstreamDataSender: UpstreamDataSendable
     
     private var serverPolicy: Policy.ServerPolicy?
     private var dialogState: DialogState = .idle
@@ -37,12 +38,14 @@ final public class SystemAgent: SystemAgentProtocol {
     
     public init(
         contextManager: ContextManageable,
-        networkManager: NetworkManageable
+        networkManager: NetworkManageable,
+        upstreamDataSender: UpstreamDataSendable
     ) {
         log.info("")
         
         self.contextManager = contextManager
         self.networkManager = networkManager
+        self.upstreamDataSender = upstreamDataSender
     }
     
     deinit {
@@ -58,7 +61,7 @@ extension SystemAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         let result = Result<DirectiveTypeInfo, Error>(catching: {
@@ -138,7 +141,7 @@ extension SystemAgent: DialogStateDelegate {
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
-    func handOffConnection(directive: DownStream.Directive) -> Result<Void, Error> {
+    func handOffConnection(directive: Downstream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -159,7 +162,7 @@ private extension SystemAgent {
         return .success(())
     }
     
-    func handleException(directive: DownStream.Directive) -> Result<Void, Error> {
+    func handleException(directive: Downstream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -189,7 +192,7 @@ private extension SystemAgent {
                 Event(typeInfo: .synchronizeState),
                 contextPayload: contextPayload,
                 dialogRequestId: TimeUUID().hexString,
-                by: self.networkManager
+                by: self.upstreamDataSender
             )
         }
     }

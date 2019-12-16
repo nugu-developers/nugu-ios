@@ -1,5 +1,5 @@
 //
-//  DownStreamDataTimeoutPreprocessor.swift
+//  DownstreamDataTimeoutPreprocessor.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 2019/11/25.
@@ -22,14 +22,14 @@ import Foundation
 
 import NuguInterface
 
-public class DownStreamDataTimeoutPreprocessor: DownStreamDataPreprocessable {
+public class DownstreamDataTimeoutPreprocessor: DownstreamDataPreprocessable {
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.timeout_preprocessor", qos: .userInitiated)
     
     private var timeoutDialogRequestIds = [String]()
     
     public init() {}
     
-    public func preprocess<T>(message: T) -> T? where T: DownStreamMessageable {
+    public func preprocess<T>(message: T) -> T? where T: DownstreamMessageable {
         asrDispatchQueue.sync {
             guard self.timeoutDialogRequestIds.contains(message.header.dialogRequestId) == false else {
                 log.warning("\(message.header.dialogRequestId) was timeout")
@@ -42,7 +42,7 @@ public class DownStreamDataTimeoutPreprocessor: DownStreamDataPreprocessable {
 
 // MARK: - ASRAgentDelegate
 
-extension DownStreamDataTimeoutPreprocessor: ASRAgentDelegate {
+extension DownstreamDataTimeoutPreprocessor: ASRAgentDelegate {
     public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
         guard case .error(let error) = result, error == .responseTimeout else { return }
         appendTimeoutDialogRequestId(dialogRequestId)
@@ -51,7 +51,7 @@ extension DownStreamDataTimeoutPreprocessor: ASRAgentDelegate {
 
 // MARK: - TextAgentDelegate
 
-extension DownStreamDataTimeoutPreprocessor: TextAgentDelegate {
+extension DownstreamDataTimeoutPreprocessor: TextAgentDelegate {
     public func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
         guard case .error(let error) = result, error == .responseTimeout else { return }
         appendTimeoutDialogRequestId(dialogRequestId)
@@ -60,7 +60,7 @@ extension DownStreamDataTimeoutPreprocessor: TextAgentDelegate {
 
 // MARK: - Private
 
-private extension DownStreamDataTimeoutPreprocessor {
+private extension DownstreamDataTimeoutPreprocessor {
     func appendTimeoutDialogRequestId(_ dialogRequestId: String) {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }

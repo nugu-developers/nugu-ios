@@ -39,7 +39,7 @@ public protocol NuguClientContainer {
     /// <#Description#>
     var directiveSequencer: DirectiveSequenceable { get }
     /// <#Description#>
-    var downStreamDataInterpreter: DownStreamDataInterpretable { get }
+    var streamDataRouter: StreamDataRoutable { get }
     /// <#Description#>
     var mediaPlayerFactory: MediaPlayerFactory { get }
     /// <#Description#>
@@ -48,6 +48,4 @@ public protocol NuguClientContainer {
     var inputProvider: AudioProvidable { get }
     /// <#Description#>
     var endPointDetector: EndPointDetectable { get }
-    /// <#Description#>
-    var wakeUpDetector: KeywordDetector? { get }
 }

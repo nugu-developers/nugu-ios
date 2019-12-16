@@ -1,5 +1,5 @@
 //
-//  DownStream.swift
+//  Downstream.swift
 //  NuguInterface
 //
 //  Created by MinChul Lee on 11/22/2019.
@@ -20,12 +20,12 @@
 
 import Foundation
 
-public protocol DownStreamMessageable {
-    var header: DownStream.Header { get }
+public protocol DownstreamMessageable {
+    var header: Downstream.Header { get }
 }
 
-public struct DownStream {
-    public struct Directive: DownStreamMessageable, Decodable {
+public struct Downstream {
+    public struct Directive: DownstreamMessageable, Decodable {
         public let header: Header
         public let payload: String
         
@@ -35,7 +35,7 @@ public struct DownStream {
         }
     }
     
-    public struct Attachment: DownStreamMessageable, Decodable {
+    public struct Attachment: DownstreamMessageable, Decodable {
         public let header: Header
         public let seq: Int
         public let content: Data
@@ -70,9 +70,9 @@ public struct DownStream {
     }
 }
 
-// MARK: - DownStream.Directivex
+// MARK: - Downstream.Directivex
 
-extension DownStream.Directive {
+extension Downstream.Directive {
     /// <#Description#>
     /// - Parameter Type: <#Type description#>
     public func typeInfo<T: CaseIterable & DirectiveTypeInforable>(for configurationType: T.Type) -> T? {
@@ -82,8 +82,8 @@ extension DownStream.Directive {
     }
 }
 
-// MARK: - DownStream.Header
+// MARK: - Downstream.Header
 
-extension DownStream.Header {
+extension Downstream.Header {
     public var type: String { "\(namespace).\(name)" }
 }

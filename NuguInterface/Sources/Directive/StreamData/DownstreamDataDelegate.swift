@@ -1,8 +1,8 @@
 //
-//  SystemAgentProtocol.swift
+//  DownstreamDataDelegate.swift
 //  NuguInterface
 //
-//  Created by yonghoonKwon on 24/05/2019.
+//  Created by MinChul Lee on 10/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,18 +20,20 @@
 
 import Foundation
 
-/// System-agent is responsible agent for the utilities of the system in the nugu.
-/// This agent is mandatory in SDK.
-public protocol SystemAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-NetworkStatusDelegate,
-HandleDirectiveDelegate,
-DialogStateDelegate {
+/// <#Description#>
+public protocol DownstreamDataDelegate: class {
     /// <#Description#>
-    /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
-    func add(systemAgentDelegate: SystemAgentDelegate)
+    /// - Parameter directive: <#directive description#>
+    func downstreamDataDidReceive(directive: Downstream.Directive)
     /// <#Description#>
-    /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
-    func remove(systemAgentDelegate: SystemAgentDelegate)
+    /// - Parameter attachment: <#attachment description#>
+    func downstreamDataDidReceive(attachment: Downstream.Attachment)
+}
+
+// MARK: - Optional
+
+public extension DownstreamDataDelegate {
+    /// <#Description#>
+    /// - Parameter attachment: <#attachment description#>
+    func downstreamDataDidReceive(attachment: Downstream.Attachment) {}
 }

@@ -43,9 +43,7 @@ public class NuguClient: NuguClientContainer {
     /// <#Description#>
     public let directiveSequencer: DirectiveSequenceable
     /// <#Description#>
-    public let downStreamDataTimeoutPreprocessor: DownStreamDataTimeoutPreprocessor
-    /// <#Description#>
-    public let downStreamDataInterpreter: DownStreamDataInterpretable
+    public let streamDataRouter: StreamDataRoutable
     /// <#Description#>
     public let mediaPlayerFactory: MediaPlayerFactory
     /// <#Description#>
@@ -54,8 +52,12 @@ public class NuguClient: NuguClientContainer {
     public let inputProvider: AudioProvidable
     /// <#Description#>
     public let endPointDetector: EndPointDetectable
+    
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
+    
+    /// <#Description#>
+    let downstreamDataTimeoutPreprocessor: DownstreamDataTimeoutPreprocessor
     
     private let capabilityAgentFactory: CapabilityAgentFactory
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
@@ -66,7 +68,8 @@ public class NuguClient: NuguClientContainer {
     /// <#Description#>
     public private(set) lazy var systemAgent: SystemAgentProtocol = SystemAgent(
         contextManager: contextManager,
-        networkManager: networkManager
+        networkManager: networkManager,
+        upstreamDataSender: streamDataRouter
     )
     
     /// <#Description#>
@@ -91,7 +94,6 @@ public class NuguClient: NuguClientContainer {
     /// - Parameter dialogStateAggregator: <#dialogStateAggregator description#>
     /// - Parameter contextManager: <#contextManager description#>
     /// - Parameter playSyncManager: <#playSyncManager description#>
-    /// - Parameter downStreamDataInterpreter: <#downStreamDataInterpreter description#>
     /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
     /// - Parameter sharedAudioStream: <#sharedAudioStream description#>
     /// - Parameter inputProvider: <#inputProvider description#>
@@ -105,7 +107,6 @@ public class NuguClient: NuguClientContainer {
         dialogStateAggregator: DialogStateAggregatable = DialogStateAggregator(),
         contextManager: ContextManageable = ContextManager(),
         playSyncManager: PlaySyncManageable = PlaySyncManager(),
-        downStreamDataInterpreter: DownStreamDataInterpretable = DownStreamDataInterpreter(),
         mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
         sharedAudioStream: AudioStreamable = AudioStream(capacity: 300),
         inputProvider: AudioProvidable = MicInputProvider(),
@@ -119,9 +120,9 @@ public class NuguClient: NuguClientContainer {
         self.dialogStateAggregator = dialogStateAggregator
         self.contextManager = contextManager
         self.playSyncManager = playSyncManager
-        self.directiveSequencer = DirectiveSequencer(messageSender: networkManager)
-        self.downStreamDataTimeoutPreprocessor = DownStreamDataTimeoutPreprocessor()
-        self.downStreamDataInterpreter = downStreamDataInterpreter
+        self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
+        self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
+        self.downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
         self.mediaPlayerFactory = mediaPlayerFactory
         self.sharedAudioStream = sharedAudioStream
         self.inputProvider = inputProvider

@@ -1,8 +1,8 @@
 //
-//  DownStreamDataDelegate.swift
-//  NuguInterface
+//  StreamDataRoutable.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 10/04/2019.
+//  Created by MinChul Lee on 11/22/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,19 +21,16 @@
 import Foundation
 
 /// <#Description#>
-public protocol DownStreamDataDelegate: class {
+public protocol StreamDataRoutable: ReceiveMessageDelegate, UpstreamDataSendable {
     /// <#Description#>
-    /// - Parameter directive: <#directive description#>
-    func downStreamDataDidReceive(directive: DownStream.Directive)
+    /// - Parameter preprocessor: <#preprocessor description#>
+    func add(preprocessor: DownstreamDataPreprocessable)
+    
     /// <#Description#>
-    /// - Parameter attachment: <#attachment description#>
-    func downStreamDataDidReceive(attachment: DownStream.Attachment)
-}
-
-// MARK: - Optional
-
-public extension DownStreamDataDelegate {
+    /// - Parameter delegate:
+    func add(delegate: DownstreamDataDelegate)
+    
     /// <#Description#>
-    /// - Parameter attachment: <#attachment description#>
-    func downStreamDataDidReceive(attachment: DownStream.Attachment) {}
+    /// - Parameter delegate:
+    func remove(delegate: DownstreamDataDelegate)
 }
