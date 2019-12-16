@@ -27,14 +27,18 @@ final class DisplayWeatherView: DisplayView {
     @IBOutlet private weak var weatherLabel: UILabel!
     @IBOutlet private weak var weatherImageView: UIImageView!
     
+    @IBOutlet private weak var temperatureStackView: UIStackView!
     @IBOutlet private weak var currentTemperatureLabel: UILabel!
     @IBOutlet private weak var minTemperatureLabel: UILabel!
     @IBOutlet private weak var maxTemperatureLabel: UILabel!
     
     @IBOutlet private weak var additionalWeatherInfoLabel: UILabel!
     
+    @IBOutlet private weak var furtherWeatherStackView: UIStackView!
     @IBOutlet private var furtherWeatherLabels: [UILabel]!
     @IBOutlet private var furtherWeatherImageViews: [UIImageView]!
+    @IBOutlet private var furtherWeatherlevelLabels: [UILabel]!
+    @IBOutlet private var furtherWeatherIndicatorLabels: [UILabel]!
     
     override var displayPayload: String? {
         didSet {
@@ -83,7 +87,7 @@ final class DisplayWeatherView: DisplayView {
             maxTemperatureLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.temperature?.max?.color)
             
             // Set additional weather infos with html typed string
-            if let bodyTextData = displayItem.content.body.text.data(using: .utf8),
+            if let bodyTextData = displayItem.content.body?.text.data(using: .utf8),
                 let attributedBodyText = try? NSAttributedString(
                     data: bodyTextData,
                     options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
@@ -92,24 +96,49 @@ final class DisplayWeatherView: DisplayView {
                 additionalWeatherInfoLabel.attributedText = attributedBodyText
                 additionalWeatherInfoLabel.textAlignment = .center
             } else {
-                additionalWeatherInfoLabel.text = displayItem.content.body.text
-                additionalWeatherInfoLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.body.color)
+                additionalWeatherInfoLabel.text = displayItem.content.body?.text
+                additionalWeatherInfoLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.body?.color)
+            }
+            
+            // Set detail ui by min/max temperature existence
+            if (minTemperatureLabel.text == nil) || (maxTemperatureLabel.text == nil) {
+                temperatureStackView.isHidden = true
+                additionalWeatherInfoLabel.font = .systemFont(ofSize: 24)
+            } else {
+                temperatureStackView.isHidden = false
+                additionalWeatherInfoLabel.font = .systemFont(ofSize: 16)
             }
             
             // Set further weather infos and images
+            furtherWeatherStackView.arrangedSubviews.forEach { $0.isHidden = true }
             displayItem.content.listItems?.enumerated().forEach({ (index, item) in
-                if furtherWeatherLabels.indices.contains(index) {
+                if furtherWeatherStackView.arrangedSubviews.indices.contains(index) {
                     furtherWeatherLabels[index].text = item.header?.text
                     furtherWeatherLabels[index].textColor = UIColor.textColor(rgbHexString: item.header?.color)
-                }
                 
-                if furtherWeatherImageViews.indices.contains(index) {
                     if let weatherIconUrl = item.image?.sources.first?.url {
                         furtherWeatherImageViews[index].loadImage(from: weatherIconUrl)
                     } else {
                         furtherWeatherImageViews[index].image = nil
                     }
+                    
+                    if let bodyTextData = item.body?.text.data(using: .utf8),
+                        let attributedBodyText = try? NSAttributedString(
+                            data: bodyTextData,
+                            options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
+                            documentAttributes: nil
+                        ) {
+                        furtherWeatherlevelLabels[index].attributedText = attributedBodyText
+                        furtherWeatherlevelLabels[index].textAlignment = .center
+                    } else {
+                        furtherWeatherlevelLabels[index].text = item.body?.text
+                        furtherWeatherlevelLabels[index].textColor = UIColor.textColor(rgbHexString: item.body?.color)
+                    }
+                    
+                    furtherWeatherIndicatorLabels[index].text = item.footer?.text
+                    furtherWeatherIndicatorLabels[index].textColor = UIColor.textColor(rgbHexString: item.footer?.color)
                 }
+                furtherWeatherStackView.arrangedSubviews[index].isHidden = false
             })
         }
     }

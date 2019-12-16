@@ -30,7 +30,7 @@ struct DisplayWeatherTemplate: Decodable {
         let header: DisplayCommonTemplate.Common.Text?
         let image: DisplayCommonTemplate.Common.Image?
         let temperature: Temperature?
-        let body: DisplayCommonTemplate.Common.Text
+        let body: DisplayCommonTemplate.Common.Text?
         let listItems: [Item]?
         
         struct Temperature: Decodable {
@@ -42,6 +42,8 @@ struct DisplayWeatherTemplate: Decodable {
         struct Item: Decodable {
             let header: DisplayCommonTemplate.Common.Text?
             let image: DisplayCommonTemplate.Common.Image?
+            let body: DisplayCommonTemplate.Common.Text?
+            let footer: DisplayCommonTemplate.Common.Text?
         }
     }
 }
