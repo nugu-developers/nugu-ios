@@ -73,19 +73,25 @@ extension NuguCentralManager {
         }
         switch loginMethod {
         case .type1:
-            guard let clientId = SampleApp.clientId,
+            guard
+                let clientId = SampleApp.clientId,
                 let clientSecret = SampleApp.clientSecret,
                 let redirectUri = SampleApp.redirectUri else {
                     completion(.failure(SampleAppError.nilValue(description: "clientId, clientSecret, redirectUri is nil")))
                     return
             }
-
-            OAuthManager<Type1>.shared.loginTypeInfo = Type1(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                redirectUri: redirectUri,
-                deviceUniqueId: SampleApp.deviceUniqueId
-            )
+            
+            do {
+                OAuthManager<Type1>.shared.loginTypeInfo = try Type1(
+                    clientId: clientId,
+                    clientSecret: clientSecret,
+                    redirectUri: redirectUri,
+                    serviceName: Bundle.main.bundleIdentifier ?? "NuguSample"
+                )
+            } catch {
+                completion(.failure(SampleAppError.nilValue(description: "Type1 initializer has occured error: \(error)")))
+                return
+            }
             
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
                 loginBySafariViewController(from: viewController) { (result) in
@@ -112,11 +118,16 @@ extension NuguCentralManager {
                     return
             }
             
-            OAuthManager<Type2>.shared.loginTypeInfo = Type2(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                deviceUniqueId: SampleApp.deviceUniqueId
-            )
+            do {
+                OAuthManager<Type2>.shared.loginTypeInfo = try Type2(
+                    clientId: clientId,
+                    clientSecret: clientSecret,
+                    serviceName: Bundle.main.bundleIdentifier ?? "NuguSample"
+                )
+            } catch {
+                completion(.failure(SampleAppError.nilValue(description: "Type2 initializer has occured error: \(error)")))
+                return
+            }
             
             loginType2 { (result) in
                 guard case .success = result else {

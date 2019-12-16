@@ -71,10 +71,7 @@ public extension OAuthManager where T: Type1 {
         queries.append(URLQueryItem(name: "state", value: state))
         queries.append(URLQueryItem(name: "client_id", value: loginTypeInfo.clientId))
         queries.append(URLQueryItem(name: "redirect_uri", value: loginTypeInfo.redirectUri))
-        
-        if let deviceUniqueId = loginTypeInfo.deviceUniqueId {
-            queries.append(URLQueryItem(name: "data", value: "{\"deviceSerialNumber\":\"\(deviceUniqueId)\"}"))
-        }
+        queries.append(URLQueryItem(name: "data", value: "{\"deviceSerialNumber\":\"\(loginTypeInfo.deviceUniqueId)\"}"))
         
         urlComponents?.queryItems = queries
         
@@ -160,6 +157,7 @@ public extension OAuthManager where T: Type1 {
     /// Request OAuth 2.0 by refresh token grant type.
     /// Request Nugu login without any UI. If has refresh-token, can refresh authorization-info.
     /// It occurs error when the refresh-token expires.
+    ///
     /// - Parameter refreshToken: The token to refresh authorization-info.
     /// - Parameter completion: The closure to receive result for NUGU login.
     func loginSilently(

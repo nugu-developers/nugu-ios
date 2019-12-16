@@ -26,7 +26,7 @@ struct Type2Api {
         serverBaseUrl: String,
         clientId: String,
         clientSecret: String,
-        deviceSerialNumber: String?,
+        deviceSerialNumber: String,
         completion: @escaping (Swift.Result<AuthorizationInfo, Error>) -> Void
         ) -> URLSessionDataTask {
         // URLRequest
@@ -40,16 +40,13 @@ struct Type2Api {
         urlRequest.addValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
         // Body
-        var parameters = [
+        let parameters = [
             "grant_type": "client_credentials",
             "client_id": clientId,
-            "client_secret": clientSecret
+            "client_secret": clientSecret,
+            "data": "{\"deviceSerialNumber\":\"\(deviceSerialNumber)\"}"
             //"scope":"?"
         ]
-        
-        if let deviceSerialNumber = deviceSerialNumber {
-            parameters["data"] = "{\"deviceSerialNumber\":\"\(deviceSerialNumber)\"}"
-        }
         
         urlRequest.httpBody = parameters
             .map { (parameter) -> String? in

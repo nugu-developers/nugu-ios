@@ -1,5 +1,5 @@
 //
-//  KeyChainHelper.swift
+//  KeychainHelper.swift
 //  NuguLoginKit
 //
 //  Created by yonghoonKwon on 13/12/2019.
@@ -21,7 +21,7 @@
 import Foundation
 import Security
 
-class KeyChainHelper {
+class KeychainHelper {
     private lazy var lock = NSLock()
     private let accessGroupId: String?
     private let service: String
@@ -34,7 +34,7 @@ class KeyChainHelper {
 
 // MARK: - Set
 
-extension KeyChainHelper {
+extension KeychainHelper {
     func setValue(_ value: String, forKey key: String) throws {
         guard let data = value.data(using: .utf8) else {
             throw KeychainError.encodingFailed
@@ -72,8 +72,7 @@ extension KeyChainHelper {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
             kSecAttrService as String: service,
-            kSecValueData as String: value,
-            kSecAttrAccessible as String: kSecAttrAccessibleAlways
+            kSecValueData as String: value
         ]
         
         if let groupId = accessGroupId {
@@ -89,7 +88,7 @@ extension KeyChainHelper {
 
 // MARK: - Get
 
-extension KeyChainHelper {
+extension KeychainHelper {
     func string(forKey key: String) throws -> String? {
         guard let data = try data(forKey: key) else {
             return nil
@@ -134,17 +133,20 @@ extension KeyChainHelper {
             SecItemCopyMatching(copyQuery as CFDictionary, UnsafeMutablePointer(pointer))
         }
         
-        guard resultCode == noErr else {
+        switch resultCode {
+        case noErr:
+            return result as? Data
+        case errSecItemNotFound:
+            return nil
+        default:
             throw KeychainError.copyQueryFailed(code: resultCode)
         }
-        
-        return result as? Data
     }
 }
 
 // MARK: - Delete
 
-extension KeyChainHelper {
+extension KeychainHelper {
     func clear() throws {
         lock.lock()
         defer { lock.unlock() }
