@@ -310,6 +310,8 @@ private extension MainViewController {
             displayView = DisplayBodyListView(frame: view.frame)
         case "Display.Weather1", "Display.Weather2":
             displayView = DisplayWeatherView(frame: view.frame)
+        case "Display.Weather3", "Display.Weather4":
+            displayView = DisplayWeatherListView(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break

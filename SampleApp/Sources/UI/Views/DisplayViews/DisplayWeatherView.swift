@@ -47,10 +47,6 @@ final class DisplayWeatherView: DisplayView {
             
             titleLabel.text = displayItem.title.text.text
             titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)
-
-            // Set location info
-            locationButton.setTitle(displayItem.title.subtext?.text, for: .normal)
-            locationButton.setTitleColor(UIColor.textColor(rgbHexString: displayItem.title.subtext?.color), for: .normal)
             
             backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
             
@@ -61,6 +57,10 @@ final class DisplayWeatherView: DisplayView {
                 logoImageView.isHidden = true
             }
 
+            // Set location info
+            locationButton.setTitle(displayItem.title.subtext?.text, for: .normal)
+            locationButton.setTitleColor(UIColor.textColor(rgbHexString: displayItem.title.subtext?.color), for: .normal)
+            
             // Set weather info and image
             weatherLabel.text = displayItem.content.header?.text ?? "-"
             weatherLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.header?.color)
