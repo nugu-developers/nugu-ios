@@ -44,7 +44,9 @@ final class DisplayWeatherView: DisplayView {
             titleLabel.text = displayItem.title.text.text
             titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)
 
+            // Set location info
             locationButton.setTitle(displayItem.title.subtext?.text, for: .normal)
+            locationButton.setTitleColor(UIColor.textColor(rgbHexString: displayItem.title.subtext?.color), for: .normal)
             
             backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
             
@@ -55,6 +57,7 @@ final class DisplayWeatherView: DisplayView {
                 logoImageView.isHidden = true
             }
 
+            // Set weather info and image
             weatherLabel.text = displayItem.content.header?.text ?? "-"
             weatherLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.header?.color)
             
@@ -64,6 +67,7 @@ final class DisplayWeatherView: DisplayView {
                 weatherImageView.image = nil
             }
             
+            // Set tempertature infos
             if let currentTemperature = displayItem.content.temperature?.current {
                 currentTemperatureLabel.text = currentTemperature.text
                 currentTemperatureLabel.textColor = UIColor.textColor(rgbHexString: currentTemperature.color)
@@ -78,6 +82,7 @@ final class DisplayWeatherView: DisplayView {
             maxTemperatureLabel.text = displayItem.content.temperature?.max?.text
             maxTemperatureLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.temperature?.max?.color)
             
+            // Set additional weather infos with html typed string
             if let bodyTextData = displayItem.content.body.text.data(using: .utf8),
                 let attributedBodyText = try? NSAttributedString(
                     data: bodyTextData,
@@ -91,6 +96,7 @@ final class DisplayWeatherView: DisplayView {
                 additionalWeatherInfoLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.body.color)
             }
             
+            // Set further weather infos and images
             displayItem.content.listItems?.enumerated().forEach({ (index, item) in
                 if furtherWeatherLabels.indices.contains(index) {
                     furtherWeatherLabels[index].text = item.header?.text
