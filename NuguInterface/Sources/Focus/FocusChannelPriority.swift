@@ -23,19 +23,19 @@ import Foundation
 /// The priority of the channel used by the `FocusManager` to create `Channel` objects.
 ///
 /// Use a initializer if you want to create priorities directly in application.
-/// The predetermined focus channel includes `recognition`(priority = 100), `information`(priority = 200) and `content`(priority = 300).
+/// The predetermined focus channel includes `recognition`(priority = 300), `information`(priority = 200) and `content`(priority = 100).
 public struct FocusChannelPriority: RawRepresentable {
     public typealias RawValue = Int
     
     /// The `rawValue` is priority of the channel
     public var rawValue: Int
     
-    /// A priority of `recognition` channel is 100
-    public static let recognition = FocusChannelPriority(rawValue: 100)
+    /// A priority of `recognition` channel is 300
+    public static let recognition = FocusChannelPriority(rawValue: 300)
     /// A priority of `information` channel is 200
     public static let information = FocusChannelPriority(rawValue: 200)
-    /// A priority of `content` channel is 300
-    public static let content = FocusChannelPriority(rawValue: 300)
+    /// A priority of `content` channel is 100
+    public static let content = FocusChannelPriority(rawValue: 100)
 
     public init(rawValue: Int) {
         self.rawValue = rawValue
