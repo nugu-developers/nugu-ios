@@ -45,7 +45,8 @@ SpeakerVolumeDelegate {
     func requestTTS(text: String, playServiceId: String?, handler: ((TTSResult) -> Void)?)
     
     /// Stops playback
-    func stopTTS(cancelAssociated: Bool)
+    /// - Parameter cancelAssociation: true: cancel all associated directives, false : only stop tts
+    func stopTTS(cancelAssociation: Bool)
 }
 
 // MARK: - Optional
@@ -60,6 +61,6 @@ public extension TTSAgentProtocol {
     
     /// Stops playback
     func stopTTS() {
-        stopTTS(cancelAssociated: true)
+        stopTTS(cancelAssociation: true)
     }
 }
