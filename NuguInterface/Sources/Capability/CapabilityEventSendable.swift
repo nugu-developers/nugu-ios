@@ -30,11 +30,13 @@ public protocol CapabilityEventSendable: CapabilityConfigurable {
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
+    /// - Parameter resultHandler: <#resultHandler description#>
     func sendEvent(_ event: Event,
                    contextPayload: ContextPayload,
                    dialogRequestId: String,
                    by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)?)
+                   completion: ((Result<Data, Error>) -> Void)?,
+                   resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?)
 }
 
 // MARK: - Optional
@@ -46,17 +48,19 @@ public extension CapabilityEventSendable {
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
+    /// - Parameter resultHandler: <#resultHandler description#>
     func sendEvent(_ event: Event,
                    context: ContextInfo?,
                    dialogRequestId: String,
                    by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)? = nil) {
+                   completion: ((Result<Data, Error>) -> Void)? = nil,
+                   resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
         let contextPayload = ContextPayload(
             supportedInterfaces: context != nil ? [context!] : [],
             client: []
         )
         
-        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, by: upstreamDataSender, completion: completion)
+        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, by: upstreamDataSender, completion: completion, resultHandler: resultHandler)
     }
     
     /// <#Description#>
@@ -65,11 +69,13 @@ public extension CapabilityEventSendable {
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
+    /// - Parameter resultHandler: <#resultHandler description#>
     func sendEvent(_ event: Event,
                    contextPayload: ContextPayload,
                    dialogRequestId: String,
                    by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)? = nil) {
+                   completion: ((Result<Data, Error>) -> Void)? = nil,
+                   resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
         let header = UpstreamHeader(
             namespace: capabilityAgentProperty.name,
             name: event.name,
@@ -83,6 +89,6 @@ public extension CapabilityEventSendable {
             contextPayload: contextPayload
         )
         
-        upstreamDataSender.send(upstreamEventMessage: eventMessage, completion: completion)
+        upstreamDataSender.send(upstreamEventMessage: eventMessage, completion: completion, resultHandler: resultHandler)
     }
 }

@@ -22,11 +22,16 @@ import Foundation
 
 import NuguInterface
 
+import RxSwift
+
 public class StreamDataRouter: StreamDataRoutable {
     private let delegates = DelegateSet<DownstreamDataDelegate>()
     private var preprocessors = [DownstreamDataPreprocessable]()
     
     private let networkManager: NetworkManageable
+    
+    private let disposeBag = DisposeBag()
+    private let directiveSubject = PublishSubject<Downstream.Directive>()
     
     public init(networkManager: NetworkManageable) {
         self.networkManager = networkManager
@@ -56,10 +61,11 @@ extension StreamDataRouter: ReceiveMessageDelegate {
                 return
             }
             let directivies = directiveArray
-                .compactMap { Downstream.Directive(directiveDictionary: $0) }
-                .compactMap { preprocess(message: $0) }
+                .compactMap(Downstream.Directive.init(directiveDictionary:))
+                .compactMap(preprocess)
             
             directivies.forEach { directive in
+                directiveSubject.onNext(directive)
                 delegates.notify { delegate in
                     delegate.downstreamDataDidReceive(directive: directive)
                 }
@@ -79,7 +85,11 @@ extension StreamDataRouter: ReceiveMessageDelegate {
 // MARK: - UpstreamDataSendable
 
 extension StreamDataRouter: UpstreamDataSendable {
-    public func send(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Data, Error>) -> Void)?) {
+    public func send(
+        upstreamEventMessage: UpstreamEventMessage,
+        completion: ((Result<Data, Error>) -> Void)?,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
+    ) {
         guard let apiProvider = networkManager.apiProvider else {
             completion?(.failure(NetworkError.unavailable))
             return
@@ -101,6 +111,18 @@ extension StreamDataRouter: UpstreamDataSendable {
             bodyData: bodyData,
             queryItems: [:]
         )
+        if let resultHandler = resultHandler {
+            directiveSubject
+                .filter { $0.header.dialogRequestId == upstreamEventMessage.header.dialogRequestId }
+                .take(1)
+                .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                .do(onNext: { directive in
+                    resultHandler(.success(directive))
+                }, onError: { error in
+                    resultHandler(.failure(error))
+                })
+                .subscribe().disposed(by: disposeBag)
+        }
         apiProvider.request(with: request, completion: completion)
     }
     
