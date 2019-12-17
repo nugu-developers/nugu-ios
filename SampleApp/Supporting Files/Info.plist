@@ -30,6 +30,16 @@
 				<string>nugu.public.sample</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>app.sample.sdk.ios</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nugu.user.app.sample.sdk.ios</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
@@ -44,6 +54,10 @@
 	<string>현재 위치 정보를 사용합니다.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>For Speech Recognition</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

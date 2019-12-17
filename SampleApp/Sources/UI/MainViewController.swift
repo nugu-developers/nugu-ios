@@ -63,13 +63,6 @@ final class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(didEnterBackground(_:)),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(didBecomeActive(_:)),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
@@ -130,13 +123,6 @@ final class MainViewController: UIViewController {
     func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
         NuguCentralManager.shared.stopWakeUpDetector()
-    }
-    
-    /// Catch entering background notification to disable nugu service
-    /// It is possible to keep connected even on background, but need careful attention for battery issues, audio interruptions and so on
-    /// - Parameter notification: UIApplication.didBecomeActiveNotification
-    func didEnterBackground(_ notification: Notification) {
-        NuguCentralManager.shared.disable()
     }
     
     /// Catch becoming active notification to refresh mic status & Nugu button
