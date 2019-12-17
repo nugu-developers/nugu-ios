@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol CapabilityEventSendable: CapabilityConfigurable {
+public protocol CapabilityEventSendable {
     associatedtype Event: Eventable
     
     /// <#Description#>
@@ -33,6 +33,7 @@ public protocol CapabilityEventSendable: CapabilityConfigurable {
     func sendEvent(_ event: Event,
                    contextPayload: ContextPayload,
                    dialogRequestId: String,
+                   property: CapabilityAgentProperty,
                    by upstreamDataSender: UpstreamDataSendable,
                    completion: ((Result<Data, Error>) -> Void)?)
 }
@@ -49,6 +50,7 @@ public extension CapabilityEventSendable {
     func sendEvent(_ event: Event,
                    context: ContextInfo?,
                    dialogRequestId: String,
+                   property: CapabilityAgentProperty,
                    by upstreamDataSender: UpstreamDataSendable,
                    completion: ((Result<Data, Error>) -> Void)? = nil) {
         let contextPayload = ContextPayload(
@@ -56,7 +58,7 @@ public extension CapabilityEventSendable {
             client: []
         )
         
-        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, by: upstreamDataSender, completion: completion)
+        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, property: property, by: upstreamDataSender, completion: completion)
     }
     
     /// <#Description#>
@@ -68,12 +70,13 @@ public extension CapabilityEventSendable {
     func sendEvent(_ event: Event,
                    contextPayload: ContextPayload,
                    dialogRequestId: String,
+                   property: CapabilityAgentProperty,
                    by upstreamDataSender: UpstreamDataSendable,
                    completion: ((Result<Data, Error>) -> Void)? = nil) {
         let header = UpstreamHeader(
-            namespace: capabilityAgentProperty.name,
+            namespace: property.name,
             name: event.name,
-            version: capabilityAgentProperty.version,
+            version: property.version,
             dialogRequestId: dialogRequestId
         )
         

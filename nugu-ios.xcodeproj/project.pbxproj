@@ -104,7 +104,6 @@
 		1FFFF2C52375703000C9A177 /* ASRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2552375703000C9A177 /* ASRError.swift */; };
 		1FFFF2C62375703000C9A177 /* ASRAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2562375703000C9A177 /* ASRAgentProtocol.swift */; };
 		1FFFF2C72375703100C9A177 /* ASRResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2572375703000C9A177 /* ASRResult.swift */; };
-		1FFFF2C82375703100C9A177 /* CapabilityConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */; };
 		1FFFF2C92375703100C9A177 /* SystemAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25A2375703000C9A177 /* SystemAgentProtocol.swift */; };
 		1FFFF2CA2375703100C9A177 /* SystemAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25B2375703000C9A177 /* SystemAgentDelegate.swift */; };
 		1FFFF2CB2375703100C9A177 /* CapabilityAgentCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */; };
@@ -625,7 +624,6 @@
 		1FFFF2552375703000C9A177 /* ASRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRError.swift; sourceTree = "<group>"; };
 		1FFFF2562375703000C9A177 /* ASRAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF2572375703000C9A177 /* ASRResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRResult.swift; sourceTree = "<group>"; };
-		1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityConfigurable.swift; sourceTree = "<group>"; };
 		1FFFF25A2375703000C9A177 /* SystemAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF25B2375703000C9A177 /* SystemAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityAgentCategory.swift; sourceTree = "<group>"; };
@@ -1335,7 +1333,6 @@
 				1FFFF2682375703000C9A177 /* Text */,
 				1FFFF24D2375703000C9A177 /* Location */,
 				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
-				1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */,
 				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
 				1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */,
 				1FFFF25D2375703000C9A177 /* CapabilityEventSendable.swift */,
@@ -2930,7 +2927,6 @@
 				1FFFF2B42375703000C9A177 /* ExtensionAgentProtocol.swift in Sources */,
 				1FFFF2B22375703000C9A177 /* CapabilityAgentProperty.swift in Sources */,
 				1FFFF2DB2375703100C9A177 /* NetworkStatusDelegate.swift in Sources */,
-				1FFFF2C82375703100C9A177 /* CapabilityConfigurable.swift in Sources */,
 				1FFFF2FE2375703100C9A177 /* EndPointDetectable.swift in Sources */,
 				1FFFF2B12375703000C9A177 /* DelegateSet.swift in Sources */,
 				1FFFF2B02375703000C9A177 /* DelegateDictionary.swift in Sources */,

@@ -128,6 +128,7 @@ public extension TTSAgent {
                 event,
                 context: self.contextInfoRequestContext(),
                 dialogRequestId: dialogRequestId,
+                property: self.capabilityAgentProperty,
                 by: self.upstreamDataSender
             )
             
@@ -452,6 +453,7 @@ private extension TTSAgent {
             ),
             context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
+            property: capabilityAgentProperty,
             by: upstreamDataSender
         )
     }

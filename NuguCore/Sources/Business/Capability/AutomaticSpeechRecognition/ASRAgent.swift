@@ -106,7 +106,7 @@ final public class ASRAgent: ASRAgentProtocol {
                 case .listeningTimeout:
                     sendEvent(event: .listenTimeout)
                 case .listenFailed:
-                    sendEvent(event: .listenFailed, dialogRequestId: asrRequest.dialogRequestId)
+                    sendEvent(event: .listenFailed)
                 case .recognizeFailed:
                     break
                 }
@@ -503,6 +503,7 @@ private extension ASRAgent {
             Event(typeInfo: eventTypeInfo, expectSpeech: currentExpectSpeech),
             contextPayload: asrRequest.contextPayload,
             dialogRequestId: asrRequest.dialogRequestId,
+            property: capabilityAgentProperty,
             by: upstreamDataSender,
             completion: completion
         )
@@ -551,14 +552,11 @@ private extension ASRAgent {
             return
         }
         
-        sendEvent(event: event, dialogRequestId: asrRequest.dialogRequestId)
-    }
-    
-    func sendEvent(event: ASRAgent.Event.TypeInfo, dialogRequestId: String) {
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
             context: contextInfoRequestContext(),
-            dialogRequestId: dialogRequestId,
+            dialogRequestId: asrRequest.dialogRequestId,
+            property: capabilityAgentProperty,
             by: upstreamDataSender
         )
     }

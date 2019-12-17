@@ -218,6 +218,7 @@ private extension TextAgent {
             Event(typeInfo: .textInput(text: textRequest.text), expectSpeech: dialogStateAggregator.expectSpeech),
             contextPayload: textRequest.contextPayload,
             dialogRequestId: textRequest.dialogRequestId,
+            property: capabilityAgentProperty,
             by: upstreamDataSender
         )
     }

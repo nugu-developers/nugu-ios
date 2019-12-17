@@ -83,6 +83,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                         event,
                         context: self.contextInfoRequestContext(),
                         dialogRequestId: TimeUUID().hexString,
+                        property: self.capabilityAgentProperty,
                         by: self.upstreamDataSender
                     )
             })

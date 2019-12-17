@@ -484,6 +484,7 @@ private extension AudioPlayerAgent {
             ),
             context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
+            property: capabilityAgentProperty,
             by: upstreamDataSender
         )
     }
