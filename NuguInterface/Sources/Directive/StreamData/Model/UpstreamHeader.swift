@@ -32,14 +32,6 @@ public struct UpstreamHeader {
     /// - Parameter namespace: <#namespace description#>
     /// - Parameter name: <#name description#>
     /// - Parameter version: <#version description#>
-    public init(namespace: String, name: String, version: String) {
-        self.init(namespace: namespace, name: name, version: version, dialogRequestId: "")
-    }
-    
-    /// <#Description#>
-    /// - Parameter namespace: <#namespace description#>
-    /// - Parameter name: <#name description#>
-    /// - Parameter version: <#version description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
     public init(namespace: String, name: String, version: String, dialogRequestId: String) {
         self.namespace = namespace

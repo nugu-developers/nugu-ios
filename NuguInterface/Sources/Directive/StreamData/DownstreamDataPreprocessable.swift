@@ -1,5 +1,5 @@
 //
-//  DownStreamDataPreprocessable.swift
+//  DownstreamDataPreprocessable.swift
 //  NuguInterface
 //
 //  Created by MinChul Lee on 2019/11/25.
@@ -20,6 +20,6 @@
 
 import Foundation
 
-public protocol DownStreamDataPreprocessable {
-    func preprocess<T>(message: T) -> T? where T: DownStreamMessageable
+public protocol DownstreamDataPreprocessable {
+    func preprocess<T>(message: T) -> T? where T: DownstreamMessageable
 }

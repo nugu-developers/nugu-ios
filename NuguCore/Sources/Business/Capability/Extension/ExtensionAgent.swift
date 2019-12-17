@@ -25,14 +25,14 @@ import NuguInterface
 final public class ExtensionAgent: ExtensionAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
     
-    private let messageSender: MessageSendable
+    private let upstreamDataSender: UpstreamDataSendable
     
     public weak var delegate: ExtensionAgentDelegate?
     
-    public init(messageSender: MessageSendable) {
+    public init(upstreamDataSender: UpstreamDataSendable) {
         log.info("")
         
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
     }
     
     deinit {
@@ -48,7 +48,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
         guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
             completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Unknown directive")))
@@ -83,7 +83,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                         event,
                         context: self.contextInfoRequestContext(),
                         dialogRequestId: TimeUUID().hexString,
-                        by: self.messageSender
+                        by: self.upstreamDataSender
                     )
             })
             

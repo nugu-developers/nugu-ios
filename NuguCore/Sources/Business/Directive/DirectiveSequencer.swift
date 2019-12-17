@@ -25,21 +25,21 @@ import NuguInterface
 import RxSwift
 
 public class DirectiveSequencer: DirectiveSequenceable {
-    private let messageSender: MessageSendable
+    private let upstreamDataSender: UpstreamDataSendable
     
     private var handleDirectiveDelegates = DelegateDictionary<String, HandleDirectiveDelegate>()
 
-    private let prefetchDirectiveSubject = PublishSubject<DownStream.Directive>()
-    private let handleDirectiveSubject = PublishSubject<DownStream.Directive>()
+    private let prefetchDirectiveSubject = PublishSubject<Downstream.Directive>()
+    private let handleDirectiveSubject = PublishSubject<Downstream.Directive>()
     
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
 
     private let disposeBag = DisposeBag()
 
-    public init(messageSender: MessageSendable) {
+    public init(upstreamDataSender: UpstreamDataSendable) {
         log.debug("")
         
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
 
         prefetchDirective()
         handleDirective()
@@ -73,13 +73,13 @@ extension DirectiveSequencer {
     }
 }
 
-// MARK: - DownStreamDataDelegate
+// MARK: - DownstreamDataDelegate
 
-extension DirectiveSequencer: DownStreamDataDelegate {
-    public func downStreamDataDidReceive(directive: DownStream.Directive) {
+extension DirectiveSequencer: DownstreamDataDelegate {
+    public func downstreamDataDidReceive(directive: Downstream.Directive) {
         log.info("\(directive.header.messageId)")
         guard handleDirectiveDelegates[directive.header.type] != nil else {
-            messageSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: directive.header.type))
+            upstreamDataSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: directive.header.type))
             log.warning("No handler registered \(directive.header.messageId)")
             return
         }
@@ -87,10 +87,10 @@ extension DirectiveSequencer: DownStreamDataDelegate {
         prefetchDirectiveSubject.onNext(directive)
     }
     
-    public func downStreamDataDidReceive(attachment: DownStream.Attachment) {
+    public func downstreamDataDidReceive(attachment: Downstream.Attachment) {
         log.info("\(attachment.header.messageId)")
         guard let handler = handleDirectiveDelegates[attachment.header.type] else {
-            messageSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: attachment.header.type))
+            upstreamDataSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: attachment.header.type))
             log.warning("No handler registered \(attachment.header.messageId)")
             return
         }
@@ -130,13 +130,13 @@ private extension DirectiveSequencer {
                     case .success:
                         self.handleDirectiveSubject.onNext(directive)
                     case .failure(let error):
-                        self.messageSender.sendCrashReport(error: error)
+                        self.upstreamDataSender.sendCrashReport(error: error)
                         log.error(error)
                     }
                 })
             })
             .do(onError: { [weak self] error in
-                self?.messageSender.sendCrashReport(error: error)
+                self?.upstreamDataSender.sendCrashReport(error: error)
                 log.error(error)
             })
             .retry()
@@ -151,7 +151,7 @@ private extension DirectiveSequencer {
         )
         
         var handlingTypeInfos = [DirectiveTypeInforable]()
-        var blockedDirectives = [DirectiveMedium: [DownStream.Directive]]()
+        var blockedDirectives = [DirectiveMedium: [Downstream.Directive]]()
         for medium in DirectiveMedium.allCases {
             blockedDirectives[medium] = []
         }
@@ -193,12 +193,12 @@ private extension DirectiveSequencer {
                 handler.handleDirective(directive) { [weak self] result in
                     remove(typeInfo)
                     if case .failure(let error) = result {
-                        self?.messageSender.sendCrashReport(error: error)
+                        self?.upstreamDataSender.sendCrashReport(error: error)
                         log.error(error)
                     }
                 }
             }, onError: { [weak self] error in
-                self?.messageSender.sendCrashReport(error: error)
+                self?.upstreamDataSender.sendCrashReport(error: error)
                 log.error(error)
             })
             .retry()
