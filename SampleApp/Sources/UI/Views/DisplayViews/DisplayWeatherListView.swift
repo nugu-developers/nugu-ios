@@ -47,8 +47,7 @@ final class DisplayWeatherListView: DisplayView {
             locationButton.setTitleColor(UIColor.textColor(rgbHexString: displayItem.title.subtext?.color), for: .normal)
 
             weatherListItems = displayItem.content.listItems
-            tableView.reloadData()
-            
+            tableView.reloadData()            
         }
     }
 

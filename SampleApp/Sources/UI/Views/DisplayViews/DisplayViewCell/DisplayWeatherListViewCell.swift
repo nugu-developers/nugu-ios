@@ -30,7 +30,6 @@ final class DisplayWeatherListViewCell: UITableViewCell {
     @IBOutlet private weak var maxTemperatureLabel: UILabel!
     
     func configure(item: DisplayWeatherListTemplate.Content.Item?) {
-        
         weatherTitleLabel.text = item?.header?.text ?? "-"
         weatherTitleLabel.textColor = UIColor.textColor(rgbHexString: item?.header?.color)
         
