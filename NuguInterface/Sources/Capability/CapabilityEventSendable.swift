@@ -28,6 +28,7 @@ public protocol CapabilityEventSendable {
     /// - Parameter event: <#event description#>
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
+    /// - Parameter property: <#property description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
     func sendEvent(_ event: Event,
@@ -45,6 +46,7 @@ public extension CapabilityEventSendable {
     /// - Parameter event: <#event description#>
     /// - Parameter context: <#contexts description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
+    /// - Parameter property: <#property description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
     func sendEvent(_ event: Event,
@@ -65,6 +67,7 @@ public extension CapabilityEventSendable {
     /// - Parameter event: <#event description#>
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
+    /// - Parameter property: <#property description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
     func sendEvent(_ event: Event,
