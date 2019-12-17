@@ -584,7 +584,7 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentDidRender(template: DisplayTemplate) -> NSObject? {
+    func displayAgentDidRender(template: DisplayTemplate) -> Any? {
         return addDisplayView(displayTemplate: template)
     }
     
@@ -601,7 +601,7 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
