@@ -141,9 +141,8 @@ public extension TTSAgent {
         }
     }
     
-    func stopTTS(cancelAssociated: Bool) {
-        currentMedia?.cancelAssociated = cancelAssociated
-        stop()
+    func stopTTS(cancelAssociation: Bool) {
+        stop(cancelAssociation: cancelAssociation)
     }
 }
 
@@ -184,7 +183,7 @@ extension TTSAgent: HandleDirectiveDelegate {
             // Speak 는 재생 완료 후 handler 호출
             play(directive: directive, completionHandler: completionHandler)
         case .stop:
-            completionHandler(stop())
+            completionHandler(stop(cancelAssociation: true))
         }
     }
     
@@ -234,12 +233,12 @@ extension TTSAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             case (.background, .playing):
-                self.stop()
+                self.stop(cancelAssociation: false)
             // background. idle, stopped, finished 무시
             case (.background, _):
                 break
             case (.nothing, .playing):
-                self.stop()
+                self.stop(cancelAssociation: false)
             // none. idle/stopped/finished 무시
             case (.nothing, _):
                 break
@@ -286,7 +285,7 @@ extension TTSAgent: MediaPlayerDelegate {
                 media.player.stop()
             case .stop:
                 self.ttsResultSubject.onNext(
-                    (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociated: media.cancelAssociated))
+                    (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
                 )
                 self.ttsState = .stopped
             case .bufferUnderrun:
@@ -409,12 +408,13 @@ private extension TTSAgent {
         }
     }
     
-    @discardableResult func stop() -> Result<Void, Error> {
+    @discardableResult func stop(cancelAssociation: Bool) -> Result<Void, Error> {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self, let media = self.currentMedia else { return }
+            self.currentMedia?.cancelAssociation = cancelAssociation
 
             media.player.stop()
-            if media.cancelAssociated == true {
+            if cancelAssociation == true {
                 self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
             }
         }
@@ -428,7 +428,7 @@ private extension TTSAgent {
         media.player.stop()
         sendEvent(info: .speechStopped)
         ttsResultSubject.onNext(
-            (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociated: media.cancelAssociated))
+            (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
         )
         ttsState = .stopped
     }
