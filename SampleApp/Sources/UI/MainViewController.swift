@@ -157,7 +157,7 @@ private extension MainViewController {
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
         // Set AudioSession
-        NuguAudioSessionManager.allowMixWithOthers()
+        NuguAudioSessionManager.shared.allowMixWithOthers()
         
         // Add delegates
         NuguCentralManager.shared.client.networkManager.add(statusDelegate: self)

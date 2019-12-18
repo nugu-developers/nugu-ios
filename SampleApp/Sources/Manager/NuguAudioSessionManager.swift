@@ -20,15 +20,54 @@
 
 import AVFoundation
 
-struct NuguAudioSessionManager {
+final class NuguAudioSessionManager {
     
-    static func requestRecordPermission(_ response: @escaping PermissionBlock) {
+    static let shared = NuguAudioSessionManager()
+    
+    @objc private func interruptionNotification(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+                return
+        }
+        switch type {
+        case .began:
+            // Interruption began, take appropriate actions
+            NuguCentralManager.shared.client.audioPlayerAgent?.pause()
+            allowMixWithOthers()
+        case .ended:
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    NuguCentralManager.shared.client.audioPlayerAgent?.play()
+                } else {
+                    // Interruption Ended - playback should NOT resume
+                }
+            }
+        @unknown default: break
+        }
+    }
+}
+
+// MARK: - Internal
+
+extension NuguAudioSessionManager {
+    
+    func observeAVAudioSessionInterruptionNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(interruptionNotification(_ :)), name: AVAudioSession.interruptionNotification, object: nil)
+    }
+    
+    func removeObservingAVAudioSessionInterruptionNotification() {
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
+    }
+    
+    func requestRecordPermission(_ response: @escaping PermissionBlock) {
         AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
             response(isGranted)
         }
     }
     
-    static func allowMixWithOthers() {
+    func allowMixWithOthers() {
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
@@ -41,11 +80,9 @@ struct NuguAudioSessionManager {
         }
     }
     
-    @discardableResult static func setAudioSession() -> Bool {
-        // check whether other application is playing audio to disable mixWithOthers option
+    @discardableResult func setAudioSession() -> Bool {
         // if mixWithOthers option is already included, resetting audioSession is unnecessary
-        guard AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint == true,
-            AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == true else {
+        guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == true else {
                 return true
         }
         do {
@@ -62,12 +99,7 @@ struct NuguAudioSessionManager {
         }
     }
     
-    static func nofifyAudioSessionDeactivationAndRecover() {
-        // check whether mixWithOthers option is included or not,
-        // to determine secondaryAudio has been interrupted or not
-        // if not, calling notifyOthersOnDeactivation is unnecessary
-        guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == false else { return }
-        
+    func nofifyAudioSessionDeactivationAndRecover() {
         // clean up all I/O before deactivating audioSession
         NuguCentralManager.shared.stopWakeUpDetector()
         if NuguCentralManager.shared.client.inputProvider.isRunning == true {

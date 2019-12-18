@@ -51,11 +51,13 @@ final class NuguCentralManager {
 
 extension NuguCentralManager {
     func enable(accessToken: String) {
+        NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
         client.accessToken = accessToken
         client.networkManager.connect()
     }
     
     func disable() {
+        NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
         client.focusManager.stopForegroundActivity()
         client.networkManager.disconnect()
         client.accessToken = nil
@@ -219,7 +221,7 @@ private extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startRecognize(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
@@ -262,7 +264,7 @@ extension NuguCentralManager {
     }
     
     func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
@@ -314,11 +316,11 @@ extension NuguCentralManager {
 
 extension NuguCentralManager: FocusDelegate {
     func focusShouldAcquire() -> Bool {
-        return NuguAudioSessionManager.setAudioSession()
+        return NuguAudioSessionManager.shared.setAudioSession()
     }
     
     func focusShouldRelease() {
-        NuguAudioSessionManager.nofifyAudioSessionDeactivationAndRecover()
+        NuguAudioSessionManager.shared.nofifyAudioSessionDeactivationAndRecover()
     }
 }
 
