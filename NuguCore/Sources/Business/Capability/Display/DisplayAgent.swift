@@ -85,6 +85,7 @@ public extension DisplayAgent {
                     )),
                 context: self.contextInfoRequestContext(),
                 dialogRequestId: TimeUUID().hexString,
+                property: self.capabilityAgentProperty,
                 by: self.upstreamDataSender
             )
         }

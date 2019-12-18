@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguInterface
+
 /// <#Description#>
 public protocol CapabilityEventSendable {
     associatedtype Event: Eventable

@@ -138,6 +138,7 @@ private extension SpeakerAgent {
                     Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
                     context: self.contextInfoRequestContext(),
                     dialogRequestId: TimeUUID().hexString,
+                    property: self.capabilityAgentProperty,
                     by: self.upstreamDataSender
                 )
             }

@@ -104,11 +104,9 @@
 		1FFFF2C52375703000C9A177 /* ASRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2552375703000C9A177 /* ASRError.swift */; };
 		1FFFF2C62375703000C9A177 /* ASRAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2562375703000C9A177 /* ASRAgentProtocol.swift */; };
 		1FFFF2C72375703100C9A177 /* ASRResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2572375703000C9A177 /* ASRResult.swift */; };
-		1FFFF2C82375703100C9A177 /* CapabilityConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */; };
 		1FFFF2C92375703100C9A177 /* SystemAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25A2375703000C9A177 /* SystemAgentProtocol.swift */; };
 		1FFFF2CA2375703100C9A177 /* SystemAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25B2375703000C9A177 /* SystemAgentDelegate.swift */; };
 		1FFFF2CB2375703100C9A177 /* CapabilityAgentCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */; };
-		1FFFF2CC2375703100C9A177 /* CapabilityEventSendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25D2375703000C9A177 /* CapabilityEventSendable.swift */; };
 		1FFFF2CD2375703100C9A177 /* TTSState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25F2375703000C9A177 /* TTSState.swift */; };
 		1FFFF2CE2375703100C9A177 /* TTSResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2602375703000C9A177 /* TTSResult.swift */; };
 		1FFFF2CF2375703100C9A177 /* TTSAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2612375703000C9A177 /* TTSAgentDelegate.swift */; };
@@ -336,6 +334,7 @@
 		73454FBD2382C1E50073AF48 /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
 		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
 		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
+		7382C87A23A8F6A800CFB536 /* CapabilityEventSendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25D2375703000C9A177 /* CapabilityEventSendable.swift */; };
 		7E26C57E239FBF1300716E44 /* NuguApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C57D239FBF1300716E44 /* NuguApiRequest.swift */; };
 		7E26C57F239FC2E300716E44 /* NuguApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3642375707000C9A177 /* NuguApi.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
@@ -630,7 +629,6 @@
 		1FFFF2552375703000C9A177 /* ASRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRError.swift; sourceTree = "<group>"; };
 		1FFFF2562375703000C9A177 /* ASRAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF2572375703000C9A177 /* ASRResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRResult.swift; sourceTree = "<group>"; };
-		1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityConfigurable.swift; sourceTree = "<group>"; };
 		1FFFF25A2375703000C9A177 /* SystemAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF25B2375703000C9A177 /* SystemAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityAgentCategory.swift; sourceTree = "<group>"; };
@@ -1345,10 +1343,8 @@
 				1FFFF2682375703000C9A177 /* Text */,
 				1FFFF24D2375703000C9A177 /* Location */,
 				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
-				1FFFF2582375703000C9A177 /* CapabilityConfigurable.swift */,
 				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
 				1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */,
-				1FFFF25D2375703000C9A177 /* CapabilityEventSendable.swift */,
 			);
 			path = Capability;
 			sourceTree = "<group>";
@@ -1659,6 +1655,7 @@
 			children = (
 				1FFFF3292375707000C9A177 /* Context */,
 				1FFFF32B2375707000C9A177 /* Capability */,
+				1FFFF25D2375703000C9A177 /* CapabilityEventSendable.swift */,
 				1FFFF35D2375707000C9A177 /* Network */,
 				1FFFF3692375707000C9A177 /* PlaySync */,
 				1FFFF36C2375707000C9A177 /* Focus */,
@@ -2947,7 +2944,6 @@
 				1FFFF2B42375703000C9A177 /* ExtensionAgentProtocol.swift in Sources */,
 				1FFFF2B22375703000C9A177 /* CapabilityAgentProperty.swift in Sources */,
 				1FFFF2DB2375703100C9A177 /* NetworkStatusDelegate.swift in Sources */,
-				1FFFF2C82375703100C9A177 /* CapabilityConfigurable.swift in Sources */,
 				1FFFF2FE2375703100C9A177 /* EndPointDetectable.swift in Sources */,
 				1FFFF2B12375703000C9A177 /* DelegateSet.swift in Sources */,
 				1FFFF2B02375703000C9A177 /* DelegateDictionary.swift in Sources */,
@@ -2994,7 +2990,6 @@
 				1FFFF3022375703100C9A177 /* AuthorizationManageable.swift in Sources */,
 				1FFFF2F12375703100C9A177 /* FocusChannelDelegate.swift in Sources */,
 				1FFFF2AA2375703000C9A177 /* MediaPlayable.swift in Sources */,
-				1FFFF2CC2375703100C9A177 /* CapabilityEventSendable.swift in Sources */,
 				1FFFF2C02375703000C9A177 /* LocationAgentDelegate.swift in Sources */,
 				1FFFF2AE2375703000C9A177 /* ContextInfoDelegate.swift in Sources */,
 				1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */,
@@ -3019,6 +3014,7 @@
 				1FFFF3C62375707100C9A177 /* FocusChannelInfo.swift in Sources */,
 				1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */,
 				1FFFF3B52375707100C9A177 /* DisplayAgent+Directive.swift in Sources */,
+				7382C87A23A8F6A800CFB536 /* CapabilityEventSendable.swift in Sources */,
 				1FFFF3BE2375707100C9A177 /* NuguApiProvider.swift in Sources */,
 				1FFFF3CD2375707100C9A177 /* NuguConfiguration.swift in Sources */,
 				1FFFF3B42375707100C9A177 /* DisplayRenderingInfo.swift in Sources */,
