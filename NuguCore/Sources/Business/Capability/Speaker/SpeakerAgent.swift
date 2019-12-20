@@ -25,13 +25,17 @@ import NuguInterface
 import RxSwift
 
 final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .speaker, version: "1.0")
     
-    private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
-    
+    // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
     
+    // SpeakerAgentProtocol
     public weak var delegate: SpeakerAgentDelegate?
+    
+    // Private
+    private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
     public init(upstreamDataSender: UpstreamDataSendable) {

@@ -25,14 +25,8 @@ import NuguInterface
 import RxSwift
 
 final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
-    
-    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
-    
-    private let contextManager: ContextManageable
-    private let audioStream: AudioStreamable
-    private let endPointDetector: EndPointDetectable
-    private let dialogStateAggregator: DialogStateAggregatable
     
     // CapabilityFocusAgentable
     public let focusManager: FocusManageable
@@ -41,8 +35,18 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
     
-    private let asrDelegates = DelegateSet<ASRAgentDelegate>()
+    // WakeUpInfoDelegate(KeenSense)
     public weak var wakeUpInfoDelegate: WakeUpInfoDelegate?
+    
+    // Private
+    private let contextManager: ContextManageable
+    private let audioStream: AudioStreamable
+    private let endPointDetector: EndPointDetectable
+    private let dialogStateAggregator: DialogStateAggregatable
+    
+    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
+    
+    private let asrDelegates = DelegateSet<ASRAgentDelegate>()
     
     private var focusState: FocusState = .nothing
     private var asrState: ASRState = .idle {

@@ -25,12 +25,8 @@ import NuguInterface
 import RxSwift
 
 final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
-    
-    private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
-    
-    private let playSyncManager: PlaySyncManageable
-    private let mediaPlayerFactory: MediaPlayerFactory
     
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
@@ -38,6 +34,12 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
     // CapabilityFocusAgentable
     public let focusManager: FocusManageable
     public let channelPriority: FocusChannelPriority
+    
+    // Private
+    private let playSyncManager: PlaySyncManageable
+    private let mediaPlayerFactory: MediaPlayerFactory
+    
+    private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
     
@@ -61,6 +63,7 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
             }
         }
     }
+    
     private let ttsResultSubject = PublishSubject<(dialogRequestId: String, result: TTSResult)>()
     
     // Current play Info

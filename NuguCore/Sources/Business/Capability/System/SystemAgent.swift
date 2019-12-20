@@ -23,13 +23,17 @@ import Foundation
 import NuguInterface
 
 final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.0")
     
-    private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
+    // Private
     private let contextManager: ContextManageable
     private let networkManager: NetworkManageable
-    public let upstreamDataSender: UpstreamDataSendable
+    
+    private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
     private var serverPolicy: Policy.ServerPolicy?
     private var dialogState: DialogState = .idle

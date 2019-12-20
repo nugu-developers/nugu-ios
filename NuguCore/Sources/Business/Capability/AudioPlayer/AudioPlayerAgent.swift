@@ -25,16 +25,8 @@ import NuguInterface
 import RxSwift
 
 final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
-    
-    private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
-    private lazy var audioPlayerScheduler = SerialDispatchQueueScheduler(
-        queue: audioPlayerDispatchQueue,
-        internalSerialQueueName: "com.sktelecom.romaine.audioplayer_agent_timer"
-    )
-    
-    private let mediaPlayerFactory: MediaPlayerFactory
-    private let playSyncManager: PlaySyncManageable
     
     // CapabilityFocusAgentable
     public let focusManager: FocusManageable
@@ -43,11 +35,8 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
     
-    private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
     
     // AudioPlayerAgentProtocol
-    private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
-    
     public var offset: Int? {
         return currentMedia?.player.offset.truncatedSeconds
     }
@@ -55,6 +44,18 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
     public var duration: Int? {
         return currentMedia?.player.duration.truncatedSeconds
     }
+     
+    // Private
+    private let mediaPlayerFactory: MediaPlayerFactory
+    private let playSyncManager: PlaySyncManageable
+    private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
+    private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
+    
+    private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
+    private lazy var audioPlayerScheduler = SerialDispatchQueueScheduler(
+        queue: audioPlayerDispatchQueue,
+        internalSerialQueueName: "com.sktelecom.romaine.audioplayer_agent_timer"
+    )
     
     private var focusState: FocusState = .nothing
     private var audioPlayerState: AudioPlayerState = .idle {

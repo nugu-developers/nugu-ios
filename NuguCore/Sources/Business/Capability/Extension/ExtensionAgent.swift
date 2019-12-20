@@ -23,10 +23,13 @@ import Foundation
 import NuguInterface
 
 final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
     
+    // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
     
+    // ExtensionAgentProtocol
     public weak var delegate: ExtensionAgentDelegate?
     
     public init(upstreamDataSender: UpstreamDataSendable) {

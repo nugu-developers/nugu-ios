@@ -25,12 +25,16 @@ import NuguInterface
 import RxSwift
 
 final public class DisplayAgent: DisplayAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.1")
     
-    private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
-    
-    private let playSyncManager: PlaySyncManageable
+    // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
+    
+    // Private
+    private let playSyncManager: PlaySyncManageable
+    
+    private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     
     private var renderingInfos = [DisplayRenderingInfo]()
     private var timerInfos = [String: Bool]()
