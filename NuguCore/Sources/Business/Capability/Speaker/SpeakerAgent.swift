@@ -130,9 +130,9 @@ private extension SpeakerAgent {
 
                 let succeeded = results.allSatisfy { $0 }
                 let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
+                
                 self.sendEvent(
                     Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
-                    context: self.contextInfoRequestContext(),
                     dialogRequestId: TimeUUID().hexString
                 )
             }

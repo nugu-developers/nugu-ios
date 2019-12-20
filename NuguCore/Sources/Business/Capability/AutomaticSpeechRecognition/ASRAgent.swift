@@ -548,7 +548,6 @@ private extension ASRAgent {
         
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
-            context: contextInfoRequestContext(),
             dialogRequestId: asrRequest.dialogRequestId
         )
     }

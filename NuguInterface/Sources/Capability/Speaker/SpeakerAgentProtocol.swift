@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol SpeakerAgentProtocol: class {
+public protocol SpeakerAgentProtocol: CapabilityAgentable {
     /// <#Description#>
     var delegate: SpeakerAgentDelegate? { get set }
     

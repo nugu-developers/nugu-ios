@@ -478,7 +478,6 @@ private extension AudioPlayerAgent {
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
             ),
-            context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString
         )
     }

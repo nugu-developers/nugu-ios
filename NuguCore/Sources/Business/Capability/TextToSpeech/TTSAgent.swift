@@ -126,7 +126,6 @@ public extension TTSAgent {
             let dialogRequestId = TimeUUID().hexString
             self.sendEvent(
                 event,
-                context: self.contextInfoRequestContext(),
                 dialogRequestId: dialogRequestId
             )
             
@@ -445,7 +444,6 @@ private extension TTSAgent {
                 playServiceId: playServiceId,
                 typeInfo: info
             ),
-            context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString
         )
     }

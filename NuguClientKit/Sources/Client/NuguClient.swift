@@ -73,19 +73,19 @@ public class NuguClient: NuguClientContainer {
     )
     
     /// <#Description#>
-    public private(set) lazy var asrAgent: (ASRAgentProtocol & CapabilityAgentable)? = capabilityAgentFactory.makeASRAgent(container: self)
+    public private(set) lazy var asrAgent: ASRAgentProtocol? = capabilityAgentFactory.makeASRAgent(container: self)
     /// <#Description#>
-    public private(set) lazy var ttsAgent: (TTSAgentProtocol & CapabilityAgentable)? = capabilityAgentFactory.makeTTSAgent(container: self)
+    public private(set) lazy var ttsAgent: TTSAgentProtocol? = capabilityAgentFactory.makeTTSAgent(container: self)
     /// <#Description#>
-    public private(set) lazy var audioPlayerAgent: (AudioPlayerAgentProtocol & CapabilityAgentable)? = capabilityAgentFactory.makeAudioPlayerAgent(container: self)
+    public private(set) lazy var audioPlayerAgent: AudioPlayerAgentProtocol? = capabilityAgentFactory.makeAudioPlayerAgent(container: self)
     /// <#Description#>
-    public private(set) lazy var displayAgent: (DisplayAgentProtocol & CapabilityAgentable)? = capabilityAgentFactory.makeDisplayAgent(container: self)
+    public private(set) lazy var displayAgent: DisplayAgentProtocol? = capabilityAgentFactory.makeDisplayAgent(container: self)
     /// <#Description#>
-    public private(set) lazy var textAgent: (TextAgentProtocol & CapabilityAgentable)? = capabilityAgentFactory.makeTextAgent(container: self)
+    public private(set) lazy var textAgent: TextAgentProtocol? = capabilityAgentFactory.makeTextAgent(container: self)
     /// <#Description#>
-    public private(set) lazy var extensionAgent: (ExtensionAgentProtocol & CapabilityAgentable)? = capabilityAgentFactory.makeExtensionAgent(container: self)
+    public private(set) lazy var extensionAgent: ExtensionAgentProtocol? = capabilityAgentFactory.makeExtensionAgent(container: self)
     /// <#Description#>
-    public private(set) lazy var locationAgent: (LocationAgentProtocol & CapabilityAgentable)? = capabilityAgentFactory.makeLocationAgent(container: self)
+    public private(set) lazy var locationAgent: LocationAgentProtocol? = capabilityAgentFactory.makeLocationAgent(container: self)
     
     /// <#Description#>
     /// - Parameter authorizationManager: <#authorizationManager description#>

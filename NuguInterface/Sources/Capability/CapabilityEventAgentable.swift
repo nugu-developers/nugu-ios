@@ -23,19 +23,20 @@ import Foundation
 public protocol CapabilityEventAgentable: CapabilityAgentable {
     associatedtype Event: Eventable
     
+    /// <#Description#>
     var upstreamDataSender: UpstreamDataSendable { get }
     
     /// <#Description#>
     /// - Parameter event: <#event description#>
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter property: <#property description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
-    func sendEvent(_ event: Event,
-                   contextPayload: ContextPayload,
-                   dialogRequestId: String,
-                   completion: ((Result<Data, Error>) -> Void)?)
+    func sendEvent(
+        _ event: Event,
+        contextPayload: ContextPayload,
+        dialogRequestId: String,
+        completion: ((Result<Data, Error>) -> Void)?
+    )
 }
 
 // MARK: - Default
@@ -43,17 +44,15 @@ public protocol CapabilityEventAgentable: CapabilityAgentable {
 public extension CapabilityEventAgentable {
     /// <#Description#>
     /// - Parameter event: <#event description#>
-    /// - Parameter context: <#contexts description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter property: <#property description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
-    func sendEvent(_ event: Event,
-                   context: ContextInfo?,
-                   dialogRequestId: String,
-                   completion: ((Result<Data, Error>) -> Void)? = nil) {
+    func sendEvent(
+        _ event: Event,
+        dialogRequestId: String,
+        completion: ((Result<Data, Error>) -> Void)? = nil
+    ) {
         let contextPayload = ContextPayload(
-            supportedInterfaces: context != nil ? [context!] : [],
+            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
             client: []
         )
         
@@ -64,13 +63,13 @@ public extension CapabilityEventAgentable {
     /// - Parameter event: <#event description#>
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter property: <#property description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
-    func sendEvent(_ event: Event,
-                   contextPayload: ContextPayload,
-                   dialogRequestId: String,
-                   completion: ((Result<Data, Error>) -> Void)? = nil) {
+    func sendEvent(
+        _ event: Event,
+        contextPayload: ContextPayload,
+        dialogRequestId: String,
+        completion: ((Result<Data, Error>) -> Void)? = nil
+    ) {
         let header = UpstreamHeader(
             namespace: capabilityAgentProperty.name,
             name: event.name,

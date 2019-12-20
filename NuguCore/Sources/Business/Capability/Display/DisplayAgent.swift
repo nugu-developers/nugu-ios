@@ -83,7 +83,6 @@ public extension DisplayAgent {
                         playServiceId: template.playServiceId,
                         token: token
                     )),
-                context: self.contextInfoRequestContext(),
                 dialogRequestId: TimeUUID().hexString
             )
         }

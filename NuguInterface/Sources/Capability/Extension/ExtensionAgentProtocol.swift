@@ -21,7 +21,7 @@
 import Foundation
 
 /// Extension-agent handles directives that not defined by other capability-agents
-public protocol ExtensionAgentProtocol: class {
+public protocol ExtensionAgentProtocol: CapabilityAgentable {
     /// The object that acts as the delegate of extension-agent
     var delegate: ExtensionAgentDelegate? { get set }
 }
