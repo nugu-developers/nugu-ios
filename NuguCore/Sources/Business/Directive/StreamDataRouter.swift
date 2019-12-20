@@ -172,14 +172,7 @@ extension Downstream.Attachment {
                 return nil
         }
         
-        self.init(
-            header: header,
-            seq: fileSequence,
-            content: body,
-            isEnd: fileInfo[1] == "end",
-            parentMessageId: parentMessageId,
-            mediaType: mediaType
-        )
+        self.init(header: header, seq: fileSequence, content: body, isEnd: fileInfo[1] == "end", parentMessageId: parentMessageId, mediaType: mediaType)
     }
 }
 
@@ -211,13 +204,6 @@ extension Downstream.Header {
                 return nil
         }
         
-        self.init(
-            namespace: namespace,
-            name: name,
-            dialogRequestId: dialogRequestId,
-            referrerDialogRequestId: headerDictionary["Referrer-Dialog-Request-Id"],
-            messageId: "",
-            version: version
-        )
+        self.init(namespace: namespace, name: name, dialogRequestId: dialogRequestId, messageId: "", version: version)
     }
 }
