@@ -1,8 +1,8 @@
 //
-//  CapabilityDirectiveAgentable.swift
+//  CapabilityFocusAgentable.swift
 //  NuguInterface
 //
-//  Created by yonghoonKwon on 2019/12/19.
+//  Created by yonghoonKwon on 2019/12/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,16 +20,15 @@
 
 import Foundation
 
-public protocol CapabilityDirectiveAgentable: CapabilityAgentable, HandleDirectiveDelegate {
-    // CHECK-ME: var storedDirective: Downstream.Directive? { get }
-    
-    associatedtype DirectiveTypeInfo: DirectiveTypeInforable, CaseIterable
+public protocol CapabilityFocusAgentable: CapabilityAgentable, FocusChannelDelegate {
+    var focusManager: FocusManageable { get }
+    var channelPriority: FocusChannelPriority { get }
 }
 
-// MARK: - Default HandleDirectiveDelegate
+// MARK: - Default FocusChannelDelegate
 
-extension CapabilityDirectiveAgentable {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        DirectiveTypeInfo.allDictionaryCases
+extension CapabilityFocusAgentable {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        channelPriority
     }
 }

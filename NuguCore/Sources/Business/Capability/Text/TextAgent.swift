@@ -24,16 +24,21 @@ import NuguInterface
 
 import RxSwift
 
-final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable {
+final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, CapabilityFocusAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
     private let contextManager: ContextManageable
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
+    
     private let dialogStateAggregator: DialogStateAggregatable
+    
+    // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
+    
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
     
     private let delegates = DelegateSet<TextAgentDelegate>()
     
@@ -130,10 +135,6 @@ extension TextAgent: ContextInfoDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TextAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(textAgentState)")
         self.focusState = focusState

@@ -54,6 +54,7 @@
 		1F2E80402397A2E500569C59 /* WakeUpDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* WakeUpDetectorDelegate.swift */; };
 		1FD1CFE223AB7D060000FB8C /* CapabilityDirectiveAgentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE123AB7D060000FB8C /* CapabilityDirectiveAgentable.swift */; };
 		1FD1CFE423AB7D1D0000FB8C /* CapabilityEventAgentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE323AB7D1D0000FB8C /* CapabilityEventAgentable.swift */; };
+		1FD1CFE623ACC0FE0000FB8C /* CapabilityFocusAgentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE523ACC0FE0000FB8C /* CapabilityFocusAgentable.swift */; };
 		1FD4A97823A0C1DF002EB56D /* NuguClientContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4A97723A0C1DF002EB56D /* NuguClientContainer.swift */; };
 		1FD4A97A23A0C297002EB56D /* CapabilityAgentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4A97923A0C297002EB56D /* CapabilityAgentFactory.swift */; };
 		1FD4A97C23A0C2FD002EB56D /* NuguClientKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4A97B23A0C2FD002EB56D /* NuguClientKit.swift */; };
@@ -565,6 +566,7 @@
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFE123AB7D060000FB8C /* CapabilityDirectiveAgentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityDirectiveAgentable.swift; sourceTree = "<group>"; };
 		1FD1CFE323AB7D1D0000FB8C /* CapabilityEventAgentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityEventAgentable.swift; sourceTree = "<group>"; };
+		1FD1CFE523ACC0FE0000FB8C /* CapabilityFocusAgentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityFocusAgentable.swift; sourceTree = "<group>"; };
 		1FD4A97723A0C1DF002EB56D /* NuguClientContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguClientContainer.swift; sourceTree = "<group>"; };
 		1FD4A97923A0C297002EB56D /* CapabilityAgentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityAgentFactory.swift; sourceTree = "<group>"; };
 		1FD4A97B23A0C2FD002EB56D /* NuguClientKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguClientKit.swift; sourceTree = "<group>"; };
@@ -1347,6 +1349,7 @@
 				1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */,
 				1FD1CFE123AB7D060000FB8C /* CapabilityDirectiveAgentable.swift */,
 				1FD1CFE323AB7D1D0000FB8C /* CapabilityEventAgentable.swift */,
+				1FD1CFE523ACC0FE0000FB8C /* CapabilityFocusAgentable.swift */,
 				1FFFF25C2375703000C9A177 /* CapabilityAgentCategory.swift */,
 				1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */,
 			);
@@ -2930,6 +2933,7 @@
 				1FFFF2D92375703100C9A177 /* TextAgentDelegate.swift in Sources */,
 				1FFFF2F52375703100C9A177 /* DialogStateAggregatable.swift in Sources */,
 				1FFFF3032375703100C9A177 /* AuthorizationError.swift in Sources */,
+				1FD1CFE623ACC0FE0000FB8C /* CapabilityFocusAgentable.swift in Sources */,
 				1FFFF2AD2375703000C9A177 /* ContextInfo.swift in Sources */,
 				1FFFF2BF2375703000C9A177 /* LocationAgentProtocol.swift in Sources */,
 				1FFFF2C72375703100C9A177 /* ASRResult.swift in Sources */,

@@ -24,16 +24,20 @@ import NuguInterface
 
 import RxSwift
 
-final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
     
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
-    private let mediaPlayerFactory: MediaPlayerFactory
-    public let upstreamDataSender: UpstreamDataSendable
     private let playSyncManager: PlaySyncManageable
+    private let mediaPlayerFactory: MediaPlayerFactory
+    
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
+    
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
     
@@ -209,10 +213,6 @@ extension TTSAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TTSAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(ttsState)")
         self.focusState = focusState

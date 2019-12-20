@@ -24,17 +24,21 @@ import NuguInterface
 
 import RxSwift
 
-final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
     private let contextManager: ContextManageable
     private let audioStream: AudioStreamable
     private let endPointDetector: EndPointDetectable
     private let dialogStateAggregator: DialogStateAggregatable
+    
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
+    
+    // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
     
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
@@ -77,6 +81,7 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
             }
         }
     }
+    
     private var asrResult: ASRResult = .none {
         didSet {
             log.info("\(asrResult)")
@@ -272,10 +277,6 @@ extension ASRAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension ASRAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("Focus:\(focusState) ASR:\(asrState)")
         self.focusState = focusState
@@ -583,11 +584,13 @@ private extension ASRAgent {
             return expectTimeout / 1000
         }
         
-        endPointDetector.start(inputStream: asrRequest.reader,
-                               sampleRate: ASRConst.sampleRate,
-                               timeout: timeout,
-                               maxDuration: ASRConst.maxDuration,
-                               pauseLength: ASRConst.pauseLength)
+        endPointDetector.start(
+            inputStream: asrRequest.reader,
+            sampleRate: ASRConst.sampleRate,
+            timeout: timeout,
+            maxDuration: ASRConst.maxDuration,
+            pauseLength: ASRConst.pauseLength
+        )
         
         asrState = .listening
         

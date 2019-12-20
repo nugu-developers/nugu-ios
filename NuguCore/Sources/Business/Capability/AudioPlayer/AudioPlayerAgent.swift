@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
     
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
@@ -33,10 +33,14 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
         internalSerialQueueName: "com.sktelecom.romaine.audioplayer_agent_timer"
     )
     
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
     private let mediaPlayerFactory: MediaPlayerFactory
     private let playSyncManager: PlaySyncManageable
+    
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
+    
+    // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
     
     private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
@@ -280,10 +284,6 @@ extension AudioPlayerAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension AudioPlayerAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(audioPlayerState)")
         self.focusState = focusState
