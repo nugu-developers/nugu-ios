@@ -32,9 +32,7 @@ final class NuguAudioSessionManager {
     @objc private func interruptionNotification(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
             let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
-                return
-        }
+            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
         switch type {
         case .began:
             // Interruption began, take appropriate actions
@@ -108,19 +106,6 @@ extension NuguAudioSessionManager {
             return false
         }
     }
-    
-    func allowMixWithOthers() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            log.debug("addingMixWithOthers failed: \(error)")
-        }
-    }
      
     func nofifyAudioSessionDeactivationAndRecover() {
         // clean up all I/O before deactivating audioSession
@@ -137,6 +122,23 @@ extension NuguAudioSessionManager {
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         } catch {
             log.debug("notifyOthersOnDeactivation failed: \(error)")
+        }
+    }
+}
+
+// MARK: - private
+
+private extension NuguAudioSessionManager {
+    func allowMixWithOthers() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                .playAndRecord,
+                mode: .default,
+                options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP]
+            )
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            log.debug("addingMixWithOthers failed: \(error)")
         }
     }
 }

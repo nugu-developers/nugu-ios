@@ -30,16 +30,6 @@
 				<string>nugu.public.sample</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>app.sample.sdk.ios</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>nugu.user.app.sample.sdk.ios</string>
-			</array>
-		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
