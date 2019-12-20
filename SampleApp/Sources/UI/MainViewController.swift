@@ -157,7 +157,7 @@ private extension MainViewController {
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
         // Set AudioSession
-        NuguAudioSessionManager.shared.allowMixWithOthers()
+        NuguAudioSessionManager.shared.initializeAudioSession()
         
         // Add delegates
         NuguCentralManager.shared.client.networkManager.add(statusDelegate: self)
@@ -607,9 +607,16 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState) {
+        NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
         DispatchQueue.main.async { [weak self] in
-            guard let self = self,
-                let displayAudioPlayerView = self.displayAudioPlayerView else { return }
+            guard let self = self else { return }
+            switch state {
+            case .paused, .playing:
+                NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
+            case .idle, .finished, .stopped:
+                NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
+            }
+            guard let displayAudioPlayerView = self.displayAudioPlayerView else { return }
             displayAudioPlayerView.audioPlayerState = state
         }
     }

@@ -51,13 +51,11 @@ final class NuguCentralManager {
 
 extension NuguCentralManager {
     func enable(accessToken: String) {
-        NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
         client.accessToken = accessToken
         client.networkManager.connect()
     }
     
     func disable() {
-        NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
         client.focusManager.stopForegroundActivity()
         client.networkManager.disconnect()
         client.accessToken = nil

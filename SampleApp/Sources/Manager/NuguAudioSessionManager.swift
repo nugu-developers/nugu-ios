@@ -21,8 +21,13 @@
 import AVFoundation
 
 final class NuguAudioSessionManager {
-    
     static let shared = NuguAudioSessionManager()
+    
+    /// NUGU Service should set AudioSession.Category as .playAndRecord for recording voice and playing media
+    /// Setting AudioSession.Category as .playAndRecord leads you to stop on going 3rd party app's music player
+    /// To avoid 3rd party app's music player being stopped, application should append .mixWithOthers option to AudioSession.CategoryOptions
+    /// To support mixWithOthersOption, simply change following value to 'true'
+    private let supportMixWithOthersOption = false
     
     @objc private func interruptionNotification(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
@@ -34,7 +39,9 @@ final class NuguAudioSessionManager {
         case .began:
             // Interruption began, take appropriate actions
             NuguCentralManager.shared.client.audioPlayerAgent?.pause()
-            allowMixWithOthers()
+            if supportMixWithOthersOption == true {
+                allowMixWithOthers()
+            }
         case .ended:
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
@@ -52,8 +59,8 @@ final class NuguAudioSessionManager {
 // MARK: - Internal
 
 extension NuguAudioSessionManager {
-    
     func observeAVAudioSessionInterruptionNotification() {
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(interruptionNotification(_ :)), name: AVAudioSession.interruptionNotification, object: nil)
     }
     
@@ -64,6 +71,41 @@ extension NuguAudioSessionManager {
     func requestRecordPermission(_ response: @escaping PermissionBlock) {
         AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
             response(isGranted)
+        }
+    }
+    
+    func initializeAudioSession() {
+        if supportMixWithOthersOption == true {
+            allowMixWithOthers()
+        } else {
+            setAudioSession()
+        }
+    }
+    
+    @discardableResult func setAudioSession() -> Bool {
+        if supportMixWithOthersOption == true {
+            // if mixWithOthers option is already included, resetting audioSession is unnecessary
+            guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == true else {
+                return true
+            }
+        } else {
+            // if category is already .playAndRecord, resetting audioSession is unnecessary
+            guard AVAudioSession.sharedInstance().category != .playAndRecord else {
+                return true
+            }
+        }
+
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                .playAndRecord,
+                mode: .default,
+                options: [.defaultToSpeaker, .allowBluetoothA2DP]
+            )
+            try AVAudioSession.sharedInstance().setActive(true)
+            return true
+        } catch {
+            log.debug("setCategory failed: \(error)")
+            return false
         }
     }
     
@@ -79,27 +121,9 @@ extension NuguAudioSessionManager {
             log.debug("addingMixWithOthers failed: \(error)")
         }
     }
-    
-    @discardableResult func setAudioSession() -> Bool {
-        // if mixWithOthers option is already included, resetting audioSession is unnecessary
-        guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == true else {
-                return true
-        }
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-            return true
-        } catch {
-            log.debug("setCategory failed: \(error)")
-            return false
-        }
-    }
-    
+     
     func nofifyAudioSessionDeactivationAndRecover() {
+        guard supportMixWithOthersOption == true else { return }
         // clean up all I/O before deactivating audioSession
         NuguCentralManager.shared.stopWakeUpDetector()
         if NuguCentralManager.shared.client.inputProvider.isRunning == true {
