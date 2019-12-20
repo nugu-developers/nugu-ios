@@ -318,6 +318,8 @@ extension NuguCentralManager: FocusDelegate {
     }
     
     func focusShouldRelease() {
+        // notifyOthersOnDeactivation is unnecessory when .mixWithOthers option is off
+        guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
         NuguAudioSessionManager.shared.nofifyAudioSessionDeactivationAndRecover()
     }
 }

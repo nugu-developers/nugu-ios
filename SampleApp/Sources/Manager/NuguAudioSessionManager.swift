@@ -27,7 +27,7 @@ final class NuguAudioSessionManager {
     /// Setting AudioSession.Category as .playAndRecord leads you to stop on going 3rd party app's music player
     /// To avoid 3rd party app's music player being stopped, application should append .mixWithOthers option to AudioSession.CategoryOptions
     /// To support mixWithOthersOption, simply change following value to 'true'
-    private let supportMixWithOthersOption = false
+    let supportMixWithOthersOption = false
     
     @objc private func interruptionNotification(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
@@ -123,7 +123,6 @@ extension NuguAudioSessionManager {
     }
      
     func nofifyAudioSessionDeactivationAndRecover() {
-        guard supportMixWithOthersOption == true else { return }
         // clean up all I/O before deactivating audioSession
         NuguCentralManager.shared.stopWakeUpDetector()
         if NuguCentralManager.shared.client.inputProvider.isRunning == true {
