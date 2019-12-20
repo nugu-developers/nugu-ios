@@ -22,7 +22,7 @@ import Foundation
 
 import NuguInterface
 
-final public class LocationAgent: LocationAgentProtocol {
+final public class LocationAgent: LocationAgentProtocol, CapabilityAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .location, version: "1.0")
     
     public weak var delegate: LocationAgentDelegate?

@@ -24,18 +24,18 @@ import NuguInterface
 
 import RxSwift
 
-final public class ASRAgent: ASRAgentProtocol {
+final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
     private let focusManager: FocusManageable
     private let channelPriority: FocusChannelPriority
-    private let upstreamDataSender: UpstreamDataSendable
     private let contextManager: ContextManageable
     private let audioStream: AudioStreamable
     private let endPointDetector: EndPointDetectable
     private let dialogStateAggregator: DialogStateAggregatable
+    public let upstreamDataSender: UpstreamDataSendable
     
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
     public weak var wakeUpInfoDelegate: WakeUpInfoDelegate?
@@ -234,10 +234,6 @@ public extension ASRAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension ASRAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirectivePrefetch(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -503,8 +499,6 @@ private extension ASRAgent {
             Event(typeInfo: eventTypeInfo, expectSpeech: currentExpectSpeech),
             contextPayload: asrRequest.contextPayload,
             dialogRequestId: asrRequest.dialogRequestId,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender,
             completion: completion
         )
 
@@ -555,9 +549,7 @@ private extension ASRAgent {
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
             context: contextInfoRequestContext(),
-            dialogRequestId: asrRequest.dialogRequestId,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender
+            dialogRequestId: asrRequest.dialogRequestId
         )
     }
 }

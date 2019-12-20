@@ -22,10 +22,10 @@ import Foundation
 
 import NuguInterface
 
-final public class ExtensionAgent: ExtensionAgentProtocol {
+final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
     
-    private let upstreamDataSender: UpstreamDataSendable
+    public let upstreamDataSender: UpstreamDataSendable
     
     public weak var delegate: ExtensionAgentDelegate?
     
@@ -42,11 +42,7 @@ final public class ExtensionAgent: ExtensionAgentProtocol {
 
 // MARK: - HandleDirectiveDelegate
 
-extension ExtensionAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
+extension ExtensionAgent: HandleDirectiveDelegate {    
     public func handleDirective(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
@@ -82,9 +78,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                     self.sendEvent(
                         event,
                         context: self.contextInfoRequestContext(),
-                        dialogRequestId: TimeUUID().hexString,
-                        property: self.capabilityAgentProperty,
-                        by: self.upstreamDataSender
+                        dialogRequestId: TimeUUID().hexString
                     )
             })
             

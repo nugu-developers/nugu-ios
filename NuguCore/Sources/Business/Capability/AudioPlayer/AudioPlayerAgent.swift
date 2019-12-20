@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
+final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
     
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
@@ -36,8 +36,8 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private let focusManager: FocusManageable
     private let channelPriority: FocusChannelPriority
     private let mediaPlayerFactory: MediaPlayerFactory
-    private let upstreamDataSender: UpstreamDataSendable
     private let playSyncManager: PlaySyncManageable
+    public let upstreamDataSender: UpstreamDataSendable
     
     private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
     
@@ -237,10 +237,6 @@ public extension AudioPlayerAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension AudioPlayerAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirectivePrefetch(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
@@ -483,9 +479,7 @@ private extension AudioPlayerAgent {
                 typeInfo: typeInfo
             ),
             context: contextInfoRequestContext(),
-            dialogRequestId: TimeUUID().hexString,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender
+            dialogRequestId: TimeUUID().hexString
         )
     }
 }

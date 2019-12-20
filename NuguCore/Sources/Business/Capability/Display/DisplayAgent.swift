@@ -24,13 +24,13 @@ import NuguInterface
 
 import RxSwift
 
-final public class DisplayAgent: DisplayAgentProtocol {
+final public class DisplayAgent: DisplayAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.1")
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     
-    private let upstreamDataSender: UpstreamDataSendable
     private let playSyncManager: PlaySyncManageable
+    public let upstreamDataSender: UpstreamDataSendable
     
     private var renderingInfos = [DisplayRenderingInfo]()
     private var timerInfos = [String: Bool]()
@@ -84,9 +84,7 @@ public extension DisplayAgent {
                         token: token
                     )),
                 context: self.contextInfoRequestContext(),
-                dialogRequestId: TimeUUID().hexString,
-                property: self.capabilityAgentProperty,
-                by: self.upstreamDataSender
+                dialogRequestId: TimeUUID().hexString
             )
         }
     }
@@ -99,10 +97,6 @@ public extension DisplayAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension DisplayAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirective(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void

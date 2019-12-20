@@ -35,16 +35,24 @@ extension NuguClient {
         dialogStateAggregator.add(delegate: focusManager)
         
         // Setup capability-agents
-        setupASRAgentDependency()
-        setupTTSAgentDependency()
-        setupAudioPlayerAgentDependency()
-        setupDisplayAgentDependency()
-        setupSystemAgentDependency()
-        setupTextAgentDependency()
-        setupExtensionAgentDependency()
-        setupLocationAgentDependency()
+        let capabilityAgents: [CapabilityAgentable?] = [
+            asrAgent,
+            ttsAgent,
+            audioPlayerAgent,
+            displayAgent,
+            textAgent,
+            extensionAgent,
+            locationAgent
+        ]
         
-        // Setup core
+        capabilityAgents
+            .compactMap({ $0 })
+            .forEach({ setupCapabilityAgentDependency($0) })
+        
+        setupDialogStateAggregatorDependency()
+        setupDownstreamDataTimeoutPreprocessorDependency()
+        setupAuthorizationManagerDependency()
+        
         setupAudioStreamDependency()
         setupWakeUpDetectorDependency()
     }
@@ -53,80 +61,55 @@ extension NuguClient {
 // MARK: - Capability-Agents (Optional)
 
 extension NuguClient {
-    func setupASRAgentDependency() {
-        guard let agent = asrAgent else { return }
+    func setupCapabilityAgentDependency(_ agent: CapabilityAgentable) {
+        // ContextInfoDelegate
+        contextManager.add(provideContextDelegate: agent)
         
-        directiveSequencer.add(handleDirectiveDelegate: agent)
-        contextManager.add(provideContextDelegate: agent)
-        focusManager.add(channelDelegate: agent)
-        streamDataRouter.add(delegate: agent)
-        agent.add(delegate: dialogStateAggregator)
-        agent.add(delegate: downstreamDataTimeoutPreprocessor)
-    }
-    
-    func setupTTSAgentDependency() {
-        guard let agent = ttsAgent else { return }
+        // HandleDirectiveDelegate
+        if let agent = agent as? HandleDirectiveDelegate {
+            directiveSequencer.add(handleDirectiveDelegate: agent)
+        }
         
-        directiveSequencer.add(handleDirectiveDelegate: agent)
-        contextManager.add(provideContextDelegate: agent)
-        focusManager.add(channelDelegate: agent)
-        agent.add(delegate: dialogStateAggregator)
-    }
-    
-    func setupAudioPlayerAgentDependency() {
-        guard let agent = audioPlayerAgent else { return }
-
-        directiveSequencer.add(handleDirectiveDelegate: agent)
-        contextManager.add(provideContextDelegate: agent)
-        focusManager.add(channelDelegate: agent)
-    }
-    
-    func setupDisplayAgentDependency() {
-        guard let agent = displayAgent else { return }
-
-        directiveSequencer.add(handleDirectiveDelegate: agent)
-        contextManager.add(provideContextDelegate: agent)
-    }
-    
-    func setupTextAgentDependency() {
-        guard let agent = textAgent else { return }
+        // FocusChannelDelegate
+        if let agent = agent as? FocusChannelDelegate {
+            focusManager.add(channelDelegate: agent)
+        }
         
-        contextManager.add(provideContextDelegate: agent)
-        streamDataRouter.add(delegate: agent)
-        focusManager.add(channelDelegate: agent)
-        agent.add(delegate: dialogStateAggregator)
-        agent.add(delegate: downstreamDataTimeoutPreprocessor)
-    }
-    
-    func setupExtensionAgentDependency() {
-        guard let agent = extensionAgent else { return }
+        // DownstreamDataDelegate
+        if let agent = agent as? DownstreamDataDelegate {
+            streamDataRouter.add(delegate: agent)
+        }
         
-        directiveSequencer.add(handleDirectiveDelegate: agent)
-        contextManager.add(provideContextDelegate: agent)
-    }
-    
-    func setupLocationAgentDependency() {
-        guard let agent = locationAgent else { return }
+        // NetworkStatusDelegate
+        if let agent = agent as? NetworkStatusDelegate {
+            networkManager.add(statusDelegate: agent)
+        }
         
-        contextManager.add(provideContextDelegate: agent)
-    }
-}
-
-// MARK: - Capability-Agents (Mandatory)
-
-extension NuguClient {
-    func setupSystemAgentDependency() {
-        directiveSequencer.add(handleDirectiveDelegate: systemAgent)
-        contextManager.add(provideContextDelegate: systemAgent)
-        networkManager.add(statusDelegate: systemAgent)
-        dialogStateAggregator.add(delegate: systemAgent)
-        systemAgent.add(systemAgentDelegate: authorizationManager)
+        // DialogStateDelegate
+        if let agent = agent as? DialogStateDelegate {
+            dialogStateAggregator.add(delegate: agent)
+        }
     }
 }
 
 // MARK: - Core
 
 extension NuguClient {
+    func setupDialogStateAggregatorDependency() {
+        asrAgent?.add(delegate: dialogStateAggregator)
+        ttsAgent?.add(delegate: dialogStateAggregator)
+        textAgent?.add(delegate: dialogStateAggregator)
+    }
+    
+    func setupDownstreamDataTimeoutPreprocessorDependency() {
+        asrAgent?.add(delegate: downstreamDataTimeoutPreprocessor)
+        textAgent?.add(delegate: downstreamDataTimeoutPreprocessor)
+    }
+    
+    func setupAuthorizationManagerDependency() {
+        systemAgent.add(systemAgentDelegate: authorizationManager)
+    }
+    
     func setupAudioStreamDependency() {
         guard let audioStream = sharedAudioStream as? AudioStream else { return }
         

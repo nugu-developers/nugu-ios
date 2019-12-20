@@ -21,11 +21,7 @@
 import Foundation
 
 /// Text-agent is needed to send event-based text recognition.
-public protocol TextAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-FocusChannelDelegate,
-DownstreamDataDelegate {
+public protocol TextAgentProtocol: class {
     /// Adds a delegate to be notified of `TextAgentState` and `TextAgentResult` changes.
     /// - Parameter delegate: The delegate object to add.
     func add(delegate: TextAgentDelegate)

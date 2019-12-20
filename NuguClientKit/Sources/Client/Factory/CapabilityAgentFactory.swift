@@ -27,29 +27,29 @@ public protocol CapabilityAgentFactory {
     
     /// <#Description#>
     /// - Parameter container: <#container description#>
-    func makeASRAgent(container: NuguClientContainer) -> ASRAgentProtocol?
+    func makeASRAgent(container: NuguClientContainer) -> (ASRAgentProtocol & CapabilityAgentable)?
     
     /// <#Description#>
     /// - Parameter container: <#container description#>
-    func makeTTSAgent(container: NuguClientContainer) -> TTSAgentProtocol?
+    func makeTTSAgent(container: NuguClientContainer) -> (TTSAgentProtocol & CapabilityAgentable)?
     
     /// <#Description#>
     /// - Parameter container: <#container description#>
-    func makeAudioPlayerAgent(container: NuguClientContainer) -> AudioPlayerAgentProtocol?
+    func makeAudioPlayerAgent(container: NuguClientContainer) -> (AudioPlayerAgentProtocol & CapabilityAgentable)?
     
     /// <#Description#>
     /// - Parameter container: <#container description#>
-    func makeDisplayAgent(container: NuguClientContainer) -> DisplayAgentProtocol?
+    func makeDisplayAgent(container: NuguClientContainer) -> (DisplayAgentProtocol & CapabilityAgentable)?
     
     /// <#Description#>
     /// - Parameter container: <#container description#>
-    func makeTextAgent(container: NuguClientContainer) -> TextAgentProtocol?
+    func makeTextAgent(container: NuguClientContainer) -> (TextAgentProtocol & CapabilityAgentable)?
     
     /// <#Description#>
     /// - Parameter container: <#container description#>
-    func makeExtensionAgent(container: NuguClientContainer) -> ExtensionAgentProtocol?
+    func makeExtensionAgent(container: NuguClientContainer) -> (ExtensionAgentProtocol & CapabilityAgentable)?
     
     /// <#Description#>
     /// - Parameter container: <#container description#>
-    func makeLocationAgent(container: NuguClientContainer) -> LocationAgentProtocol?
+    func makeLocationAgent(container: NuguClientContainer) -> (LocationAgentProtocol & CapabilityAgentable)?
 }

@@ -1,8 +1,8 @@
 //
-//  ExtensionAgentProtocol.swift
+//  CapabilityDirectiveAgentable.swift
 //  NuguInterface
 //
-//  Created by yonghoonKwon on 25/07/2019.
+//  Created by yonghoonKwon on 2019/12/19.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,14 @@
 
 import Foundation
 
-/// Extension-agent handles directives that not defined by other capability-agents
-public protocol ExtensionAgentProtocol: class {
-    /// The object that acts as the delegate of extension-agent
-    var delegate: ExtensionAgentDelegate? { get set }
+public protocol CapabilityDirectiveAgentable: CapabilityAgentable, HandleDirectiveDelegate {
+    // CHECK-ME: var storedDirective: Downstream.Directive? { get }
+    
+    associatedtype DirectiveTypeInfo: DirectiveTypeInforable, CaseIterable
+}
+
+extension CapabilityDirectiveAgentable {
+    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
+        DirectiveTypeInfo.allDictionaryCases
+    }
 }

@@ -21,13 +21,7 @@
 import Foundation
 
 /// The `TTSAgent` handles directives for controlling speech playback.
-public protocol TTSAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-FocusChannelDelegate,
-HandleDirectiveDelegate,
-PlaySyncDelegate,
-SpeakerVolumeDelegate {
+public protocol TTSAgentProtocol: class {
     /// Adds a delegate to be notified of `TTSState` changes.
     ///
     /// - Parameter delegate: The object to add.

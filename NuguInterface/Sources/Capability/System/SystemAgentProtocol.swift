@@ -22,12 +22,7 @@ import Foundation
 
 /// System-agent is responsible agent for the utilities of the system in the nugu.
 /// This agent is mandatory in SDK.
-public protocol SystemAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-NetworkStatusDelegate,
-HandleDirectiveDelegate,
-DialogStateDelegate {
+public protocol SystemAgentProtocol: class {
     /// <#Description#>
     /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
     func add(systemAgentDelegate: SystemAgentDelegate)

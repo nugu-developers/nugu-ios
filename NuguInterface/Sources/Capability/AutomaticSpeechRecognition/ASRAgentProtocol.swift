@@ -21,13 +21,7 @@
 import Foundation
 
 /// `ASRAgent` 는 사용자 음성을 서버로 전송하고 음성 인식 결과 및 연속 발화 directive 를 처리합니다.
-public protocol ASRAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-FocusChannelDelegate,
-DownstreamDataDelegate,
-EndPointDetectorDelegate,
-HandleDirectiveDelegate {
+public protocol ASRAgentProtocol: class {
     /// Adds a delegate to be notified of `ASRAgent` state changes.
     /// - Parameter delegate: The object to add.
     func add(delegate: ASRAgentDelegate)

@@ -24,7 +24,7 @@ import NuguInterface
 
 import RxSwift
 
-final public class TTSAgent: TTSAgentProtocol {
+final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
     
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
@@ -32,7 +32,7 @@ final public class TTSAgent: TTSAgentProtocol {
     private let focusManager: FocusManageable
     private let channelPriority: FocusChannelPriority
     private let mediaPlayerFactory: MediaPlayerFactory
-    private let upstreamDataSender: UpstreamDataSendable
+    public let upstreamDataSender: UpstreamDataSendable
     private let playSyncManager: PlaySyncManageable
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
@@ -127,9 +127,7 @@ public extension TTSAgent {
             self.sendEvent(
                 event,
                 context: self.contextInfoRequestContext(),
-                dialogRequestId: dialogRequestId,
-                property: self.capabilityAgentProperty,
-                by: self.upstreamDataSender
+                dialogRequestId: dialogRequestId
             )
             
             self.ttsResultSubject
@@ -150,10 +148,6 @@ public extension TTSAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension TTSAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirectivePrefetch(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -452,9 +446,7 @@ private extension TTSAgent {
                 typeInfo: info
             ),
             context: contextInfoRequestContext(),
-            dialogRequestId: TimeUUID().hexString,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender
+            dialogRequestId: TimeUUID().hexString
         )
     }
 }

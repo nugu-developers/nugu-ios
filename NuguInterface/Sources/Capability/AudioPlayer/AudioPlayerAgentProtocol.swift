@@ -21,14 +21,7 @@
 import Foundation
 
 /// The `AudioPlayerAgent` handles directives for controlling audio playback.
-public protocol AudioPlayerAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-FocusChannelDelegate,
-MediaPlayerDelegate,
-HandleDirectiveDelegate,
-PlaySyncDelegate,
-SpeakerVolumeDelegate {
+public protocol AudioPlayerAgentProtocol: class {
     /// Adds a delegate to be notified of `AudioPlayerState` changes.
     /// - Parameter delegate: The object to add.
     func add(delegate: AudioPlayerAgentDelegate)
