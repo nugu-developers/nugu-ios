@@ -61,7 +61,7 @@ extension StreamDataRouter: ReceiveMessageDelegate {
                 return
             }
             let directivies = directiveArray
-                .compactMap(Downstream.Directive.init(directiveDictionary:))
+                .compactMap(Downstream.Directive.init)
                 .compactMap(preprocess)
             
             directivies.forEach { directive in
