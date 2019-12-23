@@ -192,6 +192,7 @@ private extension SystemAgent {
                 Event(typeInfo: .synchronizeState),
                 contextPayload: contextPayload,
                 dialogRequestId: TimeUUID().hexString,
+                property: self.capabilityAgentProperty,
                 by: self.upstreamDataSender
             )
         }

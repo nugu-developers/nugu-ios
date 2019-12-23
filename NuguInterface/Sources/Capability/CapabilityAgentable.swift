@@ -21,4 +21,6 @@
 import Foundation
 
 /// <#Description#>
-public protocol CapabilityAgentable: CapabilityConfigurable {}
+public protocol CapabilityAgentable {
+    var capabilityAgentProperty: CapabilityAgentProperty { get }
+}

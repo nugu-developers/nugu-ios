@@ -1,8 +1,8 @@
 //
-//  DisplayWeatherTemplate.swift
+//  DisplayWeatherListTemplate.swift
 //  SampleApp
 //
-//  Created by jin kim on 2019/12/13.
+//  Created by jin kim on 2019/12/16.
 //  Copyright © 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 //  limitations under the License.
 //
 
-struct DisplayWeatherTemplate: Decodable {
+struct DisplayWeatherListTemplate: Decodable {
     let playServiceId: String
     let token: String?
     let duration: DisplayCommonTemplate.Common.Duration?
@@ -27,23 +27,20 @@ struct DisplayWeatherTemplate: Decodable {
     let content: Content
     
     struct Content: Decodable {
-        let header: DisplayCommonTemplate.Common.Text?
-        let image: DisplayCommonTemplate.Common.Image?
-        let temperature: Temperature?
-        let body: DisplayCommonTemplate.Common.Text?
         let listItems: [Item]?
-        
-        struct Temperature: Decodable {
-            let current: DisplayCommonTemplate.Common.Text?
-            let max: DisplayCommonTemplate.Common.Text?
-            let min: DisplayCommonTemplate.Common.Text?
-        }
         
         struct Item: Decodable {
             let header: DisplayCommonTemplate.Common.Text?
-            let image: DisplayCommonTemplate.Common.Image?
             let body: DisplayCommonTemplate.Common.Text?
+            let image: DisplayCommonTemplate.Common.Image?
+            let temperature: Temperature?
             let footer: DisplayCommonTemplate.Common.Text?
+            let focus: Bool?
+            
+            struct Temperature: Decodable {
+                let max: DisplayCommonTemplate.Common.Text?
+                let min: DisplayCommonTemplate.Common.Text?
+            }
         }
     }
 }
