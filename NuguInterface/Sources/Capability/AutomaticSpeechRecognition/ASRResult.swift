@@ -34,9 +34,5 @@ public enum ASRResult {
     case cancel
     /// 음성 인식 결과 실패
     /// - Parameter error:
-    case error(_ error: ASRError)
+    case error(_ error: Error)
 }
-
-// MARK: - Equatable
-
-extension ASRResult: Equatable {}

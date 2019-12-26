@@ -44,7 +44,7 @@ public class DownstreamDataTimeoutPreprocessor: DownstreamDataPreprocessable {
 
 extension DownstreamDataTimeoutPreprocessor: ASRAgentDelegate {
     public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        guard case .error(let error) = result, error == .responseTimeout else { return }
+        guard case .error(let error) = result, case .timeout = (error as? NetworkError)else { return }
         appendTimeoutDialogRequestId(dialogRequestId)
     }
 }

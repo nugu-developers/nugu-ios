@@ -25,7 +25,6 @@ public protocol ASRAgentProtocol:
 CapabilityAgentable,
 ContextInfoDelegate,
 FocusChannelDelegate,
-DownstreamDataDelegate,
 EndPointDetectorDelegate,
 HandleDirectiveDelegate {
     /// Adds a delegate to be notified of `ASRAgent` state changes.

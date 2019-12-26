@@ -118,23 +118,7 @@ extension StreamDataRouter: UpstreamDataSendable {
             switch result {
             case .success:
                 if let resultHandler = resultHandler {
-                    self.directiveSubject
-                        .filter { $0.header.dialogRequestId == upstreamEventMessage.header.dialogRequestId }
-                        .take(1)
-                        .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                        .catchError({ error -> Observable<Downstream.Directive> in
-                            guard case .timeout = (error as? RxError) else {
-                                return Observable.error(error)
-                            }
-                            
-                            return Observable.error(NetworkError.timeout)
-                        })
-                        .do(onNext: { directive in
-                            resultHandler(.success(directive))
-                        }, onError: { error in
-                            resultHandler(.failure(error))
-                        })
-                        .subscribe().disposed(by: self.disposeBag)
+                    self.observeResultDirective(dialogRequestId: upstreamEventMessage.header.dialogRequestId, resultHandler: resultHandler)
                 }
             case .failure(let error):
                 resultHandler?(.failure(error))
@@ -142,7 +126,11 @@ extension StreamDataRouter: UpstreamDataSendable {
         }
     }
     
-    public func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)?) {
+    public func send(
+        upstreamAttachment: UpstreamAttachment,
+        completion: ((Result<Data, Error>) -> Void)?,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
+    ) {
         guard let apiProvider = networkManager.apiProvider else {
             completion?(.failure(NetworkError.unavailable))
             return
@@ -168,6 +156,19 @@ extension StreamDataRouter: UpstreamDataSendable {
             bodyData: upstreamAttachment.content,
             queryItems: queryItems
         )
+        
+        apiProvider.request(with: request) { [weak self] result in
+            guard let self = self else { return }
+            completion?(result)
+            switch result {
+            case .success:
+                if let resultHandler = resultHandler {
+                    self.observeResultDirective(dialogRequestId: upstreamAttachment.header.dialogRequestId, resultHandler: resultHandler)
+                }
+            case .failure(let error):
+                resultHandler?(.failure(error))
+            }
+        }
         apiProvider.request(with: request, completion: completion)
     }
     
@@ -194,6 +195,27 @@ extension StreamDataRouter {
             guard let result = result else { return nil}
             return preprocessor.preprocess(message: result)
         }
+    }
+    
+    func observeResultDirective(dialogRequestId: String, resultHandler: @escaping (Result<Downstream.Directive, Error>) -> Void) {
+        directiveSubject
+            .filter { $0.header.dialogRequestId == dialogRequestId }
+            .filter { $0.header.type != ASRAgent.DirectiveTypeInfo.notifyResult.type }
+            .take(1)
+            .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+            .catchError({ error -> Observable<Downstream.Directive> in
+                guard case .timeout = (error as? RxError) else {
+                    return Observable.error(error)
+                }
+                
+                return Observable.error(NetworkError.timeout)
+            })
+            .do(onNext: { directive in
+                resultHandler(.success(directive))
+            }, onError: { error in
+                resultHandler(.failure(error))
+            })
+            .subscribe().disposed(by: disposeBag)
     }
 }
 

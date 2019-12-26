@@ -59,7 +59,6 @@ extension NuguClient {
         directiveSequencer.add(handleDirectiveDelegate: agent)
         contextManager.add(provideContextDelegate: agent)
         focusManager.add(channelDelegate: agent)
-        streamDataRouter.add(delegate: agent)
         agent.add(delegate: dialogStateAggregator)
         agent.add(delegate: downstreamDataTimeoutPreprocessor)
     }

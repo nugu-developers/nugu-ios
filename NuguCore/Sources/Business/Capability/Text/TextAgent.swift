@@ -183,6 +183,7 @@ private extension TextAgent {
             by: upstreamDataSender
         ) { [weak self] result in
             guard let self = self else { return }
+            guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
 
             let result = result.map({ _ in () })
             self.delegates.notify({ (delegate) in
