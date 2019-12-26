@@ -27,7 +27,7 @@ final class NuguAudioSessionManager {
     /// Setting AudioSession.Category as .playAndRecord leads you to stop on going 3rd party app's music player
     /// To avoid 3rd party app's music player being stopped, application should append .mixWithOthers option to AudioSession.CategoryOptions
     /// To support mixWithOthersOption, simply change following value to 'true'
-    let supportMixWithOthersOption = false
+    let supportMixWithOthersOption = true
     
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
 }
@@ -56,12 +56,6 @@ extension NuguAudioSessionManager {
             AVAudioSession.sharedInstance().categoryOptions.contains(defaultCategoryOptions) else {
                 return updateAudioSessionCategoryWithOptions()
         }
-
-        // If mixWithOthers option is already included/discluded properly, resetting audioSession is unnecessary
-        guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == supportMixWithOthersOption else {
-            return true
-        }
-        
         return updateAudioSessionCategoryWithOptions(requestingFocus: true)
     }
      
@@ -127,6 +121,12 @@ private extension NuguAudioSessionManager {
         if requestingFocus == false && supportMixWithOthersOption == true {
             options.insert(.mixWithOthers)
         }
+        
+        // If audioSession is already has been set properly, resetting audioSession is unnecessary
+        guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options else {
+            return true
+        }
+        
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
