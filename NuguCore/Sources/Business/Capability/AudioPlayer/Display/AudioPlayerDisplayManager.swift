@@ -153,7 +153,7 @@ private extension AudioPlayerDisplayManager {
             
             replace(delegate: delegate, template: template)
             
-            displayObject.rx.deallocated.subscribe({ [weak self] _ in
+            Reactive(displayObject).deallocated.subscribe({ [weak self] _ in
                 self?.removeRenderedTemplate(delegate: delegate, template: template)
             }).disposed(by: disposeBag)
             return true

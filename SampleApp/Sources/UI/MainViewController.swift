@@ -294,8 +294,10 @@ private extension MainViewController {
             displayView = DisplayListView(frame: view.frame)
         case "Display.TextList3", "Display.TextList4":
             displayView = DisplayBodyListView(frame: view.frame)
-        case "Display.Weather1":
+        case "Display.Weather1", "Display.Weather2":
             displayView = DisplayWeatherView(frame: view.frame)
+        case "Display.Weather3", "Display.Weather4":
+            displayView = DisplayWeatherListView(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break
@@ -572,7 +574,7 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentDidRender(template: DisplayTemplate) -> NSObject? {
+    func displayAgentDidRender(template: DisplayTemplate) -> Any? {
         return addDisplayView(displayTemplate: template)
     }
     
@@ -589,7 +591,7 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     

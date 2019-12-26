@@ -13,7 +13,7 @@ import RxSwift
 private var deallocatedSubjectTriggerContext: UInt8 = 0
 private var deallocatedSubjectContext: UInt8 = 0
 
-extension Reactive where Base: AnyObject {
+extension Reactive where Base: Any {
     /**
     Observable sequence of object deallocated events.
     
@@ -35,7 +35,7 @@ extension Reactive where Base: AnyObject {
     }
 }
 
-extension Reactive where Base: AnyObject {
+extension Reactive where Base: Any {
     func synchronized<T>( _ action: () -> T) -> T {
         objc_sync_enter(self.base)
         let result = action()

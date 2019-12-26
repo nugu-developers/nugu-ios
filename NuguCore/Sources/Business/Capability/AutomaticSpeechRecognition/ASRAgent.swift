@@ -106,7 +106,7 @@ final public class ASRAgent: ASRAgentProtocol {
                 case .listeningTimeout:
                     sendEvent(event: .listenTimeout)
                 case .listenFailed:
-                    sendEvent(event: .listenFailed, dialogRequestId: asrRequest.dialogRequestId)
+                    sendEvent(event: .listenFailed)
                 case .recognizeFailed:
                     break
                 }
@@ -219,7 +219,7 @@ public extension ASRAgent {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            // TODO: cancelAssociated = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
+            // TODO: cancelAssociation = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
             self.currentExpectSpeech = nil
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
@@ -503,6 +503,7 @@ private extension ASRAgent {
             Event(typeInfo: eventTypeInfo, expectSpeech: currentExpectSpeech),
             contextPayload: asrRequest.contextPayload,
             dialogRequestId: asrRequest.dialogRequestId,
+            property: capabilityAgentProperty,
             by: upstreamDataSender,
             completion: completion
         )
@@ -551,14 +552,11 @@ private extension ASRAgent {
             return
         }
         
-        sendEvent(event: event, dialogRequestId: asrRequest.dialogRequestId)
-    }
-    
-    func sendEvent(event: ASRAgent.Event.TypeInfo, dialogRequestId: String) {
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
             context: contextInfoRequestContext(),
-            dialogRequestId: dialogRequestId,
+            dialogRequestId: asrRequest.dialogRequestId,
+            property: capabilityAgentProperty,
             by: upstreamDataSender
         )
     }
@@ -630,7 +628,7 @@ private extension ASRAgent {
         
         responseTimeout?.dispose()
         responseTimeout = Observable<Int>
-            .timer(NuguConfiguration.asrResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+            .timer(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { [weak self] _ in
                 log.info("responseTimeout")
                 self?.asrResult = .error(.responseTimeout)

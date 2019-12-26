@@ -203,7 +203,7 @@ private extension TextAgent {
         
         responseTimeout?.dispose()
         responseTimeout = Observable<Int>
-            .timer(NuguConfiguration.asrResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+            .timer(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.releaseFocus()
@@ -218,6 +218,7 @@ private extension TextAgent {
             Event(typeInfo: .textInput(text: textRequest.text), expectSpeech: dialogStateAggregator.expectSpeech),
             contextPayload: textRequest.contextPayload,
             dialogRequestId: textRequest.dialogRequestId,
+            property: capabilityAgentProperty,
             by: upstreamDataSender
         )
     }

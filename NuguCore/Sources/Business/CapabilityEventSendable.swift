@@ -20,21 +20,26 @@
 
 import Foundation
 
+import NuguInterface
+
 /// <#Description#>
-public protocol CapabilityEventSendable: CapabilityConfigurable {
+public protocol CapabilityEventSendable {
     associatedtype Event: Eventable
     
     /// <#Description#>
     /// - Parameter event: <#event description#>
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
+    /// - Parameter property: <#property description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
     func sendEvent(_ event: Event,
                    contextPayload: ContextPayload,
                    dialogRequestId: String,
+                   property: CapabilityAgentProperty,
                    by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)?)
+                   completion: ((Result<Data, Error>) -> Void)?,
+                   resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?)
 }
 
 // MARK: - Optional
@@ -44,36 +49,42 @@ public extension CapabilityEventSendable {
     /// - Parameter event: <#event description#>
     /// - Parameter context: <#contexts description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
+    /// - Parameter property: <#property description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
     func sendEvent(_ event: Event,
                    context: ContextInfo?,
                    dialogRequestId: String,
+                   property: CapabilityAgentProperty,
                    by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)? = nil) {
+                   completion: ((Result<Data, Error>) -> Void)? = nil,
+                   resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
         let contextPayload = ContextPayload(
             supportedInterfaces: context != nil ? [context!] : [],
             client: []
         )
         
-        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, by: upstreamDataSender, completion: completion)
+        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, property: property, by: upstreamDataSender, completion: completion, resultHandler: resultHandler)
     }
     
     /// <#Description#>
     /// - Parameter event: <#event description#>
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
+    /// - Parameter property: <#property description#>
     /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
     func sendEvent(_ event: Event,
                    contextPayload: ContextPayload,
                    dialogRequestId: String,
+                   property: CapabilityAgentProperty,
                    by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)? = nil) {
+                   completion: ((Result<Data, Error>) -> Void)? = nil,
+                   resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
         let header = UpstreamHeader(
-            namespace: capabilityAgentProperty.name,
+            namespace: property.name,
             name: event.name,
-            version: capabilityAgentProperty.version,
+            version: property.version,
             dialogRequestId: dialogRequestId
         )
         
@@ -83,6 +94,6 @@ public extension CapabilityEventSendable {
             contextPayload: contextPayload
         )
         
-        upstreamDataSender.send(upstreamEventMessage: eventMessage, completion: completion)
+        upstreamDataSender.send(upstreamEventMessage: eventMessage, completion: completion, resultHandler: resultHandler)
     }
 }

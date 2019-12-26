@@ -26,7 +26,7 @@ struct TTSMedia {
     let player: MediaPlayable
     let payload: Payload
     let dialogRequestId: String
-    var cancelAssociated: Bool = true
+    var cancelAssociation: Bool = true
     
     init(player: MediaPlayable, payload: Payload, dialogRequestId: String) {
         self.player = player

@@ -100,7 +100,7 @@ private extension NuguDisplayPlayerController {
             currentState = state
         }
         
-        guard let playerItem = currentItem else {
+        guard let playerItem = item else {
             remove()
             return
         }
@@ -252,9 +252,9 @@ private extension NuguDisplayPlayerController {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
         update(newItem: template)
-        return nowPlayingInfoCenter
+        return currentItem
     }
     
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
