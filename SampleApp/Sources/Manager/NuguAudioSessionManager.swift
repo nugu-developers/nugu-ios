@@ -29,7 +29,70 @@ final class NuguAudioSessionManager {
     /// To support mixWithOthersOption, simply change following value to 'true'
     let supportMixWithOthersOption = false
     
-    @objc private func interruptionNotification(_ notification: Notification) {
+    private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
+}
+
+// MARK: - Internal
+
+extension NuguAudioSessionManager {
+    func requestRecordPermission(_ response: @escaping PermissionBlock) {
+        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
+            response(isGranted)
+        }
+    }
+    
+    func observeAVAudioSessionInterruptionNotification() {
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(interruptionNotification(_ :)), name: AVAudioSession.interruptionNotification, object: nil)
+    }
+    
+    func removeObservingAVAudioSessionInterruptionNotification() {
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
+    }
+    
+    @discardableResult func updateAudioSession() -> Bool {
+        // When AudioSession default value has not been set, updating AudioSession should be done first
+        guard AVAudioSession.sharedInstance().category == .playAndRecord,
+            AVAudioSession.sharedInstance().categoryOptions.contains(defaultCategoryOptions) else {
+                return updateAudioSessionCategoryWithOptions()
+        }
+
+        // If mixWithOthers option is already included/discluded properly, resetting audioSession is unnecessary
+        guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == supportMixWithOthersOption else {
+            return true
+        }
+        
+        return updateAudioSessionCategoryWithOptions(requestingFocus: true)
+    }
+     
+    func notifyAudioSessionDeactivationIfNeeded() {
+        // NotifyOthersOnDeactivation is unnecessory when .mixWithOthers option is off
+        guard supportMixWithOthersOption == true else { return }
+        
+        // Clean up all I/O before deactivating audioSession
+        NuguCentralManager.shared.stopWakeUpDetector()
+        if NuguCentralManager.shared.client.inputProvider.isRunning == true {
+            NuguCentralManager.shared.client.inputProvider.stop()
+        }
+        
+        do {
+            // Defer statement for recovering audioSession and wakeUpDetector
+            defer {
+                updateAudioSessionCategoryWithOptions()
+                NuguCentralManager.shared.refreshWakeUpDetector()
+            }
+            // Notify audio session deactivation to 3rd party apps
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            log.debug("notifyOthersOnDeactivation failed: \(error)")
+        }
+    }
+}
+
+// MARK: - private
+
+private extension NuguAudioSessionManager {
+    @objc func interruptionNotification(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
             let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
             let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
@@ -37,8 +100,12 @@ final class NuguAudioSessionManager {
         case .began:
             // Interruption began, take appropriate actions
             NuguCentralManager.shared.client.audioPlayerAgent?.pause()
+            
+            // When supportMixWithOthersOption is on,
+            // AudioSession's category option should be changed as including mixWithOthers option when paused with interruption.
+            // Otherwise, 3rd party app's music player will stop when user returns to this app.
             if supportMixWithOthersOption == true {
-                allowMixWithOthers()
+                updateAudioSessionCategoryWithOptions()
             }
         case .ended:
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
@@ -52,93 +119,25 @@ final class NuguAudioSessionManager {
         @unknown default: break
         }
     }
-}
-
-// MARK: - Internal
-
-extension NuguAudioSessionManager {
-    func observeAVAudioSessionInterruptionNotification() {
-        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(interruptionNotification(_ :)), name: AVAudioSession.interruptionNotification, object: nil)
-    }
     
-    func removeObservingAVAudioSessionInterruptionNotification() {
-        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
-    }
-    
-    func requestRecordPermission(_ response: @escaping PermissionBlock) {
-        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
-            response(isGranted)
+    /// Update AudioSession.Category and AudioSession.CategoryOptions
+    /// - Parameter requestingFocus: whether updating AudioSession is for requesting focus or just updating without requesting focus
+    @discardableResult func updateAudioSessionCategoryWithOptions(requestingFocus: Bool = false) -> Bool {
+        var options = defaultCategoryOptions
+        if requestingFocus == false && supportMixWithOthersOption == true {
+            options.insert(.mixWithOthers)
         }
-    }
-    
-    func initializeAudioSession() {
-        if supportMixWithOthersOption == true {
-            allowMixWithOthers()
-        } else {
-            setAudioSession()
-        }
-    }
-    
-    @discardableResult func setAudioSession() -> Bool {
-        if supportMixWithOthersOption == true {
-            // if mixWithOthers option is already included, resetting audioSession is unnecessary
-            guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == true else {
-                return true
-            }
-        } else {
-            // if category is already .playAndRecord, resetting audioSession is unnecessary
-            guard AVAudioSession.sharedInstance().category != .playAndRecord else {
-                return true
-            }
-        }
-
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
                 mode: .default,
-                options: [.defaultToSpeaker, .allowBluetoothA2DP]
+                options: options
             )
             try AVAudioSession.sharedInstance().setActive(true)
             return true
         } catch {
-            log.debug("setCategory failed: \(error)")
+            log.debug("updateAudioSessionCategoryOptions failed: \(error)")
             return false
-        }
-    }
-     
-    func nofifyAudioSessionDeactivationAndRecover() {
-        // clean up all I/O before deactivating audioSession
-        NuguCentralManager.shared.stopWakeUpDetector()
-        if NuguCentralManager.shared.client.inputProvider.isRunning == true {
-            NuguCentralManager.shared.client.inputProvider.stop()
-        }
-        
-        do {
-            defer {
-                self.allowMixWithOthers()
-                NuguCentralManager.shared.refreshWakeUpDetector()
-            }
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        } catch {
-            log.debug("notifyOthersOnDeactivation failed: \(error)")
-        }
-    }
-}
-
-// MARK: - private
-
-private extension NuguAudioSessionManager {
-    func allowMixWithOthers() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            log.debug("addingMixWithOthers failed: \(error)")
         }
     }
 }
