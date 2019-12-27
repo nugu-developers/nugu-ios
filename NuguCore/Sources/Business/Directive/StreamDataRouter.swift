@@ -92,6 +92,7 @@ extension StreamDataRouter: UpstreamDataSendable {
     ) {
         guard let apiProvider = networkManager.apiProvider else {
             completion?(.failure(NetworkError.unavailable))
+            resultHandler?(.failure(NetworkError.unavailable))
             return
         }
         // body
@@ -111,19 +112,34 @@ extension StreamDataRouter: UpstreamDataSendable {
             bodyData: bodyData,
             queryItems: [:]
         )
-        if let resultHandler = resultHandler {
-            directiveSubject
-                .filter { $0.header.dialogRequestId == upstreamEventMessage.header.dialogRequestId }
-                .take(1)
-                .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                .do(onNext: { directive in
-                    resultHandler(.success(directive))
-                }, onError: { error in
-                    resultHandler(.failure(error))
-                })
-                .subscribe().disposed(by: disposeBag)
+        apiProvider.request(with: request) { [weak self] result in
+            guard let self = self else { return }
+            completion?(result)
+            switch result {
+            case .success:
+                if let resultHandler = resultHandler {
+                    self.directiveSubject
+                        .filter { $0.header.dialogRequestId == upstreamEventMessage.header.dialogRequestId }
+                        .take(1)
+                        .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                        .catchError({ error -> Observable<Downstream.Directive> in
+                            guard case .timeout = (error as? RxError) else {
+                                return Observable.error(error)
+                            }
+                            
+                            return Observable.error(NetworkError.timeout)
+                        })
+                        .do(onNext: { directive in
+                            resultHandler(.success(directive))
+                        }, onError: { error in
+                            resultHandler(.failure(error))
+                        })
+                        .subscribe().disposed(by: self.disposeBag)
+                }
+            case .failure(let error):
+                resultHandler?(.failure(error))
+            }
         }
-        apiProvider.request(with: request, completion: completion)
     }
     
     public func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)?) {

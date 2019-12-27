@@ -568,18 +568,15 @@ extension MainViewController: ASRAgentDelegate {
 // MARK: - TextAgentDelegate
 
 extension MainViewController: TextAgentDelegate {
-    func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
+    func textAgentDidReceive(result: Result<Void, Error>, dialogRequestId: String) {
         switch result {
-        case .complete:
+        case .success:
             DispatchQueue.main.async {
                 ASRBeepPlayer.shared.beep(type: .success)
             }
-        case .error(let textAgentError):
-            switch textAgentError {
-            case .responseTimeout:
-                DispatchQueue.main.async {
-                    ASRBeepPlayer.shared.beep(type: .fail)
-                }
+        case .failure:
+            DispatchQueue.main.async {
+                ASRBeepPlayer.shared.beep(type: .fail)
             }
         }
     }

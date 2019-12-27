@@ -92,7 +92,6 @@ extension NuguClient {
         guard let agent = textAgent else { return }
         
         contextManager.add(provideContextDelegate: agent)
-        streamDataRouter.add(delegate: agent)
         focusManager.add(channelDelegate: agent)
         agent.add(delegate: dialogStateAggregator)
         agent.add(delegate: downstreamDataTimeoutPreprocessor)

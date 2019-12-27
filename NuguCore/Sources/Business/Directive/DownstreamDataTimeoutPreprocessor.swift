@@ -52,8 +52,8 @@ extension DownstreamDataTimeoutPreprocessor: ASRAgentDelegate {
 // MARK: - TextAgentDelegate
 
 extension DownstreamDataTimeoutPreprocessor: TextAgentDelegate {
-    public func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
-        guard case .error(let error) = result, error == .responseTimeout else { return }
+    public func textAgentDidReceive(result: Result<Void, Error>, dialogRequestId: String) {
+        guard case .failure(let error) = result, case .timeout = (error as? NetworkError) else { return }
         appendTimeoutDialogRequestId(dialogRequestId)
     }
 }

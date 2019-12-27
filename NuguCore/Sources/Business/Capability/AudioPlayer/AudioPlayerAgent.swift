@@ -517,7 +517,10 @@ private extension AudioPlayerAgent {
 private extension AudioPlayerAgent {
     func releaseFocusIfNeeded() {
         guard focusState != .nothing else { return }
-        guard [.idle, .stopped, .finished].contains(self.audioPlayerState) else { return }
+        guard [.idle, .stopped, .finished].contains(self.audioPlayerState) else {
+            log.info("Not permitted in current state, \(audioPlayerState)")
+            return
+        }
         focusManager.releaseFocus(channelDelegate: self)
     }
 }
