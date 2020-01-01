@@ -25,7 +25,7 @@ public protocol DisplayAgentDelegate: class {
     /// Tells the delegate that the specified template should be displayed.
     ///
     /// - Parameter template: The template to display.
-    func displayAgentDidRender(template: DisplayTemplate) -> NSObject?
+    func displayAgentDidRender(template: DisplayTemplate) -> Any?
     
     /// Tells the delegate that the specified template should be removed from the screen.
     ///

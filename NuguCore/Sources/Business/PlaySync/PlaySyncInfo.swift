@@ -47,7 +47,7 @@ struct PlaySyncInfo {
 extension PlaySyncInfo: CustomStringConvertible {
     var description: String {
         if let delegate = delegate {
-            return "\nPlaySyncInfo: \(delegate), \(playServiceId ?? ""), \(playSyncState)"
+            return "\nPlaySyncInfo: \(delegate), \(playServiceId ?? ""), \(playSyncState), \(dialogRequestId)"
         } else {
             return ""
         }

@@ -626,7 +626,7 @@ private extension ASRAgent {
         
         responseTimeout?.dispose()
         responseTimeout = Observable<Int>
-            .timer(NuguConfiguration.asrResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+            .timer(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { [weak self] _ in
                 log.info("responseTimeout")
                 self?.asrResult = .error(.responseTimeout)

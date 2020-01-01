@@ -31,11 +31,13 @@ public protocol CapabilityEventAgentable: CapabilityAgentable {
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
     /// - Parameter completion: <#completion description#>
+    /// - Parameter resultHandler: <#resultHandler description#>
     func sendEvent(
         _ event: Event,
         contextPayload: ContextPayload,
         dialogRequestId: String,
-        completion: ((Result<Data, Error>) -> Void)?
+        completion: ((Result<Data, Error>) -> Void)?,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
     )
 }
 
@@ -45,18 +47,20 @@ public extension CapabilityEventAgentable {
     /// <#Description#>
     /// - Parameter event: <#event description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter completion: <#completion description#>
+    /// - Parameter completion: completion description
+    /// - Parameter resultHandler: <#resultHandler description#>
     func sendEvent(
         _ event: Event,
         dialogRequestId: String,
-        completion: ((Result<Data, Error>) -> Void)? = nil
+        completion: ((Result<Data, Error>) -> Void)? = nil,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
     ) {
         let contextPayload = ContextPayload(
             supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
             client: []
         )
         
-        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, completion: completion)
+        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, completion: completion, resultHandler: resultHandler)
     }
     
     /// <#Description#>
@@ -68,7 +72,8 @@ public extension CapabilityEventAgentable {
         _ event: Event,
         contextPayload: ContextPayload,
         dialogRequestId: String,
-        completion: ((Result<Data, Error>) -> Void)? = nil
+        completion: ((Result<Data, Error>) -> Void)? = nil,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
     ) {
         let header = UpstreamHeader(
             namespace: capabilityAgentProperty.name,
@@ -83,6 +88,6 @@ public extension CapabilityEventAgentable {
             contextPayload: contextPayload
         )
         
-        upstreamDataSender.send(upstreamEventMessage: eventMessage, completion: completion)
+        upstreamDataSender.send(upstreamEventMessage: eventMessage, completion: completion, resultHandler: resultHandler)
     }
 }
