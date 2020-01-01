@@ -52,12 +52,11 @@ public class NuguClient: NuguClientContainer {
     public let inputProvider: AudioProvidable
     /// <#Description#>
     public let endPointDetector: EndPointDetectable
+    /// <#Description#>
+    let downstreamDataTimeoutPreprocessor: DownstreamDataTimeoutPreprocessor
     
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
-    
-    /// <#Description#>
-    let downstreamDataTimeoutPreprocessor: DownstreamDataTimeoutPreprocessor
     
     private let capabilityAgentFactory: CapabilityAgentFactory
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
@@ -69,7 +68,10 @@ public class NuguClient: NuguClientContainer {
     public private(set) lazy var systemAgent: SystemAgentProtocol = SystemAgent(
         contextManager: contextManager,
         networkManager: networkManager,
-        upstreamDataSender: streamDataRouter
+        upstreamDataSender: streamDataRouter,
+        dialogStateAggregator: dialogStateAggregator,
+        directiveSequencer: directiveSequencer,
+        authorizationManager: authorizationManager
     )
     
     /// <#Description#>

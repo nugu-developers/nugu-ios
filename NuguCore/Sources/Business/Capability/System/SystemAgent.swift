@@ -43,13 +43,23 @@ final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentabl
     public init(
         contextManager: ContextManageable,
         networkManager: NetworkManageable,
-        upstreamDataSender: UpstreamDataSendable
+        upstreamDataSender: UpstreamDataSendable,
+        dialogStateAggregator: DialogStateAggregatable,
+        directiveSequencer: DirectiveSequenceable,
+        authorizationManager: AuthorizationManageable
     ) {
         log.info("")
         
         self.contextManager = contextManager
         self.networkManager = networkManager
         self.upstreamDataSender = upstreamDataSender
+        
+        self.add(systemAgentDelegate: authorizationManager)
+        
+        contextManager.add(provideContextDelegate: self)
+        networkManager.add(statusDelegate: self)
+        dialogStateAggregator.add(delegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {

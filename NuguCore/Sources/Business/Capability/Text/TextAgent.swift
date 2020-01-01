@@ -74,6 +74,7 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
         upstreamDataSender: UpstreamDataSendable,
         focusManager: FocusManageable,
         channelPriority: FocusChannelPriority,
+        streamDataRouter: StreamDataRoutable,
         dialogStateAggregator: DialogStateAggregatable
     ) {
         log.info("")
@@ -83,6 +84,11 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
         self.focusManager = focusManager
         self.channelPriority = channelPriority
         self.dialogStateAggregator = dialogStateAggregator
+        
+        self.add(delegate: dialogStateAggregator)
+        
+        contextManager.add(provideContextDelegate: self)
+        streamDataRouter.add(delegate: self)
     }
     
     deinit {

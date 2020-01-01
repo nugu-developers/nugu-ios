@@ -117,7 +117,9 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
         channelPriority: FocusChannelPriority,
         mediaPlayerFactory: MediaPlayerFactory,
         upstreamDataSender: UpstreamDataSendable,
-        playSyncManager: PlaySyncManageable
+        playSyncManager: PlaySyncManageable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
@@ -126,6 +128,10 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
         self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        
+        contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
         
         audioPlayerDisplayManager.playSyncManager = playSyncManager
     }

@@ -38,10 +38,17 @@ final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityDirectiveAgenta
     private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
-    public init(upstreamDataSender: UpstreamDataSendable) {
+    public init(
+        upstreamDataSender: UpstreamDataSendable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
+    ) {
         log.info("")
         
         self.upstreamDataSender = upstreamDataSender
+        
+        contextManager.add(provideContextDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {

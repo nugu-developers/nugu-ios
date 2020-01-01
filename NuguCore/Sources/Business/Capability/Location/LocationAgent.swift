@@ -29,8 +29,10 @@ final public class LocationAgent: LocationAgentProtocol {
     // LocationAgentProtocol
     public weak var delegate: LocationAgentDelegate?
     
-    public init() {
+    public init(contextManager: ContextManageable) {
         log.info("")
+        
+        contextManager.add(provideContextDelegate: self)
     }
     
     deinit {

@@ -82,7 +82,10 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
         channelPriority: FocusChannelPriority,
         mediaPlayerFactory: MediaPlayerFactory,
         upstreamDataSender: UpstreamDataSendable,
-        playSyncManager: PlaySyncManageable
+        playSyncManager: PlaySyncManageable,
+        contextManager: ContextManageable,
+        dialogStateAggregator: DialogStateAggregatable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
@@ -91,6 +94,12 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
         self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        
+        self.add(delegate: dialogStateAggregator)
+        
+        contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
         
         ttsResultSubject.subscribe(onNext: { [weak self] (_, result) in
             // Send error

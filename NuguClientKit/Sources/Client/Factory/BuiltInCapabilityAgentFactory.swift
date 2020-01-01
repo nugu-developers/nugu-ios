@@ -34,7 +34,9 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
             contextManager: container.contextManager,
             audioStream: container.sharedAudioStream,
             endPointDetector: container.endPointDetector,
-            dialogStateAggregator: container.dialogStateAggregator
+            dialogStateAggregator: container.dialogStateAggregator,
+            streamDataRouter: container.streamDataRouter,
+            directiveSequencer: container.directiveSequencer
         )
     }
     
@@ -44,7 +46,10 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
             channelPriority: .information,
             mediaPlayerFactory: container.mediaPlayerFactory,
             upstreamDataSender: container.streamDataRouter,
-            playSyncManager: container.playSyncManager
+            playSyncManager: container.playSyncManager,
+            contextManager: container.contextManager,
+            dialogStateAggregator: container.dialogStateAggregator,
+            directiveSequencer: container.directiveSequencer
         )
     }
     
@@ -54,7 +59,9 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
             channelPriority: .content,
             mediaPlayerFactory: container.mediaPlayerFactory,
             upstreamDataSender: container.streamDataRouter,
-            playSyncManager: container.playSyncManager
+            playSyncManager: container.playSyncManager,
+            contextManager: container.contextManager,
+            directiveSequencer: container.directiveSequencer
         )
     }
     
@@ -64,22 +71,29 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
             upstreamDataSender: container.streamDataRouter,
             focusManager: container.focusManager,
             channelPriority: .recognition,
+            streamDataRouter: container.streamDataRouter,
             dialogStateAggregator: container.dialogStateAggregator
         )
     }
     
     public func makeExtensionAgent(container: NuguClientContainer) -> ExtensionAgentProtocol? {
-        return ExtensionAgent(upstreamDataSender: container.streamDataRouter)
+        return ExtensionAgent(
+            upstreamDataSender: container.streamDataRouter,
+            contextManager: container.contextManager,
+            directiveSequencer: container.directiveSequencer
+        )
     }
     
     public func makeLocationAgent(container: NuguClientContainer) -> LocationAgentProtocol? {
-        return LocationAgent()
+        return LocationAgent(contextManager: container.contextManager)
     }
     
     public func makeDisplayAgent(container: NuguClientContainer) -> DisplayAgentProtocol? {
         return DisplayAgent(
             upstreamDataSender: container.streamDataRouter,
-            playSyncManager: container.playSyncManager
+            playSyncManager: container.playSyncManager,
+            contextManager: container.contextManager,
+            directiveSequencer: container.directiveSequencer
         )
     }
 }

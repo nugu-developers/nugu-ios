@@ -34,80 +34,19 @@ extension NuguClient {
         contextManager.add(provideContextDelegate: playSyncManager)
         dialogStateAggregator.add(delegate: focusManager)
         
-        // Setup capability-agents
-        let capabilityAgents: [CapabilityAgentable?] = [
-            asrAgent,
-            ttsAgent,
-            audioPlayerAgent,
-            displayAgent,
-            textAgent,
-            extensionAgent,
-            locationAgent
-        ]
-        
-        capabilityAgents
-            .compactMap({ $0 })
-            .forEach({ setupCapabilityAgentDependency($0) })
-        
-        setupDialogStateAggregatorDependency()
         setupDownstreamDataTimeoutPreprocessorDependency()
-        setupAuthorizationManagerDependency()
         
         setupAudioStreamDependency()
         setupWakeUpDetectorDependency()
     }
 }
 
-// MARK: - Capability-Agents (Optional)
-
-extension NuguClient {
-    func setupCapabilityAgentDependency(_ agent: CapabilityAgentable) {
-        // ContextInfoDelegate
-        contextManager.add(provideContextDelegate: agent)
-        
-        // HandleDirectiveDelegate
-        if let agent = agent as? HandleDirectiveDelegate {
-            directiveSequencer.add(handleDirectiveDelegate: agent)
-        }
-        
-        // FocusChannelDelegate
-        if let agent = agent as? FocusChannelDelegate {
-            focusManager.add(channelDelegate: agent)
-        }
-        
-        // DownstreamDataDelegate
-        if let agent = agent as? DownstreamDataDelegate {
-            streamDataRouter.add(delegate: agent)
-        }
-        
-        // NetworkStatusDelegate
-        if let agent = agent as? NetworkStatusDelegate {
-            networkManager.add(statusDelegate: agent)
-        }
-        
-        // DialogStateDelegate
-        if let agent = agent as? DialogStateDelegate {
-            dialogStateAggregator.add(delegate: agent)
-        }
-    }
-}
-
 // MARK: - Core
 
 extension NuguClient {
-    func setupDialogStateAggregatorDependency() {
-        asrAgent?.add(delegate: dialogStateAggregator)
-        ttsAgent?.add(delegate: dialogStateAggregator)
-        textAgent?.add(delegate: dialogStateAggregator)
-    }
-    
     func setupDownstreamDataTimeoutPreprocessorDependency() {
         asrAgent?.add(delegate: downstreamDataTimeoutPreprocessor)
         textAgent?.add(delegate: downstreamDataTimeoutPreprocessor)
-    }
-    
-    func setupAuthorizationManagerDependency() {
-        systemAgent.add(systemAgentDelegate: authorizationManager)
     }
     
     func setupAudioStreamDependency() {

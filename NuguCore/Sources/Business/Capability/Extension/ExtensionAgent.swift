@@ -32,10 +32,17 @@ final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAg
     // ExtensionAgentProtocol
     public weak var delegate: ExtensionAgentDelegate?
     
-    public init(upstreamDataSender: UpstreamDataSendable) {
+    public init(
+        upstreamDataSender: UpstreamDataSendable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
+    ) {
         log.info("")
         
         self.upstreamDataSender = upstreamDataSender
+        
+        contextManager.add(provideContextDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {

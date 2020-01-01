@@ -46,12 +46,17 @@ final public class DisplayAgent: DisplayAgentProtocol, CapabilityDirectiveAgenta
   
     public init(
         upstreamDataSender: UpstreamDataSendable,
-        playSyncManager: PlaySyncManageable
+        playSyncManager: PlaySyncManageable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        
+        contextManager.add(provideContextDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {

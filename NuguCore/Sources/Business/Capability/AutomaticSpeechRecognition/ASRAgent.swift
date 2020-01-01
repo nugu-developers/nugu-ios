@@ -149,7 +149,9 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
         endPointDetector: EndPointDetectable,
-        dialogStateAggregator: DialogStateAggregatable
+        dialogStateAggregator: DialogStateAggregatable,
+        streamDataRouter: StreamDataRoutable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
@@ -161,7 +163,14 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
         self.endPointDetector = endPointDetector
         self.dialogStateAggregator = dialogStateAggregator
         
+        self.add(delegate: dialogStateAggregator)
+        
         self.endPointDetector.delegate = self
+        contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
+        streamDataRouter.add(delegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
+        
     }
     
     deinit {
