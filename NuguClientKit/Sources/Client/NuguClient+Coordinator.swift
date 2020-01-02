@@ -30,7 +30,6 @@ extension NuguClient {
         // Setup managers
         networkManager.add(receiveMessageDelegate: streamDataRouter)
         streamDataRouter.add(delegate: directiveSequencer)
-        streamDataRouter.add(preprocessor: downstreamDataTimeoutPreprocessor)
         contextManager.add(provideContextDelegate: playSyncManager)
         dialogStateAggregator.add(delegate: focusManager)
         
@@ -60,7 +59,6 @@ extension NuguClient {
         contextManager.add(provideContextDelegate: agent)
         focusManager.add(channelDelegate: agent)
         agent.add(delegate: dialogStateAggregator)
-        agent.add(delegate: downstreamDataTimeoutPreprocessor)
     }
     
     func setupTTSAgentDependency() {
@@ -93,7 +91,6 @@ extension NuguClient {
         contextManager.add(provideContextDelegate: agent)
         focusManager.add(channelDelegate: agent)
         agent.add(delegate: dialogStateAggregator)
-        agent.add(delegate: downstreamDataTimeoutPreprocessor)
     }
     
     func setupExtensionAgentDependency() {

@@ -56,9 +56,6 @@ public class NuguClient: NuguClientContainer {
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
     
-    /// <#Description#>
-    let downstreamDataTimeoutPreprocessor: DownstreamDataTimeoutPreprocessor
-    
     private let capabilityAgentFactory: CapabilityAgentFactory
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
@@ -122,7 +119,6 @@ public class NuguClient: NuguClientContainer {
         self.playSyncManager = playSyncManager
         self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
         self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
-        self.downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
         self.mediaPlayerFactory = mediaPlayerFactory
         self.sharedAudioStream = sharedAudioStream
         self.inputProvider = inputProvider

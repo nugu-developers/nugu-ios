@@ -27,6 +27,7 @@ import RxSwift
 public class StreamDataRouter: StreamDataRoutable {
     private let delegates = DelegateSet<DownstreamDataDelegate>()
     private var preprocessors = [DownstreamDataPreprocessable]()
+    private let downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
     
     private let networkManager: NetworkManageable
     
@@ -35,6 +36,7 @@ public class StreamDataRouter: StreamDataRoutable {
     
     public init(networkManager: NetworkManageable) {
         self.networkManager = networkManager
+        add(preprocessor: downstreamDataTimeoutPreprocessor)
     }
     
     public func add(preprocessor: DownstreamDataPreprocessable) {
@@ -203,11 +205,12 @@ extension StreamDataRouter {
             .filter { $0.header.type != ASRAgent.DirectiveTypeInfo.notifyResult.type }
             .take(1)
             .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-            .catchError({ error -> Observable<Downstream.Directive> in
-                guard case .timeout = (error as? RxError) else {
+            .catchError({ [weak self] error -> Observable<Downstream.Directive> in
+                guard case RxError.timeout = error else {
                     return Observable.error(error)
                 }
                 
+                self?.downstreamDataTimeoutPreprocessor.appendTimeoutDialogRequestId(dialogRequestId)
                 return Observable.error(NetworkError.timeout)
             })
             .do(onNext: { directive in
