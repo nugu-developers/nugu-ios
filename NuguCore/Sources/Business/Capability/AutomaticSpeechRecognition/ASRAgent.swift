@@ -42,7 +42,7 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     private let contextManager: ContextManageable
     private let audioStream: AudioStreamable
     private let endPointDetector: EndPointDetectable
-    private let dialogStateAggregator: DialogStateAggregatable
+    private var dialogStateAggregator: DialogStateAggregatable
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
@@ -162,8 +162,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
         self.audioStream = audioStream
         self.endPointDetector = endPointDetector
         self.dialogStateAggregator = dialogStateAggregator
-        
-        self.add(delegate: dialogStateAggregator)
         
         self.endPointDetector.delegate = self
         contextManager.add(provideContextDelegate: self)

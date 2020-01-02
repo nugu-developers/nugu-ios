@@ -21,8 +21,7 @@
 import Foundation
 
 /// DialogStateAggregator aggregate several components state into one.
-public protocol DialogStateAggregatable:
-ASRAgentDelegate, TTSAgentDelegate, TextAgentDelegate {
+public protocol DialogStateAggregatable: class {
     var expectSpeech: ASRExpectSpeech? { get set }
         
     /// Adds a delegate to be notified of DialogStateAggregator state changes.

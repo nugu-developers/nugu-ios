@@ -48,7 +48,6 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
             upstreamDataSender: container.streamDataRouter,
             playSyncManager: container.playSyncManager,
             contextManager: container.contextManager,
-            dialogStateAggregator: container.dialogStateAggregator,
             directiveSequencer: container.directiveSequencer
         )
     }

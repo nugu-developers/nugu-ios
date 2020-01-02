@@ -84,7 +84,6 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
         upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
-        dialogStateAggregator: DialogStateAggregatable,
         directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
@@ -94,8 +93,6 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
         self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
-        
-        self.add(delegate: dialogStateAggregator)
         
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)

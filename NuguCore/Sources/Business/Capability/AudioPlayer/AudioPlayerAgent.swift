@@ -35,7 +35,6 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
     
-    
     // AudioPlayerAgentProtocol
     public var offset: Int? {
         return currentMedia?.player.offset.truncatedSeconds

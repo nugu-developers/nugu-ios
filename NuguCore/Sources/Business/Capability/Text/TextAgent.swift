@@ -85,8 +85,6 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
         self.channelPriority = channelPriority
         self.dialogStateAggregator = dialogStateAggregator
         
-        self.add(delegate: dialogStateAggregator)
-        
         contextManager.add(provideContextDelegate: self)
         streamDataRouter.add(delegate: self)
     }
