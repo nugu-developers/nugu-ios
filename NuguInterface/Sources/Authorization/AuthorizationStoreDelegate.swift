@@ -20,8 +20,10 @@
 
 import Foundation
 
-/// <#Description#>
+/// An delegate that application should extend to provide access token.
 public protocol AuthorizationStoreDelegate: class {
-    /// <#Description#>
+    /// Provides an access token from cache(ex> `UserDefault`).
+    ///
+    /// - returns: The current authorization token.
     func authorizationStoreRequestAccessToken() -> String?
 }

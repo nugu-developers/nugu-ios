@@ -20,11 +20,14 @@
 
 import Foundation
 
-/// <#Description#>
+/// The `AuthorizationStoreable` is used to provide authorization token.
+/// Provide authorization token
 public protocol AuthorizationStoreable: class {
-    /// <#Description#>
+    /// An delegate that application should extend to provide access token.
     var delegate: AuthorizationStoreDelegate? { get set }
     
-    /// <#Description#>
+    /// Get the current authorization token
+    ///
+    /// - returns: The current authorization token. (auth_type + access_token)
     func requestAuthorization() -> String?
 }
