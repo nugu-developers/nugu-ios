@@ -24,21 +24,29 @@ import NuguInterface
 
 import RxSwift
 
-final public class ASRAgent: ASRAgentProtocol {
+final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
     
-    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
     
-    private let focusManager: FocusManageable
-    private let channel: FocusChannelConfigurable
-    private let messageSender: MessageSendable
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
+    
+    // WakeUpInfoDelegate(KeenSense)
+    public weak var wakeUpInfoDelegate: WakeUpInfoDelegate?
+    
+    // Private
     private let contextManager: ContextManageable
     private let audioStream: AudioStreamable
     private let endPointDetector: EndPointDetectable
     private let dialogStateAggregator: DialogStateAggregatable
     
+    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
+    
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
-    public weak var wakeUpInfoDelegate: WakeUpInfoDelegate?
     
     private var focusState: FocusState = .nothing
     private var asrState: ASRState = .idle {
@@ -59,6 +67,7 @@ final public class ASRAgent: ASRAgentProtocol {
             // release asrRequest
             if asrState == .idle {
                 asrRequest = nil
+                releaseFocus()
             }
             
             // Stop EPD
@@ -76,9 +85,15 @@ final public class ASRAgent: ASRAgentProtocol {
             }
         }
     }
+    
     private var asrResult: ASRResult = .none {
         didSet {
             log.info("\(asrResult)")
+            guard let asrRequest = asrRequest else {
+                asrState = .idle
+                log.error("ASRRequest not exist")
+                return
+            }
             
             switch asrResult {
             case .none:
@@ -91,8 +106,8 @@ final public class ASRAgent: ASRAgentProtocol {
                 currentExpectSpeech = nil
             case .cancel:
                 sendEvent(event: .stopRecognize)
-                releaseFocus()
                 currentExpectSpeech = nil
+                asrState = .idle
             case .error(let error):
                 switch error {
                 case .responseTimeout:
@@ -100,20 +115,16 @@ final public class ASRAgent: ASRAgentProtocol {
                 case .listeningTimeout:
                     sendEvent(event: .listenTimeout)
                 case .listenFailed:
-                    if let asrRequest = asrRequest {
-                        sendEvent(event: .listenFailed, dialogRequestId: asrRequest.dialogRequestId)
-                    } else {
-                        self.sendEvent(event: .listenFailed, dialogRequestId: TimeUUID().hexString)
-                    }
+                    sendEvent(event: .listenFailed)
                 case .recognizeFailed:
                     break
                 }
-                releaseFocus()
                 currentExpectSpeech = nil
+                asrState = .idle
             }
             
             self.asrDelegates.notify({ (delegate) in
-                delegate.asrAgentDidReceive(result: asrResult)
+                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.dialogRequestId)
             })
         }
     }
@@ -133,24 +144,31 @@ final public class ASRAgent: ASRAgentProtocol {
     
     public init(
         focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
-        messageSender: MessageSendable,
+        channelPriority: FocusChannelPriority,
+        upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
         endPointDetector: EndPointDetectable,
-        dialogStateAggregator: DialogStateAggregatable
+        dialogStateAggregator: DialogStateAggregatable,
+        streamDataRouter: StreamDataRoutable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
         self.focusManager = focusManager
-        self.channel = channel
-        self.messageSender = messageSender
+        self.channelPriority = channelPriority
+        self.upstreamDataSender = upstreamDataSender
         self.contextManager = contextManager
         self.audioStream = audioStream
         self.endPointDetector = endPointDetector
         self.dialogStateAggregator = dialogStateAggregator
         
         self.endPointDetector.delegate = self
+        contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
+        streamDataRouter.add(delegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
+        
     }
     
     deinit {
@@ -217,7 +235,7 @@ public extension ASRAgent {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            // TODO: cancelAssociated = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
+            // TODO: cancelAssociation = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
             self.currentExpectSpeech = nil
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
@@ -232,12 +250,8 @@ public extension ASRAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension ASRAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirectivePrefetch(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         switch directive.header.type {
@@ -249,7 +263,7 @@ extension ASRAgent: HandleDirectiveDelegate {
     }
     
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         let result = Result<DirectiveTypeInfo, Error>(catching: {
@@ -274,10 +288,6 @@ extension ASRAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension ASRAgent: FocusChannelDelegate {
-    public func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("Focus:\(focusState) ASR:\(asrState)")
         self.focusState = focusState
@@ -292,10 +302,10 @@ extension ASRAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Background 허용 안함.
-            case (.background, _):
+            case (_, let asrState) where asrState != .idle:
                 self.asrResult = .cancel
-            case (.nothing, _):
-                self.asrState = .idle
+            default:
+                break
             }
         }
     }
@@ -371,17 +381,17 @@ extension ASRAgent: EndPointDetectorDelegate {
                 dialogRequestId: asrRequest.dialogRequestId
             )
             let attachment = UpstreamAttachment(header: attachmentHeader, content: speechData, seq: self.attachmentSeq, isEnd: false)
-            self.messageSender.send(upstreamAttachment: attachment)
+            self.upstreamDataSender.send(upstreamAttachment: attachment, completion: nil)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
         }
     }
 }
 
-// MARK: - DownStreamDataDelegate
+// MARK: - DownstreamDataDelegate
 
-extension ASRAgent: DownStreamDataDelegate {
-    public func downStreamDataDidReceive(directive: DownStream.Directive) {
+extension ASRAgent: DownstreamDataDelegate {
+    public func downstreamDataDidReceive(directive: Downstream.Directive) {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let request = self.asrRequest else { return }
@@ -401,7 +411,7 @@ extension ASRAgent: DownStreamDataDelegate {
 // MARK: - Private (Directive)
 
 private extension ASRAgent {
-    func prefetchExpectSpeech(directive: DownStream.Directive) -> Result<Void, Error> {
+    func prefetchExpectSpeech(directive: Downstream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -411,7 +421,7 @@ private extension ASRAgent {
         }
     }
 
-    func expectSpeech(directive: DownStream.Directive) -> Result<Void, Error> {
+    func expectSpeech(directive: Downstream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard currentExpectSpeech != nil else {
                 throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
@@ -440,7 +450,7 @@ private extension ASRAgent {
         }
     }
     
-    func notifyResult(directive: DownStream.Directive) -> Result<Void, Error> {
+    func notifyResult(directive: Downstream.Directive) -> Result<Void, Error> {
         return Result { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -472,7 +482,7 @@ private extension ASRAgent {
 // MARK: - Private (Event, Attachment)
 
 private extension ASRAgent {
-    func sendRequestEvent(asrRequest: ASRRequest, completion: ((SendMessageStatus) -> Void)? = nil) {
+    func sendRequestEvent(asrRequest: ASRRequest, completion: ((Result<Data, Error>) -> Void)? = nil) {
         // TODO: 추후 server epd 구현되면 활성화
 //        let wakeUpInfo: (Data, Int)?
 //        if asrRequest.initiator == .wakeword {
@@ -501,7 +511,6 @@ private extension ASRAgent {
             Event(typeInfo: eventTypeInfo, expectSpeech: currentExpectSpeech),
             contextPayload: asrRequest.contextPayload,
             dialogRequestId: asrRequest.dialogRequestId,
-            by: messageSender,
             completion: completion
         )
 
@@ -540,7 +549,7 @@ private extension ASRAgent {
             dialogRequestId: asrRequest.dialogRequestId
         )
         let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), seq: attachmentSeq, isEnd: true)
-        messageSender.send(upstreamAttachment: attachment)
+        upstreamDataSender.send(upstreamAttachment: attachment, completion: nil)
     }
     
     func sendEvent(event: ASRAgent.Event.TypeInfo) {
@@ -549,15 +558,9 @@ private extension ASRAgent {
             return
         }
         
-        sendEvent(event: event, dialogRequestId: asrRequest.dialogRequestId)
-    }
-    
-    func sendEvent(event: ASRAgent.Event.TypeInfo, dialogRequestId: String) {
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
-            context: contextInfoRequestContext(),
-            dialogRequestId: dialogRequestId,
-            by: messageSender
+            dialogRequestId: asrRequest.dialogRequestId
         )
     }
 }
@@ -577,7 +580,7 @@ private extension ASRAgent {
     /// asrDispatchQueue
     func executeStartCapture() {
         guard let asrRequest = asrRequest else {
-            log.warning("ASRRequest not exist")
+            log.error("ASRRequest not exist")
             asrResult = .cancel
             return
         }
@@ -592,11 +595,13 @@ private extension ASRAgent {
             return expectTimeout / 1000
         }
         
-        endPointDetector.start(inputStream: asrRequest.reader,
-                               sampleRate: ASRConst.sampleRate,
-                               timeout: timeout,
-                               maxDuration: ASRConst.maxDuration,
-                               pauseLength: ASRConst.pauseLength)
+        endPointDetector.start(
+            inputStream: asrRequest.reader,
+            sampleRate: ASRConst.sampleRate,
+            timeout: timeout,
+            maxDuration: ASRConst.maxDuration,
+            pauseLength: ASRConst.pauseLength
+        )
         
         asrState = .listening
         
@@ -612,7 +617,7 @@ private extension ASRAgent {
     /// asrDispatchQueue
     func executeStopSpeech() {
         guard let asrRequest = asrRequest else {
-            log.warning("ASRRequest not exist")
+            log.error("ASRRequest not exist")
             asrResult = .cancel
             return
         }
@@ -628,7 +633,7 @@ private extension ASRAgent {
         
         responseTimeout?.dispose()
         responseTimeout = Observable<Int>
-            .timer(NuguConfiguration.asrResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+            .timer(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { [weak self] _ in
                 log.info("responseTimeout")
                 self?.asrResult = .error(.responseTimeout)

@@ -21,23 +21,20 @@
 import Foundation
 
 /// <#Description#>
-public protocol SpeakerAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-HandleDirectiveDelegate {
-    /// <#Description#>
-    /// - Parameter messageSender: <#messageSender description#>
-    init(messageSender: MessageSendable)
-    
+public protocol SpeakerAgentProtocol: CapabilityAgentable {
     /// <#Description#>
     var delegate: SpeakerAgentDelegate? { get set }
     
     /// <#Description#>
     /// - Parameter speakerVolumeDelegate: <#handleDirectiveDelegate description#>
     func add(speakerVolumeDelegate: SpeakerVolumeDelegate)
+    
     /// <#Description#>
     /// - Parameter speakerVolumeDelegate: <#handleDirectiveDelegate description#>
     func remove(speakerVolumeDelegate: SpeakerVolumeDelegate)
     
+    /// <#Description#>
+    /// - Parameter type: <#type description#>
+    /// - Parameter muted: <#muted description#>
     func set(type: SpeakerVolumeType, muted: Bool)
 }

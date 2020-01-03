@@ -70,8 +70,8 @@ struct NuguAudioSessionManager {
         
         // clean up all I/O before deactivating audioSession
         NuguCentralManager.shared.stopWakeUpDetector()
-        if NuguCentralManager.shared.client.inputProvider?.isRunning == true {
-            NuguCentralManager.shared.client.inputProvider?.stop()
+        if NuguCentralManager.shared.client.inputProvider.isRunning == true {
+            NuguCentralManager.shared.client.inputProvider.stop()
         }
         
         do {

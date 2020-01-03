@@ -67,7 +67,7 @@ extension FocusManager {
         focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.delegate?.focusShouldAcquire() == true else {
-                log.warning("Focus should not acquire. \(channelDelegate.focusChannelConfiguration())")
+                log.warning("Focus should not acquire. \(channelDelegate.focusChannelPriority())")
                 self.set(channelDelegate: channelDelegate, focusState: .nothing)
                 return
             }
@@ -76,7 +76,7 @@ extension FocusManager {
             if let foregroundChannelDelegate = self.foregroundChannelDelegate {
                 if foregroundChannelDelegate === channelDelegate {
                     self.set(channelDelegate: channelDelegate, focusState: .foreground)
-                } else if channelDelegate.focusChannelConfiguration().priority >= foregroundChannelDelegate.focusChannelConfiguration().priority {
+                } else if channelDelegate.focusChannelPriority().rawValue >= foregroundChannelDelegate.focusChannelPriority().rawValue {
                     self.set(channelDelegate: foregroundChannelDelegate, focusState: .background)
                     self.set(channelDelegate: channelDelegate, focusState: .foreground)
                 } else {
@@ -147,7 +147,6 @@ private extension FocusManager {
         switch focusState {
         case .nothing:
             assignForeground()
-            notifyIfFocusReleased()
         case .foreground, .background:
             break
         }
@@ -160,6 +159,7 @@ private extension FocusManager {
             guard
                 self.foregroundChannelDelegate == nil,
                 let backgroundChannelDelegate = self.backgroundChannelDelegate else {
+                    self.notifyIfFocusReleased()
                     return
             }
             
@@ -169,6 +169,7 @@ private extension FocusManager {
     
     func notifyIfFocusReleased() {
         if self.dialogState == .idle && channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
+            log.debug("")
             delegate?.focusShouldRelease()
         }
     }
@@ -183,7 +184,7 @@ private extension FocusManager {
         return self.channelInfos
             .filter { $0.focusState == .background }
             .compactMap { $0.delegate}
-            .sorted { $0.focusChannelConfiguration().priority > $1.focusChannelConfiguration().priority  }
+            .sorted { $0.focusChannelPriority().rawValue > $1.focusChannelPriority().rawValue }
             .first
     }
 }

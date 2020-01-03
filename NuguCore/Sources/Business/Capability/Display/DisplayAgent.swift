@@ -24,13 +24,17 @@ import NuguInterface
 
 import RxSwift
 
-final public class DisplayAgent: DisplayAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.0")
+final public class DisplayAgent: DisplayAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.1")
+    
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
+    
+    // Private
+    private let playSyncManager: PlaySyncManageable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
-    
-    private let messageSender: MessageSendable
-    private let playSyncManager: PlaySyncManageable
     
     private var renderingInfos = [DisplayRenderingInfo]()
     private var timerInfos = [String: Bool]()
@@ -41,13 +45,18 @@ final public class DisplayAgent: DisplayAgentProtocol {
     private var disposeBag = DisposeBag()
   
     public init(
-        messageSender: MessageSendable,
-        playSyncManager: PlaySyncManageable
+        upstreamDataSender: UpstreamDataSendable,
+        playSyncManager: PlaySyncManageable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        
+        contextManager.add(provideContextDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {
@@ -83,9 +92,7 @@ public extension DisplayAgent {
                         playServiceId: template.playServiceId,
                         token: token
                     )),
-                context: self.contextInfoRequestContext(),
-                dialogRequestId: TimeUUID().hexString,
-                by: self.messageSender
+                dialogRequestId: TimeUUID().hexString
             )
         }
     }
@@ -98,12 +105,8 @@ public extension DisplayAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension DisplayAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         
@@ -185,7 +188,7 @@ extension DisplayAgent: PlaySyncDelegate {
 // MARK: - Private(Directive, Event)
 
 private extension DisplayAgent {
-    func display(directive: DownStream.Directive) -> Result<Void, Error> {
+    func display(directive: Downstream.Directive) -> Result<Void, Error> {
         log.info("\(directive.header.type)")
 
         return Result { [weak self] in
@@ -238,7 +241,7 @@ private extension DisplayAgent {
             
             replace(delegate: delegate, template: template)
             
-            displayObject.rx.deallocated.subscribe({ [weak self] _ in
+            Reactive(displayObject).deallocated.subscribe({ [weak self] _ in
                 self?.removeRenderedTemplate(delegate: delegate, template: template)
             }).disposed(by: disposeBag)
             return true

@@ -22,8 +22,10 @@ import Foundation
 
 import NuguInterface
 
+// MARK: - CapabilityDirectiveAgentable
+
 extension ExtensionAgent {
-    enum DirectiveTypeInfo: CaseIterable {
+    public enum DirectiveTypeInfo: CaseIterable {
         case action
     }
 }
@@ -31,21 +33,21 @@ extension ExtensionAgent {
 // MARK: - DirectiveTypeInforable
 
 extension ExtensionAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "Extension" }
+    public var namespace: String { "Extension" }
     
-    var name: String {
+    public var name: String {
         switch self {
         case .action: return "Action"
         }
     }
     
-    var medium: DirectiveMedium {
+    public var medium: DirectiveMedium {
         switch self {
         case .action: return .none
         }
     }
     
-    var isBlocking: Bool {
+    public var isBlocking: Bool {
         switch self {
         case .action: return false
         }

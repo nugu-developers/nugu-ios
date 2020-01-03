@@ -22,8 +22,10 @@ import Foundation
 
 import NuguInterface
 
+// MARK: - CapabilityDirectiveAgentable
+
 extension DisplayAgent {
-    enum DirectiveTypeInfo: CaseIterable {
+    public enum DirectiveTypeInfo: CaseIterable {
         case fullText1
         case fullText2
         case imageText1
@@ -37,6 +39,12 @@ extension DisplayAgent {
         case imageList1
         case imageList2
         case imageList3
+        case weather1
+        case weather2
+        case weather3
+        case weather4
+        case weather5
+        case fullImage
         case customTemplate
     }
 }
@@ -44,9 +52,9 @@ extension DisplayAgent {
 // MARK: - DirectiveTypeInforable
 
 extension DisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "Display" }
+    public var namespace: String { "Display" }
     
-    var name: String {
+    public var name: String {
         switch self {
         case .fullText1: return "FullText1"
         case .fullText2: return "FullText2"
@@ -61,15 +69,21 @@ extension DisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         case .imageList1: return "ImageList1"
         case .imageList2: return "ImageList2"
         case .imageList3: return "ImageList3"
+        case .weather1: return "Weather1"
+        case .weather2: return "Weather2"
+        case .weather3: return "Weather3"
+        case .weather4: return "Weather4"
+        case .weather5: return "Weather5"
+        case .fullImage: return "FullImage"
         case .customTemplate: return "CustomTemplate"
         }
     }
     
-    var medium: DirectiveMedium {
+    public var medium: DirectiveMedium {
         return .visual
     }
     
-    var isBlocking: Bool {
+    public var isBlocking: Bool {
         return false
     }
 }

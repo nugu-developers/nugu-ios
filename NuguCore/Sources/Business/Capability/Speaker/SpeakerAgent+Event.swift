@@ -22,7 +22,9 @@ import Foundation
 
 import NuguInterface
 
-extension SpeakerAgent: CapabilityEventSendable {
+// MARK: - CapabilityEventAgentable
+
+extension SpeakerAgent {
     public struct Event {
         let typeInfo: TypeInfo
         let volumes: [SpeakerMuteInfo.Volume]

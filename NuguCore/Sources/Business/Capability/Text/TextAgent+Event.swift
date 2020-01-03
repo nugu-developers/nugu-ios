@@ -22,7 +22,9 @@ import Foundation
 
 import NuguInterface
 
-extension TextAgent: CapabilityEventSendable {
+// MARK: - CapabilityEventAgentable
+
+extension TextAgent {
     public struct Event {
         let typeInfo: TypeInfo
         let expectSpeech: ASRExpectSpeech?

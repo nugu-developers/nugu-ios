@@ -22,7 +22,9 @@ import Foundation
 
 import NuguInterface
 
-extension SystemAgent: CapabilityEventSendable {    
+// MARK: - CapabilityEventAgentable
+
+extension SystemAgent {    
     public struct Event {
         let typeInfo: TypeInfo
         

@@ -24,16 +24,22 @@ import NuguInterface
 
 import RxSwift
 
-final public class TextAgent: TextAgentProtocol {
+final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     
-    private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
+    
+    // Private
     private let contextManager: ContextManageable
-    private let messageSender: MessageSendable
-    private let focusManager: FocusManageable
-    private let channel: FocusChannelConfigurable
     private let dialogStateAggregator: DialogStateAggregatable
+    
+    private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TextAgentDelegate>()
     
@@ -65,18 +71,22 @@ final public class TextAgent: TextAgentProtocol {
     
     public init(
         contextManager: ContextManageable,
-        messageSender: MessageSendable,
+        upstreamDataSender: UpstreamDataSendable,
         focusManager: FocusManageable,
-        channel: FocusChannelConfigurable,
+        channelPriority: FocusChannelPriority,
+        streamDataRouter: StreamDataRoutable,
         dialogStateAggregator: DialogStateAggregatable
     ) {
         log.info("")
         
         self.contextManager = contextManager
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
         self.focusManager = focusManager
-        self.channel = channel
+        self.channelPriority = channelPriority
         self.dialogStateAggregator = dialogStateAggregator
+        
+        contextManager.add(provideContextDelegate: self)
+        streamDataRouter.add(delegate: self)
     }
     
     deinit {
@@ -130,10 +140,6 @@ extension TextAgent: ContextInfoDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TextAgent: FocusChannelDelegate {
-    public func focusChannelConfiguration() -> FocusChannelConfigurable {
-        return channel
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(textAgentState)")
         self.focusState = focusState
@@ -168,10 +174,10 @@ private extension TextAgent {
     }
 }
 
-// MARK: - DownStreamDataDelegate
+// MARK: - DownstreamDataDelegate
 
-extension TextAgent: DownStreamDataDelegate {
-    public func downStreamDataDidReceive(directive: DownStream.Directive) {
+extension TextAgent: DownstreamDataDelegate {
+    public func downstreamDataDidReceive(directive: Downstream.Directive) {
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let request = self.textRequest else { return }
@@ -180,7 +186,7 @@ extension TextAgent: DownStreamDataDelegate {
             switch self.textAgentState {
             case .busy:
                 self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: .complete)
+                    delegate.textAgentDidReceive(result: .complete, dialogRequestId: request.dialogRequestId)
                 })
                 self.releaseFocus()
             case .idle:
@@ -203,13 +209,13 @@ private extension TextAgent {
         
         responseTimeout?.dispose()
         responseTimeout = Observable<Int>
-            .timer(NuguConfiguration.asrResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+            .timer(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.releaseFocus()
                 
                 self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: .error(.responseTimeout))
+                    delegate.textAgentDidReceive(result: .error(.responseTimeout), dialogRequestId: textRequest.dialogRequestId)
                 })
             })
         responseTimeout?.disposed(by: disposeBag)
@@ -217,8 +223,7 @@ private extension TextAgent {
         sendEvent(
             Event(typeInfo: .textInput(text: textRequest.text), expectSpeech: dialogStateAggregator.expectSpeech),
             contextPayload: textRequest.contextPayload,
-            dialogRequestId: textRequest.dialogRequestId,
-            by: messageSender
+            dialogRequestId: textRequest.dialogRequestId
         )
     }
 }

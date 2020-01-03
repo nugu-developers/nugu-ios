@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayBodyView" customModule="SampleApp_iOS" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayBodyView" customModule="SampleApp" customModuleProvider="target">
             <connections>
                 <outlet property="bodyLabel" destination="Dov-Xe-N22" id="vdD-1n-btk"/>
                 <outlet property="contentImageView" destination="FXH-2a-ynZ" id="84f-rU-vl1"/>
@@ -40,10 +40,10 @@
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WO4-SU-uye">
-                    <rect key="frame" x="140.33333333333334" y="80" width="94.333333333333343" height="28"/>
+                    <rect key="frame" x="134" y="80" width="107" height="28"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="TAW-Ar-7gA">
-                            <rect key="frame" x="16.000000000000004" y="5" width="62.333333333333343" height="18"/>
+                            <rect key="frame" x="16" y="5" width="75" height="18"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ZEo-NP-kSN">
                                     <rect key="frame" x="0.0" y="0.0" width="19" height="18"/>
@@ -51,8 +51,8 @@
                                         <constraint firstAttribute="width" secondItem="ZEo-NP-kSN" secondAttribute="height" multiplier="1:1" constant="1" id="9nJ-hm-wBw"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYf-6a-KuN">
-                                    <rect key="frame" x="25.000000000000004" y="0.0" width="37.333333333333343" height="18"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYf-6a-KuN">
+                                    <rect key="frame" x="25" y="0.0" width="50" height="18"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                     <color key="textColor" name="TextColor"/>
                                     <nil key="highlightedColor"/>
@@ -72,7 +72,7 @@
                     </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="X43-EG-n0s">
-                    <rect key="frame" x="32" y="128" width="311" height="419"/>
+                    <rect key="frame" x="32" y="128" width="311" height="150"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GjG-oy-nN7">
                             <rect key="frame" x="0.0" y="0.0" width="311" height="120"/>
@@ -92,21 +92,20 @@
                                 <constraint firstItem="FXH-2a-ynZ" firstAttribute="centerX" secondItem="GjG-oy-nN7" secondAttribute="centerX" id="w1P-gq-IKp"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="오늘의 운세" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ddb-oW-QOU">
-                            <rect key="frame" x="0.0" y="130" width="311" height="36"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ddb-oW-QOU">
+                            <rect key="frame" x="0.0" y="130" width="311" height="0.0"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="30"/>
                             <color key="textColor" name="TextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1990년 2월 18일생" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dov-Xe-N22">
-                            <rect key="frame" x="0.0" y="176" width="311" height="18"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dov-Xe-N22">
+                            <rect key="frame" x="0.0" y="140" width="311" height="0.0"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" name="TextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smR-hw-TJe">
-                            <rect key="frame" x="0.0" y="204" width="311" height="215"/>
-                            <string key="text">늘 나만이 최고다라는 생각으로 세상을 살아가는 것은 그리 바람직한 사고방식은 아닙니다. 어느 상황, 어느 순간에는 나 혼자만의 힘으로는 도저히 해결하기 힘든 일도 있는 법입니다. 그럴 때 다른 사람과 힘을 합해서 대처함으로써 일이 해결된다면 그 보다 더 좋은 일은 없을 것입니다. 이러한 때일수록 정신을 가다듬고 지혜를 모으십시오. 신중하게 지혜를 발휘해 대처한다면 좋은 방향으로 운이 열릴 것입니다.</string>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smR-hw-TJe">
+                            <rect key="frame" x="0.0" y="150" width="311" height="0.0"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <color key="textColor" name="TextColor"/>
                             <nil key="highlightedColor"/>

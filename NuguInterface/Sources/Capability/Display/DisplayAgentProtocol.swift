@@ -21,19 +21,7 @@
 import Foundation
 
 /// The `DisplayAgent` handles directives for controlling template display.
-public protocol DisplayAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-HandleDirectiveDelegate,
-PlaySyncDelegate {
-    /// <#Description#>
-    /// - Parameter messageSender: <#messageSender description#>
-    /// - Parameter playSyncManager: <#playSyncManager description#>
-    init(
-        messageSender: MessageSendable,
-        playSyncManager: PlaySyncManageable
-    )
-    
+public protocol DisplayAgentProtocol: CapabilityAgentable {
     /// Adds a delegate to be notified of `DisplayTemplate` changes.
     ///
     /// - Parameter delegate: The object to add.

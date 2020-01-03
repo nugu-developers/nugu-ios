@@ -61,18 +61,19 @@ Here are some basic examples for some capability agent.
 #### Initialize & Connect
 Before using `NUGU SDK for iOS`, connect to nugu when using NuguClientKit. like this:
 ```swift
-let client = NuguClient.Builder().build()
+let capabilityAgentFactory = BuiltInCapabilityAgentFactory() // If possible, avoid using `BuiltInCapabilityAgentFactory` and make only what you need. 
+let client = NuguClient(capabilityAgentFactory: capabilityAgentFactory)
 
 client.accessToken = "{access-token}"
 client.networkManager.connect()
 ```
 
-#### Using ASRAgent (Automatic Speech Recognition agent)
+#### Using ASRAgent (Automatic Speech Recognition Agent)
 ```swift
 client.asrAgent.startRecognition()
 ```
 
-#### Using TTSAgent(Text to Speech agent)
+#### Using TTSAgent (Text To Speech Agent)
 ```swift
 client.ttsAgent.requestTTS("Hello world")
 ```

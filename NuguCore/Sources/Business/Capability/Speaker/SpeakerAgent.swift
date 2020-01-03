@@ -24,20 +24,31 @@ import NuguInterface
 
 import RxSwift
 
-final public class SpeakerAgent: SpeakerAgentProtocol {
+final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .speaker, version: "1.0")
     
-    private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
-    private let messageSender: MessageSendable
-    
+    // SpeakerAgentProtocol
     public weak var delegate: SpeakerAgentDelegate?
+    
+    // Private
+    private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
-    public init(messageSender: MessageSendable) {
+    public init(
+        upstreamDataSender: UpstreamDataSendable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
+    ) {
         log.info("")
         
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
+        
+        contextManager.add(provideContextDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {
@@ -70,12 +81,8 @@ public extension SpeakerAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension SpeakerAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
         ) {
         let result = Result<DirectiveTypeInfo, Error>(catching: {
@@ -111,7 +118,7 @@ extension SpeakerAgent: ContextInfoDelegate {
 // MARK: - Private(Directive)
 
 private extension SpeakerAgent {
-    func setMute(directive: DownStream.Directive) -> Result<Void, Error> {
+    func setMute(directive: Downstream.Directive) -> Result<Void, Error> {
         return Result<Void, Error> { [weak self] in
             guard let data = directive.payload.data(using: .utf8) else {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -134,11 +141,10 @@ private extension SpeakerAgent {
 
                 let succeeded = results.allSatisfy { $0 }
                 let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
+                
                 self.sendEvent(
                     Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
-                    context: self.contextInfoRequestContext(),
-                    dialogRequestId: TimeUUID().hexString,
-                    by: self.messageSender
+                    dialogRequestId: TimeUUID().hexString
                 )
             }
         }

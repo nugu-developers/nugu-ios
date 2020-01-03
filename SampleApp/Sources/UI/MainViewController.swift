@@ -42,6 +42,9 @@ final class MainViewController: UIViewController {
     
     private var hasShownGuideWeb = false
     
+    private var displayContextReleaseTimer: DispatchSourceTimer?
+    private let displayContextReleaseTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.MainViewController.displayContextReleaseTimer")
+    
     // MARK: Override
     
     override func viewDidLoad() {
@@ -305,6 +308,10 @@ private extension MainViewController {
             displayView = DisplayListView(frame: view.frame)
         case "Display.TextList3", "Display.TextList4":
             displayView = DisplayBodyListView(frame: view.frame)
+        case "Display.Weather1", "Display.Weather2":
+            displayView = DisplayWeatherView(frame: view.frame)
+        case "Display.Weather3", "Display.Weather4":
+            displayView = DisplayWeatherListView(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break
@@ -321,6 +328,10 @@ private extension MainViewController {
             guard let selectedItemToken = selectedItemToken else { return }
             NuguCentralManager.shared.client.displayAgent?.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
         }
+        displayView.onUserInteraction = { [weak self] in
+            guard let self = self else { return }
+            self.startDisplayContextReleaseTimer(templateId: displayTemplate.templateId, duration: displayTemplate.duration.time)
+        }
         displayView.alpha = 0
         view.insertSubview(displayView, belowSubview: nuguButton)
         UIView.animate(withDuration: 0.3) {
@@ -331,6 +342,7 @@ private extension MainViewController {
     }
     
     func dismissDisplayView() {
+        stopDisplayContextReleaseTimer()
         UIView.animate(
             withDuration: 0.3,
             animations: { [weak self] in
@@ -369,6 +381,31 @@ private extension MainViewController {
     }
 }
 
+// MARK: - Private (DisplayTimer)
+
+private extension MainViewController {
+    func startDisplayContextReleaseTimer(templateId: String, duration: DispatchTimeInterval) {
+        // Inform sdk to stop displayRendering timer
+        NuguCentralManager.shared.client.displayAgent?.stopRenderingTimer(templateId: templateId)
+        
+        // Start application side's displayContextReleaseTimer
+        displayContextReleaseTimer?.cancel()
+        displayContextReleaseTimer = DispatchSource.makeTimerSource(queue: displayContextReleaseTimerQueue)
+        displayContextReleaseTimer?.schedule(deadline: .now() + duration)
+        displayContextReleaseTimer?.setEventHandler(handler: {
+            DispatchQueue.main.async { [weak self] in
+                self?.dismissDisplayView()
+            }
+        })
+        displayContextReleaseTimer?.resume()
+    }
+    
+    func stopDisplayContextReleaseTimer() {
+        displayContextReleaseTimer?.cancel()
+        displayContextReleaseTimer = nil
+    }
+}
+
 // MARK: - NetworkStatusDelegate
 
 extension MainViewController: NetworkStatusDelegate {
@@ -384,33 +421,37 @@ extension MainViewController: NetworkStatusDelegate {
                 self?.nuguButton.isHidden = false
             }
         case .disconnected(let error):
+            // Stop wakeup-detector
+            NuguCentralManager.shared.stopWakeUpDetector()
+            
+            // Update UI
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguButton.isEnabled = false
+                if UserDefaults.Standard.useNuguService == true {
+                    self?.nuguButton.isHidden = false
+                } else {
+                    self?.nuguButton.isHidden = true
+                }
+            }
+            
+            // Handle Nugu's predefined NetworkError
             if let networkError = error as? NetworkError {
                 switch networkError {
                 case .authError:
-                    DispatchQueue.main.async {
-                        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
-                        NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-                        NuguCentralManager.shared.disable()
-                        UserDefaults.Standard.clear()
-                        rootNavigationViewController.popToRootViewController(animated: true)
-                    }
+                    NuguCentralManager.shared.handleAuthError()
+                case .timeout:
+                    LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayTimeout)
                 default:
-                    // Stop wakeup-detector
-                    NuguCentralManager.shared.stopWakeUpDetector()
-                    
-                    // Update UI
-                    DispatchQueue.main.async { [weak self] in
-                        self?.nuguButton.isEnabled = false
-                        if UserDefaults.Standard.useNuguService == true {
-                            self?.nuguButton.isHidden = false
-                        } else {
-                            self?.nuguButton.isHidden = true
-                        }
-                    }
+                    LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayAuthServerError)
                 }
-            } else {
-                // TODO: error handling
+            } else { // Handle URLError
+                guard let urlError = error as? URLError else { return }
+                switch urlError.code {
+                case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
+                    LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayNetworkError)
+                default: // Handle other URLErrors with your own way
+                    break
+                }
             }
         }
     }
@@ -466,7 +507,7 @@ extension MainViewController: DialogStateDelegate {
         case .listening:
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
-                SoundPlayer.playSound(soundType: .start)
+                ASRBeepPlayer.shared.beep(type: .start)
             }
         case .recognizing:
             DispatchQueue.main.async { [weak self] in
@@ -496,12 +537,12 @@ extension MainViewController: ASRAgentDelegate {
         }
     }
     
-    func asrAgentDidReceive(result: ASRResult) {
+    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
         switch result {
         case .complete(let text):
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
-                SoundPlayer.playSound(soundType: .success)
+                ASRBeepPlayer.shared.beep(type: .success)
             }
         case .partial(let text):
             DispatchQueue.main.async { [weak self] in
@@ -509,11 +550,14 @@ extension MainViewController: ASRAgentDelegate {
             }
         case .error(let asrError):
             DispatchQueue.main.async { [weak self] in
-                SoundPlayer.playSound(soundType: .fail)
                 switch asrError {
-                case .listenFailed, .recognizeFailed:
+                case .listenFailed:
+                    ASRBeepPlayer.shared.beep(type: .fail)
                     self?.nuguVoiceChrome.changeState(state: .speakingError)
-                default: break
+                case .recognizeFailed:
+                    LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                default:
+                    ASRBeepPlayer.shared.beep(type: .fail)
                 }
             }
         default: break
@@ -524,17 +568,17 @@ extension MainViewController: ASRAgentDelegate {
 // MARK: - TextAgentDelegate
 
 extension MainViewController: TextAgentDelegate {
-    func textAgentDidReceive(result: TextAgentResult) {
+    func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
         switch result {
         case .complete:
             DispatchQueue.main.async {
-                SoundPlayer.playSound(soundType: .success)
+                ASRBeepPlayer.shared.beep(type: .success)
             }
         case .error(let textAgentError):
             switch textAgentError {
             case .responseTimeout:
                 DispatchQueue.main.async {
-                    SoundPlayer.playSound(soundType: .fail)
+                    ASRBeepPlayer.shared.beep(type: .fail)
                 }
             }
         }
@@ -544,7 +588,7 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentDidRender(template: DisplayTemplate) -> NSObject? {
+    func displayAgentDidRender(template: DisplayTemplate) -> Any? {
         return addDisplayView(displayTemplate: template)
     }
     
@@ -561,7 +605,7 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     

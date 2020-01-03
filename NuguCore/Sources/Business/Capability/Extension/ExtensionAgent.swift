@@ -22,17 +22,27 @@ import Foundation
 
 import NuguInterface
 
-final public class ExtensionAgent: ExtensionAgentProtocol {
+final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
     
-    private let messageSender: MessageSendable
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
+    // ExtensionAgentProtocol
     public weak var delegate: ExtensionAgentDelegate?
     
-    public init(messageSender: MessageSendable) {
+    public init(
+        upstreamDataSender: UpstreamDataSendable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
+    ) {
         log.info("")
         
-        self.messageSender = messageSender
+        self.upstreamDataSender = upstreamDataSender
+        
+        contextManager.add(provideContextDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {
@@ -42,13 +52,9 @@ final public class ExtensionAgent: ExtensionAgentProtocol {
 
 // MARK: - HandleDirectiveDelegate
 
-extension ExtensionAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
+extension ExtensionAgent: HandleDirectiveDelegate {    
     public func handleDirective(
-        _ directive: DownStream.Directive,
+        _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
         guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
             completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Unknown directive")))
@@ -79,12 +85,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                     let eventTypeInfo: ExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
                     let event = ExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
                     
-                    self.sendEvent(
-                        event,
-                        context: self.contextInfoRequestContext(),
-                        dialogRequestId: TimeUUID().hexString,
-                        by: self.messageSender
-                    )
+                    self.sendEvent(event, dialogRequestId: TimeUUID().hexString)
             })
             
             completionHandler(.success(()))

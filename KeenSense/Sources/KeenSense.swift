@@ -22,47 +22,44 @@ import Foundation
 
 import NattyLog
 
-let log = KeenSenseConfiguration.natty
+// MARK: - NattyLog
 
-// MARK: - KeenSenseConfiguration
+let log: Natty = Natty(by: nattyConfiguration)
+private var nattyConfiguration: NattyConfiguration {
+    #if DEBUG
+    return NattyConfiguration(
+        minLogLevel: .debug,
+        maxDescriptionLevel: .error,
+        showPersona: true,
+        prefix: "KeenSense")
+    #else
+    return NattyConfiguration(
+        minLogLevel: .warning,
+        maxDescriptionLevel: .warning,
+        showPersona: true,
+        prefix: "KeenSense")
+    #endif
+}
 
-public enum KeenSenseConfiguration {
-    fileprivate static let natty: NattyLog.Natty = NattyLog.Natty(by: nattyConfiguration)
-    private static var nattyConfiguration: NattyLog.NattyConfiguration {
+/// Turn the log enable and disable in `KeenSense`.
+public var logEnabled: Bool {
+    set {
+        guard newValue == true else {
+            log.configuration.minLogLevel = .nothing
+            return
+        }
+        
         #if DEBUG
-        return NattyLog.NattyConfiguration(
-            minLogLevel: .debug,
-            maxDescriptionLevel: .error,
-            showPersona: true,
-            prefix: "KeenSense")
+        log.configuration.minLogLevel = .debug
         #else
-        return NattyLog.NattyConfiguration(
-            minLogLevel: .warning,
-            maxDescriptionLevel: .warning,
-            showPersona: true,
-            prefix: "KeenSense")
+        log.configuration.minLogLevel = .warning
         #endif
-    }
-    
-    public static var logEnabled: Bool {
-        set {
-            switch newValue {
-            case true:
-                #if DEBUG
-                natty.configuration.minLogLevel = .debug
-                #else
-                natty.configuration.minLogLevel = .warning
-                #endif
-            case false:
-                natty.configuration.minLogLevel = .nothing
-            }
-        } get {
-            switch nattyConfiguration.minLogLevel {
-            case .nothing:
-                return false
-            default:
-                return true
-            }
+    } get {
+        switch log.configuration.minLogLevel {
+        case .nothing:
+            return false
+        default:
+            return true
         }
     }
 }
