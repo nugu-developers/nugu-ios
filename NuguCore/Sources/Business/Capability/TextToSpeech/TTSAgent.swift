@@ -269,6 +269,7 @@ extension TTSAgent: MediaPlayerDelegate {
             switch state {
             case .start:
                 self.sendEvent(media: media, info: .speechStarted)
+                self.ttsState = .playing
             case .resume, .bufferRefilled:
                 self.ttsState = .playing
             case .finish:
