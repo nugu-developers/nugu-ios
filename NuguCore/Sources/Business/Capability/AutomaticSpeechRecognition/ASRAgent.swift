@@ -24,21 +24,29 @@ import NuguInterface
 
 import RxSwift
 
-final public class ASRAgent: ASRAgentProtocol {
+final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
     
-    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
     
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
-    private let upstreamDataSender: UpstreamDataSendable
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
+    
+    // WakeUpInfoDelegate(KeenSense)
+    public weak var wakeUpInfoDelegate: WakeUpInfoDelegate?
+    
+    // Private
     private let contextManager: ContextManageable
     private let audioStream: AudioStreamable
     private let endPointDetector: EndPointDetectable
     private let dialogStateAggregator: DialogStateAggregatable
     
+    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
+    
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
-    public weak var wakeUpInfoDelegate: WakeUpInfoDelegate?
     
     private var focusState: FocusState = .nothing
     private var asrState: ASRState = .idle {
@@ -77,6 +85,7 @@ final public class ASRAgent: ASRAgentProtocol {
             }
         }
     }
+    
     private var asrResult: ASRResult = .none {
         didSet {
             log.info("\(asrResult)")
@@ -140,7 +149,9 @@ final public class ASRAgent: ASRAgentProtocol {
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
         endPointDetector: EndPointDetectable,
-        dialogStateAggregator: DialogStateAggregatable
+        dialogStateAggregator: DialogStateAggregatable,
+        streamDataRouter: StreamDataRoutable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
@@ -153,6 +164,11 @@ final public class ASRAgent: ASRAgentProtocol {
         self.dialogStateAggregator = dialogStateAggregator
         
         self.endPointDetector.delegate = self
+        contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
+        streamDataRouter.add(delegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
+        
     }
     
     deinit {
@@ -234,10 +250,6 @@ public extension ASRAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension ASRAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirectivePrefetch(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -276,10 +288,6 @@ extension ASRAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension ASRAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("Focus:\(focusState) ASR:\(asrState)")
         self.focusState = focusState
@@ -503,8 +511,6 @@ private extension ASRAgent {
             Event(typeInfo: eventTypeInfo, expectSpeech: currentExpectSpeech),
             contextPayload: asrRequest.contextPayload,
             dialogRequestId: asrRequest.dialogRequestId,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender,
             completion: completion
         )
 
@@ -554,10 +560,7 @@ private extension ASRAgent {
         
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
-            context: contextInfoRequestContext(),
-            dialogRequestId: asrRequest.dialogRequestId,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender
+            dialogRequestId: asrRequest.dialogRequestId
         )
     }
 }
@@ -592,11 +595,13 @@ private extension ASRAgent {
             return expectTimeout / 1000
         }
         
-        endPointDetector.start(inputStream: asrRequest.reader,
-                               sampleRate: ASRConst.sampleRate,
-                               timeout: timeout,
-                               maxDuration: ASRConst.maxDuration,
-                               pauseLength: ASRConst.pauseLength)
+        endPointDetector.start(
+            inputStream: asrRequest.reader,
+            sampleRate: ASRConst.sampleRate,
+            timeout: timeout,
+            maxDuration: ASRConst.maxDuration,
+            pauseLength: ASRConst.pauseLength
+        )
         
         asrState = .listening
         

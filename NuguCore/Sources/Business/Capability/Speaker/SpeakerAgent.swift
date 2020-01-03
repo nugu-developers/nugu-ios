@@ -24,20 +24,31 @@ import NuguInterface
 
 import RxSwift
 
-final public class SpeakerAgent: SpeakerAgentProtocol {
+final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .speaker, version: "1.0")
     
-    private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
-    private let upstreamDataSender: UpstreamDataSendable
-    
+    // SpeakerAgentProtocol
     public weak var delegate: SpeakerAgentDelegate?
+    
+    // Private
+    private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
-    public init(upstreamDataSender: UpstreamDataSendable) {
+    public init(
+        upstreamDataSender: UpstreamDataSendable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
+    ) {
         log.info("")
         
         self.upstreamDataSender = upstreamDataSender
+        
+        contextManager.add(provideContextDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {
@@ -70,10 +81,6 @@ public extension SpeakerAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension SpeakerAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirective(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -134,12 +141,10 @@ private extension SpeakerAgent {
 
                 let succeeded = results.allSatisfy { $0 }
                 let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
+                
                 self.sendEvent(
                     Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
-                    context: self.contextInfoRequestContext(),
-                    dialogRequestId: TimeUUID().hexString,
-                    property: self.capabilityAgentProperty,
-                    by: self.upstreamDataSender
+                    dialogRequestId: TimeUUID().hexString
                 )
             }
         }

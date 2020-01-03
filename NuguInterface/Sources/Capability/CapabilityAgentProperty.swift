@@ -33,7 +33,7 @@ public struct CapabilityAgentProperty {
     public init(
         category: CapabilityAgentCategory,
         version: String
-        ) {
+    ) {
         self.category = category
         self.version = version
     }

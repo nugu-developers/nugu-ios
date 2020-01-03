@@ -22,8 +22,10 @@ import Foundation
 
 import NuguInterface
 
+// MARK: - CapabilityDirectiveAgentable
+
 extension SpeakerAgent {
-    enum DirectiveTypeInfo: CaseIterable {
+    public enum DirectiveTypeInfo: CaseIterable {
         case setMute
     }
 }
@@ -31,21 +33,21 @@ extension SpeakerAgent {
 // MARK: - DirectiveTypeInforable
 
 extension SpeakerAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "Speaker" }
+    public var namespace: String { "Speaker" }
     
-    var name: String {
+    public var name: String {
         switch self {
         case .setMute: return "SetMute"
         }
     }
     
-    var medium: DirectiveMedium {
+    public var medium: DirectiveMedium {
         switch self {
         case .setMute: return .audio
         }
     }
     
-    var isBlocking: Bool {
+    public var isBlocking: Bool {
         switch self {
         case .setMute: return false
         }

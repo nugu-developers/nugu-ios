@@ -1,8 +1,8 @@
 //
-//  SystemAgentProtocol.swift
+//  CapabilityFocusAgentable.swift
 //  NuguInterface
 //
-//  Created by yonghoonKwon on 24/05/2019.
+//  Created by yonghoonKwon on 2019/12/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,15 @@
 
 import Foundation
 
-/// System-agent is responsible agent for the utilities of the system in the nugu.
-/// This agent is mandatory in SDK.
-public protocol SystemAgentProtocol: CapabilityAgentable {
-    /// <#Description#>
-    /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
-    func add(systemAgentDelegate: SystemAgentDelegate)
-    /// <#Description#>
-    /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
-    func remove(systemAgentDelegate: SystemAgentDelegate)
+public protocol CapabilityFocusAgentable: CapabilityAgentable, FocusChannelDelegate {
+    var focusManager: FocusManageable { get }
+    var channelPriority: FocusChannelPriority { get }
+}
+
+// MARK: - Default FocusChannelDelegate
+
+extension CapabilityFocusAgentable {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        channelPriority
+    }
 }

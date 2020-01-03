@@ -21,9 +21,7 @@
 import Foundation
 
 /// The `LocationAgent` is needed to send location information for nugu service.
-public protocol LocationAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate {
+public protocol LocationAgentProtocol: CapabilityAgentable {
     /// The object that acts as the delegate of `LocationAgent`
     var delegate: LocationAgentDelegate? { get set }
 }

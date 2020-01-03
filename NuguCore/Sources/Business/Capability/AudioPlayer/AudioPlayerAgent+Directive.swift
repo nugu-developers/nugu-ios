@@ -22,8 +22,10 @@ import Foundation
 
 import NuguInterface
 
+// MARK: - CapabilityDirectiveAgentable
+
 extension AudioPlayerAgent {
-    enum DirectiveTypeInfo: CaseIterable {
+    public enum DirectiveTypeInfo: CaseIterable {
         case play
         case stop
         case pause
@@ -33,9 +35,9 @@ extension AudioPlayerAgent {
 // MARK: - DirectiveTypeInforable
 
 extension AudioPlayerAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "AudioPlayer" }
+    public var namespace: String { "AudioPlayer" }
     
-    var name: String {
+    public var name: String {
         switch self {
         case .play: return "Play"
         case .stop: return "Stop"
@@ -43,7 +45,7 @@ extension AudioPlayerAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         }
     }
     
-    var medium: DirectiveMedium {
+    public var medium: DirectiveMedium {
         switch self {
         case .play: return .audio
         case .stop: return .audio
@@ -51,7 +53,7 @@ extension AudioPlayerAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         }
     }
 
-    var isBlocking: Bool {
+    public var isBlocking: Bool {
         switch self {
         case .play: return false
         case .stop: return false

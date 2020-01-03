@@ -23,12 +23,16 @@ import Foundation
 import NuguInterface
 
 final public class LocationAgent: LocationAgentProtocol {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .location, version: "1.0")
     
+    // LocationAgentProtocol
     public weak var delegate: LocationAgentDelegate?
     
-    public init() {
+    public init(contextManager: ContextManageable) {
         log.info("")
+        
+        contextManager.add(provideContextDelegate: self)
     }
     
     deinit {
