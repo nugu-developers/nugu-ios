@@ -85,33 +85,33 @@ public extension NuguApi {
         switch self {
         case .policy:
             return [
-                "Authorization": AuthorizationStore.shared.requestAuthorization() ?? ""
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? ""
             ]
         case .directives:
             return [
-                "Authorization": AuthorizationStore.shared.requestAuthorization() ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent
             ]
         case .event:
              return [
-                "Authorization": AuthorizationStore.shared.requestAuthorization() ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent,
                 "Content-Type": "application/json"
                 ]
         case .eventAttachment:
             return [
-                "Authorization": AuthorizationStore.shared.requestAuthorization() ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent,
                 "Content-Type": "application/octet-stream"
             ]
         case .ping:
             return [
-                "Authorization": AuthorizationStore.shared.requestAuthorization() ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent
             ]
         case .crashReport:
             return [
-                "Authorization": AuthorizationStore.shared.requestAuthorization() ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent,
                 "Content-Type": "application/json"
             ]

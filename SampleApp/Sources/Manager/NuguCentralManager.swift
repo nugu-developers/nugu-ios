@@ -51,7 +51,7 @@ final class NuguCentralManager {
 // MARK: - Internal (Enable / Disable)
 
 extension NuguCentralManager {
-    func enable(accessToken: String) {
+    func enable() {
         client.networkManager.connect()
     }
     
@@ -140,7 +140,7 @@ extension NuguCentralManager {
                     self?.logoutAfterErrorHandling()
                     return
                 }
-                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+                self?.enable()
             }
         case .type2:
             loginType2 { [weak self] (result) in
@@ -148,7 +148,7 @@ extension NuguCentralManager {
                     self?.logoutAfterErrorHandling()
                     return
                 }
-                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+                self?.enable()
             }
         default:
             break

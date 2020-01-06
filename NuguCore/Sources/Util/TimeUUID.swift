@@ -49,7 +49,7 @@ public struct TimeUUID {
             hexString.append(char)
         }
         
-        let hashKey = AuthorizationStore.shared.requestAuthorization() ?? "No Device Id"
+        let hashKey = AuthorizationStore.shared.authorizationToken ?? ""
         // length 16
         let hash = { () -> String in
             let data = Data(hashKey.utf8)

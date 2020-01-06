@@ -26,8 +26,6 @@ public protocol AuthorizationStoreable: class {
     /// An delegate that application should extend to provide access token.
     var delegate: AuthorizationStoreDelegate? { get set }
     
-    /// Get the current authorization token
-    ///
-    /// - returns: The current authorization token. (auth_type + access_token)
-    func requestAuthorization() -> String?
+    /// The current authorization token. (auth_type + access_token)
+    var authorizationToken: String? { get }
 }

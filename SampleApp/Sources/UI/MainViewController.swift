@@ -215,7 +215,7 @@ private extension MainViewController {
             }
             
             // Enable Nugu SDK
-            NuguCentralManager.shared.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+            NuguCentralManager.shared.enable()
         case false:
             // Exception handling when already disconnected, scheduled update in future
             guard NuguCentralManager.shared.client.networkManager.connected == true else {
