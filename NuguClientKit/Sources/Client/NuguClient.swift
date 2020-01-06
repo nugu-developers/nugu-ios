@@ -52,8 +52,6 @@ public class NuguClient: NuguClientContainer {
     public let inputProvider: AudioProvidable
     /// <#Description#>
     public let endPointDetector: EndPointDetectable
-    /// <#Description#>
-    let downstreamDataTimeoutPreprocessor: DownstreamDataTimeoutPreprocessor
     
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
@@ -131,7 +129,6 @@ public class NuguClient: NuguClientContainer {
         self.dialogStateAggregator = dialogStateAggregator
         self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
         self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
-        self.downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
         
         asrAgent?.add(delegate: dialogStateAggregator)
         textAgent?.add(delegate: dialogStateAggregator)

@@ -465,30 +465,10 @@ private extension TTSAgent {
 private extension TTSAgent {
     func releaseFocusIfNeeded() {
         guard focusState != .nothing else { return }
-        guard [.idle, .stopped, .finished].contains(self.ttsState) else { return }
-        focusManager.releaseFocus(channelDelegate: self)
-    }
-}
-
-// MARK: - MediaPlayerState + EventTypeInfo
-
-private extension MediaPlayerState {
-    var eventTypeInfo: TTSAgent.Event.TypeInfo? {
-        switch self {
-        case .bufferRefilled, .bufferUnderrun:
-            return nil
-        case .start:
-            return .speechStarted
-        case .stop:
-            return .speechStopped
-        case .pause:
-            return nil
-        case .resume:
-            return nil
-        case .finish:
-            return .speechFinished
-        case .error:
-            return .speechStopped
+        guard [.idle, .stopped, .finished].contains(ttsState) else {
+            log.info("Not permitted in current state, \(ttsState)")
+            return
         }
+        focusManager.releaseFocus(channelDelegate: self)
     }
 }

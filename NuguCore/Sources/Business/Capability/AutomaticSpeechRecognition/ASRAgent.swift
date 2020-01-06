@@ -59,15 +59,10 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
                 expectingSpeechTimeout?.dispose()
             }
             
-            // dispose responseTimeout
-            if asrState != .busy {
-                responseTimeout?.dispose()
-            }
-            
             // release asrRequest
             if asrState == .idle {
                 asrRequest = nil
-                releaseFocus()
+                releaseFocusIfNeeded()
             }
             
             // Stop EPD
@@ -110,13 +105,15 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
                 asrState = .idle
             case .error(let error):
                 switch error {
-                case .responseTimeout:
+                case NetworkError.timeout:
                     sendEvent(event: .responseTimeout)
-                case .listeningTimeout:
+                case ASRError.listeningTimeout:
                     sendEvent(event: .listenTimeout)
-                case .listenFailed:
+                case ASRError.listenFailed:
                     sendEvent(event: .listenFailed)
-                case .recognizeFailed:
+                case ASRError.recognizeFailed:
+                    break
+                default:
                     break
                 }
                 currentExpectSpeech = nil
@@ -140,7 +137,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     
     private lazy var disposeBag = DisposeBag()
     private var expectingSpeechTimeout: Disposable?
-    private var responseTimeout: Disposable?
     
     public init(
         focusManager: FocusManageable,
@@ -150,7 +146,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
         audioStream: AudioStreamable,
         endPointDetector: EndPointDetectable,
         dialogStateAggregator: DialogStateAggregatable,
-        streamDataRouter: StreamDataRoutable,
         directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
@@ -166,9 +161,7 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
         self.endPointDetector.delegate = self
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
-        streamDataRouter.add(delegate: self)
         directiveSequencer.add(handleDirectiveDelegate: self)
-        
     }
     
     deinit {
@@ -329,7 +322,7 @@ extension ASRAgent: ContextInfoDelegate {
 extension ASRAgent: EndPointDetectorDelegate {
     public func endPointDetectorDidError() {
         asrDispatchQueue.async { [weak self] in
-            self?.asrResult = .error(.listenFailed)
+            self?.asrResult = .error(ASRError.listenFailed)
         }
     }
     
@@ -354,7 +347,7 @@ extension ASRAgent: EndPointDetectorDelegate {
             case .end, .reachToMaxLength, .finish, .unknown:
                 self.executeStopSpeech()
             case .timeout:
-                self.asrResult = .error(.listeningTimeout)
+                self.asrResult = .error(ASRError.listeningTimeout)
             }
         }
     }
@@ -381,29 +374,9 @@ extension ASRAgent: EndPointDetectorDelegate {
                 dialogRequestId: asrRequest.dialogRequestId
             )
             let attachment = UpstreamAttachment(header: attachmentHeader, content: speechData, seq: self.attachmentSeq, isEnd: false)
-            self.upstreamDataSender.send(upstreamAttachment: attachment, completion: nil)
+            self.upstreamDataSender.send(upstreamAttachment: attachment, completion: nil, resultHandler: nil)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
-        }
-    }
-}
-
-// MARK: - DownstreamDataDelegate
-
-extension ASRAgent: DownstreamDataDelegate {
-    public func downstreamDataDidReceive(directive: Downstream.Directive) {
-        asrDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let request = self.asrRequest else { return }
-            guard directive.header.type != DirectiveTypeInfo.notifyResult.type else { return }
-            guard request.dialogRequestId == directive.header.dialogRequestId else { return }
-            
-            switch self.asrState {
-            case .busy, .expectingSpeech:
-                self.releaseFocus()
-            case .idle, .listening, .recognizing:
-                return
-            }
         }
     }
 }
@@ -441,7 +414,7 @@ private extension ASRAgent {
                     .timer(ASRConst.focusTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                     .subscribe(onNext: { [weak self] _ in
                         log.info("expectingSpeechTimeout")
-                        self?.asrResult = .error(.listenFailed)
+                        self?.asrResult = .error(ASRError.listenFailed)
                     })
                 self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
                 
@@ -469,7 +442,7 @@ private extension ASRAgent {
                 case .none:
                     self.asrResult = .none
                 case .error:
-                    self.asrResult = .error(.recognizeFailed)
+                    self.asrResult = .error(ASRError.recognizeFailed)
                 case .sos, .eos, .reset, .falseAcceptance:
                     // TODO 추후 Server EPD 개발시 구현
                     break
@@ -541,17 +514,6 @@ private extension ASRAgent {
 //        }
     }
     
-    func sendEndOfSpeechAttachment(asrRequest: ASRRequest) {
-        let attachmentHeader = UpstreamHeader(
-            namespace: capabilityAgentProperty.name,
-            name: "Recognize",
-            version: capabilityAgentProperty.version,
-            dialogRequestId: asrRequest.dialogRequestId
-        )
-        let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), seq: attachmentSeq, isEnd: true)
-        upstreamDataSender.send(upstreamAttachment: attachment, completion: nil)
-    }
-    
     func sendEvent(event: ASRAgent.Event.TypeInfo) {
         guard let asrRequest = asrRequest else {
             log.warning("ASRRequest not exist")
@@ -568,8 +530,13 @@ private extension ASRAgent {
 // MARK: - Private(FocusManager)
 
 private extension ASRAgent {
-    func releaseFocus() {
+    func releaseFocusIfNeeded() {
         guard focusState != .nothing else { return }
+        guard asrState == .idle else {
+            log.info("Not permitted in current state, \(asrState)")
+            return
+        }
+        
         focusManager.releaseFocus(channelDelegate: self)
     }
 }
@@ -608,7 +575,7 @@ private extension ASRAgent {
         sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
             guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
             guard case .success = status else {
-                self?.asrResult = .error(.recognizeFailed)
+                self?.asrResult = .error(ASRError.recognizeFailed)
                 return
             }
         }
@@ -631,15 +598,23 @@ private extension ASRAgent {
         
         asrState = .busy
         
-        responseTimeout?.dispose()
-        responseTimeout = Observable<Int>
-            .timer(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-            .subscribe(onNext: { [weak self] _ in
-                log.info("responseTimeout")
-                self?.asrResult = .error(.responseTimeout)
-            })
-        self.responseTimeout?.disposed(by: self.disposeBag)
-        
-        sendEndOfSpeechAttachment(asrRequest: asrRequest)
+        let attachmentHeader = UpstreamHeader(
+            namespace: capabilityAgentProperty.name,
+            name: "Recognize",
+            version: capabilityAgentProperty.version,
+            dialogRequestId: asrRequest.dialogRequestId
+        )
+        let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), seq: attachmentSeq, isEnd: true)
+        upstreamDataSender.send(upstreamAttachment: attachment, completion: nil) { [weak self] result in
+            guard let self = self else { return }
+            guard asrRequest.dialogRequestId == self.asrRequest?.dialogRequestId else { return }
+            
+            switch result {
+            case .success:
+                self.asrState = .idle
+            case .failure(let error):
+                self.asrResult = .error(error)
+            }
+        }
     }
 }

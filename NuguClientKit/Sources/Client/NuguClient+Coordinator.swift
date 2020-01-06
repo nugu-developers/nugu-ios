@@ -30,11 +30,8 @@ extension NuguClient {
         // Setup managers
         networkManager.add(receiveMessageDelegate: streamDataRouter)
         streamDataRouter.add(delegate: directiveSequencer)
-        streamDataRouter.add(preprocessor: downstreamDataTimeoutPreprocessor)
         contextManager.add(provideContextDelegate: playSyncManager)
         dialogStateAggregator.add(delegate: focusManager)
-        
-        setupDownstreamDataTimeoutPreprocessorDependency()
         
         setupAudioStreamDependency()
         setupWakeUpDetectorDependency()
@@ -44,11 +41,6 @@ extension NuguClient {
 // MARK: - Core
 
 extension NuguClient {
-    func setupDownstreamDataTimeoutPreprocessorDependency() {
-        asrAgent?.add(delegate: downstreamDataTimeoutPreprocessor)
-        textAgent?.add(delegate: downstreamDataTimeoutPreprocessor)
-    }
-    
     func setupAudioStreamDependency() {
         guard let audioStream = sharedAudioStream as? AudioStream else { return }
         

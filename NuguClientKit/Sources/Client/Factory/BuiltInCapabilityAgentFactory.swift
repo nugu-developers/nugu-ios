@@ -35,7 +35,6 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
             audioStream: container.sharedAudioStream,
             endPointDetector: container.endPointDetector,
             dialogStateAggregator: container.dialogStateAggregator,
-            streamDataRouter: container.streamDataRouter,
             directiveSequencer: container.directiveSequencer
         )
     }
@@ -70,7 +69,6 @@ public class BuiltInCapabilityAgentFactory: CapabilityAgentFactory {
             upstreamDataSender: container.streamDataRouter,
             focusManager: container.focusManager,
             channelPriority: .recognition,
-            streamDataRouter: container.streamDataRouter,
             dialogStateAggregator: container.dialogStateAggregator
         )
     }

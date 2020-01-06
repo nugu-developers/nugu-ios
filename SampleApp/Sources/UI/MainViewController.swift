@@ -548,13 +548,13 @@ extension MainViewController: ASRAgentDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
             }
-        case .error(let asrError):
+        case .error(let error):
             DispatchQueue.main.async { [weak self] in
-                switch asrError {
-                case .listenFailed:
+                switch error {
+                case ASRError.listenFailed:
                     ASRBeepPlayer.shared.beep(type: .fail)
                     self?.nuguVoiceChrome.changeState(state: .speakingError)
-                case .recognizeFailed:
+                case ASRError.recognizeFailed:
                     LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
                 default:
                     ASRBeepPlayer.shared.beep(type: .fail)
@@ -568,18 +568,15 @@ extension MainViewController: ASRAgentDelegate {
 // MARK: - TextAgentDelegate
 
 extension MainViewController: TextAgentDelegate {
-    func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
+    func textAgentDidReceive(result: Result<Void, Error>, dialogRequestId: String) {
         switch result {
-        case .complete:
+        case .success:
             DispatchQueue.main.async {
                 ASRBeepPlayer.shared.beep(type: .success)
             }
-        case .error(let textAgentError):
-            switch textAgentError {
-            case .responseTimeout:
-                DispatchQueue.main.async {
-                    ASRBeepPlayer.shared.beep(type: .fail)
-                }
+        case .failure:
+            DispatchQueue.main.async {
+                ASRBeepPlayer.shared.beep(type: .fail)
             }
         }
     }

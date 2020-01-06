@@ -49,12 +49,10 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
             log.info("from: \(oldValue) to: \(textAgentState)")
             guard oldValue != textAgentState else { return }
             
-            // dispose responseTimeout
-            switch textAgentState {
-            case .busy:
-                break
-            default:
-                responseTimeout?.dispose()
+            // release textRequest
+            if textAgentState == .idle {
+                textRequest = nil
+                releaseFocusIfNeeded()
             }
             
             delegates.notify { delegate in
@@ -66,15 +64,11 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
     // For Recognize Event
     private var textRequest: TextRequest?
     
-    private lazy var disposeBag = DisposeBag()
-    private var responseTimeout: Disposable?
-    
     public init(
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
         focusManager: FocusManageable,
         channelPriority: FocusChannelPriority,
-        streamDataRouter: StreamDataRoutable,
         dialogStateAggregator: DialogStateAggregatable
     ) {
         log.info("")
@@ -86,7 +80,6 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
         self.dialogStateAggregator = dialogStateAggregator
         
         contextManager.add(provideContextDelegate: self)
-        streamDataRouter.add(delegate: self)
     }
     
     deinit {
@@ -154,10 +147,10 @@ extension TextAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Background 허용 안함.
-            case (.background, _):
-                self.releaseFocus()
-            case (.nothing, _):
+            case (_, let textAgentState) where textAgentState != .idle:
                 self.textAgentState = .idle
+            default:
+                break
             }
         }
     }
@@ -166,33 +159,14 @@ extension TextAgent: FocusChannelDelegate {
 // MARK: - Private(FocusManager)
 
 private extension TextAgent {
-    func releaseFocus() {
+    func releaseFocusIfNeeded() {
         guard focusState != .nothing else { return }
-        
-        textRequest = nil
-        focusManager.releaseFocus(channelDelegate: self)
-    }
-}
-
-// MARK: - DownstreamDataDelegate
-
-extension TextAgent: DownstreamDataDelegate {
-    public func downstreamDataDidReceive(directive: Downstream.Directive) {
-        textDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let request = self.textRequest else { return }
-            guard request.dialogRequestId == directive.header.dialogRequestId else { return }
-            
-            switch self.textAgentState {
-            case .busy:
-                self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: .complete, dialogRequestId: request.dialogRequestId)
-                })
-                self.releaseFocus()
-            case .idle:
-                return
-            }
+        guard textAgentState == .idle else {
+            log.info("Not permitted in current state, \(textAgentState)")
+            return
         }
+        
+        focusManager.releaseFocus(channelDelegate: self)
     }
 }
 
@@ -207,23 +181,18 @@ private extension TextAgent {
         
         textAgentState = .busy
         
-        responseTimeout?.dispose()
-        responseTimeout = Observable<Int>
-            .timer(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.releaseFocus()
-                
-                self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: .error(.responseTimeout), dialogRequestId: textRequest.dialogRequestId)
-                })
-            })
-        responseTimeout?.disposed(by: disposeBag)
-        
         sendEvent(
             Event(typeInfo: .textInput(text: textRequest.text), expectSpeech: dialogStateAggregator.expectSpeech),
-            contextPayload: textRequest.contextPayload,
             dialogRequestId: textRequest.dialogRequestId
-        )
+        ) { [weak self] result in
+            guard let self = self else { return }
+            guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
+            
+            let result = result.map({ _ in () })
+            self.delegates.notify({ (delegate) in
+                delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
+            })
+            self.textAgentState = .idle
+        }
     }
 }
