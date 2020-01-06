@@ -22,8 +22,10 @@ import Foundation
 
 import NuguInterface
 
+// MARK: - CapabilityDirectiveAgentable
+
 extension ASRAgent {
-    enum DirectiveTypeInfo: CaseIterable {
+    public enum DirectiveTypeInfo: CaseIterable {
         case expectSpeech
         case notifyResult
     }
@@ -32,23 +34,23 @@ extension ASRAgent {
 // MARK: - DirectiveTypeInforable
 
 extension ASRAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "ASR" }
+    public var namespace: String { "ASR" }
     
-    var name: String {
+    public var name: String {
         switch self {
         case .expectSpeech: return "ExpectSpeech"
         case .notifyResult: return "NotifyResult"
         }
     }
 
-    var medium: DirectiveMedium {
+    public var medium: DirectiveMedium {
         switch self {
         case .expectSpeech: return .audio
         case .notifyResult: return .none
         }
     }
 
-    var isBlocking: Bool {
+    public var isBlocking: Bool {
         switch self {
         case .expectSpeech: return true
         case .notifyResult: return false

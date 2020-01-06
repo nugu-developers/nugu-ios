@@ -22,7 +22,9 @@ import Foundation
 
 import NuguInterface
 
-extension AudioPlayerAgent: CapabilityEventSendable {
+// MARK: - CapabilityEventAgentable
+
+extension AudioPlayerAgent {
     public struct Event {
         let token: String
         let offsetInMilliseconds: Int

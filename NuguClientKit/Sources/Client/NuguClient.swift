@@ -66,7 +66,10 @@ public class NuguClient: NuguClientContainer {
     public private(set) lazy var systemAgent: SystemAgentProtocol = SystemAgent(
         contextManager: contextManager,
         networkManager: networkManager,
-        upstreamDataSender: streamDataRouter
+        upstreamDataSender: streamDataRouter,
+        dialogStateAggregator: dialogStateAggregator,
+        directiveSequencer: directiveSequencer,
+        authorizationManager: authorizationManager
     )
     
     /// <#Description#>
@@ -88,43 +91,48 @@ public class NuguClient: NuguClientContainer {
     /// - Parameter authorizationManager: <#authorizationManager description#>
     /// - Parameter focusManager: <#focusManager description#>
     /// - Parameter networkManager: <#networkManager description#>
-    /// - Parameter dialogStateAggregator: <#dialogStateAggregator description#>
     /// - Parameter contextManager: <#contextManager description#>
     /// - Parameter playSyncManager: <#playSyncManager description#>
-    /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
     /// - Parameter sharedAudioStream: <#sharedAudioStream description#>
     /// - Parameter inputProvider: <#inputProvider description#>
     /// - Parameter endPointDetector: <#endPointDetector description#>
     /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
+    /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
     /// - Parameter capabilityAgentFactory: <#capabilityAgentFactory description#>
     public init(
         authorizationManager: AuthorizationManageable = AuthorizationManager.shared,
         focusManager: FocusManageable = FocusManager(),
         networkManager: NetworkManageable = NetworkManager(),
-        dialogStateAggregator: DialogStateAggregatable = DialogStateAggregator(),
         contextManager: ContextManageable = ContextManager(),
         playSyncManager: PlaySyncManageable = PlaySyncManager(),
-        mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
         sharedAudioStream: AudioStreamable = AudioStream(capacity: 300),
         inputProvider: AudioProvidable = MicInputProvider(),
         endPointDetector: EndPointDetectable = EndPointDetector(),
         wakeUpDetector: KeywordDetector? = KeywordDetector(),
+        mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
         capabilityAgentFactory: CapabilityAgentFactory
     ) {
         self.authorizationManager = authorizationManager
         self.focusManager = focusManager
         self.networkManager = networkManager
-        self.dialogStateAggregator = dialogStateAggregator
         self.contextManager = contextManager
         self.playSyncManager = playSyncManager
-        self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
-        self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
         self.mediaPlayerFactory = mediaPlayerFactory
         self.sharedAudioStream = sharedAudioStream
         self.inputProvider = inputProvider
         self.endPointDetector = endPointDetector
         self.wakeUpDetector = wakeUpDetector
         self.capabilityAgentFactory = capabilityAgentFactory
+        
+        let dialogStateAggregator = DialogStateAggregator()
+        
+        self.dialogStateAggregator = dialogStateAggregator
+        self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
+        self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
+        
+        asrAgent?.add(delegate: dialogStateAggregator)
+        textAgent?.add(delegate: dialogStateAggregator)
+        ttsAgent?.add(delegate: dialogStateAggregator)
         
         setupDependencies()
     }

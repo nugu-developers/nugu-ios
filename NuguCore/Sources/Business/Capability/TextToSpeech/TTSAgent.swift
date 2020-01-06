@@ -24,16 +24,22 @@ import NuguInterface
 
 import RxSwift
 
-final public class TTSAgent: TTSAgentProtocol {
+final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
     
-    private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
-    private let mediaPlayerFactory: MediaPlayerFactory
-    private let upstreamDataSender: UpstreamDataSendable
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
+    
+    // Private
     private let playSyncManager: PlaySyncManageable
+    private let mediaPlayerFactory: MediaPlayerFactory
+    
+    private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
     
@@ -57,6 +63,7 @@ final public class TTSAgent: TTSAgentProtocol {
             }
         }
     }
+    
     private let ttsResultSubject = PublishSubject<(dialogRequestId: String, result: TTSResult)>()
     
     // Current play Info
@@ -75,7 +82,9 @@ final public class TTSAgent: TTSAgentProtocol {
         channelPriority: FocusChannelPriority,
         mediaPlayerFactory: MediaPlayerFactory,
         upstreamDataSender: UpstreamDataSendable,
-        playSyncManager: PlaySyncManageable
+        playSyncManager: PlaySyncManageable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
@@ -84,6 +93,10 @@ final public class TTSAgent: TTSAgentProtocol {
         self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        
+        contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
         
         ttsResultSubject.subscribe(onNext: { [weak self] (_, result) in
             // Send error
@@ -120,10 +133,7 @@ public extension TTSAgent {
             let dialogRequestId = TimeUUID().hexString
             self.sendEvent(
                 event,
-                context: self.contextInfoRequestContext(),
-                dialogRequestId: dialogRequestId,
-                property: self.capabilityAgentProperty,
-                by: self.upstreamDataSender
+                dialogRequestId: dialogRequestId
             )
             
             self.ttsResultSubject
@@ -144,10 +154,6 @@ public extension TTSAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension TTSAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirectivePrefetch(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -210,10 +216,6 @@ extension TTSAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TTSAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(ttsState)")
         self.focusState = focusState
@@ -269,6 +271,7 @@ extension TTSAgent: MediaPlayerDelegate {
             switch state {
             case .start:
                 self.sendEvent(media: media, info: .speechStarted)
+                self.ttsState = .playing
             case .resume, .bufferRefilled:
                 self.ttsState = .playing
             case .finish:
@@ -451,10 +454,7 @@ private extension TTSAgent {
                 playServiceId: playServiceId,
                 typeInfo: info
             ),
-            context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender,
             resultHandler: resultHandler
         )
     }

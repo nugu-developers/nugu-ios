@@ -22,16 +22,24 @@ import Foundation
 
 import NuguInterface
 
-final public class TextAgent: TextAgentProtocol {
+import RxSwift
+
+final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     
-    private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
+    
+    // Private
     private let contextManager: ContextManageable
-    private let upstreamDataSender: UpstreamDataSendable
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
     private let dialogStateAggregator: DialogStateAggregatable
+    
+    private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TextAgentDelegate>()
     
@@ -70,6 +78,8 @@ final public class TextAgent: TextAgentProtocol {
         self.focusManager = focusManager
         self.channelPriority = channelPriority
         self.dialogStateAggregator = dialogStateAggregator
+        
+        contextManager.add(provideContextDelegate: self)
     }
     
     deinit {
@@ -123,10 +133,6 @@ extension TextAgent: ContextInfoDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TextAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(textAgentState)")
         self.focusState = focusState
@@ -177,14 +183,11 @@ private extension TextAgent {
         
         sendEvent(
             Event(typeInfo: .textInput(text: textRequest.text), expectSpeech: dialogStateAggregator.expectSpeech),
-            contextPayload: textRequest.contextPayload,
-            dialogRequestId: textRequest.dialogRequestId,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender
+            dialogRequestId: textRequest.dialogRequestId
         ) { [weak self] result in
             guard let self = self else { return }
             guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
-
+            
             let result = result.map({ _ in () })
             self.delegates.notify({ (delegate) in
                 delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)

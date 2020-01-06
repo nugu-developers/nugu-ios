@@ -1,6 +1,6 @@
 //
 //  DialogStateAggregator.swift
-//  NuguCore
+//  NuguClientKit
 //
 //  Created by MinChul Lee on 17/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -26,6 +26,7 @@ public class DialogStateAggregator: DialogStateAggregatable {
     private let dialogStateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.dialog_state_aggregator", qos: .userInitiated)
     private let dialogStateDelegates = DelegateSet<DialogStateDelegate>()
 
+    private let shortTimeout: DispatchTimeInterval = .milliseconds(200)
     private var multiturnSpeakingToListeningTimer: DispatchWorkItem?
 
     private var dialogState: DialogState = .idle {
@@ -145,6 +146,6 @@ private extension DialogStateAggregator {
             }
         }
         multiturnSpeakingToListeningTimer = workItem
-        dialogStateDispatchQueue.asyncAfter(deadline: .now() + DialogConst.shortTimeout, execute: workItem)
+        dialogStateDispatchQueue.asyncAfter(deadline: .now() + shortTimeout, execute: workItem)
     }
 }

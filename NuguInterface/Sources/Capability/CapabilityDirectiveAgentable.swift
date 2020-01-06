@@ -1,8 +1,8 @@
 //
-//  DialogConst.swift
-//  NuguCore
+//  CapabilityDirectiveAgentable.swift
+//  NuguInterface
 //
-//  Created by MinChul Lee on 22/04/2019.
+//  Created by yonghoonKwon on 2019/12/19.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,16 @@
 
 import Foundation
 
-enum DialogConst {
-    // 200ms
-    static let shortTimeout: DispatchTimeInterval = .milliseconds(200)
+public protocol CapabilityDirectiveAgentable: CapabilityAgentable, HandleDirectiveDelegate {
+    // CHECK-ME: var storedDirective: Downstream.Directive? { get }
+    
+    associatedtype DirectiveTypeInfo: DirectiveTypeInforable, CaseIterable
+}
+
+// MARK: - Default HandleDirectiveDelegate
+
+extension CapabilityDirectiveAgentable {
+    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
+        DirectiveTypeInfo.allDictionaryCases
+    }
 }

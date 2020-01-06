@@ -22,8 +22,10 @@ import Foundation
 
 import NuguInterface
 
+// MARK: - CapabilityDirectiveAgentable
+
 extension TTSAgent {
-    enum DirectiveTypeInfo: CaseIterable {
+    public enum DirectiveTypeInfo: CaseIterable {
         case speak
         case stop
     }
@@ -32,23 +34,23 @@ extension TTSAgent {
 // MARK: - DirectiveTypeInforable
 
 extension TTSAgent.DirectiveTypeInfo: DirectiveTypeInforable {
-    var namespace: String { "TTS" }
+    public var namespace: String { "TTS" }
     
-    var name: String {
+    public var name: String {
         switch self {
         case .speak: return "Speak"
         case .stop: return "Stop"
         }
     }
 
-    var medium: DirectiveMedium {
+    public var medium: DirectiveMedium {
         switch self {
         case .speak: return .audio
         case .stop: return .none
         }
     }
 
-    var isBlocking: Bool {
+    public var isBlocking: Bool {
         switch self {
         case .speak: return true
         case .stop: return false

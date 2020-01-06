@@ -24,26 +24,18 @@ import NuguInterface
 
 import RxSwift
 
-final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
+final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
     
-    private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
-    private lazy var audioPlayerScheduler = SerialDispatchQueueScheduler(
-        queue: audioPlayerDispatchQueue,
-        internalSerialQueueName: "com.sktelecom.romaine.audioplayer_agent_timer"
-    )
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
     
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
-    private let mediaPlayerFactory: MediaPlayerFactory
-    private let upstreamDataSender: UpstreamDataSendable
-    private let playSyncManager: PlaySyncManageable
-    
-    private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
     // AudioPlayerAgentProtocol
-    private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
-    
     public var offset: Int? {
         return currentMedia?.player.offset.truncatedSeconds
     }
@@ -51,6 +43,18 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
     public var duration: Int? {
         return currentMedia?.player.duration.truncatedSeconds
     }
+     
+    // Private
+    private let mediaPlayerFactory: MediaPlayerFactory
+    private let playSyncManager: PlaySyncManageable
+    private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
+    private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
+    
+    private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
+    private lazy var audioPlayerScheduler = SerialDispatchQueueScheduler(
+        queue: audioPlayerDispatchQueue,
+        internalSerialQueueName: "com.sktelecom.romaine.audioplayer_agent_timer"
+    )
     
     private var focusState: FocusState = .nothing
     private var audioPlayerState: AudioPlayerState = .idle {
@@ -112,7 +116,9 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
         channelPriority: FocusChannelPriority,
         mediaPlayerFactory: MediaPlayerFactory,
         upstreamDataSender: UpstreamDataSendable,
-        playSyncManager: PlaySyncManageable
+        playSyncManager: PlaySyncManageable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
@@ -121,6 +127,10 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol {
         self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        
+        contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
         
         audioPlayerDisplayManager.playSyncManager = playSyncManager
     }
@@ -237,10 +247,6 @@ public extension AudioPlayerAgent {
 // MARK: - HandleDirectiveDelegate
 
 extension AudioPlayerAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirectivePrefetch(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
@@ -284,10 +290,6 @@ extension AudioPlayerAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension AudioPlayerAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(audioPlayerState)")
         self.focusState = focusState
@@ -503,10 +505,7 @@ private extension AudioPlayerAgent {
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
             ),
-            context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
-            property: capabilityAgentProperty,
-            by: upstreamDataSender,
             resultHandler: resultHandler
         )
     }
