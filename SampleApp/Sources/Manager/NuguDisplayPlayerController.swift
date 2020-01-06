@@ -48,11 +48,15 @@ final class NuguDisplayPlayerController {
     }
     
     func use() {
+        // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
+        guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
         client.audioPlayerAgent?.add(displayDelegate: self)
         client.audioPlayerAgent?.add(delegate: self)
     }
     
     func unuse() {
+        // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
+        guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
         client.audioPlayerAgent?.remove(displayDelegate: self)
         client.audioPlayerAgent?.remove(delegate: self)
     }

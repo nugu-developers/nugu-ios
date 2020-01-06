@@ -63,13 +63,6 @@ final class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(didEnterBackground(_:)),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(didBecomeActive(_:)),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
@@ -132,13 +125,6 @@ final class MainViewController: UIViewController {
         NuguCentralManager.shared.stopWakeUpDetector()
     }
     
-    /// Catch entering background notification to disable nugu service
-    /// It is possible to keep connected even on background, but need careful attention for battery issues, audio interruptions and so on
-    /// - Parameter notification: UIApplication.didBecomeActiveNotification
-    func didEnterBackground(_ notification: Notification) {
-        NuguCentralManager.shared.disable()
-    }
-    
     /// Catch becoming active notification to refresh mic status & Nugu button
     /// Recover all status for any issues caused from becoming background
     /// - Parameter notification: UIApplication.didBecomeActiveNotification
@@ -171,7 +157,7 @@ private extension MainViewController {
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
         // Set AudioSession
-        NuguAudioSessionManager.allowMixWithOthers()
+        NuguAudioSessionManager.shared.updateAudioSession()
         
         // Add delegates
         NuguCentralManager.shared.client.networkManager.add(statusDelegate: self)
@@ -620,6 +606,12 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState) {
+        switch state {
+        case .paused, .playing:
+            NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
+        case .idle, .finished, .stopped:
+            NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
+        }
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }
