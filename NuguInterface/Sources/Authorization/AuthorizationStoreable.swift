@@ -1,8 +1,8 @@
 //
-//  AuthorizationStateDelegate.swift
+//  AuthorizationStoreable.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 26/04/2019.
+//  Created by MinChul Lee on 2019/12/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,12 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol AuthorizationStateDelegate: class {
-    /// <#Description#>
-    /// - Parameter state: <#state description#>
-    func authorizationStateDidChange(_ state: AuthorizationState)
+/// The `AuthorizationStoreable` is used to provide authorization token.
+/// Provide authorization token
+public protocol AuthorizationStoreable: class {
+    /// An delegate that application should extend to provide access token.
+    var delegate: AuthorizationStoreDelegate? { get set }
+    
+    /// The current authorization token. (auth_type + access_token)
+    var authorizationToken: String? { get }
 }

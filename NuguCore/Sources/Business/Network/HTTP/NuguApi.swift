@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguInterface
+
 public enum NuguApi {
     case policy
     case directives
@@ -83,33 +85,33 @@ public extension NuguApi {
         switch self {
         case .policy:
             return [
-                "Authorization": AuthorizationManager.shared.authorizationPayload?.authorization ?? ""
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? ""
             ]
         case .directives:
             return [
-                "Authorization": AuthorizationManager.shared.authorizationPayload?.authorization ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent
             ]
         case .event:
              return [
-                "Authorization": AuthorizationManager.shared.authorizationPayload?.authorization ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent,
                 "Content-Type": "application/json"
                 ]
         case .eventAttachment:
             return [
-                "Authorization": AuthorizationManager.shared.authorizationPayload?.authorization ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent,
                 "Content-Type": "application/octet-stream"
             ]
         case .ping:
             return [
-                "Authorization": AuthorizationManager.shared.authorizationPayload?.authorization ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent
             ]
         case .crashReport:
             return [
-                "Authorization": AuthorizationManager.shared.authorizationPayload?.authorization ?? "",
+                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent,
                 "Content-Type": "application/json"
             ]

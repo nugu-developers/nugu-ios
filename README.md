@@ -64,7 +64,6 @@ Before using `NUGU SDK for iOS`, connect to nugu when using NuguClientKit. like 
 let capabilityAgentFactory = BuiltInCapabilityAgentFactory() // If possible, avoid using `BuiltInCapabilityAgentFactory` and make only what you need. 
 let client = NuguClient(capabilityAgentFactory: capabilityAgentFactory)
 
-client.accessToken = "{access-token}"
 client.networkManager.connect()
 ```
 
