@@ -22,17 +22,17 @@ import Foundation
 
 import NuguInterface
 
-class BoundStreams: NSObject, StreamDelegate {
+public class BoundStreams: NSObject, StreamDelegate {
     private static var id = 0
     private var id: Int
-    let input: InputStream
-    let output: OutputStream
+    public let input: InputStream
+    public let output: OutputStream
     private let streamQueue = DispatchQueue(label: "com.sktelecom.romaine.bound_stream_queue")
     private var streamWorkItem: DispatchWorkItem?
     private var buffer: AudioStreamReadable?
     private let streamSemaphore = DispatchSemaphore(value: 0)
     
-    init(buffer: AudioStreamReadable) {
+    public init(buffer: AudioStreamReadable) {
         id = BoundStreams.id
         
         if BoundStreams.id == Int.max {
@@ -77,7 +77,7 @@ class BoundStreams: NSObject, StreamDelegate {
         streamQueue.async(execute: streamWorkItem!)
     }
     
-    func stop() {
+    public func stop() {
         log.debug("[id: \(id)] bound stream try to stop")
         streamWorkItem?.cancel()
         streamSemaphore.signal()
@@ -90,7 +90,7 @@ class BoundStreams: NSObject, StreamDelegate {
         }
     }
     
-    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch eventCode {
         case .hasSpaceAvailable:
             buffer?.read(complete: { [weak self] (result) in
