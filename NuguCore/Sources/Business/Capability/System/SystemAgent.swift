@@ -43,16 +43,13 @@ final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentabl
         contextManager: ContextManageable,
         networkManager: NetworkManageable,
         upstreamDataSender: UpstreamDataSendable,
-        directiveSequencer: DirectiveSequenceable,
-        authorizationManager: AuthorizationManageable
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
         self.contextManager = contextManager
         self.networkManager = networkManager
         self.upstreamDataSender = upstreamDataSender
-        
-        self.add(systemAgentDelegate: authorizationManager)
         
         contextManager.add(provideContextDelegate: self)
         networkManager.add(statusDelegate: self)

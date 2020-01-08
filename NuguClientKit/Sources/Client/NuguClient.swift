@@ -29,7 +29,7 @@ public class NuguClient: NuguClientContainer {
     // MARK: NuguClientContainer
     
     /// <#Description#>
-    public let authorizationManager: AuthorizationManageable
+    public let authorizationStore: AuthorizationStoreable
     /// <#Description#>
     public let focusManager: FocusManageable
     /// <#Description#>
@@ -67,8 +67,7 @@ public class NuguClient: NuguClientContainer {
         contextManager: contextManager,
         networkManager: networkManager,
         upstreamDataSender: streamDataRouter,
-        directiveSequencer: directiveSequencer,
-        authorizationManager: authorizationManager
+        directiveSequencer: directiveSequencer
     )
     
     /// <#Description#>
@@ -99,7 +98,7 @@ public class NuguClient: NuguClientContainer {
     /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
     /// - Parameter capabilityAgentFactory: <#capabilityAgentFactory description#>
     public init(
-        authorizationManager: AuthorizationManageable = AuthorizationManager.shared,
+        authorizationStore: AuthorizationStoreable = AuthorizationStore.shared,
         focusManager: FocusManageable = FocusManager(),
         networkManager: NetworkManageable = NetworkManager(),
         contextManager: ContextManageable = ContextManager(),
@@ -111,7 +110,7 @@ public class NuguClient: NuguClientContainer {
         mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
         capabilityAgentFactory: CapabilityAgentFactory
     ) {
-        self.authorizationManager = authorizationManager
+        self.authorizationStore = authorizationStore
         self.focusManager = focusManager
         self.networkManager = networkManager
         self.contextManager = contextManager
@@ -132,24 +131,6 @@ public class NuguClient: NuguClientContainer {
         ttsAgent?.add(delegate: dialogStateAggregator)
         
         setupDependencies()
-    }
-}
-
-// MARK: - Authorization
-
-public extension NuguClient {
-    /// <#Description#>
-    var accessToken: String? {
-        get {
-            return authorizationManager.authorizationPayload?.accessToken
-        } set {
-            guard let newAccessToken = newValue else {
-                authorizationManager.authorizationPayload = nil
-                return
-            }
-            
-            authorizationManager.authorizationPayload = AuthorizationPayload(accessToken: newAccessToken)
-        }
     }
 }
 

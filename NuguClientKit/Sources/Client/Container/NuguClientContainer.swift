@@ -25,7 +25,7 @@ import NuguInterface
 /// <#Description#>
 public protocol NuguClientContainer {
     /// <#Description#>
-    var authorizationManager: AuthorizationManageable { get }
+    var authorizationStore: AuthorizationStoreable { get }
     /// <#Description#>
     var focusManager: FocusManageable { get }
     /// <#Description#>

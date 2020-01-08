@@ -1,8 +1,8 @@
 //
-//  AuthorizationState.swift
+//  AuthorizationStoreDelegate.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 26/04/2019.
+//  Created by MinChul Lee on 2019/12/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,15 +20,10 @@
 
 import Foundation
 
-/// <#Description#>
-public enum AuthorizationState {
-    /// <#Description#>
-    case uninitialized
-    /// <#Description#>
-    case refreshed
-    /// <#Description#>
-    /// - Parameter error: <#error description#>
-    case error(_ error: AuthorizationError)
+/// An delegate that application should extend to provide access token.
+public protocol AuthorizationStoreDelegate: class {
+    /// Provides an access token from cache(ex> `UserDefault`).
+    ///
+    /// - returns: The current authorization token.
+    func authorizationStoreRequestAccessToken() -> String?
 }
-
-extension AuthorizationState: Equatable {}

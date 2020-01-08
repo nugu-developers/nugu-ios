@@ -30,6 +30,7 @@ final class NuguCentralManager {
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
     
     private init() {
+        client.authorizationStore.delegate = self
         client.focusManager.delegate = self
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
@@ -50,15 +51,13 @@ final class NuguCentralManager {
 // MARK: - Internal (Enable / Disable)
 
 extension NuguCentralManager {
-    func enable(accessToken: String) {
-        client.accessToken = accessToken
+    func enable() {
         client.networkManager.connect()
     }
     
     func disable() {
         client.focusManager.stopForegroundActivity()
         client.networkManager.disconnect()
-        client.accessToken = nil
         client.inputProvider.stop()
     }
 }
@@ -141,7 +140,7 @@ extension NuguCentralManager {
                     self?.logoutAfterErrorHandling()
                     return
                 }
-                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+                self?.enable()
             }
         case .type2:
             loginType2 { [weak self] (result) in
@@ -149,7 +148,7 @@ extension NuguCentralManager {
                     self?.logoutAfterErrorHandling()
                     return
                 }
-                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+                self?.enable()
             }
         default:
             break
@@ -327,6 +326,14 @@ extension NuguCentralManager: FocusDelegate {
 extension NuguCentralManager: LocationAgentDelegate {
     func locationAgentRequestLocationInfo() -> LocationInfo? {
         return NuguLocationManager.shared.cachedLocationInfo
+    }
+}
+
+// MARK: - AuthorizationStoreDelegate
+
+extension NuguCentralManager: AuthorizationStoreDelegate {
+    func authorizationStoreRequestAccessToken() -> String? {
+        return UserDefaults.Standard.accessToken
     }
 }
 
