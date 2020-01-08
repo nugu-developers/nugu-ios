@@ -150,9 +150,6 @@
 		1FFFF2FA2375703100C9A177 /* DirectiveTypeInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2952375703000C9A177 /* DirectiveTypeInfoError.swift */; };
 		1FFFF2FB2375703100C9A177 /* AudioStreamProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2972375703000C9A177 /* AudioStreamProtocol.swift */; };
 		1FFFF2FC2375703100C9A177 /* AudioProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2982375703000C9A177 /* AudioProvidable.swift */; };
-		1FFFF2FD2375703100C9A177 /* EndPointDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF29A2375703000C9A177 /* EndPointDetectorDelegate.swift */; };
-		1FFFF2FE2375703100C9A177 /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF29B2375703000C9A177 /* EndPointDetectable.swift */; };
-		1FFFF2FF2375703100C9A177 /* EndPointDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF29C2375703000C9A177 /* EndPointDetectorState.swift */; };
 		1FFFF3052375703100C9A177 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* Eventable.swift */; };
 		1FFFF37E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */; };
 		1FFFF37F2375707000C9A177 /* MediaPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF30F2375707000C9A177 /* MediaPlayerError.swift */; };
@@ -317,8 +314,10 @@
 		1FFFF51A237674DF00C9A177 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
 		1FFFF51B237674DF00C9A177 /* NuguUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF525237676BE00C9A177 /* NuguTests.swift */; };
-		7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */; };
-		7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD80237A77D800FCD6E9 /* BoundStreams.swift */; };
+		7303C68623C5BFD500610343 /* EndPointDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68323C5BFD400610343 /* EndPointDetectorDelegate.swift */; };
+		7303C68723C5BFD500610343 /* EndPointDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68423C5BFD400610343 /* EndPointDetectorState.swift */; };
+		7303C68823C5BFD500610343 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68523C5BFD400610343 /* EndPointDetector.swift */; };
+		7303C68A23C5C00F00610343 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68923C5C00F00610343 /* BoundStreams.swift */; };
 		7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */; };
 		7330CD88237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */; };
 		7330CD89237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */; };
@@ -670,9 +669,6 @@
 		1FFFF2952375703000C9A177 /* DirectiveTypeInfoError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectiveTypeInfoError.swift; sourceTree = "<group>"; };
 		1FFFF2972375703000C9A177 /* AudioStreamProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioStreamProtocol.swift; sourceTree = "<group>"; };
 		1FFFF2982375703000C9A177 /* AudioProvidable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioProvidable.swift; sourceTree = "<group>"; };
-		1FFFF29A2375703000C9A177 /* EndPointDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectorDelegate.swift; sourceTree = "<group>"; };
-		1FFFF29B2375703000C9A177 /* EndPointDetectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
-		1FFFF29C2375703000C9A177 /* EndPointDetectorState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectorState.swift; sourceTree = "<group>"; };
 		1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationStore.swift; sourceTree = "<group>"; };
 		1FFFF2A42375703000C9A177 /* Eventable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Eventable.swift; sourceTree = "<group>"; };
 		1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaAVPlayerItemDelegate.swift; sourceTree = "<group>"; };
@@ -851,8 +847,10 @@
 		3D9C42DB22745DB0000A6585 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		3D9C43012274611B000A6585 /* nugu-ios-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nugu-ios-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D9C431122746198000A6585 /* nugu-ios-macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nugu-ios-macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetector.swift; sourceTree = "<group>"; };
-		7330CD80237A77D800FCD6E9 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
+		7303C68323C5BFD400610343 /* EndPointDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectorDelegate.swift; sourceTree = "<group>"; };
+		7303C68423C5BFD400610343 /* EndPointDetectorState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectorState.swift; sourceTree = "<group>"; };
+		7303C68523C5BFD400610343 /* EndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetector.swift; sourceTree = "<group>"; };
+		7303C68923C5C00F00610343 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
 		7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngineDelegate.swift; sourceTree = "<group>"; };
 		7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TycheEndpointDetectorEngine+State.swift"; sourceTree = "<group>"; };
@@ -1107,14 +1105,6 @@
 			path = KeywordDetector;
 			sourceTree = "<group>";
 		};
-		1F2E803723966B3A00569C59 /* EndPointDetector */ = {
-			isa = PBXGroup;
-			children = (
-				7330CD7F237A77D800FCD6E9 /* EndPointDetector.swift */,
-			);
-			path = EndPointDetector;
-			sourceTree = "<group>";
-		};
 		1F2E803A2397A22D00569C59 /* WakeUpDetectable */ = {
 			isa = PBXGroup;
 			children = (
@@ -1154,9 +1144,7 @@
 		1FD4A98223A22302002EB56D /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				1F2E803723966B3A00569C59 /* EndPointDetector */,
 				1F2E803623966B2900569C59 /* KeywordDetector */,
-				7330CD80237A77D800FCD6E9 /* BoundStreams.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -1289,7 +1277,6 @@
 				1FFFF28C2375703000C9A177 /* Dialog */,
 				1FFFF2902375703000C9A177 /* Directive */,
 				1FFFF2962375703000C9A177 /* Audio */,
-				1FFFF2992375703000C9A177 /* EndPointDetector */,
 				1FFFF29D2375703000C9A177 /* Authorization */,
 				1FFFF2A32375703000C9A177 /* Event */,
 			);
@@ -1524,16 +1511,6 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
-		1FFFF2992375703000C9A177 /* EndPointDetector */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF29B2375703000C9A177 /* EndPointDetectable.swift */,
-				1FFFF29A2375703000C9A177 /* EndPointDetectorDelegate.swift */,
-				1FFFF29C2375703000C9A177 /* EndPointDetectorState.swift */,
-			);
-			path = EndPointDetector;
-			sourceTree = "<group>";
-		};
 		1FFFF29D2375703000C9A177 /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
@@ -1618,6 +1595,7 @@
 		1FFFF31B2375707000C9A177 /* AudioStream */ = {
 			isa = PBXGroup;
 			children = (
+				7303C68923C5C00F00610343 /* BoundStreams.swift */,
 				1FFFF31F2375707000C9A177 /* AudioStream.swift */,
 				1FFFF31E2375707000C9A177 /* SharedBuffer.swift */,
 				1FFFF31C2375707000C9A177 /* SharedBufferIndex.swift */,
@@ -1742,6 +1720,7 @@
 		1FFFF3422375707000C9A177 /* AutomaticSpeechRecognition */ = {
 			isa = PBXGroup;
 			children = (
+				7303C68223C5BF5E00610343 /* EndPointDetector */,
 				1FFFF3432375707000C9A177 /* ASRAgent.swift */,
 				1FFFF3462375707000C9A177 /* ASRAgent+Directive.swift */,
 				1FFFF3482375707000C9A177 /* ASRAgent+Event.swift */,
@@ -2297,14 +2276,24 @@
 			name = Configs;
 			sourceTree = "<group>";
 		};
+		7303C68223C5BF5E00610343 /* EndPointDetector */ = {
+			isa = PBXGroup;
+			children = (
+				7303C68523C5BFD400610343 /* EndPointDetector.swift */,
+				7303C68323C5BFD400610343 /* EndPointDetectorDelegate.swift */,
+				7303C68423C5BFD400610343 /* EndPointDetectorState.swift */,
+			);
+			path = EndPointDetector;
+			sourceTree = "<group>";
+		};
 		7E98BAD1239A2FBD00B9582D /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
 				1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */,
 			);
 			path = Authorization;
-            sourceTree = "<group>";
-        };
+			sourceTree = "<group>";
+		};
 		7E98BAD3239F997C00B9582D /* Api */ = {
 			isa = PBXGroup;
 			children = (
@@ -2888,14 +2877,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FFFF2F42375703100C9A177 /* DialogStateDelegate.swift in Sources */,
-				1FFFF2FD2375703100C9A177 /* EndPointDetectorDelegate.swift in Sources */,
 				1FFFF2CB2375703100C9A177 /* CapabilityAgentCategory.swift in Sources */,
 				1FFFF2F62375703100C9A177 /* DirectiveSequenceable.swift in Sources */,
 				1FFFF2E22375703100C9A177 /* UpstreamAttachment.swift in Sources */,
 				1FFFF3052375703100C9A177 /* Eventable.swift in Sources */,
 				1FFFF2F22375703100C9A177 /* FocusManageable.swift in Sources */,
 				1FFFF2D22375703100C9A177 /* DisplayAgentDelegate.swift in Sources */,
-				1FFFF2FF2375703100C9A177 /* EndPointDetectorState.swift in Sources */,
 				1FFFF2F82375703100C9A177 /* DirectiveTypeInfos.swift in Sources */,
 				1FFFF2B82375703000C9A177 /* SpeakerVolumeDelegate.swift in Sources */,
 				1FFFF2A92375703000C9A177 /* MediaPlayerFactory.swift in Sources */,
@@ -2931,7 +2918,6 @@
 				1FFFF2B42375703000C9A177 /* ExtensionAgentProtocol.swift in Sources */,
 				1FFFF2B22375703000C9A177 /* CapabilityAgentProperty.swift in Sources */,
 				1FFFF2DB2375703100C9A177 /* NetworkStatusDelegate.swift in Sources */,
-				1FFFF2FE2375703100C9A177 /* EndPointDetectable.swift in Sources */,
 				1FFFF2B12375703000C9A177 /* DelegateSet.swift in Sources */,
 				1FFFF2B02375703000C9A177 /* DelegateDictionary.swift in Sources */,
 				1FD1CFE423AB7D1D0000FB8C /* CapabilityEventAgentable.swift in Sources */,
@@ -2998,6 +2984,7 @@
 				7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */,
 				1FFFF39F2375707100C9A177 /* AudioPlayerDisplayRenderingInfo.swift in Sources */,
 				1FFFF3C62375707100C9A177 /* FocusChannelInfo.swift in Sources */,
+				7303C68A23C5C00F00610343 /* BoundStreams.swift in Sources */,
 				1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */,
 				1FFFF3B52375707100C9A177 /* DisplayAgent+Directive.swift in Sources */,
 				1FFFF3BE2375707100C9A177 /* NuguApiProvider.swift in Sources */,
@@ -3042,6 +3029,7 @@
 				1FFFF37F2375707000C9A177 /* MediaPlayerError.swift in Sources */,
 				1FFFF3B02375707100C9A177 /* TTSAgent+Directive.swift in Sources */,
 				1FFFF3D4237570C900C9A177 /* ObjcExceptionCatcher.m in Sources */,
+				7303C68723C5BFD500610343 /* EndPointDetectorState.swift in Sources */,
 				1FFFF39D2375707100C9A177 /* AudioPlayerAgent+Event.swift in Sources */,
 				73454FBD2382C1E50073AF48 /* Publish.swift in Sources */,
 				1FFFF3CB2375707100C9A177 /* DirectiveSequencer.swift in Sources */,
@@ -3049,6 +3037,7 @@
 				1FFFF3882375707000C9A177 /* SharedBufferIndex.swift in Sources */,
 				1FFFF3852375707000C9A177 /* OpusPlayerConst.swift in Sources */,
 				1FFFF39E2375707100C9A177 /* AudioPlayerDisplayManager.swift in Sources */,
+				7303C68823C5BFD500610343 /* EndPointDetector.swift in Sources */,
 				1FFFF3A32375707100C9A177 /* LocationAgent.swift in Sources */,
 				1FFFF38A2375707000C9A177 /* SharedBuffer.swift in Sources */,
 				1FFFF3B82375707100C9A177 /* TextAgent.swift in Sources */,
@@ -3057,6 +3046,7 @@
 				1FFFF3AB2375707100C9A177 /* SystemAgent+Event.swift in Sources */,
 				1FFFF3A62375707100C9A177 /* WakeUpInfoDelegate.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
+				7303C68623C5BFD500610343 /* EndPointDetectorDelegate.swift in Sources */,
 				1FFFF3AC2375707100C9A177 /* SystemAgent+Directive.swift in Sources */,
 				1FFFF3A12375707100C9A177 /* AudioPlayerAgent+Directive.swift in Sources */,
 				1FFFF3A82375707100C9A177 /* ASRNotifyResult.swift in Sources */,
@@ -3092,8 +3082,6 @@
 				1FFFF3DF2375735E00C9A177 /* BuiltInMediaPlayerFactory.swift in Sources */,
 				1FD1CFF723BDC0660000FB8C /* DialogStateAggregator.swift in Sources */,
 				1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */,
-				7330CD82237A77D800FCD6E9 /* EndPointDetector.swift in Sources */,
-				7330CD83237A77D800FCD6E9 /* BoundStreams.swift in Sources */,
 				1FD4A98023A0D115002EB56D /* BuiltInCapabilityAgentFactory.swift in Sources */,
 				1FD4A97C23A0C2FD002EB56D /* NuguClientKit.swift in Sources */,
 				7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */,
