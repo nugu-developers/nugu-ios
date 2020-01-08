@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguInterface
+import NuguCore
 import KeenSense
 
 public class KeywordDetector: WakeUpDetectable {

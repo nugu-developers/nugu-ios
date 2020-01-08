@@ -20,7 +20,7 @@ Default Instances for Nugu service
 
   s.dependency 'NuguCore', '~> 0'
   s.dependency 'NuguInterface', '~> 0'
-  s.dependency 'JadeMarble', '~> 0'
   s.dependency 'KeenSense', '~> 0'
+
   s.dependency 'NattyLog', '~> 1'
 end

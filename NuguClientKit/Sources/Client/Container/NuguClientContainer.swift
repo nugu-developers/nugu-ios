@@ -46,6 +46,4 @@ public protocol NuguClientContainer {
     var sharedAudioStream: AudioStreamable { get }
     /// <#Description#>
     var inputProvider: AudioProvidable { get }
-    /// <#Description#>
-    var endPointDetector: EndPointDetectable { get }
 }

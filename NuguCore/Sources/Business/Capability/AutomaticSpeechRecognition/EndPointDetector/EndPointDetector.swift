@@ -23,7 +23,7 @@ import Foundation
 import NuguInterface
 import JadeMarble
 
-public class EndPointDetector: EndPointDetectable {
+public class EndPointDetector {
     private let engine = TycheEndPointDetectorEngine()
     private var boundStreams: BoundStreams?
     public weak var delegate: EndPointDetectorDelegate?
