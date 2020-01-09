@@ -24,4 +24,11 @@ import Foundation
 public protocol ExtensionAgentProtocol: CapabilityAgentable {
     /// The object that acts as the delegate of extension-agent
     var delegate: ExtensionAgentDelegate? { get set }
+    
+    // Send event to specific play with custom data.
+    /// - Parameters:
+    ///   - playServiceId: The play's unique id
+    ///   - data: Custom data
+    ///   - completion: The completion handler to call when the request is complete.
+    func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?)
 }
