@@ -12,7 +12,6 @@
 		1F1008D02379221700D90FEE /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
 		1F1008D12379221700D90FEE /* KeenSense.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F1008E22379237B00D90FEE /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
-		1F1008E52379237E00D90FEE /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
 		1F1008E82379237F00D90FEE /* NuguCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFFD23753F1800C9A177 /* NuguCore.framework */; };
 		1F1008EA2379238000D90FEE /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
 		1F1008EC2379242000D90FEE /* NuguInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFF023753EFD00C9A177 /* NuguInterface.framework */; };
@@ -318,6 +317,7 @@
 		7303C68723C5BFD500610343 /* EndPointDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68423C5BFD400610343 /* EndPointDetectorState.swift */; };
 		7303C68823C5BFD500610343 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68523C5BFD400610343 /* EndPointDetector.swift */; };
 		7303C68A23C5C00F00610343 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68923C5C00F00610343 /* BoundStreams.swift */; };
+		7303C69B23C83BFB00610343 /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
 		7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */; };
 		7330CD88237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */; };
 		7330CD89237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */; };
@@ -420,13 +420,6 @@
 			remoteGlobalIDString = 1FFFEFEF23753EFD00C9A177;
 			remoteInfo = NuguInterface;
 		};
-		1FFFF48723766E6700C9A177 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3D9C428722745894000A6585 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1FFFF03023753FA200C9A177;
-			remoteInfo = JadeMarble;
-		};
 		1FFFF510237674DF00C9A177 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D9C428722745894000A6585 /* Project object */;
@@ -503,6 +496,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1FFFF02323753F8A00C9A177;
 			remoteInfo = NuguUIKit;
+		};
+		7303C69D23C83BFB00610343 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FFFF03023753FA200C9A177;
+			remoteInfo = JadeMarble;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -907,6 +907,7 @@
 			files = (
 				1F10091923792A4900D90FEE /* RxSwift.framework in Frameworks */,
 				1FFFF22923756D1700C9A177 /* libopus.a in Frameworks */,
+				7303C69B23C83BFB00610343 /* JadeMarble.framework in Frameworks */,
 				1F10091323792A1F00D90FEE /* NattyLog.framework in Frameworks */,
 				1F1008E22379237B00D90FEE /* NuguInterface.framework in Frameworks */,
 			);
@@ -919,7 +920,6 @@
 				1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */,
 				1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */,
 				1F1008E82379237F00D90FEE /* NuguCore.framework in Frameworks */,
-				1F1008E52379237E00D90FEE /* JadeMarble.framework in Frameworks */,
 				1F1008EA2379238000D90FEE /* NuguInterface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2472,6 +2472,7 @@
 			);
 			dependencies = (
 				1FFFF22723756C0500C9A177 /* PBXTargetDependency */,
+				7303C69E23C83BFB00610343 /* PBXTargetDependency */,
 			);
 			name = NuguCore;
 			packageProductDependencies = (
@@ -2495,7 +2496,6 @@
 			dependencies = (
 				1FFFF3E52375737A00C9A177 /* PBXTargetDependency */,
 				1FFFF3E92375737A00C9A177 /* PBXTargetDependency */,
-				1FFFF48823766E6700C9A177 /* PBXTargetDependency */,
 			);
 			name = NuguClientKit;
 			packageProductDependencies = (
@@ -3237,11 +3237,6 @@
 			target = 1FFFEFEF23753EFD00C9A177 /* NuguInterface */;
 			targetProxy = 1FFFF43A23757E9A00C9A177 /* PBXContainerItemProxy */;
 		};
-		1FFFF48823766E6700C9A177 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1FFFF03023753FA200C9A177 /* JadeMarble */;
-			targetProxy = 1FFFF48723766E6700C9A177 /* PBXContainerItemProxy */;
-		};
 		1FFFF511237674DF00C9A177 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FFFF03D23753FB200C9A177 /* KeenSense */;
@@ -3296,6 +3291,11 @@
 			isa = PBXTargetDependency;
 			target = 1FFFF02323753F8A00C9A177 /* NuguUIKit */;
 			targetProxy = 1FFFF5392376779200C9A177 /* PBXContainerItemProxy */;
+		};
+		7303C69E23C83BFB00610343 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FFFF03023753FA200C9A177 /* JadeMarble */;
+			targetProxy = 7303C69D23C83BFB00610343 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
