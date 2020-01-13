@@ -20,23 +20,18 @@
 
 import Foundation
 
-public class ClientCredentialsGrant {
+public struct ClientCredentialsGrant {
+    /// The `clientId` for OAuth authentication.
     public let clientId: String
+    
+    /// The `clientSecret` for OAuth authentication.
     public let clientSecret: String
     
+    /// The initializer for `ClientCredentialsGrant`.
+    /// - Parameter clientId: The `clientId` for OAuth authentication.
+    /// - Parameter clientSecret: The `clientSecret` for OAuth authentication.
     public init(clientId: String, clientSecret: String) {
         self.clientId = clientId
         self.clientSecret = clientSecret
-    }
-    
-    public func authorize(deviceUniqueId: String, completion: ((Result<AuthorizationInfo, Error>) -> Void)?) {
-        let api = NuguOAuthApi(
-            clientId: clientId,
-            clientSecret: clientSecret,
-            deviceUniqueId: deviceUniqueId,
-            grantTypeInfo: .clientCredentials
-        )
-        
-        api.request(completion: completion)
     }
 }

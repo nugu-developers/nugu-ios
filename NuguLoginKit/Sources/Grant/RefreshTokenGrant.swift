@@ -20,11 +20,18 @@
 
 import Foundation
 
-public class RefreshTokenGrant {
+public struct RefreshTokenGrant {
+    /// The `clientId` for OAuth authentication.
     public let clientId: String
+    /// The `clientSecret` for OAuth authentication.
     public let clientSecret: String
+    /// The `refreshToken` for OAuth authentication.
     public let refreshToken: String
     
+    /// The initializer for `RefreshTokenGrant`.
+    /// - Parameter clientId: The `clientId` for OAuth authentication.
+    /// - Parameter clientSecret: The `clientSecret` for OAuth authentication.
+    /// - Parameter refreshToken: The `refreshToken` for OAuth authentication.
     public init(clientId: String, clientSecret: String, refreshToken: String) {
         self.clientId = clientId
         self.clientSecret = clientSecret

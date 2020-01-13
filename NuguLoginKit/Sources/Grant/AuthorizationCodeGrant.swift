@@ -18,23 +18,25 @@
 //  limitations under the License.
 //
 
-import UIKit
+import Foundation
 
-public class AuthorizationCodeGrant {    
+public struct AuthorizationCodeGrant {
+    /// The `clientId` for OAuth authentication.
     public let clientId: String
+    /// The `clientSecret` for OAuth authentication.
     public let clientSecret: String
+    /// The `redirectUri` for OAuth authentication.
     public let redirectUri: String
     
-    var observer: NSObjectProtocol?
     let stateController: OAuthStateController = OAuthStateController()
     
+    /// The initializer for `AuthorizationCodeGrant`.
+    /// - Parameter clientId: The `clientId` for OAuth authentication.
+    /// - Parameter clientSecret: The `clientSecret` for OAuth authentication.
+    /// - Parameter redirectUri: The `redirectUri` for OAuth authentication.
     public init(clientId: String, clientSecret: String, redirectUri: String) {
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.redirectUri = redirectUri
-    }
-    
-    public func asRefreshToken(refreshToken: String) -> RefreshTokenGrant {
-        return RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken)
     }
 }

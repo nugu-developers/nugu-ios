@@ -18,14 +18,18 @@
 //  limitations under the License.
 //
 
-import Foundation
+import UIKit
 
 public class NuguOAuthClient {
-    /// <#Description#>
+    /// The `deviceUniqueId` is unique identifier each device.
     public let deviceUniqueId: String
     
-    /// <#Description#>
-    /// - Parameter serviceName: <#serviceName description#>
+    private var observer: NSObjectProtocol?
+    
+    /// The initializer for `NuguOAuthClient`.
+    /// Create a `deviceUniqueId` once for each `serviceName` and device, store `deviceUniqueId` in keychain.
+    /// If there is a `deviceUniqueId` stored in the keychain, it is used.
+    /// - Parameter serviceName: The `serviceName` is unique identifier each service (eg. bundle identifier).
     public convenience init(serviceName: String) throws {
         let keychainHelper = KeychainHelper(service: serviceName)
         guard let deviceUniqueId = try? keychainHelper.string(forKey: "deviceUniqueId") else {
@@ -39,20 +43,27 @@ public class NuguOAuthClient {
         self.init(deviceUniqueId: deviceUniqueId)
     }
     
-    /// <#Description#>
-    /// - Parameter deviceUniqueId: <#deviceUniqueId description#>
+    /// The initializer for `NuguOAuthClient`.
+    /// Should be use `init(serviceName: String)` instead of `init(deviceUniqueId: String)`.
+    /// Only use `init(deviceUniqueId: String)` when it must explicitly used `deviceUniqueId`.
+    /// It cannot store and validate `deviceUniqueId`.
+    /// - Parameter deviceUniqueId: The `deviceUniqueId` is unique identifier each device.
     public init(deviceUniqueId: String) {
         self.deviceUniqueId = deviceUniqueId
+    }
+    
+    deinit {
+        observer = nil
     }
 }
 
 // MARK: - AuthorizationCodeGrant
 
 public extension NuguOAuthClient {
-    /// <#Description#>
-    /// - Parameter grant: <#grant description#>
-    /// - Parameter parentViewController: <#parentViewController description#>
-    /// - Parameter completion: <#completion description#>
+    /// Authorize with `AuthorizationCode` grant type.
+    /// - Parameter grant: The `grant` information that `AuthorizationCodeGrant`
+    /// - Parameter parentViewController: The `parentViewController` will present a safariViewController.
+    /// - Parameter completion: The closure to receive result for authorization.
     func authorize(grant: AuthorizationCodeGrant, parentViewController: UIViewController, completion: ((Result<AuthorizationInfo, Error>) -> Void)?) {
         grant.stateController.completionHandler = completion
         let state = grant.stateController.makeState()
@@ -83,7 +94,7 @@ public extension NuguOAuthClient {
             }
         }
         
-        grant.observer = NotificationCenter.default.addObserver(
+        observer = NotificationCenter.default.addObserver(
             forName: .authorization,
             object: nil,
             queue: OperationQueue.main) { [weak self] (notification) in
@@ -146,8 +157,11 @@ public extension NuguOAuthClient {
         }
     }
     
-    /// <#Description#>
-    /// - Parameter url: <#url description#>
+    /// Call this method from the `UIApplicationDelegate.application(app:url:options:)` method of the AppDelegate for your app.
+    ///
+    /// It should be implemeted to receive authorization-code by `SFSafariViewController`.
+    ///
+    /// - Parameter url: The URL as passed to `UIApplicationDelegate.application(app:url:options:)`.
     class func handle(url: URL) {
          NotificationCenter.default.post(name: .authorization, object: nil, userInfo: ["url": url])
     }
@@ -156,9 +170,9 @@ public extension NuguOAuthClient {
 // MARK: - RefreshTokenGrant
 
 public extension NuguOAuthClient {
-    /// <#Description#>
-    /// - Parameter grant: <#grant description#>
-    /// - Parameter completion: <#completion description#>
+    /// Authorize with `RefreshToken` grant type.
+    /// - Parameter grant: The `grant` information that `RefreshTokenGrant`
+    /// - Parameter completion: The closure to receive result for authorization.
     func authorize(grant: RefreshTokenGrant, completion: ((Result<AuthorizationInfo, Error>) -> Void)?) {
         let api = NuguOAuthApi(
             clientId: grant.clientId,
@@ -174,9 +188,9 @@ public extension NuguOAuthClient {
 // MARK: - ClientCredentialsGrant
 
 public extension NuguOAuthClient {
-    /// <#Description#>
-    /// - Parameter grant: <#grant description#>
-    /// - Parameter completion: <#completion description#>
+    /// Authorize with `ClientCredentials` grant type.
+    /// - Parameter grant: The `grant` information that `ClientCredentialsGrant`
+    /// - Parameter completion: The closure to receive result for authorization.
     func authorize(grant: ClientCredentialsGrant, completion: ((Result<AuthorizationInfo, Error>) -> Void)?) {
         let api = NuguOAuthApi(
             clientId: grant.clientId,

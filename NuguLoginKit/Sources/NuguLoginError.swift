@@ -49,6 +49,6 @@ public enum LoginError: Error {
     /// The error occurs when request OAuth authentication API.
     case network(error: Error)
     
-    /// The error occurs by unknown
+    /// The error occurs by unknown or complicated issue.
     case unknown(description: String?)
 }
