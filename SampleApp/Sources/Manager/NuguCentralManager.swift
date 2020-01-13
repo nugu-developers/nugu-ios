@@ -26,7 +26,7 @@ import NuguLoginKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
-    let client = NuguClient(capabilityAgentFactory: BuiltInCapabilityAgentFactory())
+    let client = NuguClient(capabilityAgentFactory: BuiltInCapabilityAgentFactory.self)
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
     
     private init() {
