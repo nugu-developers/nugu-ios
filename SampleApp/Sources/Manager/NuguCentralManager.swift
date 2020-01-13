@@ -28,6 +28,14 @@ final class NuguCentralManager {
     static let shared = NuguCentralManager()
     let client = NuguClient(capabilityAgentFactory: BuiltInCapabilityAgentFactory())
     lazy private(set) var displayPlayerController = NuguDisplayPlayerController(client: client)
+    lazy private(set) var oauthClient: NuguOAuthClient = {
+        do {
+            return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
+        } catch {
+            log.warning("OAuthClient has instatinated by using deviceUniqueId")
+            return NuguOAuthClient(deviceUniqueId: "sample-device-unique-id")
+        }
+    }()
     
     private init() {
         client.focusManager.delegate = self
@@ -71,105 +79,93 @@ extension NuguCentralManager {
             completion(.failure(SampleAppError.nilValue(description: "loginMethod is nil")))
             return
         }
+        
         switch loginMethod {
         case .type1:
-            guard
-                let clientId = SampleApp.clientId,
-                let clientSecret = SampleApp.clientSecret,
-                let redirectUri = SampleApp.redirectUri else {
-                    completion(.failure(SampleAppError.nilValue(description: "clientId, clientSecret, redirectUri is nil")))
-                    return
-            }
-            
-            do {
-                OAuthManager<Type1>.shared.loginTypeInfo = try Type1(
-                    clientId: clientId,
-                    clientSecret: clientSecret,
-                    redirectUri: redirectUri,
-                    serviceName: Bundle.main.bundleIdentifier ?? "NuguSample"
-                )
-            } catch {
-                completion(.failure(SampleAppError.nilValue(description: "Type1 initializer has occured error: \(error)")))
-                return
-            }
-            
+            // If has not refreshToken
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
-                loginBySafariViewController(from: viewController) { (result) in
-                    guard case .success = result else {
-                        completion(.failure(SampleAppError.loginFailedError(loginMethod: .type1)))
-                        return
+                authorizationCodeLogin(from: viewController) { (result) in
+                    switch result {
+                    case .success(let authInfo):
+                        UserDefaults.Standard.accessToken = authInfo.accessToken
+                        UserDefaults.Standard.refreshToken = authInfo.refreshToken
+                        completion(.success(()))
+                    case .failure(let error):
+                        completion(.failure(SampleAppError.loginFailed(error: error)))
                     }
-                    completion(.success(()))
                 }
                 return
             }
             
-            loginWithRefreshToken(refreshToken: refreshToken) { (result) in
-                guard case .success = result else {
-                    completion(.failure(SampleAppError.loginWithRefreshTokenFailedError))
-                    return
+            // If has refreshToken
+            refreshTokenLogin(refreshToken: refreshToken) { (result) in
+                switch result {
+                case .success(let authInfo):
+                    UserDefaults.Standard.accessToken = authInfo.accessToken
+                    UserDefaults.Standard.refreshToken = authInfo.refreshToken
+                    completion(.success(()))
+                case .failure:
+                    completion(.failure(SampleAppError.loginWithRefreshTokenFailed))
                 }
-                completion(.success(()))
             }
         case .type2:
-            guard let clientId = SampleApp.clientId,
-                let clientSecret = SampleApp.clientSecret else {
-                    completion(.failure(SampleAppError.nilValue(description: "clientId, clientSecret is nil")))
-                    return
-            }
-            
-            do {
-                OAuthManager<Type2>.shared.loginTypeInfo = try Type2(
-                    clientId: clientId,
-                    clientSecret: clientSecret,
-                    serviceName: Bundle.main.bundleIdentifier ?? "NuguSample"
-                )
-            } catch {
-                completion(.failure(SampleAppError.nilValue(description: "Type2 initializer has occured error: \(error)")))
-                return
-            }
-            
-            loginType2 { (result) in
-                guard case .success = result else {
-                    completion(.failure(SampleAppError.loginFailedError(loginMethod: .type2)))
-                    return
+            clientCredentialsLogin { (result) in
+                switch result {
+                case .success(let authInfo):
+                    UserDefaults.Standard.accessToken = authInfo.accessToken
+                case .failure(let error):
+                    completion(.failure(SampleAppError.loginFailed(error: error)))
                 }
-                completion(.success(()))
             }
         }
     }
     
     func handleAuthError() {
-        switch SampleApp.loginMethod {
+        guard let loginMethod = SampleApp.loginMethod else {
+            log.info("loginMethod is nil")
+            return
+        }
+        
+        switch loginMethod {
         case .type1:
+            // If has not refreshToken
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
                 log.debug("Try to login with refresh token when refresh token is nil")
                 logoutAfterErrorHandling()
                 return
             }
-            loginWithRefreshToken(refreshToken: refreshToken) { [weak self] (result) in
-                guard case .success = result else {
+            
+            // If has refreshToken
+            refreshTokenLogin(refreshToken: refreshToken) { [weak self] (result) in
+                switch result {
+                case .success(let authInfo):
+                    UserDefaults.Standard.accessToken = authInfo.accessToken
+                    UserDefaults.Standard.refreshToken = authInfo.refreshToken
+                    self?.enable(accessToken: authInfo.accessToken)
+                case .failure:
                     self?.logoutAfterErrorHandling()
-                    return
                 }
-                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
             }
         case .type2:
-            loginType2 { [weak self] (result) in
-                guard case .success = result else {
+            clientCredentialsLogin { [weak self] (result) in
+                switch result {
+                case .success(let authInfo):
+                    UserDefaults.Standard.accessToken = authInfo.accessToken
+                    self?.enable(accessToken: authInfo.accessToken)
+                case .failure:
                     self?.logoutAfterErrorHandling()
-                    return
                 }
-                self?.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
             }
-        default:
-            break
         }
     }
     
     func logout() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
+        guard
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else {
+                return
+        }
+        
         disable()
         UserDefaults.Standard.clear()
         rootNavigationViewController.popToRootViewController(animated: true)
@@ -179,42 +175,52 @@ extension NuguCentralManager {
 // MARK: - Private (Auth)
 
 private extension NuguCentralManager {
-    func loginBySafariViewController(from viewController: UIViewController, completion: @escaping (Result<Void, Error>) -> Void) {
-        OAuthManager<Type1>.shared.loginBySafariViewController(from: viewController) { (result) in
-            switch result {
-            case .success(let authorizationInfo):
-                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
-                UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
-                completion(.success(()))
-            case .failure(let error):
-                completion(.failure(error))
-            }
+    func authorizationCodeLogin(from viewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
+        guard
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret,
+            let redirectUri = SampleApp.redirectUri else {
+                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret, redirectUri")))
+                return
         }
+        
+        oauthClient.authorize(
+            grant: AuthorizationCodeGrant(
+                clientId: clientId,
+                clientSecret: clientSecret,
+                redirectUri: redirectUri
+            ),
+            parentViewController: viewController,
+            completion: completion
+        )
     }
     
-    func loginWithRefreshToken(refreshToken: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        OAuthManager<Type1>.shared.loginSilently(by: refreshToken) { result in
-            switch result {
-            case .success(let authorizationInfo):
-                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
-                UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
-                completion(.success(()))
-            case .failure(let error):
-                completion(.failure(error))
-            }
+    func refreshTokenLogin(refreshToken: String, completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
+        guard
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret else {
+                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret")))
+                return
         }
+        
+        oauthClient.authorize(
+            grant: RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken),
+            completion: completion
+        )
     }
     
-    func loginType2(completion: @escaping (Result<Void, Error>) -> Void) {
-        OAuthManager<Type2>.shared.login(completion: { (result) in
-            switch result {
-            case .success(let authorizationInfo):
-                UserDefaults.Standard.accessToken = authorizationInfo.accessToken
-                completion(.success(()))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        })
+    func clientCredentialsLogin(completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
+        guard
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret else {
+                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret")))
+                return
+        }
+        
+        oauthClient.authorize(
+            grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret),
+            completion: completion
+        )
     }
     
     func logoutAfterErrorHandling() {

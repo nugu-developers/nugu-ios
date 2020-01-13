@@ -68,6 +68,7 @@ private extension IntroViewController {
             presentNoDataPopup()
             return
         }
+
         NuguCentralManager.shared.login(from: self, completion: { [weak self] result in
             switch result {
             case .success:
@@ -77,7 +78,7 @@ private extension IntroViewController {
             case .failure(let sampleAppError):
                 log.debug(sampleAppError.errorDescription)
                 switch sampleAppError {
-                case .loginWithRefreshTokenFailedError:
+                case .loginWithRefreshTokenFailed:
                     self?.presentLoginWithRefreshTokenErrorPopup()
                 default: break
                 }

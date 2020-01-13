@@ -193,7 +193,7 @@ private extension MainViewController {
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
         guard hasShownGuideWeb == false,
-            let url = SampleApp.guideWebUrl else { return }
+            let url = SampleApp.makeGuideWebURL(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) else { return }
         
         performSegue(withIdentifier: "mainToGuideWeb", sender: url)
     }

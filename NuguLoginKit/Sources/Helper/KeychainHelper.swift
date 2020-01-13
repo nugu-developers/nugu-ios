@@ -65,14 +65,15 @@ extension KeychainHelper {
         
         let deleteResultCode = SecItemDelete(deleteQuery as CFDictionary)
         if deleteResultCode != noErr {
-            NSLog("(Not Important) No exist data: \(deleteResultCode)")
+            NSLog("[NuguLoginKit](Not Important) No exist data: \(deleteResultCode)")
         }
         
         var addQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
             kSecAttrService as String: service,
-            kSecValueData as String: value
+            kSecValueData as String: value,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly // "After first unlock" and "This device only"
         ]
         
         if let groupId = accessGroupId {
@@ -121,7 +122,8 @@ extension KeychainHelper {
             kSecAttrAccount as String: key,
             kSecAttrService as String: service,
             kSecMatchLimit as String: kSecMatchLimitOne,
-            kSecReturnData as String: kCFBooleanTrue!
+            kSecReturnData as String: kCFBooleanTrue!,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly // "After first unlock" and "This device only"
         ]
         
         if let groupId = accessGroupId {

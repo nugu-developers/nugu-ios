@@ -1,8 +1,8 @@
 //
-//  LoginType.swift
+//  RefreshTokenGrant.swift
 //  NuguLoginKit
 //
-//  Created by yonghoonKwon on 26/09/2019.
+//  Created by yonghoonKwon on 2019/12/21.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,14 @@
 
 import Foundation
 
-public protocol LoginType {
-    var clientId: String { get }
-    var clientSecret: String { get }
+public class RefreshTokenGrant {
+    public let clientId: String
+    public let clientSecret: String
+    public let refreshToken: String
+    
+    public init(clientId: String, clientSecret: String, refreshToken: String) {
+        self.clientId = clientId
+        self.clientSecret = clientSecret
+        self.refreshToken = refreshToken
+    }
 }
