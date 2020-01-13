@@ -63,13 +63,6 @@ final class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(didEnterBackground(_:)),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(didBecomeActive(_:)),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
@@ -132,13 +125,6 @@ final class MainViewController: UIViewController {
         NuguCentralManager.shared.stopWakeUpDetector()
     }
     
-    /// Catch entering background notification to disable nugu service
-    /// It is possible to keep connected even on background, but need careful attention for battery issues, audio interruptions and so on
-    /// - Parameter notification: UIApplication.didBecomeActiveNotification
-    func didEnterBackground(_ notification: Notification) {
-        NuguCentralManager.shared.disable()
-    }
-    
     /// Catch becoming active notification to refresh mic status & Nugu button
     /// Recover all status for any issues caused from becoming background
     /// - Parameter notification: UIApplication.didBecomeActiveNotification
@@ -171,7 +157,7 @@ private extension MainViewController {
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
         // Set AudioSession
-        NuguAudioSessionManager.allowMixWithOthers()
+        NuguAudioSessionManager.shared.updateAudioSession()
         
         // Add delegates
         NuguCentralManager.shared.client.networkManager.add(statusDelegate: self)
@@ -215,7 +201,7 @@ private extension MainViewController {
             }
             
             // Enable Nugu SDK
-            NuguCentralManager.shared.enable(accessToken: UserDefaults.Standard.accessToken ?? "")
+            NuguCentralManager.shared.enable()
         case false:
             // Exception handling when already disconnected, scheduled update in future
             guard NuguCentralManager.shared.client.networkManager.connected == true else {
@@ -308,8 +294,10 @@ private extension MainViewController {
             displayView = DisplayListView(frame: view.frame)
         case "Display.TextList3", "Display.TextList4":
             displayView = DisplayBodyListView(frame: view.frame)
-        case "Display.Weather1":
+        case "Display.Weather1", "Display.Weather2":
             displayView = DisplayWeatherView(frame: view.frame)
+        case "Display.Weather3", "Display.Weather4":
+            displayView = DisplayWeatherListView(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break
@@ -546,13 +534,13 @@ extension MainViewController: ASRAgentDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
             }
-        case .error(let asrError):
+        case .error(let error):
             DispatchQueue.main.async { [weak self] in
-                switch asrError {
-                case .listenFailed:
+                switch error {
+                case ASRError.listenFailed:
                     ASRBeepPlayer.shared.beep(type: .fail)
                     self?.nuguVoiceChrome.changeState(state: .speakingError)
-                case .recognizeFailed:
+                case ASRError.recognizeFailed:
                     LocalTTSPlayer.shared.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
                 default:
                     ASRBeepPlayer.shared.beep(type: .fail)
@@ -566,18 +554,15 @@ extension MainViewController: ASRAgentDelegate {
 // MARK: - TextAgentDelegate
 
 extension MainViewController: TextAgentDelegate {
-    func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
+    func textAgentDidReceive(result: Result<Void, Error>, dialogRequestId: String) {
         switch result {
-        case .complete:
+        case .success:
             DispatchQueue.main.async {
                 ASRBeepPlayer.shared.beep(type: .success)
             }
-        case .error(let textAgentError):
-            switch textAgentError {
-            case .responseTimeout:
-                DispatchQueue.main.async {
-                    ASRBeepPlayer.shared.beep(type: .fail)
-                }
+        case .failure:
+            DispatchQueue.main.async {
+                ASRBeepPlayer.shared.beep(type: .fail)
             }
         }
     }
@@ -586,7 +571,7 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentDidRender(template: DisplayTemplate) -> NSObject? {
+    func displayAgentDidRender(template: DisplayTemplate) -> Any? {
         return addDisplayView(displayTemplate: template)
     }
     
@@ -603,7 +588,7 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
@@ -621,6 +606,12 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState) {
+        switch state {
+        case .paused, .playing:
+            NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
+        case .idle, .finished, .stopped:
+            NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
+        }
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }

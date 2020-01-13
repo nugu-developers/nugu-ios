@@ -22,7 +22,9 @@ import Foundation
 
 import NuguInterface
 
-extension TTSAgent: CapabilityEventSendable {
+// MARK: - CapabilityEventAgentable
+
+extension TTSAgent {
     public struct Event {
         let token: String?
         let playServiceId: String?

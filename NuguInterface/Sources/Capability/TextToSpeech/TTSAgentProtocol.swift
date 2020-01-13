@@ -21,13 +21,7 @@
 import Foundation
 
 /// The `TTSAgent` handles directives for controlling speech playback.
-public protocol TTSAgentProtocol:
-CapabilityAgentable,
-ContextInfoDelegate,
-FocusChannelDelegate,
-HandleDirectiveDelegate,
-PlaySyncDelegate,
-SpeakerVolumeDelegate {
+public protocol TTSAgentProtocol: CapabilityAgentable {
     /// Adds a delegate to be notified of `TTSState` changes.
     ///
     /// - Parameter delegate: The object to add.
@@ -45,10 +39,11 @@ SpeakerVolumeDelegate {
     func requestTTS(text: String, playServiceId: String?, handler: ((TTSResult) -> Void)?)
     
     /// Stops playback
-    func stopTTS(cancelAssociated: Bool)
+    /// - Parameter cancelAssociation: true: cancel all associated directives, false : only stop tts
+    func stopTTS(cancelAssociation: Bool)
 }
 
-// MARK: - Optional
+// MARK: - Default
 
 public extension TTSAgentProtocol {
     /// Request voice synthesis and playback.
@@ -60,6 +55,6 @@ public extension TTSAgentProtocol {
     
     /// Stops playback
     func stopTTS() {
-        stopTTS(cancelAssociated: true)
+        stopTTS(cancelAssociation: true)
     }
 }

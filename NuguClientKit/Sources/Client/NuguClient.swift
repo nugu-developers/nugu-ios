@@ -29,7 +29,7 @@ public class NuguClient: NuguClientContainer {
     // MARK: NuguClientContainer
     
     /// <#Description#>
-    public let authorizationManager: AuthorizationManageable
+    public let authorizationStore: AuthorizationStoreable
     /// <#Description#>
     public let focusManager: FocusManageable
     /// <#Description#>
@@ -56,9 +56,6 @@ public class NuguClient: NuguClientContainer {
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
     
-    /// <#Description#>
-    let downstreamDataTimeoutPreprocessor: DownstreamDataTimeoutPreprocessor
-    
     private let capabilityAgentFactory: CapabilityAgentFactory
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
@@ -69,7 +66,9 @@ public class NuguClient: NuguClientContainer {
     public private(set) lazy var systemAgent: SystemAgentProtocol = SystemAgent(
         contextManager: contextManager,
         networkManager: networkManager,
-        upstreamDataSender: streamDataRouter
+        upstreamDataSender: streamDataRouter,
+        dialogStateAggregator: dialogStateAggregator,
+        directiveSequencer: directiveSequencer
     )
     
     /// <#Description#>
@@ -91,38 +90,32 @@ public class NuguClient: NuguClientContainer {
     /// - Parameter authorizationManager: <#authorizationManager description#>
     /// - Parameter focusManager: <#focusManager description#>
     /// - Parameter networkManager: <#networkManager description#>
-    /// - Parameter dialogStateAggregator: <#dialogStateAggregator description#>
     /// - Parameter contextManager: <#contextManager description#>
     /// - Parameter playSyncManager: <#playSyncManager description#>
-    /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
     /// - Parameter sharedAudioStream: <#sharedAudioStream description#>
     /// - Parameter inputProvider: <#inputProvider description#>
     /// - Parameter endPointDetector: <#endPointDetector description#>
     /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
+    /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
     /// - Parameter capabilityAgentFactory: <#capabilityAgentFactory description#>
     public init(
-        authorizationManager: AuthorizationManageable = AuthorizationManager.shared,
+        authorizationStore: AuthorizationStoreable = AuthorizationStore.shared,
         focusManager: FocusManageable = FocusManager(),
         networkManager: NetworkManageable = NetworkManager(),
-        dialogStateAggregator: DialogStateAggregatable = DialogStateAggregator(),
         contextManager: ContextManageable = ContextManager(),
         playSyncManager: PlaySyncManageable = PlaySyncManager(),
-        mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
         sharedAudioStream: AudioStreamable = AudioStream(capacity: 300),
         inputProvider: AudioProvidable = MicInputProvider(),
         endPointDetector: EndPointDetectable = EndPointDetector(),
         wakeUpDetector: KeywordDetector? = KeywordDetector(),
+        mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
         capabilityAgentFactory: CapabilityAgentFactory
     ) {
-        self.authorizationManager = authorizationManager
+        self.authorizationStore = authorizationStore
         self.focusManager = focusManager
         self.networkManager = networkManager
-        self.dialogStateAggregator = dialogStateAggregator
         self.contextManager = contextManager
         self.playSyncManager = playSyncManager
-        self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
-        self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
-        self.downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
         self.mediaPlayerFactory = mediaPlayerFactory
         self.sharedAudioStream = sharedAudioStream
         self.inputProvider = inputProvider
@@ -130,25 +123,17 @@ public class NuguClient: NuguClientContainer {
         self.wakeUpDetector = wakeUpDetector
         self.capabilityAgentFactory = capabilityAgentFactory
         
+        let dialogStateAggregator = DialogStateAggregator()
+        
+        self.dialogStateAggregator = dialogStateAggregator
+        self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
+        self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
+        
+        asrAgent?.add(delegate: dialogStateAggregator)
+        textAgent?.add(delegate: dialogStateAggregator)
+        ttsAgent?.add(delegate: dialogStateAggregator)
+        
         setupDependencies()
-    }
-}
-
-// MARK: - Authorization
-
-public extension NuguClient {
-    /// <#Description#>
-    var accessToken: String? {
-        get {
-            return authorizationManager.authorizationPayload?.accessToken
-        } set {
-            guard let newAccessToken = newValue else {
-                authorizationManager.authorizationPayload = nil
-                return
-            }
-            
-            authorizationManager.authorizationPayload = AuthorizationPayload(accessToken: newAccessToken)
-        }
     }
 }
 

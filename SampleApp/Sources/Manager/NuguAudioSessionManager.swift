@@ -20,68 +20,124 @@
 
 import AVFoundation
 
-struct NuguAudioSessionManager {
+final class NuguAudioSessionManager {
+    static let shared = NuguAudioSessionManager()
     
-    static func requestRecordPermission(_ response: @escaping PermissionBlock) {
+    /// NUGU Service should set AudioSession.Category as .playAndRecord for recording voice and playing media
+    /// Setting AudioSession.Category as .playAndRecord leads you to stop on going 3rd party app's music player
+    /// To avoid 3rd party app's music player being stopped, application should append .mixWithOthers option to AudioSession.CategoryOptions
+    /// To support mixWithOthersOption, simply change following value to 'true'
+    let supportMixWithOthersOption = true
+    
+    private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
+}
+
+// MARK: - Internal
+
+extension NuguAudioSessionManager {
+    func requestRecordPermission(_ response: @escaping PermissionBlock) {
         AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
             response(isGranted)
         }
     }
     
-    static func allowMixWithOthers() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            log.debug("addingMixWithOthers failed: \(error)")
-        }
+    func observeAVAudioSessionInterruptionNotification() {
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(interruptionNotification(_ :)), name: AVAudioSession.interruptionNotification, object: nil)
     }
     
-    @discardableResult static func setAudioSession() -> Bool {
-        // check whether other application is playing audio to disable mixWithOthers option
-        // if mixWithOthers option is already included, resetting audioSession is unnecessary
-        guard AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint == true,
-            AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == true else {
-                return true
-        }
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: [.defaultToSpeaker, .allowBluetoothA2DP]
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-            return true
-        } catch {
-            log.debug("setCategory failed: \(error)")
-            return false
-        }
+    func removeObservingAVAudioSessionInterruptionNotification() {
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
     }
     
-    static func nofifyAudioSessionDeactivationAndRecover() {
-        // check whether mixWithOthers option is included or not,
-        // to determine secondaryAudio has been interrupted or not
-        // if not, calling notifyOthersOnDeactivation is unnecessary
-        guard AVAudioSession.sharedInstance().categoryOptions.contains(.mixWithOthers) == false else { return }
+    @discardableResult func updateAudioSession() -> Bool {
+        // When AudioSession default value has not been set, updating AudioSession should be done first
+        guard AVAudioSession.sharedInstance().category == .playAndRecord,
+            AVAudioSession.sharedInstance().categoryOptions.contains(defaultCategoryOptions) else {
+                return updateAudioSessionCategoryWithOptions()
+        }
+        return updateAudioSessionCategoryWithOptions(requestingFocus: true)
+    }
+     
+    func notifyAudioSessionDeactivationIfNeeded() {
+        // NotifyOthersOnDeactivation is unnecessory when .mixWithOthers option is off
+        guard supportMixWithOthersOption == true else { return }
         
-        // clean up all I/O before deactivating audioSession
+        // Clean up all I/O before deactivating audioSession
         NuguCentralManager.shared.stopWakeUpDetector()
         if NuguCentralManager.shared.client.inputProvider.isRunning == true {
             NuguCentralManager.shared.client.inputProvider.stop()
         }
         
         do {
+            // Defer statement for recovering audioSession and wakeUpDetector
             defer {
-                self.allowMixWithOthers()
+                updateAudioSessionCategoryWithOptions()
                 NuguCentralManager.shared.refreshWakeUpDetector()
             }
+            // Notify audio session deactivation to 3rd party apps
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         } catch {
             log.debug("notifyOthersOnDeactivation failed: \(error)")
+        }
+    }
+}
+
+// MARK: - private
+
+private extension NuguAudioSessionManager {
+    @objc func interruptionNotification(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
+        switch type {
+        case .began:
+            // Interruption began, take appropriate actions
+            NuguCentralManager.shared.client.audioPlayerAgent?.pause()
+            
+            // When supportMixWithOthersOption is on,
+            // AudioSession's category option should be changed as including mixWithOthers option when paused with interruption.
+            // Otherwise, 3rd party app's music player will stop when user returns to this app.
+            if supportMixWithOthersOption == true {
+                updateAudioSessionCategoryWithOptions()
+            }
+        case .ended:
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    NuguCentralManager.shared.client.audioPlayerAgent?.play()
+                } else {
+                    // Interruption Ended - playback should NOT resume
+                }
+            }
+        @unknown default: break
+        }
+    }
+    
+    /// Update AudioSession.Category and AudioSession.CategoryOptions
+    /// - Parameter requestingFocus: whether updating AudioSession is for requesting focus or just updating without requesting focus
+    @discardableResult func updateAudioSessionCategoryWithOptions(requestingFocus: Bool = false) -> Bool {
+        var options = defaultCategoryOptions
+        if requestingFocus == false && supportMixWithOthersOption == true {
+            options.insert(.mixWithOthers)
+        }
+        
+        // If audioSession is already has been set properly, resetting audioSession is unnecessary
+        guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options else {
+            return true
+        }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                .playAndRecord,
+                mode: .default,
+                options: options
+            )
+            try AVAudioSession.sharedInstance().setActive(true)
+            return true
+        } catch {
+            log.debug("updateAudioSessionCategoryOptions failed: \(error)")
+            return false
         }
     }
 }

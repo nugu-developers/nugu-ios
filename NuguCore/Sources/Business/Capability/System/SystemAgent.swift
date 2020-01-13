@@ -22,14 +22,18 @@ import Foundation
 
 import NuguInterface
 
-final public class SystemAgent: SystemAgentProtocol {
+final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.0")
     
-    private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
+    // Private
     private let contextManager: ContextManageable
     private let networkManager: NetworkManageable
-    private let upstreamDataSender: UpstreamDataSendable
+    
+    private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
     private var serverPolicy: Policy.ServerPolicy?
     private var dialogState: DialogState = .idle
@@ -39,13 +43,20 @@ final public class SystemAgent: SystemAgentProtocol {
     public init(
         contextManager: ContextManageable,
         networkManager: NetworkManageable,
-        upstreamDataSender: UpstreamDataSendable
+        upstreamDataSender: UpstreamDataSendable,
+        dialogStateAggregator: DialogStateAggregatable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
         self.contextManager = contextManager
         self.networkManager = networkManager
         self.upstreamDataSender = upstreamDataSender
+        
+        contextManager.add(provideContextDelegate: self)
+        networkManager.add(statusDelegate: self)
+        dialogStateAggregator.add(delegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {
@@ -56,10 +67,6 @@ final public class SystemAgent: SystemAgentProtocol {
 // MARK: - HandleDirectiveDelegate
 
 extension SystemAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirective(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -191,8 +198,7 @@ private extension SystemAgent {
             self.sendEvent(
                 Event(typeInfo: .synchronizeState),
                 contextPayload: contextPayload,
-                dialogRequestId: TimeUUID().hexString,
-                by: self.upstreamDataSender
+                dialogRequestId: TimeUUID().hexString
             )
         }
     }

@@ -22,17 +22,27 @@ import Foundation
 
 import NuguInterface
 
-final public class ExtensionAgent: ExtensionAgentProtocol {
+final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
     
-    private let upstreamDataSender: UpstreamDataSendable
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
+    // ExtensionAgentProtocol
     public weak var delegate: ExtensionAgentDelegate?
     
-    public init(upstreamDataSender: UpstreamDataSendable) {
+    public init(
+        upstreamDataSender: UpstreamDataSendable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
+    ) {
         log.info("")
         
         self.upstreamDataSender = upstreamDataSender
+        
+        contextManager.add(provideContextDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {
@@ -42,11 +52,7 @@ final public class ExtensionAgent: ExtensionAgentProtocol {
 
 // MARK: - HandleDirectiveDelegate
 
-extension ExtensionAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
+extension ExtensionAgent: HandleDirectiveDelegate {    
     public func handleDirective(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void) {
@@ -79,12 +85,7 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                     let eventTypeInfo: ExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
                     let event = ExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
                     
-                    self.sendEvent(
-                        event,
-                        context: self.contextInfoRequestContext(),
-                        dialogRequestId: TimeUUID().hexString,
-                        by: self.upstreamDataSender
-                    )
+                    self.sendEvent(event, dialogRequestId: TimeUUID().hexString)
             })
             
             completionHandler(.success(()))

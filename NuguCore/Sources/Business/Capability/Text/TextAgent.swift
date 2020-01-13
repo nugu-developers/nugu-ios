@@ -24,16 +24,22 @@ import NuguInterface
 
 import RxSwift
 
-final public class TextAgent: TextAgentProtocol {
+final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     
-    private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
+    
+    // Private
     private let contextManager: ContextManageable
-    private let upstreamDataSender: UpstreamDataSendable
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
     private let dialogStateAggregator: DialogStateAggregatable
+    
+    private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TextAgentDelegate>()
     
@@ -43,12 +49,10 @@ final public class TextAgent: TextAgentProtocol {
             log.info("from: \(oldValue) to: \(textAgentState)")
             guard oldValue != textAgentState else { return }
             
-            // dispose responseTimeout
-            switch textAgentState {
-            case .busy:
-                break
-            default:
-                responseTimeout?.dispose()
+            // release textRequest
+            if textAgentState == .idle {
+                textRequest = nil
+                releaseFocusIfNeeded()
             }
             
             delegates.notify { delegate in
@@ -59,9 +63,6 @@ final public class TextAgent: TextAgentProtocol {
     
     // For Recognize Event
     private var textRequest: TextRequest?
-    
-    private lazy var disposeBag = DisposeBag()
-    private var responseTimeout: Disposable?
     
     public init(
         contextManager: ContextManageable,
@@ -77,6 +78,8 @@ final public class TextAgent: TextAgentProtocol {
         self.focusManager = focusManager
         self.channelPriority = channelPriority
         self.dialogStateAggregator = dialogStateAggregator
+        
+        contextManager.add(provideContextDelegate: self)
     }
     
     deinit {
@@ -130,10 +133,6 @@ extension TextAgent: ContextInfoDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TextAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(textAgentState)")
         self.focusState = focusState
@@ -148,10 +147,10 @@ extension TextAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Background 허용 안함.
-            case (.background, _):
-                self.releaseFocus()
-            case (.nothing, _):
+            case (_, let textAgentState) where textAgentState != .idle:
                 self.textAgentState = .idle
+            default:
+                break
             }
         }
     }
@@ -160,33 +159,14 @@ extension TextAgent: FocusChannelDelegate {
 // MARK: - Private(FocusManager)
 
 private extension TextAgent {
-    func releaseFocus() {
+    func releaseFocusIfNeeded() {
         guard focusState != .nothing else { return }
-        
-        textRequest = nil
-        focusManager.releaseFocus(channelDelegate: self)
-    }
-}
-
-// MARK: - DownstreamDataDelegate
-
-extension TextAgent: DownstreamDataDelegate {
-    public func downstreamDataDidReceive(directive: Downstream.Directive) {
-        textDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let request = self.textRequest else { return }
-            guard request.dialogRequestId == directive.header.dialogRequestId else { return }
-            
-            switch self.textAgentState {
-            case .busy:
-                self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: .complete, dialogRequestId: request.dialogRequestId)
-                })
-                self.releaseFocus()
-            case .idle:
-                return
-            }
+        guard textAgentState == .idle else {
+            log.info("Not permitted in current state, \(textAgentState)")
+            return
         }
+        
+        focusManager.releaseFocus(channelDelegate: self)
     }
 }
 
@@ -201,24 +181,18 @@ private extension TextAgent {
         
         textAgentState = .busy
         
-        responseTimeout?.dispose()
-        responseTimeout = Observable<Int>
-            .timer(NuguConfiguration.asrResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.releaseFocus()
-                
-                self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: .error(.responseTimeout), dialogRequestId: textRequest.dialogRequestId)
-                })
-            })
-        responseTimeout?.disposed(by: disposeBag)
-        
         sendEvent(
             Event(typeInfo: .textInput(text: textRequest.text), expectSpeech: dialogStateAggregator.expectSpeech),
-            contextPayload: textRequest.contextPayload,
-            dialogRequestId: textRequest.dialogRequestId,
-            by: upstreamDataSender
-        )
+            dialogRequestId: textRequest.dialogRequestId
+        ) { [weak self] result in
+            guard let self = self else { return }
+            guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
+            
+            let result = result.map({ _ in () })
+            self.delegates.notify({ (delegate) in
+                delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
+            })
+            self.textAgentState = .idle
+        }
     }
 }

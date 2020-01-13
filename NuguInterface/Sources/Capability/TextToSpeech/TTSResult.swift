@@ -25,7 +25,7 @@ public enum TTSResult {
     /// Indicates that tts playback has finished.
     case finished
     /// Indicates that audio playback was stopped due to a user request or a directive which stops or replaces the current stream.
-    case stopped(cancelAssociated: Bool)
+    case stopped(cancelAssociation: Bool)
     /// Indicates that audio playback was stopped due to an error.
     case error(_ error: Error)
 }

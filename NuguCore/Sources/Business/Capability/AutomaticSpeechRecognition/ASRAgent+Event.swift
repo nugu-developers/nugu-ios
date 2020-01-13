@@ -22,7 +22,9 @@ import Foundation
 
 import NuguInterface
 
-extension ASRAgent: CapabilityEventSendable {
+// MARK: - CapabilityEventAgentable
+
+extension ASRAgent {
     public struct Event {
         let typeInfo: TypeInfo
         let expectSpeech: ASRExpectSpeech?

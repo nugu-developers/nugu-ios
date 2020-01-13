@@ -1,8 +1,8 @@
 //
-//  CapabilityEventSendable.swift
+//  CapabilityEventAgentable.swift
 //  NuguInterface
 //
-//  Created by yonghoonKwon on 10/06/2019.
+//  Created by yonghoonKwon on 2019/12/19.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,56 +20,61 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol CapabilityEventSendable: CapabilityConfigurable {
+public protocol CapabilityEventAgentable: CapabilityAgentable {
     associatedtype Event: Eventable
+    
+    /// <#Description#>
+    var upstreamDataSender: UpstreamDataSendable { get }
     
     /// <#Description#>
     /// - Parameter event: <#event description#>
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
-    func sendEvent(_ event: Event,
-                   contextPayload: ContextPayload,
-                   dialogRequestId: String,
-                   by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)?)
+    /// - Parameter resultHandler: <#resultHandler description#>
+    func sendEvent(
+        _ event: Event,
+        contextPayload: ContextPayload,
+        dialogRequestId: String,
+        completion: ((Result<Data, Error>) -> Void)?,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
+    )
 }
 
-// MARK: - Optional
+// MARK: - Default
 
-public extension CapabilityEventSendable {
+public extension CapabilityEventAgentable {
     /// <#Description#>
     /// - Parameter event: <#event description#>
-    /// - Parameter context: <#contexts description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
-    /// - Parameter completion: <#completion description#>
-    func sendEvent(_ event: Event,
-                   context: ContextInfo?,
-                   dialogRequestId: String,
-                   by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)? = nil) {
+    /// - Parameter completion: completion description
+    /// - Parameter resultHandler: <#resultHandler description#>
+    func sendEvent(
+        _ event: Event,
+        dialogRequestId: String,
+        completion: ((Result<Data, Error>) -> Void)? = nil,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
+    ) {
         let contextPayload = ContextPayload(
-            supportedInterfaces: context != nil ? [context!] : [],
+            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
             client: []
         )
         
-        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, by: upstreamDataSender, completion: completion)
+        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, completion: completion, resultHandler: resultHandler)
     }
     
     /// <#Description#>
     /// - Parameter event: <#event description#>
     /// - Parameter contextPayload: <#contextPayload description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter upstreamDataSender: <#upstreamDataSender description#>
     /// - Parameter completion: <#completion description#>
-    func sendEvent(_ event: Event,
-                   contextPayload: ContextPayload,
-                   dialogRequestId: String,
-                   by upstreamDataSender: UpstreamDataSendable,
-                   completion: ((Result<Data, Error>) -> Void)? = nil) {
+    func sendEvent(
+        _ event: Event,
+        contextPayload: ContextPayload,
+        dialogRequestId: String,
+        completion: ((Result<Data, Error>) -> Void)? = nil,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
+    ) {
         let header = UpstreamHeader(
             namespace: capabilityAgentProperty.name,
             name: event.name,
@@ -83,6 +88,6 @@ public extension CapabilityEventSendable {
             contextPayload: contextPayload
         )
         
-        upstreamDataSender.send(upstreamEventMessage: eventMessage, completion: completion)
+        upstreamDataSender.send(upstreamEventMessage: eventMessage, completion: completion, resultHandler: resultHandler)
     }
 }

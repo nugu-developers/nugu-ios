@@ -1,8 +1,8 @@
 //
-//  AuthorizationError.swift
+//  CapabilityDirectiveAgentable.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 26/04/2019.
+//  Created by yonghoonKwon on 2019/12/19.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +20,16 @@
 
 import Foundation
 
-public enum AuthorizationError: Error {
-    case unknown
-    case authorizationFailed
+public protocol CapabilityDirectiveAgentable: CapabilityAgentable, HandleDirectiveDelegate {
+    // CHECK-ME: var storedDirective: Downstream.Directive? { get }
+    
+    associatedtype DirectiveTypeInfo: DirectiveTypeInforable, CaseIterable
 }
 
-// MARK: - LocalizedError
+// MARK: - Default HandleDirectiveDelegate
 
-extension AuthorizationError: LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case .unknown:
-            return "Unknown authrozation error"
-        case .authorizationFailed:
-            return "Authorize failed"
-        }
+extension CapabilityDirectiveAgentable {
+    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
+        DirectiveTypeInfo.allDictionaryCases
     }
 }

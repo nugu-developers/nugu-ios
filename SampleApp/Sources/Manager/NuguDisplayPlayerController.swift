@@ -48,11 +48,15 @@ final class NuguDisplayPlayerController {
     }
     
     func use() {
+        // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
+        guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
         client.audioPlayerAgent?.add(displayDelegate: self)
         client.audioPlayerAgent?.add(delegate: self)
     }
     
     func unuse() {
+        // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
+        guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
         client.audioPlayerAgent?.remove(displayDelegate: self)
         client.audioPlayerAgent?.remove(delegate: self)
     }
@@ -96,7 +100,7 @@ private extension NuguDisplayPlayerController {
             currentState = state
         }
         
-        guard let playerItem = currentItem else {
+        guard let playerItem = item else {
             remove()
             return
         }
@@ -248,9 +252,9 @@ private extension NuguDisplayPlayerController {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> NSObject? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
         update(newItem: template)
-        return nowPlayingInfoCenter
+        return currentItem
     }
     
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {

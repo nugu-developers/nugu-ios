@@ -23,14 +23,14 @@ import Foundation
 import NuguInterface
 
 public class DownstreamDataTimeoutPreprocessor: DownstreamDataPreprocessable {
-    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.timeout_preprocessor", qos: .userInitiated)
+    private let timeoutPreprocessorDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.timeout_preprocessor", qos: .userInitiated)
     
     private var timeoutDialogRequestIds = [String]()
     
     public init() {}
     
     public func preprocess<T>(message: T) -> T? where T: DownstreamMessageable {
-        asrDispatchQueue.sync {
+        timeoutPreprocessorDispatchQueue.sync {
             guard self.timeoutDialogRequestIds.contains(message.header.dialogRequestId) == false else {
                 log.warning("\(message.header.dialogRequestId) was timeout")
                 return nil
@@ -40,29 +40,11 @@ public class DownstreamDataTimeoutPreprocessor: DownstreamDataPreprocessable {
     }
 }
 
-// MARK: - ASRAgentDelegate
+// MARK: - Internal
 
-extension DownstreamDataTimeoutPreprocessor: ASRAgentDelegate {
-    public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        guard case .error(let error) = result, error == .responseTimeout else { return }
-        appendTimeoutDialogRequestId(dialogRequestId)
-    }
-}
-
-// MARK: - TextAgentDelegate
-
-extension DownstreamDataTimeoutPreprocessor: TextAgentDelegate {
-    public func textAgentDidReceive(result: TextAgentResult, dialogRequestId: String) {
-        guard case .error(let error) = result, error == .responseTimeout else { return }
-        appendTimeoutDialogRequestId(dialogRequestId)
-    }
-}
-
-// MARK: - Private
-
-private extension DownstreamDataTimeoutPreprocessor {
+extension DownstreamDataTimeoutPreprocessor {
     func appendTimeoutDialogRequestId(_ dialogRequestId: String) {
-        asrDispatchQueue.async { [weak self] in
+        timeoutPreprocessorDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             self.timeoutDialogRequestIds.append(dialogRequestId)
             if self.timeoutDialogRequestIds.count > 100 {

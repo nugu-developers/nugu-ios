@@ -1,8 +1,8 @@
 //
-//  DialogConst.swift
-//  NuguCore
+//  CapabilityFocusAgentable.swift
+//  NuguInterface
 //
-//  Created by MinChul Lee on 22/04/2019.
+//  Created by yonghoonKwon on 2019/12/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,15 @@
 
 import Foundation
 
-enum DialogConst {
-    // 200ms
-    static let shortTimeout: DispatchTimeInterval = .milliseconds(200)
+public protocol CapabilityFocusAgentable: CapabilityAgentable, FocusChannelDelegate {
+    var focusManager: FocusManageable { get }
+    var channelPriority: FocusChannelPriority { get }
+}
+
+// MARK: - Default FocusChannelDelegate
+
+extension CapabilityFocusAgentable {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        channelPriority
+    }
 }

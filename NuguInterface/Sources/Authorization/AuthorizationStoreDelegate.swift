@@ -1,8 +1,8 @@
 //
-//  TextAgentResult.swift
+//  AuthorizationStoreDelegate.swift
 //  NuguInterface
 //
-//  Created by MinChul Lee on 2019/07/22.
+//  Created by MinChul Lee on 2019/12/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,10 @@
 
 import Foundation
 
-/// A result of text recognition.
-public enum TextAgentResult {
-    /// Text recognition has completed successfully.
-    case complete
-    
-    /// Text recognition has occured error.
-    case error(_ error: TextAgentError)
+/// An delegate that application should extend to provide access token.
+public protocol AuthorizationStoreDelegate: class {
+    /// Provides an access token from cache(ex> `UserDefault`).
+    ///
+    /// - returns: The current authorization token.
+    func authorizationStoreRequestAccessToken() -> String?
 }

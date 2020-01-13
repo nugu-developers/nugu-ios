@@ -26,13 +26,21 @@ public protocol UpstreamDataSendable {
     /// - Parameters:
     ///   - upstreamEventMessage: <#upstreamEventMessage description#>
     ///   - completion: <#completion description#>
-    func send(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Data, Error>) -> Void)?)
+    func send(
+        upstreamEventMessage: UpstreamEventMessage,
+        completion: ((Result<Data, Error>) -> Void)?,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
+    )
     
     /// <#Description#>
     /// - Parameters:
     ///   - upstreamAttachment: <#upstreamAttachment description#>
     ///   - completion: <#completion description#>
-    func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)?)
+    func send(
+        upstreamAttachment: UpstreamAttachment,
+        completion: ((Result<Data, Error>) -> Void)?,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
+    )
     
     /// <#Description#>
     /// - Parameter crashReports: <#crashReports description#>

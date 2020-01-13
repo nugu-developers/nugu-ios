@@ -38,6 +38,7 @@ final class NuguCentralManager {
     }()
     
     private init() {
+        client.authorizationStore.delegate = self
         client.focusManager.delegate = self
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
@@ -58,15 +59,13 @@ final class NuguCentralManager {
 // MARK: - Internal (Enable / Disable)
 
 extension NuguCentralManager {
-    func enable(accessToken: String) {
-        client.accessToken = accessToken
+    func enable() {
         client.networkManager.connect()
     }
     
     func disable() {
         client.focusManager.stopForegroundActivity()
         client.networkManager.disconnect()
-        client.accessToken = nil
         client.inputProvider.stop()
     }
 }
@@ -141,7 +140,7 @@ extension NuguCentralManager {
                 case .success(let authInfo):
                     UserDefaults.Standard.accessToken = authInfo.accessToken
                     UserDefaults.Standard.refreshToken = authInfo.refreshToken
-                    self?.enable(accessToken: authInfo.accessToken)
+                    self?.enable()
                 case .failure:
                     self?.logoutAfterErrorHandling()
                 }
@@ -151,7 +150,7 @@ extension NuguCentralManager {
                 switch result {
                 case .success(let authInfo):
                     UserDefaults.Standard.accessToken = authInfo.accessToken
-                    self?.enable(accessToken: authInfo.accessToken)
+                    self?.enable()
                 case .failure:
                     self?.logoutAfterErrorHandling()
                 }
@@ -236,7 +235,7 @@ private extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startRecognize(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
@@ -279,7 +278,7 @@ extension NuguCentralManager {
     }
     
     func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
@@ -331,11 +330,11 @@ extension NuguCentralManager {
 
 extension NuguCentralManager: FocusDelegate {
     func focusShouldAcquire() -> Bool {
-        return NuguAudioSessionManager.setAudioSession()
+        return NuguAudioSessionManager.shared.updateAudioSession()
     }
     
     func focusShouldRelease() {
-        NuguAudioSessionManager.nofifyAudioSessionDeactivationAndRecover()
+        NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
 }
 
@@ -344,6 +343,14 @@ extension NuguCentralManager: FocusDelegate {
 extension NuguCentralManager: LocationAgentDelegate {
     func locationAgentRequestLocationInfo() -> LocationInfo? {
         return NuguLocationManager.shared.cachedLocationInfo
+    }
+}
+
+// MARK: - AuthorizationStoreDelegate
+
+extension NuguCentralManager: AuthorizationStoreDelegate {
+    func authorizationStoreRequestAccessToken() -> String? {
+        return UserDefaults.Standard.accessToken
     }
 }
 

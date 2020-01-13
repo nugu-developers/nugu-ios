@@ -24,16 +24,22 @@ import NuguInterface
 
 import RxSwift
 
-final public class TTSAgent: TTSAgentProtocol {
+final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+    // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
     
-    private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
+    // CapabilityEventAgentable
+    public let upstreamDataSender: UpstreamDataSendable
     
-    private let focusManager: FocusManageable
-    private let channelPriority: FocusChannelPriority
-    private let mediaPlayerFactory: MediaPlayerFactory
-    private let upstreamDataSender: UpstreamDataSendable
+    // CapabilityFocusAgentable
+    public let focusManager: FocusManageable
+    public let channelPriority: FocusChannelPriority
+    
+    // Private
     private let playSyncManager: PlaySyncManageable
+    private let mediaPlayerFactory: MediaPlayerFactory
+    
+    private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
     
@@ -57,16 +63,11 @@ final public class TTSAgent: TTSAgentProtocol {
             }
         }
     }
+    
     private let ttsResultSubject = PublishSubject<(dialogRequestId: String, result: TTSResult)>()
     
     // Current play Info
-    private var currentMedia: TTSMedia? {
-        didSet {
-            if currentMedia == nil {
-                releaseFocus()
-            }
-        }
-    }
+    private var currentMedia: TTSMedia?
     
     private var playerIsMuted: Bool = false {
         didSet {
@@ -81,7 +82,9 @@ final public class TTSAgent: TTSAgentProtocol {
         channelPriority: FocusChannelPriority,
         mediaPlayerFactory: MediaPlayerFactory,
         upstreamDataSender: UpstreamDataSendable,
-        playSyncManager: PlaySyncManageable
+        playSyncManager: PlaySyncManageable,
+        contextManager: ContextManageable,
+        directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
         
@@ -90,6 +93,10 @@ final public class TTSAgent: TTSAgentProtocol {
         self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        
+        contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
+        directiveSequencer.add(handleDirectiveDelegate: self)
         
         ttsResultSubject.subscribe(onNext: { [weak self] (_, result) in
             // Send error
@@ -126,9 +133,7 @@ public extension TTSAgent {
             let dialogRequestId = TimeUUID().hexString
             self.sendEvent(
                 event,
-                context: self.contextInfoRequestContext(),
-                dialogRequestId: dialogRequestId,
-                by: self.upstreamDataSender
+                dialogRequestId: dialogRequestId
             )
             
             self.ttsResultSubject
@@ -141,19 +146,14 @@ public extension TTSAgent {
         }
     }
     
-    func stopTTS(cancelAssociated: Bool) {
-        currentMedia?.cancelAssociated = cancelAssociated
-        stop()
+    func stopTTS(cancelAssociation: Bool) {
+        stop(cancelAssociation: cancelAssociation)
     }
 }
 
 // MARK: - HandleDirectiveDelegate
 
 extension TTSAgent: HandleDirectiveDelegate {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        return DirectiveTypeInfo.allDictionaryCases
-    }
-    
     public func handleDirectivePrefetch(
         _ directive: Downstream.Directive,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -184,7 +184,7 @@ extension TTSAgent: HandleDirectiveDelegate {
             // Speak 는 재생 완료 후 handler 호출
             play(directive: directive, completionHandler: completionHandler)
         case .stop:
-            completionHandler(stop())
+            completionHandler(stop(cancelAssociation: true))
         }
     }
     
@@ -216,10 +216,6 @@ extension TTSAgent: HandleDirectiveDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TTSAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
-    }
-    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(ttsState)")
         self.focusState = focusState
@@ -234,12 +230,12 @@ extension TTSAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             case (.background, .playing):
-                self.stop()
+                self.stop(cancelAssociation: false)
             // background. idle, stopped, finished 무시
             case (.background, _):
                 break
             case (.nothing, .playing):
-                self.stop()
+                self.stop(cancelAssociation: false)
             // none. idle/stopped/finished 무시
             case (.nothing, _):
                 break
@@ -272,28 +268,35 @@ extension TTSAgent: MediaPlayerDelegate {
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
-            if let eventInfo = state.eventTypeInfo {
-                self.sendEvent(info: eventInfo)
-            }
-            
             switch state {
-            case .start, .resume, .bufferRefilled:
+            case .start:
+                self.sendEvent(media: media, info: .speechStarted)
+                self.ttsState = .playing
+            case .resume, .bufferRefilled:
                 self.ttsState = .playing
             case .finish:
+                // Release focus after receiving directive
+                self.sendEvent(media: media, info: .speechFinished) { [weak self] _ in
+                    self?.releaseFocusIfNeeded()
+                }
                 self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                 self.ttsState = .finished
             case .pause:
                 media.player.stop()
             case .stop:
+                self.sendEvent(media: media, info: .speechStopped)
                 self.ttsResultSubject.onNext(
-                    (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociated: media.cancelAssociated))
+                    (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
                 )
                 self.ttsState = .stopped
+                self.releaseFocusIfNeeded()
             case .bufferUnderrun:
                 break
             case .error(let error):
+                self.sendEvent(media: media, info: .speechStopped)
                 self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .error(error)))
                 self.ttsState = .stopped
+                self.releaseFocusIfNeeded()
             }
         }
     }
@@ -319,6 +322,7 @@ extension TTSAgent: PlaySyncDelegate {
                 let media = self.currentMedia, media.dialogRequestId == dialogRequestId {
                 self.stopSilently()
                 self.currentMedia = nil
+                self.releaseFocusIfNeeded()
             }
         }
     }
@@ -409,12 +413,13 @@ private extension TTSAgent {
         }
     }
     
-    @discardableResult func stop() -> Result<Void, Error> {
+    @discardableResult func stop(cancelAssociation: Bool) -> Result<Void, Error> {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self, let media = self.currentMedia else { return }
+            self.currentMedia?.cancelAssociation = cancelAssociation
 
             media.player.stop()
-            if media.cancelAssociated == true {
+            if cancelAssociation == true {
                 self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
             }
         }
@@ -426,9 +431,9 @@ private extension TTSAgent {
         guard let media = currentMedia else { return }
         media.player.delegate = nil
         media.player.stop()
-        sendEvent(info: .speechStopped)
+        sendEvent(media: media, info: .speechStopped)
         ttsResultSubject.onNext(
-            (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociated: media.cancelAssociated))
+            (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
         )
         ttsState = .stopped
     }
@@ -437,10 +442,9 @@ private extension TTSAgent {
 // MARK: - Private (Event)
 
 private extension TTSAgent {
-    func sendEvent(info: Event.TypeInfo) {
-        guard let media = currentMedia,
-            let playServiceId = media.payload.playServiceId else {
-            log.error("TextToSpeechItem not exist")
+    func sendEvent(media: TTSMedia, info: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
+        guard let playServiceId = media.payload.playServiceId else {
+            log.debug("TTSMedia does not have playServiceId")
             return
         }
         
@@ -450,9 +454,8 @@ private extension TTSAgent {
                 playServiceId: playServiceId,
                 typeInfo: info
             ),
-            context: contextInfoRequestContext(),
             dialogRequestId: TimeUUID().hexString,
-            by: upstreamDataSender
+            resultHandler: resultHandler
         )
     }
 }
@@ -460,31 +463,12 @@ private extension TTSAgent {
 // MARK: - Private(FocusManager)
 
 private extension TTSAgent {
-    func releaseFocus() {
+    func releaseFocusIfNeeded() {
         guard focusState != .nothing else { return }
-        focusManager.releaseFocus(channelDelegate: self)
-    }
-}
-
-// MARK: - MediaPlayerState + EventTypeInfo
-
-private extension MediaPlayerState {
-    var eventTypeInfo: TTSAgent.Event.TypeInfo? {
-        switch self {
-        case .bufferRefilled, .bufferUnderrun:
-            return nil
-        case .start:
-            return .speechStarted
-        case .stop:
-            return .speechStopped
-        case .pause:
-            return nil
-        case .resume:
-            return nil
-        case .finish:
-            return .speechFinished
-        case .error:
-            return .speechStopped
+        guard [.idle, .stopped, .finished].contains(ttsState) else {
+            log.info("Not permitted in current state, \(ttsState)")
+            return
         }
+        focusManager.releaseFocus(channelDelegate: self)
     }
 }

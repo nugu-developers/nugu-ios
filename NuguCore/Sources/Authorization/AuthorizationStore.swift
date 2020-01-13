@@ -1,6 +1,6 @@
 //
-//  AuthorizationState.swift
-//  NuguInterface
+//  AuthorizationStore.swift
+//  NuguCore
 //
 //  Created by MinChul Lee on 26/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,15 +20,16 @@
 
 import Foundation
 
-/// <#Description#>
-public enum AuthorizationState {
-    /// <#Description#>
-    case uninitialized
-    /// <#Description#>
-    case refreshed
-    /// <#Description#>
-    /// - Parameter error: <#error description#>
-    case error(_ error: AuthorizationError)
-}
+import NuguInterface
 
-extension AuthorizationState: Equatable {}
+public class AuthorizationStore: AuthorizationStoreable {
+    public static let shared = AuthorizationStore()
+    
+    public weak var delegate: AuthorizationStoreDelegate?
+    
+    public var authorizationToken: String? {
+        guard let delegate = delegate else { return nil }
+        guard let accessToken = delegate.authorizationStoreRequestAccessToken() else { return nil }
+        return "Bearer \(accessToken)"
+    }
+}

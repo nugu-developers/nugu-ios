@@ -147,7 +147,6 @@ private extension FocusManager {
         switch focusState {
         case .nothing:
             assignForeground()
-            notifyIfFocusReleased()
         case .foreground, .background:
             break
         }
@@ -160,6 +159,7 @@ private extension FocusManager {
             guard
                 self.foregroundChannelDelegate == nil,
                 let backgroundChannelDelegate = self.backgroundChannelDelegate else {
+                    self.notifyIfFocusReleased()
                     return
             }
             
@@ -169,6 +169,7 @@ private extension FocusManager {
     
     func notifyIfFocusReleased() {
         if self.dialogState == .idle && channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
+            log.debug("")
             delegate?.focusShouldRelease()
         }
     }
