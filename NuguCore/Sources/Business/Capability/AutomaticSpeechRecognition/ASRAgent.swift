@@ -41,8 +41,8 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     // Private
     private let contextManager: ContextManageable
     private let audioStream: AudioStreamable
-    private let endPointDetector: EndPointDetectable
     private let dialogStateAggregator: DialogStateAggregatable
+    fileprivate static var endPointDetector: EndPointDetector?
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
@@ -66,13 +66,9 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
             }
             
             // Stop EPD
-            switch (asrState, endPointDetector.state) {
-            case (let asrState, _) where [.listening, .recognizing].contains(asrState):
-                break
-            case (_, let epdState) where [.start, .listening].contains(epdState):
-                endPointDetector.stop()
-            default:
-                break
+            if [.listening, .recognizing].contains(asrState) == false &&
+                [.start, .listening].contains(Self.endPointDetector?.state) {
+                Self.endPointDetector?.stop()
             }
             
             asrDelegates.notify { delegate in
@@ -144,28 +140,26 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
-        endPointDetector: EndPointDetectable,
         dialogStateAggregator: DialogStateAggregatable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
+        Self.endPointDetector = EndPointDetector()
         
         self.focusManager = focusManager
         self.channelPriority = channelPriority
         self.upstreamDataSender = upstreamDataSender
         self.contextManager = contextManager
         self.audioStream = audioStream
-        self.endPointDetector = endPointDetector
         self.dialogStateAggregator = dialogStateAggregator
         
-        self.endPointDetector.delegate = self
+        Self.endPointDetector?.delegate = self
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
     deinit {
-        log.info("")
+        Self.endPointDetector = nil
     }
 }
 
@@ -562,7 +556,7 @@ private extension ASRAgent {
             return expectTimeout / 1000
         }
         
-        endPointDetector.start(
+        Self.endPointDetector?.start(
             inputStream: asrRequest.reader,
             sampleRate: ASRConst.sampleRate,
             timeout: timeout,
@@ -615,6 +609,21 @@ private extension ASRAgent {
             case .failure(let error):
                 self.asrResult = .error(error)
             }
+        }
+    }
+}
+
+// MARK: - ASRAgentProtocol
+
+extension ASRAgentProtocol {
+    /// File that you have for end point detection
+    public var epdFile: URL? {
+        get {
+            return ASRAgent.endPointDetector?.epdFile
+        }
+        
+        set {
+            ASRAgent.endPointDetector?.epdFile = newValue
         }
     }
 }
