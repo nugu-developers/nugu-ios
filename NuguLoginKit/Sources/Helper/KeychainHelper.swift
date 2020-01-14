@@ -22,7 +22,6 @@ import Foundation
 import Security
 
 class KeychainHelper {
-    private lazy var lock = NSLock()
     private let accessGroupId: String?
     private let service: String
     
@@ -50,9 +49,6 @@ extension KeychainHelper {
     }
     
     func setValue(_ value: Data, forKey key: String) throws {
-        lock.lock()
-        defer { lock.unlock() }
-        
         var deleteQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
@@ -114,9 +110,6 @@ extension KeychainHelper {
     }
     
     func data(forKey key: String) throws -> Data? {
-        lock.lock()
-        defer { lock.unlock() }
-        
         var copyQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
@@ -150,9 +143,6 @@ extension KeychainHelper {
 
 extension KeychainHelper {
     func clear() throws {
-        lock.lock()
-        defer { lock.unlock() }
-        
         var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword
         ]
