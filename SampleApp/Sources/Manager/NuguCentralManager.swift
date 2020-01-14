@@ -32,7 +32,7 @@ final class NuguCentralManager {
         do {
             return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
         } catch {
-            log.warning("OAuthClient has instatinated by using deviceUniqueId")
+            log.warning("OAuthClient has instantiated by using deviceUniqueId")
             return NuguOAuthClient(deviceUniqueId: "sample-device-unique-id")
         }
     }()
@@ -112,6 +112,7 @@ extension NuguCentralManager {
                 switch result {
                 case .success(let authInfo):
                     UserDefaults.Standard.accessToken = authInfo.accessToken
+                    completion(.success(()))
                 case .failure(let error):
                     completion(.failure(SampleAppError.loginFailed(error: error)))
                 }
