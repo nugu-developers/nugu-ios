@@ -34,7 +34,7 @@ final class NuguCentralManager {
         client.focusManager.delegate = self
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.endPointDetector.epdFile = epdFile
+            client.asrAgent?.epdFile = epdFile
         }
         
         client.locationAgent?.delegate = self

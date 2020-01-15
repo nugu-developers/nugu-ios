@@ -48,8 +48,6 @@ public class NuguClient: NuguClientContainer {
     public let sharedAudioStream: AudioStreamable
     /// <#Description#>
     public let inputProvider: AudioProvidable
-    /// <#Description#>
-    public let endPointDetector: EndPointDetectable
     
     /// <#Description#>
     public let dialogStateAggregator: DialogStateAggregator
@@ -105,7 +103,6 @@ public class NuguClient: NuguClientContainer {
         playSyncManager: PlaySyncManageable = PlaySyncManager(),
         sharedAudioStream: AudioStreamable = AudioStream(capacity: 300),
         inputProvider: AudioProvidable = MicInputProvider(),
-        endPointDetector: EndPointDetectable = EndPointDetector(),
         wakeUpDetector: KeywordDetector? = KeywordDetector(),
         mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
         capabilityAgentFactory: CapabilityAgentFactory
@@ -118,7 +115,6 @@ public class NuguClient: NuguClientContainer {
         self.mediaPlayerFactory = mediaPlayerFactory
         self.sharedAudioStream = sharedAudioStream
         self.inputProvider = inputProvider
-        self.endPointDetector = endPointDetector
         self.wakeUpDetector = wakeUpDetector
         self.capabilityAgentFactory = capabilityAgentFactory
         

@@ -24,6 +24,8 @@ Nugu framework for AI Service
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/NuguCore/NuguCore/Libraries/**' }
 
   s.dependency 'NuguInterface', '~> 0'
+  s.dependency 'JadeMarble', '~> 0'
+  
   s.dependency 'NattyLog', '~> 1.0'
   s.dependency 'RxSwift', '~> 5'
 
