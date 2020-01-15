@@ -33,13 +33,13 @@ public struct UpstreamHeader {
     /// - Parameter name: <#name description#>
     /// - Parameter version: <#version description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    public init(namespace: String, name: String, version: String, dialogRequestId: String) {
+    /// - Parameter messageId: <#messageId description#>
+    public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String) {
         self.namespace = namespace
         self.name = name
         self.version = version
         self.dialogRequestId = dialogRequestId
-        // 64bit (8bytes) base16 hexa string(string length is 16)
-        self.messageId = String(format: "%llx", UInt64.random(in: 0..<UInt64.max))
+        self.messageId = messageId
     }
 }
     

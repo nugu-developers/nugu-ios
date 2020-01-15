@@ -365,7 +365,8 @@ extension ASRAgent: EndPointDetectorDelegate {
                 namespace: self.capabilityAgentProperty.name,
                 name: "Recognize",
                 version: self.capabilityAgentProperty.version,
-                dialogRequestId: asrRequest.dialogRequestId
+                dialogRequestId: asrRequest.dialogRequestId,
+                messageId: TimeUUID().hexString
             )
             let attachment = UpstreamAttachment(header: attachmentHeader, content: speechData, seq: self.attachmentSeq, isEnd: false)
             self.upstreamDataSender.send(upstreamAttachment: attachment, completion: nil, resultHandler: nil)
@@ -478,6 +479,7 @@ private extension ASRAgent {
             Event(typeInfo: eventTypeInfo, expectSpeech: currentExpectSpeech),
             contextPayload: asrRequest.contextPayload,
             dialogRequestId: asrRequest.dialogRequestId,
+            messageId: TimeUUID().hexString,
             completion: completion
         )
 
@@ -516,7 +518,8 @@ private extension ASRAgent {
         
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
-            dialogRequestId: asrRequest.dialogRequestId
+            dialogRequestId: asrRequest.dialogRequestId,
+            messageId: TimeUUID().hexString
         )
     }
 }
@@ -596,7 +599,8 @@ private extension ASRAgent {
             namespace: capabilityAgentProperty.name,
             name: "Recognize",
             version: capabilityAgentProperty.version,
-            dialogRequestId: asrRequest.dialogRequestId
+            dialogRequestId: asrRequest.dialogRequestId,
+            messageId: TimeUUID().hexString
         )
         let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), seq: attachmentSeq, isEnd: true)
         upstreamDataSender.send(upstreamAttachment: attachment, completion: nil) { [weak self] result in

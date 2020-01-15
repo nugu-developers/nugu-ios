@@ -92,7 +92,8 @@ public extension DisplayAgent {
                         playServiceId: template.playServiceId,
                         token: token
                     )),
-                dialogRequestId: TimeUUID().hexString
+                dialogRequestId: TimeUUID().hexString,
+                messageId: TimeUUID().hexString
             )
         }
     }

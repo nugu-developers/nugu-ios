@@ -85,7 +85,11 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                     let eventTypeInfo: ExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
                     let event = ExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
                     
-                    self.sendEvent(event, dialogRequestId: TimeUUID().hexString)
+                    self.sendEvent(
+                        event,
+                        dialogRequestId: TimeUUID().hexString,
+                        messageId: TimeUUID().hexString
+                    )
             })
             
             completionHandler(.success(()))
