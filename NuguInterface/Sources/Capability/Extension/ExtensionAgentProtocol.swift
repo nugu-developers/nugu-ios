@@ -26,9 +26,12 @@ public protocol ExtensionAgentProtocol: CapabilityAgentable {
     var delegate: ExtensionAgentDelegate? { get set }
     
     // Send event to specific play with custom data.
+    ///
+    /// [JSONSerialization.isValidJSONObject]: apple-reference-documentation://hsLgkBvV03
     /// - Parameters:
     ///   - playServiceId: The play's unique id
-    ///   - data: Custom data
+    ///   - data: Custom data as a Dictionary. Should be available converting JSON format.
+    ///           see [JSONSerialization.isValidJSONObject].
     ///   - completion: The completion handler to call when the request is complete.
     func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?)
 }
