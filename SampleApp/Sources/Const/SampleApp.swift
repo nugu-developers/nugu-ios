@@ -40,7 +40,7 @@ private var nattyConfiguration: NattyConfiguration {
 struct SampleApp {
     /// Web page url for NUGU usage guide of own device
     /// URLQueryItem["poc_id"]: put your own poc_id issued from Nugu Developers site ( https://developers.nugu.co.kr/#/sdk/pocList)
-    static var guideWebUrl: URL? {
+    static func makeGuideWebURL(deviceUniqueId: String) -> URL? {
         var urlComponent = URLComponents(string: "https://webview.sktnugu.com/v2/3pp/confirm.html")
         urlComponent?.queryItems = [
             URLQueryItem(name: "poc_id", value: "own.poc.id"),
@@ -54,12 +54,20 @@ struct SampleApp {
     /// Used only for Sample app (Clients should not use this code)
     /// - Parameter openUrl: url parameter from AppDelegate's application(_:open:options:) method for url scheme replacement
     static func schemeReplacedUrl(openUrl: URL) -> URL? {
-        guard let redirectUri = redirectUri,
-            let redirectUrlComponents = URLComponents(string: redirectUri),
-            var openUrlComponents = URLComponents(url: openUrl, resolvingAgainstBaseURL: false) else { return nil }
-        openUrlComponents.scheme = redirectUrlComponents.scheme
-        guard let schemeReplacedUrl = openUrlComponents.url else { return nil }
-        return schemeReplacedUrl
+        guard
+            let redirectUri = redirectUri,
+            let redirectUrlComponents = URLComponents(string: redirectUri) else {
+                return nil
+        }
+        
+        var openUrlComponents = URLComponents(url: openUrl, resolvingAgainstBaseURL: false)
+        openUrlComponents?.scheme = redirectUrlComponents.scheme
+        
+        guard let replacedUrl = openUrlComponents?.url else {
+            return nil
+        }
+        
+        return replacedUrl
     }
 }
 
@@ -113,9 +121,6 @@ extension SampleApp {
     // Common
     static var loginMethod: LoginMethod? {
         return LoginMethod(rawValue: UserDefaults.Romaine.loginMethod)
-    }
-    static var deviceUniqueId: String? {
-        return UserDefaults.Romaine.deviceUniqueId
     }
     static var clientId: String? {
         return UserDefaults.Romaine.clientId

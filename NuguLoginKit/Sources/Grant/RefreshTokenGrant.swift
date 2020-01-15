@@ -1,8 +1,8 @@
 //
-//  Type2.swift
+//  RefreshTokenGrant.swift
 //  NuguLoginKit
 //
-//  Created by yonghoonKwon on 01/10/2019.
+//  Created by yonghoonKwon on 2019/12/21.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,25 +20,21 @@
 
 import Foundation
 
-public class Type2: LoginType {
-    
-    /// The `ClientSecret` for OAuth authentication.
+public struct RefreshTokenGrant {
+    /// The `clientId` for OAuth authentication.
     public let clientId: String
-    
-    /// The `ClientSecret` for OAuth authentication.
+    /// The `clientSecret` for OAuth authentication.
     public let clientSecret: String
+    /// The `refreshToken` for OAuth authentication.
+    public let refreshToken: String
     
-    /// The `deviceUniqueId` for OAuth authentication. Must be unique each device in your system.
-    public let deviceUniqueId: String?
-    
-    /// The initializer for `Type2` authentication.
-    public init(
-        clientId: String,
-        clientSecret: String,
-        deviceUniqueId: String?
-        ) {
+    /// The initializer for `RefreshTokenGrant`.
+    /// - Parameter clientId: The `clientId` for OAuth authentication.
+    /// - Parameter clientSecret: The `clientSecret` for OAuth authentication.
+    /// - Parameter refreshToken: The `refreshToken` for OAuth authentication.
+    public init(clientId: String, clientSecret: String, refreshToken: String) {
         self.clientId = clientId
         self.clientSecret = clientSecret
-        self.deviceUniqueId = deviceUniqueId
+        self.refreshToken = refreshToken
     }
 }

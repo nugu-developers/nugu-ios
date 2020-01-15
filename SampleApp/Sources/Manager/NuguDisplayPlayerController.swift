@@ -41,6 +41,8 @@ final class NuguDisplayPlayerController {
     private var currentState: AudioPlayerState = .idle
     private var nowPlayingInfoCenter: MPNowPlayingInfoCenter?
     
+    private var renderingContext: AnyObject?
+    
     // MARK: Initialize
     
     init(client: NuguClient) {
@@ -66,6 +68,7 @@ final class NuguDisplayPlayerController {
         currentItem = nil
         nowPlayingInfoCenter?.nowPlayingInfo = nil
         nowPlayingInfoCenter = nil
+        renderingContext = nil
     }
 }
 
@@ -252,9 +255,10 @@ private extension NuguDisplayPlayerController {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
+        renderingContext = NSObject()
         update(newItem: template)
-        return currentItem
+        return renderingContext
     }
     
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {

@@ -179,7 +179,7 @@ private extension MainViewController {
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
         guard hasShownGuideWeb == false,
-            let url = SampleApp.guideWebUrl else { return }
+            let url = SampleApp.makeGuideWebURL(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) else { return }
         
         performSegue(withIdentifier: "mainToGuideWeb", sender: url)
     }
@@ -571,7 +571,7 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentDidRender(template: DisplayTemplate) -> Any? {
+    func displayAgentDidRender(template: DisplayTemplate) -> AnyObject? {
         return addDisplayView(displayTemplate: template)
     }
     
@@ -588,7 +588,7 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
