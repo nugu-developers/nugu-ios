@@ -35,8 +35,6 @@ final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentabl
     
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
-    private var serverPolicy: Policy.ServerPolicy?
-    
     private let delegates = DelegateSet<SystemAgentDelegate>()
     
     public init(
