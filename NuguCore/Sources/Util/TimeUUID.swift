@@ -31,27 +31,25 @@ public struct TimeUUID {
     public init() {
         var hexString = String()
         
-        // Time: length 10
+        // MARK: Time: length 10
         let time = Date().timeIntervalSince1970 * 1000 - TimeUUID.baseTime
         hexString += String(format: "%010llx", UInt64(time))
         
-        // Version: length 2
+        // MARK: Version: length 2
         hexString += String(format: "%02x", 0x01)
         
+        // MARK: Hash: length 12
         let hashKey = AuthorizationStore.shared.authorizationToken ?? ""
-        // Hash: length 12
-        hexString += { () -> String in
-            let data = Data(hashKey.utf8)
-            var digest = [UInt8](repeating: 0, count: 20)
-            data.withUnsafeBytes {
-                _ = CC_SHA1($0.baseAddress, CC_LONG(data.count), &digest)
-            }
-            // sha1 의 앞 6자리만...
-            let hexBytes = digest.prefix(6).map { String(format: "%02hhx", $0) }
-            return hexBytes.joined()
-            }()
+        let data = Data(hashKey.utf8)
+        var digest = [UInt8](repeating: 0, count: 20)
+        data.withUnsafeBytes {
+            _ = CC_SHA1($0.baseAddress, CC_LONG(data.count), &digest)
+        }
+        // sha1 의 앞 6자리만...
+        let hexBytes = digest.prefix(6).map { String(format: "%02hhx", $0) }
+        hexString += hexBytes.joined()
         
-        // Random: length 8
+        // MARK: Random: length 8
         let random = UInt32.random(in: 0..<UInt32.max)
         hexString += String(format: "%08x", random)
         
