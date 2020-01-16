@@ -22,4 +22,5 @@ import Foundation
 
 enum FocusConst {
     static let shortLatency: DispatchTimeInterval = .milliseconds(30)
+    static let releaseLatency: DispatchTimeInterval = .milliseconds(200)
 }

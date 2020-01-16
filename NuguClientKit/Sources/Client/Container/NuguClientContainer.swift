@@ -31,8 +31,6 @@ public protocol NuguClientContainer {
     /// <#Description#>
     var networkManager: NetworkManageable { get }
     /// <#Description#>
-    var dialogStateAggregator: DialogStateAggregatable { get }
-    /// <#Description#>
     var contextManager: ContextManageable { get }
     /// <#Description#>
     var playSyncManager: PlaySyncManageable { get }

@@ -29,8 +29,8 @@ public class FocusManager: FocusManageable {
     
     private var channelInfos = [FocusChannelInfo]()
     
-    private var dialogState: DialogState = .idle
-
+    private var releaseFocusWorkItem: DispatchWorkItem?
+    
     public init() {
         log.info("")
     }
@@ -116,18 +116,6 @@ extension FocusManager {
     }
 }
 
-// MARK: - DialogStateDelegate
-
-extension FocusManager: DialogStateDelegate {
-    public func dialogStateDidChange(_ state: DialogState) {
-        focusDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.dialogState = state
-            self.notifyIfFocusReleased()
-        }
-    }
-}
-
 // MARK: - Private
 
 private extension FocusManager {
@@ -147,7 +135,9 @@ private extension FocusManager {
         switch focusState {
         case .nothing:
             assignForeground()
+            notifyReleaseFocusIfNeeded()
         case .foreground, .background:
+            releaseFocusWorkItem?.cancel()
             break
         }
     }
@@ -156,10 +146,8 @@ private extension FocusManager {
         /// Background -> Foreground
         focusDispatchQueue.asyncAfter(deadline: .now() + FocusConst.shortLatency) { [weak self] in
             guard let self = self else { return }
-            guard
-                self.foregroundChannelDelegate == nil,
+            guard self.foregroundChannelDelegate == nil,
                 let backgroundChannelDelegate = self.backgroundChannelDelegate else {
-                    self.notifyIfFocusReleased()
                     return
             }
             
@@ -167,11 +155,17 @@ private extension FocusManager {
         }
     }
     
-    func notifyIfFocusReleased() {
-        if self.dialogState == .idle && channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
-            log.debug("")
-            delegate?.focusShouldRelease()
+    func notifyReleaseFocusIfNeeded() {
+        releaseFocusWorkItem?.cancel()
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            if self.channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
+                log.debug("")
+                self.delegate?.focusShouldRelease()
+            }
         }
+        releaseFocusWorkItem = workItem
+        focusDispatchQueue.asyncAfter(deadline: .now() + FocusConst.releaseLatency, execute: workItem)
     }
     
     var foregroundChannelDelegate: FocusChannelDelegate? {

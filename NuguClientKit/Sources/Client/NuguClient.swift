@@ -35,8 +35,6 @@ public class NuguClient: NuguClientContainer {
     /// <#Description#>
     public let networkManager: NetworkManageable
     /// <#Description#>
-    public let dialogStateAggregator: DialogStateAggregatable
-    /// <#Description#>
     public let contextManager: ContextManageable
     /// <#Description#>
     public let playSyncManager: PlaySyncManageable
@@ -52,6 +50,8 @@ public class NuguClient: NuguClientContainer {
     public let inputProvider: AudioProvidable
     
     /// <#Description#>
+    public let dialogStateAggregator: DialogStateAggregator
+    /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
     
     private let capabilityAgentFactory: CapabilityAgentFactory
@@ -65,7 +65,6 @@ public class NuguClient: NuguClientContainer {
         contextManager: contextManager,
         networkManager: networkManager,
         upstreamDataSender: streamDataRouter,
-        dialogStateAggregator: dialogStateAggregator,
         directiveSequencer: directiveSequencer
     )
     
@@ -119,9 +118,7 @@ public class NuguClient: NuguClientContainer {
         self.wakeUpDetector = wakeUpDetector
         self.capabilityAgentFactory = capabilityAgentFactory
         
-        let dialogStateAggregator = DialogStateAggregator()
-        
-        self.dialogStateAggregator = dialogStateAggregator
+        self.dialogStateAggregator = DialogStateAggregator()
         self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
         self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
         

@@ -20,6 +20,9 @@
 
 import Foundation
 
+/// The information about multiturn.
+///
+/// NUGU ask you to get more information to know about you requested.
 public struct ASRExpectSpeech {
     public let timeoutInMilliseconds: Int?
     public let playServiceId: String?

@@ -27,10 +27,9 @@ import NuguInterface
 extension TextAgent {
     public struct Event {
         let typeInfo: TypeInfo
-        let expectSpeech: ASRExpectSpeech?
         
         public enum TypeInfo {
-            case textInput(text: String)
+            case textInput(text: String, expectSpeech: ASRExpectSpeech?)
         }
     }
 }
@@ -41,7 +40,7 @@ extension TextAgent.Event: Eventable {
     public var payload: [String: Any] {
         var payload: [String: Any?]
         switch typeInfo {
-        case .textInput(let text):
+        case .textInput(let text, let expectSpeech):
             payload = [
                 "text": text,
                 "sessionId": expectSpeech?.sessionId,

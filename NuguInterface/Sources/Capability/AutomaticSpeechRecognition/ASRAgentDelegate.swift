@@ -24,16 +24,10 @@ import Foundation
 public protocol ASRAgentDelegate: class {
     /// Used to notify the observer of `ASRState` changes.
     /// - Parameter state: The new `ASRState` of the `ASRAgent`
-    func asrAgentDidChange(state: ASRState)
+    /// - Parameter expectSpeech: indicates `ASRState` is in progress with multiturn.
+    func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?)
     
     /// Called when received a result of `startRecognition` request.
     /// - Parameter result: A recognized result.
     func asrAgentDidReceive(result: ASRResult, dialogRequestId: String)
-}
-
-// MARK: - Optional
-
-public extension ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState) {}
-    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {}
 }
