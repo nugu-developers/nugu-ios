@@ -218,9 +218,9 @@ public class NuguClient {
 // MARK: - Helper functions
 
 extension NuguClient {
-    public func addComponent<Component>(_ agent: Component.Type, option: ComponentKey.Option = .representative, factory: @escaping (ComponentResolver) -> Component) {
-        let additionalAgent = factory(container)
-        container.register(agent, option: option) { _ in additionalAgent }
+    public func addComponent<Component>(_ componentType: Component.Type, option: ComponentKey.Option = .representative, factory: @escaping (ComponentResolver) -> Component?) {
+        let additionalComponent = factory(container)
+        container.register(componentType, option: option) { _ in additionalComponent }
     }
     
     public func getComponent<Component>(_ componentType: Component.Type) -> Component? {
@@ -245,6 +245,22 @@ extension NuguClient {
         }
         
         networkManager.disconnect()
+    }
+    
+    public func enable() {
+        connect()
+    }
+    
+    public func disable() {
+        if let focusManager = container.resolve(FocusManageable.self) {
+            focusManager.stopForegroundActivity()
+        }
+        
+        if let inputProvider = container.resolve(AudioProvidable.self) {
+            inputProvider.stop()
+        }
+        
+        disconnect()
     }
 }
 
@@ -294,7 +310,7 @@ extension NuguClient: AudioStreamDelegate {
             
         }
         
-        inputControlQueue.asyncAfter(deadline: .now() + 3, execute: inputControlWorkItem!)
+        inputControlQueue.async(execute: inputControlWorkItem!)
     }
 }
 

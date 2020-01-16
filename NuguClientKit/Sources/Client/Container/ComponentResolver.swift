@@ -24,7 +24,7 @@ public protocol ComponentResolver {
     func resolve<Component, Concreate>(_ protocol: Component.Type, concreateType: Concreate.Type?, option: ComponentKey.Option) -> Concreate?
 }
 
-extension ComponentResolver {
+public extension ComponentResolver {
     func resolve<Component>(_ componentType: Component.Type) -> Component? {
         return resolve(componentType, concreateType: nil, option: .representative)
     }

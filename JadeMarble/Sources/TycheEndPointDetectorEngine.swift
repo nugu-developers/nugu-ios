@@ -129,7 +129,9 @@ public class TycheEndPointDetectorEngine: NSObject {
         
         guard let epdFile = epdFile else { throw EndPointDetectorError.initFailed }
         
-        try epdFile.path.withCString { (cstringEpdFile) -> Void in
+        try epdFile.path.withCString { [weak self] (cstringEpdFile) -> Void in
+            guard let self = self else { return }
+            
             guard let epdHandle = epdClientChannelSTART(
                 cstringEpdFile,
                 myint(sampleRate),

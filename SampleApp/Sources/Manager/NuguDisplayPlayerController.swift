@@ -29,7 +29,7 @@ final class NuguDisplayPlayerController {
     
     // MARK: Properties
     
-    private let client: NuguClient
+    private let audioPlayerAgent: AudioPlayerAgentProtocol
     
     private var playCommandTarget: Any?
     private var pauseCommandTarget: Any?
@@ -45,22 +45,26 @@ final class NuguDisplayPlayerController {
     
     // MARK: Initialize
     
-    init(client: NuguClient) {
-        self.client = client
+    init?(audioPlayerAgent: AudioPlayerAgentProtocol?) {
+        guard let audioPlayerAgent = audioPlayerAgent else { return nil }
+        
+        self.audioPlayerAgent = audioPlayerAgent
     }
     
     func use() {
         // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
         guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
-        client.audioPlayerAgent?.add(displayDelegate: self)
-        client.audioPlayerAgent?.add(delegate: self)
+        audioPlayerAgent.add(displayDelegate: self)
+        audioPlayerAgent.add(delegate: self)
     }
     
     func unuse() {
         // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
         guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
-        client.audioPlayerAgent?.remove(displayDelegate: self)
-        client.audioPlayerAgent?.remove(delegate: self)
+        
+        
+        audioPlayerAgent.remove(displayDelegate: self)
+        audioPlayerAgent.remove(delegate: self)
     }
     
     func remove() {
@@ -114,7 +118,7 @@ private extension NuguDisplayPlayerController {
         let albumTitle: String
         let imageUrl: String?
         
-        duration = client.audioPlayerAgent?.duration ?? 0
+        duration = audioPlayerAgent.duration ?? 0
         title = playerItem.payload.template.title.text
         albumTitle = playerItem.payload.template.content.title
         imageUrl = playerItem.payload.template.content.imageUrl
@@ -126,7 +130,7 @@ private extension NuguDisplayPlayerController {
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
         nowPlayingInfo[MPMediaItemPropertyArtwork] = nil
     
-        let offset = client.audioPlayerAgent?.offset ?? 0
+        let offset = audioPlayerAgent.offset ?? 0
         switch state {
         case .playing:
             addRemoteCommands()
@@ -177,7 +181,7 @@ private extension NuguDisplayPlayerController {
         if playCommandTarget == nil {
             playCommandTarget = MPRemoteCommandCenter.shared()
                 .playCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
-                    self?.client.audioPlayerAgent?.play()
+                    self?.audioPlayerAgent.play()
                     return .success
             }
         }
@@ -188,7 +192,7 @@ private extension NuguDisplayPlayerController {
         
         pauseCommandTarget = MPRemoteCommandCenter.shared()
             .pauseCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
-                self?.client.audioPlayerAgent?.pause()
+                self?.audioPlayerAgent.pause()
                 return .success
         }
     }
@@ -198,7 +202,7 @@ private extension NuguDisplayPlayerController {
         
         previousCommandTarget = MPRemoteCommandCenter.shared()
             .previousTrackCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
-                self?.client.audioPlayerAgent?.prev()
+                self?.audioPlayerAgent.prev()
                 return .success
         }
     }
@@ -208,7 +212,7 @@ private extension NuguDisplayPlayerController {
         
         nextCommandTarget = MPRemoteCommandCenter.shared()
             .nextTrackCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
-                self?.client.audioPlayerAgent?.next()
+                self?.audioPlayerAgent.next()
                 return .success
         }
     }
@@ -219,7 +223,7 @@ private extension NuguDisplayPlayerController {
         seekCommandTarget = MPRemoteCommandCenter.shared()
             .changePlaybackPositionCommand.addTarget { [weak self] (event) -> MPRemoteCommandHandlerStatus in
                 guard let event = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
-                self?.client.audioPlayerAgent?.seek(to: Int(event.positionTime))
+                self?.audioPlayerAgent.seek(to: Int(event.positionTime))
                 return .success
         }
     }
