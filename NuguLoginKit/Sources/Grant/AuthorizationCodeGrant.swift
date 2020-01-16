@@ -1,8 +1,8 @@
 //
-//  Type1.swift
+//  AuthorizationCodeGrant.swift
 //  NuguLoginKit
 //
-//  Created by yonghoonKwon on 01/10/2019.
+//  Created by yonghoonKwon on 2019/12/21.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,30 +20,23 @@
 
 import Foundation
 
-/// The `Type1` authentication method that grant-type is authorization_code or refresh_token.
-public class Type1: LoginType {
-    
-    /// The `ClientId` for OAuth authentication.
+public struct AuthorizationCodeGrant {
+    /// The `clientId` for OAuth authentication.
     public let clientId: String
-    
-    /// The `ClientSecret` for OAuth authentication.
+    /// The `clientSecret` for OAuth authentication.
     public let clientSecret: String
-    
     /// The `redirectUri` for OAuth authentication.
     public let redirectUri: String
     
-    /// The `deviceUniqueId` for OAuth authentication. Must be unique each device in your system.
-    public let deviceUniqueId: String?
+    let stateController: OAuthStateController = OAuthStateController()
     
-    /// The initializer for `Type1` authentication.
-    public init(
-        clientId: String,
-        clientSecret: String,
-        redirectUri: String,
-        deviceUniqueId: String?) {
+    /// The initializer for `AuthorizationCodeGrant`.
+    /// - Parameter clientId: The `clientId` for OAuth authentication.
+    /// - Parameter clientSecret: The `clientSecret` for OAuth authentication.
+    /// - Parameter redirectUri: The `redirectUri` for OAuth authentication.
+    public init(clientId: String, clientSecret: String, redirectUri: String) {
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.redirectUri = redirectUri
-        self.deviceUniqueId = deviceUniqueId
     }
 }

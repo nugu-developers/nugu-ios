@@ -22,10 +22,11 @@ import Foundation
 
 import NuguInterface
 
-public class DialogStateAggregator: DialogStateAggregatable {
+/// DialogStateAggregator aggregate several components state into one.
+public class DialogStateAggregator {
     private let dialogStateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.dialog_state_aggregator", qos: .userInitiated)
     private let dialogStateDelegates = DelegateSet<DialogStateDelegate>()
-
+    
     private let shortTimeout: DispatchTimeInterval = .milliseconds(200)
     private var multiturnSpeakingToListeningTimer: DispatchWorkItem?
 
@@ -36,19 +37,15 @@ public class DialogStateAggregator: DialogStateAggregatable {
             if oldValue != dialogState {
                 multiturnSpeakingToListeningTimer?.cancel()
                 dialogStateDelegates.notify { delegate in
-                    delegate.dialogStateDidChange(dialogState)
+                    delegate.dialogStateDidChange(dialogState, expectSpeech: expectSpeech)
                 }
             }
         }
     }
     private var asrState: ASRState = .idle
+    private var expectSpeech: ASRExpectSpeech?
     private var ttsState: TTSState = .finished
     private var textAgentState: TextAgentState = .idle
-    public var expectSpeech: ASRExpectSpeech? {
-        didSet {
-            applyState()
-        }
-    }
 
     public init() {
         log.info("")
@@ -62,10 +59,14 @@ public class DialogStateAggregator: DialogStateAggregatable {
 // MARK: - DialogStateAggregatable
 
 extension DialogStateAggregator {
+    /// Adds a delegate to be notified of DialogStateAggregator state changes.
+    /// - Parameter delegate: The object to add.
     public func add(delegate: DialogStateDelegate) {
         dialogStateDelegates.add(delegate)
     }
-
+    
+    /// Removes a delegate from DialogStateAggregator.
+    /// - Parameter delegate: The object to remove.
     public func remove(delegate: DialogStateDelegate) {
         dialogStateDelegates.remove(delegate)
     }
@@ -74,13 +75,16 @@ extension DialogStateAggregator {
 // MARK: - ASRAgentDelegate
 
 extension DialogStateAggregator: ASRAgentDelegate {
-    public func asrAgentDidChange(state: ASRState) {
+    public func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?) {
         dialogStateDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             self.asrState = state
+            self.expectSpeech = expectSpeech
             self.applyState()
         }
     }
+    
+    public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {}
 }
 
 // MARK: - TTSAgentDelegate
@@ -116,7 +120,7 @@ private extension DialogStateAggregator {
         log.info("\(asrState)\(ttsState)")
         switch (asrState, textAgentState, ttsState) {
         case (_, _, .playing):
-            dialogState = .speaking(expectingSpeech: expectSpeech != nil)
+            dialogState = .speaking
         case (.expectingSpeech, _, _):
             dialogState = .expectingSpeech
         case (.listening, _, _):

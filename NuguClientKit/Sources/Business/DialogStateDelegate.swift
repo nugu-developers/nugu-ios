@@ -1,6 +1,6 @@
 //
 //  DialogStateDelegate.swift
-//  NuguInterface
+//  NuguClientKit
 //
 //  Created by MinChul Lee on 24/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,9 +20,12 @@
 
 import Foundation
 
-/// An delegate that appllication can extend to register to observe DialogStateAggregator state changes.
+import NuguInterface
+
+/// An delegate that appllication can extend to register to observe `DialogStateAggregator` state changes.
 public protocol DialogStateDelegate: class {
     /// Used to notify the observer of DialogState changes.
-    /// - Parameter state: The new DialogState of the DialogStateAggregator
-    func dialogStateDidChange(_ state: DialogState)
+    /// - Parameter state: The new `DialogState` of the `DialogStateAggregator`
+    /// - Parameter expectSpeech: indicates `DialogState` is in progress with multiturn.
+    func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?)
 }

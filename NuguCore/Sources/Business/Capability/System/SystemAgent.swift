@@ -35,16 +35,12 @@ final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentabl
     
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
-    private var serverPolicy: Policy.ServerPolicy?
-    private var dialogState: DialogState = .idle
-    
     private let delegates = DelegateSet<SystemAgentDelegate>()
     
     public init(
         contextManager: ContextManageable,
         networkManager: NetworkManageable,
         upstreamDataSender: UpstreamDataSendable,
-        dialogStateAggregator: DialogStateAggregatable,
         directiveSequencer: DirectiveSequenceable
     ) {
         log.info("")
@@ -55,7 +51,6 @@ final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentabl
         
         contextManager.add(provideContextDelegate: self)
         networkManager.add(statusDelegate: self)
-        dialogStateAggregator.add(delegate: self)
         directiveSequencer.add(handleDirectiveDelegate: self)
     }
     
@@ -132,19 +127,6 @@ extension SystemAgent: NetworkStatusDelegate {
     }
 }
 
-// MARK: - DialogStateDelegate
-
-extension SystemAgent: DialogStateDelegate {
-    public func dialogStateDidChange(_ state: DialogState) {
-        systemDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.dialogState = state
-            self.connect()
-        }
-    }
-}
-
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
@@ -154,9 +136,12 @@ private extension SystemAgent {
                 throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
             }
             
-            self?.serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
+            let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
             self?.systemDispatchQueue.async { [weak self] in
-                self?.connect()
+                 // TODO: casting 제거
+                if let networkManager = self?.networkManager as? NetworkManager {
+                    networkManager.connect(serverPolicies: [serverPolicy])
+                }
             }
         }
     }
@@ -201,18 +186,6 @@ private extension SystemAgent {
                 dialogRequestId: TimeUUID().hexString,
                 messageId: TimeUUID().hexString
             )
-        }
-    }
-    
-    func connect() {
-        // DialogState 가 idle 일 때 hand off
-        guard case .idle = dialogState else { return }
-
-        if let serverPolicy = serverPolicy,
-            // TODO: casting 제거
-            let networkManager = networkManager as? NetworkManager {
-            self.serverPolicy = nil
-            networkManager.connect(serverPolicies: [serverPolicy])
         }
     }
 }

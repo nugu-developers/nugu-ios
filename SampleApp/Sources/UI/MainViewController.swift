@@ -179,7 +179,7 @@ private extension MainViewController {
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
         guard hasShownGuideWeb == false,
-            let url = SampleApp.guideWebUrl else { return }
+            let url = SampleApp.makeGuideWebURL(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) else { return }
         
         performSegue(withIdentifier: "mainToGuideWeb", sender: url)
     }
@@ -473,7 +473,7 @@ extension MainViewController: WakeUpDetectorDelegate {
 // MARK: - DialogStateDelegate
 
 extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState) {
+    func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
         switch state {
         case .idle:
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
@@ -481,9 +481,9 @@ extension MainViewController: DialogStateDelegate {
             })
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
-        case .speaking(let expectingSpeech):
+        case .speaking:
             DispatchQueue.main.async { [weak self] in
-                guard expectingSpeech == false else {
+                guard expectSpeech == nil else {
                     self?.nuguVoiceChrome.changeState(state: .speaking)
                     self?.nuguVoiceChrome.minimize()
                     return
@@ -512,7 +512,7 @@ extension MainViewController: DialogStateDelegate {
 // MARK: - AutomaticSpeechRecognitionDelegate
 
 extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState) {
+    func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?) {
         switch state {
         case .idle:
             refreshWakeUpDetector()
@@ -571,7 +571,7 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentDidRender(template: DisplayTemplate) -> Any? {
+    func displayAgentDidRender(template: DisplayTemplate) -> AnyObject? {
         return addDisplayView(displayTemplate: template)
     }
     
@@ -588,7 +588,7 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> Any? {
+    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     

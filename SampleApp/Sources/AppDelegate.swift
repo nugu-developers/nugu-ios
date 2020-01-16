@@ -34,8 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Only for free pass of Sample app's Oauth validation check
         guard let schemeReplacedUrl = SampleApp.schemeReplacedUrl(openUrl: url) else { return false }
         
-        let handled = OAuthManager<Type1>.shared.handle(open: schemeReplacedUrl, options: options)
-        return handled
+        NuguOAuthClient.handle(url: schemeReplacedUrl)
+        return true
     }
     
     func applicationWillResignActive(_ application: UIApplication) {

@@ -1,8 +1,8 @@
 //
-//  LoginType.swift
+//  ClientCredentialsGrant.swift
 //  NuguLoginKit
 //
-//  Created by yonghoonKwon on 26/09/2019.
+//  Created by yonghoonKwon on 2019/12/21.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,18 @@
 
 import Foundation
 
-public protocol LoginType {
-    var clientId: String { get }
-    var clientSecret: String { get }
+public struct ClientCredentialsGrant {
+    /// The `clientId` for OAuth authentication.
+    public let clientId: String
+    
+    /// The `clientSecret` for OAuth authentication.
+    public let clientSecret: String
+    
+    /// The initializer for `ClientCredentialsGrant`.
+    /// - Parameter clientId: The `clientId` for OAuth authentication.
+    /// - Parameter clientSecret: The `clientSecret` for OAuth authentication.
+    public init(clientId: String, clientSecret: String) {
+        self.clientId = clientId
+        self.clientSecret = clientSecret
+    }
 }
