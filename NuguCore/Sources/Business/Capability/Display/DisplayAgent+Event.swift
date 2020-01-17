@@ -26,10 +26,13 @@ import NuguInterface
 
 extension DisplayAgent {
     public struct Event {
+        let playServiceId: String
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case elementSelected(playServiceId: String, token: String)
+            case elementSelected(token: String)
+            case closeSucceeded
+            case closeFailed
         }
     }
 }
@@ -38,21 +41,26 @@ extension DisplayAgent {
 
 extension DisplayAgent.Event: Eventable {
     public var payload: [String: Any] {
+        var payload: [String: Any] = [
+            "playServiceId": playServiceId
+        ]
         switch typeInfo {
-        case .elementSelected(let playServiceId, let token):
-            let payload: [String: Any] = [
-                "token": token,
-                "playServiceId": playServiceId
-            ]
-            
-            return payload
+        case .elementSelected(let token):
+            payload["token"] = token
+        default:
+            break
         }
+        return payload
     }
     
     public var name: String {
         switch typeInfo {
         case .elementSelected:
             return "ElementSelected"
+        case .closeSucceeded:
+            return "CloseSucceeded"
+        case .closeFailed:
+            return "CloseFailed"
         }
     }
 }
