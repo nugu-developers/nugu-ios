@@ -506,6 +506,7 @@ private extension AudioPlayerAgent {
                 typeInfo: typeInfo
             ),
             dialogRequestId: TimeUUID().hexString,
+            messageId: TimeUUID().hexString,
             resultHandler: resultHandler
         )
     }

@@ -144,7 +144,8 @@ private extension SpeakerAgent {
                 
                 self.sendEvent(
                     Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
-                    dialogRequestId: TimeUUID().hexString
+                    dialogRequestId: TimeUUID().hexString,
+                    messageId: TimeUUID().hexString
                 )
             }
         }
