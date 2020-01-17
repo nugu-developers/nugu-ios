@@ -92,7 +92,8 @@ public extension DisplayAgent {
             
             self.sendEvent(
                 Event(playServiceId: template.playServiceId, typeInfo: .elementSelected(token: token)),
-                dialogRequestId: TimeUUID().hexString
+                dialogRequestId: TimeUUID().hexString,
+                messageId: TimeUUID().hexString
             )
         }
     }
@@ -214,14 +215,16 @@ private extension DisplayAgent {
             guard let item = self.currentItem, item.playServiceId == payload.playServiceId else {
                 self.sendEvent(
                     Event(playServiceId: payload.playServiceId, typeInfo: .closeFailed),
-                    dialogRequestId: TimeUUID().hexString
+                    dialogRequestId: TimeUUID().hexString,
+                    messageId: TimeUUID().hexString
                 )
                 return
             }
             
             self.sendEvent(
                 Event(playServiceId: payload.playServiceId, typeInfo: .closeSucceeded),
-                dialogRequestId: TimeUUID().hexString
+                dialogRequestId: TimeUUID().hexString,
+                messageId: TimeUUID().hexString
             )
             
             self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)

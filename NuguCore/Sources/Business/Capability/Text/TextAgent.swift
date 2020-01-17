@@ -181,7 +181,8 @@ private extension TextAgent {
         
         sendEvent(
             Event(typeInfo: .textInput(text: textRequest.text, expectSpeech: textRequest.expectSpeech)),
-            dialogRequestId: textRequest.dialogRequestId
+            dialogRequestId: textRequest.dialogRequestId,
+            messageId: TimeUUID().hexString
         ) { [weak self] result in
             guard let self = self else { return }
             guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }

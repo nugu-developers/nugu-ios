@@ -23,47 +23,35 @@ import CommonCrypto
 
 public struct TimeUUID {
     // seconds
-    private static let baseTime = 1546300800.0
-    private static let maxRandom: UInt32 = (2 << 23) - 1
+    private static let baseTime = 1546300800000.0
     
     // 32 * 4(hex string) = 128bit
     public let hexString: String
     
     public init() {
-        var hexString = [Character]()
+        var hexString = String()
         
-        // length 8
-        let time = (Date().timeIntervalSince1970 - TimeUUID.baseTime) * 10
-        String(format: "%08x", Int32(time)).forEach { (char) in
-            hexString.append(char)
-        }
+        // MARK: Time: length 10
+        let time = Date().timeIntervalSince1970 * 1000 - TimeUUID.baseTime
+        hexString += String(format: "%010llx", UInt64(time))
         
-        // length 2
-        String(format: "%02x", 0x00).forEach { (char) in
-            hexString.append(char)
-        }
+        // MARK: Version: length 2
+        hexString += String(format: "%02x", 0x01)
         
-        // length 6
-        let random = UInt32.random(in: 0..<TimeUUID.maxRandom)
-        String(format: "%06x", random).forEach { (char) in
-            hexString.append(char)
-        }
-        
+        // MARK: Hash: length 12
         let hashKey = AuthorizationStore.shared.authorizationToken ?? ""
-        // length 16
-        let hash = { () -> String in
-            let data = Data(hashKey.utf8)
-            var digest = [UInt8](repeating: 0, count: 20)
-            data.withUnsafeBytes {
-                _ = CC_SHA1($0.baseAddress, CC_LONG(data.count), &digest)
-            }
-            // sha1 의 앞 8자리만...
-            let hexBytes = digest.prefix(8).map { String(format: "%02hhx", $0) }
-            return hexBytes.joined()
-        }()
-        hash.forEach { (char) in
-            hexString.append(char)
+        let data = Data(hashKey.utf8)
+        var digest = [UInt8](repeating: 0, count: 20)
+        data.withUnsafeBytes {
+            _ = CC_SHA1($0.baseAddress, CC_LONG(data.count), &digest)
         }
+        // sha1 의 앞 6자리만...
+        let hexBytes = digest.prefix(6).map { String(format: "%02hhx", $0) }
+        hexString += hexBytes.joined()
+        
+        // MARK: Random: length 8
+        let random = UInt32.random(in: 0..<UInt32.max)
+        hexString += String(format: "%08x", random)
         
         self.hexString = String(hexString)
     }

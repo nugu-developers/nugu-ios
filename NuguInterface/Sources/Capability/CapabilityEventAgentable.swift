@@ -23,19 +23,13 @@ import Foundation
 public protocol CapabilityEventAgentable: CapabilityAgentable {
     associatedtype Event: Eventable
     
-    /// <#Description#>
     var upstreamDataSender: UpstreamDataSendable { get }
     
-    /// <#Description#>
-    /// - Parameter event: <#event description#>
-    /// - Parameter contextPayload: <#contextPayload description#>
-    /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter completion: <#completion description#>
-    /// - Parameter resultHandler: <#resultHandler description#>
     func sendEvent(
         _ event: Event,
         contextPayload: ContextPayload,
         dialogRequestId: String,
+        messageId: String,
         completion: ((Result<Data, Error>) -> Void)?,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
     )
@@ -44,14 +38,10 @@ public protocol CapabilityEventAgentable: CapabilityAgentable {
 // MARK: - Default
 
 public extension CapabilityEventAgentable {
-    /// <#Description#>
-    /// - Parameter event: <#event description#>
-    /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter completion: completion description
-    /// - Parameter resultHandler: <#resultHandler description#>
     func sendEvent(
         _ event: Event,
         dialogRequestId: String,
+        messageId: String,
         completion: ((Result<Data, Error>) -> Void)? = nil,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
     ) {
@@ -60,18 +50,21 @@ public extension CapabilityEventAgentable {
             client: []
         )
         
-        sendEvent(event, contextPayload: contextPayload, dialogRequestId: dialogRequestId, completion: completion, resultHandler: resultHandler)
+        sendEvent(
+            event,
+            contextPayload: contextPayload,
+            dialogRequestId: dialogRequestId,
+            messageId: messageId,
+            completion: completion,
+            resultHandler: resultHandler
+        )
     }
     
-    /// <#Description#>
-    /// - Parameter event: <#event description#>
-    /// - Parameter contextPayload: <#contextPayload description#>
-    /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    /// - Parameter completion: <#completion description#>
     func sendEvent(
         _ event: Event,
         contextPayload: ContextPayload,
         dialogRequestId: String,
+        messageId: String,
         completion: ((Result<Data, Error>) -> Void)? = nil,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
     ) {
@@ -79,7 +72,8 @@ public extension CapabilityEventAgentable {
             namespace: capabilityAgentProperty.name,
             name: event.name,
             version: capabilityAgentProperty.version,
-            dialogRequestId: dialogRequestId
+            dialogRequestId: dialogRequestId,
+            messageId: messageId
         )
         
         let eventMessage = UpstreamEventMessage(
