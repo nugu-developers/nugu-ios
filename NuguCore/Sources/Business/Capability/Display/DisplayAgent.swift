@@ -221,7 +221,11 @@ private extension DisplayAgent {
             )
             
             if let item = self.currentItem {
-                self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
+                self.playSyncManager.startSync(
+                    delegate: self,
+                    dialogRequestId: item.dialogRequestId,
+                    playServiceId: item.playStackServiceId
+                )
             }
         }
     }

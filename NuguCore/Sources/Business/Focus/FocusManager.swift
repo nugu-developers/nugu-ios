@@ -126,6 +126,10 @@ private extension FocusManager {
             log.warning("Channel not registered \(channelDelegate)")
             return
         }
+        guard channelInfos[index].focusState != focusState else {
+            log.info("Channel already set \(channelDelegate) to \(focusState)")
+            return
+        }
         
         channelInfos.remove(at: index)
         channelInfos.append(FocusChannelInfo(delegate: channelDelegate, focusState: focusState))
@@ -138,7 +142,6 @@ private extension FocusManager {
             notifyReleaseFocusIfNeeded()
         case .foreground, .background:
             releaseFocusWorkItem?.cancel()
-            break
         }
     }
     
