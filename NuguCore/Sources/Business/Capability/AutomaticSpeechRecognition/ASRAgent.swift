@@ -41,7 +41,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     // Private
     private let contextManager: ContextManageable
     private let audioStream: AudioStreamable
-    private let dialogStateAggregator: DialogStateAggregatable
     fileprivate static var endPointDetector: EndPointDetector?
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
@@ -72,7 +71,7 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
             }
             
             asrDelegates.notify { delegate in
-                delegate.asrAgentDidChange(state: asrState)
+                delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
             }
         }
     }
@@ -125,11 +124,7 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     // For Recognize Event
     private var asrRequest: ASRRequest?
     private var attachmentSeq: Int32 = 0
-    private var currentExpectSpeech: ASRExpectSpeech? {
-        didSet {
-            dialogStateAggregator.expectSpeech = currentExpectSpeech
-        }
-    }
+    private var currentExpectSpeech: ASRExpectSpeech?
     
     private lazy var disposeBag = DisposeBag()
     private var expectingSpeechTimeout: Disposable?
@@ -140,7 +135,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
-        dialogStateAggregator: DialogStateAggregatable,
         directiveSequencer: DirectiveSequenceable
     ) {
         Self.endPointDetector = EndPointDetector()
@@ -150,7 +144,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
         self.upstreamDataSender = upstreamDataSender
         self.contextManager = contextManager
         self.audioStream = audioStream
-        self.dialogStateAggregator = dialogStateAggregator
         
         Self.endPointDetector?.delegate = self
         contextManager.add(provideContextDelegate: self)
@@ -365,7 +358,8 @@ extension ASRAgent: EndPointDetectorDelegate {
                 namespace: self.capabilityAgentProperty.name,
                 name: "Recognize",
                 version: self.capabilityAgentProperty.version,
-                dialogRequestId: asrRequest.dialogRequestId
+                dialogRequestId: asrRequest.dialogRequestId,
+                messageId: TimeUUID().hexString
             )
             let attachment = UpstreamAttachment(header: attachmentHeader, content: speechData, seq: self.attachmentSeq, isEnd: false)
             self.upstreamDataSender.send(upstreamAttachment: attachment, completion: nil, resultHandler: nil)
@@ -478,6 +472,7 @@ private extension ASRAgent {
             Event(typeInfo: eventTypeInfo, expectSpeech: currentExpectSpeech),
             contextPayload: asrRequest.contextPayload,
             dialogRequestId: asrRequest.dialogRequestId,
+            messageId: TimeUUID().hexString,
             completion: completion
         )
 
@@ -516,7 +511,8 @@ private extension ASRAgent {
         
         sendEvent(
             Event(typeInfo: event, expectSpeech: currentExpectSpeech),
-            dialogRequestId: asrRequest.dialogRequestId
+            dialogRequestId: asrRequest.dialogRequestId,
+            messageId: TimeUUID().hexString
         )
     }
 }
@@ -596,7 +592,8 @@ private extension ASRAgent {
             namespace: capabilityAgentProperty.name,
             name: "Recognize",
             version: capabilityAgentProperty.version,
-            dialogRequestId: asrRequest.dialogRequestId
+            dialogRequestId: asrRequest.dialogRequestId,
+            messageId: TimeUUID().hexString
         )
         let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), seq: attachmentSeq, isEnd: true)
         upstreamDataSender.send(upstreamAttachment: attachment, completion: nil) { [weak self] result in

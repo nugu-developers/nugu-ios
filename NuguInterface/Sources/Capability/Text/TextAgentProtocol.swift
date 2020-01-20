@@ -32,5 +32,5 @@ public protocol TextAgentProtocol: CapabilityAgentable {
     
     /// Send event that needs a text-based recognition
     /// - Parameter text: The `text` to be recognized
-    func requestTextInput(text: String)
+    func requestTextInput(text: String, expectSpeech: ASRExpectSpeech?)
 }

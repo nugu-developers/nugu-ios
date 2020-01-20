@@ -37,7 +37,6 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
     
     // Private
     private let contextManager: ContextManageable
-    private let dialogStateAggregator: DialogStateAggregatable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
@@ -68,8 +67,7 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
         focusManager: FocusManageable,
-        channelPriority: FocusChannelPriority,
-        dialogStateAggregator: DialogStateAggregatable
+        channelPriority: FocusChannelPriority
     ) {
         log.info("")
         
@@ -77,7 +75,6 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
         self.upstreamDataSender = upstreamDataSender
         self.focusManager = focusManager
         self.channelPriority = channelPriority
-        self.dialogStateAggregator = dialogStateAggregator
         
         contextManager.add(provideContextDelegate: self)
     }
@@ -98,7 +95,7 @@ extension TextAgent {
         delegates.remove(delegate)
     }
     
-    public func requestTextInput(text: String) {
+    public func requestTextInput(text: String, expectSpeech: ASRExpectSpeech?) {
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -111,7 +108,8 @@ extension TextAgent {
                 self.textRequest = TextRequest(
                     contextPayload: contextPayload,
                     text: text,
-                    dialogRequestId: TimeUUID().hexString
+                    dialogRequestId: TimeUUID().hexString,
+                    expectSpeech: expectSpeech
                 )
                 
                 self.focusManager.requestFocus(channelDelegate: self)
@@ -182,8 +180,9 @@ private extension TextAgent {
         textAgentState = .busy
         
         sendEvent(
-            Event(typeInfo: .textInput(text: textRequest.text), expectSpeech: dialogStateAggregator.expectSpeech),
-            dialogRequestId: textRequest.dialogRequestId
+            Event(typeInfo: .textInput(text: textRequest.text, expectSpeech: textRequest.expectSpeech)),
+            dialogRequestId: textRequest.dialogRequestId,
+            messageId: TimeUUID().hexString
         ) { [weak self] result in
             guard let self = self else { return }
             guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }

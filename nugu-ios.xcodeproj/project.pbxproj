@@ -107,7 +107,6 @@
 		1FFFF2C12375703000C9A177 /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationInfo.swift */; };
 		1FFFF2C22375703000C9A177 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */; };
 		1FFFF2C32375703000C9A177 /* ASRState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2532375703000C9A177 /* ASRState.swift */; };
-		1FFFF2C42375703000C9A177 /* ASRExpectSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */; };
 		1FFFF2C52375703000C9A177 /* ASRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2552375703000C9A177 /* ASRError.swift */; };
 		1FFFF2C62375703000C9A177 /* ASRAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2562375703000C9A177 /* ASRAgentProtocol.swift */; };
 		1FFFF2C72375703100C9A177 /* ASRResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2572375703000C9A177 /* ASRResult.swift */; };
@@ -143,9 +142,6 @@
 		1FFFF2F02375703100C9A177 /* FocusChannelPriority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2892375703000C9A177 /* FocusChannelPriority.swift */; };
 		1FFFF2F12375703100C9A177 /* FocusChannelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28A2375703000C9A177 /* FocusChannelDelegate.swift */; };
 		1FFFF2F22375703100C9A177 /* FocusManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28B2375703000C9A177 /* FocusManageable.swift */; };
-		1FFFF2F32375703100C9A177 /* DialogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28D2375703000C9A177 /* DialogState.swift */; };
-		1FFFF2F42375703100C9A177 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
-		1FFFF2F52375703100C9A177 /* DialogStateAggregatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28F2375703000C9A177 /* DialogStateAggregatable.swift */; };
 		1FFFF2F62375703100C9A177 /* DirectiveSequenceable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2912375703000C9A177 /* DirectiveSequenceable.swift */; };
 		1FFFF2F72375703100C9A177 /* HandleDirectiveDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2922375703000C9A177 /* HandleDirectiveDelegate.swift */; };
 		1FFFF2F82375703100C9A177 /* DirectiveTypeInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2932375703000C9A177 /* DirectiveTypeInfos.swift */; };
@@ -342,6 +338,9 @@
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EDCF2A8238529CC006F96B6 /* StreamDataRoutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A42384FE7A006F96B6 /* StreamDataRoutable.swift */; };
 		7EDCF2AB23852AEA006F96B6 /* DownstreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2AA23852AEA006F96B6 /* DownstreamDataDelegate.swift */; };
+		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
+		7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28D2375703000C9A177 /* DialogState.swift */; };
+		7EF12B2123C47EDE0000E158 /* ASRExpectSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */; };
 		A17B065E2394D22800D739E9 /* device_GW_error_002.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06572394D22700D739E9 /* device_GW_error_002.wav */; };
 		A17B065F2394D22800D739E9 /* device_GW_error_001.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06582394D22700D739E9 /* device_GW_error_001.wav */; };
 		A17B06602394D22800D739E9 /* device_GW_error_005.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06592394D22700D739E9 /* device_GW_error_005.wav */; };
@@ -665,7 +664,6 @@
 		1FFFF28B2375703000C9A177 /* FocusManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusManageable.swift; sourceTree = "<group>"; };
 		1FFFF28D2375703000C9A177 /* DialogState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogState.swift; sourceTree = "<group>"; };
 		1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogStateDelegate.swift; sourceTree = "<group>"; };
-		1FFFF28F2375703000C9A177 /* DialogStateAggregatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogStateAggregatable.swift; sourceTree = "<group>"; };
 		1FFFF2912375703000C9A177 /* DirectiveSequenceable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectiveSequenceable.swift; sourceTree = "<group>"; };
 		1FFFF2922375703000C9A177 /* HandleDirectiveDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandleDirectiveDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2932375703000C9A177 /* DirectiveTypeInfos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectiveTypeInfos.swift; sourceTree = "<group>"; };
@@ -1147,6 +1145,8 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF3722375707000C9A177 /* DialogStateAggregator.swift */,
+				1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */,
+				1FFFF28D2375703000C9A177 /* DialogState.swift */,
 			);
 			path = Business;
 			sourceTree = "<group>";
@@ -1302,7 +1302,6 @@
 				1FFFF26E2375703000C9A177 /* Network */,
 				1FFFF2822375703000C9A177 /* PlaySync */,
 				1FFFF2862375703000C9A177 /* Focus */,
-				1FFFF28C2375703000C9A177 /* Dialog */,
 				1FFFF2902375703000C9A177 /* Directive */,
 				1FFFF2962375703000C9A177 /* Audio */,
 				1FFFF29D2375703000C9A177 /* Authorization */,
@@ -1425,8 +1424,8 @@
 				1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */,
 				1FFFF2532375703000C9A177 /* ASRState.swift */,
 				1FFFF2572375703000C9A177 /* ASRResult.swift */,
-				1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */,
 				1FFFF2552375703000C9A177 /* ASRError.swift */,
+				1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */,
 			);
 			path = AutomaticSpeechRecognition;
 			sourceTree = "<group>";
@@ -1505,16 +1504,6 @@
 				1FFFF2882375703000C9A177 /* FocusState.swift */,
 			);
 			path = Focus;
-			sourceTree = "<group>";
-		};
-		1FFFF28C2375703000C9A177 /* Dialog */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF28F2375703000C9A177 /* DialogStateAggregatable.swift */,
-				1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */,
-				1FFFF28D2375703000C9A177 /* DialogState.swift */,
-			);
-			path = Dialog;
 			sourceTree = "<group>";
 		};
 		1FFFF2902375703000C9A177 /* Directive */ = {
@@ -2894,7 +2883,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF2F42375703100C9A177 /* DialogStateDelegate.swift in Sources */,
 				1FFFF2CB2375703100C9A177 /* CapabilityAgentCategory.swift in Sources */,
 				1FFFF2F62375703100C9A177 /* DirectiveSequenceable.swift in Sources */,
 				1FFFF2E22375703100C9A177 /* UpstreamAttachment.swift in Sources */,
@@ -2916,7 +2904,6 @@
 				1FFFF2EE2375703100C9A177 /* FocusDelegate.swift in Sources */,
 				1FFFF2D82375703100C9A177 /* TextAgentProtocol.swift in Sources */,
 				1FFFF2D92375703100C9A177 /* TextAgentDelegate.swift in Sources */,
-				1FFFF2F52375703100C9A177 /* DialogStateAggregatable.swift in Sources */,
 				1FD1CFE623ACC0FE0000FB8C /* CapabilityFocusAgentable.swift in Sources */,
 				1FFFF2AD2375703000C9A177 /* ContextInfo.swift in Sources */,
 				1FFFF2BF2375703000C9A177 /* LocationAgentProtocol.swift in Sources */,
@@ -2924,7 +2911,6 @@
 				1FFFF2E92375703100C9A177 /* NetworkManageable.swift in Sources */,
 				1FFFF2C92375703100C9A177 /* SystemAgentProtocol.swift in Sources */,
 				1FFFF2CD2375703100C9A177 /* TTSState.swift in Sources */,
-				1FFFF2F32375703100C9A177 /* DialogState.swift in Sources */,
 				7E98BACE239A1F7C00B9582D /* AuthorizationStoreDelegate.swift in Sources */,
 				1FFFF2E52375703100C9A177 /* CrashReport.swift in Sources */,
 				1FFFF2A72375703000C9A177 /* MediaPlayerDelegate.swift in Sources */,
@@ -2972,10 +2958,10 @@
 				7EDCF2A8238529CC006F96B6 /* StreamDataRoutable.swift in Sources */,
 				1FFFF2C62375703000C9A177 /* ASRAgentProtocol.swift in Sources */,
 				1FFFF2E72375703100C9A177 /* NetworkError.swift in Sources */,
-				1FFFF2C42375703000C9A177 /* ASRExpectSpeech.swift in Sources */,
 				1FFFF2EB2375703100C9A177 /* PlaySyncDelegate.swift in Sources */,
 				1FFFF2CF2375703100C9A177 /* TTSAgentDelegate.swift in Sources */,
 				1FFFF2B52375703000C9A177 /* SpeakerAgentDelegate.swift in Sources */,
+				7EF12B2123C47EDE0000E158 /* ASRExpectSpeech.swift in Sources */,
 				1FFFF2AB2375703000C9A177 /* ContextManageable.swift in Sources */,
 				1F2E8001238EA70400569C59 /* MediaOpusStreamDataSource.swift in Sources */,
 				1FFFF2F12375703100C9A177 /* FocusChannelDelegate.swift in Sources */,
@@ -3091,10 +3077,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				7303C6A423C8488100610343 /* ComponentContainer.swift in Sources */,
+				7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */,
 				1F2E803C2397A26300569C59 /* WakeUpDetectable.swift in Sources */,
 				1F2E803923966D9D00569C59 /* KeywordSource.swift in Sources */,
 				1F2E803E2397A27300569C59 /* WakeUpDetectorState.swift in Sources */,
 				7303C6A523C8488100610343 /* ComponentResolver.swift in Sources */,
+				7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */,
 				1F2E80402397A2E500569C59 /* WakeUpDetectorDelegate.swift in Sources */,
 				1FFFF3DF2375735E00C9A177 /* BuiltInMediaPlayerFactory.swift in Sources */,
 				7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */,

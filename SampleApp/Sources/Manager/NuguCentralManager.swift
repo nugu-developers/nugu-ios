@@ -38,6 +38,7 @@ final class NuguCentralManager {
     }()
     
     private init() {
+        client.delegate = self
         client.getComponent(AuthorizationStoreable.self)?.delegate = self
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
@@ -335,12 +336,12 @@ extension NuguCentralManager {
 
 // MARK: - FocusDelegate
 
-extension NuguCentralManager: FocusDelegate {
-    func focusShouldAcquire() -> Bool {
+extension NuguCentralManager: NuguClientDelegate {
+    func nuguClientWillRequireAudioSession() -> Bool {
         return NuguAudioSessionManager.shared.updateAudioSession()
     }
     
-    func focusShouldRelease() {
+    func nuguClientDidReleaseAudioSession() {
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
 }

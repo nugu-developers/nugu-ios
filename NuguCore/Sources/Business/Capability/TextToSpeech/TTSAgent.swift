@@ -133,7 +133,8 @@ public extension TTSAgent {
             let dialogRequestId = TimeUUID().hexString
             self.sendEvent(
                 event,
-                dialogRequestId: dialogRequestId
+                dialogRequestId: dialogRequestId,
+                messageId: TimeUUID().hexString
             )
             
             self.ttsResultSubject
@@ -455,6 +456,7 @@ private extension TTSAgent {
                 typeInfo: info
             ),
             dialogRequestId: TimeUUID().hexString,
+            messageId: TimeUUID().hexString,
             resultHandler: resultHandler
         )
     }

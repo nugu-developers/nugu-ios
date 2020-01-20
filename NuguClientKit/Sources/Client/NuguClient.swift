@@ -49,7 +49,17 @@ public class NuguClient {
         container.register(AudioStreamable.self) { _ in AudioStream(capacity: 300) }
         container.register(AudioProvidable.self) { _ in MicInputProvider() }
         container.register(MediaPlayerFactory.self) { _ in BuiltInMediaPlayerFactory() }
-        container.register(DialogStateAggregatable.self) { _ in DialogStateAggregator() }
+        container.register(DialogStateAggregator.self) { _ in DialogStateAggregator() }
+        
+        container.register(FocusManageable.self) { [weak self] _ -> FocusManager in
+            let focusManager = FocusManager()
+            
+            if let self = self {
+                focusManager.delegate = self
+            }
+            
+            return focusManager
+        }
         
         container.register(NetworkManageable.self) { [weak self] _ -> NetworkManager in
             let networkManager = NetworkManager()
@@ -62,18 +72,6 @@ public class NuguClient {
             return networkManager
         }
         
-        container.register(FocusManageable.self) { [weak self] resolver -> FocusManageable in
-            let dialogStateAggregate = resolver.resolve(DialogStateAggregatable.self)!
-            let focusManager = FocusManager()
-            dialogStateAggregate.add(delegate: focusManager)
-            
-            if let self = self {
-                focusManager.delegate = self
-            }
-            
-            return focusManager
-        }
-
         container.register(PlaySyncManageable.self) { resolver -> PlaySyncManager in
             let contextManager = resolver.resolve(ContextManageable.self)!
             let playSyncManager = PlaySyncManager()
@@ -110,7 +108,7 @@ public class NuguClient {
             let streamDataRouter = container.resolve(StreamDataRoutable.self),
             let contextManager = container.resolve(ContextManageable.self),
             let sharedAudioStream = container.resolve(AudioStreamable.self),
-            let dialogStateAggregator = container.resolve(DialogStateAggregatable.self),
+            let dialogStateAggregator = container.resolve(DialogStateAggregator.self),
             let mediaPlayerFactory = container.resolve(MediaPlayerFactory.self),
             let playSyncManager = container.resolve(PlaySyncManageable.self),
             let networkManager = container.resolve(NetworkManageable.self),
@@ -125,13 +123,10 @@ public class NuguClient {
                 upstreamDataSender: streamDataRouter,
                 contextManager: contextManager,
                 audioStream: sharedAudioStream,
-                dialogStateAggregator: dialogStateAggregator,
                 directiveSequencer: directiveSequencer
             )
             
-            if let dialogStateAggregator = dialogStateAggregator as? DialogStateAggregator {
-                asrAgent.add(delegate: dialogStateAggregator)
-            }
+            asrAgent.add(delegate: dialogStateAggregator)
             
             return asrAgent
         }
@@ -147,9 +142,7 @@ public class NuguClient {
                 directiveSequencer: directiveSequencer
             )
             
-            if let dialogStateAggregator = dialogStateAggregator as? DialogStateAggregator {
-                ttsAgent.add(delegate: dialogStateAggregator)
-            }
+            ttsAgent.add(delegate: dialogStateAggregator)
             
             return ttsAgent
         }
@@ -180,13 +173,10 @@ public class NuguClient {
                 contextManager: contextManager,
                 upstreamDataSender: streamDataRouter,
                 focusManager: focusManager,
-                channelPriority: .recognition,
-                dialogStateAggregator: dialogStateAggregator
+                channelPriority: .recognition
             )
             
-            if let dialogStateAggregator = dialogStateAggregator as? DialogStateAggregator {
-                textAgent.add(delegate: dialogStateAggregator)
-            }
+            textAgent.add(delegate: dialogStateAggregator)
             
             return textAgent
         }
@@ -208,7 +198,6 @@ public class NuguClient {
                 contextManager: contextManager,
                 networkManager: networkManager,
                 upstreamDataSender: streamDataRouter,
-                dialogStateAggregator: dialogStateAggregator,
                 directiveSequencer: directiveSequencer
             )
         }
