@@ -1,5 +1,5 @@
 //
-//  LocalTTSPlayer.swift
+//  LocalTTSAgent.swift
 //  SampleApp
 //
 //  Created by jin kim on 2019/12/09.
@@ -24,13 +24,14 @@ import NuguInterface
 
 // MARK: LocalTTSPlayer
 
-final class LocalTTSPlayer: NSObject {
-    static let shared = LocalTTSPlayer()
+final class LocalTTSAgent: NSObject {
+    private let focusManager: FocusManageable
     
-    override init() {
+    init(focusManager: FocusManageable) {
+        self.focusManager = focusManager
         super.init()
         
-        NuguCentralManager.shared.client.focusManager.add(channelDelegate: self)
+        focusManager.add(channelDelegate: self)
     }
     
     // MARK: TTSPlayer
@@ -89,16 +90,16 @@ final class LocalTTSPlayer: NSObject {
 
 // MARK: Internal (play)
     
-extension LocalTTSPlayer {
+extension LocalTTSAgent {
     func playLocalTTS(type: TTSType) {
         requestedTTSType = type
-        NuguCentralManager.shared.client.focusManager.requestFocus(channelDelegate: self)
+        focusManager.requestFocus(channelDelegate: self)
     }
 }
 
 // MARK: Private
 
-private extension LocalTTSPlayer {
+private extension LocalTTSAgent {
     func play(type: TTSType) {
         // when ttsPlayer has been paused, just resuming the player is enough
         if player != nil && player?.isPlaying == false {
@@ -107,7 +108,7 @@ private extension LocalTTSPlayer {
         }
         guard let url = Bundle.main.url(forResource: type.fileName, withExtension: type.extention) else {
             log.error("Can't find sound file")
-            NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
+            focusManager.releaseFocus(channelDelegate: self)
             return
         }
         do {
@@ -116,7 +117,7 @@ private extension LocalTTSPlayer {
             player?.play()
         } catch {
             log.error("Failed to play local tts file : \(error.localizedDescription)")
-            NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
+            focusManager.releaseFocus(channelDelegate: self)
         }
     }
     
@@ -129,7 +130,7 @@ private extension LocalTTSPlayer {
 
 // MARK: FocusChannelDelegate
 
-extension LocalTTSPlayer: FocusChannelDelegate {
+extension LocalTTSAgent: FocusChannelDelegate {
     func focusChannelPriority() -> FocusChannelPriority {
         return channelPriority
     }
@@ -153,14 +154,14 @@ extension LocalTTSPlayer: FocusChannelDelegate {
 
 // MARK: AVAudioPlayerDelegate
 
-extension LocalTTSPlayer: AVAudioPlayerDelegate {
+extension LocalTTSAgent: AVAudioPlayerDelegate {
     /* audioPlayerDidFinishPlaying:successfully: is called when a sound has finished playing. This method is NOT called if the player is stopped due to an interruption. */
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
+        focusManager.releaseFocus(channelDelegate: self)
     }
     
     /* if an error occurs while decoding it will be reported to the delegate. */
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        NuguCentralManager.shared.client.focusManager.releaseFocus(channelDelegate: self)
+        focusManager.releaseFocus(channelDelegate: self)
     }
 }
