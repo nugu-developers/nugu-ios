@@ -21,6 +21,12 @@
 import Foundation
 
 public protocol ComponentResolver {
+    /**
+    To get component.
+    - parameter protocol: representative name
+    - parameter concreateType: If you registered using options(.all), You should give certain concreate type for distinction
+    - parameter option: option for distinction. If you set this argument as .representative, concreateType will be ignored though you provide certain concreate type.
+    */
     func resolve<Component, Concreate>(_ protocol: Component.Type, concreateType: Concreate.Type?, option: ComponentKey.Option) -> Concreate?
 }
 

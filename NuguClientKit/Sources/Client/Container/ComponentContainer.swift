@@ -23,6 +23,12 @@ import Foundation
 public final class ComponentContainer {
     private var components = [ComponentKey: Any]()
     
+    /**
+     To put component into the container
+     - parameter protocol: representative name.
+     - parameter option: If you want to register multiple instances of concreate class, you should set this argument to .all for distinction.
+     - parameter factory: component factory
+     */
     public func register<Component>(_ protocol: Any.Type, option: ComponentKey.Option = .representative, factory: @escaping (ComponentResolver) -> Component) {
         let key = ComponentKey(protocolType: `protocol`.self, concreateType: Component.self, option: option)
         let component = factory(self)

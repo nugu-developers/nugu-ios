@@ -39,8 +39,8 @@ extension ComponentKey: Hashable {
     public func hash(into hasher: inout Hasher) {
         ObjectIdentifier(protocolType).hash(into: &hasher)
         
-        if option == .all,
-            concreateType != nil {
+        // If multiple concreate class conform to protocol and All of them need to be registered, we can distinguish using concreate type and representative name both.
+        if option == .all, concreateType != nil {
             ObjectIdentifier(concreateType!).hash(into: &hasher)
         }
     }
