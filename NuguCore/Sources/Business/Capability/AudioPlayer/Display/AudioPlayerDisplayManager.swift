@@ -129,7 +129,7 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
                 self.currentItem = nil
                 self.renderingInfos
                     .filter({ (rederingInfo) -> Bool in
-                        guard let template = rederingInfo.currentItem, let delegate = rederingInfo.delegate else { return false}
+                        guard let template = rederingInfo.currentItem, let delegate = rederingInfo.delegate else { return false }
                         return self.removeRenderedTemplate(delegate: delegate, template: template)
                     })
                     .compactMap { $0.delegate }
