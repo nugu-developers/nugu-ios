@@ -149,14 +149,14 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
 
 private extension AudioPlayerDisplayManager {
     func replace(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate?) {
-        __dispatch_assert_queue(displayDispatchQueue)
+        displayDispatchQueue.precondition(.onQueue)
         remove(delegate: delegate)
         let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: template)
         renderingInfos.append(info)
     }
     
     func setRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
-        __dispatch_assert_queue(displayDispatchQueue)
+        displayDispatchQueue.precondition(.onQueue)
         guard let displayObject = DispatchQueue.main.sync(execute: { () -> AnyObject? in
             return delegate.audioPlayerDisplayDidRender(template: template)
         }) else { return false }
@@ -178,7 +178,7 @@ private extension AudioPlayerDisplayManager {
     }
     
     func removeRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
-        __dispatch_assert_queue(displayDispatchQueue)
+        displayDispatchQueue.precondition(.onQueue)
         guard self.renderingInfos.contains(
             where: { $0.delegate === delegate && $0.currentItem?.templateId == template.templateId }
             ) else { return false }
@@ -190,7 +190,7 @@ private extension AudioPlayerDisplayManager {
     }
     
     func hasRenderedDisplay(template: AudioPlayerDisplayTemplate) -> Bool {
-        __dispatch_assert_queue(displayDispatchQueue)
+        displayDispatchQueue.precondition(.onQueue)
         return renderingInfos.contains { $0.currentItem?.templateId == template.templateId }
     }
 }
