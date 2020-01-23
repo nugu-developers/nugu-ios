@@ -121,7 +121,7 @@ public extension PlaySyncManager {
                 .do(onNext: {  [weak self] (info) in
                     guard let self = self else { return }
                     guard let target = info.delegate else { return }
-                    if info.playSyncState == .releasing {
+                    if target === delegate ||  info.playSyncState == .releasing {
                         self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .released)
                     } else {
                         self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .releasing)
