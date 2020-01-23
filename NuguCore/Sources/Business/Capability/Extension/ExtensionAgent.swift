@@ -55,7 +55,7 @@ final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAg
 public extension ExtensionAgent {
     func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?) {
         let event = ExtensionAgent.Event(playServiceId: playServiceId, typeInfo: .commandIssued(data: data))
-        self.sendEvent(event, dialogRequestId: TimeUUID().hexString) { result in
+        self.sendEvent(event, dialogRequestId: TimeUUID().hexString, messageId: TimeUUID().hexString) { result in
             let result = result.map { _ in () }
             completion?(result)
         }
