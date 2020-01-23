@@ -32,6 +32,7 @@ extension ExtensionAgent {
         public enum TypeInfo {
             case actionSucceeded
             case actionFailed
+            case commandIssued(data: [String: Any])
         }
     }
 }
@@ -40,9 +41,15 @@ extension ExtensionAgent {
 
 extension ExtensionAgent.Event: Eventable {
     public var payload: [String: Any] {
-        let payload: [String: Any] = [
+        var payload: [String: Any] = [
             "playServiceId": playServiceId
         ]
+        switch typeInfo {
+        case .commandIssued(let data):
+            payload["data"] = data
+        default:
+            break
+        }
         return payload
     }
     
@@ -52,11 +59,8 @@ extension ExtensionAgent.Event: Eventable {
             return "ActionSucceeded"
         case .actionFailed:
             return "ActionFailed"
+        case .commandIssued:
+            return "CommandIssued"
         }
     }
 }
-
-// MARK: - Equatable
-
-extension ExtensionAgent.Event.TypeInfo: Equatable {}
-extension ExtensionAgent.Event: Equatable {}
