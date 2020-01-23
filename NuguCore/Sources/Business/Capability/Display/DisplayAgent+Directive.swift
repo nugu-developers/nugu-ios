@@ -26,6 +26,7 @@ import NuguInterface
 
 extension DisplayAgent {
     public enum DirectiveTypeInfo: CaseIterable {
+        case close
         case fullText1
         case fullText2
         case imageText1
@@ -56,6 +57,7 @@ extension DisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
     
     public var name: String {
         switch self {
+        case .close: return "Close"
         case .fullText1: return "FullText1"
         case .fullText2: return "FullText2"
         case .imageText1: return "ImageText1"
