@@ -94,7 +94,7 @@ extension FocusManager {
                 log.warning("\(channelDelegate): Channel not registered")
                 return
             }
-            guard info.focusState == .nothing else {
+            guard info.focusState != .nothing else {
                 log.info("\(channelDelegate): Already released")
                 return
             }
