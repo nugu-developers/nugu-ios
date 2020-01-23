@@ -24,7 +24,7 @@ import NuguInterface
 
 final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.1")
     
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
@@ -47,6 +47,18 @@ final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAg
     
     deinit {
         log.info("")
+    }
+}
+
+// MARK: - ExtensionAgentProtocol
+
+public extension ExtensionAgent {
+    func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?) {
+        let event = ExtensionAgent.Event(playServiceId: playServiceId, typeInfo: .commandIssued(data: data))
+        self.sendEvent(event, dialogRequestId: TimeUUID().hexString) { result in
+            let result = result.map { _ in () }
+            completion?(result)
+        }
     }
 }
 

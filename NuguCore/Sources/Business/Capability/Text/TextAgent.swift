@@ -186,7 +186,7 @@ private extension TextAgent {
             guard let self = self else { return }
             guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
             
-            let result = result.map({ _ in () })
+            let result = result.map { _ in () }
             self.delegates.notify({ (delegate) in
                 delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
             })
