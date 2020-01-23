@@ -124,7 +124,15 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     // For Recognize Event
     private var asrRequest: ASRRequest?
     private var attachmentSeq: Int32 = 0
-    private var currentExpectSpeech: ASRExpectSpeech?
+    private var currentExpectSpeech: ASRExpectSpeech? {
+        didSet {
+            guard oldValue != currentExpectSpeech else { return }
+            
+            asrDelegates.notify { delegate in
+                delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+            }
+        }
+    }
     
     private lazy var disposeBag = DisposeBag()
     private var expectingSpeechTimeout: Disposable?
