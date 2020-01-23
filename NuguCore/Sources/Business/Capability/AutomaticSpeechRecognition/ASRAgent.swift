@@ -553,7 +553,7 @@ private extension ASRAgent {
         }
         
         Self.endPointDetector?.start(
-            inputStream: asrRequest.reader,
+            audioStreamReader: asrRequest.reader,
             sampleRate: ASRConst.sampleRate,
             timeout: timeout,
             maxDuration: ASRConst.maxDuration,

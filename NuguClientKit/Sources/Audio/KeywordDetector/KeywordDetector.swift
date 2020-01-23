@@ -25,7 +25,7 @@ import NuguCore
 import KeenSense
 
 public class KeywordDetector: WakeUpDetectable {
-    private var boundStreams: BoundStreams?
+    private var boundStreams: AudioBoundStreams?
     private let engine = TycheKeywordDetectorEngine()
     
     public var audioStream: AudioStreamable!
@@ -51,7 +51,7 @@ public class KeywordDetector: WakeUpDetectable {
     
     public func start() {
         boundStreams?.stop()
-        boundStreams = BoundStreams(buffer: audioStream.makeAudioStreamReader())
+        boundStreams = AudioBoundStreams(audioStreamReader: audioStream.makeAudioStreamReader())
         engine.start(inputStream: boundStreams!.input)
     }
     

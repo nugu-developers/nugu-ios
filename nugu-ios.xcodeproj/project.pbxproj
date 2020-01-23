@@ -324,6 +324,7 @@
 		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
 		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
 		7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */; };
+		738D520A23D59B2F00FDECAF /* AudioBoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */; };
 		7E26C57E239FBF1300716E44 /* NuguApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C57D239FBF1300716E44 /* NuguApiRequest.swift */; };
 		7E26C57F239FC2E300716E44 /* NuguApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3642375707000C9A177 /* NuguApi.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
@@ -859,6 +860,7 @@
 		73454FC22387BDF00073AF48 /* NuguServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServerInfo.swift; sourceTree = "<group>"; };
 		73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguOAuthServerInfo.swift; sourceTree = "<group>"; };
 		7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClientDelegate.swift; sourceTree = "<group>"; };
+		738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBoundStreams.swift; sourceTree = "<group>"; };
 		7E26C57D239FBF1300716E44 /* NuguApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguApiRequest.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
@@ -1612,8 +1614,8 @@
 		1FFFF31B2375707000C9A177 /* AudioStream */ = {
 			isa = PBXGroup;
 			children = (
-				7303C68923C5C00F00610343 /* BoundStreams.swift */,
 				1FFFF31F2375707000C9A177 /* AudioStream.swift */,
+				738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */,
 				1FFFF31E2375707000C9A177 /* SharedBuffer.swift */,
 				1FFFF31C2375707000C9A177 /* SharedBufferIndex.swift */,
 				1FFFF31D2375707000C9A177 /* SharedBufferError.swift */,
@@ -1637,6 +1639,7 @@
 		1FFFF3252375707000C9A177 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				7303C68923C5C00F00610343 /* BoundStreams.swift */,
 				73454FBC2382C1E50073AF48 /* Publish.swift */,
 				1FFFF3262375707000C9A177 /* TimeUUID.swift */,
 				1FFFF3272375707000C9A177 /* Atomic.swift */,
@@ -3031,6 +3034,7 @@
 				1FFFF3862375707000C9A177 /* MicInputProvider.swift in Sources */,
 				1FFFF38F2375707000C9A177 /* KeyedDecodingContainerExtension.swift in Sources */,
 				1FFFF37F2375707000C9A177 /* MediaPlayerError.swift in Sources */,
+				738D520A23D59B2F00FDECAF /* AudioBoundStreams.swift in Sources */,
 				1FFFF3B02375707100C9A177 /* TTSAgent+Directive.swift in Sources */,
 				1FFFF3D4237570C900C9A177 /* ObjcExceptionCatcher.m in Sources */,
 				7303C68723C5BFD500610343 /* EndPointDetectorState.swift in Sources */,
