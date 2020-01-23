@@ -158,7 +158,6 @@ extension TextAgent: FocusChannelDelegate {
 
 private extension TextAgent {
     func releaseFocusIfNeeded() {
-        guard focusState != .nothing else { return }
         guard textAgentState == .idle else {
             log.info("Not permitted in current state, \(textAgentState)")
             return

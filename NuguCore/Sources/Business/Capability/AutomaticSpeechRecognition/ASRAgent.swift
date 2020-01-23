@@ -521,7 +521,6 @@ private extension ASRAgent {
 
 private extension ASRAgent {
     func releaseFocusIfNeeded() {
-        guard focusState != .nothing else { return }
         guard asrState == .idle else {
             log.info("Not permitted in current state, \(asrState)")
             return

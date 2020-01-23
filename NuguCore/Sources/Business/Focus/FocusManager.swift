@@ -44,62 +44,62 @@ public class FocusManager: FocusManageable {
 
 extension FocusManager {
     public func add(channelDelegate: FocusChannelDelegate) {
-        remove(channelDelegate: channelDelegate)
+        channelInfos.remove(delegate: channelDelegate)
         
         let info = FocusChannelInfo(delegate: channelDelegate, focusState: .nothing)
         channelInfos.append(info)
     }
     
     public func remove(channelDelegate: FocusChannelDelegate) {
-        channelInfos.removeAll { (info) -> Bool in
-            return info.delegate == nil || info.delegate === channelDelegate
-        }
+        channelInfos.remove(delegate: channelDelegate)
     }
     
     public func requestFocus(channelDelegate: FocusChannelDelegate) {
-        guard channelInfos.contains(where: { (info) -> Bool in
-            return info.delegate === channelDelegate
-        }) == true else {
-            log.warning("Channel not registered \(channelDelegate)")
-            return
-        }
-        
         focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard let info = self.channelInfos.object(forDelegate: channelDelegate) else {
+                log.warning("\(channelDelegate): Channel not registered")
+                return
+            }
+            guard info.focusState != .foreground else {
+                log.info("\(channelDelegate): Already set to foreground")
+                return
+            }
             guard self.delegate?.focusShouldAcquire() == true else {
                 log.warning("Focus should not acquire. \(channelDelegate.focusChannelPriority())")
-                self.set(channelDelegate: channelDelegate, focusState: .nothing)
+                self.update(channelDelegate: channelDelegate, focusState: .nothing)
                 return
             }
             
             // 우선순위에 따른 Focus 부여
             if let foregroundChannelDelegate = self.foregroundChannelDelegate {
                 if foregroundChannelDelegate === channelDelegate {
-                    self.set(channelDelegate: channelDelegate, focusState: .foreground)
+                    self.update(channelDelegate: channelDelegate, focusState: .foreground)
                 } else if channelDelegate.focusChannelPriority().rawValue >= foregroundChannelDelegate.focusChannelPriority().rawValue {
-                    self.set(channelDelegate: foregroundChannelDelegate, focusState: .background)
-                    self.set(channelDelegate: channelDelegate, focusState: .foreground)
+                    self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
+                    self.update(channelDelegate: channelDelegate, focusState: .foreground)
                 } else {
-                    self.set(channelDelegate: channelDelegate, focusState: .background)
+                    self.update(channelDelegate: channelDelegate, focusState: .background)
                 }
             } else {
-                self.set(channelDelegate: channelDelegate, focusState: .foreground)
+                self.update(channelDelegate: channelDelegate, focusState: .foreground)
             }
         }
     }
 
     public func releaseFocus(channelDelegate: FocusChannelDelegate) {
-        guard channelInfos.contains(where: { (info) -> Bool in
-            return info.delegate === channelDelegate
-        }) == true else {
-            log.warning("Channel not registered \(channelDelegate)")
-            return
-        }
-        
         focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard let info = self.channelInfos.object(forDelegate: channelDelegate) else {
+                log.warning("\(channelDelegate): Channel not registered")
+                return
+            }
+            guard info.focusState == .nothing else {
+                log.info("\(channelDelegate): Already released")
+                return
+            }
             
-            self.set(channelDelegate: channelDelegate, focusState: .nothing)
+            self.update(channelDelegate: channelDelegate, focusState: .nothing)
         }
     }
 
@@ -107,11 +107,11 @@ extension FocusManager {
         focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let foregroundChannelDelegate = self.foregroundChannelDelegate else {
-                log.warning("Foreground channel not exist")
+                log.info("Foreground channel not exist")
                 return
             }
             
-            self.set(channelDelegate: foregroundChannelDelegate, focusState: .nothing)
+            self.update(channelDelegate: foregroundChannelDelegate, focusState: .nothing)
         }
     }
 }
@@ -119,20 +119,12 @@ extension FocusManager {
 // MARK: - Private
 
 private extension FocusManager {
-    func set(channelDelegate: FocusChannelDelegate, focusState: FocusState) {
-        guard let index = channelInfos.firstIndex(where: { (info) -> Bool in
-            return info.delegate === channelDelegate
-        }) else {
-            log.warning("Channel not registered \(channelDelegate)")
+    func update(channelDelegate: FocusChannelDelegate, focusState: FocusState) {
+        let info = FocusChannelInfo(delegate: channelDelegate, focusState: focusState)
+        guard channelInfos.replace(info: info) else {
+            log.warning("\(channelDelegate): Failed set to \(focusState).")
             return
         }
-        guard channelInfos[index].focusState != focusState else {
-            log.info("Channel already set \(channelDelegate) to \(focusState)")
-            return
-        }
-        
-        channelInfos.remove(at: index)
-        channelInfos.append(FocusChannelInfo(delegate: channelDelegate, focusState: focusState))
         
         channelDelegate.focusChannelDidChange(focusState: focusState)
         
@@ -154,7 +146,7 @@ private extension FocusManager {
                     return
             }
             
-            self.set(channelDelegate: backgroundChannelDelegate, focusState: .foreground)
+            self.update(channelDelegate: backgroundChannelDelegate, focusState: .foreground)
         }
     }
     

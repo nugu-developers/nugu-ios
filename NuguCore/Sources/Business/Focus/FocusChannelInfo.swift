@@ -26,3 +26,31 @@ struct FocusChannelInfo {
     weak var delegate: FocusChannelDelegate?
     let focusState: FocusState
 }
+
+// MARK: - Equatable
+
+extension FocusChannelInfo: Equatable {
+    static func == (lhs: FocusChannelInfo, rhs: FocusChannelInfo) -> Bool {
+        lhs.delegate === rhs.delegate
+    }
+}
+
+// MARK: - Array + FocusChannelInfo
+
+extension Array where Element == FocusChannelInfo {
+    mutating func replace(info: FocusChannelInfo) -> Bool {
+        guard remove(element: info) else { return false }
+        insert(info, at: 0)
+        return true
+    }
+    
+    @discardableResult mutating func remove(delegate: FocusChannelDelegate) -> Bool {
+        removeAll { $0.delegate == nil }
+        guard let info = object(forDelegate: delegate) else { return false }
+        return remove(element: info)
+    }
+    
+    func object(forDelegate delegate: FocusChannelDelegate) -> FocusChannelInfo? {
+        first { $0.delegate === delegate }
+    }
+}
