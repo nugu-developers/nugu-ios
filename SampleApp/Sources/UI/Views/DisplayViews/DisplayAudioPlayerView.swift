@@ -114,19 +114,19 @@ final class DisplayAudioPlayerView: UIView {
 
 private extension DisplayAudioPlayerView {
     @IBAction private func previousButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.audioPlayerAgent?.prev()
+        NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.prev()
     }
     
     @IBAction private func playPauseDidClick(_ button: UIButton) {
         if button.isSelected {
-            NuguCentralManager.shared.client.audioPlayerAgent?.pause()
+            NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.pause()
         } else {
-            NuguCentralManager.shared.client.audioPlayerAgent?.play()
+            NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.play()
         }
     }
     
     @IBAction private func nextButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.audioPlayerAgent?.next()
+        NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.next()
     }
     
     @IBAction private func closeButtonDidClick(_ button: UIButton) {
@@ -139,8 +139,8 @@ private extension DisplayAudioPlayerView {
 private extension DisplayAudioPlayerView {
     func setAudioPlayerProgress() {
         DispatchQueue.main.async { [weak self] in
-            guard let elapsedTimeAsInt = NuguCentralManager.shared.client.audioPlayerAgent?.offset,
-                let durationAsInt = NuguCentralManager.shared.client.audioPlayerAgent?.duration else {
+            guard let elapsedTimeAsInt = NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.offset,
+                let durationAsInt = NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.duration else {
                     self?.elapsedTimeLabel.text = nil
                     self?.durationTimeLabel.text = nil
                     self?.progressView.isHidden = true

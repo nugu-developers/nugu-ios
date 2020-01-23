@@ -24,126 +24,254 @@ import NuguCore
 import NuguInterface
 
 /// <#Description#>
-public class NuguClient: NuguClientContainer {
+public class NuguClient {
+    private let container: ComponentContainer
+    public weak var delegate: NuguClientDelegate?
     
-    // MARK: NuguClientContainer
-    
-    /// <#Description#>
-    public let authorizationStore: AuthorizationStoreable
-    /// <#Description#>
-    public let focusManager: FocusManageable
-    /// <#Description#>
-    public let networkManager: NetworkManageable
-    /// <#Description#>
-    public let contextManager: ContextManageable
-    /// <#Description#>
-    public let playSyncManager: PlaySyncManageable
-    /// <#Description#>
-    public let directiveSequencer: DirectiveSequenceable
-    /// <#Description#>
-    public let streamDataRouter: StreamDataRoutable
-    /// <#Description#>
-    public let mediaPlayerFactory: MediaPlayerFactory
-    /// <#Description#>
-    public let sharedAudioStream: AudioStreamable
-    /// <#Description#>
-    public let inputProvider: AudioProvidable
-    
-    /// <#Description#>
-    public let dialogStateAggregator: DialogStateAggregator
     /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
     
-    private let capabilityAgentFactory: CapabilityAgentFactory
+    /// <#Description#>
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
     
-    // MARK: CapabilityAgents
-    
     /// <#Description#>
-    public private(set) lazy var systemAgent: SystemAgentProtocol = SystemAgent(
-        contextManager: contextManager,
-        networkManager: networkManager,
-        upstreamDataSender: streamDataRouter,
-        directiveSequencer: directiveSequencer
-    )
-    
-    /// <#Description#>
-    public private(set) lazy var asrAgent: ASRAgentProtocol? = capabilityAgentFactory.makeASRAgent(container: self)
-    /// <#Description#>
-    public private(set) lazy var ttsAgent: TTSAgentProtocol? = capabilityAgentFactory.makeTTSAgent(container: self)
-    /// <#Description#>
-    public private(set) lazy var audioPlayerAgent: AudioPlayerAgentProtocol? = capabilityAgentFactory.makeAudioPlayerAgent(container: self)
-    /// <#Description#>
-    public private(set) lazy var displayAgent: DisplayAgentProtocol? = capabilityAgentFactory.makeDisplayAgent(container: self)
-    /// <#Description#>
-    public private(set) lazy var textAgent: TextAgentProtocol? = capabilityAgentFactory.makeTextAgent(container: self)
-    /// <#Description#>
-    public private(set) lazy var extensionAgent: ExtensionAgentProtocol? = capabilityAgentFactory.makeExtensionAgent(container: self)
-    /// <#Description#>
-    public private(set) lazy var locationAgent: LocationAgentProtocol? = capabilityAgentFactory.makeLocationAgent(container: self)
-    
-    /// <#Description#>
-    /// - Parameter authorizationManager: <#authorizationManager description#>
-    /// - Parameter focusManager: <#focusManager description#>
-    /// - Parameter networkManager: <#networkManager description#>
-    /// - Parameter contextManager: <#contextManager description#>
-    /// - Parameter playSyncManager: <#playSyncManager description#>
-    /// - Parameter sharedAudioStream: <#sharedAudioStream description#>
-    /// - Parameter inputProvider: <#inputProvider description#>
-    /// - Parameter endPointDetector: <#endPointDetector description#>
     /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
-    /// - Parameter mediaPlayerFactory: <#mediaPlayerFactory description#>
     /// - Parameter capabilityAgentFactory: <#capabilityAgentFactory description#>
-    public init(
-        authorizationStore: AuthorizationStoreable = AuthorizationStore.shared,
-        focusManager: FocusManageable = FocusManager(),
-        networkManager: NetworkManageable = NetworkManager(),
-        contextManager: ContextManageable = ContextManager(),
-        playSyncManager: PlaySyncManageable = PlaySyncManager(),
-        sharedAudioStream: AudioStreamable = AudioStream(capacity: 300),
-        inputProvider: AudioProvidable = MicInputProvider(),
-        wakeUpDetector: KeywordDetector? = KeywordDetector(),
-        mediaPlayerFactory: MediaPlayerFactory = BuiltInMediaPlayerFactory(),
-        capabilityAgentFactory: CapabilityAgentFactory
-    ) {
-        self.authorizationStore = authorizationStore
-        self.focusManager = focusManager
-        self.networkManager = networkManager
-        self.contextManager = contextManager
-        self.playSyncManager = playSyncManager
-        self.mediaPlayerFactory = mediaPlayerFactory
-        self.sharedAudioStream = sharedAudioStream
-        self.inputProvider = inputProvider
+    public init(wakeUpDetector: KeywordDetector? = KeywordDetector()) {
         self.wakeUpDetector = wakeUpDetector
-        self.capabilityAgentFactory = capabilityAgentFactory
         
-        self.dialogStateAggregator = DialogStateAggregator()
-        self.streamDataRouter = StreamDataRouter(networkManager: networkManager)
-        self.directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
+        container = ComponentContainer()
         
-        asrAgent?.add(delegate: dialogStateAggregator)
-        textAgent?.add(delegate: dialogStateAggregator)
-        ttsAgent?.add(delegate: dialogStateAggregator)
+        // Core
+        container.register(AuthorizationStoreable.self) { _ in AuthorizationStore.shared }
+        container.register(ContextManageable.self) { _ in ContextManager() }
+        container.register(AudioStreamable.self) { _ in AudioStream(capacity: 300) }
+        container.register(AudioProvidable.self) { _ in MicInputProvider() }
+        container.register(MediaPlayerFactory.self) { _ in BuiltInMediaPlayerFactory() }
+        container.register(DialogStateAggregator.self) { _ in DialogStateAggregator() }
         
-        setupDependencies()
+        container.register(FocusManageable.self) { [weak self] _ -> FocusManager in
+            let focusManager = FocusManager()
+            
+            if let self = self {
+                focusManager.delegate = self
+            }
+            
+            return focusManager
+        }
+        
+        container.register(NetworkManageable.self) { [weak self] _ -> NetworkManager in
+            let networkManager = NetworkManager()
+            
+            if let self = self {
+                networkManager.add(statusDelegate: self)
+                networkManager.add(receiveMessageDelegate: self)
+            }
+            
+            return networkManager
+        }
+        
+        container.register(PlaySyncManageable.self) { resolver -> PlaySyncManager in
+            let contextManager = resolver.resolve(ContextManageable.self)!
+            let playSyncManager = PlaySyncManager()
+            contextManager.add(provideContextDelegate: playSyncManager)
+            
+            return playSyncManager
+        }
+
+        container.register(StreamDataRoutable.self) { resolver -> StreamDataRouter in
+            let networkManager = resolver.resolve(NetworkManageable.self)!
+            let streamDataRouter = StreamDataRouter(networkManager: networkManager)
+            networkManager.add(receiveMessageDelegate: streamDataRouter)
+            
+            return streamDataRouter
+        }
+        
+        container.register(DirectiveSequenceable.self) { resolver -> DirectiveSequencer in
+            let streamDataRouter = resolver.resolve(StreamDataRoutable.self)!
+            let directiveSequencer = DirectiveSequencer(upstreamDataSender: streamDataRouter)
+            streamDataRouter.add(delegate: directiveSequencer)
+            
+            return directiveSequencer
+        }
+        
+        // Capability Agents
+        registerBuiltInAgents()
+        
+        setupAudioStream()
+        setupWakeUpDetectorDependency()
+    }
+    
+    private func registerBuiltInAgents() {
+        guard let focusManager = container.resolve(FocusManageable.self),
+            let streamDataRouter = container.resolve(StreamDataRoutable.self),
+            let contextManager = container.resolve(ContextManageable.self),
+            let sharedAudioStream = container.resolve(AudioStreamable.self),
+            let dialogStateAggregator = container.resolve(DialogStateAggregator.self),
+            let mediaPlayerFactory = container.resolve(MediaPlayerFactory.self),
+            let playSyncManager = container.resolve(PlaySyncManageable.self),
+            let networkManager = container.resolve(NetworkManageable.self),
+            let directiveSequencer = container.resolve(DirectiveSequenceable.self) else {
+                return
+        }
+        
+        container.register(ASRAgentProtocol.self) { _ -> ASRAgentProtocol? in
+            let asrAgent = ASRAgent(
+                focusManager: focusManager,
+                channelPriority: .recognition,
+                upstreamDataSender: streamDataRouter,
+                contextManager: contextManager,
+                audioStream: sharedAudioStream,
+                directiveSequencer: directiveSequencer
+            )
+            
+            asrAgent.add(delegate: dialogStateAggregator)
+            
+            return asrAgent
+        }
+        
+        container.register(TTSAgentProtocol.self) { _ -> TTSAgentProtocol? in
+            let ttsAgent = TTSAgent(
+                focusManager: focusManager,
+                channelPriority: .information,
+                mediaPlayerFactory: mediaPlayerFactory,
+                upstreamDataSender: streamDataRouter,
+                playSyncManager: playSyncManager,
+                contextManager: contextManager,
+                directiveSequencer: directiveSequencer
+            )
+            
+            ttsAgent.add(delegate: dialogStateAggregator)
+            
+            return ttsAgent
+        }
+        
+        container.register(AudioPlayerAgentProtocol.self) { _ in
+            return AudioPlayerAgent(
+                focusManager: focusManager,
+                channelPriority: .content,
+                mediaPlayerFactory: mediaPlayerFactory,
+                upstreamDataSender: streamDataRouter,
+                playSyncManager: playSyncManager,
+                contextManager: contextManager,
+                directiveSequencer: directiveSequencer
+            )
+        }
+        
+        container.register(DisplayAgentProtocol.self) { _ in
+            return DisplayAgent(
+                upstreamDataSender: streamDataRouter,
+                playSyncManager: playSyncManager,
+                contextManager: contextManager,
+                directiveSequencer: directiveSequencer
+            )
+        }
+        
+        container.register(TextAgentProtocol.self) { _ -> TextAgentProtocol? in
+            let textAgent = TextAgent(
+                contextManager: contextManager,
+                upstreamDataSender: streamDataRouter,
+                focusManager: focusManager,
+                channelPriority: .recognition
+            )
+            
+            textAgent.add(delegate: dialogStateAggregator)
+            
+            return textAgent
+        }
+        
+        container.register(ExtensionAgentProtocol.self) { _ in
+            return ExtensionAgent(
+                upstreamDataSender: streamDataRouter,
+                contextManager: contextManager,
+                directiveSequencer: directiveSequencer
+            )
+        }
+        
+        container.register(LocationAgentProtocol.self) { _ in
+            return LocationAgent(contextManager: contextManager)
+        }
+        
+        container.register(SystemAgentProtocol.self) { _ in
+            return SystemAgent(
+                contextManager: contextManager,
+                networkManager: networkManager,
+                upstreamDataSender: streamDataRouter,
+                directiveSequencer: directiveSequencer
+            )
+        }
     }
 }
 
-// MARK: - AudioStreamDelegate
+// MARK: - Helper functions
 
+extension NuguClient {
+    public func addComponent<Component>(_ componentType: Component.Type, option: ComponentKey.Option = .representative, factory: @escaping (ComponentResolver) -> Component?) {
+        let additionalComponent = factory(container)
+        container.register(componentType, option: option) { _ in additionalComponent }
+    }
+    
+    public func getComponent<Component>(_ componentType: Component.Type) -> Component? {
+        return container.resolve(componentType.self)
+    }
+    
+    public func getComponent<Component, Concreate>(_ componentType: Component.Type, concreateType: Concreate.Type, option: ComponentKey.Option = .all) -> Concreate? {
+        return container.resolve(componentType.self, concreateType: concreateType, option: option)
+    }
+    
+    public func connect() {
+        guard let networkManager = container.resolve(NetworkManageable.self) else {
+            return
+        }
+        
+        networkManager.connect()
+    }
+    
+    public func disconnect() {
+        guard let networkManager = container.resolve(NetworkManageable.self) else {
+            return
+        }
+        
+        networkManager.disconnect()
+    }
+    
+    public func enable() {
+        connect()
+    }
+    
+    public func disable() {
+        if let focusManager = container.resolve(FocusManageable.self) {
+            focusManager.stopForegroundActivity()
+        }
+        
+        if let inputProvider = container.resolve(AudioProvidable.self) {
+            inputProvider.stop()
+        }
+        
+        disconnect()
+    }
+}
+
+// MARK: - Audio Stream Control
 extension NuguClient: AudioStreamDelegate {
+    private func setupAudioStream() {
+        if let audioStream = container.resolve(AudioStreamable.self) as? AudioStream {
+            audioStream.delegate = self
+        }
+    }
+
     public func audioStreamWillStart() {
         inputControlWorkItem?.cancel()
         inputControlQueue.async { [weak self] in
-            guard let sharedAudioStream = self?.sharedAudioStream,
-                self?.inputProvider.isRunning == false else {
+            guard let sharedAudioStream = self?.container.resolve(AudioStreamable.self),
+                self?.container.resolve(AudioProvidable.self)?.isRunning == false else {
                     log.debug("input provider is already started.")
                     return
             }
             
             do {
-                try self?.inputProvider.start(streamWriter: sharedAudioStream.makeAudioStreamWriter())
+                try self?.container.resolve(AudioProvidable.self)?.start(streamWriter: sharedAudioStream.makeAudioStreamWriter())
                 log.debug("input provider is started.")
             } catch {
                 log.debug("input provider failed to start: \(error)")
@@ -161,16 +289,58 @@ extension NuguClient: AudioStreamDelegate {
                 return
             }
             
-            guard self.inputProvider.isRunning == true else {
+            guard self.container.resolve(AudioProvidable.self)?.isRunning == true else {
                 log.debug("input provider is not running")
                 return
             }
             
-            self.inputProvider.stop()
+            self.container.resolve(AudioProvidable.self)?.stop()
             log.debug("input provider is stopped.")
             
         }
         
-        inputControlQueue.asyncAfter(deadline: .now() + 3, execute: inputControlWorkItem!)
+        inputControlQueue.async(execute: inputControlWorkItem!)
+    }
+}
+
+// MARK: - Wake Up Detector
+
+extension NuguClient {
+    private func setupWakeUpDetectorDependency() {
+        guard let wakeUpDetector = wakeUpDetector else { return }
+
+        if let sharedAudioStream = container.resolve(AudioStreamable.self) {
+            wakeUpDetector.audioStream = sharedAudioStream
+        }
+
+        if let contextManager = container.resolve(ContextManageable.self) {
+            contextManager.add(provideContextDelegate: wakeUpDetector)
+        }
+    }
+}
+
+// MARK: - FocusManagerDelegate
+
+extension NuguClient: FocusDelegate {
+    public func focusShouldAcquire() -> Bool {
+        delegate?.nuguClientWillRequireAudioSession() == true
+    }
+    
+    public func focusShouldRelease() {
+        delegate?.nuguClientDidReleaseAudioSession()
+    }
+}
+
+// MARK: - Delegates releated Network
+
+extension NuguClient: NetworkStatusDelegate {
+    public func networkStatusDidChange(_ status: NetworkStatus) {
+        delegate?.nuguClientConnectionStatusChanged(status: status)
+    }
+}
+
+extension NuguClient: ReceiveMessageDelegate {
+    public func receiveMessageDidReceive(header: [String: String], body: Data) {
+        delegate?.nuguClientDidReceiveMessage(header: header, body: body)
     }
 }
