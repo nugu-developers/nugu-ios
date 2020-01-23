@@ -53,3 +53,31 @@ extension PlaySyncInfo: CustomStringConvertible {
         }
     }
 }
+
+// MARK: - Equatable
+
+extension PlaySyncInfo: Equatable {
+    static func == (lhs: PlaySyncInfo, rhs: PlaySyncInfo) -> Bool {
+        lhs.delegate === rhs.delegate && lhs.dialogRequestId == rhs.dialogRequestId
+    }
+}
+
+// MARK: - Array + PlaySyncInfo
+
+extension Array where Element == PlaySyncInfo {
+    mutating func replace(info: PlaySyncInfo) -> Bool {
+        guard remove(element: info) else { return false }
+        insert(info, at: 0)
+        return true
+    }
+    
+    @discardableResult mutating func remove(delegate: PlaySyncDelegate, dialogRequestId: String) -> Bool {
+        removeAll { $0.delegate == nil }
+        guard let info = object(forDelegate: delegate, dialogRequestId: dialogRequestId) else { return false }
+        return remove(element: info)
+    }
+    
+    func object(forDelegate delegate: PlaySyncDelegate, dialogRequestId: String) -> PlaySyncInfo? {
+        first { $0.delegate === delegate && $0.dialogRequestId == dialogRequestId}
+    }
+}
