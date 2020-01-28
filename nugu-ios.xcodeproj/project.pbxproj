@@ -314,6 +314,7 @@
 		7303C6A323C8488100610343 /* ComponentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A023C8488100610343 /* ComponentKey.swift */; };
 		7303C6A423C8488100610343 /* ComponentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A123C8488100610343 /* ComponentContainer.swift */; };
 		7303C6A523C8488100610343 /* ComponentResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A223C8488100610343 /* ComponentResolver.swift */; };
+		73152F9423E034C300F843C3 /* DispatchQueue+Precondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */; };
 		7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */; };
 		7330CD88237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */; };
 		7330CD89237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */; };
@@ -851,6 +852,7 @@
 		7303C6A023C8488100610343 /* ComponentKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentKey.swift; sourceTree = "<group>"; };
 		7303C6A123C8488100610343 /* ComponentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentContainer.swift; sourceTree = "<group>"; };
 		7303C6A223C8488100610343 /* ComponentResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentResolver.swift; sourceTree = "<group>"; };
+		73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Precondition.swift"; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
 		7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngineDelegate.swift; sourceTree = "<group>"; };
 		7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TycheEndpointDetectorEngine+State.swift"; sourceTree = "<group>"; };
@@ -1628,6 +1630,7 @@
 		1FFFF3202375707000C9A177 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */,
 				1FFFF3232375707000C9A177 /* Array+Equatable.swift */,
 				1FFFF3212375707000C9A177 /* Collection+Convenience.swift */,
 				1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */,
@@ -3024,6 +3027,7 @@
 				1FFFF3B92375707100C9A177 /* TextRequest.swift in Sources */,
 				1FFFF3AF2375707100C9A177 /* TTSAgent.swift in Sources */,
 				1FFFF3A92375707100C9A177 /* ASRAgent+Event.swift in Sources */,
+				73152F9423E034C300F843C3 /* DispatchQueue+Precondition.swift in Sources */,
 				1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */,
 				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
 				7EB6D0DF238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift in Sources */,
