@@ -20,9 +20,9 @@
 
 import Foundation
 
-import NuguInterface
+import NuguCore
 
-public typealias NetworkStatus = NuguInterface.NetworkStatus
+public typealias NetworkStatus = NuguCore.NetworkStatus
 
 public protocol NuguClientDelegate: class {
     func nuguClientWillRequireAudioSession() -> Bool

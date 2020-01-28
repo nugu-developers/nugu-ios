@@ -20,7 +20,6 @@
 
 import Foundation
 
-import NuguInterface
 import NuguCore
 import KeenSense
 

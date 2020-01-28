@@ -20,7 +20,7 @@
 
 import UIKit
 
-import NuguInterface
+import NuguAgents
 
 final class DisplayAudioPlayerView: UIView {
     

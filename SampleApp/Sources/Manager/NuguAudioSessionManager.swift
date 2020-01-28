@@ -20,7 +20,8 @@
 
 import AVFoundation
 
-import NuguInterface
+import NuguCore
+import NuguAgents
 
 final class NuguAudioSessionManager {
     static let shared = NuguAudioSessionManager()

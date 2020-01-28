@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 public enum NuguApi {
     case policy
     case directives

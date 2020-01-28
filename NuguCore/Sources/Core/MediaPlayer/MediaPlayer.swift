@@ -21,8 +21,6 @@
 import Foundation
 import AVFoundation
 
-import NuguInterface
-
 public class MediaPlayer: MediaPlayable {
     public weak var delegate: MediaPlayerDelegate?
     
@@ -45,7 +43,7 @@ extension MediaPlayer {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
-                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayerError.notPrepareSource))
+                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.notPrepareSource))
                 return
         }
         
@@ -58,7 +56,7 @@ extension MediaPlayer {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
-                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayerError.notPrepareSource))
+                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.notPrepareSource))
                 return
         }
         
@@ -75,7 +73,7 @@ extension MediaPlayer {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
-                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayerError.notPrepareSource))
+                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.notPrepareSource))
                 return
         }
         
@@ -88,7 +86,7 @@ extension MediaPlayer {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
-                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayerError.notPrepareSource))
+                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.notPrepareSource))
                 return
         }
         
@@ -101,7 +99,7 @@ extension MediaPlayer {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
-                completion?(.failure(MediaPlayerError.notPrepareSource))
+                completion?(.failure(MediaPlayableError.notPrepareSource))
                 return
         }
 
@@ -142,7 +140,7 @@ extension MediaPlayer {
 extension MediaPlayer: MediaUrlDataSource {
     public func setSource(url: String, offset: TimeIntervallic) throws {
         guard let urlItem = URL(string: url) else {
-            throw MediaPlayerError.invalidURL
+            throw MediaPlayableError.invalidURL
         }
         
         playerItem = MediaAVPlayerItem(url: urlItem)
@@ -163,7 +161,7 @@ extension MediaPlayer: MediaAVPlayerItemDelegate {
         switch status {
         case .failed(let error):
             guard let playerItemError = error else {
-                delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayerError.unknown))
+                delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.unknown))
                 break
             }
             

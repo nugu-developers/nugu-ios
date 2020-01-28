@@ -24,11 +24,6 @@ import Foundation
 public class NuguConfiguration {
     /// <#Description#>
     public static var deviceGatewayResponseTimeout: DispatchTimeInterval = .milliseconds(10000)
-    /// <#Description#>
-    public static var asrEncoding: String = "PARTIAL" // "PARTIAL" or "COMPLETE"
-    // TODO never 로 설정할 수 있는 방법 제공.
-    /// <#Description#>
-    public static var audioPlayerPauseTimeout: DispatchTimeInterval = .milliseconds(600000)
 
     private init() {}
 }

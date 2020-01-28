@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 struct FocusChannelInfo {
     weak var delegate: FocusChannelDelegate?
     let focusState: FocusState

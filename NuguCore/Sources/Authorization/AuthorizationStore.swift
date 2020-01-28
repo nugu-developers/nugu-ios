@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 public class AuthorizationStore: AuthorizationStoreable {
     public static let shared = AuthorizationStore()
     

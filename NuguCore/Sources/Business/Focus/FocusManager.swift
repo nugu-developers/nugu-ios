@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 public class FocusManager: FocusManageable {
     public weak var delegate: FocusDelegate?
     
@@ -138,12 +136,11 @@ private extension FocusManager {
             notifyReleaseFocusIfNeeded()
         case .foreground, .background:
             releaseFocusWorkItem?.cancel()
-            break
         }
     }
     
     func assignForeground() {
-        /// Background -> Foreground
+        // Background -> Foreground
         focusDispatchQueue.asyncAfter(deadline: .now() + FocusConst.shortLatency) { [weak self] in
             guard let self = self else { return }
             guard self.foregroundChannelDelegate == nil,

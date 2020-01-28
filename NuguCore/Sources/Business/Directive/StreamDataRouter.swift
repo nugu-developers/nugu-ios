@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
@@ -202,7 +200,8 @@ extension StreamDataRouter {
     func observeResultDirective(dialogRequestId: String, resultHandler: @escaping (Result<Downstream.Directive, Error>) -> Void) {
         directiveSubject
             .filter { $0.header.dialogRequestId == dialogRequestId }
-            .filter { $0.header.type != ASRAgent.DirectiveTypeInfo.notifyResult.type }
+            
+//            .filter { $0.header.type != ASRAgent.DirectiveTypeInfo.notifyResult.type } // TODO: Agents참조하지 않게 바꾸어 재적용할 것.
             .take(1)
             .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .catchError({ [weak self] error -> Observable<Downstream.Directive> in
