@@ -77,6 +77,7 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
         self.channelPriority = channelPriority
         
         contextManager.add(provideContextDelegate: self)
+        focusManager.add(channelDelegate: self)
     }
     
     deinit {
