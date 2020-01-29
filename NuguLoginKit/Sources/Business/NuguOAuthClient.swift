@@ -64,7 +64,7 @@ public extension NuguOAuthClient {
     /// - Parameter grant: The `grant` information that `AuthorizationCodeGrant`
     /// - Parameter parentViewController: The `parentViewController` will present a safariViewController.
     /// - Parameter completion: The closure to receive result for authorization.
-    func authorize(grant: AuthorizationCodeGrant, parentViewController: UIViewController, completion: ((Result<AuthorizationInfo, Error>) -> Void)?) {
+    func authorize(grant: AuthorizationCodeGrant, parentViewController: UIViewController, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
         grant.stateController.completionHandler = completion
         let state = grant.stateController.makeState()
         var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/oauth/authorize")
@@ -79,13 +79,13 @@ public extension NuguOAuthClient {
         urlComponents?.queryItems = queries
         
         guard let url = urlComponents?.url else {
-            grant.stateController.completionHandler?(.failure(LoginError.invalidRequestURL))
+            grant.stateController.completionHandler?(.failure(NuguLoginKitError.invalidRequestURL))
             grant.stateController.clearState()
             return
         }
         
         // Complete function
-        func complete(result: Result<AuthorizationInfo, Error>) {
+        func complete(result: Result<AuthorizationInfo, NuguLoginKitError>) {
             DispatchQueue.main.async {
                 grant.stateController.dismissSafariViewController(completion: {
                     grant.stateController.completionHandler?(result)
@@ -99,18 +99,18 @@ public extension NuguOAuthClient {
             object: nil,
             queue: OperationQueue.main) { [weak self] (notification) in
                 guard let self = self else {
-                    complete(result: .failure(LoginError.unknown(description: "self is nil")))
+                    complete(result: .failure(NuguLoginKitError.unknown(description: "self is nil")))
                     return
                 }
                 
                 guard let url = notification.userInfo?["url"] as? URL else {
-                    complete(result: .failure(LoginError.invalidOpenURL))
+                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
                     return
                 }
                 
                 // Get URLComponent
                 guard let urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-                    complete(result: .failure(LoginError.invalidOpenURL))
+                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
                     return
                 }
                 
@@ -119,13 +119,13 @@ public extension NuguOAuthClient {
                 
                 // Validate Redirect URI
                 guard grant.redirectUri == "\(scheme)://\(host)" else {
-                    complete(result: .failure(LoginError.invalidOpenURL))
+                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
                     return
                 }
                 
                 // Get authorization code
                 guard let authorizationCode = urlComponent.queryItems?.first(where: { $0.name == "code" })?.value else {
-                    complete(result: .failure(LoginError.noAuthorizationCode))
+                    complete(result: .failure(NuguLoginKitError.noAuthorizationCode))
                     return
                 }
                 
@@ -133,7 +133,7 @@ public extension NuguOAuthClient {
                 guard
                     let state = urlComponent.queryItems?.first(where: { $0.name == "state" })?.value,
                     state == grant.stateController.currentState else {
-                        complete(result: .failure(LoginError.invalidState))
+                        complete(result: .failure(NuguLoginKitError.invalidState))
                         return
                 }
                 
@@ -146,9 +146,7 @@ public extension NuguOAuthClient {
                 )
                 
                 api.request { (result) in
-                    complete(result: result.mapError({ (error) -> Error in
-                        return LoginError.network(error: error)
-                    }))
+                    complete(result: result.mapError({ NuguLoginKitError.apiError(error: $0) }))
                 }
         }
         
@@ -173,7 +171,7 @@ public extension NuguOAuthClient {
     /// Authorize with `RefreshToken` grant type.
     /// - Parameter grant: The `grant` information that `RefreshTokenGrant`
     /// - Parameter completion: The closure to receive result for authorization.
-    func authorize(grant: RefreshTokenGrant, completion: ((Result<AuthorizationInfo, Error>) -> Void)?) {
+    func authorize(grant: RefreshTokenGrant, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
         let api = NuguOAuthApi(
             clientId: grant.clientId,
             clientSecret: grant.clientSecret,
@@ -181,7 +179,9 @@ public extension NuguOAuthClient {
             grantTypeInfo: .refreshToken(refreshToken: grant.refreshToken)
         )
         
-        api.request(completion: completion)
+        api.request { (result) in
+            completion?(result.mapError({ NuguLoginKitError.apiError(error: $0) }))
+        }
     }
 }
 
@@ -191,7 +191,7 @@ public extension NuguOAuthClient {
     /// Authorize with `ClientCredentials` grant type.
     /// - Parameter grant: The `grant` information that `ClientCredentialsGrant`
     /// - Parameter completion: The closure to receive result for authorization.
-    func authorize(grant: ClientCredentialsGrant, completion: ((Result<AuthorizationInfo, Error>) -> Void)?) {
+    func authorize(grant: ClientCredentialsGrant, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
         let api = NuguOAuthApi(
             clientId: grant.clientId,
             clientSecret: grant.clientSecret,
@@ -199,7 +199,9 @@ public extension NuguOAuthClient {
             grantTypeInfo: .clientCredentials
         )
         
-        api.request(completion: completion)
+        api.request { (result) in
+            completion?(result.mapError({ NuguLoginKitError.apiError(error: $0) }))
+        }
     }
 }
 
