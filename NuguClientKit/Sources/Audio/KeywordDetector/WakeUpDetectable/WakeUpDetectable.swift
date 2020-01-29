@@ -20,7 +20,7 @@
 
 import Foundation
 
-import NuguInterface
+import NuguCore
 
 /// <#Description#>
 public protocol WakeUpDetectable: class {

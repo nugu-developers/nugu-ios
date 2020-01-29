@@ -20,7 +20,8 @@
 
 import Foundation
 
-import NuguInterface
+import NuguCore
+import NuguAgents
 
 /// DialogStateAggregator aggregate several components state into one.
 public class DialogStateAggregator {

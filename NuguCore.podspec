@@ -16,16 +16,14 @@ Nugu framework for AI Service
 
   s.swift_version = '5.1'
 
-  s.source_files = 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/*.{h,m}', 'NuguCore/Libraries/**/*.h',
-  s.public_header_files = 'NuguCore/**/*.h'
+  s.source_files = 'NuguCore/Interface/**/*', 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/*.{h,m}', 'NuguCore/Libraries/**/*.h'
+  s.public_header_files = 'NuguCore/Libraries/**/*.h', 'NuguCore/Sources-ObjC/*.h'
   s.vendored_libraries = 'NuguCore/Libraries/**/*.a'
   s.preserve_paths = 'NuguCore/Libraries/**'
   s.libraries = 'c++'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/NuguCore/NuguCore/Libraries/**' }
 
-  s.dependency 'NuguInterface', '~> 0'
   s.dependency 'JadeMarble', '~> 0'
-  
   s.dependency 'NattyLog', '~> 1.0'
   s.dependency 'RxSwift', '~> 5'
 

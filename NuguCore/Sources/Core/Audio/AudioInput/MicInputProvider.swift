@@ -21,8 +21,6 @@
 import Foundation
 import AVFoundation
 
-import NuguInterface
-
 public class MicInputProvider: AudioProvidable {
     public var isRunning: Bool {
         return audioEngine.isRunning

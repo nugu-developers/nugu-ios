@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 public class MultiPartParser {
     let boundary: String
     

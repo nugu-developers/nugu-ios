@@ -21,7 +21,8 @@
 import UIKit
 import MediaPlayer
 
-import NuguInterface
+import NuguCore
+import NuguAgents
 import NuguClientKit
 import NuguUIKit
 

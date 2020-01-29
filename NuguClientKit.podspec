@@ -19,7 +19,7 @@ Default Instances for Nugu service
   s.source_files = 'NuguClientKit/Sources/**/*'
 
   s.dependency 'NuguCore', '~> 0'
-  s.dependency 'NuguInterface', '~> 0'
+  s.dependency 'NuguAgents', '~> 0'
   s.dependency 'KeenSense', '~> 0'
 
   s.dependency 'NattyLog', '~> 1'

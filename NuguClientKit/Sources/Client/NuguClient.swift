@@ -21,7 +21,7 @@
 import Foundation
 
 import NuguCore
-import NuguInterface
+import NuguAgents
 
 /// <#Description#>
 public class NuguClient {

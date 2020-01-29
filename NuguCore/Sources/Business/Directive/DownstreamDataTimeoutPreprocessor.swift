@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 public class DownstreamDataTimeoutPreprocessor: DownstreamDataPreprocessable {
     private let timeoutPreprocessorDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.timeout_preprocessor", qos: .userInitiated)
     

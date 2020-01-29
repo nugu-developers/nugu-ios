@@ -21,8 +21,6 @@
 import Foundation
 import AVFoundation
 
-import NuguInterface
-
 import RxSwift
 
 /**

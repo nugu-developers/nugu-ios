@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 public class AudioBoundStreams: NSObject, StreamDelegate {
     private let streams = BoundStreams()
     private var audioStreamReader: AudioStreamReadable?
