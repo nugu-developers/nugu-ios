@@ -23,28 +23,21 @@ import Foundation
 import NuguCore
 import NuguAgents
 
-/// <#Description#>
 public class NuguClient {
     private let container: ComponentContainer
     public weak var delegate: NuguClientDelegate?
     
-    /// <#Description#>
     public let wakeUpDetector: KeywordDetector?
     
-    /// <#Description#>
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
     
-    /// <#Description#>
-    /// - Parameter wakeUpDetector: <#wakeUpDetector description#>
-    /// - Parameter capabilityAgentFactory: <#capabilityAgentFactory description#>
     public init(wakeUpDetector: KeywordDetector? = KeywordDetector()) {
         self.wakeUpDetector = wakeUpDetector
         
         container = ComponentContainer()
         
         // Core
-        container.register(AuthorizationStoreable.self) { _ in AuthorizationStore.shared }
         container.register(ContextManageable.self) { _ in ContextManager() }
         container.register(AudioStreamable.self) { _ in AudioStream(capacity: 300) }
         container.register(AudioProvidable.self) { _ in MicInputProvider() }
@@ -101,6 +94,7 @@ public class NuguClient {
         
         setupAudioStream()
         setupWakeUpDetectorDependency()
+        setupAuthorizationStore()
     }
     
     private func registerBuiltInAgents() {
@@ -254,6 +248,7 @@ extension NuguClient {
 }
 
 // MARK: - Audio Stream Control
+
 extension NuguClient: AudioStreamDelegate {
     private func setupAudioStream() {
         if let audioStream = container.resolve(AudioStreamable.self) as? AudioStream {
@@ -269,9 +264,12 @@ extension NuguClient: AudioStreamDelegate {
                     log.debug("input provider is already started.")
                     return
             }
+
+            self?.delegate?.nuguClientWillOpenInputSource()
             
             do {
                 try self?.container.resolve(AudioProvidable.self)?.start(streamWriter: sharedAudioStream.makeAudioStreamWriter())
+
                 log.debug("input provider is started.")
             } catch {
                 log.debug("input provider failed to start: \(error)")
@@ -295,10 +293,9 @@ extension NuguClient: AudioStreamDelegate {
             }
             
             self.container.resolve(AudioProvidable.self)?.stop()
+            self.delegate?.nuguClientDidCloseInputSource()
             log.debug("input provider is stopped.")
-            
         }
-        
         inputControlQueue.async(execute: inputControlWorkItem!)
     }
 }
@@ -316,6 +313,18 @@ extension NuguClient {
         if let contextManager = container.resolve(ContextManageable.self) {
             contextManager.add(provideContextDelegate: wakeUpDetector)
         }
+    }
+}
+
+// MARK: - Authorization
+
+extension NuguClient: AuthorizationStoreDelegate {
+    private func setupAuthorizationStore() {
+        AuthorizationStore.shared.delegate = self
+    }
+    
+    public func authorizationStoreRequestAccessToken() -> String? {
+        return delegate?.nuguClientRequestAccessToken()
     }
 }
 

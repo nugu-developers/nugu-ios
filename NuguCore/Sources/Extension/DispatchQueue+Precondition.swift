@@ -27,6 +27,12 @@ public enum DispatchQueuePredicate {
 }
 
 public extension DispatchQueue {
+    /**
+     Check the current task is running on suitalbe queue If it Built for debug.
+     
+     __dispatch_assert_queue() is not for common.  And precondition() is able to check though it built for release.
+     - parameter condition: DispatchQueuePredicate
+     */
     func precondition(_ condition: DispatchQueuePredicate) {
         #if DEBUG
         var dispatchPredicate: DispatchPredicate {

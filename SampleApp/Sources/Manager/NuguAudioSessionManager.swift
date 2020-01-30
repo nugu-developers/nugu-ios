@@ -20,7 +20,6 @@
 
 import AVFoundation
 
-import NuguCore
 import NuguAgents
 
 final class NuguAudioSessionManager {
@@ -66,11 +65,17 @@ extension NuguAudioSessionManager {
         // NotifyOthersOnDeactivation is unnecessory when .mixWithOthers option is off
         guard supportMixWithOthersOption == true else { return }
         
+        NotificationCenter.default.removeObserver(self, name: NuguCentralManager.NotificationName.inputStatus, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(inputStatusDidChanged(_ :)), name: NuguCentralManager.NotificationName.inputStatus, object: nil)
+        
         // Clean up all I/O before deactivating audioSession
         NuguCentralManager.shared.stopWakeUpDetector()
-        if let inputProvider = NuguCentralManager.shared.client.getComponent(AudioProvidable.self),
-            inputProvider.isRunning == true {
-            inputProvider.stop()
+    }
+    
+    @objc func inputStatusDidChanged(_ notification: Notification) {
+        guard let status = notification.userInfo?["status"] as? Bool,
+            status == false else {
+                return
         }
         
         do {
@@ -84,6 +89,8 @@ extension NuguAudioSessionManager {
         } catch {
             log.debug("notifyOthersOnDeactivation failed: \(error)")
         }
+        
+        NotificationCenter.default.removeObserver(self, name: NuguCentralManager.NotificationName.inputStatus, object: nil)
     }
 }
 
