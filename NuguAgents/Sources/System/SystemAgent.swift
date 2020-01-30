@@ -77,7 +77,7 @@ extension SystemAgent: HandleDirectiveDelegate {
             case .handoffConnection:
                 return handOffConnection(directive: directive)
             case .updateState:
-                return updateState()
+                return updateState(directive: directive)
             case .exception:
                 return handleException(directive: directive)
             case .noDirectives:
@@ -145,7 +145,7 @@ private extension SystemAgent {
         }
     }
     
-    func updateState() -> Result<Void, Error> {
+    func updateState(directive: Downstream.Directive) -> Result<Void, Error> {
         systemDispatchQueue.async { [weak self] in
             self?.sendSynchronizeStateEvent()
         }
@@ -175,7 +175,7 @@ private extension SystemAgent {
 }
 
 private extension SystemAgent {
-    func sendSynchronizeStateEvent() {
+    func sendSynchronizeStateEvent(directive: Downstream.Directive? = nil) {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
@@ -183,7 +183,8 @@ private extension SystemAgent {
                 Event(typeInfo: .synchronizeState),
                 contextPayload: contextPayload,
                 dialogRequestId: TimeUUID().hexString,
-                messageId: TimeUUID().hexString
+                messageId: TimeUUID().hexString,
+                referrerDialogRequestId: directive?.header.referrerDialogRequestId ?? directive?.header.dialogRequestId
             )
         }
     }

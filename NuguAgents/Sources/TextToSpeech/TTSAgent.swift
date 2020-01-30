@@ -372,7 +372,8 @@ private extension TTSAgent {
                 self.currentMedia = TTSMedia(
                     player: mediaPlayer,
                     payload: payload,
-                    dialogRequestId: directive.header.dialogRequestId
+                    dialogRequestId: directive.header.dialogRequestId,
+                    referrerDialogRequestId: directive.header.referrerDialogRequestId ?? directive.header.dialogRequestId
                 )
                 
                 self.playSyncManager.prepareSync(
@@ -457,6 +458,7 @@ private extension TTSAgent {
             ),
             dialogRequestId: TimeUUID().hexString,
             messageId: TimeUUID().hexString,
+            referrerDialogRequestId: media.referrerDialogRequestId,
             resultHandler: resultHandler
         )
     }

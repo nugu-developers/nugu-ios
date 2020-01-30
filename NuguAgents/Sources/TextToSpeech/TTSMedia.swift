@@ -26,12 +26,14 @@ struct TTSMedia {
     let player: MediaPlayable
     let payload: Payload
     let dialogRequestId: String
+    let referrerDialogRequestId: String?
     var cancelAssociation: Bool = true
     
-    init(player: MediaPlayable, payload: Payload, dialogRequestId: String) {
+    init(player: MediaPlayable, payload: Payload, dialogRequestId: String, referrerDialogRequestId: String? = nil) {
         self.player = player
         self.payload = payload
         self.dialogRequestId = dialogRequestId
+        self.referrerDialogRequestId = referrerDialogRequestId
     }
     
     struct Payload {

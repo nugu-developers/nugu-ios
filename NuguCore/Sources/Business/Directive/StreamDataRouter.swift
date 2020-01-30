@@ -266,6 +266,15 @@ extension Downstream.Header {
                 return nil
         }
         
-        self.init(namespace: namespace, name: name, dialogRequestId: dialogRequestId, messageId: "", version: version)
+        let referrerDialogRequestId = headerDictionary["Referrer-Dialog-Request-Id"]
+        
+        self.init(
+            namespace: namespace,
+            name: name,
+            dialogRequestId: dialogRequestId,
+            messageId: "",
+            version: version,
+            referrerDialogRequestId: referrerDialogRequestId
+        )
     }
 }

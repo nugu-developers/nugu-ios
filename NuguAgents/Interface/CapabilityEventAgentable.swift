@@ -32,6 +32,7 @@ public protocol CapabilityEventAgentable: CapabilityAgentable {
         contextPayload: ContextPayload,
         dialogRequestId: String,
         messageId: String,
+        referrerDialogRequestId: String?,
         completion: ((Result<Data, Error>) -> Void)?,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
     )
@@ -44,6 +45,7 @@ public extension CapabilityEventAgentable {
         _ event: Event,
         dialogRequestId: String,
         messageId: String,
+        referrerDialogRequestId: String? = nil,
         completion: ((Result<Data, Error>) -> Void)? = nil,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
     ) {
@@ -57,6 +59,7 @@ public extension CapabilityEventAgentable {
             contextPayload: contextPayload,
             dialogRequestId: dialogRequestId,
             messageId: messageId,
+            referrerDialogRequestId: referrerDialogRequestId,
             completion: completion,
             resultHandler: resultHandler
         )
@@ -67,6 +70,7 @@ public extension CapabilityEventAgentable {
         contextPayload: ContextPayload,
         dialogRequestId: String,
         messageId: String,
+        referrerDialogRequestId: String? = nil,
         completion: ((Result<Data, Error>) -> Void)? = nil,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
     ) {
@@ -75,7 +79,8 @@ public extension CapabilityEventAgentable {
             name: event.name,
             version: capabilityAgentProperty.version,
             dialogRequestId: dialogRequestId,
-            messageId: messageId
+            messageId: messageId,
+            referrerDialogRequestId: referrerDialogRequestId
         )
         
         let eventMessage = UpstreamEventMessage(

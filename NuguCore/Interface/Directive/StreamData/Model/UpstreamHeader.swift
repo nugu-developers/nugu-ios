@@ -26,6 +26,7 @@ public struct UpstreamHeader {
     public let name: String
     public let version: String
     public let dialogRequestId: String
+    public let referrerDialogRequestId: String?
     public let messageId: String
     
     /// <#Description#>
@@ -34,12 +35,14 @@ public struct UpstreamHeader {
     /// - Parameter version: <#version description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
     /// - Parameter messageId: <#messageId description#>
-    public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String) {
+    /// - Parameter referrerDialogRequestId: <#referrerDialogRequestId description#>
+    public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String, referrerDialogRequestId: String? = nil) {
         self.namespace = namespace
         self.name = name
         self.version = version
         self.dialogRequestId = dialogRequestId
         self.messageId = messageId
+        self.referrerDialogRequestId = referrerDialogRequestId
     }
 }
     

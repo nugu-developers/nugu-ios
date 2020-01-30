@@ -57,20 +57,22 @@ public struct Downstream {
         public let namespace: String
         public let name: String
         public let dialogRequestId: String
+        public let referrerDialogRequestId: String?
         public let messageId: String
         public let version: String
         
-        public init(namespace: String, name: String, dialogRequestId: String, messageId: String, version: String) {
+        public init(namespace: String, name: String, dialogRequestId: String, messageId: String, version: String, referrerDialogRequestId: String? = nil) {
             self.namespace = namespace
             self.name = name
             self.dialogRequestId = dialogRequestId
             self.messageId = messageId
             self.version = version
+            self.referrerDialogRequestId = referrerDialogRequestId
         }
     }
 }
 
-// MARK: - Downstream.Directivex
+// MARK: - Downstream.Directive
 
 extension Downstream.Directive {
     /// <#Description#>
