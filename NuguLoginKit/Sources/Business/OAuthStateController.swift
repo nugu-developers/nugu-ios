@@ -28,7 +28,7 @@ final class OAuthStateController: NSObject {
             safariViewController?.delegate = self
         }
     }
-    var completionHandler: ((Result<AuthorizationInfo, Error>) -> Void)?
+    var completionHandler: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     
     @discardableResult
     func makeState() -> String {
@@ -60,7 +60,7 @@ final class OAuthStateController: NSObject {
 
 extension OAuthStateController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        completionHandler?(.failure(LoginError.didFinishSafariViewController))
+        completionHandler?(.failure(NuguLoginKitError.didFinishSafariViewController))
         clearState()
     }
 }

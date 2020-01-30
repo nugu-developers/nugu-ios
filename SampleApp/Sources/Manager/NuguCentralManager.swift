@@ -198,9 +198,9 @@ private extension NuguCentralManager {
                 clientSecret: clientSecret,
                 redirectUri: redirectUri
             ),
-            parentViewController: viewController,
-            completion: completion
-        )
+            parentViewController: viewController) { (result) in
+                completion(result.mapError({ $0 as Error }))
+        }
     }
     
     func refreshTokenLogin(refreshToken: String, completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
@@ -211,10 +211,9 @@ private extension NuguCentralManager {
                 return
         }
         
-        oauthClient.authorize(
-            grant: RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken),
-            completion: completion
-        )
+        oauthClient.authorize(grant: RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken)) { (result) in
+                completion(result.mapError({ $0 as Error }))
+        }
     }
     
     func clientCredentialsLogin(completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
@@ -225,10 +224,9 @@ private extension NuguCentralManager {
                 return
         }
         
-        oauthClient.authorize(
-            grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret),
-            completion: completion
-        )
+        oauthClient.authorize(grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret)) { (result) in
+            completion(result.mapError({ $0 as Error }))
+        }
     }
     
     func logoutAfterErrorHandling() {
