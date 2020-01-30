@@ -72,7 +72,7 @@ final class MainViewController: UIViewController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(networkStatusDidChange(_:)),
-            name: NuguCentralManager.NotificationName.networkStatus,
+            name: .nuguClientNetworkStatus,
             object: nil
         )
     }

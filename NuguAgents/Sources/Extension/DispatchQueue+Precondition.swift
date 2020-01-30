@@ -1,6 +1,6 @@
 //
 //  DispatchQueue+Precondition.swift
-//  NuguCore
+//  NuguAgents
 //
 //  Created by childc on 2020/01/23.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
@@ -20,13 +20,13 @@
 
 import Foundation
 
-public enum DispatchQueuePredicate {
+enum DispatchQueuePredicate {
     case onQueue
     case onQueueAsBarrier
     case notOnQueue
 }
 
-public extension DispatchQueue {
+extension DispatchQueue {
     /**
      Check the current task is running on suitalbe queue If it Built for debug.
      

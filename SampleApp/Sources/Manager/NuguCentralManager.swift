@@ -40,19 +40,14 @@ final class NuguCentralManager {
     
     var inputStatus: Bool = false {
         didSet {
-            NotificationCenter.default.post(name: NotificationName.inputStatus, object: nil, userInfo: ["status": inputStatus])
+            NotificationCenter.default.post(name: .nuguClientInputStatus, object: nil, userInfo: ["status": inputStatus])
         }
     }
     
     var networkStatus: NetworkStatus = .disconnected(error: nil) {
         didSet {
-            NotificationCenter.default.post(name: NotificationName.networkStatus, object: nil, userInfo: ["status": networkStatus])
+            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
         }
-    }
-    
-    enum NotificationName {
-        static let inputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
-        static let networkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")
     }
     
     private init() {
@@ -399,4 +394,9 @@ extension NuguCentralManager: SystemAgentDelegate {
             handleAuthError()
         }
     }
+}
+
+extension Notification.Name {
+    static let nuguClientInputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
+    static let nuguClientNetworkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")
 }

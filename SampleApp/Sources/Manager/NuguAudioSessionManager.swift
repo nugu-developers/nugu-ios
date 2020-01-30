@@ -65,8 +65,8 @@ extension NuguAudioSessionManager {
         // NotifyOthersOnDeactivation is unnecessory when .mixWithOthers option is off
         guard supportMixWithOthersOption == true else { return }
         
-        NotificationCenter.default.removeObserver(self, name: NuguCentralManager.NotificationName.inputStatus, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(inputStatusDidChanged(_ :)), name: NuguCentralManager.NotificationName.inputStatus, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .nuguClientInputStatus, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(inputStatusDidChanged(_ :)), name: .nuguClientInputStatus, object: nil)
         
         // Clean up all I/O before deactivating audioSession
         NuguCentralManager.shared.stopWakeUpDetector()
@@ -90,7 +90,7 @@ extension NuguAudioSessionManager {
             log.debug("notifyOthersOnDeactivation failed: \(error)")
         }
         
-        NotificationCenter.default.removeObserver(self, name: NuguCentralManager.NotificationName.inputStatus, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .nuguClientInputStatus, object: nil)
     }
 }
 

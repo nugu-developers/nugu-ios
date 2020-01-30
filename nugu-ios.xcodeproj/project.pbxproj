@@ -177,7 +177,6 @@
 		7303C6A323C8488100610343 /* ComponentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A023C8488100610343 /* ComponentKey.swift */; };
 		7303C6A423C8488100610343 /* ComponentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A123C8488100610343 /* ComponentContainer.swift */; };
 		7303C6A523C8488100610343 /* ComponentResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A223C8488100610343 /* ComponentResolver.swift */; };
-		73152F9423E034C300F843C3 /* DispatchQueue+Precondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */; };
 		73152F9E23E0405900F843C3 /* NuguAgents.h in Headers */ = {isa = PBXBuildFile; fileRef = 73152F9C23E0405900F843C3 /* NuguAgents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		73152FA123E0405900F843C3 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
 		73152FA223E0405900F843C3 /* NuguAgents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -333,6 +332,7 @@
 		73454FBD2382C1E50073AF48 /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
 		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
 		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
+		736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */; };
 		7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */; };
 		738D520A23D59B2F00FDECAF /* AudioBoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */; };
 		7E26C57F239FC2E300716E44 /* NuguApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3642375707000C9A177 /* NuguApi.swift */; };
@@ -1557,7 +1557,6 @@
 		1FFFF3202375707000C9A177 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */,
 				1FFFF3232375707000C9A177 /* Array+Equatable.swift */,
 				1FFFF3212375707000C9A177 /* Collection+Convenience.swift */,
 				1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */,
@@ -2250,6 +2249,7 @@
 		73152FE123E047F200F843C3 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */,
 				1FFFF3242375707000C9A177 /* KeyedDecodingContainerExtension.swift */,
 				7E5237F8239649940058F0B9 /* NSObject+Rx.swift */,
 			);
@@ -2920,7 +2920,6 @@
 				7315303823E11EDF00F843C3 /* UpstreamEventMessage.swift in Sources */,
 				7315303C23E11EDF00F843C3 /* DirectiveSequenceable.swift in Sources */,
 				1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */,
-				73152F9423E034C300F843C3 /* DispatchQueue+Precondition.swift in Sources */,
 				1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */,
 				7315301D23E11EDF00F843C3 /* ContextType.swift in Sources */,
 				7315303723E11EDF00F843C3 /* UpstreamHeader.swift in Sources */,
@@ -3118,6 +3117,7 @@
 				73152FBA23E0414700F843C3 /* ASRAgent.swift in Sources */,
 				7315306923E1248300F843C3 /* AudioPlayerAgentDelegate.swift in Sources */,
 				73152FAB23E0413700F843C3 /* SpeakerAgent.swift in Sources */,
+				736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */,
 				7315305523E1246F00F843C3 /* TextAgentState.swift in Sources */,
 				7315306123E1248300F843C3 /* SpeakerAgentProtocol.swift in Sources */,
 				73152FC823E0415400F843C3 /* TTSMedia.swift in Sources */,
