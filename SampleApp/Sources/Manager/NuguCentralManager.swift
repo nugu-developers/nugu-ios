@@ -97,8 +97,8 @@ extension NuguCentralManager {
                         UserDefaults.Standard.accessToken = authInfo.accessToken
                         UserDefaults.Standard.refreshToken = authInfo.refreshToken
                         completion(.success(()))
-                    case .failure(let error):
-                        completion(.failure(SampleAppError.loginFailed(error: error)))
+                    case .failure(let sampleAppError):
+                        completion(.failure(sampleAppError))
                     }
                 }
                 return
@@ -112,7 +112,7 @@ extension NuguCentralManager {
                     UserDefaults.Standard.refreshToken = authInfo.refreshToken
                     completion(.success(()))
                 case .failure:
-                    completion(.failure(SampleAppError.loginWithRefreshTokenFailed))
+                    completion(.failure(.loginWithRefreshTokenFailed))
                 }
             }
         case .type2:
@@ -121,8 +121,8 @@ extension NuguCentralManager {
                 case .success(let authInfo):
                     UserDefaults.Standard.accessToken = authInfo.accessToken
                     completion(.success(()))
-                case .failure(let error):
-                    completion(.failure(SampleAppError.loginFailed(error: error)))
+                case .failure(let sampleAppError):
+                    completion(.failure(sampleAppError))
                 }
             }
         }
@@ -139,7 +139,7 @@ extension NuguCentralManager {
             // If has not refreshToken
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
                 log.debug("Try to login with refresh token when refresh token is nil")
-                logoutAfterErrorHandling()
+                logoutAfterErrorHandling(sampleAppError: .nilValue(description: "Try to login with refresh token when refresh token is nil"))
                 return
             }
             
@@ -150,8 +150,8 @@ extension NuguCentralManager {
                     UserDefaults.Standard.accessToken = authInfo.accessToken
                     UserDefaults.Standard.refreshToken = authInfo.refreshToken
                     self?.enable()
-                case .failure:
-                    self?.logoutAfterErrorHandling()
+                case .failure(let sampleAppError):
+                    self?.logoutAfterErrorHandling(sampleAppError: sampleAppError)
                 }
             }
         case .type2:
@@ -160,8 +160,8 @@ extension NuguCentralManager {
                 case .success(let authInfo):
                     UserDefaults.Standard.accessToken = authInfo.accessToken
                     self?.enable()
-                case .failure:
-                    self?.logoutAfterErrorHandling()
+                case .failure(let sampleAppError):
+                    self?.logoutAfterErrorHandling(sampleAppError: sampleAppError)
                 }
             }
         }
@@ -183,7 +183,7 @@ extension NuguCentralManager {
 // MARK: - Private (Auth)
 
 private extension NuguCentralManager {
-    func authorizationCodeLogin(from viewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
+    func authorizationCodeLogin(from viewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
         guard
             let clientId = SampleApp.clientId,
             let clientSecret = SampleApp.clientSecret,
@@ -199,11 +199,11 @@ private extension NuguCentralManager {
                 redirectUri: redirectUri
             ),
             parentViewController: viewController) { (result) in
-                completion(result.mapError({ $0 as Error }))
+                completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
     
-    func refreshTokenLogin(refreshToken: String, completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
+    func refreshTokenLogin(refreshToken: String, completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
         guard
             let clientId = SampleApp.clientId,
             let clientSecret = SampleApp.clientSecret else {
@@ -212,11 +212,11 @@ private extension NuguCentralManager {
         }
         
         oauthClient.authorize(grant: RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken)) { (result) in
-                completion(result.mapError({ $0 as Error }))
+                completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
     
-    func clientCredentialsLogin(completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
+    func clientCredentialsLogin(completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
         guard
             let clientId = SampleApp.clientId,
             let clientSecret = SampleApp.clientSecret else {
@@ -225,15 +225,22 @@ private extension NuguCentralManager {
         }
         
         oauthClient.authorize(grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret)) { (result) in
-            completion(result.mapError({ $0 as Error }))
+            completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
     
-    func logoutAfterErrorHandling() {
+    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
         DispatchQueue.main.async { [weak self] in
-            self?.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayAuthError)
-            NuguToastManager.shared.showToast(message: "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요.")
-            self?.logout()
+            defer {
+                self?.logout()
+            }
+            guard case .loginUnauthorized = sampleAppError else {
+                self?.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayAuthError)
+                NuguToastManager.shared.showToast(message: SampleAppError.onDisconnected.errorDescription)
+                return
+            }
+            self?.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .pocStateServiceTerminated)
+            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
         }
     }
 }
