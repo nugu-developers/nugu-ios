@@ -68,6 +68,13 @@ final class MainViewController: UIViewController {
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(networkStatusDidChange(_:)),
+            name: .nuguClientNetworkStatus,
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -163,7 +170,6 @@ private extension MainViewController {
         // Add delegates
         NuguCentralManager.shared.client.wakeUpDetector?.delegate = self
 
-        NuguCentralManager.shared.client.getComponent(NetworkManageable.self)?.add(statusDelegate: self)
         NuguCentralManager.shared.client.getComponent(DialogStateAggregator.self)?.add(delegate: self)
         NuguCentralManager.shared.client.getComponent(ASRAgentProtocol.self)?.add(delegate: self)
         NuguCentralManager.shared.client.getComponent(TextAgentProtocol.self)?.add(delegate: self)
@@ -189,32 +195,24 @@ private extension MainViewController {
     /// Hide Nugu button when Nugu service is intended not to use or network issue has occured
     /// Disable Nugu button when wake up feature is intended not to use
     func refreshNugu() {
-        switch UserDefaults.Standard.useNuguService {
-        case true:
-            // Exception handling when already connected, scheduled update in future
-            guard NuguCentralManager.shared.client.getComponent(NetworkManageable.self)?.connected == false else {
-                nuguButton.isEnabled = true
-                nuguButton.isHidden = false
-                
-                refreshWakeUpDetector()
-                return
-            }
-            
-            // Enable Nugu SDK
-            NuguCentralManager.shared.enable()
-        case false:
+        guard UserDefaults.Standard.useNuguService else {
             // Exception handling when already disconnected, scheduled update in future
-            guard NuguCentralManager.shared.client.getComponent(NetworkManageable.self)?.connected == true else {
-                nuguButton.isEnabled = false
-                nuguButton.isHidden = true
-                
-                NuguCentralManager.shared.stopWakeUpDetector()
-                return
-            }
+            nuguButton.isEnabled = false
+            nuguButton.isHidden = true
+            NuguCentralManager.shared.stopWakeUpDetector()
             
             // Disable Nugu SDK
             NuguCentralManager.shared.disable()
+            return
         }
+        
+        // Exception handling when already connected, scheduled update in future
+        nuguButton.isEnabled = true
+        nuguButton.isHidden = false
+        refreshWakeUpDetector()
+        
+        // Enable Nugu SDK
+        NuguCentralManager.shared.enable()
     }
     
     func refreshWakeUpDetector() {
@@ -392,10 +390,14 @@ private extension MainViewController {
     }
 }
 
-// MARK: - NetworkStatusDelegate
+// MARK: - NuguNetworkStatus
 
-extension MainViewController: NetworkStatusDelegate {
-    func networkStatusDidChange(_ status: NetworkStatus) {
+extension MainViewController {
+    @objc func networkStatusDidChange(_ notification: Notification) {
+        guard let status = notification.userInfo?["status"] as? NetworkStatus else {
+            return
+        }
+        
         switch status {
         case .connected:
             // Refresh wakeup-detector

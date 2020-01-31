@@ -38,9 +38,20 @@ final class NuguCentralManager {
         }
     }()
     
+    var inputStatus: Bool = false {
+        didSet {
+            NotificationCenter.default.post(name: .nuguClientInputStatus, object: nil, userInfo: ["status": inputStatus])
+        }
+    }
+    
+    var networkStatus: NetworkStatus = .disconnected(error: nil) {
+        didSet {
+            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
+        }
+    }
+    
     private init() {
         client.delegate = self
-        client.getComponent(AuthorizationStoreable.self)?.delegate = self
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
             client.getComponent(ASRAgentProtocol.self)?.epdFile = epdFile
@@ -51,8 +62,8 @@ final class NuguCentralManager {
 
         NuguLocationManager.shared.startUpdatingLocation()
         
-        /// Set Last WakeUp Keyword
-        /// If you don't want to use saved wakeup-word, don't need to be implemented
+        // Set Last WakeUp Keyword
+        // If you don't want to use saved wakeup-word, don't need to be implemented
         setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
         
         // local tts player
@@ -276,17 +287,16 @@ extension NuguCentralManager {
         DispatchQueue.main.async { [weak self] in
             // Should check application state, because iOS audio input can not be start using in background state
             guard UIApplication.shared.applicationState == .active else { return }
-            switch UserDefaults.Standard.useWakeUpDetector {
-            case true:
-                self?.startWakeUpDetector(completion: { (result) in
-                    switch result {
-                    case .success: return
-                    case .failure(let error):
-                        log.debug("Failed to start WakeUp-Detector with reason: \(error)")
-                    }
-                })
-            case false:
+            
+            guard UserDefaults.Standard.useWakeUpDetector else {
                 self?.stopWakeUpDetector()
+                return
+            }
+            
+            self?.startWakeUpDetector { (result) in
+                if case let .failure(error) = result {
+                    log.debug("Failed to start WakeUp-Detector with reason: \(error)")
+                }
             }
         }
     }
@@ -340,15 +350,31 @@ extension NuguCentralManager {
     }
 }
 
-// MARK: - FocusDelegate
+// MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
+    func nuguClientRequestAccessToken() -> String? {
+        return UserDefaults.Standard.accessToken
+    }
+    
     func nuguClientWillRequireAudioSession() -> Bool {
         return NuguAudioSessionManager.shared.updateAudioSession()
     }
     
     func nuguClientDidReleaseAudioSession() {
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
+    }
+    
+    func nuguClientConnectionStatusChanged(status: NetworkStatus) {
+        networkStatus = status
+    }
+    
+    func nuguClientWillOpenInputSource() {
+        inputStatus = true
+    }
+    
+    func nuguClientDidCloseInputSource() {
+        inputStatus = false
     }
 }
 
@@ -357,14 +383,6 @@ extension NuguCentralManager: NuguClientDelegate {
 extension NuguCentralManager: LocationAgentDelegate {
     func locationAgentRequestLocationInfo() -> LocationInfo? {
         return NuguLocationManager.shared.cachedLocationInfo
-    }
-}
-
-// MARK: - AuthorizationStoreDelegate
-
-extension NuguCentralManager: AuthorizationStoreDelegate {
-    func authorizationStoreRequestAccessToken() -> String? {
-        return UserDefaults.Standard.accessToken
     }
 }
 
@@ -381,4 +399,9 @@ extension NuguCentralManager: SystemAgentDelegate {
             handleAuthError()
         }
     }
+}
+
+extension Notification.Name {
+    static let nuguClientInputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
+    static let nuguClientNetworkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")
 }
