@@ -1,6 +1,6 @@
 //
 //  TextAgentState.swift
-//  NuguInterface
+//  NuguAgents
 //
 //  Created by MinChul Lee on 2019/07/19.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

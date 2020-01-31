@@ -1096,6 +1096,39 @@
 			path = WakeUpDetectable;
 			sourceTree = "<group>";
 		};
+		1F9C5B6823E42D740086CC04 /* CapabilityAgents */ = {
+			isa = PBXGroup;
+			children = (
+				1FFFF32C2375707000C9A177 /* Extension */,
+				1FFFF3312375707000C9A177 /* Speaker */,
+				1FFFF3372375707000C9A177 /* AudioPlayer */,
+				1FFFF3422375707000C9A177 /* AutomaticSpeechRecognition */,
+				1FFFF34A2375707000C9A177 /* System */,
+				1FFFF34F2375707000C9A177 /* TextToSpeech */,
+				1FFFF3542375707000C9A177 /* Display */,
+				1FFFF3592375707000C9A177 /* Text */,
+				1FFFF3402375707000C9A177 /* Location */,
+			);
+			path = CapabilityAgents;
+			sourceTree = "<group>";
+		};
+		1F9C5B6923E42F660086CC04 /* PropertyWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				73454FBC2382C1E50073AF48 /* Publish.swift */,
+				1FFFF3272375707000C9A177 /* Atomic.swift */,
+			);
+			path = PropertyWrappers;
+			sourceTree = "<group>";
+		};
+		1F9C5B6A23E431330086CC04 /* PropertyWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				1FFFF4CF237672F100C9A177 /* UserDefaultsWrapper.swift */,
+			);
+			path = PropertyWrappers;
+			sourceTree = "<group>";
+		};
 		1FD1CFD523A388570000FB8C /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1483,6 +1516,7 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF30C2375707000C9A177 /* Core */,
+				1F9C5B6923E42F660086CC04 /* PropertyWrappers */,
 				1FFFF3202375707000C9A177 /* Extension */,
 				1FFFF3252375707000C9A177 /* Util */,
 				1FFFF3282375707000C9A177 /* Business */,
@@ -1570,8 +1604,6 @@
 			isa = PBXGroup;
 			children = (
 				7303C68923C5C00F00610343 /* BoundStreams.swift */,
-				73454FBC2382C1E50073AF48 /* Publish.swift */,
-				1FFFF3272375707000C9A177 /* Atomic.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1596,7 +1628,7 @@
 			path = Context;
 			sourceTree = "<group>";
 		};
-		1FFFF32C2375707000C9A177 /* ExtensionAgent */ = {
+		1FFFF32C2375707000C9A177 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
 				1FFFF32E2375707000C9A177 /* ExtensionAgent.swift */,
@@ -1604,7 +1636,7 @@
 				1FFFF32D2375707000C9A177 /* ExtensionAgent+Event.swift */,
 				1FFFF32F2375707000C9A177 /* ExtensionAgentItem.swift */,
 			);
-			path = ExtensionAgent;
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		1FFFF3312375707000C9A177 /* Speaker */ = {
@@ -1985,6 +2017,7 @@
 				1FFFF4C3237672F100C9A177 /* Network */,
 				1FFFF4C5237672F100C9A177 /* Const */,
 				1FFFF4CD237672F100C9A177 /* Store */,
+				1F9C5B6A23E431330086CC04 /* PropertyWrappers */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -2099,7 +2132,6 @@
 		1FFFF4CD237672F100C9A177 /* Store */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF4CF237672F100C9A177 /* UserDefaultsWrapper.swift */,
 				1FFFF4CE237672F100C9A177 /* UserDefaults+Romaine.swift */,
 				1FFFF4D0237672F100C9A177 /* UserDefaults+Standard.swift */,
 			);
@@ -2223,16 +2255,8 @@
 		73152FA623E0411200F843C3 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1F9C5B6823E42D740086CC04 /* CapabilityAgents */,
 				73152FE123E047F200F843C3 /* Extension */,
-				1FFFF32C2375707000C9A177 /* ExtensionAgent */,
-				1FFFF3312375707000C9A177 /* Speaker */,
-				1FFFF3372375707000C9A177 /* AudioPlayer */,
-				1FFFF3422375707000C9A177 /* AutomaticSpeechRecognition */,
-				1FFFF34A2375707000C9A177 /* System */,
-				1FFFF34F2375707000C9A177 /* TextToSpeech */,
-				1FFFF3542375707000C9A177 /* Display */,
-				1FFFF3592375707000C9A177 /* Text */,
-				1FFFF3402375707000C9A177 /* Location */,
 				73152FDD23E045AB00F843C3 /* Util */,
 				73152FDB23E0451900F843C3 /* NuguAgents.swift */,
 			);

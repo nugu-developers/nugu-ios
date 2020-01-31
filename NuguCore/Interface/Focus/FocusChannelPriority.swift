@@ -1,6 +1,6 @@
 //
 //  FocusChannelPriority.swift
-//  NuguInterface
+//  NuguCore
 //
 //  Created by MinChul Lee on 11/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
