@@ -1,0 +1,8 @@
+language: swift
+osx_image: xcode11.3
+xcode_project: nugu-ios.xcodeproj
+xcode_scheme: SampleApp
+xcode_destination: platform=iOS Simulator,OS=13.3,name=iPhone 11
+
+before_install:
+   - carthage update --platform iOS
