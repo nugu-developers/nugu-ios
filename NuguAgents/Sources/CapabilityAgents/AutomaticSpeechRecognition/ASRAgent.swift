@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import JadeMarble
 
 import RxSwift
 
@@ -34,9 +35,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
-    
-    // WakeUpInfoDelegate(KeenSense)
-    public weak var wakeUpInfoDelegate: WakeUpInfoDelegate?
     
     // Private
     private let contextManager: ContextManageable
@@ -178,7 +176,7 @@ public extension ASRAgent {
         asrDelegates.remove(delegate)
     }
     
-    func startRecognition() {
+    func startRecognition(initiator: ASRInitiator = .user) {
         log.debug("")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = self.audioStream.makeAudioStreamReader()
@@ -197,7 +195,8 @@ public extension ASRAgent {
                 self.asrRequest = ASRRequest(
                     contextPayload: contextPayload,
                     reader: reader,
-                    dialogRequestId: TimeUUID().hexString
+                    dialogRequestId: TimeUUID().hexString,
+                    initiator: initiator
                 )
                 
                 self.focusManager.requestFocus(channelDelegate: self)
@@ -455,63 +454,65 @@ private extension ASRAgent {
 
 private extension ASRAgent {
     func sendRequestEvent(asrRequest: ASRRequest, completion: ((Result<Data, Error>) -> Void)? = nil) {
-        // TODO: 추후 server epd 구현되면 활성화
-//        let wakeUpInfo: (Data, Int)?
-//        if asrRequest.initiator == .wakeword {
-//            wakeUpInfo = wakeUpInfoDelegate?.requestWakeUpInfo()
-//        } else {
-//            wakeUpInfo = nil
-//        }
-//
-//        var eventWakeUpInfo: ASRAgent.Event.WakeUpInfo? {
-//            guard let (data, padding) = wakeUpInfo else {
-//                return nil
-//            }
-//
-//            /**
-//             KeywordDetector's use 16k mono (bit depth: 16).
-//             so, You can calculate sample count by (dataCount / 2)
-//             */
-//            let totalFrameCount = data.count / 2
-//            let paddingFrameCount = padding / 2
-//            return Event.WakeUpInfo(start: 0, end: totalFrameCount - paddingFrameCount, detection: totalFrameCount)
-//        }
-//        let eventTypeInfo = Event.TypeInfo.recognize(wakeUpInfo: eventWakeUpInfo)
+        var wakeUpInfo: (Data, Int)? {
+            guard case let .wakeUpKeyword(data, padding) = asrRequest.initiator else { return nil }
+            
+            return (data, padding)
+        }
         
-        let eventTypeInfo = Event.TypeInfo.recognize(wakeUpInfo: nil)
+        var eventWakeUpInfo: ASRAgent.Event.WakeUpInfo? {
+            guard let (data, padding) = wakeUpInfo else {
+                return nil
+            }
+
+            /**
+             KeywordDetector use 16k mono (bit depth: 16).
+             so, You can calculate sample count by (dataCount / 2)
+             */
+            let totalFrameCount = data.count / 2
+            let paddingFrameCount = padding / 2
+            return Event.WakeUpInfo(start: 0, end: totalFrameCount - paddingFrameCount, detection: totalFrameCount)
+        }
+        let eventTypeInfo = Event.TypeInfo.recognize(wakeUpInfo: eventWakeUpInfo)
+        
         sendEvent(
-            Event(typeInfo: eventTypeInfo, encoding: asrEncoding, expectSpeech: currentExpectSpeech),
+            Event(
+                typeInfo: eventTypeInfo,
+                encoding: asrEncoding,
+                expectSpeech: currentExpectSpeech
+            ),
             contextPayload: asrRequest.contextPayload,
             dialogRequestId: asrRequest.dialogRequestId,
             messageId: TimeUUID().hexString,
             completion: completion
         )
 
-        // TODO: 추후 server epd 구현되면 활성화
         // send wake up voice data
-//        if let (data, _) = wakeUpInfo {
-//            if let speexData = try? SpeexEncoder(sampleRate: 16000, inputType: .linearPCM16).encode(data: data) {
-//                let attachmentHeader = UpstreamHeader(
-//                    namespace: capabilityAgentProperty.name,
-//                    name: "Recognize",
-//                    version: capabilityAgentProperty.version,
-//                    dialogRequestId: asrRequest.dialogRequestId
-//                )
-//
-//                let attachment = UpstreamAttachment(header: attachmentHeader, content: speexData, seq: attachmentSeq, isEnd: false)
-//                messageSender.send(upstreamAttachment: attachment)
-//
-//                #if DEBUG
-//                let wakeUpFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("wakeUpVoice.speex")
-//                do {
-//                    try speexData.write(to: wakeUpFilename)
-//                    log.debug("wake up voice file: \(wakeUpFilename)")
-//                } catch {
-//                    log.error("file write error: \(error)")
-//                }
-//                #endif
-//            }
-//        }
+        if let (data, _) = wakeUpInfo {
+            if let speexData = try? SpeexEncoder(sampleRate: 16000, inputType: .linearPcm16).encode(data: data) {
+                let attachmentHeader = UpstreamHeader(
+                    namespace: capabilityAgentProperty.name,
+                    name: "Recognize",
+                    version: capabilityAgentProperty.version,
+                    dialogRequestId: asrRequest.dialogRequestId,
+                    messageId: TimeUUID().hexString
+                )
+                
+                let attachment = UpstreamAttachment(header: attachmentHeader, content: speexData, seq: attachmentSeq, isEnd: false)
+                upstreamDataSender.send(upstreamAttachment: attachment, completion: nil, resultHandler: nil)
+                self.attachmentSeq += 1
+                
+                #if DEBUG
+                let wakeUpFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("wakeUpVoice.speex")
+                do {
+                    try speexData.write(to: wakeUpFilename)
+                    log.debug("wake up voice file: \(wakeUpFilename)")
+                } catch {
+                    log.error("file write error: \(error)")
+                }
+                #endif
+            }
+        }
     }
     
     func sendEvent(event: ASRAgent.Event.TypeInfo) {
@@ -521,7 +522,11 @@ private extension ASRAgent {
         }
         
         sendEvent(
-            Event(typeInfo: event, encoding: asrEncoding, expectSpeech: currentExpectSpeech),
+            Event(
+                typeInfo: event,
+                encoding: asrEncoding,
+                expectSpeech: currentExpectSpeech
+            ),
             dialogRequestId: asrRequest.dialogRequestId,
             messageId: TimeUUID().hexString
         )

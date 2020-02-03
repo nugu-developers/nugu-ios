@@ -32,9 +32,6 @@ public class TycheKeywordDetectorEngine: NSObject {
     private var kwdWorkItem: DispatchWorkItem?
     private var engineHandle: WakeupHandle?
     
-    /// User's voice data of speaking keyword
-    private var detectedData: DetectedData?
-    
     /// Window buffer for user's voice. This will help extract certain section of speaking keyword
     private var detectingData = ShiftingData(capacity: Int(KeywordDetectorConst.sampleRate*5*2))
     
@@ -158,7 +155,7 @@ extension TycheKeywordDetectorEngine {
 
 // MARK: - ETC
 extension TycheKeywordDetectorEngine {
-    private func extractDetectedData() {
+    private func extractDetectedData() -> (data: Data, padding: Int) {
         let startTime = Int(Wakeup_GetStartTime(engineHandle))
         let endTime = Int(Wakeup_GetEndTime(engineHandle))
         let paddingTime = Int(Wakeup_GetDelayTime(engineHandle))
@@ -171,7 +168,7 @@ extension TycheKeywordDetectorEngine {
         
         let size = (endIndex - startIndex) + paddingSize
         let detectedRange = (detectingData.count - size)..<detectingData.count
-        detectedData = DetectedData(data: detectingData.subdata(in: detectedRange), padding: paddingSize)
+        let detectedData = detectingData.subdata(in: detectedRange)
         
         // reset buffers
         detectingData.removeAll()
@@ -179,14 +176,14 @@ extension TycheKeywordDetectorEngine {
         #if DEBUG
         let filename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("detected.raw")
         do {
-            log.debug(filename)
-            if let detectedData = detectedData {
-                try detectedData.data.write(to: filename)
-            }
+            log.debug("detected filenlame: \(filename)")
+            try detectedData.write(to: filename)
         } catch {
             log.debug(error)
         }
         #endif
+        
+        return (detectedData, paddingSize)
     }
 }
 
@@ -216,8 +213,8 @@ extension TycheKeywordDetectorEngine: StreamDelegate {
                 log.debug("kwd hasBytesAvailable detected")
                 stop()
 
-                extractDetectedData()
-                self.delegate?.tycheKeywordDetectorEngineDidDetect()
+                let detectedData = extractDetectedData()
+                self.delegate?.tycheKeywordDetectorEngineDidDetect(data: detectedData.data, padding: detectedData.padding)
             }
             
         case .endEncountered:

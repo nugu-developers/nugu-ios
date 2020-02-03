@@ -105,7 +105,3 @@ public enum KeywordDetectorError: Error {
     case noDataAvailable
     case alreadyActivated
 }
-
-public enum SpeexError: Error {
-    case encodeFailed
-}

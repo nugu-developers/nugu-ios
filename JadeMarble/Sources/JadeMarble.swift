@@ -86,3 +86,9 @@ public enum EndPointDetectorError: Error, LocalizedError {
     case initFailed
     case alreadyRunning
 }
+
+// MARK: - SpeexError
+
+enum SpeexError: Error {
+    case encodeFailed
+}
