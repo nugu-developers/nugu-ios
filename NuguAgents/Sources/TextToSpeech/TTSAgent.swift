@@ -37,7 +37,6 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
     
     // Private
     private let playSyncManager: PlaySyncManageable
-    private let mediaPlayerFactory: MediaPlayerFactory
     
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
@@ -80,7 +79,6 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
     public init(
         focusManager: FocusManageable,
         channelPriority: FocusChannelPriority,
-        mediaPlayerFactory: MediaPlayerFactory,
         upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
@@ -90,7 +88,6 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
         
         self.focusManager = focusManager
         self.channelPriority = channelPriority
-        self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         
@@ -365,7 +362,7 @@ private extension TTSAgent {
                 
                 self.stopSilently()
                 
-                let mediaPlayer = self.mediaPlayerFactory.makeOpusPlayer()
+                let mediaPlayer = OpusPlayer()
                 mediaPlayer.delegate = self
                 mediaPlayer.isMuted = self.playerIsMuted
                 

@@ -252,12 +252,12 @@ private extension NuguCentralManager {
 // MARK: - Internal (ASR)
 
 extension NuguCentralManager {
-    func startRecognize(completion: ((Result<Void, Error>) -> Void)? = nil) {
+    func startRecognize(initiator: ASRInitiator, completion: ((Result<Void, Error>) -> Void)? = nil) {
         NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.client.getComponent(ASRAgentProtocol.self)?.startRecognition()
+                self.client.getComponent(ASRAgentProtocol.self)?.startRecognition(initiator: initiator)
             })
             completion?(result)
         }
@@ -299,14 +299,14 @@ extension NuguCentralManager {
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.client.wakeUpDetector?.start()
+                self.client.getComponent(KeywordDetector.self)?.start()
             })
             completion?(result)
         }
     }
     
     func stopWakeUpDetector() {
-        client.wakeUpDetector?.stop()
+        client.getComponent(KeywordDetector.self)?.stop()
     }
     
     func setWakeUpWord(rawValue wakeUpWord: Int) {
@@ -319,7 +319,7 @@ extension NuguCentralManager {
                     return
             }
             
-            client.wakeUpDetector?.keywordSource = KeywordSource(
+            client.getComponent(KeywordDetector.self)?.keywordSource = KeywordSource(
                 keyword: .aria,
                 netFileUrl: netFile,
                 searchFileUrl: searchFile
@@ -332,7 +332,7 @@ extension NuguCentralManager {
                     return
             }
             
-            client.wakeUpDetector?.keywordSource = KeywordSource(
+            client.getComponent(KeywordDetector.self)?.keywordSource = KeywordSource(
                 keyword: .tinkerbell,
                 netFileUrl: netFile,
                 searchFileUrl: searchFile

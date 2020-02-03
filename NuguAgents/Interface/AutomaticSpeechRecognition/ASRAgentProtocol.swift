@@ -33,7 +33,7 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
     /// This function asks the `ASRAgent` to send a Recognize Event to Server and start streaming from `AudioStream`, which transitions it to the `recognizing` state.
     ///
     /// This function can be called in `idle` and `expectingSpeech` state.
-    func startRecognition()
+    func startRecognition(initiator: ASRInitiator)
     
     /// This function forces the `ASRAgent` back to the `idle` state.
     ///

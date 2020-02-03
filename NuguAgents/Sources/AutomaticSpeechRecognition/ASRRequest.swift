@@ -1,6 +1,6 @@
 //
 //  ASRRequest.swift
-//  NuguCore
+//  NuguAgents
 //
 //  Created by MinChul Lee on 13/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -26,4 +26,11 @@ struct ASRRequest {
     let contextPayload: ContextPayload
     let reader: AudioStreamReadable
     let dialogRequestId: String
+    let initiator: ASRInitiator
+}
+
+public enum ASRInitiator {
+    case wakeUpKeyword(data: Data, padding: Int)
+    case user
+    case senario
 }
