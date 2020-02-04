@@ -1,6 +1,6 @@
 //
 //  WakeUpDetectorProtocol.swift
-//  NuguInterface
+//  NuguClientKit
 //
 //  Created by DCs-OfficeMBP on 14/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

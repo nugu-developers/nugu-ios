@@ -1,6 +1,6 @@
 //
 //  LocationAgentProtocol.swift
-//  NuguInterface
+//  NuguAgents
 //
 //  Created by yonghoonKwon on 2019/10/30.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

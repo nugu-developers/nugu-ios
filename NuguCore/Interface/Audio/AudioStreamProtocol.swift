@@ -1,6 +1,6 @@
 //
 //  AudioStreamProtocol.swift
-//  NuguInterface
+//  NuguCore
 //
 //  Created by DCs-OfficeMBP on 03/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

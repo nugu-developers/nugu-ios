@@ -1,6 +1,6 @@
 //
 //  DisplayListView.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by jin kim on 14/08/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
