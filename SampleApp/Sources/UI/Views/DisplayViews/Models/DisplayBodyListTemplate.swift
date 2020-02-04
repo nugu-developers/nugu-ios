@@ -25,6 +25,9 @@ struct DisplayBodyListTemplate: Decodable {
     let title: DisplayCommonTemplate.Common.Title
     let background: DisplayCommonTemplate.Common.Background?
     let badgeNumber: Bool?
+    let badgeNumberMode: DisplayCommonTemplate.Common.BadgeNumberMode?
+    let focusable: Bool?
+    let anchorItemToken: String?
     let listItems: [Item]
     let caption: DisplayCommonTemplate.Common.Text?
 

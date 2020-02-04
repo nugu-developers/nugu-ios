@@ -25,13 +25,16 @@ struct DisplayListTemplate: Decodable {
     let title: DisplayCommonTemplate.Common.Title
     let background: DisplayCommonTemplate.Common.Background?
     let badgeNumber: Bool?
+    let badgeNumberMode: DisplayCommonTemplate.Common.BadgeNumberMode?
+    let focusable: Bool?
+    let anchorItemToken: String?
     let listItems: [Item]
     
     struct Item: Decodable {
         let token: String
         let image: DisplayCommonTemplate.Common.Image?
         let icon: DisplayCommonTemplate.Common.Image?
-        let header: DisplayCommonTemplate.Common.Text
+        let header: DisplayCommonTemplate.Common.Text?
         let body: DisplayCommonTemplate.Common.Text?
         let footer: DisplayCommonTemplate.Common.Text?
     }

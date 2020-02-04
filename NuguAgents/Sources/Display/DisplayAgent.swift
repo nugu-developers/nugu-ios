@@ -26,7 +26,7 @@ import RxSwift
 
 final public class DisplayAgent: DisplayAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.1")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.2")
     
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
@@ -152,6 +152,8 @@ extension DisplayAgent: PlaySyncDelegate {
     public func playSyncDuration() -> PlaySyncDuration {
         var playSyncDuration: PlaySyncDuration {
             switch currentItem?.duration {
+            case .none:
+                return .none
             case .short:
                 return .short
             case .mid:

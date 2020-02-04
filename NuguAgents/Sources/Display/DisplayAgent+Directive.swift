@@ -46,6 +46,10 @@ extension DisplayAgent {
         case weather4
         case weather5
         case fullImage
+        case score1
+        case score2
+        case searchList1
+        case searchList2
         case customTemplate
     }
 }
@@ -77,6 +81,10 @@ extension DisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         case .weather4: return "Weather4"
         case .weather5: return "Weather5"
         case .fullImage: return "FullImage"
+        case .score1: return "Score1"
+        case .score2: return "Score2"
+        case .searchList1: return "SearchList1"
+        case .searchList2: return "SearchList2"
         case .customTemplate: return "CustomTemplate"
         }
     }
