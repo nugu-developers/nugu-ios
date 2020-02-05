@@ -454,10 +454,10 @@ private extension ASRAgent {
 
 private extension ASRAgent {
     func sendRequestEvent(asrRequest: ASRRequest, completion: ((Result<Data, Error>) -> Void)? = nil) {
-        var wakeUpInfo: (Data, Int)? {
+        var wakeUpInfo: (data: Data, padding: Int)? {
             guard case let .wakeUpKeyword(data, padding) = asrRequest.initiator else { return nil }
             
-            return (data, padding)
+            return (data: data, padding: padding)
         }
         
         var eventWakeUpInfo: ASRAgent.Event.WakeUpInfo? {
@@ -488,8 +488,8 @@ private extension ASRAgent {
         )
 
         // send wake up voice data
-        if let (data, _) = wakeUpInfo {
-            if let speexData = try? SpeexEncoder(sampleRate: 16000, inputType: .linearPcm16).encode(data: data) {
+        if let wakeUpData = wakeUpInfo?.data {
+            if let speexData = try? SpeexEncoder(sampleRate: 16000, inputType: .linearPcm16).encode(data: wakeUpData) {
                 let attachmentHeader = UpstreamHeader(
                     namespace: capabilityAgentProperty.name,
                     name: "Recognize",

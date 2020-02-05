@@ -101,6 +101,15 @@ public class NuguClient {
             
             return directiveSequencer
         }
+        
+        coreContainer.register(SystemAgentProtocol.self) { (resolver) -> SystemAgent in
+            return SystemAgent(
+                contextManager: resolver.resolve(ContextManageable.self)!,
+                networkManager: resolver.resolve(NetworkManageable.self)!,
+                upstreamDataSender: resolver.resolve(StreamDataRoutable.self)!,
+                directiveSequencer: resolver.resolve(DirectiveSequenceable.self)!
+            )
+        }
     }
     
     private func registerDialogStateAggregator() {
@@ -129,7 +138,6 @@ public class NuguClient {
             let contextManager = coreContainer.resolve(ContextManageable.self),
             let sharedAudioStream = coreContainer.resolve(AudioStreamable.self),
             let playSyncManager = coreContainer.resolve(PlaySyncManageable.self),
-            let networkManager = coreContainer.resolve(NetworkManageable.self),
             let directiveSequencer = coreContainer.resolve(DirectiveSequenceable.self) else {
                 return
         }
@@ -207,15 +215,6 @@ public class NuguClient {
         
         addComponent(LocationAgentProtocol.self) { _ in
             return LocationAgent(contextManager: contextManager)
-        }
-        
-        addComponent(SystemAgentProtocol.self) { _ in
-            return SystemAgent(
-                contextManager: contextManager,
-                networkManager: networkManager,
-                upstreamDataSender: streamDataRouter,
-                directiveSequencer: directiveSequencer
-            )
         }
     }
 }
