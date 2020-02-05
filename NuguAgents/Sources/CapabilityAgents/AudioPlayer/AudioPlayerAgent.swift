@@ -47,7 +47,6 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
     public let audioPlayerPauseTimeout: DispatchTimeInterval
      
     // Private
-    private let mediaPlayerFactory: MediaPlayerFactory
     private let playSyncManager: PlaySyncManageable
     private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
@@ -116,7 +115,6 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
     public init(
         focusManager: FocusManageable,
         channelPriority: FocusChannelPriority,
-        mediaPlayerFactory: MediaPlayerFactory,
         upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
@@ -127,7 +125,6 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
         
         self.focusManager = focusManager
         self.channelPriority = channelPriority
-        self.mediaPlayerFactory = mediaPlayerFactory
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.audioPlayerPauseTimeout = audioPlayerPauseTimeout
@@ -594,7 +591,7 @@ private extension AudioPlayerAgent {
 private extension AudioPlayerAgent {
     /// set mediaplayer
     func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) throws {
-        let mediaPlayer = self.mediaPlayerFactory.makeMediaPlayer()
+        let mediaPlayer = MediaPlayer()
         mediaPlayer.delegate = self
         
         self.currentMedia = AudioPlayerAgentMedia(

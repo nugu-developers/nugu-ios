@@ -26,4 +26,11 @@ struct ASRRequest {
     let contextPayload: ContextPayload
     let reader: AudioStreamReadable
     let dialogRequestId: String
+    let initiator: ASRInitiator
+}
+
+public enum ASRInitiator {
+    case wakeUpKeyword(data: Data, padding: Int)
+    case user
+    case senario
 }
