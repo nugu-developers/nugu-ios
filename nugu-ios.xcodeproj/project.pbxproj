@@ -508,7 +508,6 @@
 
 /* Begin PBXFileReference section */
 		1F1008BB237688E200D90FEE /* NuguLoginKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguLoginKit.podspec; sourceTree = "<group>"; };
-		1F1008BC237688E200D90FEE /* NuguInterface.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguInterface.podspec; sourceTree = "<group>"; };
 		1F1008BD237688E200D90FEE /* NuguClientKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguClientKit.podspec; sourceTree = "<group>"; };
 		1F1008BE237688E200D90FEE /* NuguCore.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguCore.podspec; sourceTree = "<group>"; };
 		1F1008BF237688E300D90FEE /* KeenSense.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = KeenSense.podspec; sourceTree = "<group>"; };
@@ -536,6 +535,7 @@
 		1F2E803D2397A27300569C59 /* WakeUpDetectorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorState.swift; sourceTree = "<group>"; };
 		1F2E803F2397A2E500569C59 /* WakeUpDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WakeUpDetectorDelegate.swift; sourceTree = "<group>"; };
 		1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguOAuthApi.swift; sourceTree = "<group>"; };
+		1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguAgents.podspec; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -1019,7 +1019,7 @@
 		1F100951237A887A00D90FEE /* Cocoapods */ = {
 			isa = PBXGroup;
 			children = (
-				1F1008BC237688E200D90FEE /* NuguInterface.podspec */,
+				1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */,
 				1F1008BE237688E200D90FEE /* NuguCore.podspec */,
 				1F1008BD237688E200D90FEE /* NuguClientKit.podspec */,
 				1F1008BB237688E200D90FEE /* NuguLoginKit.podspec */,
