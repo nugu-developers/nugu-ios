@@ -34,6 +34,8 @@ public class StreamDataRouter: StreamDataRoutable {
     
     public init(networkManager: NetworkManageable) {
         self.networkManager = networkManager
+        networkManager.add(receiveMessageDelegate: self)
+        
         add(preprocessor: downstreamDataTimeoutPreprocessor)
     }
     

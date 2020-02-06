@@ -2,7 +2,7 @@
 //  AudioStreamProtocol.swift
 //  NuguCore
 //
-//  Created by DCs-OfficeMBP on 03/05/2019.
+//  Created by childc on 03/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,27 +21,20 @@
 import Foundation
 import AVFoundation
 
-/// <#Description#>
+/**
+ Audio Stream Provide reader and writer.
+ */
 public protocol AudioStreamable {
-    /// <#Description#>
     func makeAudioStreamWriter() -> AudioStreamWritable
-    /// <#Description#>
     func makeAudioStreamReader() -> AudioStreamReadable
 }
 
-/// <#Description#>
 public protocol AudioStreamReadable {
-    /// <#Description#>
-    /// - Parameter complete: <#complete description#>
     func read(complete: @escaping (Result<AVAudioPCMBuffer, Error>) -> Void)
 }
 
-/// <#Description#>
 public protocol AudioStreamWritable {
-    /// <#Description#>
-    /// - Parameter element: <#element description#>
     func write(_ element: AVAudioPCMBuffer) throws
-    /// <#Description#>
     func finish()
 }
 
