@@ -5,4 +5,8 @@ xcode_scheme: NuguTests
 xcode_destination: platform=iOS Simulator,OS=13.3,name=iPhone 11
 
 before_install:
-   - carthage update --platform iOS
+   - carthage update --cache-builds --platform iOS
+
+script:
+  - xcodebuild -project nugu-ios.xcodeproj -scheme SampleApp -sdk iphonesimulator
+  - xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -sdk iphonesimulator
