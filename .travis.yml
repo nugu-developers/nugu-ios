@@ -1,12 +1,9 @@
 language: swift
 osx_image: xcode11.3
-xcode_project: nugu-ios.xcodeproj
-xcode_scheme: NuguTests
-xcode_destination: platform=iOS Simulator,OS=13.3,name=iPhone 11
 
 before_install:
    - carthage update --cache-builds --platform iOS
 
 script:
   - xcodebuild -project nugu-ios.xcodeproj -scheme SampleApp -sdk iphonesimulator
-  - xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -sdk iphonesimulator
+  - xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -destination 'platform=iOS Simulator,name=iPhone 11,OS=13.0'
