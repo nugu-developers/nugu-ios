@@ -17,7 +17,7 @@ protocol DisplayControllable {
 }
 
 // MARK: - Optional
-
+// DisplayAgent in iOS SampleApp does not support focus by default.
 extension DisplayControllable {
     func focusedItemToken() -> String? {
         return nil
