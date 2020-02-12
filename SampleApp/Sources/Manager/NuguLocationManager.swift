@@ -20,7 +20,7 @@
 
 import CoreLocation
 
-import NuguInterface
+import NuguAgents
 
 final class NuguLocationManager: NSObject {
     static let shared = NuguLocationManager()

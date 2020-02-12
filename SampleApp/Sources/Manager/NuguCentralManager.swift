@@ -1,6 +1,6 @@
 //
 //  NuguCentralManager.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by yonghoonKwon on 25/07/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,7 +20,8 @@
 
 import UIKit
 
-import NuguInterface
+import NuguCore
+import NuguAgents
 import NuguClientKit
 import NuguLoginKit
 
@@ -37,9 +38,20 @@ final class NuguCentralManager {
         }
     }()
     
+    var inputStatus: Bool = false {
+        didSet {
+            NotificationCenter.default.post(name: .nuguClientInputStatus, object: nil, userInfo: ["status": inputStatus])
+        }
+    }
+    
+    var networkStatus: NetworkStatus = .disconnected(error: nil) {
+        didSet {
+            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
+        }
+    }
+    
     private init() {
         client.delegate = self
-        client.getComponent(AuthorizationStoreable.self)?.delegate = self
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
             client.getComponent(ASRAgentProtocol.self)?.epdFile = epdFile
@@ -50,8 +62,8 @@ final class NuguCentralManager {
 
         NuguLocationManager.shared.startUpdatingLocation()
         
-        /// Set Last WakeUp Keyword
-        /// If you don't want to use saved wakeup-word, don't need to be implemented
+        // Set Last WakeUp Keyword
+        // If you don't want to use saved wakeup-word, don't need to be implemented
         setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
         
         // local tts player
@@ -197,9 +209,9 @@ private extension NuguCentralManager {
                 clientSecret: clientSecret,
                 redirectUri: redirectUri
             ),
-            parentViewController: viewController,
-            completion: completion
-        )
+            parentViewController: viewController) { (result) in
+                completion(result.mapError({ $0 as Error }))
+        }
     }
     
     func refreshTokenLogin(refreshToken: String, completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
@@ -210,10 +222,9 @@ private extension NuguCentralManager {
                 return
         }
         
-        oauthClient.authorize(
-            grant: RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken),
-            completion: completion
-        )
+        oauthClient.authorize(grant: RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken)) { (result) in
+                completion(result.mapError({ $0 as Error }))
+        }
     }
     
     func clientCredentialsLogin(completion: @escaping (Result<AuthorizationInfo, Error>) -> Void) {
@@ -224,10 +235,9 @@ private extension NuguCentralManager {
                 return
         }
         
-        oauthClient.authorize(
-            grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret),
-            completion: completion
-        )
+        oauthClient.authorize(grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret)) { (result) in
+            completion(result.mapError({ $0 as Error }))
+        }
     }
     
     func logoutAfterErrorHandling() {
@@ -242,12 +252,12 @@ private extension NuguCentralManager {
 // MARK: - Internal (ASR)
 
 extension NuguCentralManager {
-    func startRecognize(completion: ((Result<Void, Error>) -> Void)? = nil) {
+    func startRecognize(initiator: ASRInitiator, completion: ((Result<Void, Error>) -> Void)? = nil) {
         NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.client.getComponent(ASRAgentProtocol.self)?.startRecognition()
+                self.client.getComponent(ASRAgentProtocol.self)?.startRecognition(initiator: initiator)
             })
             completion?(result)
         }
@@ -270,17 +280,16 @@ extension NuguCentralManager {
         DispatchQueue.main.async { [weak self] in
             // Should check application state, because iOS audio input can not be start using in background state
             guard UIApplication.shared.applicationState == .active else { return }
-            switch UserDefaults.Standard.useWakeUpDetector {
-            case true:
-                self?.startWakeUpDetector(completion: { (result) in
-                    switch result {
-                    case .success: return
-                    case .failure(let error):
-                        log.debug("Failed to start WakeUp-Detector with reason: \(error)")
-                    }
-                })
-            case false:
+            
+            guard UserDefaults.Standard.useWakeUpDetector else {
                 self?.stopWakeUpDetector()
+                return
+            }
+            
+            self?.startWakeUpDetector { (result) in
+                if case let .failure(error) = result {
+                    log.debug("Failed to start WakeUp-Detector with reason: \(error)")
+                }
             }
         }
     }
@@ -290,14 +299,14 @@ extension NuguCentralManager {
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.client.wakeUpDetector?.start()
+                self.client.getComponent(KeywordDetector.self)?.start()
             })
             completion?(result)
         }
     }
     
     func stopWakeUpDetector() {
-        client.wakeUpDetector?.stop()
+        client.getComponent(KeywordDetector.self)?.stop()
     }
     
     func setWakeUpWord(rawValue wakeUpWord: Int) {
@@ -310,7 +319,7 @@ extension NuguCentralManager {
                     return
             }
             
-            client.wakeUpDetector?.keywordSource = KeywordSource(
+            client.getComponent(KeywordDetector.self)?.keywordSource = KeywordSource(
                 keyword: .aria,
                 netFileUrl: netFile,
                 searchFileUrl: searchFile
@@ -323,7 +332,7 @@ extension NuguCentralManager {
                     return
             }
             
-            client.wakeUpDetector?.keywordSource = KeywordSource(
+            client.getComponent(KeywordDetector.self)?.keywordSource = KeywordSource(
                 keyword: .tinkerbell,
                 netFileUrl: netFile,
                 searchFileUrl: searchFile
@@ -334,15 +343,31 @@ extension NuguCentralManager {
     }
 }
 
-// MARK: - FocusDelegate
+// MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
+    func nuguClientRequestAccessToken() -> String? {
+        return UserDefaults.Standard.accessToken
+    }
+    
     func nuguClientWillRequireAudioSession() -> Bool {
         return NuguAudioSessionManager.shared.updateAudioSession()
     }
     
     func nuguClientDidReleaseAudioSession() {
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
+    }
+    
+    func nuguClientConnectionStatusChanged(status: NetworkStatus) {
+        networkStatus = status
+    }
+    
+    func nuguClientWillOpenInputSource() {
+        inputStatus = true
+    }
+    
+    func nuguClientDidCloseInputSource() {
+        inputStatus = false
     }
 }
 
@@ -351,14 +376,6 @@ extension NuguCentralManager: NuguClientDelegate {
 extension NuguCentralManager: LocationAgentDelegate {
     func locationAgentRequestLocationInfo() -> LocationInfo? {
         return NuguLocationManager.shared.cachedLocationInfo
-    }
-}
-
-// MARK: - AuthorizationStoreDelegate
-
-extension NuguCentralManager: AuthorizationStoreDelegate {
-    func authorizationStoreRequestAccessToken() -> String? {
-        return UserDefaults.Standard.accessToken
     }
 }
 
@@ -375,4 +392,9 @@ extension NuguCentralManager: SystemAgentDelegate {
             handleAuthError()
         }
     }
+}
+
+extension Notification.Name {
+    static let nuguClientInputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
+    static let nuguClientNetworkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")
 }

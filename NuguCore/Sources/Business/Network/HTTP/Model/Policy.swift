@@ -20,20 +20,20 @@
 
 import Foundation
 
-struct Policy: Decodable {
-    let serverPolicies: [ServerPolicy]
-    let healthCheckPolicy: HealthCheckPolicy
+public struct Policy: Decodable {
+    public let serverPolicies: [ServerPolicy]
+    public let healthCheckPolicy: HealthCheckPolicy
     
-    struct ServerPolicy: Decodable {
-        let serverPolicyProtocol: String
-        let hostname: String
-        let address: String
-        let port: Int
-        let retryCountLimit: Int
-        let connectionTimeout: Int
-        let charge: String
+    public struct ServerPolicy: Decodable {
+        public let serverPolicyProtocol: String
+        public let hostname: String
+        public let address: String
+        public let port: Int
+        public let retryCountLimit: Int
+        public let connectionTimeout: Int
+        public let charge: String
         
-        enum CodingKeys: String, CodingKey {
+        private enum CodingKeys: String, CodingKey {
             case serverPolicyProtocol = "protocol"
             case hostname
             case address
@@ -43,13 +43,13 @@ struct Policy: Decodable {
         }
     }
     
-    struct HealthCheckPolicy: Decodable {
-        let ttl: Int
-        let ttlMax: Int
-        let beta: Int
-        let retryCountLimit: Int
-        let retryDelay: Int
-        let healthCheckTimeout: Int
-        let accumulationTime: Int
+    public struct HealthCheckPolicy: Decodable {
+        public let ttl: Int
+        public let ttlMax: Int
+        public let beta: Int
+        public let retryCountLimit: Int
+        public let retryDelay: Int
+        public let healthCheckTimeout: Int
+        public let accumulationTime: Int
     }
 }

@@ -20,7 +20,7 @@
 
 import XCTest
 
-@testable import NuguInterface
+@testable import NuguCore
 
 class TimeIntervallicTests: XCTestCase {
     override func setUp() {

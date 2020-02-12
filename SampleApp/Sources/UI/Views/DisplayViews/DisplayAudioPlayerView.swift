@@ -1,6 +1,6 @@
 //
 //  DisplayAudioPlayerView.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by yonghoonKwon on 20/07/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,7 +20,7 @@
 
 import UIKit
 
-import NuguInterface
+import NuguAgents
 
 final class DisplayAudioPlayerView: UIView {
     

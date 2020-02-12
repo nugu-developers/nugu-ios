@@ -80,7 +80,7 @@ extension NuguOAuthApi {
 
 extension NuguOAuthApi {
     @discardableResult
-    func request(completion: ((Result<AuthorizationInfo, Error>) -> Void)?) -> URLSessionDataTask {
+    func request(completion: ((Result<AuthorizationInfo, NuguLoginKitError.APIError>) -> Void)?) -> URLSessionDataTask {
         // URLRequest
         let url = URL(string: self.uri)!
         var urlRequest = URLRequest(url: url)
@@ -105,22 +105,46 @@ extension NuguOAuthApi {
         // Task
         let dataTask = URLSession.shared.dataTask(
             with: urlRequest,
-            completionHandler: { (data, _, error) in
-                if let tokenError = error {
-                    completion?(.failure(tokenError))
-                    return
+            completionHandler: { (data, response, error) in
+                switch (data, response, error) {
+                case (_, _, let error?):
+                    // URLSessionDataTask has error
+                    completion?(.failure(.urlSessionError(error)))
+                case (let data?, let response as HTTPURLResponse, _):
+                    // Validate http-status-code
+                    switch response.statusCode {
+                    case (200..<300):
+                        // Failed parsing
+                        guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
+                            completion?(.failure(.parsingFailed(data)))
+                            break
+                        }
+                        
+                        // Success
+                        completion?(.success(authorizationInfo))
+                    case (300..<400), (400..<500), (500..<600):
+                        guard let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                            // Invalid JSON format
+                            completion?(.failure(.serializationFailed(data)))
+                            break
+                        }
+                        
+                        let error = jsonDictionary["error"] as? String
+                        let description = jsonDictionary["error_description"] as? String
+                        
+                        // Known error format
+                        completion?(.failure(.invalidStatusCode(reason: APIErrorReason(error: error, description: description, urlResponse: response))))
+                    default:
+                        // Unknown http-status-code
+                        completion?(.failure(.invalidStatusCode(reason: APIErrorReason(error: nil, description: nil, urlResponse: response))))
+                    }
+                default:
+                    // No has response
+                    completion?(.failure(.noResponse))
                 }
-                
-                let result = Swift.Result<AuthorizationInfo, Error> {
-                    guard let data = data else { throw ApiError.nilValue(description: "data is nil") }
-                    return try JSONDecoder().decode(AuthorizationInfo.self, from: data)
-                }
-                
-                completion?(result)
         })
         
         dataTask.resume()
-        
         return dataTask
     }
 }

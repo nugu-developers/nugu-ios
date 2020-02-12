@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 struct PlaySyncInfo {
     // TODO: delegate 를 struct 에서 가지고 있지 않도록 구조 수정.
     weak var delegate: PlaySyncDelegate?
@@ -30,7 +28,7 @@ struct PlaySyncInfo {
     let playServiceId: String?
     let playSyncState: PlaySyncState
     let isDisplay: Bool
-    let duration: DisplayTemplate.Duration
+    let duration: PlaySyncDuration
     
     init(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
         self.delegate = delegate

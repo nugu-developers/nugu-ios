@@ -20,19 +20,29 @@
 
 import Foundation
 
-import NuguInterface
+import NuguCore
 
-public typealias NetworkStatus = NuguInterface.NetworkStatus
+public typealias NetworkStatus = NuguCore.NetworkStatus
 
 public protocol NuguClientDelegate: class {
+    // audio session related
     func nuguClientWillRequireAudioSession() -> Bool
     func nuguClientDidReleaseAudioSession()
+    func nuguClientWillOpenInputSource()
+    func nuguClientDidCloseInputSource()
+
+    // nugu server related
     func nuguClientConnectionStatusChanged(status: NetworkStatus)
     func nuguClientDidReceiveMessage(header: [String: String], body: Data)
+    
+    // authorization related
+    func nuguClientRequestAccessToken() -> String?
 }
 
 public extension NuguClientDelegate {
     func nuguClientDidReleaseAudioSession() {}
     func nuguClientConnectionStatusChanged(status: NetworkStatus) {}
     func nuguClientDidReceiveMessage(header: [String: String], body: Data) {}
+    func nuguClientWillOpenInputSource() {}
+    func nuguClientDidCloseInputSource() {}
 }

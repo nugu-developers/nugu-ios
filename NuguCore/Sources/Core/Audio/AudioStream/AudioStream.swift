@@ -21,8 +21,6 @@
 import Foundation
 import AVFoundation
 
-import NuguInterface
-
 public class AudioStream {
     private let buffer: AudioBuffer
     public weak var delegate: AudioStreamDelegate? {

@@ -20,8 +20,10 @@
 
 import Foundation
 
+import NuguCore
+
 public final class ComponentContainer {
-    private var components = [ComponentKey: Any]()
+    private var components: [ComponentKey: Any]
     
     /**
      To put component into the container
@@ -33,6 +35,33 @@ public final class ComponentContainer {
         let key = ComponentKey(protocolType: `protocol`.self, concreateType: Component.self, option: option)
         let component = factory(self)
         components[key] = component
+    }
+    
+    private init(components: [ComponentKey: Any]) {
+        self.components = components
+    }
+    
+    public init() {
+        components = [ComponentKey: Any]()
+    }
+    
+    public func union(_ other: ComponentContainer) -> ComponentContainer {
+        var unionComponents = [ComponentKey: Any]()
+        unionComponents.merge(components, uniquingKeysWith: { $1 })
+        unionComponents.merge(other.components, uniquingKeysWith: { $1 })
+        
+        return ComponentContainer(components: unionComponents)
+    }
+    
+    public func subtract(_ other: ComponentContainer) -> ComponentContainer {
+        var subComponents = [ComponentKey: Any]()
+        subComponents.merge(components, uniquingKeysWith: { $1 })
+        
+        for key in other.components.keys {
+            subComponents.removeValue(forKey: key)
+        }
+        
+        return ComponentContainer(components: subComponents)
     }
 }
 

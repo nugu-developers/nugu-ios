@@ -20,8 +20,6 @@
 
 import Foundation
 
-import NuguInterface
-
 import RxSwift
 
 public class DirectiveSequencer: DirectiveSequenceable {

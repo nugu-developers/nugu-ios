@@ -1,6 +1,6 @@
 //
 //  NuguDisplayPlayerController.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by yonghoonKwon on 02/08/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -21,7 +21,7 @@
 import Foundation
 import MediaPlayer
 
-import NuguInterface
+import NuguAgents
 import NuguClientKit
 
 // NuguClient에서 처리할 수 있을지 검토예정

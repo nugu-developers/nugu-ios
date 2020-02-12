@@ -20,7 +20,7 @@
 
 import Foundation
 
-import NuguInterface
+import NuguAgents
 
 /// An delegate that appllication can extend to register to observe `DialogStateAggregator` state changes.
 public protocol DialogStateDelegate: class {
