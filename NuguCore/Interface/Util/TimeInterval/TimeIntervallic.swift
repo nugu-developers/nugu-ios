@@ -1,6 +1,6 @@
 //
 //  TimeIntervallic.swift
-//  NuguInterface
+//  NuguCore
 //
 //  Created by yonghoonKwon on 2019/11/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

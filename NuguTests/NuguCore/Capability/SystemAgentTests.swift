@@ -21,7 +21,7 @@
 
 import XCTest
 
-@testable import NuguCore
+@testable import NuguAgents
 
 class SystemAgentTests: XCTestCase {
     

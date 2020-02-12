@@ -1,6 +1,6 @@
 //
 //  KeyedDecodingContainerExtension.swift
-//  NuguCore
+//  NuguAgents
 //
 //  Created by DCs-OfficeMBP on 28/11/2018.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

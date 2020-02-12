@@ -25,29 +25,30 @@ import NuguAgents
 
 public class NuguClient {
     private let coreContainer: ComponentContainer
-    private let agentContainer: ComponentContainer
+    private let additionalContainer: ComponentContainer
     public weak var delegate: NuguClientDelegate?
-    
-    public let wakeUpDetector: KeywordDetector?
     
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
     
-    public init(wakeUpDetector: KeywordDetector? = KeywordDetector()) {
-        self.wakeUpDetector = wakeUpDetector
-        
+    public init() {
         coreContainer = ComponentContainer()
-        agentContainer = ComponentContainer()
+        additionalContainer = ComponentContainer()
         
         // Core Components
         registerCoreComponents()
+        
+        // dialog state aggregator
+        registerDialogStateAggregator()
+        
+        // Keyword Detector
+        registerKeywordDetector()
         
         // Capability Agents
         registerBuiltInAgents()
         
         // setup additional roles
         setupAudioStream()
-        setupWakeUpDetectorDependency()
         setupAuthorizationStore()
     }
     
@@ -55,7 +56,6 @@ public class NuguClient {
         coreContainer.register(ContextManageable.self) { _ in ContextManager() }
         coreContainer.register(AudioStreamable.self) { _ in AudioStream(capacity: 300) }
         coreContainer.register(AudioProvidable.self) { _ in MicInputProvider() }
-        coreContainer.register(MediaPlayerFactory.self) { _ in BuiltInMediaPlayerFactory() }
         
         coreContainer.register(FocusManageable.self) { [weak self] _ -> FocusManager in
             let focusManager = FocusManager()
@@ -101,6 +101,35 @@ public class NuguClient {
             
             return directiveSequencer
         }
+        
+        coreContainer.register(SystemAgentProtocol.self) { (resolver) -> SystemAgent in
+            return SystemAgent(
+                contextManager: resolver.resolve(ContextManageable.self)!,
+                networkManager: resolver.resolve(NetworkManageable.self)!,
+                upstreamDataSender: resolver.resolve(StreamDataRoutable.self)!,
+                directiveSequencer: resolver.resolve(DirectiveSequenceable.self)!
+            )
+        }
+    }
+    
+    private func registerDialogStateAggregator() {
+        addComponent(DialogStateAggregator.self) { _ in DialogStateAggregator() }
+    }
+    
+    private func registerKeywordDetector() {
+        addComponent(KeywordDetector.self) { (resolver) -> KeywordDetector in
+            let keywordDetector = KeywordDetector()
+            
+            if let sharedAudioStream = resolver.resolve(AudioStreamable.self) {
+                keywordDetector.audioStream = sharedAudioStream
+            }
+
+            if let contextManager = resolver.resolve(ContextManageable.self) {
+                contextManager.add(provideContextDelegate: keywordDetector)
+            }
+            
+            return keywordDetector
+        }
     }
     
     private func registerBuiltInAgents() {
@@ -108,16 +137,12 @@ public class NuguClient {
             let streamDataRouter = coreContainer.resolve(StreamDataRoutable.self),
             let contextManager = coreContainer.resolve(ContextManageable.self),
             let sharedAudioStream = coreContainer.resolve(AudioStreamable.self),
-            let mediaPlayerFactory = coreContainer.resolve(MediaPlayerFactory.self),
             let playSyncManager = coreContainer.resolve(PlaySyncManageable.self),
-            let networkManager = coreContainer.resolve(NetworkManageable.self),
             let directiveSequencer = coreContainer.resolve(DirectiveSequenceable.self) else {
                 return
         }
         
-        agentContainer.register(DialogStateAggregator.self) { _ in DialogStateAggregator() }
-        
-        agentContainer.register(ASRAgentProtocol.self) { resolver -> ASRAgentProtocol? in
+        addComponent(ASRAgentProtocol.self) { resolver -> ASRAgentProtocol? in
             let asrAgent = ASRAgent(
                 focusManager: focusManager,
                 channelPriority: .recognition,
@@ -132,11 +157,10 @@ public class NuguClient {
             return asrAgent
         }
         
-        agentContainer.register(TTSAgentProtocol.self) { resolver -> TTSAgentProtocol? in
+        addComponent(TTSAgentProtocol.self) { resolver -> TTSAgentProtocol? in
             let ttsAgent = TTSAgent(
                 focusManager: focusManager,
                 channelPriority: .information,
-                mediaPlayerFactory: mediaPlayerFactory,
                 upstreamDataSender: streamDataRouter,
                 playSyncManager: playSyncManager,
                 contextManager: contextManager,
@@ -148,11 +172,10 @@ public class NuguClient {
             return ttsAgent
         }
         
-        agentContainer.register(AudioPlayerAgentProtocol.self) { _ in
+        addComponent(AudioPlayerAgentProtocol.self) { _ in
             return AudioPlayerAgent(
                 focusManager: focusManager,
                 channelPriority: .content,
-                mediaPlayerFactory: mediaPlayerFactory,
                 upstreamDataSender: streamDataRouter,
                 playSyncManager: playSyncManager,
                 contextManager: contextManager,
@@ -160,7 +183,7 @@ public class NuguClient {
             )
         }
         
-        agentContainer.register(DisplayAgentProtocol.self) { _ in
+        addComponent(DisplayAgentProtocol.self) { _ in
             return DisplayAgent(
                 upstreamDataSender: streamDataRouter,
                 playSyncManager: playSyncManager,
@@ -169,7 +192,7 @@ public class NuguClient {
             )
         }
         
-        agentContainer.register(TextAgentProtocol.self) { resolver -> TextAgentProtocol? in
+        addComponent(TextAgentProtocol.self) { resolver -> TextAgentProtocol? in
             let textAgent = TextAgent(
                 contextManager: contextManager,
                 upstreamDataSender: streamDataRouter,
@@ -182,7 +205,7 @@ public class NuguClient {
             return textAgent
         }
         
-        agentContainer.register(ExtensionAgentProtocol.self) { _ in
+        addComponent(ExtensionAgentProtocol.self) { _ in
             return ExtensionAgent(
                 upstreamDataSender: streamDataRouter,
                 contextManager: contextManager,
@@ -190,17 +213,8 @@ public class NuguClient {
             )
         }
         
-        agentContainer.register(LocationAgentProtocol.self) { _ in
+        addComponent(LocationAgentProtocol.self) { _ in
             return LocationAgent(contextManager: contextManager)
-        }
-        
-        agentContainer.register(SystemAgentProtocol.self) { _ in
-            return SystemAgent(
-                contextManager: contextManager,
-                networkManager: networkManager,
-                upstreamDataSender: streamDataRouter,
-                directiveSequencer: directiveSequencer
-            )
         }
     }
 }
@@ -209,16 +223,16 @@ public class NuguClient {
 
 extension NuguClient {
     public func addComponent<Component>(_ componentType: Component.Type, option: ComponentKey.Option = .representative, factory: @escaping (ComponentResolver) -> Component?) {
-        let additionalComponent = factory(coreContainer.union(agentContainer))
-        agentContainer.register(componentType, option: option) { _ in additionalComponent }
+        let additionalComponent = factory(coreContainer.union(additionalContainer))
+        additionalContainer.register(componentType, option: option) { _ in additionalComponent }
     }
     
     public func getComponent<Component>(_ componentType: Component.Type) -> Component? {
-        return agentContainer.resolve(componentType.self)
+        return additionalContainer.resolve(componentType.self)
     }
     
     public func getComponent<Component, Concreate>(_ componentType: Component.Type, concreateType: Concreate.Type, option: ComponentKey.Option = .all) -> Concreate? {
-        return agentContainer.resolve(componentType.self, concreateType: concreateType, option: option)
+        return additionalContainer.resolve(componentType.self, concreateType: concreateType, option: option)
     }
     
     public func connect() {
@@ -304,22 +318,6 @@ extension NuguClient: AudioStreamDelegate {
             log.debug("input provider is stopped.")
         }
         inputControlQueue.async(execute: inputControlWorkItem!)
-    }
-}
-
-// MARK: - Wake Up Detector
-
-extension NuguClient {
-    private func setupWakeUpDetectorDependency() {
-        guard let wakeUpDetector = wakeUpDetector else { return }
-
-        if let sharedAudioStream = coreContainer.resolve(AudioStreamable.self) {
-            wakeUpDetector.audioStream = sharedAudioStream
-        }
-
-        if let contextManager = coreContainer.resolve(ContextManageable.self) {
-            contextManager.add(provideContextDelegate: wakeUpDetector)
-        }
     }
 }
 

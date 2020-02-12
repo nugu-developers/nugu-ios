@@ -1,6 +1,6 @@
 //
 //  DisplayBodyListTemplate.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by jin kim on 2019/11/06.
 //  Copyright © 2019 SK Telecom Co., Ltd. All rights reserved.

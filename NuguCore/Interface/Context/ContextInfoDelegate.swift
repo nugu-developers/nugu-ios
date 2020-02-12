@@ -1,6 +1,6 @@
 //
 //  ContextInfoDelegate.swift
-//  NuguInterface
+//  NuguCore
 //
 //  Created by MinChul Lee on 25/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

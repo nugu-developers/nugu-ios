@@ -47,15 +47,15 @@ public final class ComponentContainer {
     
     public func union(_ other: ComponentContainer) -> ComponentContainer {
         var unionComponents = [ComponentKey: Any]()
-        unionComponents.merge(components)
-        unionComponents.merge(other.components)
+        unionComponents.merge(components, uniquingKeysWith: { $1 })
+        unionComponents.merge(other.components, uniquingKeysWith: { $1 })
         
         return ComponentContainer(components: unionComponents)
     }
     
     public func subtract(_ other: ComponentContainer) -> ComponentContainer {
         var subComponents = [ComponentKey: Any]()
-        subComponents.merge(components)
+        subComponents.merge(components, uniquingKeysWith: { $1 })
         
         for key in other.components.keys {
             subComponents.removeValue(forKey: key)
@@ -69,29 +69,5 @@ extension ComponentContainer: ComponentResolver {
     public func resolve<Component, Concreate>(_ protocol: Component.Type, concreateType: Concreate.Type?, option: ComponentKey.Option) -> Concreate? {
         let key = ComponentKey(protocolType: `protocol`.self, concreateType: concreateType, option: option)
         return components[key] as? Concreate
-    }
-}
-
-// MARK: - Dictionary
-
-private extension Dictionary {
-    mutating func merge(_ forDictionary: Dictionary) {
-        forDictionary.forEach { (targetKey, targetValue) in
-            var value = targetValue
-            if var originalValue = self[targetKey] as? Dictionary, let targetValue = targetValue as? Dictionary {
-                originalValue.merge(targetValue)
-                if let mergedValue = originalValue as? Value {
-                    value = mergedValue
-                }
-            }
-
-            updateValue(value, forKey: targetKey)
-        }
-    }
-
-    func merged(with dictionary: Dictionary) -> Dictionary {
-        var resultDic = self
-        resultDic.merge(dictionary)
-        return resultDic
     }
 }

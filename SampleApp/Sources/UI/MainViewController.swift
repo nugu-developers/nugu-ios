@@ -1,6 +1,6 @@
 //
 //  MainViewController.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by jin kim on 17/06/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -152,7 +152,7 @@ private extension MainViewController {
     }
     
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
-        presentVoiceChrome()
+        presentVoiceChrome(initiator: .user)
     }
 }
 
@@ -168,14 +168,11 @@ private extension MainViewController {
         NuguAudioSessionManager.shared.updateAudioSession()
         
         // Add delegates
-        NuguCentralManager.shared.client.wakeUpDetector?.delegate = self
-
+        NuguCentralManager.shared.client.getComponent(KeywordDetector.self)?.delegate = self
         NuguCentralManager.shared.client.getComponent(DialogStateAggregator.self)?.add(delegate: self)
         NuguCentralManager.shared.client.getComponent(ASRAgentProtocol.self)?.add(delegate: self)
         NuguCentralManager.shared.client.getComponent(TextAgentProtocol.self)?.add(delegate: self)
-        
         NuguCentralManager.shared.client.getComponent(DisplayAgentProtocol.self)?.add(delegate: self)
-        
         NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.add(displayDelegate: self)
         NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.add(delegate: self)
 
@@ -247,9 +244,9 @@ private extension MainViewController {
 // MARK: - Private (Voice Chrome)
 
 private extension MainViewController {
-    func presentVoiceChrome() {
+    func presentVoiceChrome(initiator: ASRInitiator) {
         voiceChromeDismissWorkItem?.cancel()
-        NuguCentralManager.shared.startRecognize()
+        NuguCentralManager.shared.startRecognize(initiator: initiator)
         
         nuguVoiceChrome.removeFromSuperview()
         nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
@@ -447,16 +444,16 @@ extension MainViewController {
 
 // MARK: - WakeUpDetectorDelegate
 
-extension MainViewController: WakeUpDetectorDelegate {
-    func wakeUpDetectorDidDetect() {
+extension MainViewController: KeywordDetectorDelegate {
+    func keywordDetectorDidDetect(data: Data, padding: Int) {
         DispatchQueue.main.async { [weak self] in
-            self?.presentVoiceChrome()
+            self?.presentVoiceChrome(initiator: .wakeUpKeyword(data: data, padding: padding))
         }
     }
     
-    func wakeUpDetectorDidStop() {}
+    func keywordDetectorDidStop() {}
     
-    func wakeUpDetectorStateDidChange(_ state: WakeUpDetectorState) {
+    func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {
         switch state {
         case .active:
             DispatchQueue.main.async { [weak self] in
@@ -469,7 +466,7 @@ extension MainViewController: WakeUpDetectorDelegate {
         }
     }
     
-    func wakeUpDetectorDidError(_ error: Error) {}
+    func keywordDetectorDidError(_ error: Error) {}
 }
 
 // MARK: - DialogStateDelegate

@@ -22,7 +22,7 @@ import Foundation
 
 public protocol TycheKeywordDetectorEngineDelegate: class {
     /// <#Description#>
-    func tycheKeywordDetectorEngineDidDetect()
+    func tycheKeywordDetectorEngineDidDetect(data: Data, padding: Int)
     /// <#Description#>
     /// - Parameter error: <#error description#>
     func tycheKeywordDetectorEngineDidError(_ error: Error)
