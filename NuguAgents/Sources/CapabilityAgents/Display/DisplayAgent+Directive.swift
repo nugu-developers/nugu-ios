@@ -27,6 +27,9 @@ import NuguCore
 extension DisplayAgent {
     public enum DirectiveTypeInfo: CaseIterable {
         case close
+        case controlFocus
+        case controlScroll
+        
         case fullText1
         case fullText2
         case imageText1
@@ -86,6 +89,9 @@ extension DisplayAgent.DirectiveTypeInfo: DirectiveTypeInforable {
         case .searchList1: return "SearchList1"
         case .searchList2: return "SearchList2"
         case .customTemplate: return "CustomTemplate"
+        
+        case .controlFocus: return "ControlFocus"
+        case .controlScroll: return "ControlScroll"
         }
     }
     

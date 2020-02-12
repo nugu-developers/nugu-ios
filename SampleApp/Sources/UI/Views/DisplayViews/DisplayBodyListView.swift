@@ -20,6 +20,8 @@
 
 import UIKit
 
+import NuguAgents
+
 final class DisplayBodyListView: DisplayView {
     
     @IBOutlet private weak var tableView: UITableView!
@@ -75,5 +77,44 @@ extension DisplayBodyListView: UITableViewDataSource {
 extension DisplayBodyListView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         onItemSelect?(templateBodyListItems?[indexPath.row].token)
+    }
+}
+
+extension DisplayBodyListView: DisplayControllable {    
+    func visibleTokenList() -> [String]? {        
+        return tableView.visibleCells.map { (cell) -> String? in
+            guard let indexPath = tableView.indexPath(for: cell),
+                let item = templateBodyListItems?[indexPath.row] else {
+                    return nil
+            }
+            return item.token
+        }.compactMap { $0 }
+    }
+    
+    func scroll(direction: DisplayControlPayload.Direction) -> Bool {
+        guard let templateBodyListItems = templateBodyListItems else {
+            return false
+        }
+        let visibleCellsCount = tableView.visibleCells.count
+        switch direction {
+        case .previous:
+            guard let topCell = tableView.visibleCells.first,
+                let topCellRowIndex = tableView.indexPath(for: topCell)?.row else {
+                return false
+            }
+            let previousAnchorIndex = max(topCellRowIndex - visibleCellsCount, 0)
+            tableView.scrollToRow(at: IndexPath(row: previousAnchorIndex, section: 0), at: .top, animated: true)
+            return true
+        case .next:
+            let lastCellRowIndex = templateBodyListItems.count - 1
+            guard let lastCell = tableView.visibleCells.last,
+                let lastVisibleCellRowIndex = tableView.indexPath(for: lastCell)?.row,
+                lastCellRowIndex > lastVisibleCellRowIndex else {
+                    return false
+            }
+            let nextAnchorIndex = min(lastVisibleCellRowIndex + visibleCellsCount, lastCellRowIndex)
+            tableView.scrollToRow(at: IndexPath(row: nextAnchorIndex, section: 0), at: .bottom, animated: true)
+            return true
+        }
     }
 }

@@ -120,6 +120,10 @@ extension DisplayAgent: HandleDirectiveDelegate {
             switch typeInfo {
             case .close:
                 return close(directive: directive)
+            case .controlFocus:
+                return focus(directive: directive)
+            case .controlScroll:
+                return scroll(directive: directive)
             default:
                 return display(directive: directive)
             }
@@ -132,12 +136,16 @@ extension DisplayAgent: HandleDirectiveDelegate {
 
 extension DisplayAgent: ContextInfoDelegate {
     public func contextInfoRequestContext() -> ContextInfo? {
-        let payload: [String: Any?] = [
+        var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "token": currentItem?.token,
             "playServiceId": currentItem?.playServiceId
         ]
-        
+        if let info = renderingInfos.first(where: { $0.currentItem?.templateId == currentItem?.templateId }),
+            let delegate = info.delegate {
+            payload["focusedItemToken"] = (info.currentItem?.focusable ?? false) ? delegate.focusedItemToken() : nil
+            payload["visibleTokenList"] = delegate.visibleTokenList()
+        }
         return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
     }
 }
@@ -248,6 +256,66 @@ private extension DisplayAgent {
         }
     }
     
+    func focus(directive: Downstream.Directive) -> Result<Void, Error> {
+        return Result { [weak self] in
+            guard let self = self else { return }
+            guard let data = directive.payload.data(using: .utf8) else {
+                throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+            }
+            let payload = try JSONDecoder().decode(DisplayControlPayload.self, from: data)
+            
+            guard let item = self.currentItem,
+                item.playServiceId == payload.playServiceId,
+                let info = renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
+                let delegate = info.delegate else {
+                self.sendEvent(
+                    Event(playServiceId: payload.playServiceId, typeInfo: .controlFocusFailed),
+                    dialogRequestId: TimeUUID().hexString,
+                    messageId: TimeUUID().hexString
+                )
+                return
+            }
+            
+            let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
+            
+            self.sendEvent(
+                Event(playServiceId: payload.playServiceId, typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed),
+                dialogRequestId: TimeUUID().hexString,
+                messageId: TimeUUID().hexString
+            )
+        }
+    }
+    
+    func scroll(directive: Downstream.Directive) -> Result<Void, Error> {
+        return Result { [weak self] in
+            guard let self = self else { return }
+            guard let data = directive.payload.data(using: .utf8) else {
+                throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+            }
+            let payload = try JSONDecoder().decode(DisplayControlPayload.self, from: data)
+            
+            guard let item = self.currentItem,
+                item.playServiceId == payload.playServiceId,
+                let info = renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
+                let delegate = info.delegate else {
+                    self.sendEvent(
+                        Event(playServiceId: payload.playServiceId, typeInfo: .controlScrollFailed),
+                        dialogRequestId: TimeUUID().hexString,
+                        messageId: TimeUUID().hexString
+                    )
+                    return
+            }
+            
+            let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
+            
+            self.sendEvent(
+                Event(playServiceId: payload.playServiceId, typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed),
+                dialogRequestId: TimeUUID().hexString,
+                messageId: TimeUUID().hexString
+            )
+        }
+    }
+    
     func display(directive: Downstream.Directive) -> Result<Void, Error> {
         log.info("\(directive.header.type)")
 
@@ -267,6 +335,7 @@ private extension DisplayAgent {
             
             let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
             let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
+            let focusable = payloadDictionary["focusable"] as? Bool
                         
             self.currentItem = DisplayTemplate(
                 type: directiveTypeInfo.type,
@@ -276,7 +345,8 @@ private extension DisplayAgent {
                 token: token,
                 playServiceId: playServiceId,
                 playStackServiceId: playStackServiceId,
-                duration: DisplayTemplate.Duration(rawValue: duration)
+                duration: DisplayTemplate.Duration(rawValue: duration),
+                focusable: focusable
             )
             
             if let item = self.currentItem {

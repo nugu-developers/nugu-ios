@@ -32,4 +32,12 @@ public protocol DisplayAgentDelegate: class {
     /// - Parameter template: The template to remove from the screen.
     /// - Parameter reason: Reason to clear the template.
     func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason)
+    
+    func displayAgentShouldMoveFocus(direction: DisplayControlPayload.Direction) -> Bool
+    
+    func displayAgentShouldScroll(direction: DisplayControlPayload.Direction) -> Bool
+    
+    func focusedItemToken() -> String?
+    
+    func visibleTokenList() -> [String]?
 }
