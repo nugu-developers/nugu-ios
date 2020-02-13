@@ -24,7 +24,6 @@
 		1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
 		1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */; };
-		1F2E8006238FC21900569C59 /* SystemAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E8005238FC21900569C59 /* SystemAgentTests.swift */; };
 		1F2E8007238FCCDB00569C59 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		1F2E8008238FCCE100569C59 /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
 		1F2E8009238FCD4400569C59 /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
@@ -42,6 +41,8 @@
 		1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */; };
 		1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */; };
 		1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */; };
+		1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */; };
+		1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -524,7 +525,6 @@
 		1F2E7FFE238EA6E300569C59 /* MediaUrlDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUrlDataSource.swift; sourceTree = "<group>"; };
 		1F2E8000238EA70400569C59 /* MediaOpusStreamDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaOpusStreamDataSource.swift; sourceTree = "<group>"; };
 		1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentExceptionCode.swift; sourceTree = "<group>"; };
-		1F2E8005238FC21900569C59 /* SystemAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
 		1F2E8011238FD43C00569C59 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TycheKeywordDetectorEngine+State.swift"; sourceTree = "<group>"; };
 		1F2E803823966D9D00569C59 /* KeywordSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSource.swift; sourceTree = "<group>"; };
@@ -537,6 +537,8 @@
 		1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStreamDataRouter.swift; sourceTree = "<group>"; };
 		1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDirectiveSequencer.swift; sourceTree = "<group>"; };
 		1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockContextManager.swift; sourceTree = "<group>"; };
+		1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
+		1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentTests.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -1051,14 +1053,6 @@
 			path = DataSource;
 			sourceTree = "<group>";
 		};
-		1F2E8004238FC20000569C59 /* Capability */ = {
-			isa = PBXGroup;
-			children = (
-				1F2E8005238FC21900569C59 /* SystemAgentTests.swift */,
-			);
-			path = Capability;
-			sourceTree = "<group>";
-		};
 		1F2E803523966B1900569C59 /* Client */ = {
 			isa = PBXGroup;
 			children = (
@@ -1143,7 +1137,8 @@
 		1FD1CFD923A75B040000FB8C /* NuguAgents */ = {
 			isa = PBXGroup;
 			children = (
-				1F2E8004238FC20000569C59 /* Capability */,
+				1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */,
+				1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */,
 			);
 			path = NuguAgents;
 			sourceTree = "<group>";
@@ -3109,9 +3104,10 @@
 				1F9C5B7223F27AB30086CC04 /* MockNetworkManager.swift in Sources */,
 				1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */,
 				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,
-				1F2E8006238FC21900569C59 /* SystemAgentTests.swift in Sources */,
 				1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
+				1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */,
+				1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
