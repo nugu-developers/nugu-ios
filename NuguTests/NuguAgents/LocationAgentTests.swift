@@ -25,8 +25,8 @@ import XCTest
 
 class LocationAgentTests: XCTestCase {
     
-    // NuguCore
-    let contextManager: ContextManageable = ContextManager()
+    // NuguCore(Mock)
+    let contextManager: ContextManageable = MockContextManager()
     
     // NuguAgents
     lazy var locationAgent: LocationAgent = LocationAgent(contextManager: contextManager)
@@ -40,16 +40,18 @@ class LocationAgentTests: XCTestCase {
         locationAgent.delegate = nil
     }
     
-    /* Expected context
-    {
-        "version": "1.0",
-        "current": {
-            "latitude": "{{STRING}}",
-            "longitude": "{{STRING}}"
-        }
-    }
-    */
+    // MARK: Context
+    
     func testContext() {
+        /* Expected context
+        {
+            "version": "1.0",
+            "current": {
+                "latitude": "{{STRING}}",
+                "longitude": "{{STRING}}"
+            }
+        }
+        */
         guard let contextInfo = locationAgent.contextInfoRequestContext() else {
             XCTFail("contextInfo is nil")
             return
