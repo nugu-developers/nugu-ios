@@ -136,6 +136,7 @@ private extension NetworkManager {
             }
         }
         .subscribe()
+        
         pingDisposable?.disposed(by: disposeBag)
     }
     
