@@ -35,22 +35,14 @@ public class NuguClient {
     public let playSyncManager: PlaySyncManageable
     public let systemAgent: SystemAgentProtocol
     
-    // dialog agent and helper
+    // default agents
     public let dialogStateAggregator: DialogStateAggregator
     public let asrAgent: ASRAgentProtocol
     public let ttsAgent: TTSAgentProtocol
     public let textAgent: TextAgentProtocol
-    
+    public let audioPlayerAgent: AudioPlayerAgentProtocol
+
     // additional agents
-    public lazy var audioPlayerAgent: AudioPlayerAgentProtocol = AudioPlayerAgent(
-        focusManager: focusManager,
-        channelPriority: .content,
-        upstreamDataSender: streamDataRouter,
-        playSyncManager: playSyncManager,
-        contextManager: contextManager,
-        directiveSequencer: directiveSequencer
-    )
-    
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
         upstreamDataSender: streamDataRouter,
         playSyncManager: playSyncManager,
@@ -131,6 +123,16 @@ public class NuguClient {
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
         textAgent.add(delegate: dialogStateAggregator)
+        
+        // audio player
+        audioPlayerAgent = AudioPlayerAgent(
+            focusManager: focusManager,
+            channelPriority: .content,
+            upstreamDataSender: streamDataRouter,
+            playSyncManager: playSyncManager,
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer
+        )
 
         // setup additional roles
         setupAudioStream()
