@@ -38,6 +38,10 @@
 		1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */; };
 		1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */; };
 		1F9C5B5E23C30B4B0086CC04 /* NuguOAuthApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */; };
+		1F9C5B7223F27AB30086CC04 /* MockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7123F27AB30086CC04 /* MockNetworkManager.swift */; };
+		1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */; };
+		1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */; };
+		1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -529,6 +533,10 @@
 		1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguOAuthApi.swift; sourceTree = "<group>"; };
 		1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguAgents.podspec; sourceTree = "<group>"; };
 		1F9C5B6B23EBEF810086CC04 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .travis.yml; sourceTree = "<group>"; };
+		1F9C5B7123F27AB30086CC04 /* MockNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkManager.swift; sourceTree = "<group>"; };
+		1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStreamDataRouter.swift; sourceTree = "<group>"; };
+		1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDirectiveSequencer.swift; sourceTree = "<group>"; };
+		1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockContextManager.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -1105,6 +1113,25 @@
 			path = PropertyWrappers;
 			sourceTree = "<group>";
 		};
+		1F9C5B7023F27A8F0086CC04 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				1F9C5B7123F27AB30086CC04 /* MockNetworkManager.swift */,
+				1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */,
+				1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */,
+				1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
+		1F9C5B7923F2D7440086CC04 /* NuguCore */ = {
+			isa = PBXGroup;
+			children = (
+				1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */,
+			);
+			path = NuguCore;
+			sourceTree = "<group>";
+		};
 		1FD1CFD523A388570000FB8C /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1113,13 +1140,12 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		1FD1CFD923A75B040000FB8C /* NuguCore */ = {
+		1FD1CFD923A75B040000FB8C /* NuguAgents */ = {
 			isa = PBXGroup;
 			children = (
 				1F2E8004238FC20000569C59 /* Capability */,
-				1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */,
 			);
-			path = NuguCore;
+			path = NuguAgents;
 			sourceTree = "<group>";
 		};
 		1FD1CFE923AE3BDA0000FB8C /* Grant */ = {
@@ -2124,7 +2150,9 @@
 		1FFFF524237676BE00C9A177 /* NuguTests */ = {
 			isa = PBXGroup;
 			children = (
-				1FD1CFD923A75B040000FB8C /* NuguCore */,
+				1F9C5B7023F27A8F0086CC04 /* Mock */,
+				1F9C5B7923F2D7440086CC04 /* NuguCore */,
+				1FD1CFD923A75B040000FB8C /* NuguAgents */,
 				1FFFF525237676BE00C9A177 /* NuguTests.swift */,
 				1FFFF527237676BE00C9A177 /* Info.plist */,
 			);
@@ -3078,8 +3106,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */,
+				1F9C5B7223F27AB30086CC04 /* MockNetworkManager.swift in Sources */,
+				1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */,
+				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,
 				1F2E8006238FC21900569C59 /* SystemAgentTests.swift in Sources */,
 				1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */,
+				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
