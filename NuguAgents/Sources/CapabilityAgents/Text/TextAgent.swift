@@ -42,7 +42,6 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
     
     private let delegates = DelegateSet<TextAgentDelegate>()
     
-    private var focusState: FocusState = .nothing
     private var textAgentState: TextAgentState = .idle {
         didSet {
             log.info("from: \(oldValue) to: \(textAgentState)")
@@ -134,7 +133,6 @@ extension TextAgent: ContextInfoDelegate {
 extension TextAgent: FocusChannelDelegate {
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(textAgentState)")
-        self.focusState = focusState
         
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
