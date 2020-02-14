@@ -30,6 +30,7 @@ public class PlaySyncManager: PlaySyncManageable {
     )
     
     private let disposeBag = DisposeBag()
+    private var displayOnlyDisposables = [String: Disposable]()
     private var playSyncInfos = [PlaySyncInfo]()
     public var playServiceIds: [String] {
         return playSyncInfos.filter { $0.playSyncState != .released }
@@ -58,6 +59,11 @@ public extension PlaySyncManager {
             }
             
             self.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .prepared)
+            
+            if let disposable = self.displayOnlyDisposables.removeValue(forKey: dialogRequestId) {
+                log.debug("Cancel release timer about display only layer(\(dialogRequestId)).")
+                disposable.dispose()
+            }
         }
     }
     
@@ -69,7 +75,26 @@ public extension PlaySyncManager {
                 return
             }
             
+            let hasAnotherLayer = self.playSyncInfos.contains { $0.dialogRequestId == dialogRequestId }
+            
             self.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .synced)
+            
+            // If the play sync layers contains only display layer, release it by itself after the duration.
+            if delegate.playSyncIsDisplay() && !hasAnotherLayer {
+                log.debug("Display only layer(\(dialogRequestId)) will release after \(delegate.playSyncDuration().time)")
+                let disposable = Completable.create { [weak self] event -> Disposable in
+                    guard let self = self else { return Disposables.create() }
+                    
+                    self.update(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .releasing)
+                    
+                    event(.completed)
+                    return Disposables.create()
+                }
+                .delaySubscription(delegate.playSyncDuration().time, scheduler: self.playSyncScheduler)
+                .subscribe()
+                self.displayOnlyDisposables[dialogRequestId] = disposable
+                disposable.disposed(by: self.disposeBag)
+            }
         }
     }
     
@@ -119,7 +144,7 @@ public extension PlaySyncManager {
                 .do(onNext: {  [weak self] (info) in
                     guard let self = self else { return }
                     guard let target = info.delegate else { return }
-                    if target === delegate ||  info.playSyncState == .releasing {
+                    if !info.isDisplay || info.playSyncState == .releasing {
                         self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .released)
                     } else {
                         self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .releasing)

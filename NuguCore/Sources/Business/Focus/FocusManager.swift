@@ -59,10 +59,6 @@ extension FocusManager {
                 log.warning("\(channelDelegate): Channel not registered")
                 return
             }
-            guard info.focusState != .foreground else {
-                log.info("\(channelDelegate): Already set to foreground")
-                return
-            }
             guard self.delegate?.focusShouldAcquire() == true else {
                 log.warning("Focus should not acquire. \(channelDelegate.focusChannelPriority())")
                 self.update(channelDelegate: channelDelegate, focusState: .nothing)
@@ -90,10 +86,6 @@ extension FocusManager {
             guard let self = self else { return }
             guard let info = self.channelInfos.object(forDelegate: channelDelegate) else {
                 log.warning("\(channelDelegate): Channel not registered")
-                return
-            }
-            guard info.focusState != .nothing else {
-                log.info("\(channelDelegate): Already released")
                 return
             }
             
