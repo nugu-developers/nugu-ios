@@ -43,6 +43,7 @@
 		1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */; };
 		1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */; };
 		1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */; };
+		1F9C5B8223F664340086CC04 /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -373,6 +374,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1FFFEFFC23753F1800C9A177;
 			remoteInfo = NuguCore;
+		};
+		1F9C5B8423F664340086CC04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FFFF03D23753FB200C9A177;
+			remoteInfo = KeenSense;
 		};
 		1FFFF3E42375737A00C9A177 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -884,6 +892,7 @@
 			files = (
 				1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */,
 				73152FED23E05D9700F843C3 /* NuguAgents.framework in Frameworks */,
+				1F9C5B8223F664340086CC04 /* KeenSense.framework in Frameworks */,
 				1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */,
 				1F1008E82379237F00D90FEE /* NuguCore.framework in Frameworks */,
 			);
@@ -2470,6 +2479,7 @@
 			dependencies = (
 				1FFFF3E52375737A00C9A177 /* PBXTargetDependency */,
 				73152FF023E05D9700F843C3 /* PBXTargetDependency */,
+				1F9C5B8523F664340086CC04 /* PBXTargetDependency */,
 			);
 			name = NuguClientKit;
 			packageProductDependencies = (
@@ -3198,6 +3208,11 @@
 			isa = PBXTargetDependency;
 			target = 1FFFEFFC23753F1800C9A177 /* NuguCore */;
 			targetProxy = 1F1008F82379247800D90FEE /* PBXContainerItemProxy */;
+		};
+		1F9C5B8523F664340086CC04 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FFFF03D23753FB200C9A177 /* KeenSense */;
+			targetProxy = 1F9C5B8423F664340086CC04 /* PBXContainerItemProxy */;
 		};
 		1FFFF3E52375737A00C9A177 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
