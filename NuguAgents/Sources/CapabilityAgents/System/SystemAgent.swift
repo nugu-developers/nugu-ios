@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+final public class SystemAgent: SystemAgentProtocol, CapabilityEventAgentable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.0")
     
@@ -36,6 +36,14 @@ final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentabl
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<SystemAgentDelegate>()
+    
+    // Handleable Directive
+    private lazy var handleableDirectiveInfos = [
+        DirectiveHandleInfo(namespace: "System", name: "HandoffConnection", medium: .none, isBlocking: false, handler: handleHandOffConnection),
+        DirectiveHandleInfo(namespace: "System", name: "UpdateState", medium: .none, isBlocking: false, handler: handleUpdateState),
+        DirectiveHandleInfo(namespace: "System", name: "Exception", medium: .none, isBlocking: false, handler: handleException),
+        DirectiveHandleInfo(namespace: "System", name: "NoDirectives", medium: .none, isBlocking: false, handler: { $1(.success(())) })
+    ]
     
     public init(
         contextManager: ContextManageable,
@@ -51,42 +59,11 @@ final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentabl
         
         contextManager.add(provideContextDelegate: self)
         networkManager.add(statusDelegate: self)
-        directiveSequencer.add(handleDirectiveDelegate: self)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
         log.info("")
-    }
-}
-
-// MARK: - HandleDirectiveDelegate
-
-extension SystemAgent: HandleDirectiveDelegate {
-    public func handleDirective(
-        _ directive: Downstream.Directive,
-        completionHandler: @escaping (Result<Void, Error>) -> Void
-        ) {
-        let result = Result<DirectiveTypeInfo, Error>(catching: {
-            guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Unknown directive")
-            }
-            
-            return directiveTypeInfo
-        }).flatMap({ (typeInfo) -> Result<Void, Error> in
-            switch typeInfo {
-            case .handoffConnection:
-                return handOffConnection(directive: directive)
-            case .updateState:
-                return updateState()
-            case .exception:
-                return handleException(directive: directive)
-            case .noDirectives:
-                // do nothing
-                return .success(())
-            }
-        })
-        
-        completionHandler(result)
     }
 }
 
@@ -130,47 +107,51 @@ extension SystemAgent: NetworkStatusDelegate {
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
-    func handOffConnection(directive: Downstream.Directive) -> Result<Void, Error> {
-        return Result { [weak self] in
-            guard let data = directive.payload.data(using: .utf8) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+    func handleHandOffConnection(_ directive: Downstream.Directive, _ completionHandler: (Result<Void, Error>) -> Void) {
+        completionHandler(
+            Result { [weak self] in
+                guard let data = directive.payload.data(using: .utf8) else {
+                    throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                }
+                
+                let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
+                self?.systemDispatchQueue.async { [weak self] in
+                    // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
+                    log.info("try to handoff policy: \(serverPolicy)")
+                    self?.networkManager.connect()
+                }
             }
-            
-            let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
-            self?.systemDispatchQueue.async { [weak self] in
-                // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
-                log.info("try to handoff policy: \(serverPolicy)")
-                self?.networkManager.connect()
-            }
-        }
+        )
     }
     
-    func updateState() -> Result<Void, Error> {
+    func handleUpdateState(_ directive: Downstream.Directive, _ completionHandler: (Result<Void, Error>) -> Void) {
         systemDispatchQueue.async { [weak self] in
             self?.sendSynchronizeStateEvent()
         }
         
-        return .success(())
+        completionHandler(.success(()))
     }
     
-    func handleException(directive: Downstream.Directive) -> Result<Void, Error> {
-        return Result { [weak self] in
-            guard let data = directive.payload.data(using: .utf8) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-            }
-            
-            let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
-            self?.systemDispatchQueue.async { [weak self] in
-                switch exceptionItem.code {
-                case .fail(let code):
-                    self?.delegates.notify { delegate in
-                        delegate.systemAgentDidReceiveExceptionFail(code: code)
+    func handleException(_ directive: Downstream.Directive, _ completionHandler: (Result<Void, Error>) -> Void) {
+        completionHandler(
+            Result { [weak self] in
+                guard let data = directive.payload.data(using: .utf8) else {
+                    throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                }
+                
+                let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
+                self?.systemDispatchQueue.async { [weak self] in
+                    switch exceptionItem.code {
+                    case .fail(let code):
+                        self?.delegates.notify { delegate in
+                            delegate.systemAgentDidReceiveExceptionFail(code: code)
+                        }
+                    case .warning(let code):
+                        log.debug("received warning code: \(code)")
                     }
-                case .warning(let code):
-                    log.debug("received warning code: \(code)")
                 }
             }
-        }
+        )
     }
 }
 

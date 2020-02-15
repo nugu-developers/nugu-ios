@@ -24,14 +24,10 @@ import RxSwift
 
 public class DirectiveSequencer: DirectiveSequenceable {
     private let upstreamDataSender: UpstreamDataSendable
-    
-    private var handleDirectiveDelegates = DelegateDictionary<String, HandleDirectiveDelegate>()
-
     private let prefetchDirectiveSubject = PublishSubject<Downstream.Directive>()
     private let handleDirectiveSubject = PublishSubject<Downstream.Directive>()
-    
+    private var directiveHandleInfos = DirectiveHandleInfos()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
-
     private let disposeBag = DisposeBag()
 
     public init(streamDataRouter: StreamDataRoutable) {
@@ -52,22 +48,15 @@ public class DirectiveSequencer: DirectiveSequenceable {
 // MARK: - DirectiveSequenceable
 
 extension DirectiveSequencer {
-    public func add(handleDirectiveDelegate delegate: HandleDirectiveDelegate) {
-        log.debug("\(delegate)")
-        delegate.handleDirectiveTypeInfos().forEach { typeInfo in
-            // Type 중복 체크
-            if handleDirectiveDelegates[typeInfo.key] != nil {
-                log.warning("Configuration was already set \(typeInfo.key)")
-            } else {
-                handleDirectiveDelegates[typeInfo.key] = delegate
-            }
-        }
+    public func add(directiveHandleInfos: DirectiveHandleInfos) {
+        log.debug("add directive handles: \(directiveHandleInfos)")
+        self.directiveHandleInfos.merge(directiveHandleInfos)
     }
     
-    public func remove(handleDirectiveDelegate delegate: HandleDirectiveDelegate) {
-        log.debug("\(delegate)")
-        delegate.handleDirectiveTypeInfos().forEach { typeInfo in
-            handleDirectiveDelegates.removeValue(forKey: typeInfo.key)
+    public func remove(directiveHandleInfos: DirectiveHandleInfos) {
+        log.debug("remove directive handles: \(directiveHandleInfos)")
+        directiveHandleInfos.forEach { key, _ in
+            self.directiveHandleInfos[key] = nil
         }
     }
 }
@@ -77,7 +66,7 @@ extension DirectiveSequencer {
 extension DirectiveSequencer: DownstreamDataDelegate {
     public func downstreamDataDidReceive(directive: Downstream.Directive) {
         log.info("\(directive.header.messageId)")
-        guard handleDirectiveDelegates[directive.header.type] != nil else {
+        guard directiveHandleInfos[directive.header.type] != nil else {
             upstreamDataSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: directive.header.type))
             log.warning("No handler registered \(directive.header.messageId)")
             return
@@ -87,8 +76,8 @@ extension DirectiveSequencer: DownstreamDataDelegate {
     }
     
     public func downstreamDataDidReceive(attachment: Downstream.Attachment) {
-        log.info("\(attachment.header.messageId)")
-        guard let handler = handleDirectiveDelegates[attachment.header.type] else {
+        log.info("attachment messageId: \(attachment.header.messageId)")
+        guard let handler = directiveHandleInfos[attachment.header.type] else {
             upstreamDataSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: attachment.header.type))
             log.warning("No handler registered \(attachment.header.messageId)")
             return
@@ -96,7 +85,7 @@ extension DirectiveSequencer: DownstreamDataDelegate {
         
         // DirectiveSequencer 에서는 pass through. Attachment 에 대한 Validate 는 CA 에서 처리한다.
         directiveSequencerDispatchQueue.async {
-            handler.handleAttachment(attachment)
+            handler.attachment?(attachment)
         }
     }
 }
@@ -115,14 +104,18 @@ private extension DirectiveSequencer {
             .observeOn(prefetchHandleDirectiveScheduler)
             .concatMap({ [weak self] (directive) -> Single<Result<Void, Error>> in
                 return Single.create(subscribe: { [weak self] (event) -> Disposable in
-                    if let handler = self?.handleDirectiveDelegates[directive.header.type] {
-                        handler.handleDirectivePrefetch(directive) { result in
-                            event(.success(result))
-                        }
-                    } else {
+                    let disposable = Disposables.create()
+                    
+                    guard let preFetch = self?.directiveHandleInfos[directive.header.type]?.preFetch else {
                         event(.success(.failure(HandleDirectiveError.handlerNotFound(type: directive.header.type))))
+                        return disposable
                     }
-                    return Disposables.create()
+                    
+                    preFetch(directive) { result in
+                        event(.success(result))
+                    }
+                    
+                    return disposable
                 }).do(onSuccess: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
@@ -149,13 +142,13 @@ private extension DirectiveSequencer {
             internalSerialQueueName: "nugu.directive.handle"
         )
         
-        var handlingTypeInfos = [DirectiveTypeInforable]()
+        var handlingTypeInfos = [DirectiveHandleInfo]()
         var blockedDirectives = [DirectiveMedium: [Downstream.Directive]]()
         for medium in DirectiveMedium.allCases {
             blockedDirectives[medium] = []
         }
 
-        let remove: (DirectiveTypeInforable) -> Void = { [weak self] typeInfo in
+        let remove: (DirectiveHandleInfo) -> Void = { [weak self] typeInfo in
             self?.directiveSequencerDispatchQueue.async { [weak self] in
                 handlingTypeInfos.remove(element: typeInfo)
                 
@@ -174,23 +167,21 @@ private extension DirectiveSequencer {
             .observeOn(handleDirectiveScheduler)
             .do(onNext: { [weak self] directive in
                 guard let self = self else { return }
-                guard
-                    let handler = self.handleDirectiveDelegates[directive.header.type],
-                    let typeInfo = handler.handleDirectiveTypeInfos()[directive.header.type] else {
-                    log.warning("No handler registered \(directive.header.messageId)")
+                guard let handler = self.directiveHandleInfos[directive.header.type] else {
+                    log.error("No handler registered \(directive.header.messageId)")
                     return
                 }
-
+                
                 // Block 되어야 하는 Directive 인지 확인
-                guard handlingTypeInfos.isBlock(medium: typeInfo.medium) == false else {
+                guard handlingTypeInfos.isBlock(medium: handler.medium) == false else {
                     log.debug("Block directive \(directive.header.messageId)")
-                    blockedDirectives[typeInfo.medium]?.append(directive)
+                    blockedDirectives[handler.medium]?.append(directive)
                     return
                 }
 
-                handlingTypeInfos.append(typeInfo)
-                handler.handleDirective(directive) { [weak self] result in
-                    remove(typeInfo)
+                handlingTypeInfos.append(handler)
+                handler.handler(directive) { [weak self] result in
+                    remove(handler)
                     if case .failure(let error) = result {
                         self?.upstreamDataSender.sendCrashReport(error: error)
                         log.error(error)

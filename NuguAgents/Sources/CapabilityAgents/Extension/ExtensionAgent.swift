@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityEventAgentable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.1")
     
@@ -32,17 +32,22 @@ final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAg
     // ExtensionAgentProtocol
     public weak var delegate: ExtensionAgentDelegate?
     
+    // Handleable Directive
+    private lazy var handleableDirectiveInfos = [
+        DirectiveHandleInfo(namespace: "Extension", name: "Action", medium: .none, isBlocking: false, handler: handleAction)
+    ]
+    
     public init(
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
+        log.info("initiated")
         
         self.upstreamDataSender = upstreamDataSender
         
         contextManager.add(provideContextDelegate: self)
-        directiveSequencer.add(handleDirectiveDelegate: self)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
@@ -62,53 +67,6 @@ public extension ExtensionAgent {
     }
 }
 
-// MARK: - HandleDirectiveDelegate
-
-extension ExtensionAgent: HandleDirectiveDelegate {    
-    public func handleDirective(
-        _ directive: Downstream.Directive,
-        completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
-            completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Unknown directive")))
-            return
-        }
-        
-        switch directiveTypeInfo {
-        case .action:
-            guard let data = directive.payload.data(using: .utf8) else {
-                completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
-                return
-            }
-            
-            let item: ExtensionAgentItem
-            do {
-                item = try JSONDecoder().decode(ExtensionAgentItem.self, from: data)
-            } catch {
-                completionHandler(.failure(error))
-                return
-            }
-            
-            delegate?.extensionAgentDidReceiveAction(
-                data: item.data,
-                playServiceId: item.playServiceId,
-                completion: { [weak self] (isSuccess) in
-                    guard let self = self else { return }
-                    
-                    let eventTypeInfo: ExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
-                    let event = ExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
-                    
-                    self.sendEvent(
-                        event,
-                        dialogRequestId: TimeUUID().hexString,
-                        messageId: TimeUUID().hexString
-                    )
-            })
-            
-            completionHandler(.success(()))
-        }
-    }
-}
-
 // MARK: - ContextInfoDelegate
 
 extension ExtensionAgent: ContextInfoDelegate {
@@ -119,5 +77,42 @@ extension ExtensionAgent: ContextInfoDelegate {
         ]
         
         return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+    }
+}
+
+// MARK: - Private(Directive)
+
+private extension ExtensionAgent {
+    func handleAction(_ directive: Downstream.Directive, _ completionHandler: (Result<Void, Error>) -> Void) {
+        guard let data = directive.payload.data(using: .utf8) else {
+            completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
+            return
+        }
+        
+        let item: ExtensionAgentItem
+        do {
+            item = try JSONDecoder().decode(ExtensionAgentItem.self, from: data)
+        } catch {
+            completionHandler(.failure(error))
+            return
+        }
+        
+        delegate?.extensionAgentDidReceiveAction(
+            data: item.data,
+            playServiceId: item.playServiceId,
+            completion: { [weak self] (isSuccess) in
+                guard let self = self else { return }
+                
+                let eventTypeInfo: ExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
+                let event = ExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
+                
+                self.sendEvent(
+                    event,
+                    dialogRequestId: TimeUUID().hexString,
+                    messageId: TimeUUID().hexString
+                )
+        })
+        
+        completionHandler(.success(()))
     }
 }
