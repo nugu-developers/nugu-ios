@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, CapabilityFocusAgentable {
+final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     
@@ -32,8 +32,7 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
     public let upstreamDataSender: UpstreamDataSendable
     
     // CapabilityFocusAgentable
-    public let focusManager: FocusManageable
-    public let channelPriority: FocusChannelPriority
+    private let focusManager: FocusManageable
     
     // Private
     private let contextManager: ContextManageable
@@ -66,15 +65,13 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
     public init(
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
-        focusManager: FocusManageable,
-        channelPriority: FocusChannelPriority
+        focusManager: FocusManageable
     ) {
         log.info("")
         
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.focusManager = focusManager
-        self.channelPriority = channelPriority
         
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
@@ -132,6 +129,10 @@ extension TextAgent: ContextInfoDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TextAgent: FocusChannelDelegate {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return .recognition
+    }
+    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(textAgentState)")
         self.focusState = focusState

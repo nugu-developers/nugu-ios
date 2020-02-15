@@ -25,13 +25,12 @@ import JadeMarble
 
 import RxSwift
 
-final public class ASRAgent: ASRAgentProtocol, CapabilityEventAgentable, CapabilityFocusAgentable {
+final public class ASRAgent: ASRAgentProtocol, CapabilityEventAgentable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
     
     // CapabilityFocusAgentable
-    public let focusManager: FocusManageable
-    public let channelPriority: FocusChannelPriority
+    private let focusManager: FocusManageable
     
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
@@ -139,12 +138,11 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityEventAgentable, Capabil
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: "ASR", name: "ExpectSpeech", medium: .audio, isBlocking: true, preFetch: prefetchExpectSpeech, handler: handleExpectSpeech),
-        DirectiveHandleInfo(namespace: "ASR", name: "NotifyResult", medium: .none, isBlocking: false, handler: notifyResult)
+        DirectiveHandleInfo(namespace: "ASR", name: "NotifyResult", medium: .none, isBlocking: false, handler: handleNotifyResult)
     ]
     
     public init(
         focusManager: FocusManageable,
-        channelPriority: FocusChannelPriority,
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
@@ -154,7 +152,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityEventAgentable, Capabil
         Self.endPointDetector = EndPointDetector()
         
         self.focusManager = focusManager
-        self.channelPriority = channelPriority
         self.upstreamDataSender = upstreamDataSender
         self.contextManager = contextManager
         self.audioStream = audioStream
@@ -246,6 +243,10 @@ public extension ASRAgent {
 // MARK: - FocusChannelDelegate
 
 extension ASRAgent: FocusChannelDelegate {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return .recognition
+    }
+    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("Focus:\(focusState) ASR:\(asrState)")
         self.focusState = focusState
@@ -393,7 +394,7 @@ private extension ASRAgent {
         )
     }
     
-    func notifyResult(_ directive: Downstream.Directive?, _ completionHandler: ((Result<Void, Error>) -> Void)?) {
+    func handleNotifyResult(_ directive: Downstream.Directive?, _ completionHandler: ((Result<Void, Error>) -> Void)?) {
         completionHandler?(
             Result { [weak self] in
                 guard let data = directive?.payload.data(using: .utf8) else {

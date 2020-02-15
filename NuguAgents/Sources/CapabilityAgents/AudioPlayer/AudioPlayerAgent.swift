@@ -24,13 +24,9 @@ import NuguCore
 
 import RxSwift
 
-final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityEventAgentable, CapabilityFocusAgentable {
+final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityEventAgentable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
-    
-    // CapabilityFocusAgentable
-    public let focusManager: FocusManageable
-    public let channelPriority: FocusChannelPriority
     
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
@@ -48,6 +44,7 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityEventAg
      
     // Private
     private let playSyncManager: PlaySyncManageable
+    private let focusManager: FocusManageable
     private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
@@ -121,7 +118,6 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityEventAg
     
     public init(
         focusManager: FocusManageable,
-        channelPriority: FocusChannelPriority,
         upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
@@ -131,7 +127,6 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityEventAg
         log.info("")
         
         self.focusManager = focusManager
-        self.channelPriority = channelPriority
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.audioPlayerPauseTimeout = audioPlayerPauseTimeout
@@ -255,6 +250,10 @@ public extension AudioPlayerAgent {
 // MARK: - FocusChannelDelegate
 
 extension AudioPlayerAgent: FocusChannelDelegate {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return .content
+    }
+    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(audioPlayerState)")
         self.focusState = focusState
