@@ -304,13 +304,12 @@ extension ASRAgent: FocusChannelDelegate {
 // MARK: - ContextInfoDelegate
 
 extension ASRAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "engine": "skt"
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 

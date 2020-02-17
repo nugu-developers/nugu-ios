@@ -131,14 +131,13 @@ extension DisplayAgent: HandleDirectiveDelegate {
 // MARK: - ContextInfoDelegate
 
 extension DisplayAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any?] = [
-            "version": capabilityAgentProperty.version,
-            "token": currentItem?.token,
-            "playServiceId": currentItem?.playServiceId
+            "version": self.capabilityAgentProperty.version,
+            "token": self.currentItem?.token,
+            "playServiceId": self.currentItem?.playServiceId
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        completionHandler(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 

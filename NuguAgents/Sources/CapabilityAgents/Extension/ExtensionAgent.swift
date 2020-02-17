@@ -112,12 +112,11 @@ extension ExtensionAgent: HandleDirectiveDelegate {
 // MARK: - ContextInfoDelegate
 
 extension ExtensionAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "data": delegate?.extensionAgentRequestContext()
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
