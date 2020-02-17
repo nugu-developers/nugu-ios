@@ -135,18 +135,24 @@ extension DisplayAgent: HandleDirectiveDelegate {
 // MARK: - ContextInfoDelegate
 
 extension DisplayAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
-        var payload: [String: Any?] = [
-            "version": capabilityAgentProperty.version,
-            "token": currentItem?.token,
-            "playServiceId": currentItem?.playServiceId
-        ]
-        if let info = renderingInfos.first(where: { $0.currentItem?.templateId == currentItem?.templateId }),
-            let delegate = info.delegate {
-            payload["focusedItemToken"] = (info.currentItem?.focusable ?? false) ? delegate.focusedItemToken() : nil
-            payload["visibleTokenList"] = delegate.visibleTokenList()
+    public func contextInfoRequestContext(completionHandler: @escaping (ContextInfo?) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                completionHandler(nil)
+                return
+            }
+            var payload: [String: Any?] = [
+                "version": self.capabilityAgentProperty.version,
+                "token": self.currentItem?.token,
+                "playServiceId": self.currentItem?.playServiceId
+            ]
+            if let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == self.currentItem?.templateId }),
+                let delegate = info.delegate {
+                payload["focusedItemToken"] = (info.currentItem?.focusable ?? false) ? delegate.focusedItemToken() : nil
+                payload["visibleTokenList"] = delegate.visibleTokenList()
+            }
+            completionHandler(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
         }
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
@@ -275,14 +281,14 @@ private extension DisplayAgent {
                 )
                 return
             }
-            
-            let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
-            
-            self.sendEvent(
-                Event(playServiceId: payload.playServiceId, typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed),
-                dialogRequestId: TimeUUID().hexString,
-                messageId: TimeUUID().hexString
-            )
+            DispatchQueue.main.async { [weak self] in
+                let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
+                self?.sendEvent(
+                    Event(playServiceId: payload.playServiceId, typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed),
+                    dialogRequestId: TimeUUID().hexString,
+                    messageId: TimeUUID().hexString
+                )
+            }
         }
     }
     
@@ -305,14 +311,14 @@ private extension DisplayAgent {
                     )
                     return
             }
-            
-            let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
-            
-            self.sendEvent(
-                Event(playServiceId: payload.playServiceId, typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed),
-                dialogRequestId: TimeUUID().hexString,
-                messageId: TimeUUID().hexString
-            )
+            DispatchQueue.main.async { [weak self] in
+                let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
+                self?.sendEvent(
+                    Event(playServiceId: payload.playServiceId, typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed),
+                    dialogRequestId: TimeUUID().hexString,
+                    messageId: TimeUUID().hexString
+                )
+            }
         }
     }
     

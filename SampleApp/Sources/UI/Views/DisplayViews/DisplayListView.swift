@@ -86,61 +86,40 @@ extension DisplayListView: UITableViewDelegate {
 
 extension DisplayListView: DisplayControllable {
     func visibleTokenList() -> [String]? {
-        var visibleTokenList: [String]?
-        let semaphore = DispatchSemaphore(value: 0)
-        DispatchQueue.main.async { [weak self] in
-            visibleTokenList = self?.tableView.visibleCells.map { (cell) -> String? in
-                guard let indexPath = self?.tableView.indexPath(for: cell),
-                    let item = self?.templateListItems?[indexPath.row] else {
-                        return nil
-                }
-                return item.token
-            }.compactMap { $0 }
-            semaphore.signal()
-        }
-        semaphore.wait()
-        return visibleTokenList
+        return tableView.visibleCells.map { [weak self] (cell) -> String? in
+            guard let indexPath = self?.tableView.indexPath(for: cell),
+                let item = self?.templateListItems?[indexPath.row] else {
+                    return nil
+            }
+            return item.token
+        }.compactMap { $0 }
     }
     
     func scroll(direction: DisplayControlPayload.Direction) -> Bool {
-        var scrollResult = false
-        let semaphore = DispatchSemaphore(value: 0)
-        
         guard let templateListItems = templateListItems else {
-            return scrollResult
+            return false
         }
         
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            let visibleCellsCount = self.tableView.visibleCells.count
-            switch direction {
-            case .previous:
-                guard let topCell = self.tableView.visibleCells.first,
-                    let topCellRowIndex = self.tableView.indexPath(for: topCell)?.row else {
-                        scrollResult = false
-                        semaphore.signal()
-                        return
-                }
-                let previousAnchorIndex = max(topCellRowIndex - visibleCellsCount, 0)
-                self.tableView.scrollToRow(at: IndexPath(row: previousAnchorIndex, section: 0), at: .top, animated: true)
-                scrollResult = true
-                semaphore.signal()
-            case .next:
-                let lastCellRowIndex = templateListItems.count - 1
-                guard let lastCell = self.tableView.visibleCells.last,
-                    let lastVisibleCellRowIndex = self.tableView.indexPath(for: lastCell)?.row,
-                    lastCellRowIndex > lastVisibleCellRowIndex else {
-                        scrollResult = false
-                        semaphore.signal()
-                        return
-                }
-                let nextAnchorIndex = min(lastVisibleCellRowIndex + visibleCellsCount, lastCellRowIndex)
-                self.tableView.scrollToRow(at: IndexPath(row: nextAnchorIndex, section: 0), at: .bottom, animated: true)
-                scrollResult = true
-                semaphore.signal()
+        let visibleCellsCount = tableView.visibleCells.count
+        switch direction {
+        case .previous:
+            guard let topCell = tableView.visibleCells.first,
+                let topCellRowIndex = tableView.indexPath(for: topCell)?.row else {
+                    return false
             }
+            let previousAnchorIndex = max(topCellRowIndex - visibleCellsCount, 0)
+            tableView.scrollToRow(at: IndexPath(row: previousAnchorIndex, section: 0), at: .top, animated: true)
+            return true
+        case .next:
+            let lastCellRowIndex = templateListItems.count - 1
+            guard let lastCell = tableView.visibleCells.last,
+                let lastVisibleCellRowIndex = tableView.indexPath(for: lastCell)?.row,
+                lastCellRowIndex > lastVisibleCellRowIndex else {
+                    return false
+            }
+            let nextAnchorIndex = min(lastVisibleCellRowIndex + visibleCellsCount, lastCellRowIndex)
+            tableView.scrollToRow(at: IndexPath(row: nextAnchorIndex, section: 0), at: .bottom, animated: true)
+            return true
         }
-        semaphore.wait()
-        return scrollResult
     }
 }
