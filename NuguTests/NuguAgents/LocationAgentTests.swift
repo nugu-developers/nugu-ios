@@ -52,27 +52,29 @@ class LocationAgentTests: XCTestCase {
             }
         }
         */
-        guard let contextInfo = locationAgent.contextInfoRequestContext() else {
-            XCTFail("contextInfo is nil")
-            return
-        }
-        
-        XCTAssertEqual(contextInfo.name, locationAgent.capabilityAgentProperty.name)
-        
-        guard let payload = contextInfo.payload as? [String: Any] else {
-            XCTFail("payload is nil or not dictionary")
-            return
-        }
-        
-        XCTAssertEqual(payload["version"] as? String, locationAgent.capabilityAgentProperty.version)
-        
-        guard let current = payload["current"] as? [String: Any] else {
-            XCTFail("payload[\"current\"] is nil or not dictionary")
-            return
-        }
-        
-        XCTAssertEqual(current["latitude"] as? String, "10.1")
-        XCTAssertEqual(current["longitude"] as? String, "20.9")
+        locationAgent.contextInfoRequestContext(completionHandler: { [weak self] contextInfo in
+            guard let self = self, let contextInfo = contextInfo else {
+                XCTFail("contextInfo is nil")
+                return
+            }
+            
+            XCTAssertEqual(contextInfo.name, self.locationAgent.capabilityAgentProperty.name)
+            
+            guard let payload = contextInfo.payload as? [String: Any] else {
+                XCTFail("payload is nil or not dictionary")
+                return
+            }
+            
+            XCTAssertEqual(payload["version"] as? String, self.locationAgent.capabilityAgentProperty.version)
+            
+            guard let current = payload["current"] as? [String: Any] else {
+                XCTFail("payload[\"current\"] is nil or not dictionary")
+                return
+            }
+            
+            XCTAssertEqual(current["latitude"] as? String, "10.1")
+            XCTAssertEqual(current["longitude"] as? String, "20.9")
+        })
     }
 }
 
