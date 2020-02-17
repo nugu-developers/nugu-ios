@@ -61,7 +61,10 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
         didSet {
             log.info("\(oldValue) \(audioPlayerState)")
             guard oldValue != audioPlayerState else { return }
-            guard let media = self.currentMedia else { return }
+            guard let media = self.currentMedia else {
+                log.error("AudioPlayerAgentMedia is nil")
+                return
+            }
             
             // progress report -> pause timer -> `PlaySyncState` -> `AudioPlayerAgentMedia` -> `AudioPlayerAgentDelegate`
             switch audioPlayerState {
