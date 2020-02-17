@@ -122,10 +122,9 @@ extension TextAgent {
 // MARK: - ContextInfoDelegate
 
 extension TextAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
-        let payload: [String: Any] = ["version": capabilityAgentProperty.version]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+        let payload: [String: Any] = ["version": capabilityAgentProperty.version]        
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 

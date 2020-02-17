@@ -135,7 +135,7 @@ extension DisplayAgent: HandleDirectiveDelegate {
 // MARK: - ContextInfoDelegate
 
 extension DisplayAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "token": currentItem?.token,
@@ -146,7 +146,7 @@ extension DisplayAgent: ContextInfoDelegate {
             payload["focusedItemToken"] = (info.currentItem?.focusable ?? false) ? delegate.focusedItemToken() : nil
             payload["visibleTokenList"] = delegate.visibleTokenList()
         }
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 

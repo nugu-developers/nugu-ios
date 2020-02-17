@@ -105,13 +105,12 @@ extension SpeakerAgent: HandleDirectiveDelegate {
 // MARK: - ContextInfoDelegate
 
 extension SpeakerAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "volumes": controllerVolumes.values
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 

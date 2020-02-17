@@ -37,12 +37,13 @@ public class PlaySyncManager: PlaySyncManageable {
             .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
     }
     
-    public init() {
-        log.debug("")
+    public init(contextManager: ContextManageable) {
+        log.debug("initiated")
+        contextManager.add(provideContextDelegate: self)
     }
     
     deinit {
-        log.debug("")
+        log.debug("deinitiated")
     }
 }
 
@@ -122,8 +123,8 @@ extension PlaySyncManager {
 
 // MARK: - ContextInfoDelegate
 extension PlaySyncManager: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
-        return ContextInfo(contextType: .client, name: "playStack", payload: playServiceIds)
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+        completionHandler(ContextInfo(contextType: .client, name: "playStack", payload: playServiceIds))
     }
 }
 

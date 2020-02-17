@@ -2,8 +2,8 @@
 //  AudioProvidable.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 05/05/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 06/02/2020.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,14 +20,16 @@
 
 import Foundation
 
-/// <#Description#>
+/**
+ Audio Provider Protocol
+ 
+ If you want to provide audio data to `AudioStream` from what ever you want (etc. file, network), You can implement class conform this protocol.
+ `NuguClient` will use the audio source you want when you set the `inputProvider` as your instance.
+ 
+ - seeAlso: `NuguClient`
+ */
 public protocol AudioProvidable {
-    /// <#Description#>
     var isRunning: Bool { get }
-    
-    /// <#Description#>
-    /// - Parameter streamWriter: <#streamWriter description#>
     func start(streamWriter: AudioStreamWritable) throws
-    /// <#Description#>
     func stop()
 }

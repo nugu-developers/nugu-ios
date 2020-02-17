@@ -380,7 +380,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
 // MARK: - ContextInfoDelegate
 
 extension AudioPlayerAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "playerActivity": audioPlayerState.rawValue,
@@ -391,7 +391,7 @@ extension AudioPlayerAgent: ContextInfoDelegate {
         if let duration = duration {
             payload["durationInMilliseconds"] = duration * 1000
         }
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 

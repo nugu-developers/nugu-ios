@@ -1,9 +1,9 @@
 //
-//  SystemAgentDelegate.swift
-//  NuguAgents
+//  MockContextManager.swift
+//  NuguTests
 //
-//  Created by MinChul Lee on 2019/09/17.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/02/11.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,7 +20,18 @@
 
 import Foundation
 
-/// The `SystemAgentDelegate` protocol defines methods that action when `SystemAgent` receives a directive.
-public protocol SystemAgentDelegate: class {
-    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail)
+import NuguCore
+
+class MockContextManager: ContextManageable {
+    func add(provideContextDelegate: ContextInfoDelegate) {
+        //
+    }
+    
+    func remove(provideContextDelegate: ContextInfoDelegate) {
+        //
+    }
+    
+    func getContexts(completionHandler: @escaping (ContextPayload) -> Void) {
+        //
+    }
 }

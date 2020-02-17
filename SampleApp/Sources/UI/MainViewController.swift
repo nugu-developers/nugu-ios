@@ -168,13 +168,13 @@ private extension MainViewController {
         NuguAudioSessionManager.shared.updateAudioSession()
         
         // Add delegates
-        NuguCentralManager.shared.client.getComponent(KeywordDetector.self)?.delegate = self
-        NuguCentralManager.shared.client.getComponent(DialogStateAggregator.self)?.add(delegate: self)
-        NuguCentralManager.shared.client.getComponent(ASRAgentProtocol.self)?.add(delegate: self)
-        NuguCentralManager.shared.client.getComponent(TextAgentProtocol.self)?.add(delegate: self)
-        NuguCentralManager.shared.client.getComponent(DisplayAgentProtocol.self)?.add(delegate: self)
-        NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.add(displayDelegate: self)
-        NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.add(delegate: self)
+        NuguCentralManager.shared.client.keywordDetector.delegate = self
+        NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
+        NuguCentralManager.shared.client.asrAgent.add(delegate: self)
+        NuguCentralManager.shared.client.textAgent.add(delegate: self)
+        NuguCentralManager.shared.client.displayAgent.add(delegate: self)
+        NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
+        NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
 
         NuguCentralManager.shared.displayPlayerController?.use()
     }
@@ -307,7 +307,7 @@ private extension MainViewController {
         }
         displayView.onItemSelect = { (selectedItemToken) in
             guard let selectedItemToken = selectedItemToken else { return }
-            NuguCentralManager.shared.client.getComponent(DisplayAgentProtocol.self)?.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
+            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
         }
         displayView.onUserInteraction = { [weak self] in
             guard let self = self else { return }
@@ -367,7 +367,7 @@ private extension MainViewController {
 private extension MainViewController {
     func startDisplayContextReleaseTimer(templateId: String, duration: DispatchTimeInterval) {
         // Inform sdk to stop displayRendering timer
-        NuguCentralManager.shared.client.getComponent(DisplayAgentProtocol.self)?.stopRenderingTimer(templateId: templateId)
+        NuguCentralManager.shared.client.displayAgent.stopRenderingTimer(templateId: templateId)
         
         // Start application side's displayContextReleaseTimer
         displayContextReleaseTimer?.cancel()
@@ -425,15 +425,15 @@ extension MainViewController {
                 case .authError:
                     NuguCentralManager.shared.handleAuthError()
                 case .timeout:
-                    NuguCentralManager.shared.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayTimeout)
+                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
                 default:
-                    NuguCentralManager.shared.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayAuthServerError)
+                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
                 }
             } else { // Handle URLError
                 guard let urlError = error as? URLError else { return }
                 switch urlError.code {
                 case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
-                    NuguCentralManager.shared.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayNetworkError)
+                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
                 default: // Handle other URLErrors with your own way
                     break
                 }
@@ -540,7 +540,7 @@ extension MainViewController: ASRAgentDelegate {
                     ASRBeepPlayer.shared.beep(type: .fail)
                     self?.nuguVoiceChrome.changeState(state: .speakingError)
                 case ASRError.recognizeFailed:
-                    NuguCentralManager.shared.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
                 default:
                     ASRBeepPlayer.shared.beep(type: .fail)
                 }

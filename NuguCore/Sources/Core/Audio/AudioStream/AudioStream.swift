@@ -2,7 +2,7 @@
 //  AudioStream.swift
 //  NuguCore
 //
-//  Created by DCs-OfficeMBP on 03/05/2019.
+//  Created by childc on 03/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,12 @@
 import Foundation
 import AVFoundation
 
+/**
+ AudioStream made from RingBuffer.
+ 
+ This stream can notify audio stream is needed or not using a delegator
+ - seeAlso: AudioStreamDelegate
+ */
 public class AudioStream {
     private let buffer: AudioBuffer
     public weak var delegate: AudioStreamDelegate? {

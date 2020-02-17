@@ -245,14 +245,13 @@ extension TTSAgent: FocusChannelDelegate {
 // MARK: - ContextInfoDelegate
 
 extension TTSAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
             "engine": "skt"
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 

@@ -24,7 +24,6 @@
 		1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
 		1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */; };
-		1F2E8006238FC21900569C59 /* SystemAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E8005238FC21900569C59 /* SystemAgentTests.swift */; };
 		1F2E8007238FCCDB00569C59 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		1F2E8008238FCCE100569C59 /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
 		1F2E8009238FCD4400569C59 /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
@@ -38,6 +37,13 @@
 		1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */; };
 		1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */; };
 		1F9C5B5E23C30B4B0086CC04 /* NuguOAuthApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */; };
+		1F9C5B7223F27AB30086CC04 /* MockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7123F27AB30086CC04 /* MockNetworkManager.swift */; };
+		1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */; };
+		1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */; };
+		1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */; };
+		1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */; };
+		1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */; };
+		1F9C5B8223F664340086CC04 /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -168,9 +174,6 @@
 		1FFFF51B237674DF00C9A177 /* NuguUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF525237676BE00C9A177 /* NuguTests.swift */; };
 		7303C68A23C5C00F00610343 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68923C5C00F00610343 /* BoundStreams.swift */; };
-		7303C6A323C8488100610343 /* ComponentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A023C8488100610343 /* ComponentKey.swift */; };
-		7303C6A423C8488100610343 /* ComponentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A123C8488100610343 /* ComponentContainer.swift */; };
-		7303C6A523C8488100610343 /* ComponentResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C6A223C8488100610343 /* ComponentResolver.swift */; };
 		73152F9E23E0405900F843C3 /* NuguAgents.h in Headers */ = {isa = PBXBuildFile; fileRef = 73152F9C23E0405900F843C3 /* NuguAgents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		73152FA123E0405900F843C3 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
 		73152FA223E0405900F843C3 /* NuguAgents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -374,6 +377,13 @@
 			remoteGlobalIDString = 1FFFEFFC23753F1800C9A177;
 			remoteInfo = NuguCore;
 		};
+		1F9C5B8423F664340086CC04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FFFF03D23753FB200C9A177;
+			remoteInfo = KeenSense;
+		};
 		1FFFF3E42375737A00C9A177 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D9C428722745894000A6585 /* Project object */;
@@ -522,7 +532,6 @@
 		1F2E7FFE238EA6E300569C59 /* MediaUrlDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUrlDataSource.swift; sourceTree = "<group>"; };
 		1F2E8000238EA70400569C59 /* MediaOpusStreamDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaOpusStreamDataSource.swift; sourceTree = "<group>"; };
 		1F2E8002238F96CD00569C59 /* SystemAgentExceptionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentExceptionCode.swift; sourceTree = "<group>"; };
-		1F2E8005238FC21900569C59 /* SystemAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
 		1F2E8011238FD43C00569C59 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		1F2E80132394E60100569C59 /* TycheKeywordDetectorEngine+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TycheKeywordDetectorEngine+State.swift"; sourceTree = "<group>"; };
 		1F2E803823966D9D00569C59 /* KeywordSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSource.swift; sourceTree = "<group>"; };
@@ -531,6 +540,12 @@
 		1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguOAuthApi.swift; sourceTree = "<group>"; };
 		1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguAgents.podspec; sourceTree = "<group>"; };
 		1F9C5B6B23EBEF810086CC04 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .travis.yml; sourceTree = "<group>"; };
+		1F9C5B7123F27AB30086CC04 /* MockNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkManager.swift; sourceTree = "<group>"; };
+		1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStreamDataRouter.swift; sourceTree = "<group>"; };
+		1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDirectiveSequencer.swift; sourceTree = "<group>"; };
+		1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockContextManager.swift; sourceTree = "<group>"; };
+		1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
+		1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentTests.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -810,9 +825,6 @@
 		7303C68423C5BFD400610343 /* EndPointDetectorState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectorState.swift; sourceTree = "<group>"; };
 		7303C68523C5BFD400610343 /* EndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetector.swift; sourceTree = "<group>"; };
 		7303C68923C5C00F00610343 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
-		7303C6A023C8488100610343 /* ComponentKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentKey.swift; sourceTree = "<group>"; };
-		7303C6A123C8488100610343 /* ComponentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentContainer.swift; sourceTree = "<group>"; };
-		7303C6A223C8488100610343 /* ComponentResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentResolver.swift; sourceTree = "<group>"; };
 		73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Precondition.swift"; sourceTree = "<group>"; };
 		73152F9A23E0405900F843C3 /* NuguAgents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguAgents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73152F9C23E0405900F843C3 /* NuguAgents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguAgents.h; sourceTree = "<group>"; };
@@ -884,6 +896,7 @@
 			files = (
 				1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */,
 				73152FED23E05D9700F843C3 /* NuguAgents.framework in Frameworks */,
+				1F9C5B8223F664340086CC04 /* KeenSense.framework in Frameworks */,
 				1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */,
 				1F1008E82379237F00D90FEE /* NuguCore.framework in Frameworks */,
 			);
@@ -1047,18 +1060,9 @@
 			path = DataSource;
 			sourceTree = "<group>";
 		};
-		1F2E8004238FC20000569C59 /* Capability */ = {
-			isa = PBXGroup;
-			children = (
-				1F2E8005238FC21900569C59 /* SystemAgentTests.swift */,
-			);
-			path = Capability;
-			sourceTree = "<group>";
-		};
 		1F2E803523966B1900569C59 /* Client */ = {
 			isa = PBXGroup;
 			children = (
-				1FD4A97D23A0D026002EB56D /* Container */,
 				1FFFF3D92375735E00C9A177 /* NuguClient.swift */,
 				7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */,
 			);
@@ -1109,6 +1113,25 @@
 			path = PropertyWrappers;
 			sourceTree = "<group>";
 		};
+		1F9C5B7023F27A8F0086CC04 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				1F9C5B7123F27AB30086CC04 /* MockNetworkManager.swift */,
+				1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */,
+				1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */,
+				1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
+		1F9C5B7923F2D7440086CC04 /* NuguCore */ = {
+			isa = PBXGroup;
+			children = (
+				1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */,
+			);
+			path = NuguCore;
+			sourceTree = "<group>";
+		};
 		1FD1CFD523A388570000FB8C /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1117,13 +1140,13 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		1FD1CFD923A75B040000FB8C /* NuguCore */ = {
+		1FD1CFD923A75B040000FB8C /* NuguAgents */ = {
 			isa = PBXGroup;
 			children = (
-				1F2E8004238FC20000569C59 /* Capability */,
-				1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */,
+				1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */,
+				1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */,
 			);
-			path = NuguCore;
+			path = NuguAgents;
 			sourceTree = "<group>";
 		};
 		1FD1CFE923AE3BDA0000FB8C /* Grant */ = {
@@ -1144,16 +1167,6 @@
 				1FFFF28D2375703000C9A177 /* DialogState.swift */,
 			);
 			path = Business;
-			sourceTree = "<group>";
-		};
-		1FD4A97D23A0D026002EB56D /* Container */ = {
-			isa = PBXGroup;
-			children = (
-				7303C6A123C8488100610343 /* ComponentContainer.swift */,
-				7303C6A023C8488100610343 /* ComponentKey.swift */,
-				7303C6A223C8488100610343 /* ComponentResolver.swift */,
-			);
-			path = Container;
 			sourceTree = "<group>";
 		};
 		1FD4A98223A22302002EB56D /* Audio */ = {
@@ -2130,7 +2143,9 @@
 		1FFFF524237676BE00C9A177 /* NuguTests */ = {
 			isa = PBXGroup;
 			children = (
-				1FD1CFD923A75B040000FB8C /* NuguCore */,
+				1F9C5B7023F27A8F0086CC04 /* Mock */,
+				1F9C5B7923F2D7440086CC04 /* NuguCore */,
+				1FD1CFD923A75B040000FB8C /* NuguAgents */,
 				1FFFF525237676BE00C9A177 /* NuguTests.swift */,
 				1FFFF527237676BE00C9A177 /* Info.plist */,
 			);
@@ -2470,6 +2485,7 @@
 			dependencies = (
 				1FFFF3E52375737A00C9A177 /* PBXTargetDependency */,
 				73152FF023E05D9700F843C3 /* PBXTargetDependency */,
+				1F9C5B8523F664340086CC04 /* PBXTargetDependency */,
 			);
 			name = NuguClientKit;
 			packageProductDependencies = (
@@ -2968,16 +2984,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7303C6A423C8488100610343 /* ComponentContainer.swift in Sources */,
 				7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */,
 				1F2E803923966D9D00569C59 /* KeywordSource.swift in Sources */,
 				1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */,
-				7303C6A523C8488100610343 /* ComponentResolver.swift in Sources */,
 				7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */,
 				1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */,
 				7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */,
 				1FD1CFF723BDC0660000FB8C /* DialogStateAggregator.swift in Sources */,
-				7303C6A323C8488100610343 /* ComponentKey.swift in Sources */,
 				1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */,
 				1FD4A97C23A0C2FD002EB56D /* NuguClientKit.swift in Sources */,
 				7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */,
@@ -3085,8 +3098,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */,
-				1F2E8006238FC21900569C59 /* SystemAgentTests.swift in Sources */,
+				1F9C5B7223F27AB30086CC04 /* MockNetworkManager.swift in Sources */,
+				1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */,
+				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,
 				1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */,
+				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
+				1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */,
+				1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3198,6 +3216,11 @@
 			isa = PBXTargetDependency;
 			target = 1FFFEFFC23753F1800C9A177 /* NuguCore */;
 			targetProxy = 1F1008F82379247800D90FEE /* PBXContainerItemProxy */;
+		};
+		1F9C5B8523F664340086CC04 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FFFF03D23753FB200C9A177 /* KeenSense */;
+			targetProxy = 1F9C5B8423F664340086CC04 /* PBXContainerItemProxy */;
 		};
 		1FFFF3E52375737A00C9A177 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

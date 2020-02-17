@@ -43,22 +43,16 @@ final public class LocationAgent: LocationAgentProtocol {
 // MARK: - ContextInfoDelegate
 
 extension LocationAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version
         ]
-        
         if let locationInfo = delegate?.locationAgentRequestLocationInfo() {
             payload["current"] = [
                 "latitude": locationInfo.latitude,
                 "longitude": locationInfo.longitude
             ]
         }
-        
-        return ContextInfo(
-            contextType: .capability,
-            name: capabilityAgentProperty.name,
-            payload: payload.compactMapValues { $0 }
-        )
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
