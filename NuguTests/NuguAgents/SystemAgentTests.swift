@@ -56,19 +56,21 @@ class SystemAgentTests: XCTestCase {
             "version": "1.0",
          }
          */
-        guard let contextInfo = systemAgent.contextInfoRequestContext() else {
-            XCTFail("contextInfo is nil")
-            return
-        }
-        
-        XCTAssertEqual(contextInfo.name, systemAgent.capabilityAgentProperty.name)
-        
-        guard let payload = contextInfo.payload as? [String: Any] else {
-            XCTFail("context payload is nil or not dictionary")
-            return
-        }
-        
-        XCTAssertEqual(payload["version"] as? String, systemAgent.capabilityAgentProperty.version)
+        systemAgent.contextInfoRequestContext(completionHandler: { [weak self] contextInfo in
+            guard let self = self, let contextInfo = contextInfo else {
+                XCTFail("contextInfo is nil")
+                return
+            }
+            
+            XCTAssertEqual(contextInfo.name, self.systemAgent.capabilityAgentProperty.name)
+            
+            guard let payload = contextInfo.payload as? [String: Any] else {
+                XCTFail("context payload is nil or not dictionary")
+                return
+            }
+            
+            XCTAssertEqual(payload["version"] as? String, self.systemAgent.capabilityAgentProperty.version)
+        })
     }
     
     // MARK: Directives

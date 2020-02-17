@@ -47,19 +47,20 @@ public extension CapabilityEventAgentable {
         completion: ((Result<Data, Error>) -> Void)? = nil,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil
     ) {
-        let contextPayload = ContextPayload(
-            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
-            client: []
-        )
-        
-        sendEvent(
-            event,
-            contextPayload: contextPayload,
-            dialogRequestId: dialogRequestId,
-            messageId: messageId,
-            completion: completion,
-            resultHandler: resultHandler
-        )
+        contextInfoRequestContext { [weak self] contextInfo in
+            let contextPayload = ContextPayload(
+                supportedInterfaces: [contextInfo].compactMap({ $0 }),
+                client: []
+            )
+            self?.sendEvent(
+                event,
+                contextPayload: contextPayload,
+                dialogRequestId: dialogRequestId,
+                messageId: messageId,
+                completion: completion,
+                resultHandler: resultHandler
+            )
+        }
     }
     
     func sendEvent(
