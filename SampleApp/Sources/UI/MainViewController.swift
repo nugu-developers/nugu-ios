@@ -570,14 +570,14 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func focusedItemToken() -> String? {
+    func displayAgentFocusedItemToken() -> String? {
         guard let displayControllableView = displayView as? DisplayControllable else {
             return nil
         }
         return displayControllableView.focusedItemToken()
     }
     
-    func visibleTokenList() -> [String]? {
+    func displayAgentVisibleTokenList() -> [String]? {
         guard let displayControllableView = displayView as? DisplayControllable else {
             return nil
         }

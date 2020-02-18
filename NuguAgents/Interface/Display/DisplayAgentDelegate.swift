@@ -44,8 +44,8 @@ public protocol DisplayAgentDelegate: class {
     func displayAgentShouldScroll(direction: DisplayControlPayload.Direction) -> Bool
     
     /// Should return currently focused item token.
-    func focusedItemToken() -> String?
+    func displayAgentFocusedItemToken() -> String?
     
     /// Should return currently visible item's token.
-    func visibleTokenList() -> [String]?
+    func displayAgentVisibleTokenList() -> [String]?
 }

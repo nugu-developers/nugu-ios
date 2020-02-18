@@ -148,8 +148,8 @@ extension DisplayAgent: ContextInfoDelegate {
             ]
             if let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == self.currentItem?.templateId }),
                 let delegate = info.delegate {
-                payload["focusedItemToken"] = (info.currentItem?.focusable ?? false) ? delegate.focusedItemToken() : nil
-                payload["visibleTokenList"] = delegate.visibleTokenList()
+                payload["focusedItemToken"] = (info.currentItem?.focusable ?? false) ? delegate.displayAgentFocusedItemToken() : nil
+                payload["visibleTokenList"] = delegate.displayAgentVisibleTokenList()
             }
             completionHandler(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
         }
