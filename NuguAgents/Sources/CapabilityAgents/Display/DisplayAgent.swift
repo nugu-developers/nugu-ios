@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-open class DisplayAgent: DisplayAgentProtocol {
+public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.1")
     

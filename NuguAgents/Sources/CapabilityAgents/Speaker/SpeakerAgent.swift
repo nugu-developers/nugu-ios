@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-open class SpeakerAgent: SpeakerAgentProtocol {
+public final class SpeakerAgent: SpeakerAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .speaker, version: "1.0")
     

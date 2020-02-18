@@ -25,7 +25,7 @@ import JadeMarble
 
 import RxSwift
 
-open class ASRAgent: ASRAgentProtocol {
+public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
     

@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-open class TTSAgent: TTSAgentProtocol {
+public final class TTSAgent: TTSAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
     

@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-open class TextAgent: TextAgentProtocol {
+public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     

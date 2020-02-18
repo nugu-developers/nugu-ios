@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-open class ExtensionAgent: ExtensionAgentProtocol {
+public final class ExtensionAgent: ExtensionAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.1")
     
