@@ -55,7 +55,7 @@ extension FocusManager {
     public func requestFocus(channelDelegate: FocusChannelDelegate) {
         focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let info = self.channelInfos.object(forDelegate: channelDelegate) else {
+            guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
                 log.warning("\(channelDelegate): Channel not registered")
                 return
             }
@@ -84,7 +84,7 @@ extension FocusManager {
     public func releaseFocus(channelDelegate: FocusChannelDelegate) {
         focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let info = self.channelInfos.object(forDelegate: channelDelegate) else {
+            guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
                 log.warning("\(channelDelegate): Channel not registered")
                 return
             }
@@ -111,7 +111,7 @@ extension FocusManager {
 private extension FocusManager {
     func update(channelDelegate: FocusChannelDelegate, focusState: FocusState) {
         let info = FocusChannelInfo(delegate: channelDelegate, focusState: focusState)
-        guard channelInfos.replace(info: info) else {
+        guard channelInfos.replace(info: info) != nil else {
             log.warning("\(channelDelegate): Failed set to \(focusState).")
             return
         }

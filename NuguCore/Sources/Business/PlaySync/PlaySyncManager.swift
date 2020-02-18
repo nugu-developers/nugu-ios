@@ -101,11 +101,7 @@ public extension PlaySyncManager {
     func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let info = self.playSyncInfos.object(forDelegate: delegate, dialogRequestId: dialogRequestId) else {
-                log.warning("\(delegate): Layer not registered")
-                return
-            }
-            self.playSyncInfos.remove(element: info)
+            self.playSyncInfos.remove(delegate: delegate, dialogRequestId: dialogRequestId)
         }
     }
     
@@ -196,7 +192,7 @@ private extension PlaySyncManager {
             playServiceId: playServiceId,
             playSyncState: playSyncState
         )
-        guard playSyncInfos.replace(info: playSyncInfo) else {
+        guard playSyncInfos.replace(info: playSyncInfo) != nil else {
             log.warning("\(delegate): Failed update to \(playSyncState).")
             return
         }

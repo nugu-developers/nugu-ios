@@ -63,18 +63,28 @@ extension PlaySyncInfo: Equatable {
 // MARK: - Array + PlaySyncInfo
 
 extension Array where Element == PlaySyncInfo {
-    mutating func replace(info: PlaySyncInfo) -> Bool {
-        guard remove(element: info) else { return false }
-        insert(info, at: 0)
-        return true
-    }
-    
-    @discardableResult mutating func remove(delegate: PlaySyncDelegate, dialogRequestId: String) -> Bool {
+    /// Replaces and returns the original element
+    mutating func replace(info: PlaySyncInfo) -> PlaySyncInfo? {
         removeAll { $0.delegate == nil }
-        guard let info = object(forDelegate: delegate, dialogRequestId: dialogRequestId) else { return false }
-        return remove(element: info)
+        if let index = firstIndex(of: info) {
+            let originalInfo = remove(at: index)
+            insert(info, at: 0)
+            return originalInfo
+        }
+        return nil
     }
     
+    /// Removes and returns the original element
+    @discardableResult mutating func remove(delegate: PlaySyncDelegate, dialogRequestId: String) -> PlaySyncInfo? {
+        removeAll { $0.delegate == nil }
+        if let info = object(forDelegate: delegate, dialogRequestId: dialogRequestId),
+            let index = firstIndex(of: info) {
+            return remove(at: index)
+        }
+        return nil
+    }
+    
+    /// Returns the element for delegate
     func object(forDelegate delegate: PlaySyncDelegate, dialogRequestId: String) -> PlaySyncInfo? {
         first { $0.delegate === delegate && $0.dialogRequestId == dialogRequestId}
     }

@@ -46,7 +46,10 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
         didSet {
             log.info("\(oldValue) \(ttsState)")
             guard oldValue != ttsState else { return }
-            guard let media = currentMedia else { return }
+            guard let media = currentMedia else {
+                log.error("TTSMedia is nil")
+                return
+            }
             
             // `PlaySyncState` -> `TTSMedia` -> `TTSAgentDelegate`
             switch ttsState {

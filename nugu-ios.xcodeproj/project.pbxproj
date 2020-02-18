@@ -73,7 +73,6 @@
 		1FFFF38B2375707000C9A177 /* AudioStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31F2375707000C9A177 /* AudioStream.swift */; };
 		1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3212375707000C9A177 /* Collection+Convenience.swift */; };
 		1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */; };
-		1FFFF38E2375707000C9A177 /* Array+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3232375707000C9A177 /* Array+Equatable.swift */; };
 		1FFFF3912375707100C9A177 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3272375707000C9A177 /* Atomic.swift */; };
 		1FFFF3922375707100C9A177 /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF32A2375707000C9A177 /* ContextManager.swift */; };
 		1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF35E2375707000C9A177 /* NetworkConst.swift */; };
@@ -657,7 +656,6 @@
 		1FFFF31F2375707000C9A177 /* AudioStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioStream.swift; sourceTree = "<group>"; };
 		1FFFF3212375707000C9A177 /* Collection+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+Convenience.swift"; sourceTree = "<group>"; };
 		1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+DeepMerge.swift"; sourceTree = "<group>"; };
-		1FFFF3232375707000C9A177 /* Array+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Equatable.swift"; sourceTree = "<group>"; };
 		1FFFF3242375707000C9A177 /* KeyedDecodingContainerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedDecodingContainerExtension.swift; sourceTree = "<group>"; };
 		1FFFF3262375707000C9A177 /* TimeUUID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeUUID.swift; sourceTree = "<group>"; };
 		1FFFF3272375707000C9A177 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
@@ -1558,7 +1556,6 @@
 		1FFFF3202375707000C9A177 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3232375707000C9A177 /* Array+Equatable.swift */,
 				1FFFF3212375707000C9A177 /* Collection+Convenience.swift */,
 				1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */,
 				7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */,
@@ -2946,7 +2943,6 @@
 				1FFFF3C72375707100C9A177 /* FocusManager.swift in Sources */,
 				7315301323E11EDF00F843C3 /* MediaUrlDataSource.swift in Sources */,
 				7315302623E11EDF00F843C3 /* ReceiveMessageDelegate.swift in Sources */,
-				1FFFF38E2375707000C9A177 /* Array+Equatable.swift in Sources */,
 				7315302723E11EDF00F843C3 /* NetworkStatusDelegate.swift in Sources */,
 				7315301A23E11EDF00F843C3 /* ContextManageable.swift in Sources */,
 				7315302523E11EDF00F843C3 /* NetworkManageable.swift in Sources */,
