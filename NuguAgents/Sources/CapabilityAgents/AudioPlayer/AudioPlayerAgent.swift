@@ -311,15 +311,16 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
-            // Event -> `AudioPlayerState` -> `FocusState`
+            // `AudioPlayerState` -> Event -> `FocusState`
             switch state {
             case .start:
+                self.audioPlayerState = .playing
                 self.sendEvent(media: media, typeInfo: .playbackStarted)
-                self.audioPlayerState = .playing
             case .resume:
-                self.sendEvent(media: media, typeInfo: .playbackResumed)
                 self.audioPlayerState = .playing
+                self.sendEvent(media: media, typeInfo: .playbackResumed)
             case .finish:
+                self.audioPlayerState = .finished
                 // Release focus after receiving directive
                 self.sendEvent(media: media, typeInfo: .playbackFinished) { [weak self] result in
                     guard let self = self else { return }
@@ -336,20 +337,19 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                         self.releaseFocusIfNeeded()
                     }
                 }
-                self.audioPlayerState = .finished
             case .pause:
-                self.sendEvent(media: media, typeInfo: .playbackPaused)
                 self.audioPlayerState = .paused
+                self.sendEvent(media: media, typeInfo: .playbackPaused)
             case .stop:
-                self.sendEvent(media: media, typeInfo: .playbackStopped)
                 self.audioPlayerState = .stopped
+                self.sendEvent(media: media, typeInfo: .playbackStopped)
                 self.releaseFocusIfNeeded()
             case .bufferUnderrun, .bufferRefilled:
                 break
             case .error(let error):
                 log.error("\(state) \(error)")
-                self.sendEvent(media: media, typeInfo: .playbackFailed(error: error))
                 self.audioPlayerState = .stopped
+                self.sendEvent(media: media, typeInfo: .playbackFailed(error: error))
                 self.releaseFocusIfNeeded()
             }
         }
@@ -497,13 +497,13 @@ private extension AudioPlayerAgent {
     func stopSilently() {
         guard let media = self.currentMedia else { return }
             
-        // Event -> `AudioPlayerState`
+        // `AudioPlayerState` -> Event
         switch self.audioPlayerState {
         case .playing, .paused:
             media.player.delegate = nil
             media.player.stop()
-            self.sendEvent(media: media, typeInfo: .playbackStopped)
             self.audioPlayerState = .stopped
+            self.sendEvent(media: media, typeInfo: .playbackStopped)
         case .idle, .stopped, .finished:
             return
         }

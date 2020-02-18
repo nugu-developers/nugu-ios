@@ -50,6 +50,7 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
             log.info("From:\(oldValue) To:\(asrState)")
             guard oldValue != asrState else { return }
             
+            // `expectingSpeechTimeout` -> `ASRRequest` -> `FocusState` -> EndPointDetector` -> `ASRAgentDelegate`
             // dispose expectingSpeechTimeout
             if asrState != .expectingSpeech {
                 expectingSpeechTimeout?.dispose()
@@ -82,6 +83,7 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
                 return
             }
             
+            // ASRExpectSpeech -> `ASRState` -> Event -> `ASRAgentDelegate`
             switch asrResult {
             case .none:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
@@ -92,24 +94,24 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
                 currentExpectSpeech = nil
             case .cancel:
-                sendEvent(event: .stopRecognize)
                 currentExpectSpeech = nil
                 asrState = .idle
+                sendEvent(asrRequest: asrRequest, event: .stopRecognize)
             case .error(let error):
+                currentExpectSpeech = nil
+                asrState = .idle
                 switch error {
                 case NetworkError.timeout:
-                    sendEvent(event: .responseTimeout)
+                    sendEvent(asrRequest: asrRequest, event: .responseTimeout)
                 case ASRError.listeningTimeout:
-                    sendEvent(event: .listenTimeout)
+                    sendEvent(asrRequest: asrRequest, event: .listenTimeout)
                 case ASRError.listenFailed:
-                    sendEvent(event: .listenFailed)
+                    sendEvent(asrRequest: asrRequest, event: .listenFailed)
                 case ASRError.recognizeFailed:
                     break
                 default:
                     break
                 }
-                currentExpectSpeech = nil
-                asrState = .idle
             }
             
             self.asrDelegates.notify({ (delegate) in
@@ -512,12 +514,7 @@ private extension ASRAgent {
         }
     }
     
-    func sendEvent(event: ASRAgent.Event.TypeInfo) {
-        guard let asrRequest = asrRequest else {
-            log.warning("ASRRequest not exist")
-            return
-        }
-        
+    func sendEvent(asrRequest: ASRRequest, event: ASRAgent.Event.TypeInfo) {
         sendEvent(
             Event(
                 typeInfo: event,
