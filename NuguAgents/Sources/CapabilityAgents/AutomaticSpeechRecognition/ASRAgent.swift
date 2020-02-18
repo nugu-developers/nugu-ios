@@ -45,7 +45,6 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityDirectiveAgentable, Cap
     
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
     
-    private var focusState: FocusState = .nothing
     private var asrState: ASRState = .idle {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
@@ -280,7 +279,6 @@ extension ASRAgent: HandleDirectiveDelegate {
 extension ASRAgent: FocusChannelDelegate {
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("Focus:\(focusState) ASR:\(asrState)")
-        self.focusState = focusState
         
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -536,7 +534,6 @@ private extension ASRAgent {
 
 private extension ASRAgent {
     func releaseFocusIfNeeded() {
-        guard focusState != .nothing else { return }
         guard asrState == .idle else {
             log.info("Not permitted in current state, \(asrState)")
             return
