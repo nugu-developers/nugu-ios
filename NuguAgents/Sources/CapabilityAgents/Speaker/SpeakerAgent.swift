@@ -87,13 +87,12 @@ public extension SpeakerAgent {
 // MARK: - ContextInfoDelegate
 
 extension SpeakerAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "volumes": controllerVolumes.values
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -140,18 +139,20 @@ private extension SpeakerAgent {
                             messageId: TimeUUID().hexString
                         )
                         
-                        let contextPayload = ContextPayload(
-                            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
-                            client: []
-                        )
-                        
-                        let message = UpstreamEventMessage(
-                            payload: event.payload,
-                            header: header,
-                            contextPayload: contextPayload
-                        )
+                        self.contextInfoRequestContext { (contextInfo) in
+                            let contextPayload = ContextPayload(
+                                supportedInterfaces: [contextInfo].compactMap({ $0 }),
+                                client: []
+                            )
+                            
+                            let message = UpstreamEventMessage(
+                                payload: event.payload,
+                                header: header,
+                                contextPayload: contextPayload
+                            )
 
-                        self.upstreamDataSender.send(upstreamEventMessage: message)
+                            self.upstreamDataSender.send(upstreamEventMessage: message)
+                        }
                     }
                 }
             )

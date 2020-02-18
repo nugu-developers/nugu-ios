@@ -84,8 +84,9 @@ extension ContextManager {
 private extension ContextManager {
     func getContext(delegate: ContextInfoDelegate) -> Single<ContextInfo?> {
         return Single<ContextInfo?>.create { event -> Disposable in
-            event(.success(delegate.contextInfoRequestContext()))
-            
+            delegate.contextInfoRequestContext { (contextInfo) in
+                event(.success(contextInfo))
+            }
             return Disposables.create()
         }
     }

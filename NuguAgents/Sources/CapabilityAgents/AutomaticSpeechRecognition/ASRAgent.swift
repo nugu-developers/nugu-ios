@@ -41,7 +41,6 @@ final public class ASRAgent: ASRAgentProtocol {
     
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
     
-    private var focusState: FocusState = .nothing
     private var asrState: ASRState = .idle {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
@@ -248,7 +247,6 @@ extension ASRAgent: FocusChannelDelegate {
     
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("Focus:\(focusState) ASR:\(asrState)")
-        self.focusState = focusState
         
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -272,13 +270,12 @@ extension ASRAgent: FocusChannelDelegate {
 // MARK: - ContextInfoDelegate
 
 extension ASRAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "engine": "skt"
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -515,7 +512,6 @@ private extension ASRAgent {
 
 private extension ASRAgent {
     func releaseFocusIfNeeded() {
-        guard focusState != .nothing else { return }
         guard asrState == .idle else {
             log.info("Not permitted in current state, \(asrState)")
             return

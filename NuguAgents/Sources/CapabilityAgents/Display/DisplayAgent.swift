@@ -128,14 +128,13 @@ public extension DisplayAgent {
 // MARK: - ContextInfoDelegate
 
 extension DisplayAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "token": currentItem?.token,
             "playServiceId": currentItem?.playServiceId
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
@@ -269,7 +268,11 @@ private extension DisplayAgent {
                     )
                     
                     if let item = self.currentItem {
-                        self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
+                        self.playSyncManager.startSync(
+                            delegate: self,
+                            dialogRequestId: item.dialogRequestId,
+                            playServiceId: item.playStackServiceId
+                        )
                     }
                 }
             )
@@ -339,17 +342,19 @@ private extension DisplayAgent {
             messageId: TimeUUID().hexString
         )
         
-        let contextPayload = ContextPayload(
-            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
-            client: []
-        )
-        
-        let message = UpstreamEventMessage(
-            payload: event.payload,
-            header: header,
-            contextPayload: contextPayload
-        )
+        self.contextInfoRequestContext { contextInfo in
+            let contextPayload = ContextPayload(
+                supportedInterfaces: [contextInfo].compactMap({ $0 }),
+                client: []
+            )
+            
+            let message = UpstreamEventMessage(
+                payload: event.payload,
+                header: header,
+                contextPayload: contextPayload
+            )
 
-        self.upstreamDataSender.send(upstreamEventMessage: message)
+            self.upstreamDataSender.send(upstreamEventMessage: message)
+        }
     }
 }

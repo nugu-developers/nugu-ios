@@ -37,7 +37,6 @@ final public class TextAgent: TextAgentProtocol {
     
     private let delegates = DelegateSet<TextAgentDelegate>()
     
-    private var focusState: FocusState = .nothing
     private var textAgentState: TextAgentState = .idle {
         didSet {
             log.info("from: \(oldValue) to: \(textAgentState)")
@@ -115,10 +114,9 @@ extension TextAgent {
 // MARK: - ContextInfoDelegate
 
 extension TextAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
-        let payload: [String: Any] = ["version": capabilityAgentProperty.version]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+        let payload: [String: Any] = ["version": capabilityAgentProperty.version]        
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -131,7 +129,6 @@ extension TextAgent: FocusChannelDelegate {
     
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(textAgentState)")
-        self.focusState = focusState
         
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -156,7 +153,6 @@ extension TextAgent: FocusChannelDelegate {
 
 private extension TextAgent {
     func releaseFocusIfNeeded() {
-        guard focusState != .nothing else { return }
         guard textAgentState == .idle else {
             log.info("Not permitted in current state, \(textAgentState)")
             return
@@ -186,26 +182,29 @@ private extension TextAgent {
             messageId: TimeUUID().hexString
         )
         
-        let contextPayload = ContextPayload(
-            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
-            client: []
-        )
         
-        let message = UpstreamEventMessage(
-            payload: event.payload,
-            header: header,
-            contextPayload: contextPayload
-        )
-
-        self.upstreamDataSender.send(upstreamEventMessage: message) { [weak self] result in
-            guard let self = self else { return }
-            guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
+        self.contextInfoRequestContext(completionHandler: { (contextInfo) in
+            let contextPayload = ContextPayload(
+                supportedInterfaces: [contextInfo].compactMap({ $0 }),
+                client: []
+            )
             
-            let result = result.map { _ in () }
-            self.delegates.notify({ (delegate) in
-                delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
-            })
-            self.textAgentState = .idle
-        }
+            let message = UpstreamEventMessage(
+                payload: event.payload,
+                header: header,
+                contextPayload: contextPayload
+            )
+            
+            self.upstreamDataSender.send(upstreamEventMessage: message) { [weak self] result in
+                guard let self = self else { return }
+                guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
+                
+                let result = result.map { _ in () }
+                self.delegates.notify({ (delegate) in
+                    delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
+                })
+                self.textAgentState = .idle
+            }
+        })
     }
 }

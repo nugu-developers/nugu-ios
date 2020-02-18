@@ -72,13 +72,15 @@ public extension ExtensionAgent {
 // MARK: - ContextInfoDelegate
 
 extension ExtensionAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "data": delegate?.extensionAgentRequestContext()
         ]
         
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        completionHandler(
+            ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        )
     }
 }
 
@@ -128,17 +130,19 @@ private extension ExtensionAgent {
             messageId: TimeUUID().hexString
         )
         
-        let contextPayload = ContextPayload(
-            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
-            client: []
-        )
-        
-        let eventMessage = UpstreamEventMessage(
-            payload: event.payload,
-            header: header,
-            contextPayload: contextPayload
-        )
-        
-        self.upstreamDataSender.send(upstreamEventMessage: eventMessage, resultHandler: resultHandler)
+        self.contextInfoRequestContext { contextInfo in
+            let contextPayload = ContextPayload(
+                supportedInterfaces: [contextInfo].compactMap({ $0 }),
+                client: []
+            )
+            
+            let eventMessage = UpstreamEventMessage(
+                payload: event.payload,
+                header: header,
+                contextPayload: contextPayload
+            )
+            
+            self.upstreamDataSender.send(upstreamEventMessage: eventMessage, resultHandler: resultHandler)
+        }
     }
 }

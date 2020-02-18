@@ -80,12 +80,11 @@ public extension SystemAgent {
 // MARK: - ContextInfoDelegate
 
 extension SystemAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version
         ]
-        
-        return ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 

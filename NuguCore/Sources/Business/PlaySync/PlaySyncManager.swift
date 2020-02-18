@@ -30,6 +30,7 @@ public class PlaySyncManager: PlaySyncManageable {
     )
     
     private let disposeBag = DisposeBag()
+    private var displayOnlyDisposables = [String: Disposable]()
     private var playSyncInfos = [PlaySyncInfo]()
     public var playServiceIds: [String] {
         return playSyncInfos.filter { $0.playSyncState != .released }
@@ -49,32 +50,73 @@ public class PlaySyncManager: PlaySyncManageable {
 
 // MARK: - PlaySyncManageable
 
-extension PlaySyncManager {
-    public func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
-        log.debug(delegate)
-        playSyncDispatchQueue.async { [weak self] in
-            self?.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .prepared)
-        }
-    }
-    
-    public func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
-        log.debug(delegate)
-        playSyncDispatchQueue.async { [weak self] in
-            self?.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .synced)
-        }
-    }
-    
-    public func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
-        log.debug(delegate)
-        playSyncDispatchQueue.async { [weak self] in
-            self?.remove(delegate: delegate, dialogRequestId: dialogRequestId)
-        }
-    }
-    
-    public func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
-        log.debug(delegate)
+public extension PlaySyncManager {
+    func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard self.playSyncInfos.object(forDelegate: delegate, dialogRequestId: dialogRequestId)?.playSyncState != .prepared else {
+                log.info("\(delegate): Already prepared")
+                return
+            }
+            
+            self.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .prepared)
+            
+            if let disposable = self.displayOnlyDisposables.removeValue(forKey: dialogRequestId) {
+                log.debug("Cancel release timer about display only layer(\(dialogRequestId)).")
+                disposable.dispose()
+            }
+        }
+    }
+    
+    func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+        playSyncDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard self.playSyncInfos.object(forDelegate: delegate, dialogRequestId: dialogRequestId)?.playSyncState != .synced else {
+                log.info("\(delegate): Already synced")
+                return
+            }
+            
+            let hasAnotherLayer = self.playSyncInfos.contains { $0.dialogRequestId == dialogRequestId }
+            
+            self.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .synced)
+            
+            // If the play sync layers contains only display layer, release it by itself after the duration.
+            if delegate.playSyncIsDisplay() && !hasAnotherLayer {
+                log.debug("Display only layer(\(dialogRequestId)) will release after \(delegate.playSyncDuration().time)")
+                let disposable = Completable.create { [weak self] event -> Disposable in
+                    guard let self = self else { return Disposables.create() }
+                    
+                    self.update(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .releasing)
+                    
+                    event(.completed)
+                    return Disposables.create()
+                }
+                .delaySubscription(delegate.playSyncDuration().time, scheduler: self.playSyncScheduler)
+                .subscribe()
+                self.displayOnlyDisposables[dialogRequestId] = disposable
+                disposable.disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+        playSyncDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.playSyncInfos.remove(delegate: delegate, dialogRequestId: dialogRequestId)
+        }
+    }
+    
+    func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+        playSyncDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard let info = self.playSyncInfos.object(forDelegate: delegate, dialogRequestId: dialogRequestId) else {
+                log.warning("\(delegate): Layer not registered")
+                return
+            }
+            guard info.playSyncState != .released else {
+                log.info("\(delegate): Already released")
+                return
+            }
             
             let targetLayer = self.playSyncInfos.filter { $0.dialogRequestId == dialogRequestId }
             let hasPreparedTatgetLayer = targetLayer.contains { $0.playSyncState == .prepared }
@@ -84,7 +126,7 @@ extension PlaySyncManager {
                 .filter { $0.playSyncState != .released }
                 // prepared 상태인 layer 가 있는 경우 요청한 layer 만 release 한다.
                 .filter { !hasPreparedTatgetLayer || $0.delegate === delegate }
-                .flatMap({ [weak self] (info) -> Observable<PlaySyncDelegate> in
+                .flatMap({ [weak self] (info) -> Observable<PlaySyncInfo> in
                     guard let self = self else { return Observable.empty() }
                     let latency: DispatchTimeInterval
                     if info.playSyncState != .releasing && (info.isDisplay || isSingleLayer) {
@@ -93,13 +135,13 @@ extension PlaySyncManager {
                         latency = .milliseconds(0)
                     }
                     return Observable.just(info)
-                        .compactMap { $0.delegate }
                         .do(onNext: { log.debug("\($0) will release after \(latency)") })
                         .delay(latency, scheduler: self.playSyncScheduler)
                 })
-                .do(onNext: {  [weak self] (target) in
+                .do(onNext: {  [weak self] (info) in
                     guard let self = self else { return }
-                    if !target.playSyncIsDisplay() || target === delegate {
+                    guard let target = info.delegate else { return }
+                    if !info.isDisplay || info.playSyncState == .releasing {
                         self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .released)
                     } else {
                         self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .releasing)
@@ -109,8 +151,7 @@ extension PlaySyncManager {
         }
     }
     
-    public func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?) {
-        log.debug(playServiceId)
+    func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             self.playSyncInfos
@@ -123,8 +164,8 @@ extension PlaySyncManager {
 
 // MARK: - ContextInfoDelegate
 extension PlaySyncManager: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
-        return ContextInfo(contextType: .client, name: "playStack", payload: playServiceIds)
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+        completionHandler(ContextInfo(contextType: .client, name: "playStack", payload: playServiceIds))
     }
 }
 
@@ -132,17 +173,7 @@ extension PlaySyncManager: ContextInfoDelegate {
 
 private extension PlaySyncManager {
     func set(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
-        // TODO: 0 번으로 옮겨줄 필요는 없는지 확인.
-        guard playSyncInfos.first(where: { (info) -> Bool in
-            return info.delegate === delegate && info.dialogRequestId == dialogRequestId && info.playSyncState == playSyncState
-        }) == nil else {
-            log.warning("Layer already set \(delegate) to \(playSyncState)")
-            return
-        }
-        
-        playSyncInfos.removeAll { (info) -> Bool in
-            return info.delegate === delegate
-        }
+        playSyncInfos.removeAll { $0.delegate === delegate }
         let playSyncInfo = PlaySyncInfo(
             delegate: delegate,
             dialogRequestId: dialogRequestId,
@@ -150,41 +181,24 @@ private extension PlaySyncManager {
             playSyncState: playSyncState
         )
         playSyncInfos.insert(playSyncInfo, at: 0)
+        
         delegate.playSyncDidChange(state: playSyncState, dialogRequestId: dialogRequestId)
         log.debug(playSyncInfos)
     }
     
-    @discardableResult func update(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) -> Bool {
-        guard playSyncInfos.first(where: { (info) -> Bool in
-            return info.delegate === delegate && info.dialogRequestId == dialogRequestId && info.playSyncState == playSyncState
-        }) == nil else {
-            log.warning("Layer already set \(delegate) to \(playSyncState)")
-            return false
-        }
-        guard let index = playSyncInfos.firstIndex(where: { (info) -> Bool in
-            return info.delegate === delegate && info.dialogRequestId == dialogRequestId
-        }) else {
-            log.warning("Layer not registered \(delegate)")
-            return false
-        }
-        
-        playSyncInfos.remove(at: index)
+    func update(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
         let playSyncInfo = PlaySyncInfo(
             delegate: delegate,
             dialogRequestId: dialogRequestId,
             playServiceId: playServiceId,
             playSyncState: playSyncState
         )
-        playSyncInfos.insert(playSyncInfo, at: index)
+        guard playSyncInfos.replace(info: playSyncInfo) != nil else {
+            log.warning("\(delegate): Failed update to \(playSyncState).")
+            return
+        }
+        
         delegate.playSyncDidChange(state: playSyncState, dialogRequestId: dialogRequestId)
         log.debug(playSyncInfos)
-        
-        return true
-    }
-    
-    func remove(delegate: PlaySyncDelegate, dialogRequestId: String) {
-        playSyncInfos.removeAll { (info) -> Bool in
-            return info.delegate === delegate && info.dialogRequestId == dialogRequestId
-        }
     }
 }

@@ -93,6 +93,7 @@ extension StreamDataRouter: UpstreamDataSendable {
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
     ) {
         guard let apiProvider = networkManager.apiProvider else {
+            // TODO: HTTP/2 전이중 방식으로 변경시 completion, resultHandler 통합
             completion?(.failure(NetworkError.unavailable))
             resultHandler?(.failure(NetworkError.unavailable))
             return
@@ -202,8 +203,9 @@ extension StreamDataRouter {
     func observeResultDirective(dialogRequestId: String, resultHandler: @escaping (Result<Downstream.Directive, Error>) -> Void) {
         directiveSubject
             .filter { $0.header.dialogRequestId == dialogRequestId }
-            
-//            .filter { $0.header.type != ASRAgent.DirectiveTypeInfo.notifyResult.type } // TODO: Agents참조하지 않게 바꾸어 재적용할 것.
+            // Ignore ASR.NotifyResult directive to take result directive.
+            // TODO: HTTP/2 전이중 방식으로 변경시 최종 개선
+            .filter { $0.header.type != "ASR.NotifyResult" }
             .take(1)
             .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .catchError({ [weak self] error -> Observable<Downstream.Directive> in
