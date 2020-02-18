@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-final public class DisplayAgent: DisplayAgentProtocol {
+open class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.1")
     
@@ -49,27 +49,27 @@ final public class DisplayAgent: DisplayAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: "Display", name: "Close", medium: .visual, isBlocking: false, handler: handleClose),
-        DirectiveHandleInfo(namespace: "Display", name: "FullText1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "FullText2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "ImageText1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "ImageText2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "ImageText3", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "ImageText4", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "TextList1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "TextList2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "TextList3", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "TextList4", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "ImageList1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "ImageList2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "ImageList3", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "Weather1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "Weather2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "Weather3", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "Weather4", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "Weather5", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "FullImage", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: "Display", name: "CustomTemplate", medium: .visual, isBlocking: false, handler: handleDisplay)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", medium: .visual, isBlocking: false, handler: handleClose),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText4", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList1", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList2", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList3", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList4", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList1", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList2", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList3", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather1", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather2", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather3", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather4", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather5", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullImage", medium: .visual, isBlocking: false, handler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", medium: .visual, isBlocking: false, handler: handleDisplay)
     ]
   
     public init(
@@ -116,7 +116,7 @@ public extension DisplayAgent {
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
                 let template = info.currentItem else { return }
             
-            self.sendEvent(playServiceId: template.playServiceId, type: .elementSelected(token: token))
+            self.upstreamDataSender.send(upstreamEventMessage: Event(playServiceId: template.playServiceId, typeInfo: .elementSelected(token: token)).makeEventMessage(agent: self))
         }
     }
     
@@ -226,13 +226,17 @@ private extension DisplayAgent {
                     }
 
                     let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
-                    guard let item = self.currentItem, item.playServiceId == payload.playServiceId else {
-                        self.sendEvent(playServiceId: payload.playServiceId, type: .closeFailed)
-                        return
-                    }
                     
-                    self.sendEvent(playServiceId: payload.playServiceId, type: .closeSucceeded)
-                    self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
+                    self.upstreamDataSender.send(
+                        upstreamEventMessage: Event(
+                            playServiceId: payload.playServiceId,
+                            typeInfo: self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
+                        ).makeEventMessage(agent: self)
+                    )
+                    
+                    if let item = self.currentItem, item.playServiceId == payload.playServiceId {
+                        self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
+                    }
                 }
             )
         }
@@ -327,34 +331,5 @@ private extension DisplayAgent {
     func hasRenderedDisplay(template: DisplayTemplate) -> Bool {
         displayDispatchQueue.precondition(.onQueue)
         return renderingInfos.contains { $0.currentItem?.templateId == template.templateId }
-    }
-}
-
-// MARK: - private(Event)
-private extension DisplayAgent {
-    func sendEvent(playServiceId: String, type: Event.TypeInfo) {
-        let event = Event(playServiceId: playServiceId, typeInfo: type)
-        let header = UpstreamHeader(
-            namespace: capabilityAgentProperty.name,
-            name: event.name,
-            version: capabilityAgentProperty.version,
-            dialogRequestId: TimeUUID().hexString,
-            messageId: TimeUUID().hexString
-        )
-        
-        self.contextInfoRequestContext { contextInfo in
-            let contextPayload = ContextPayload(
-                supportedInterfaces: [contextInfo].compactMap({ $0 }),
-                client: []
-            )
-            
-            let message = UpstreamEventMessage(
-                payload: event.payload,
-                header: header,
-                contextPayload: contextPayload
-            )
-
-            self.upstreamDataSender.send(upstreamEventMessage: message)
-        }
     }
 }

@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-open class AudioPlayerAgent: AudioPlayerAgentProtocol {
+public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
     
@@ -496,35 +496,15 @@ private extension AudioPlayerAgent {
 
 private extension AudioPlayerAgent {
     func sendEvent(media: AudioPlayerAgentMedia, typeInfo: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
-        let event = Event(
-            token: media.payload.audioItem.stream.token,
-            offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
-            playServiceId: media.payload.playServiceId,
-            typeInfo: typeInfo
+        upstreamDataSender.send(
+            upstreamEventMessage: Event(
+                token: media.payload.audioItem.stream.token,
+                offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
+                playServiceId: media.payload.playServiceId,
+                typeInfo: typeInfo
+            ).makeEventMessage(agent: self),
+            resultHandler: resultHandler
         )
-        
-        let header = UpstreamHeader(
-            namespace: capabilityAgentProperty.name,
-            name: event.name,
-            version: capabilityAgentProperty.version,
-            dialogRequestId: TimeUUID().hexString,
-            messageId: TimeUUID().hexString
-        )
-        
-        self.contextInfoRequestContext { contextInfo in
-            let contextPayload = ContextPayload(
-                supportedInterfaces: [contextInfo].compactMap({ $0 }),
-                client: []
-            )
-            
-            let message = UpstreamEventMessage(
-                payload: event.payload,
-                header: header,
-                contextPayload: contextPayload
-            )
-
-            upstreamDataSender.send(upstreamEventMessage: message, completion: nil, resultHandler: resultHandler)
-        }
     }
 }
 

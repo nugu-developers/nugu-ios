@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-final public class ExtensionAgent: ExtensionAgentProtocol {
+open class ExtensionAgent: ExtensionAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.1")
     
@@ -35,7 +35,7 @@ final public class ExtensionAgent: ExtensionAgentProtocol {
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: "Extension", name: "Action", medium: .none, isBlocking: false, handler: handleAction)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Action", medium: .none, isBlocking: false, handler: handleAction)
     ]
     
     public init(
@@ -62,10 +62,16 @@ final public class ExtensionAgent: ExtensionAgentProtocol {
 
 public extension ExtensionAgent {
     func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?) {
-        sendEvent(playServiceId: playServiceId, typeInfo: .commandIssued(data: data)) { result in
-            let result = result.map { _ in () }
-            completion?(result)
-        }
+        upstreamDataSender.send(
+            upstreamEventMessage: Event(
+                playServiceId: playServiceId,
+                typeInfo: .commandIssued(data: data)
+            ).makeEventMessage(agent: self),
+            resultHandler: { result in
+                let result = result.map { _ in () }
+                completion?(result)
+            }
+        )
     }
 }
 
@@ -108,41 +114,15 @@ private extension ExtensionAgent {
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    self.sendEvent(playServiceId: item.playServiceId, typeInfo: isSuccess ? .actionSucceeded : .actionFailed)
+                    self.upstreamDataSender.send(
+                        upstreamEventMessage: Event(
+                            playServiceId: item.playServiceId,
+                            typeInfo: isSuccess ? .actionSucceeded : .actionFailed
+                        ).makeEventMessage(agent: self)
+                    )
             })
             
             completionHandler(.success(()))
-        }
-    }
-}
-
-// MARK: - Private(Event)
-
-private extension ExtensionAgent {
-    func sendEvent(playServiceId: String, typeInfo: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
-         let event = ExtensionAgent.Event(playServiceId: playServiceId, typeInfo: typeInfo)
-        
-        let header = UpstreamHeader(
-            namespace: self.capabilityAgentProperty.name,
-            name: event.name,
-            version: self.capabilityAgentProperty.version,
-            dialogRequestId: TimeUUID().hexString,
-            messageId: TimeUUID().hexString
-        )
-        
-        self.contextInfoRequestContext { contextInfo in
-            let contextPayload = ContextPayload(
-                supportedInterfaces: [contextInfo].compactMap({ $0 }),
-                client: []
-            )
-            
-            let eventMessage = UpstreamEventMessage(
-                payload: event.payload,
-                header: header,
-                contextPayload: contextPayload
-            )
-            
-            self.upstreamDataSender.send(upstreamEventMessage: eventMessage, resultHandler: resultHandler)
         }
     }
 }

@@ -25,7 +25,7 @@ import JadeMarble
 
 import RxSwift
 
-final public class ASRAgent: ASRAgentProtocol {
+open class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
     
@@ -133,8 +133,8 @@ final public class ASRAgent: ASRAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: "ASR", name: "ExpectSpeech", medium: .audio, isBlocking: true, preFetch: prefetchExpectSpeech, handler: handleExpectSpeech),
-        DirectiveHandleInfo(namespace: "ASR", name: "NotifyResult", medium: .none, isBlocking: false, handler: handleNotifyResult)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", medium: .audio, isBlocking: true, preFetch: prefetchExpectSpeech, handler: handleExpectSpeech),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", medium: .none, isBlocking: false, handler: handleNotifyResult)
     ]
     
     public init(
@@ -489,22 +489,18 @@ private extension ASRAgent {
             return
         }
         
-        let event = Event(typeInfo: type, encoding: asrEncoding, expectSpeech: currentExpectSpeech)
-        let header = UpstreamHeader(
-            namespace: self.capabilityAgentProperty.name,
-            name: event.name,
-            version: self.capabilityAgentProperty.version,
-            dialogRequestId: asrRequest.dialogRequestId,
-            messageId: TimeUUID().hexString
+        upstreamDataSender.send(
+            upstreamEventMessage: Event(
+                typeInfo: type,
+                encoding: asrEncoding,
+                expectSpeech: currentExpectSpeech
+            ).makeEventMessage(
+                agent: self,
+                dialogRequestId: asrRequest.dialogRequestId,
+                contextPayload: asrRequest.contextPayload
+            ),
+            completion: completion
         )
-        
-        let message = UpstreamEventMessage(
-            payload: event.payload,
-            header: header,
-            contextPayload: asrRequest.contextPayload
-        )
-
-        self.upstreamDataSender.send(upstreamEventMessage: message, completion: completion)
     }
 }
 

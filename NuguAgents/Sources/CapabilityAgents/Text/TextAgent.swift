@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-final public class TextAgent: TextAgentProtocol {
+open class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     
@@ -173,38 +173,22 @@ private extension TextAgent {
         
         textAgentState = .busy
         
-        let event = Event(typeInfo: .textInput(text: textRequest.text, expectSpeech: textRequest.expectSpeech))
-        let header = UpstreamHeader(
-            namespace: self.capabilityAgentProperty.name,
-            name: event.name,
-            version: self.capabilityAgentProperty.version,
-            dialogRequestId: TimeUUID().hexString,
-            messageId: TimeUUID().hexString
-        )
-        
-        
-        self.contextInfoRequestContext(completionHandler: { (contextInfo) in
-            let contextPayload = ContextPayload(
-                supportedInterfaces: [contextInfo].compactMap({ $0 }),
-                client: []
-            )
+        self.upstreamDataSender.send(
+            upstreamEventMessage: Event(
+                typeInfo: .textInput(
+                    text: textRequest.text,
+                    expectSpeech: textRequest.expectSpeech
+                )
+            ).makeEventMessage(agent: self)
+        ) { [weak self] result in
+            guard let self = self else { return }
+            guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
             
-            let message = UpstreamEventMessage(
-                payload: event.payload,
-                header: header,
-                contextPayload: contextPayload
-            )
-            
-            self.upstreamDataSender.send(upstreamEventMessage: message) { [weak self] result in
-                guard let self = self else { return }
-                guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
-                
-                let result = result.map { _ in () }
-                self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
-                })
-                self.textAgentState = .idle
-            }
-        })
+            let result = result.map { _ in () }
+            self.delegates.notify({ (delegate) in
+                delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
+            })
+            self.textAgentState = .idle
+        }
     }
 }

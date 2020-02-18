@@ -37,10 +37,10 @@ open class SystemAgent: SystemAgentProtocol {
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: "System", name: "HandoffConnection", medium: .none, isBlocking: false, handler: handleHandOffConnection),
-        DirectiveHandleInfo(namespace: "System", name: "UpdateState", medium: .none, isBlocking: false, handler: handleUpdateState),
-        DirectiveHandleInfo(namespace: "System", name: "Exception", medium: .none, isBlocking: false, handler: handleException),
-        DirectiveHandleInfo(namespace: "System", name: "NoDirectives", medium: .none, isBlocking: false, handler: { { $1(.success(())) } })
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandoffConnection", medium: .none, isBlocking: false, handler: handleHandOffConnection),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", medium: .none, isBlocking: false, handler: handleUpdateState),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", medium: .none, isBlocking: false, handler: handleException),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", medium: .none, isBlocking: false, handler: { { $1(.success(())) } })
     ]
     
     public init(
@@ -164,23 +164,14 @@ private extension SystemAgent {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
-            let event = Event(typeInfo: .synchronizeState)
-            
-            let header = UpstreamHeader(
-                namespace: self.capabilityAgentProperty.name,
-                name: event.name,
-                version: self.capabilityAgentProperty.version,
-                dialogRequestId: TimeUUID().hexString,
-                messageId: TimeUUID().hexString
+            self.upstreamDataSender.send(
+                upstreamEventMessage: Event(
+                    typeInfo: .synchronizeState
+                ).makeEventMessage(
+                    agent: self,
+                    contextPayload: contextPayload
+                )
             )
-            
-            let message = UpstreamEventMessage(
-                payload: event.payload,
-                header: header,
-                contextPayload: contextPayload
-            )
-
-            self.upstreamDataSender.send(upstreamEventMessage: message)
         }
     }
 }

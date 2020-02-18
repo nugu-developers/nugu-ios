@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-final public class SpeakerAgent: SpeakerAgentProtocol {
+open class SpeakerAgent: SpeakerAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .speaker, version: "1.0")
     
@@ -39,7 +39,7 @@ final public class SpeakerAgent: SpeakerAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: "Speaker", name: "SetMute", medium: .audio, isBlocking: false, handler: handleSetMute)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetMute", medium: .audio, isBlocking: false, handler: handleSetMute)
     ]
     
     public init(
@@ -125,34 +125,13 @@ private extension SpeakerAgent {
                         let succeeded = results.allSatisfy { $0 }
                         let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
                         
-                        let event = Event(
-                            typeInfo: typeInfo,
-                            volumes: self.controllerVolumes,
-                            playServiceId: speakerMuteInfo.playServiceId
+                        self.upstreamDataSender.send(
+                            upstreamEventMessage: Event(
+                                typeInfo: typeInfo,
+                                volumes: self.controllerVolumes,
+                                playServiceId: speakerMuteInfo.playServiceId
+                            ).makeEventMessage(agent: self)
                         )
-                        
-                        let header = UpstreamHeader(
-                            namespace: self.capabilityAgentProperty.name,
-                            name: event.name,
-                            version: self.capabilityAgentProperty.version,
-                            dialogRequestId: TimeUUID().hexString,
-                            messageId: TimeUUID().hexString
-                        )
-                        
-                        self.contextInfoRequestContext { (contextInfo) in
-                            let contextPayload = ContextPayload(
-                                supportedInterfaces: [contextInfo].compactMap({ $0 }),
-                                client: []
-                            )
-                            
-                            let message = UpstreamEventMessage(
-                                payload: event.payload,
-                                header: header,
-                                contextPayload: contextPayload
-                            )
-
-                            self.upstreamDataSender.send(upstreamEventMessage: message)
-                        }
                     }
                 }
             )

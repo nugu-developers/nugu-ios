@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-final public class TTSAgent: TTSAgentProtocol {
+open class TTSAgent: TTSAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
     
@@ -92,8 +92,8 @@ final public class TTSAgent: TTSAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: "TTS", name: "Speak", medium: .audio, isBlocking: true, preFetch: prefetchPlay, handler: handlePlay, attachment: handleAttachment),
-        DirectiveHandleInfo(namespace: "TTS", name: "Stop", medium: .none, isBlocking: false, handler: handleStop)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Speak", medium: .audio, isBlocking: true, preFetch: prefetchPlay, handler: handlePlay, attachment: handleAttachment),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", medium: .none, isBlocking: false, handler: handleStop)
     ]
     
     public init(
@@ -145,31 +145,14 @@ public extension TTSAgent {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
-            let event = Event(token: nil, playServiceId: playServiceId, typeInfo: .speechPlay(text: text))
-            
             let dialogRequestId = TimeUUID().hexString
-            let header = UpstreamHeader(
-                namespace: self.capabilityAgentProperty.name,
-                name: event.name,
-                version: self.capabilityAgentProperty.version,
-                dialogRequestId: dialogRequestId,
-                messageId: TimeUUID().hexString
+            self.upstreamDataSender.send(
+                upstreamEventMessage: Event(
+                    token: nil,
+                    playServiceId: playServiceId,
+                    typeInfo: .speechPlay(text: text)
+                ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId)
             )
-            
-            self.contextInfoRequestContext { (contextInfo) in
-                let contextPayload = ContextPayload(
-                    supportedInterfaces: [contextInfo].compactMap({ $0 }),
-                    client: []
-                )
-                
-                let eventMessage = UpstreamEventMessage(
-                    payload: event.payload,
-                    header: header,
-                    contextPayload: contextPayload
-                )
-                
-                self.upstreamDataSender.send(upstreamEventMessage: eventMessage)
-            }
             
             self.ttsResultSubject
                 .filter { $0.dialogRequestId == dialogRequestId }
@@ -456,34 +439,14 @@ private extension TTSAgent {
             return
         }
         
-        let event = Event(
-            token: media.payload.token,
-            playServiceId: playServiceId,
-            typeInfo: info
+        self.upstreamDataSender.send(
+            upstreamEventMessage: Event(
+                token: media.payload.token,
+                playServiceId: playServiceId,
+                typeInfo: info
+            ).makeEventMessage(agent: self),
+            resultHandler: resultHandler
         )
-        
-        let header = UpstreamHeader(
-            namespace: self.capabilityAgentProperty.name,
-            name: event.name,
-            version: self.capabilityAgentProperty.version,
-            dialogRequestId: TimeUUID().hexString,
-            messageId: TimeUUID().hexString
-        )
-        
-        self.contextInfoRequestContext { (contextInfo) in
-            let contextPayload = ContextPayload(
-                supportedInterfaces: [contextInfo].compactMap({ $0 }),
-                client: []
-            )
-            
-            let eventMessage = UpstreamEventMessage(
-                payload: event.payload,
-                header: header,
-                contextPayload: contextPayload
-            )
-            
-            self.upstreamDataSender.send(upstreamEventMessage: eventMessage, resultHandler: resultHandler)
-        }
     }
 }
 
