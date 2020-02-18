@@ -40,6 +40,7 @@ class SystemAgentTests: XCTestCase {
         directiveSequencer: directiveSequencer
     )
     
+    // Override
     override func setUp() {
         
     }
@@ -52,12 +53,19 @@ class SystemAgentTests: XCTestCase {
     
     func testContext() {
         /* Expected context
-         {
-            "version": "1.0",
-         }
-         */
+        {
+            "System": {
+                "version": "1.0"
+            }
+        }
+        */
         systemAgent.contextInfoRequestContext(completionHandler: { [weak self] contextInfo in
-            guard let self = self, let contextInfo = contextInfo else {
+            guard let self = self else {
+                XCTFail("self is nil")
+                return
+            }
+            
+            guard let contextInfo = contextInfo else {
                 XCTFail("contextInfo is nil")
                 return
             }
@@ -274,7 +282,7 @@ private extension SystemAgentTests {
 
 // MARK: - MockSystemAgentDelegate
 
-class MockSystemAgentDelegate: SystemAgentDelegate {
+private class MockSystemAgentDelegate: SystemAgentDelegate {
     let code: SystemAgentExceptionCode.Fail
     let expectation: XCTestExpectation
     
