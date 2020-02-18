@@ -1,6 +1,6 @@
 //
 //  ASRAgentProtocol.swift
-//  NuguInterface
+//  NuguAgents
 //
 //  Created by MinChul Lee on 05/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -33,7 +33,7 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
     /// This function asks the `ASRAgent` to send a Recognize Event to Server and start streaming from `AudioStream`, which transitions it to the `recognizing` state.
     ///
     /// This function can be called in `idle` and `expectingSpeech` state.
-    func startRecognition()
+    func startRecognition(initiator: ASRInitiator)
     
     /// This function forces the `ASRAgent` back to the `idle` state.
     ///

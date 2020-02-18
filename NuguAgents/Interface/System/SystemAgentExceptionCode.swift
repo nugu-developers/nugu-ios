@@ -1,6 +1,6 @@
 //
 //  SystemAgentExceptionCode.swift
-//  NuguInterface
+//  NuguAgents
 //
 //  Created by yonghoonKwon on 2019/11/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

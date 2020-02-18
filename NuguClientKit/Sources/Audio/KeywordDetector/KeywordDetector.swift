@@ -21,18 +21,19 @@
 import Foundation
 
 import NuguCore
+import NuguAgents
 import KeenSense
 
-public class KeywordDetector: WakeUpDetectable {
+public class KeywordDetector {
     private var boundStreams: AudioBoundStreams?
     private let engine = TycheKeywordDetectorEngine()
     
     public var audioStream: AudioStreamable!
-    public weak var delegate: WakeUpDetectorDelegate?
+    public weak var delegate: KeywordDetectorDelegate?
     
-    public var state: WakeUpDetectorState = .inactive {
+    public var state: KeywordDetectorState = .inactive {
         didSet {
-            delegate?.wakeUpDetectorStateDidChange(state)
+            delegate?.keywordDetectorStateDidChange(state)
         }
     }
     
@@ -63,20 +64,20 @@ public class KeywordDetector: WakeUpDetectable {
 // MARK: - TycheKeywordDetectorEngineDelegate
 
 extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
-    public func tycheKeywordDetectorEngineDidDetect() {
-        delegate?.wakeUpDetectorDidDetect()
+    public func tycheKeywordDetectorEngineDidDetect(data: Data, padding: Int) {
+        delegate?.keywordDetectorDidDetect(data: data, padding: padding)
     }
     
     public func tycheKeywordDetectorEngineDidError(_ error: Error) {
-        delegate?.wakeUpDetectorDidError(error)
+        delegate?.keywordDetectorDidError(error)
     }
     
     public func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State) {
         switch state {
         case .active:
-            delegate?.wakeUpDetectorStateDidChange(.active)
+            delegate?.keywordDetectorStateDidChange(.active)
         case .inactive:
-            delegate?.wakeUpDetectorStateDidChange(.inactive)
+            delegate?.keywordDetectorStateDidChange(.inactive)
         }
     }
 }
@@ -84,15 +85,11 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
 // MARK: - ContextInfoDelegate
 
 extension KeywordDetector: ContextInfoDelegate {
-    public func contextInfoRequestContext() -> ContextInfo? {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         guard let keyword = keywordSource?.keyword else {
-            return nil
+            completionHandler(nil)
+            return
         }
-        
-        return ContextInfo(
-            contextType: .client,
-            name: "wakeupWord",
-            payload: keyword.description
-        )
+        completionHandler(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword.description))
     }
 }

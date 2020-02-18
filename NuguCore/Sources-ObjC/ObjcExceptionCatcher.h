@@ -1,6 +1,6 @@
 //
 //  ObjcExceptionCatcher.h
-//  SilverTray
+//  NuguCore
 //
 //  Created by DCs-OfficeMBP on 18/03/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

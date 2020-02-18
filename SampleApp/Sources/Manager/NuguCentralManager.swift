@@ -1,6 +1,6 @@
 //
 //  NuguCentralManager.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by yonghoonKwon on 25/07/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -27,8 +27,11 @@ import NuguLoginKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
+
     let client = NuguClient()
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController(audioPlayerAgent: client.getComponent(AudioPlayerAgentProtocol.self))
+    let localTTSAgent: LocalTTSAgent
+
+    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController(audioPlayerAgent: client.audioPlayerAgent)
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
             return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
@@ -51,29 +54,22 @@ final class NuguCentralManager {
     }
     
     private init() {
-        client.delegate = self
+        // local tts agent
+        localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
         
         if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.getComponent(ASRAgentProtocol.self)?.epdFile = epdFile
+            client.asrAgent.epdFile = epdFile
         }
-        
-        client.getComponent(LocationAgentProtocol.self)?.delegate = self
-        client.getComponent(SystemAgentProtocol.self)?.add(systemAgentDelegate: self)
+
+        client.delegate = self
+        client.locationAgent.delegate = self
+        client.systemAgent.add(systemAgentDelegate: self)
 
         NuguLocationManager.shared.startUpdatingLocation()
         
         // Set Last WakeUp Keyword
         // If you don't want to use saved wakeup-word, don't need to be implemented
         setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
-        
-        // local tts player
-        client.addComponent(LocalTTSAgent.self) { (resolver) -> LocalTTSAgent? in
-            guard let focusManager = resolver.resolve(FocusManageable.self) else {
-                return nil
-            }
-            
-            return LocalTTSAgent(focusManager: focusManager)
-        }
     }
 }
 
@@ -246,11 +242,11 @@ private extension NuguCentralManager {
                 self?.logout()
             }
             guard case .loginUnauthorized = sampleAppError else {
-                self?.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayAuthError)
+                self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError)
                 NuguToastManager.shared.showToast(message: SampleAppError.onDisconnected.errorDescription)
                 return
             }
-            self?.client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .pocStateServiceTerminated)
+            self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated)
             NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
         }
     }
@@ -259,24 +255,24 @@ private extension NuguCentralManager {
 // MARK: - Internal (ASR)
 
 extension NuguCentralManager {
-    func startRecognize(completion: ((Result<Void, Error>) -> Void)? = nil) {
+    func startRecognize(initiator: ASRInitiator, completion: ((Result<Void, Error>) -> Void)? = nil) {
         NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.client.getComponent(ASRAgentProtocol.self)?.startRecognition()
+                self.client.asrAgent.startRecognition(initiator: initiator)
             })
             completion?(result)
         }
     }
     
     func stopRecognize() {
-        client.getComponent(ASRAgentProtocol.self)?.stopRecognition()
+        client.asrAgent.stopRecognition()
     }
     
     func cancelRecognize() {
-        client.getComponent(ASRAgentProtocol.self)?.stopRecognition()
-        client.getComponent(TTSAgentProtocol.self)?.stopTTS()
+        client.asrAgent.stopRecognition()
+        client.ttsAgent.stopTTS()
     }
 }
 
@@ -306,14 +302,14 @@ extension NuguCentralManager {
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.client.wakeUpDetector?.start()
+                self.client.keywordDetector.start()
             })
             completion?(result)
         }
     }
     
     func stopWakeUpDetector() {
-        client.wakeUpDetector?.stop()
+        client.keywordDetector.stop()
     }
     
     func setWakeUpWord(rawValue wakeUpWord: Int) {
@@ -326,7 +322,7 @@ extension NuguCentralManager {
                     return
             }
             
-            client.wakeUpDetector?.keywordSource = KeywordSource(
+            client.keywordDetector.keywordSource = KeywordSource(
                 keyword: .aria,
                 netFileUrl: netFile,
                 searchFileUrl: searchFile
@@ -339,7 +335,7 @@ extension NuguCentralManager {
                     return
             }
             
-            client.wakeUpDetector?.keywordSource = KeywordSource(
+            client.keywordDetector.keywordSource = KeywordSource(
                 keyword: .tinkerbell,
                 netFileUrl: netFile,
                 searchFileUrl: searchFile
@@ -392,9 +388,9 @@ extension NuguCentralManager: SystemAgentDelegate {
     func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail) {
         switch code {
         case .playRouterProcessingException:
-            client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
+            localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
         case .ttsSpeakingException:
-            client.getComponent(LocalTTSAgent.self)?.playLocalTTS(type: .deviceGatewayTTSConnectionError)
+            localTTSAgent.playLocalTTS(type: .deviceGatewayTTSConnectionError)
         case .unauthorizedRequestException:
             handleAuthError()
         }

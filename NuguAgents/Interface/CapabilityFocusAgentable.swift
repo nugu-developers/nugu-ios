@@ -1,6 +1,6 @@
 //
 //  CapabilityFocusAgentable.swift
-//  NuguInterface
+//  NuguAgents
 //
 //  Created by yonghoonKwon on 2019/12/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  WebViewController.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by jin kim on 20/06/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

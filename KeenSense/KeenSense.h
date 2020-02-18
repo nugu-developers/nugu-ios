@@ -33,7 +33,6 @@
 #import "debugLog.h"
 #import "libdefines.h"
 #import "libexports.h"
-#import "libSpeexApi.h"
 #import "libtypes.h"
 #import "libWakeupApi.h"
 

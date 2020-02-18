@@ -104,7 +104,7 @@ private extension NuguAudioSessionManager {
         switch type {
         case .began:
             // Interruption began, take appropriate actions
-            NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.pause()
+            NuguCentralManager.shared.client.audioPlayerAgent.pause()
             
             // When supportMixWithOthersOption is on,
             // AudioSession's category option should be changed as including mixWithOthers option when paused with interruption.
@@ -116,7 +116,7 @@ private extension NuguAudioSessionManager {
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
-                    NuguCentralManager.shared.client.getComponent(AudioPlayerAgentProtocol.self)?.play()
+                    NuguCentralManager.shared.client.audioPlayerAgent.play()
                 } else {
                     // Interruption Ended - playback should NOT resume
                 }

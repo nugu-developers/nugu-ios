@@ -1,6 +1,6 @@
 //
 //  Int+Convenience.swift
-//  SampleApp-iOS
+//  SampleApp
 //
 //  Created by yonghoonKwon on 22/07/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

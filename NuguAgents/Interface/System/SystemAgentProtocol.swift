@@ -1,6 +1,6 @@
 //
 //  SystemAgentProtocol.swift
-//  NuguInterface
+//  NuguAgents
 //
 //  Created by yonghoonKwon on 24/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -23,10 +23,6 @@ import Foundation
 /// System-agent is responsible agent for the utilities of the system in the nugu.
 /// This agent is mandatory in SDK.
 public protocol SystemAgentProtocol: CapabilityAgentable {
-    /// <#Description#>
-    /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
     func add(systemAgentDelegate: SystemAgentDelegate)
-    /// <#Description#>
-    /// - Parameter systemAgentDelegate: <#handleDirectiveDelegate description#>
     func remove(systemAgentDelegate: SystemAgentDelegate)
 }

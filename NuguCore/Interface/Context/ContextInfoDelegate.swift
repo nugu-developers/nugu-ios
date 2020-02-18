@@ -1,6 +1,6 @@
 //
 //  ContextInfoDelegate.swift
-//  NuguInterface
+//  NuguCore
 //
 //  Created by MinChul Lee on 25/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -25,5 +25,5 @@ public protocol ContextInfoDelegate: class {
     /// A request to provide the context.
     ///
     /// It should perform minimum processing and return quickly
-    func contextInfoRequestContext() -> ContextInfo?
+    func contextInfoRequestContext(completionHandler: @escaping (ContextInfo?) -> Void)
 }
