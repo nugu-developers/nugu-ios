@@ -42,21 +42,40 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityDirectiveAgentable, Cap
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
     
-    private var focusState: FocusState = .nothing
-    private var ttsState: TTSState = .finished {
+    private var ttsState: TTSState = .idle {
         didSet {
             log.info("\(oldValue) \(ttsState)")
             guard oldValue != ttsState else { return }
-            guard let media = currentMedia else { return }
-            
-            switch ttsState {
-            case .idle, .stopped, .finished:
-                currentMedia = nil
-                playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
-            case .playing:
-                playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
+            guard let media = currentMedia else {
+                log.error("TTSMedia is nil")
+                return
             }
             
+            // `PlaySyncState` -> `TTSMedia` -> `TTSAgentDelegate`
+            switch ttsState {
+            case .playing:
+                playSyncManager.startSync(
+                    delegate: self,
+                    dialogRequestId: media.dialogRequestId,
+                    playServiceId: media.payload.playStackControl?.playServiceId
+                )
+            case .finished, .stopped:
+                if media.cancelAssociation {
+                    playSyncManager.releaseSyncImmediately(
+                        dialogRequestId: media.dialogRequestId,
+                        playServiceId: media.payload.playStackControl?.playServiceId
+                    )
+                } else {
+                    playSyncManager.releaseSync(
+                        delegate: self,
+                        dialogRequestId: media.dialogRequestId,
+                        playServiceId: media.payload.playStackControl?.playServiceId
+                    )
+                }
+                currentMedia = nil
+            default:
+                break
+            }
             delegates.notify { delegate in
                 delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
             }
@@ -216,8 +235,6 @@ extension TTSAgent: HandleDirectiveDelegate {
 extension TTSAgent: FocusChannelDelegate {
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(ttsState)")
-        self.focusState = focusState
-        
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -265,6 +282,7 @@ extension TTSAgent: MediaPlayerDelegate {
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
+            // Event -> `TTSResult` -> `TTSState` -> `FocusState`
             switch state {
             case .start:
                 self.sendEvent(media: media, info: .speechStarted)
@@ -279,7 +297,7 @@ extension TTSAgent: MediaPlayerDelegate {
                 self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                 self.ttsState = .finished
             case .pause:
-                media.player.stop()
+                self.stop(cancelAssociation: false)
             case .stop:
                 self.sendEvent(media: media, info: .speechStopped)
                 self.ttsResultSubject.onNext(
@@ -314,12 +332,10 @@ extension TTSAgent: PlaySyncDelegate {
         log.info("\(state)")
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard let media = self.currentMedia, media.dialogRequestId == dialogRequestId else { return }
             
-            if case .released = state,
-                let media = self.currentMedia, media.dialogRequestId == dialogRequestId {
-                self.stopSilently()
-                self.currentMedia = nil
-                self.releaseFocusIfNeeded()
+            if [.releasing, .released].contains(state) {
+                self.stop(cancelAssociation: false)
             }
         }
     }
@@ -413,12 +429,9 @@ private extension TTSAgent {
     @discardableResult func stop(cancelAssociation: Bool) -> Result<Void, Error> {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self, let media = self.currentMedia else { return }
+            
             self.currentMedia?.cancelAssociation = cancelAssociation
-
             media.player.stop()
-            if cancelAssociation == true {
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
-            }
         }
         return .success(())
     }
@@ -426,6 +439,7 @@ private extension TTSAgent {
     /// Stop previously playing TTS
     func stopSilently() {
         guard let media = currentMedia else { return }
+        // Event -> `TTSResult` -> `TTSState`
         media.player.delegate = nil
         media.player.stop()
         sendEvent(media: media, info: .speechStopped)
@@ -462,7 +476,6 @@ private extension TTSAgent {
 
 private extension TTSAgent {
     func releaseFocusIfNeeded() {
-        guard focusState != .nothing else { return }
         guard [.idle, .stopped, .finished].contains(ttsState) else {
             log.info("Not permitted in current state, \(ttsState)")
             return

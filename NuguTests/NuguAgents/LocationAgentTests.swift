@@ -45,15 +45,22 @@ class LocationAgentTests: XCTestCase {
     func testContext() {
         /* Expected context
         {
-            "version": "1.0",
-            "current": {
-                "latitude": "{{STRING}}",
-                "longitude": "{{STRING}}"
+            "Location": {
+                "version": "1.0",
+                "current": {
+                    "latitude": "{{STRING}}",
+                    "longitude": "{{STRING}}"
+                }
             }
         }
         */
-        locationAgent.contextInfoRequestContext(completionHandler: { [weak self] contextInfo in
-            guard let self = self, let contextInfo = contextInfo else {
+        locationAgent.contextInfoRequestContext { [weak self] contextInfo in
+            guard let self = self else {
+                XCTFail("self is nil")
+                return
+            }
+            
+            guard let contextInfo = contextInfo else {
                 XCTFail("contextInfo is nil")
                 return
             }
@@ -74,7 +81,7 @@ class LocationAgentTests: XCTestCase {
             
             XCTAssertEqual(current["latitude"] as? String, "10.1")
             XCTAssertEqual(current["longitude"] as? String, "20.9")
-        })
+        }
     }
 }
 

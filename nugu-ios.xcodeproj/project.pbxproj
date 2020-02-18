@@ -46,6 +46,7 @@
 		1F9C5B8223F664340086CC04 /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
 		1F9C5B8A23FBA3A20086CC04 /* TextAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8923FBA3A20086CC04 /* TextAgentTests.swift */; };
 		1F9C5B8C23FBA7400086CC04 /* MockFocusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */; };
+		1F9C5B8823FA82D90086CC04 /* ExtensionAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -81,7 +82,6 @@
 		1FFFF38B2375707000C9A177 /* AudioStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31F2375707000C9A177 /* AudioStream.swift */; };
 		1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3212375707000C9A177 /* Collection+Convenience.swift */; };
 		1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */; };
-		1FFFF38E2375707000C9A177 /* Array+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3232375707000C9A177 /* Array+Equatable.swift */; };
 		1FFFF3912375707100C9A177 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3272375707000C9A177 /* Atomic.swift */; };
 		1FFFF3922375707100C9A177 /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF32A2375707000C9A177 /* ContextManager.swift */; };
 		1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF35E2375707000C9A177 /* NetworkConst.swift */; };
@@ -548,6 +548,7 @@
 		1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentTests.swift; sourceTree = "<group>"; };
 		1F9C5B8923FBA3A20086CC04 /* TextAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentTests.swift; sourceTree = "<group>"; };
 		1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFocusManager.swift; sourceTree = "<group>"; };
+		1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionAgentTests.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -676,7 +677,6 @@
 		1FFFF31F2375707000C9A177 /* AudioStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioStream.swift; sourceTree = "<group>"; };
 		1FFFF3212375707000C9A177 /* Collection+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+Convenience.swift"; sourceTree = "<group>"; };
 		1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+DeepMerge.swift"; sourceTree = "<group>"; };
-		1FFFF3232375707000C9A177 /* Array+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Equatable.swift"; sourceTree = "<group>"; };
 		1FFFF3242375707000C9A177 /* KeyedDecodingContainerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedDecodingContainerExtension.swift; sourceTree = "<group>"; };
 		1FFFF3262375707000C9A177 /* TimeUUID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeUUID.swift; sourceTree = "<group>"; };
 		1FFFF3272375707000C9A177 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
@@ -1144,6 +1144,7 @@
 		1FD1CFD923A75B040000FB8C /* NuguAgents */ = {
 			isa = PBXGroup;
 			children = (
+				1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */,
 				1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */,
 				1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */,
 				1F9C5B8923FBA3A20086CC04 /* TextAgentTests.swift */,
@@ -1577,7 +1578,6 @@
 		1FFFF3202375707000C9A177 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3232375707000C9A177 /* Array+Equatable.swift */,
 				1FFFF3212375707000C9A177 /* Collection+Convenience.swift */,
 				1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */,
 				7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */,
@@ -2968,7 +2968,6 @@
 				1FFFF3C72375707100C9A177 /* FocusManager.swift in Sources */,
 				7315301323E11EDF00F843C3 /* MediaUrlDataSource.swift in Sources */,
 				7315302623E11EDF00F843C3 /* ReceiveMessageDelegate.swift in Sources */,
-				1FFFF38E2375707000C9A177 /* Array+Equatable.swift in Sources */,
 				7315302723E11EDF00F843C3 /* NetworkStatusDelegate.swift in Sources */,
 				7315301A23E11EDF00F843C3 /* ContextManageable.swift in Sources */,
 				7315302523E11EDF00F843C3 /* NetworkManageable.swift in Sources */,
@@ -3106,6 +3105,7 @@
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
 				1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */,
 				1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */,
+				1F9C5B8823FA82D90086CC04 /* ExtensionAgentTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
