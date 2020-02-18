@@ -31,11 +31,9 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable {
     // CapabilityEventAgentable
     public let upstreamDataSender: UpstreamDataSendable
     
-    // CapabilityFocusAgentable
-    private let focusManager: FocusManageable
-    
     // Private
     private let contextManager: ContextManageable
+    private let focusManager: FocusManageable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     

@@ -35,6 +35,7 @@ final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityEventAgentable 
     public weak var delegate: SpeakerAgentDelegate?
     
     // Private
+    private let directiveSequencer: DirectiveSequenceable
     private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
@@ -51,6 +52,7 @@ final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityEventAgentable 
         log.info("")
         
         self.upstreamDataSender = upstreamDataSender
+        self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
@@ -58,6 +60,7 @@ final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityEventAgentable 
     
     deinit {
         log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -99,39 +102,41 @@ extension SpeakerAgent: ContextInfoDelegate {
 // MARK: - Private(Directive)
 
 private extension SpeakerAgent {
-    func handleSetMute(_ directive: Downstream.Directive, _ completionHandler: (Result<Void, Error>) -> Void) {
-        completionHandler(
-            Result<Void, Error> { [weak self] in
-                guard let data = directive.payload.data(using: .utf8) else {
-                    throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+    func handleSetMute() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result<Void, Error> { [weak self] in
+                    guard let data = directive.payload.data(using: .utf8) else {
+                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                    }
+                    
+                    let speakerMuteInfo = try JSONDecoder().decode(SpeakerMuteInfo.self, from: data)
+                    
+                    self?.speakerDispatchQueue.async { [weak self] in
+                        guard let self = self else { return }
+                        
+                        let controllers = self.speakerVolumeDelegates.allObjects
+                        let results = speakerMuteInfo.volumes.map({ (volume) -> Bool in
+                            let result = controllers.filter { $0.speakerVolumeType() == volume.name }
+                                .allSatisfy { $0.speakerVolumeShouldChange(muted: volume.mute) }
+                            if result {
+                                self.delegate?.speakerAgentDidChange(type: volume.name, muted: volume.mute)
+                            }
+                            return result
+                        })
+                        
+                        let succeeded = results.allSatisfy { $0 }
+                        let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
+                        
+                        self.sendEvent(
+                            Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
+                            dialogRequestId: TimeUUID().hexString,
+                            messageId: TimeUUID().hexString
+                        )
+                    }
                 }
-                
-                let speakerMuteInfo = try JSONDecoder().decode(SpeakerMuteInfo.self, from: data)
-                
-                self?.speakerDispatchQueue.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    let controllers = self.speakerVolumeDelegates.allObjects
-                    let results = speakerMuteInfo.volumes.map({ (volume) -> Bool in
-                        let result = controllers.filter { $0.speakerVolumeType() == volume.name }
-                            .allSatisfy { $0.speakerVolumeShouldChange(muted: volume.mute) }
-                        if result {
-                            self.delegate?.speakerAgentDidChange(type: volume.name, muted: volume.mute)
-                        }
-                        return result
-                    })
-                    
-                    let succeeded = results.allSatisfy { $0 }
-                    let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
-                    
-                    self.sendEvent(
-                        Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
-                        dialogRequestId: TimeUUID().hexString,
-                        messageId: TimeUUID().hexString
-                    )
-                }
-            }
-        )
+            )
+        }
     }
 }
 

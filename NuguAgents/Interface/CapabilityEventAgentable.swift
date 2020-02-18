@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-public protocol CapabilityEventAgentable: CapabilityAgentable {
+protocol CapabilityEventAgentable: CapabilityAgentable {
     associatedtype Event: Eventable
     
     var upstreamDataSender: UpstreamDataSendable { get }
@@ -39,7 +39,7 @@ public protocol CapabilityEventAgentable: CapabilityAgentable {
 
 // MARK: - Default
 
-public extension CapabilityEventAgentable {
+extension CapabilityEventAgentable {
     func sendEvent(
         _ event: Event,
         dialogRequestId: String,

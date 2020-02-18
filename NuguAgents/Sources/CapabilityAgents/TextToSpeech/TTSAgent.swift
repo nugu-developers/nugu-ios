@@ -34,7 +34,7 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityEventAgentable {
     // Private
     private let playSyncManager: PlaySyncManageable
     private let focusManager: FocusManageable
-    
+    private let directiveSequencer: DirectiveSequenceable
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
@@ -76,7 +76,7 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityEventAgentable {
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: "TTS", name: "Speak", medium: .audio, isBlocking: true, preFetch: prefetchPlay, handler: handlePlay, attachment: handleAttachment),
-        DirectiveHandleInfo(namespace: "TTS", name: "Stop", medium: .none, isBlocking: false, handler: stop)
+        DirectiveHandleInfo(namespace: "TTS", name: "Stop", medium: .none, isBlocking: false, handler: handleStop)
     ]
     
     public init(
@@ -91,6 +91,7 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityEventAgentable {
         self.focusManager = focusManager
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
@@ -108,6 +109,7 @@ final public class TTSAgent: TTSAgentProtocol, CapabilityEventAgentable {
     
     deinit {
         log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -289,73 +291,81 @@ extension TTSAgent: SpeakerVolumeDelegate {
 // MARK: - Private (Directive)
 
 private extension TTSAgent {
-    func prefetchPlay(_ directive: Downstream.Directive, _ completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        ttsDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            completionHandler(
-                Result<Void, Error>(catching: {
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: data)
-                    guard case .attachment = payload.sourceType else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
-                    }
-                    
-                    self.stopSilently()
-                    
-                    let mediaPlayer = OpusPlayer()
-                    mediaPlayer.delegate = self
-                    mediaPlayer.isMuted = self.playerIsMuted
-                    
-                    self.currentMedia = TTSMedia(
-                        player: mediaPlayer,
-                        payload: payload,
-                        dialogRequestId: directive.header.dialogRequestId
-                    )
-                    
-                    self.playSyncManager.prepareSync(
-                        delegate: self,
-                        dialogRequestId: directive.header.dialogRequestId,
-                        playServiceId: payload.playStackControl?.playServiceId
-                    )
-                })
-            )
+    func prefetchPlay() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            self?.ttsDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                completionHandler(
+                    Result<Void, Error>(catching: {
+                        guard let data = directive.payload.data(using: .utf8) else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                        }
+                        
+                        let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: data)
+                        guard case .attachment = payload.sourceType else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
+                        }
+                        
+                        self.stopSilently()
+                        
+                        let mediaPlayer = OpusPlayer()
+                        mediaPlayer.delegate = self
+                        mediaPlayer.isMuted = self.playerIsMuted
+                        
+                        self.currentMedia = TTSMedia(
+                            player: mediaPlayer,
+                            payload: payload,
+                            dialogRequestId: directive.header.dialogRequestId
+                        )
+                        
+                        self.playSyncManager.prepareSync(
+                            delegate: self,
+                            dialogRequestId: directive.header.dialogRequestId,
+                            playServiceId: payload.playStackControl?.playServiceId
+                        )
+                    })
+                )
+            }
         }
     }
     
-    func handlePlay(_ directive: Downstream.Directive, _ completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        ttsDispatchQueue.async { [weak self] in
-            guard let self = self else {
-                completionHandler(.success(()))
-                return
-            }
-            guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
-                log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
-                completionHandler(.success(()))
-                return
-            }
-            
-            self.delegates.notify { delegate in
-                delegate.ttsAgentDidReceive(text: media.payload.text, dialogRequestId: media.dialogRequestId)
-            }
-            
-            self.ttsResultSubject
-                .filter { $0.dialogRequestId == media.dialogRequestId }
-                .take(1)
-                .do(onNext: { (_, _) in
+    func handlePlay() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            self?.ttsDispatchQueue.async { [weak self] in
+                guard let self = self else {
                     completionHandler(.success(()))
-                })
-                .subscribe().disposed(by: self.disposeBag)
-            
-            self.focusManager.requestFocus(channelDelegate: self)
+                    return
+                }
+                guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
+                    log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
+                    completionHandler(.success(()))
+                    return
+                }
+                
+                self.delegates.notify { delegate in
+                    delegate.ttsAgentDidReceive(text: media.payload.text, dialogRequestId: media.dialogRequestId)
+                }
+                
+                self.ttsResultSubject
+                    .filter { $0.dialogRequestId == media.dialogRequestId }
+                    .take(1)
+                    .do(onNext: { (_, _) in
+                        completionHandler(.success(()))
+                    })
+                    .subscribe().disposed(by: self.disposeBag)
+                
+                self.focusManager.requestFocus(channelDelegate: self)
+            }
         }
     }
     
-    func stop(_ directive: Downstream.Directive, _ completionHandler: ((Result<Void, Error>) -> Void)) {
-        completionHandler(stop(cancelAssociation: true))
+    func handleStop() -> HandleDirective {
+        return { [weak self] _, completionHandler in
+            guard let self = self else { return }
+            completionHandler(self.stop(cancelAssociation: true))
+        }
+
     }
     
     @discardableResult func stop(cancelAssociation: Bool) -> Result<Void, Error> {
@@ -383,26 +393,27 @@ private extension TTSAgent {
         ttsState = .stopped
     }
     
-    func handleAttachment(_ attachment: Downstream.Attachment) {
-        log.info("\(attachment.header.messageId)")
-        
-        ttsDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let media = self.currentMedia, media.dialogRequestId == attachment.header.dialogRequestId else {
-                log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
-                return
-            }
-            
-            let player = media.player as? MediaOpusStreamDataSource
-            do {
-                try player?.appendData(attachment.content)
-                
-                if attachment.isEnd {
-                    try player?.lastDataAppended()
+    func handleAttachment() -> HandleAttachment {
+        return { [weak self] attachment in
+            log.info("\(attachment.header.messageId)")
+            self?.ttsDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard let media = self.currentMedia, media.dialogRequestId == attachment.header.dialogRequestId else {
+                    log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
+                    return
                 }
-            } catch {
-                self.upstreamDataSender.sendCrashReport(error: error)
-                log.error(error)
+                
+                let player = media.player as? MediaOpusStreamDataSource
+                do {
+                    try player?.appendData(attachment.content)
+                    
+                    if attachment.isEnd {
+                        try player?.lastDataAppended()
+                    }
+                } catch {
+                    self.upstreamDataSender.sendCrashReport(error: error)
+                    log.error(error)
+                }
             }
         }
     }

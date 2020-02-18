@@ -33,6 +33,7 @@ final public class DisplayAgent: DisplayAgentProtocol, CapabilityEventAgentable 
     
     // Private
     private let playSyncManager: PlaySyncManageable
+    private let directiveSequencer: DirectiveSequenceable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -83,6 +84,7 @@ final public class DisplayAgent: DisplayAgentProtocol, CapabilityEventAgentable 
         
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
@@ -90,6 +92,7 @@ final public class DisplayAgent: DisplayAgentProtocol, CapabilityEventAgentable 
     
     deinit {
         log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -220,67 +223,71 @@ extension DisplayAgent: PlaySyncDelegate {
 // MARK: - Private(Directive, Event)
 
 private extension DisplayAgent {
-    func handleClose(_ directive: Downstream.Directive, _ completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        completionHandler(
-            Result { [weak self] in
-                guard let self = self else { return }
-                guard let data = directive.payload.data(using: .utf8) else {
-                    throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                }
-                let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
-                guard let item = self.currentItem, item.playServiceId == payload.playServiceId else {
+    func handleClose() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8) else {
+                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                    }
+                    let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
+                    guard let item = self.currentItem, item.playServiceId == payload.playServiceId else {
+                        self.sendEvent(
+                            Event(playServiceId: payload.playServiceId, typeInfo: .closeFailed),
+                            dialogRequestId: TimeUUID().hexString,
+                            messageId: TimeUUID().hexString
+                        )
+                        return
+                    }
+                    
                     self.sendEvent(
-                        Event(playServiceId: payload.playServiceId, typeInfo: .closeFailed),
+                        Event(playServiceId: payload.playServiceId, typeInfo: .closeSucceeded),
                         dialogRequestId: TimeUUID().hexString,
                         messageId: TimeUUID().hexString
                     )
-                    return
+                    
+                    self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
                 }
-                
-                self.sendEvent(
-                    Event(playServiceId: payload.playServiceId, typeInfo: .closeSucceeded),
-                    dialogRequestId: TimeUUID().hexString,
-                    messageId: TimeUUID().hexString
-                )
-                
-                self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
-            }
-        )
+            )
+        }
     }
     
-    func handleDisplay(_ directive: Downstream.Directive, _ completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        log.info("\(directive.header.type)")
+    func handleDisplay() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            log.info("\(directive.header.type)")
 
-        completionHandler(
-            Result { [weak self] in
-                guard let self = self else { return }
-                
-                guard let payloadAsData = directive.payload.data(using: .utf8),
-                    let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
-                    let token = payloadDictionary["token"] as? String,
-                    let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    
+                    guard let payloadAsData = directive.payload.data(using: .utf8),
+                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                        let token = payloadDictionary["token"] as? String,
+                        let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
+                    }
+                    
+                    let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
+                    let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
+                    
+                    self.currentItem = DisplayTemplate(
+                        type: directive.header.type,
+                        payload: directive.payload,
+                        templateId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId,
+                        token: token,
+                        playServiceId: playServiceId,
+                        playStackServiceId: playStackServiceId,
+                        duration: DisplayTemplate.Duration(rawValue: duration)
+                    )
+                    
+                    if let item = self.currentItem {
+                        self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
+                    }
                 }
-                
-                let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-                let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
-                
-                self.currentItem = DisplayTemplate(
-                    type: directive.header.type,
-                    payload: directive.payload,
-                    templateId: directive.header.messageId,
-                    dialogRequestId: directive.header.dialogRequestId,
-                    token: token,
-                    playServiceId: playServiceId,
-                    playStackServiceId: playStackServiceId,
-                    duration: DisplayTemplate.Duration(rawValue: duration)
-                )
-                
-                if let item = self.currentItem {
-                    self.playSyncManager.startSync(delegate: self, dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
-                }
-            }
-        )
+            )
+        }
     }
 }
 

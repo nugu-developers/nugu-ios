@@ -30,7 +30,7 @@ public struct DirectiveHandleInfo: Hashable {
     public let medium: DirectiveMedium
     public let isBlocking: Bool
     public let handler: HandleDirective
-    public let preFetch: HandleDirective?
+    public let preFetch: HandleDirective
     public let attachment: HandleAttachment?
     
     public var type: String {
@@ -42,17 +42,17 @@ public struct DirectiveHandleInfo: Hashable {
         name: String,
         medium: DirectiveMedium,
         isBlocking: Bool,
-        preFetch: @escaping HandleDirective = { $1(.success(())) },
-        handler: @escaping HandleDirective,
-        attachment: HandleAttachment? = nil
+        preFetch: (() -> HandleDirective) = { { $1(.success(())) } },
+        handler: () -> HandleDirective,
+        attachment: (() -> HandleAttachment)? = nil
     ) {
         self.namespace = namespace
         self.name = name
         self.medium = medium
         self.isBlocking = isBlocking
-        self.handler = handler
-        self.preFetch = preFetch
-        self.attachment = attachment
+        self.handler = handler()
+        self.preFetch = preFetch()
+        self.attachment = attachment?()
     }
     
     // hashable
