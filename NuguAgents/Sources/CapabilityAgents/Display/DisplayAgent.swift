@@ -24,16 +24,14 @@ import NuguCore
 
 import RxSwift
 
-final public class DisplayAgent: DisplayAgentProtocol, CapabilityEventAgentable {
+final public class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.1")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // Private
     private let playSyncManager: PlaySyncManageable
     private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -118,11 +116,7 @@ public extension DisplayAgent {
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
                 let template = info.currentItem else { return }
             
-            self.sendEvent(
-                Event(playServiceId: template.playServiceId, typeInfo: .elementSelected(token: token)),
-                dialogRequestId: TimeUUID().hexString,
-                messageId: TimeUUID().hexString
-            )
+            self.sendEvent(playServiceId: template.playServiceId, type: .elementSelected(token: token))
         }
     }
     
@@ -231,22 +225,14 @@ private extension DisplayAgent {
                     guard let data = directive.payload.data(using: .utf8) else {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
                     }
+
                     let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
                     guard let item = self.currentItem, item.playServiceId == payload.playServiceId else {
-                        self.sendEvent(
-                            Event(playServiceId: payload.playServiceId, typeInfo: .closeFailed),
-                            dialogRequestId: TimeUUID().hexString,
-                            messageId: TimeUUID().hexString
-                        )
+                        self.sendEvent(playServiceId: payload.playServiceId, type: .closeFailed)
                         return
                     }
                     
-                    self.sendEvent(
-                        Event(playServiceId: payload.playServiceId, typeInfo: .closeSucceeded),
-                        dialogRequestId: TimeUUID().hexString,
-                        messageId: TimeUUID().hexString
-                    )
-                    
+                    self.sendEvent(playServiceId: payload.playServiceId, type: .closeSucceeded)
                     self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
                 }
             )
@@ -338,5 +324,32 @@ private extension DisplayAgent {
     func hasRenderedDisplay(template: DisplayTemplate) -> Bool {
         displayDispatchQueue.precondition(.onQueue)
         return renderingInfos.contains { $0.currentItem?.templateId == template.templateId }
+    }
+}
+
+// MARK: - private(Event)
+private extension DisplayAgent {
+    func sendEvent(playServiceId: String, type: Event.TypeInfo) {
+        let event = Event(playServiceId: playServiceId, typeInfo: type)
+        let header = UpstreamHeader(
+            namespace: capabilityAgentProperty.name,
+            name: event.name,
+            version: capabilityAgentProperty.version,
+            dialogRequestId: TimeUUID().hexString,
+            messageId: TimeUUID().hexString
+        )
+        
+        let contextPayload = ContextPayload(
+            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
+            client: []
+        )
+        
+        let message = UpstreamEventMessage(
+            payload: event.payload,
+            header: header,
+            contextPayload: contextPayload
+        )
+
+        self.upstreamDataSender.send(upstreamEventMessage: message)
     }
 }

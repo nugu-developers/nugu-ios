@@ -24,16 +24,14 @@ import NuguCore
 
 import RxSwift
 
-final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable {
+final public class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // Private
     private let contextManager: ContextManageable
     private let focusManager: FocusManageable
+    private let upstreamDataSender: UpstreamDataSendable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
@@ -179,11 +177,27 @@ private extension TextAgent {
         
         textAgentState = .busy
         
-        sendEvent(
-            Event(typeInfo: .textInput(text: textRequest.text, expectSpeech: textRequest.expectSpeech)),
-            dialogRequestId: textRequest.dialogRequestId,
+        let event = Event(typeInfo: .textInput(text: textRequest.text, expectSpeech: textRequest.expectSpeech))
+        let header = UpstreamHeader(
+            namespace: self.capabilityAgentProperty.name,
+            name: event.name,
+            version: self.capabilityAgentProperty.version,
+            dialogRequestId: TimeUUID().hexString,
             messageId: TimeUUID().hexString
-        ) { [weak self] result in
+        )
+        
+        let contextPayload = ContextPayload(
+            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
+            client: []
+        )
+        
+        let message = UpstreamEventMessage(
+            payload: event.payload,
+            header: header,
+            contextPayload: contextPayload
+        )
+
+        self.upstreamDataSender.send(upstreamEventMessage: message) { [weak self] result in
             guard let self = self else { return }
             guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
             

@@ -24,18 +24,16 @@ import NuguCore
 
 import RxSwift
 
-final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityEventAgentable {
+final public class SpeakerAgent: SpeakerAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .speaker, version: "1.0")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // SpeakerAgentProtocol
     public weak var delegate: SpeakerAgentDelegate?
     
     // Private
     private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
     
@@ -128,11 +126,32 @@ private extension SpeakerAgent {
                         let succeeded = results.allSatisfy { $0 }
                         let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
                         
-                        self.sendEvent(
-                            Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
+                        let event = Event(
+                            typeInfo: typeInfo,
+                            volumes: self.controllerVolumes,
+                            playServiceId: speakerMuteInfo.playServiceId
+                        )
+                        
+                        let header = UpstreamHeader(
+                            namespace: self.capabilityAgentProperty.name,
+                            name: event.name,
+                            version: self.capabilityAgentProperty.version,
                             dialogRequestId: TimeUUID().hexString,
                             messageId: TimeUUID().hexString
                         )
+                        
+                        let contextPayload = ContextPayload(
+                            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
+                            client: []
+                        )
+                        
+                        let message = UpstreamEventMessage(
+                            payload: event.payload,
+                            header: header,
+                            contextPayload: contextPayload
+                        )
+
+                        self.upstreamDataSender.send(upstreamEventMessage: message)
                     }
                 }
             )

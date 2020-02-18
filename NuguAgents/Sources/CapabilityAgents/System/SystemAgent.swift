@@ -22,16 +22,14 @@ import Foundation
 
 import NuguCore
 
-final public class SystemAgent: SystemAgentProtocol, CapabilityEventAgentable {
+open class SystemAgent: SystemAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.0")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // Private
     private let contextManager: ContextManageable
     private let networkManager: NetworkManageable
+    private let upstreamDataSender: UpstreamDataSendable
     
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
@@ -167,12 +165,23 @@ private extension SystemAgent {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
-            self.sendEvent(
-                Event(typeInfo: .synchronizeState),
-                contextPayload: contextPayload,
+            let event = Event(typeInfo: .synchronizeState)
+            
+            let header = UpstreamHeader(
+                namespace: self.capabilityAgentProperty.name,
+                name: event.name,
+                version: self.capabilityAgentProperty.version,
                 dialogRequestId: TimeUUID().hexString,
                 messageId: TimeUUID().hexString
             )
+            
+            let message = UpstreamEventMessage(
+                payload: event.payload,
+                header: header,
+                contextPayload: contextPayload
+            )
+
+            self.upstreamDataSender.send(upstreamEventMessage: message)
         }
     }
 }

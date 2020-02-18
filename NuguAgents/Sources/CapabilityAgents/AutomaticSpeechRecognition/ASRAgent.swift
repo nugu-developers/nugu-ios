@@ -25,17 +25,15 @@ import JadeMarble
 
 import RxSwift
 
-final public class ASRAgent: ASRAgentProtocol, CapabilityEventAgentable {
+final public class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.0")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // Private
     private let focusManager: FocusManageable
     private let contextManager: ContextManageable
     private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     private let audioStream: AudioStreamable
     fileprivate static var endPointDetector: EndPointDetector?
     
@@ -91,17 +89,17 @@ final public class ASRAgent: ASRAgentProtocol, CapabilityEventAgentable {
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
                 currentExpectSpeech = nil
             case .cancel:
-                sendEvent(event: .stopRecognize)
+                sendEvent(type: .stopRecognize)
                 currentExpectSpeech = nil
                 asrState = .idle
             case .error(let error):
                 switch error {
                 case NetworkError.timeout:
-                    sendEvent(event: .responseTimeout)
+                    sendEvent(type: .responseTimeout)
                 case ASRError.listeningTimeout:
-                    sendEvent(event: .listenTimeout)
+                    sendEvent(type: .listenTimeout)
                 case ASRError.listenFailed:
-                    sendEvent(event: .listenFailed)
+                    sendEvent(type: .listenFailed)
                 case ASRError.recognizeFailed:
                     break
                 default:
@@ -458,18 +456,7 @@ private extension ASRAgent {
             return Event.WakeUpInfo(start: 0, end: totalFrameCount - paddingFrameCount, detection: totalFrameCount)
         }
         let eventTypeInfo = Event.TypeInfo.recognize(wakeUpInfo: eventWakeUpInfo)
-        
-        sendEvent(
-            Event(
-                typeInfo: eventTypeInfo,
-                encoding: asrEncoding,
-                expectSpeech: currentExpectSpeech
-            ),
-            contextPayload: asrRequest.contextPayload,
-            dialogRequestId: asrRequest.dialogRequestId,
-            messageId: TimeUUID().hexString,
-            completion: completion
-        )
+        sendEvent(type: eventTypeInfo, completion: completion)
 
         // send wake up voice data
         if let wakeUpData = wakeUpInfo?.data {
@@ -499,21 +486,28 @@ private extension ASRAgent {
         }
     }
     
-    func sendEvent(event: ASRAgent.Event.TypeInfo) {
+    func sendEvent(type: Event.TypeInfo, completion: ((Result<Data, Error>) -> Void)? = nil) {
         guard let asrRequest = asrRequest else {
             log.warning("ASRRequest not exist")
             return
         }
         
-        sendEvent(
-            Event(
-                typeInfo: event,
-                encoding: asrEncoding,
-                expectSpeech: currentExpectSpeech
-            ),
+        let event = Event(typeInfo: type, encoding: asrEncoding, expectSpeech: currentExpectSpeech)
+        let header = UpstreamHeader(
+            namespace: self.capabilityAgentProperty.name,
+            name: event.name,
+            version: self.capabilityAgentProperty.version,
             dialogRequestId: asrRequest.dialogRequestId,
             messageId: TimeUUID().hexString
         )
+        
+        let message = UpstreamEventMessage(
+            payload: event.payload,
+            header: header,
+            contextPayload: asrRequest.contextPayload
+        )
+
+        self.upstreamDataSender.send(upstreamEventMessage: message, completion: completion)
     }
 }
 

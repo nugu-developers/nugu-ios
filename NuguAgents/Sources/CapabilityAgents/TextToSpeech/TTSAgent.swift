@@ -24,17 +24,15 @@ import NuguCore
 
 import RxSwift
 
-final public class TTSAgent: TTSAgentProtocol, CapabilityEventAgentable {
+final public class TTSAgent: TTSAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // Private
     private let playSyncManager: PlaySyncManageable
     private let focusManager: FocusManageable
     private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
@@ -128,14 +126,29 @@ public extension TTSAgent {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
-            let typeInfo: Event.TypeInfo = .speechPlay(text: text)
-            let event = Event(token: nil, playServiceId: playServiceId, typeInfo: typeInfo)
+            let event = Event(token: nil, playServiceId: playServiceId, typeInfo: .speechPlay(text: text))
+            
             let dialogRequestId = TimeUUID().hexString
-            self.sendEvent(
-                event,
+            let header = UpstreamHeader(
+                namespace: self.capabilityAgentProperty.name,
+                name: event.name,
+                version: self.capabilityAgentProperty.version,
                 dialogRequestId: dialogRequestId,
                 messageId: TimeUUID().hexString
             )
+            
+            let contextPayload = ContextPayload(
+                supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
+                client: []
+            )
+            
+            let eventMessage = UpstreamEventMessage(
+                payload: event.payload,
+                header: header,
+                contextPayload: contextPayload
+            )
+            
+            self.upstreamDataSender.send(upstreamEventMessage: eventMessage)
             
             self.ttsResultSubject
                 .filter { $0.dialogRequestId == dialogRequestId }
@@ -428,16 +441,32 @@ private extension TTSAgent {
             return
         }
         
-        sendEvent(
-            Event(
-                token: media.payload.token,
-                playServiceId: playServiceId,
-                typeInfo: info
-            ),
-            dialogRequestId: TimeUUID().hexString,
-            messageId: TimeUUID().hexString,
-            resultHandler: resultHandler
+        let event = Event(
+            token: media.payload.token,
+            playServiceId: playServiceId,
+            typeInfo: info
         )
+        
+        let header = UpstreamHeader(
+            namespace: self.capabilityAgentProperty.name,
+            name: event.name,
+            version: self.capabilityAgentProperty.version,
+            dialogRequestId: TimeUUID().hexString,
+            messageId: TimeUUID().hexString
+        )
+        
+        let contextPayload = ContextPayload(
+            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
+            client: []
+        )
+        
+        let eventMessage = UpstreamEventMessage(
+            payload: event.payload,
+            header: header,
+            contextPayload: contextPayload
+        )
+        
+        self.upstreamDataSender.send(upstreamEventMessage: eventMessage, resultHandler: resultHandler)
     }
 }
 

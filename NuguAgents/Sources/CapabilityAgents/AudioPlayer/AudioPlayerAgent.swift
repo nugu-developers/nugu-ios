@@ -24,12 +24,9 @@ import NuguCore
 
 import RxSwift
 
-final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityEventAgentable {
+open class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // AudioPlayerAgentProtocol
     public var offset: Int? {
@@ -46,6 +43,7 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityEventAg
     private let playSyncManager: PlaySyncManageable
     private let focusManager: FocusManageable
     private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
@@ -484,17 +482,33 @@ private extension AudioPlayerAgent {
 
 private extension AudioPlayerAgent {
     func sendEvent(media: AudioPlayerAgentMedia, typeInfo: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
-        sendEvent(
-            Event(
-                token: media.payload.audioItem.stream.token,
-                offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
-                playServiceId: media.payload.playServiceId,
-                typeInfo: typeInfo
-            ),
-            dialogRequestId: TimeUUID().hexString,
-            messageId: TimeUUID().hexString,
-            resultHandler: resultHandler
+        let event = Event(
+            token: media.payload.audioItem.stream.token,
+            offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
+            playServiceId: media.payload.playServiceId,
+            typeInfo: typeInfo
         )
+        
+        let header = UpstreamHeader(
+            namespace: capabilityAgentProperty.name,
+            name: event.name,
+            version: capabilityAgentProperty.version,
+            dialogRequestId: TimeUUID().hexString,
+            messageId: TimeUUID().hexString
+        )
+        
+        let contextPayload = ContextPayload(
+            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
+            client: []
+        )
+        
+        let message = UpstreamEventMessage(
+            payload: event.payload,
+            header: header,
+            contextPayload: contextPayload
+        )
+
+        upstreamDataSender.send(upstreamEventMessage: message, completion: nil, resultHandler: resultHandler)
     }
 }
 

@@ -22,18 +22,16 @@ import Foundation
 
 import NuguCore
 
-final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityEventAgentable {
+final public class ExtensionAgent: ExtensionAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.1")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // ExtensionAgentProtocol
     public weak var delegate: ExtensionAgentDelegate?
     
     // private
     private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -64,8 +62,7 @@ final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityEventAgenta
 
 public extension ExtensionAgent {
     func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?) {
-        let event = ExtensionAgent.Event(playServiceId: playServiceId, typeInfo: .commandIssued(data: data))
-        self.sendEvent(event, dialogRequestId: TimeUUID().hexString, messageId: TimeUUID().hexString) { result in
+        sendEvent(playServiceId: playServiceId, typeInfo: .commandIssued(data: data)) { result in
             let result = result.map { _ in () }
             completion?(result)
         }
@@ -109,17 +106,39 @@ private extension ExtensionAgent {
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    let eventTypeInfo: ExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
-                    let event = ExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
-                    
-                    self.sendEvent(
-                        event,
-                        dialogRequestId: TimeUUID().hexString,
-                        messageId: TimeUUID().hexString
-                    )
+                    self.sendEvent(playServiceId: item.playServiceId, typeInfo: isSuccess ? .actionSucceeded : .actionFailed)
             })
             
             completionHandler(.success(()))
         }
+    }
+}
+
+// MARK: - Private(Event)
+
+private extension ExtensionAgent {
+    func sendEvent(playServiceId: String, typeInfo: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
+         let event = ExtensionAgent.Event(playServiceId: playServiceId, typeInfo: typeInfo)
+        
+        let header = UpstreamHeader(
+            namespace: self.capabilityAgentProperty.name,
+            name: event.name,
+            version: self.capabilityAgentProperty.version,
+            dialogRequestId: TimeUUID().hexString,
+            messageId: TimeUUID().hexString
+        )
+        
+        let contextPayload = ContextPayload(
+            supportedInterfaces: [self.contextInfoRequestContext()].compactMap({ $0 }),
+            client: []
+        )
+        
+        let eventMessage = UpstreamEventMessage(
+            payload: event.payload,
+            header: header,
+            contextPayload: contextPayload
+        )
+        
+        self.upstreamDataSender.send(upstreamEventMessage: eventMessage, resultHandler: resultHandler)
     }
 }
