@@ -31,6 +31,7 @@ extension Eventable {
             messageId: TimeUUID().hexString
         )
 
+        // TODO: async로 변경 예정임.
         var contextPayload = contextPayload
         if contextPayload == nil {
             agent.contextInfoRequestContext { (contextInfo) in

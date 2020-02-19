@@ -1,5 +1,5 @@
 //
-//  DirectiveTypeInfos.swift
+//  DirectiveHandleInfo.swift
 //  NuguCore
 //
 //  Created by childc on 15/02/2020.
