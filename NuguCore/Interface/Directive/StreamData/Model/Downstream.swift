@@ -70,18 +70,6 @@ public struct Downstream {
     }
 }
 
-// MARK: - Downstream.Directivex
-
-extension Downstream.Directive {
-    /// <#Description#>
-    /// - Parameter Type: <#Type description#>
-    public func typeInfo<T: CaseIterable & DirectiveTypeInforable>(for configurationType: T.Type) -> T? {
-        return configurationType.allCases.first { (configuration) -> Bool in
-            return configuration.type == header.type
-        }
-    }
-}
-
 // MARK: - Downstream.Header
 
 extension Downstream.Header {

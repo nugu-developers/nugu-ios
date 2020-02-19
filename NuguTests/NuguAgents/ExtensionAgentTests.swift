@@ -90,48 +90,48 @@ class ExtensionAgentTests: XCTestCase {
     
     // MARK: Directives
     
-    func testActionDirective() {
-        let rawData =
-        """
-        {
-          "header": {
-            "namespace": "Extension",
-            "name": "Action",
-            "messageId": "0",
-            "dialogRequestId": "0",
-            "version": "1.0"
-          },
-          "payload": {
-            "playServiceId": "0",
-            "data": {
-               "test": "action"
-            }
-          }
-        }
-        """.data(using: .utf8)!
-        
-        let dictionary: [String: Any]
-        do {
-            dictionary = try JSONSerialization.jsonObject(with: rawData, options: []) as! [String: Any]
-        } catch {
-            XCTFail("Failed to parse rawData to jsonObject")
-            return
-        }
-        
-        guard let directive = Downstream.Directive(directiveDictionary: dictionary) else {
-            XCTFail("Failed to parse dictionary to directive")
-            return
-        }
-        
-        extensionAgent.handleDirective(directive) { (result) in
-            switch result {
-            case .success:
-                XCTAssert(true)
-            case .failure(let error):
-                XCTFail(error.localizedDescription)
-            }
-        }
-    }
+//    func testActionDirective() {
+//        let rawData =
+//        """
+//        {
+//          "header": {
+//            "namespace": "Extension",
+//            "name": "Action",
+//            "messageId": "0",
+//            "dialogRequestId": "0",
+//            "version": "1.0"
+//          },
+//          "payload": {
+//            "playServiceId": "0",
+//            "data": {
+//               "test": "action"
+//            }
+//          }
+//        }
+//        """.data(using: .utf8)!
+//        
+//        let dictionary: [String: Any]
+//        do {
+//            dictionary = try JSONSerialization.jsonObject(with: rawData, options: []) as! [String: Any]
+//        } catch {
+//            XCTFail("Failed to parse rawData to jsonObject")
+//            return
+//        }
+//        
+//        guard let directive = Downstream.Directive(directiveDictionary: dictionary) else {
+//            XCTFail("Failed to parse dictionary to directive")
+//            return
+//        }
+//        
+//        extensionAgent.handleDirective(directive) { (result) in
+//            switch result {
+//            case .success:
+//                XCTAssert(true)
+//            case .failure(let error):
+//                XCTFail(error.localizedDescription)
+//            }
+//        }
+//    }
     
     // MARK: Events
     // TODO: - Need to add events
