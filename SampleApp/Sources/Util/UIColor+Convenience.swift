@@ -40,11 +40,11 @@ extension UIColor {
     }
     
     static func backgroundColor(rgbHexString: String?) -> UIColor? {
-        return UIColor(rgbHexString: rgbHexString) ?? UIColor(named: "BackgroundColor")
+        return UIColor(rgbHexString: rgbHexString) ?? UIColor.white
     }
     
     static func textColor(rgbHexString: String?) -> UIColor? {
-        return UIColor(rgbHexString: rgbHexString) ?? UIColor(named: "TextColor")
+        return UIColor(rgbHexString: rgbHexString) ?? UIColor.black
     }
     
     var hexString: String {
