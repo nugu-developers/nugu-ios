@@ -30,17 +30,17 @@ public final class SystemAgent: SystemAgentProtocol {
     private let contextManager: ContextManageable
     private let networkManager: NetworkManageable
     private let upstreamDataSender: UpstreamDataSendable
-    
+    private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<SystemAgentDelegate>()
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandoffConnection", medium: .none, isBlocking: false, handler: handleHandOffConnection),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", medium: .none, isBlocking: false, handler: handleUpdateState),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", medium: .none, isBlocking: false, handler: handleException),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", medium: .none, isBlocking: false, handler: { { $1(.success(())) } })
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandoffConnection", medium: .none, isBlocking: false, directiveHandler: handleHandOffConnection),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", medium: .none, isBlocking: false, directiveHandler: handleUpdateState),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", medium: .none, isBlocking: false, directiveHandler: handleException),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", medium: .none, isBlocking: false, directiveHandler: { { $1(.success(())) } })
     ]
     
     public init(
@@ -49,11 +49,12 @@ public final class SystemAgent: SystemAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
+        log.info("initiated")
         
         self.contextManager = contextManager
         self.networkManager = networkManager
         self.upstreamDataSender = upstreamDataSender
+        self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
         networkManager.add(statusDelegate: self)
@@ -61,7 +62,8 @@ public final class SystemAgent: SystemAgentProtocol {
     }
     
     deinit {
-        log.info("")
+        log.info("deinit")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 

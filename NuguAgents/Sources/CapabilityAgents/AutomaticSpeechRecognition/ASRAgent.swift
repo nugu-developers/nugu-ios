@@ -133,8 +133,8 @@ public final class ASRAgent: ASRAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", medium: .audio, isBlocking: true, preFetch: prefetchExpectSpeech, handler: handleExpectSpeech),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", medium: .none, isBlocking: false, handler: handleNotifyResult)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", medium: .audio, isBlocking: true, preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", medium: .none, isBlocking: false, directiveHandler: handleNotifyResult)
     ]
     
     public init(
@@ -548,6 +548,7 @@ private extension ASRAgent {
         
         asrState = .listening
         
+        // TODO: asrRequest를 넘기는 이유가 명확하지 않으면 개선 필요
         sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
             guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
             guard case .success = status else {

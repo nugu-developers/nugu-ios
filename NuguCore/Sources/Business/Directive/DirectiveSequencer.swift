@@ -55,8 +55,8 @@ extension DirectiveSequencer {
     
     public func remove(directiveHandleInfos: DirectiveHandleInfos) {
         log.debug("remove directive handles: \(directiveHandleInfos)")
-        directiveHandleInfos.forEach { key, _ in
-            self.directiveHandleInfos[key] = nil
+        directiveHandleInfos.keys.forEach { key in
+            self.directiveHandleInfos.removeValue(forKey: key)
         }
     }
 }
@@ -85,7 +85,7 @@ extension DirectiveSequencer: DownstreamDataDelegate {
         
         // DirectiveSequencer 에서는 pass through. Attachment 에 대한 Validate 는 CA 에서 처리한다.
         directiveSequencerDispatchQueue.async {
-            handler.attachment?(attachment)
+            handler.attachmentHandler?(attachment)
         }
     }
 }
@@ -180,7 +180,7 @@ private extension DirectiveSequencer {
                 }
 
                 handlingTypeInfos.append(handler)
-                handler.handler(directive) { [weak self] result in
+                handler.directiveHandler(directive) { [weak self] result in
                     remove(handler)
                     if case .failure(let error) = result {
                         self?.upstreamDataSender.sendCrashReport(error: error)

@@ -92,8 +92,8 @@ public final class TTSAgent: TTSAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Speak", medium: .audio, isBlocking: true, preFetch: prefetchPlay, handler: handlePlay, attachment: handleAttachment),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", medium: .none, isBlocking: false, handler: handleStop)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Speak", medium: .audio, isBlocking: true, preFetch: prefetchPlay, directiveHandler: handlePlay, attachmentHandler: handleAttachment),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", medium: .none, isBlocking: false, directiveHandler: handleStop)
     ]
     
     public init(

@@ -120,9 +120,9 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Play", medium: .audio, isBlocking: false, preFetch: prefetchPlay, handler: handlePlay),
-        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Stop", medium: .audio, isBlocking: false, handler: handleStop),
-        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Pause", medium: .audio, isBlocking: false, handler: handlePause)
+        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Play", medium: .audio, isBlocking: false, preFetch: prefetchPlay, directiveHandler: handlePlay),
+        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Stop", medium: .audio, isBlocking: false, directiveHandler: handleStop),
+        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause)
     ]
     
     public init(

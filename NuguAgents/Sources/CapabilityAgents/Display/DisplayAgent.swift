@@ -49,27 +49,27 @@ public final class DisplayAgent: DisplayAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", medium: .visual, isBlocking: false, handler: handleClose),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText4", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList3", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList4", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList3", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather1", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather2", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather3", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather4", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather5", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullImage", medium: .visual, isBlocking: false, handler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", medium: .visual, isBlocking: false, handler: handleDisplay)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", medium: .visual, isBlocking: false, directiveHandler: handleClose),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather5", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullImage", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", medium: .visual, isBlocking: false, directiveHandler: handleDisplay)
     ]
   
     public init(
