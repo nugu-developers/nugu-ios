@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.7.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.7.0)
+Released on 2019-11-29
+
+#### Fixed
+- Fix to release audio stream when Tyche engine initialize failed. (#114)
+
+#### Updated
+- Removes `lottie-ios` dependency. (#76)
+- Remove related `Nugu-Info.plist`. (#109)
+- Adds `TimeIntervallic` protocol and `NuguTimeInterval` structure. (#111)
+- Adds `DownStreamDataInterpreter` to decode downloaded data. (#113)
+- Add a `focusShouldRelease()` function to `FocusManageable` to notify that audio-session was completed. (#119)
+
 ## [0.6.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.6.1)
 Released on 2019-11-17
 
