@@ -27,6 +27,7 @@ public class MicInputProvider: AudioProvidable {
     }
     
     public var audioFormat: AVAudioFormat?
+    private let audioOutputBus = 0
     private var streamWriter: AudioStreamWritable?
     private let audioEngine = AVAudioEngine()
     private let audioQueue = DispatchQueue(label: "romain_mic_input_audio_queue")
@@ -76,7 +77,7 @@ public class MicInputProvider: AudioProvidable {
     
     private func beginTappingMicrophone(streamWriter: AudioStreamWritable) throws {
         let inputNode = audioEngine.inputNode
-        let inputFormat = inputNode.inputFormat(forBus: 1)
+        let inputFormat = inputNode.outputFormat(forBus: audioOutputBus)
         
         guard let recordingFormat = audioFormat else {
             log.error("cannot make audioFormat")
@@ -92,11 +93,11 @@ public class MicInputProvider: AudioProvidable {
         
         log.info("convert from: \(inputFormat) to: \(recordingFormat)")
         
-        if let error = ObjcExceptionCatcher.objcTry({
-            inputNode.removeTap(onBus: 1)
-            inputNode.installTap(onBus: 1, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, _) in
-                guard let self = self else { return }
-                
+        if let error = ObjcExceptionCatcher.objcTry({ [weak self] in
+            guard let self = self else { return }
+            
+            inputNode.removeTap(onBus: self.audioOutputBus)
+            inputNode.installTap(onBus: self.audioOutputBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { (buffer, _) in
                 self.audioQueue.sync {
                     let convertedFrameCount = AVAudioFrameCount((Double(buffer.frameLength) / inputFormat.sampleRate) * recordingFormat.sampleRate)
                     guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: convertedFrameCount) else {
@@ -119,7 +120,7 @@ public class MicInputProvider: AudioProvidable {
                         try self.streamWriter?.write(pcmBuffer)
                     } catch {
                         log.error(error)
-                        inputNode.removeTap(onBus: 1)
+                        inputNode.removeTap(onBus: self.audioOutputBus)
                     }
                 }
             }
