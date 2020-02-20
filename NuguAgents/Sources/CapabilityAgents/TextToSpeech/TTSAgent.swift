@@ -434,15 +434,10 @@ private extension TTSAgent {
 
 private extension TTSAgent {
     func sendEvent(media: TTSMedia, info: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
-        guard let playServiceId = media.payload.playServiceId else {
-            log.debug("TTSMedia does not have playServiceId")
-            return
-        }
-        
         self.upstreamDataSender.send(
             upstreamEventMessage: Event(
                 token: media.payload.token,
-                playServiceId: playServiceId,
+                playServiceId: media.payload.playServiceId,
                 typeInfo: info
             ).makeEventMessage(agent: self),
             resultHandler: resultHandler
