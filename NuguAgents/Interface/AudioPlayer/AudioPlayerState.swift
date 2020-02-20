@@ -21,15 +21,33 @@
 import Foundation
 
 /// Identifies the player state.
-public enum AudioPlayerState: String {
+public enum AudioPlayerState {
     /// Initial state, prior to acting on the first Play directive.
-    case idle = "IDLE"
+    case idle
     /// Indicates that audio is currently playing.
-    case playing = "PLAYING"
+    case playing
     /// Indicates that audio playback was stopped due to an error or a directive which stops or replaces the current stream.
-    case stopped = "STOPPED"
+    case stopped
     /// Indicates that the audio stream has been paused.
-    case paused = "PAUSED"
+    case paused
+    /// Indicates taht the audio stream has been paused by `FocusState.background`.
+    /// It will be resume when changed to `FocusState.foreground`.
+    ///
+    /// In this case, "playerActivity" in `AudioPlayerAgent`'s context is "PLAYING"
+    case temporalPaused
     /// Indicates that playback has finished.
-    case finished = "FINISHED"
+    case finished
+}
+
+extension AudioPlayerState {
+    var playerActivity: String {
+        switch self {
+        case .idle: return "IDLE"
+        case .playing: return "PLAYING"
+        case .stopped: return "STOPPED"
+        case .paused: return "PAUSED"
+        case .temporalPaused: return "PLAYING"
+        case .finished: return "FINISHED"
+        }
+    }
 }
