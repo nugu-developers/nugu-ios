@@ -23,9 +23,9 @@ import Foundation
 public protocol PlaySyncManageable: ContextInfoDelegate {
     var playServiceIds: [String] { get }
     
-    func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?)
+    func prepareSync(delegate: PlaySyncDelegate, playServiceId: String?)
+    func startSync(delegate: PlaySyncDelegate, playServiceId: String?)
+    func cancelSync(delegate: PlaySyncDelegate, playServiceId: String?)
+    func releaseSync(delegate: PlaySyncDelegate, playServiceId: String?)
+    func releaseSyncImmediately(playServiceId: String?)
 }

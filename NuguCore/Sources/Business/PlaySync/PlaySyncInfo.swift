@@ -24,15 +24,13 @@ struct PlaySyncInfo {
     // TODO: delegate 를 struct 에서 가지고 있지 않도록 구조 수정.
     weak var delegate: PlaySyncDelegate?
     
-    let dialogRequestId: String
     let playServiceId: String?
     let playSyncState: PlaySyncState
     let isDisplay: Bool
     let duration: PlaySyncDuration
     
-    init(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
+    init(delegate: PlaySyncDelegate, playServiceId: String?, playSyncState: PlaySyncState) {
         self.delegate = delegate
-        self.dialogRequestId = dialogRequestId
         self.playServiceId = playServiceId
         self.playSyncState = playSyncState
         self.isDisplay = delegate.playSyncIsDisplay()
@@ -45,7 +43,7 @@ struct PlaySyncInfo {
 extension PlaySyncInfo: CustomStringConvertible {
     var description: String {
         if let delegate = delegate {
-            return "\nPlaySyncInfo: \(delegate), \(playServiceId ?? ""), \(playSyncState), \(dialogRequestId)"
+            return "\nPlaySyncInfo: \(delegate), \(playServiceId ?? ""), \(playSyncState)"
         } else {
             return ""
         }
@@ -56,7 +54,7 @@ extension PlaySyncInfo: CustomStringConvertible {
 
 extension PlaySyncInfo: Equatable {
     static func == (lhs: PlaySyncInfo, rhs: PlaySyncInfo) -> Bool {
-        lhs.delegate === rhs.delegate && lhs.dialogRequestId == rhs.dialogRequestId
+        lhs.delegate === rhs.delegate && lhs.playServiceId == rhs.playServiceId
     }
 }
 
@@ -75,9 +73,9 @@ extension Array where Element == PlaySyncInfo {
     }
     
     /// Removes and returns the original element
-    @discardableResult mutating func remove(delegate: PlaySyncDelegate, dialogRequestId: String) -> PlaySyncInfo? {
+    @discardableResult mutating func remove(delegate: PlaySyncDelegate, playServiceId: String) -> PlaySyncInfo? {
         removeAll { $0.delegate == nil }
-        if let info = object(forDelegate: delegate, dialogRequestId: dialogRequestId),
+        if let info = object(forDelegate: delegate, playServiceId: playServiceId),
             let index = firstIndex(of: info) {
             return remove(at: index)
         }
@@ -85,7 +83,7 @@ extension Array where Element == PlaySyncInfo {
     }
     
     /// Returns the element for delegate
-    func object(forDelegate delegate: PlaySyncDelegate, dialogRequestId: String) -> PlaySyncInfo? {
-        first { $0.delegate === delegate && $0.dialogRequestId == dialogRequestId}
+    func object(forDelegate delegate: PlaySyncDelegate, playServiceId: String) -> PlaySyncInfo? {
+        first { $0.delegate === delegate && $0.playServiceId == playServiceId}
     }
 }

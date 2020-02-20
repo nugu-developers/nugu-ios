@@ -30,8 +30,14 @@ final class DisplayBodyView: DisplayView {
     
     override var displayPayload: String? {
         didSet {
-            guard let payloadData = displayPayload?.data(using: .utf8),
-            let displayItem = try? JSONDecoder().decode(DisplayBodyTemplate.self, from: payloadData) else { return }
+            guard let payloadData = displayPayload?.data(using: .utf8) else { return }
+            let displayItem: DisplayBodyTemplate
+            do {
+                displayItem = try JSONDecoder().decode(DisplayBodyTemplate.self, from: payloadData)
+            } catch {
+                log.error(error)
+                return
+            }
             
             titleLabel.text = displayItem.title.text.text
             titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)

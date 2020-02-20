@@ -164,11 +164,11 @@ extension DisplayAgent: PlaySyncDelegate {
         return playSyncDuration
     }
     
-    public func playSyncDidChange(state: PlaySyncState, dialogRequestId: String) {
+    public func playSyncDidChange(state: PlaySyncState, playServiceId: String) {
         log.info("\(state)")
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let item = self.currentItem, item.dialogRequestId == dialogRequestId else { return }
+            guard let item = self.currentItem, item.playStackServiceId == playServiceId else { return }
             
             switch state {
             case .synced:
@@ -180,7 +180,7 @@ extension DisplayAgent: PlaySyncDelegate {
                 }
                 if rendered == false {
                     self.currentItem = nil
-                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
+                    self.playSyncManager.cancelSync(delegate: self, playServiceId: item.playStackServiceId)
                 }
             case .releasing:
                 if self.timerInfos[item.templateId] != false {
@@ -235,7 +235,7 @@ private extension DisplayAgent {
                     )
                     
                     if let item = self.currentItem, item.playServiceId == payload.playServiceId {
-                        self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
+                        self.playSyncManager.releaseSyncImmediately(playServiceId: item.playStackServiceId)
                     }
                 }
             )
@@ -274,7 +274,6 @@ private extension DisplayAgent {
                     if let item = self.currentItem {
                         self.playSyncManager.startSync(
                             delegate: self,
-                            dialogRequestId: item.dialogRequestId,
                             playServiceId: item.playStackServiceId
                         )
                     }
@@ -310,7 +309,7 @@ private extension DisplayAgent {
                 if self.removeRenderedTemplate(delegate: delegate, template: template),
                     self.hasRenderedDisplay(template: template) == false {
                     // Release sync when removed all of template(May be closed by user).
-                    self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playStackServiceId)
+                    self.playSyncManager.releaseSyncImmediately(playServiceId: template.playStackServiceId)
                 }
             }).disposed(by: disposeBag)
         return true
