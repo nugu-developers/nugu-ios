@@ -32,5 +32,5 @@ struct ASRRequest {
 public enum ASRInitiator {
     case wakeUpKeyword
     case user
-    case senario
+    case scenario
 }
