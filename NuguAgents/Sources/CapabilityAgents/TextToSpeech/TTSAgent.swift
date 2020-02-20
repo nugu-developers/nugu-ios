@@ -233,12 +233,13 @@ extension TTSAgent: MediaPlayerDelegate {
             case .resume, .bufferRefilled:
                 self.ttsState = .playing
             case .finish:
+                self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
+                self.ttsState = .finished
+                
                 // Release focus after receiving directive
                 self.sendEvent(media: media, info: .speechFinished) { [weak self] _ in
                     self?.releaseFocusIfNeeded()
                 }
-                self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
-                self.ttsState = .finished
             case .pause:
                 self.stop(cancelAssociation: false)
             case .stop:
@@ -436,6 +437,9 @@ private extension TTSAgent {
     func sendEvent(media: TTSMedia, info: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
         guard let playServiceId = media.payload.playServiceId else {
             log.debug("TTSMedia does not have playServiceId")
+            
+            let error = NSError(domain: "com.sktelecom.romaine.tts_agent", code: 1000, userInfo: nil)
+            resultHandler?(.failure(error))
             return
         }
         

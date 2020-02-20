@@ -34,8 +34,7 @@ class TextAgentTests: XCTestCase {
     lazy var textAgent: TextAgent = TextAgent(
         contextManager: contextManager,
         upstreamDataSender: upstreamDataSender,
-        focusManager: focusManager,
-        channelPriority: .recognition
+        focusManager: focusManager
     )
     
     // Override
