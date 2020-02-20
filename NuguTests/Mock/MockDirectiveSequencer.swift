@@ -23,11 +23,11 @@ import Foundation
 import NuguCore
 
 class MockDirectiveSequencer: DirectiveSequenceable {
-    func add(handleDirectiveDelegate: HandleDirectiveDelegate) {
+    func add(directiveHandleInfos: DirectiveHandleInfos) {
         //
     }
     
-    func remove(handleDirectiveDelegate: HandleDirectiveDelegate) {
+    func remove(directiveHandleInfos: DirectiveHandleInfos) {
         //
     }
     

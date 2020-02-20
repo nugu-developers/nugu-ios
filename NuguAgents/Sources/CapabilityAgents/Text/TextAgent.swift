@@ -24,25 +24,19 @@ import NuguCore
 
 import RxSwift
 
-final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, CapabilityFocusAgentable {
+public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
     
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
-    
-    // CapabilityFocusAgentable
-    public let focusManager: FocusManageable
-    public let channelPriority: FocusChannelPriority
-    
     // Private
     private let contextManager: ContextManageable
+    private let focusManager: FocusManageable
+    private let upstreamDataSender: UpstreamDataSendable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TextAgentDelegate>()
     
-    private var focusState: FocusState = .nothing
     private var textAgentState: TextAgentState = .idle {
         didSet {
             log.info("from: \(oldValue) to: \(textAgentState)")
@@ -66,15 +60,13 @@ final public class TextAgent: TextAgentProtocol, CapabilityEventAgentable, Capab
     public init(
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
-        focusManager: FocusManageable,
-        channelPriority: FocusChannelPriority
+        focusManager: FocusManageable
     ) {
         log.info("")
         
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.focusManager = focusManager
-        self.channelPriority = channelPriority
         
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
@@ -131,9 +123,12 @@ extension TextAgent: ContextInfoDelegate {
 // MARK: - FocusChannelDelegate
 
 extension TextAgent: FocusChannelDelegate {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return .recognition
+    }
+    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(textAgentState)")
-        self.focusState = focusState
         
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -158,7 +153,6 @@ extension TextAgent: FocusChannelDelegate {
 
 private extension TextAgent {
     func releaseFocusIfNeeded() {
-        guard focusState != .nothing else { return }
         guard textAgentState == .idle else {
             log.info("Not permitted in current state, \(textAgentState)")
             return
@@ -179,10 +173,13 @@ private extension TextAgent {
         
         textAgentState = .busy
         
-        sendEvent(
-            Event(typeInfo: .textInput(text: textRequest.text, expectSpeech: textRequest.expectSpeech)),
-            dialogRequestId: textRequest.dialogRequestId,
-            messageId: TimeUUID().hexString
+        self.upstreamDataSender.send(
+            upstreamEventMessage: Event(
+                typeInfo: .textInput(
+                    text: textRequest.text,
+                    expectSpeech: textRequest.expectSpeech
+                )
+            ).makeEventMessage(agent: self)
         ) { [weak self] result in
             guard let self = self else { return }
             guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }

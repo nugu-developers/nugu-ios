@@ -22,20 +22,26 @@ import Foundation
 
 import NuguCore
 
-final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+public final class SystemAgent: SystemAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.0")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // Private
     private let contextManager: ContextManageable
     private let networkManager: NetworkManageable
-    
+    private let upstreamDataSender: UpstreamDataSendable
+    private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<SystemAgentDelegate>()
+    
+    // Handleable Directive
+    private lazy var handleableDirectiveInfos = [
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandoffConnection", medium: .none, isBlocking: false, directiveHandler: handleHandOffConnection),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", medium: .none, isBlocking: false, directiveHandler: handleUpdateState),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", medium: .none, isBlocking: false, directiveHandler: handleException),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", medium: .none, isBlocking: false, directiveHandler: { { $1(.success(())) } })
+    ]
     
     public init(
         contextManager: ContextManageable,
@@ -43,50 +49,21 @@ final public class SystemAgent: SystemAgentProtocol, CapabilityDirectiveAgentabl
         upstreamDataSender: UpstreamDataSendable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
+        log.info("initiated")
         
         self.contextManager = contextManager
         self.networkManager = networkManager
         self.upstreamDataSender = upstreamDataSender
+        self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
         networkManager.add(statusDelegate: self)
-        directiveSequencer.add(handleDirectiveDelegate: self)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
-        log.info("")
-    }
-}
-
-// MARK: - HandleDirectiveDelegate
-
-extension SystemAgent: HandleDirectiveDelegate {
-    public func handleDirective(
-        _ directive: Downstream.Directive,
-        completionHandler: @escaping (Result<Void, Error>) -> Void
-        ) {
-        let result = Result<DirectiveTypeInfo, Error>(catching: {
-            guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Unknown directive")
-            }
-            
-            return directiveTypeInfo
-        }).flatMap({ (typeInfo) -> Result<Void, Error> in
-            switch typeInfo {
-            case .handoffConnection:
-                return handOffConnection(directive: directive)
-            case .updateState:
-                return updateState()
-            case .exception:
-                return handleException(directive: directive)
-            case .noDirectives:
-                // do nothing
-                return .success(())
-            }
-        })
-        
-        completionHandler(result)
+        log.info("deinit")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -129,46 +106,57 @@ extension SystemAgent: NetworkStatusDelegate {
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
-    func handOffConnection(directive: Downstream.Directive) -> Result<Void, Error> {
-        return Result { [weak self] in
-            guard let data = directive.payload.data(using: .utf8) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-            }
-            
-            let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
-            self?.systemDispatchQueue.async { [weak self] in
-                // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
-                log.info("try to handoff policy: \(serverPolicy)")
-                self?.networkManager.connect()
-            }
+    func handleHandOffConnection() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result { [weak self] in
+                    guard let data = directive.payload.data(using: .utf8) else {
+                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                    }
+                    
+                    let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
+                    self?.systemDispatchQueue.async { [weak self] in
+                        // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
+                        log.info("try to handoff policy: \(serverPolicy)")
+                        self?.networkManager.connect()
+                    }
+                }
+            )
         }
     }
     
-    func updateState() -> Result<Void, Error> {
-        systemDispatchQueue.async { [weak self] in
-            self?.sendSynchronizeStateEvent()
+    func handleUpdateState() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            self?.systemDispatchQueue.async { [weak self] in
+                self?.sendSynchronizeStateEvent()
+            }
+            
+            completionHandler(.success(()))
         }
         
-        return .success(())
     }
     
-    func handleException(directive: Downstream.Directive) -> Result<Void, Error> {
-        return Result { [weak self] in
-            guard let data = directive.payload.data(using: .utf8) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-            }
-            
-            let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
-            self?.systemDispatchQueue.async { [weak self] in
-                switch exceptionItem.code {
-                case .fail(let code):
-                    self?.delegates.notify { delegate in
-                        delegate.systemAgentDidReceiveExceptionFail(code: code)
+    func handleException() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result { [weak self] in
+                    guard let data = directive.payload.data(using: .utf8) else {
+                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
                     }
-                case .warning(let code):
-                    log.debug("received warning code: \(code)")
+                    
+                    let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
+                    self?.systemDispatchQueue.async { [weak self] in
+                        switch exceptionItem.code {
+                        case .fail(let code):
+                            self?.delegates.notify { delegate in
+                                delegate.systemAgentDidReceiveExceptionFail(code: code)
+                            }
+                        case .warning(let code):
+                            log.debug("received warning code: \(code)")
+                        }
+                    }
                 }
-            }
+            )
         }
     }
 }
@@ -178,11 +166,13 @@ private extension SystemAgent {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
-            self.sendEvent(
-                Event(typeInfo: .synchronizeState),
-                contextPayload: contextPayload,
-                dialogRequestId: TimeUUID().hexString,
-                messageId: TimeUUID().hexString
+            self.upstreamDataSender.send(
+                upstreamEventMessage: Event(
+                    typeInfo: .synchronizeState
+                ).makeEventMessage(
+                    agent: self,
+                    contextPayload: contextPayload
+                )
             )
         }
     }

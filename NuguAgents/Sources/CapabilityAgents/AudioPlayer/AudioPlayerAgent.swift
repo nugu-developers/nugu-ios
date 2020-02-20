@@ -24,16 +24,9 @@ import NuguCore
 
 import RxSwift
 
-final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable, CapabilityFocusAgentable {
+public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
-    
-    // CapabilityFocusAgentable
-    public let focusManager: FocusManageable
-    public let channelPriority: FocusChannelPriority
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // AudioPlayerAgentProtocol
     public var offset: Int? {
@@ -48,6 +41,9 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
      
     // Private
     private let playSyncManager: PlaySyncManageable
+    private let focusManager: FocusManageable
+    private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
@@ -57,36 +53,46 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
         internalSerialQueueName: "com.sktelecom.romaine.audioplayer_agent_timer"
     )
     
-    private var focusState: FocusState = .nothing
     private var audioPlayerState: AudioPlayerState = .idle {
         didSet {
             log.info("\(oldValue) \(audioPlayerState)")
-            
             guard oldValue != audioPlayerState else { return }
+            guard let media = self.currentMedia else {
+                log.error("AudioPlayerAgentMedia is nil")
+                return
+            }
             
-            // Progress Report
+            // progress report -> pause timer -> `PlaySyncState` -> `AudioPlayerAgentMedia` -> `AudioPlayerAgentDelegate`
             switch audioPlayerState {
             case .playing:
                 startProgressReport()
-            default:
+                stopPauseTimeout()
+                playSyncManager.startSync(
+                    delegate: self,
+                    dialogRequestId: media.dialogRequestId,
+                    playServiceId: media.payload.playStackControl?.playServiceId
+                )
+            case .stopped, .finished:
                 stopProgressReport()
-            }
-            
-            // Release Focus
-            switch audioPlayerState {
-            case .idle, .stopped, .finished:
                 stopPauseTimeout()
-                if let media = currentMedia {
-                    self.currentMedia = nil
-                    playSyncManager.releaseSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
+                if media.cancelAssociation {
+                    playSyncManager.releaseSyncImmediately(
+                        dialogRequestId: media.dialogRequestId,
+                        playServiceId: media.payload.playStackControl?.playServiceId
+                    )
+                } else {
+                    playSyncManager.releaseSync(
+                        delegate: self,
+                        dialogRequestId: media.dialogRequestId,
+                        playServiceId: media.payload.playStackControl?.playServiceId
+                    )
                 }
-            case .playing:
-                stopPauseTimeout()
-                if let media = currentMedia {
-                    playSyncManager.startSync(delegate: self, dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
-                }
+                currentMedia = nil
             case .paused:
+                stopProgressReport()
                 startPauseTimeout()
+            default:
+                break
             }
             
             delegates.notify { delegate in
@@ -112,9 +118,15 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
     
     private lazy var disposeBag = DisposeBag()
     
+    // Handleable Directives
+    private lazy var handleableDirectiveInfos = [
+        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Play", medium: .audio, isBlocking: false, preFetch: prefetchPlay, directiveHandler: handlePlay),
+        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Stop", medium: .audio, isBlocking: false, directiveHandler: handleStop),
+        DirectiveHandleInfo(namespace: "AudioPlayer", name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause)
+    ]
+    
     public init(
         focusManager: FocusManageable,
-        channelPriority: FocusChannelPriority,
         upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
@@ -124,20 +136,21 @@ final public class AudioPlayerAgent: AudioPlayerAgentProtocol, CapabilityDirecti
         log.info("")
         
         self.focusManager = focusManager
-        self.channelPriority = channelPriority
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        self.directiveSequencer = directiveSequencer
         self.audioPlayerPauseTimeout = audioPlayerPauseTimeout
         
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
-        directiveSequencer.add(handleDirectiveDelegate: self)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         
         audioPlayerDisplayManager.playSyncManager = playSyncManager
     }
 
     deinit {
         log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -166,37 +179,8 @@ public extension AudioPlayerAgent {
         }
     }
     
-    private func resume() {
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard self.currentMedia != nil else { return }
-            self.currentMedia?.blockResume = false
-            self.focusManager.requestFocus(channelDelegate: self)
-        }
-    }
-    
     func stop() {
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self, let media = self.currentMedia else { return }
-            
-            media.player.stop()
-            self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
-        }
-    }
-    
-    /// Stop mediaplayer
-    private func stopSilently() {
-        guard let media = self.currentMedia else { return }
-            
-        switch self.audioPlayerState {
-        case .playing, .paused:
-            media.player.delegate = nil
-            media.player.stop()
-            self.sendEvent(media: media, typeInfo: .playbackStopped)
-            self.audioPlayerState = .stopped
-        case .idle, .stopped, .finished:
-            return
-        }
+        stop(cancelAssociation: true)
     }
     
     func next() {
@@ -241,60 +225,18 @@ public extension AudioPlayerAgent {
     
     func stopRenderingTimer(templateId: String) {
         audioPlayerDisplayManager.stopRenderingTimer(templateId: templateId)
-        
-    }
-}
-
-// MARK: - HandleDirectiveDelegate
-
-extension AudioPlayerAgent: HandleDirectiveDelegate {
-    public func handleDirectivePrefetch(
-        _ directive: Downstream.Directive,
-        completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        log.info("\(directive.header.type)")
-        
-        switch directive.header.type {
-        case DirectiveTypeInfo.play.type:
-            prefetchPlay(directive: directive, completionHandler: completionHandler)
-        default:
-            completionHandler(.success(()))
-        }
-    }
-    
-    public func handleDirective(
-        _ directive: Downstream.Directive,
-        completionHandler: @escaping (Result<Void, Error>) -> Void
-        ) {
-        log.info("\(directive.header.type)")
-        
-        let result = Result<DirectiveTypeInfo, Error>(catching: {
-            guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Unknown directive")
-            }
-            
-            return directiveTypeInfo
-        }).map({ (typeInfo) -> Void in
-            switch typeInfo {
-            case .play:
-                resume()
-            case .stop:
-                stop()
-            case .pause:
-                pause()
-            }
-        })
-            
-        completionHandler(result)
     }
 }
 
 // MARK: - FocusChannelDelegate
 
 extension AudioPlayerAgent: FocusChannelDelegate {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return .content
+    }
+    
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(audioPlayerState)")
-        self.focusState = focusState
-        
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -315,7 +257,7 @@ extension AudioPlayerAgent: FocusChannelDelegate {
             case (.background, _):
                 break
             case (.nothing, let playerState) where [.playing, .paused].contains(playerState):
-                self.currentMedia?.player.stop()
+                self.stop(cancelAssociation: false)
             // none. idle/stopped/finished 무시
             case (.nothing, _):
                 break
@@ -333,6 +275,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
+            // Event -> `AudioPlayerState` -> `FocusState`
             switch state {
             case .start:
                 self.sendEvent(media: media, typeInfo: .playbackStarted)
@@ -344,16 +287,12 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 // Release focus after receiving directive
                 self.sendEvent(media: media, typeInfo: .playbackFinished) { [weak self] result in
                     guard let self = self else { return }
-                    switch result {
-                    case .success(let directive):
-                        let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self)
-                        switch directiveTypeInfo {
-                        case .play:
-                            break
-                        default:
-                            self.releaseFocusIfNeeded()
-                        }
-                    case .failure:
+                    guard case let .success(directive) = result else {
+                        self.releaseFocusIfNeeded()
+                        return
+                    }
+                    
+                    if directive.header.type != "AudioPlayer.Play" {
                         self.releaseFocusIfNeeded()
                     }
                 }
@@ -410,12 +349,10 @@ extension AudioPlayerAgent: PlaySyncDelegate {
         log.info("\(state)")
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard let media = self.currentMedia, media.dialogRequestId == dialogRequestId else { return }
             
-            if case .released = state,
-                let media = self.currentMedia, media.dialogRequestId == dialogRequestId {
-                self.stopSilently()
-                self.currentMedia = nil
-                self.releaseFocusIfNeeded()
+            if [.releasing, .released].contains(state) {
+                self.stop(cancelAssociation: false)
             }
         }
     }
@@ -441,56 +378,116 @@ extension AudioPlayerAgent: SpeakerVolumeDelegate {
 // MARK: - Private (Directive)
 
 private extension AudioPlayerAgent {
-    func prefetchPlay(directive: Downstream.Directive, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    func prefetchPlay() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            self?.audioPlayerDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                completionHandler(
+                    Result<Void, Error>(catching: {
+                        guard let data = directive.payload.data(using: .utf8) else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                        }
+                        let payload = try JSONDecoder().decode(AudioPlayerAgentMedia.Payload.self, from: data)
+                        guard case .url = payload.sourceType else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
+                        }
+                        
+                        switch self.currentMedia {
+                        case .some(let media) where media.payload.audioItem.stream.token == payload.audioItem.stream.token:
+                            // Resume and seek
+                            self.currentMedia = AudioPlayerAgentMedia(
+                                dialogRequestId: directive.header.dialogRequestId,
+                                player: media.player,
+                                payload: payload
+                            )
+                            
+                            media.player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
+                        case .some:
+                            self.stopSilently()
+                            try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
+                        case .none:
+                            // Set mediaplayer
+                            try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
+                        }
+                        self.playSyncManager.prepareSync(
+                            delegate: self,
+                            dialogRequestId: directive.header.dialogRequestId,
+                            playServiceId: payload.playStackControl?.playServiceId
+                        )
+                        
+                        if let metaData = payload.audioItem.metadata,
+                            ((metaData["disableTemplate"] as? Bool) ?? false) == false {
+                            self.audioPlayerDisplayManager.display(
+                                metaData: metaData,
+                                messageId: directive.header.messageId,
+                                dialogRequestId: directive.header.dialogRequestId,
+                                playStackServiceId: payload.playStackControl?.playServiceId
+                            )
+                        }
+                    }).flatMapError({ (error) -> Result<Void, Error> in
+                        if let media = self.currentMedia {
+                            self.sendEvent(media: media, typeInfo: .playbackFailed(error: error))
+                        }
+                        self.releaseFocusIfNeeded()
+                        return .failure(error)
+                    })
+                )
+            }
+        }
+    }
+    
+    private func handlePlay() -> HandleDirective {
+        return { [weak self] _, completionHandler in
+            self?.resume()
+            completionHandler(.success(()))
+        }
+    }
+    
+    private func handleStop() -> HandleDirective {
+        return { [weak self] _, completionHandler in
+            self?.stop(cancelAssociation: true)
+            completionHandler(.success(()))
+        }
+    }
+    
+    private func handlePause() -> HandleDirective {
+        return { [weak self] _, completionHandler in
+            self?.pause()
+            completionHandler(.success(()))
+        }
+    }
+
+    func resume() {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard self.currentMedia != nil else { return }
+            self.currentMedia?.blockResume = false
+            self.focusManager.requestFocus(channelDelegate: self)
+        }
+    }
+        
+    func stop(cancelAssociation: Bool) {
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self, let media = self.currentMedia else { return }
             
-            let result = Result<Void, Error>(catching: {
-                guard let data = directive.payload.data(using: .utf8) else {
-                    throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                }
-                let payload = try JSONDecoder().decode(AudioPlayerAgentMedia.Payload.self, from: data)
-                guard case .url = payload.sourceType else {
-                    throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
-                }
-                
-                switch self.currentMedia {
-                case .some(let media) where media.payload.audioItem.stream.token == payload.audioItem.stream.token:
-                    // Resume and seek
-                    self.currentMedia = AudioPlayerAgentMedia(
-                        dialogRequestId: directive.header.dialogRequestId,
-                        player: media.player,
-                        payload: payload
-                    )
-                    
-                    media.player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
-                case .some:
-                    self.stopSilently()
-                    try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
-                case .none:
-                    // Set mediaplayer
-                    try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
-                }
-                self.playSyncManager.prepareSync(delegate: self, dialogRequestId: directive.header.dialogRequestId, playServiceId: payload.playStackControl?.playServiceId)
-                
-                if let metaData = payload.audioItem.metadata,
-                    ((metaData["disableTemplate"] as? Bool) ?? false) == false {
-                    self.audioPlayerDisplayManager.display(
-                        metaData: metaData,
-                        messageId: directive.header.messageId,
-                        dialogRequestId: directive.header.dialogRequestId,
-                        playStackServiceId: payload.playStackControl?.playServiceId
-                    )
-                }
-            }).flatMapError({ (error) -> Result<Void, Error> in
-                if let media = self.currentMedia {
-                    self.sendEvent(media: media, typeInfo: .playbackFailed(error: error))
-                }
-                self.releaseFocusIfNeeded()
-                return .failure(error)
-            })
+            self.currentMedia?.cancelAssociation = cancelAssociation
+            media.player.stop()
+        }
+    }
+    
+    /// Stop mediaplayer
+    func stopSilently() {
+        guard let media = self.currentMedia else { return }
             
-            completionHandler(result)
+        // Event -> `AudioPlayerState`
+        switch self.audioPlayerState {
+        case .playing, .paused:
+            media.player.delegate = nil
+            media.player.stop()
+            self.sendEvent(media: media, typeInfo: .playbackStopped)
+            self.audioPlayerState = .stopped
+        case .idle, .stopped, .finished:
+            return
         }
     }
 }
@@ -499,15 +496,13 @@ private extension AudioPlayerAgent {
 
 private extension AudioPlayerAgent {
     func sendEvent(media: AudioPlayerAgentMedia, typeInfo: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
-        sendEvent(
-            Event(
+        upstreamDataSender.send(
+            upstreamEventMessage: Event(
                 token: media.payload.audioItem.stream.token,
                 offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
-            ),
-            dialogRequestId: TimeUUID().hexString,
-            messageId: TimeUUID().hexString,
+            ).makeEventMessage(agent: self),
             resultHandler: resultHandler
         )
     }
@@ -517,7 +512,6 @@ private extension AudioPlayerAgent {
 
 private extension AudioPlayerAgent {
     func releaseFocusIfNeeded() {
-        guard focusState != .nothing else { return }
         guard [.idle, .stopped, .finished].contains(self.audioPlayerState) else {
             log.info("Not permitted in current state, \(audioPlayerState)")
             return
@@ -574,9 +568,7 @@ private extension AudioPlayerAgent {
         pauseTimeout = Observable<Int>
             .timer(audioPlayerPauseTimeout, scheduler: audioPlayerScheduler)
             .subscribe(onNext: { [weak self] _ in
-                if let self = self, let media = self.currentMedia {
-                    self.playSyncManager.releaseSyncImmediately(dialogRequestId: media.dialogRequestId, playServiceId: media.payload.playStackControl?.playServiceId)
-                }
+                self?.stop(cancelAssociation: false)
             })
         pauseTimeout?.disposed(by: disposeBag)
     }

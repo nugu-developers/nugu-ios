@@ -2,8 +2,8 @@
 //  DirectiveSequenceable.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 19/04/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 15/02/2020.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,12 +20,7 @@
 
 import Foundation
 
-/// <#Description#>
 public protocol DirectiveSequenceable: DownstreamDataDelegate {
-    /// <#Description#>
-    /// - Parameter handleDirectiveDelegate: <#handleDirectiveDelegate description#>
-    func add(handleDirectiveDelegate: HandleDirectiveDelegate)
-    /// <#Description#>
-    /// - Parameter handleDirectiveDelegate: <#handleDirectiveDelegate description#>
-    func remove(handleDirectiveDelegate: HandleDirectiveDelegate)
+    func add(directiveHandleInfos: DirectiveHandleInfos)
+    func remove(directiveHandleInfos: DirectiveHandleInfos)
 }
