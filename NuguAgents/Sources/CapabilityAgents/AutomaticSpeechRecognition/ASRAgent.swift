@@ -62,8 +62,11 @@ public final class ASRAgent: ASRAgentProtocol {
                 Self.endPointDetector?.stop()
             }
             
-            asrDelegates.notify { delegate in
-                delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+            // Notify delegates only if the agent's status changes.
+            if oldValue != asrState {
+                asrDelegates.notify { delegate in
+                    delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+                }
             }
         }
     }

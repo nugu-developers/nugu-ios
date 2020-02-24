@@ -70,8 +70,12 @@ public final class TTSAgent: TTSAgentProtocol {
             default:
                 break
             }
-            delegates.notify { delegate in
-                delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
+            
+            // Notify delegates only if the agent's status changes.
+            if oldValue != ttsState {
+                delegates.notify { delegate in
+                    delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
+                }
             }
         }
     }

@@ -47,8 +47,11 @@ public final class TextAgent: TextAgentProtocol {
                 releaseFocusIfNeeded()
             }
             
-            delegates.notify { delegate in
-                delegate.textAgentDidChange(state: textAgentState)
+            // Notify delegates only if the agent's status changes.
+            if oldValue != textAgentState {
+                delegates.notify { delegate in
+                    delegate.textAgentDidChange(state: textAgentState)
+                }
             }
         }
     }
