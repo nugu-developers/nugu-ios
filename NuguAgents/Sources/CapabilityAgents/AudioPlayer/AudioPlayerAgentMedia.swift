@@ -132,7 +132,7 @@ extension AudioPlayerAgentMedia.Payload.AudioItem: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         stream = try container.decode(Stream.self, forKey: .stream)
-        metadata = try container.decode([String: Any].self, forKey: .metadata)
+        metadata = try? container.decode([String: Any].self, forKey: .metadata)
     }
 }
 
