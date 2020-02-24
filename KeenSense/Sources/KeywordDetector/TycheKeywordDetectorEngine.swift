@@ -200,6 +200,8 @@ extension TycheKeywordDetectorEngine: StreamDelegate {
             }
             
             let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
+            defer { inputBuffer.deallocate() }
+            
             let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
             guard 0 < inputLength else { return }
 
@@ -214,7 +216,7 @@ extension TycheKeywordDetectorEngine: StreamDelegate {
                 stop()
 
                 let detectedData = extractDetectedData()
-                self.delegate?.tycheKeywordDetectorEngineDidDetect(data: detectedData.data, padding: detectedData.padding)
+                delegate?.tycheKeywordDetectorEngineDidDetect(data: detectedData.data, padding: detectedData.padding)
             }
             
         case .endEncountered:
