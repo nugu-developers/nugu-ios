@@ -27,7 +27,7 @@ public class MicInputProvider: AudioProvidable {
     }
     
     public var audioFormat: AVAudioFormat?
-    private let audioOutputBus = 0
+    private let audioBus = 0
     private var streamWriter: AudioStreamWritable?
     private let audioEngine = AVAudioEngine()
     private let audioQueue = DispatchQueue(label: "romain_mic_input_audio_queue")
@@ -35,9 +35,9 @@ public class MicInputProvider: AudioProvidable {
     public init(inputFormat: AVAudioFormat? = nil) {
         guard inputFormat != nil else {
             self.audioFormat = AVAudioFormat(commonFormat: MicInputConst.defaultFormat,
-                          sampleRate: MicInputConst.defaultSampleRate,
-                          channels: MicInputConst.defaultChannelCount,
-                          interleaved: MicInputConst.defaultInterLeavingSetting)
+                                             sampleRate: MicInputConst.defaultSampleRate,
+                                             channels: MicInputConst.defaultChannelCount,
+                                             interleaved: MicInputConst.defaultInterLeavingSetting)
             return
         }
         
@@ -71,13 +71,13 @@ public class MicInputProvider: AudioProvidable {
         self.streamWriter?.finish()
         self.streamWriter = nil
         
-        self.audioEngine.inputNode.removeTap(onBus: 1)
+        self.audioEngine.inputNode.removeTap(onBus: audioBus)
         self.audioEngine.stop()
     }
     
     private func beginTappingMicrophone(streamWriter: AudioStreamWritable) throws {
         let inputNode = audioEngine.inputNode
-        let inputFormat = inputNode.outputFormat(forBus: audioOutputBus)
+        let inputFormat = inputNode.inputFormat(forBus: audioBus)
         
         guard let recordingFormat = audioFormat else {
             log.error("cannot make audioFormat")
@@ -96,8 +96,8 @@ public class MicInputProvider: AudioProvidable {
         if let error = ObjcExceptionCatcher.objcTry({ [weak self] in
             guard let self = self else { return }
             
-            inputNode.removeTap(onBus: self.audioOutputBus)
-            inputNode.installTap(onBus: self.audioOutputBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { (buffer, _) in
+            inputNode.removeTap(onBus: self.audioBus)
+            inputNode.installTap(onBus: self.audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { (buffer, _) in
                 self.audioQueue.sync {
                     let convertedFrameCount = AVAudioFrameCount((Double(buffer.frameLength) / inputFormat.sampleRate) * recordingFormat.sampleRate)
                     guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: convertedFrameCount) else {
@@ -120,11 +120,19 @@ public class MicInputProvider: AudioProvidable {
                         try self.streamWriter?.write(pcmBuffer)
                     } catch {
                         log.error(error)
-                        inputNode.removeTap(onBus: self.audioOutputBus)
+                        inputNode.removeTap(onBus: self.audioBus)
                     }
                 }
             }
         }) {
+            log.error("installTap error: \(error)\n" +
+                "\t\trequested format: \(inputFormat)\n" +
+                "\t\tengine output format: \(audioEngine.inputNode.outputFormat(forBus: audioBus))\n" +
+                "\t\tinput format: \(audioEngine.inputNode.inputFormat(forBus: audioBus))")
+            log.error("\n\t\t\(AVAudioSession.sharedInstance().category)\n" +
+                "\t\t\(AVAudioSession.sharedInstance().categoryOptions)\n" +
+                "\t\taudio session sampleRate: \(AVAudioSession.sharedInstance().sampleRate)")
+            
             throw error
         }
                 
