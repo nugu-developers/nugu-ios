@@ -49,8 +49,16 @@ public extension TTSAgentProtocol {
     /// Request voice synthesis and playback.
     ///
     /// - Parameter text: The obejct to request speech synthesis.
-    func requestTTS(text: String, playServiceId: String? = nil, handler: ((TTSResult) -> Void)? = nil) {
-        requestTTS(text: text, playServiceId: playServiceId, handler: handler)
+    func requestTTS(text: String) {
+        requestTTS(text: text, playServiceId: nil, handler: nil)
+    }
+
+    func requestTTS(text: String, playServiceId: String?) {
+        requestTTS(text: text, playServiceId: playServiceId, handler: nil)
+    }
+    
+    func requestTTS(text: String, handler: ((TTSResult) -> Void)? = nil) {
+        requestTTS(text: text, playServiceId: nil, handler: handler)
     }
     
     /// Stops playback
