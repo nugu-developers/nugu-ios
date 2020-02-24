@@ -40,7 +40,6 @@ public final class TextAgent: TextAgentProtocol {
     private var textAgentState: TextAgentState = .idle {
         didSet {
             log.info("from: \(oldValue) to: \(textAgentState)")
-            guard oldValue != textAgentState else { return }
             
             // release textRequest
             if textAgentState == .idle {

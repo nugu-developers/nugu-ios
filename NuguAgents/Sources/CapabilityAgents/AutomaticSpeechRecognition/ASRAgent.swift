@@ -44,7 +44,6 @@ public final class ASRAgent: ASRAgentProtocol {
     private var asrState: ASRState = .idle {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
-            guard oldValue != asrState else { return }
             
             // dispose expectingSpeechTimeout
             if asrState != .expectingSpeech {

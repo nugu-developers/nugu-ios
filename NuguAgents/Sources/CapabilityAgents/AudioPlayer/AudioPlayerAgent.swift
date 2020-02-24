@@ -56,7 +56,6 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private var audioPlayerState: AudioPlayerState = .idle {
         didSet {
             log.info("\(oldValue) \(audioPlayerState)")
-            guard oldValue != audioPlayerState else { return }
             guard let media = self.currentMedia else {
                 log.error("AudioPlayerAgentMedia is nil")
                 return

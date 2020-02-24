@@ -40,7 +40,6 @@ public final class TTSAgent: TTSAgentProtocol {
     private var ttsState: TTSState = .idle {
         didSet {
             log.info("\(oldValue) \(ttsState)")
-            guard oldValue != ttsState else { return }
             guard let media = currentMedia else {
                 log.error("TTSMedia is nil")
                 return
