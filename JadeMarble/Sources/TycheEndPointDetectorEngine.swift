@@ -163,6 +163,8 @@ extension TycheEndPointDetectorEngine: StreamDelegate {
             }
             
             let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
+            defer { inputBuffer.deallocate() }
+            
             let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
             guard 0 < inputLength else { return }
             
@@ -194,6 +196,8 @@ extension TycheEndPointDetectorEngine: StreamDelegate {
             let length = epdClientChannelGetOutputDataSize(engineHandle)
             if 0 < length {
                 let detectedBytes = UnsafeMutablePointer<Int8>.allocate(capacity: Int(length))
+                defer { detectedBytes.deallocate() }
+                
                 let result = epdClientChannelGetOutputData(engineHandle, detectedBytes, length)
                 if 0 < result {
                     let detectedData = Data(bytes: detectedBytes, count: Int(result))
