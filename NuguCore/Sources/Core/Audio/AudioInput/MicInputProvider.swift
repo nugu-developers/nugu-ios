@@ -84,14 +84,14 @@ public class MicInputProvider: AudioProvidable {
             throw MicInputError.audioFormatError
         }
 
+        log.info("convert from: \(inputFormat) to: \(recordingFormat)")
         guard let formatConverter = AVAudioConverter(from: inputFormat, to: recordingFormat) else {
             log.error("cannot make audio converter")
             throw MicInputError.resamplerError(source: inputFormat, dest: recordingFormat)
         }
         
         self.streamWriter = streamWriter
-        
-        log.info("convert from: \(inputFormat) to: \(recordingFormat)")
+        audioEngine.prepare()
         
         if let error = ObjcExceptionCatcher.objcTry({ [weak self] in
             guard let self = self else { return }
@@ -135,8 +135,7 @@ public class MicInputProvider: AudioProvidable {
             
             throw error
         }
-                
-        audioEngine.prepare()
+        
         do {
             try audioEngine.start()
         } catch {
