@@ -91,7 +91,6 @@ public class MicInputProvider: AudioProvidable {
         }
         
         self.streamWriter = streamWriter
-        audioEngine.prepare()
         
         if let error = ObjcExceptionCatcher.objcTry({ [weak self] in
             guard let self = self else { return }
@@ -136,6 +135,8 @@ public class MicInputProvider: AudioProvidable {
             throw error
         }
         
+        // installTap() must be called before prepare() or start() on iOS 11.
+        audioEngine.prepare()
         do {
             try audioEngine.start()
         } catch {
