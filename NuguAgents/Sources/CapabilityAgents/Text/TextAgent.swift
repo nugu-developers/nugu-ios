@@ -40,7 +40,6 @@ public final class TextAgent: TextAgentProtocol {
     private var textAgentState: TextAgentState = .idle {
         didSet {
             log.info("from: \(oldValue) to: \(textAgentState)")
-            guard oldValue != textAgentState else { return }
             
             // release textRequest
             if textAgentState == .idle {
@@ -48,8 +47,11 @@ public final class TextAgent: TextAgentProtocol {
                 releaseFocusIfNeeded()
             }
             
-            delegates.notify { delegate in
-                delegate.textAgentDidChange(state: textAgentState)
+            // Notify delegates only if the agent's status changes.
+            if oldValue != textAgentState {
+                delegates.notify { delegate in
+                    delegate.textAgentDidChange(state: textAgentState)
+                }
             }
         }
     }

@@ -40,7 +40,6 @@ public final class TTSAgent: TTSAgentProtocol {
     private var ttsState: TTSState = .idle {
         didSet {
             log.info("state changed from: \(oldValue) to: \(ttsState)")
-            guard oldValue != ttsState else { return }
             guard let media = currentMedia else {
                 log.error("TTSMedia is nil")
                 return
@@ -71,8 +70,12 @@ public final class TTSAgent: TTSAgentProtocol {
             default:
                 break
             }
-            delegates.notify { delegate in
-                delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
+            
+            // Notify delegates only if the agent's status changes.
+            if oldValue != ttsState {
+                delegates.notify { delegate in
+                    delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
+                }
             }
         }
     }

@@ -44,7 +44,6 @@ public final class ASRAgent: ASRAgentProtocol {
     private var asrState: ASRState = .idle {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
-            guard oldValue != asrState else { return }
             
             // dispose expectingSpeechTimeout
             if asrState != .expectingSpeech {
@@ -63,8 +62,11 @@ public final class ASRAgent: ASRAgentProtocol {
                 Self.endPointDetector?.stop()
             }
             
-            asrDelegates.notify { delegate in
-                delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+            // Notify delegates only if the agent's status changes.
+            if oldValue != asrState {
+                asrDelegates.notify { delegate in
+                    delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+                }
             }
         }
     }
