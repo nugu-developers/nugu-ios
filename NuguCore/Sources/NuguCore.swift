@@ -64,4 +64,3 @@ public var logEnabled: Bool {
         }
     }
 }
-

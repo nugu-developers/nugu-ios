@@ -43,6 +43,8 @@ public class SpeexEncoder {
         }
         
         let ptrEncodedData = UnsafeMutablePointer<mychar>.allocate(capacity: Int(result))
+        defer { ptrEncodedData.deallocate() }
+        
         speexGetOutputData(codecHandle, ptrEncodedData, result)
         return Data(bytes: ptrEncodedData, count: Int(result))
     }

@@ -24,19 +24,23 @@ import NuguCore
 
 import RxSwift
 
-final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+public final class SpeakerAgent: SpeakerAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .speaker, version: "1.0")
-    
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
     
     // SpeakerAgentProtocol
     public weak var delegate: SpeakerAgentDelegate?
     
     // Private
+    private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     private let speakerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.speaker_agent", qos: .userInitiated)
     private let speakerVolumeDelegates = DelegateSet<SpeakerVolumeDelegate>()
+    
+    // Handleable Directives
+    private lazy var handleableDirectiveInfos = [
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetMute", medium: .audio, isBlocking: false, directiveHandler: handleSetMute)
+    ]
     
     public init(
         upstreamDataSender: UpstreamDataSendable,
@@ -46,13 +50,15 @@ final public class SpeakerAgent: SpeakerAgentProtocol, CapabilityDirectiveAgenta
         log.info("")
         
         self.upstreamDataSender = upstreamDataSender
+        self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
-        directiveSequencer.add(handleDirectiveDelegate: self)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
         log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -78,30 +84,6 @@ public extension SpeakerAgent {
     }
 }
 
-// MARK: - HandleDirectiveDelegate
-
-extension SpeakerAgent: HandleDirectiveDelegate {
-    public func handleDirective(
-        _ directive: Downstream.Directive,
-        completionHandler: @escaping (Result<Void, Error>) -> Void
-        ) {
-        let result = Result<DirectiveTypeInfo, Error>(catching: {
-            guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Unknown directive")
-            }
-            
-            return directiveTypeInfo
-        }).flatMap({ (typeInfo) -> Result<Void, Error> in
-            switch typeInfo {
-            case .setMute:
-                return setMute(directive: directive)
-            }
-        })
-        
-        completionHandler(result)
-    }
-}
-
 // MARK: - ContextInfoDelegate
 
 extension SpeakerAgent: ContextInfoDelegate {
@@ -117,36 +99,42 @@ extension SpeakerAgent: ContextInfoDelegate {
 // MARK: - Private(Directive)
 
 private extension SpeakerAgent {
-    func setMute(directive: Downstream.Directive) -> Result<Void, Error> {
-        return Result<Void, Error> { [weak self] in
-            guard let data = directive.payload.data(using: .utf8) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-            }
-            
-            let speakerMuteInfo = try JSONDecoder().decode(SpeakerMuteInfo.self, from: data)
-            
-            self?.speakerDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                
-                let controllers = self.speakerVolumeDelegates.allObjects
-                let results = speakerMuteInfo.volumes.map({ (volume) -> Bool in
-                    let result = controllers.filter { $0.speakerVolumeType() == volume.name }
-                        .allSatisfy { $0.speakerVolumeShouldChange(muted: volume.mute) }
-                    if result {
-                        self.delegate?.speakerAgentDidChange(type: volume.name, muted: volume.mute)
+    func handleSetMute() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result<Void, Error> { [weak self] in
+                    guard let data = directive.payload.data(using: .utf8) else {
+                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
                     }
-                    return result
-                })
-
-                let succeeded = results.allSatisfy { $0 }
-                let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
-                
-                self.sendEvent(
-                    Event(typeInfo: typeInfo, volumes: self.controllerVolumes, playServiceId: speakerMuteInfo.playServiceId),
-                    dialogRequestId: TimeUUID().hexString,
-                    messageId: TimeUUID().hexString
-                )
-            }
+                    
+                    let speakerMuteInfo = try JSONDecoder().decode(SpeakerMuteInfo.self, from: data)
+                    
+                    self?.speakerDispatchQueue.async { [weak self] in
+                        guard let self = self else { return }
+                        
+                        let controllers = self.speakerVolumeDelegates.allObjects
+                        let results = speakerMuteInfo.volumes.map({ (volume) -> Bool in
+                            let result = controllers.filter { $0.speakerVolumeType() == volume.name }
+                                .allSatisfy { $0.speakerVolumeShouldChange(muted: volume.mute) }
+                            if result {
+                                self.delegate?.speakerAgentDidChange(type: volume.name, muted: volume.mute)
+                            }
+                            return result
+                        })
+                        
+                        let succeeded = results.allSatisfy { $0 }
+                        let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
+                        
+                        self.upstreamDataSender.send(
+                            upstreamEventMessage: Event(
+                                typeInfo: typeInfo,
+                                volumes: self.controllerVolumes,
+                                playServiceId: speakerMuteInfo.playServiceId
+                            ).makeEventMessage(agent: self)
+                        )
+                    }
+                }
+            )
         }
     }
 }

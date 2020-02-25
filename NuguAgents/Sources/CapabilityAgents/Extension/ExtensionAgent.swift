@@ -22,31 +22,39 @@ import Foundation
 
 import NuguCore
 
-final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+public final class ExtensionAgent: ExtensionAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.1")
     
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
-    
     // ExtensionAgentProtocol
     public weak var delegate: ExtensionAgentDelegate?
+    
+    // private
+    private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
+    
+    // Handleable Directive
+    private lazy var handleableDirectiveInfos = [
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Action", medium: .none, isBlocking: false, directiveHandler: handleAction)
+    ]
     
     public init(
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
+        log.info("initiated")
         
         self.upstreamDataSender = upstreamDataSender
+        self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
-        directiveSequencer.add(handleDirectiveDelegate: self)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
         log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -54,27 +62,39 @@ final public class ExtensionAgent: ExtensionAgentProtocol, CapabilityDirectiveAg
 
 public extension ExtensionAgent {
     func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?) {
-        let event = ExtensionAgent.Event(playServiceId: playServiceId, typeInfo: .commandIssued(data: data))
-        self.sendEvent(event, dialogRequestId: TimeUUID().hexString, messageId: TimeUUID().hexString) { result in
-            let result = result.map { _ in () }
-            completion?(result)
-        }
+        upstreamDataSender.send(
+            upstreamEventMessage: Event(
+                playServiceId: playServiceId,
+                typeInfo: .commandIssued(data: data)
+            ).makeEventMessage(agent: self),
+            resultHandler: { result in
+                let result = result.map { _ in () }
+                completion?(result)
+            }
+        )
     }
 }
 
-// MARK: - HandleDirectiveDelegate
+// MARK: - ContextInfoDelegate
 
-extension ExtensionAgent: HandleDirectiveDelegate {    
-    public func handleDirective(
-        _ directive: Downstream.Directive,
-        completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
-            completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Unknown directive")))
-            return
-        }
+extension ExtensionAgent: ContextInfoDelegate {
+    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+        let payload: [String: Any?] = [
+            "version": capabilityAgentProperty.version,
+            "data": delegate?.extensionAgentRequestContext()
+        ]
         
-        switch directiveTypeInfo {
-        case .action:
+        completionHandler(
+            ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        )
+    }
+}
+
+// MARK: - Private(Directive)
+
+private extension ExtensionAgent {
+    func handleAction() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
             guard let data = directive.payload.data(using: .utf8) else {
                 completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
                 return
@@ -88,35 +108,21 @@ extension ExtensionAgent: HandleDirectiveDelegate {
                 return
             }
             
-            delegate?.extensionAgentDidReceiveAction(
+            self?.delegate?.extensionAgentDidReceiveAction(
                 data: item.data,
                 playServiceId: item.playServiceId,
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    let eventTypeInfo: ExtensionAgent.Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
-                    let event = ExtensionAgent.Event(playServiceId: item.playServiceId, typeInfo: eventTypeInfo)
-                    
-                    self.sendEvent(
-                        event,
-                        dialogRequestId: TimeUUID().hexString,
-                        messageId: TimeUUID().hexString
+                    self.upstreamDataSender.send(
+                        upstreamEventMessage: Event(
+                            playServiceId: item.playServiceId,
+                            typeInfo: isSuccess ? .actionSucceeded : .actionFailed
+                        ).makeEventMessage(agent: self)
                     )
             })
             
             completionHandler(.success(()))
         }
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension ExtensionAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
-        let payload: [String: Any?] = [
-            "version": capabilityAgentProperty.version,
-            "data": delegate?.extensionAgentRequestContext()
-        ]
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }

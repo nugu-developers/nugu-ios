@@ -55,4 +55,30 @@ public extension UpstreamDataSendable {
         let crashReport = CrashReport(level: .error, message: error.localizedDescription, detail: detail)
         send(crashReports: [crashReport])
     }
+    
+    // MARK: - Default Implement for send event message
+    func send(upstreamEventMessage: UpstreamEventMessage) {
+        send(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: nil)
+    }
+    
+    func send(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Data, Error>) -> Void)?) {
+        send(upstreamEventMessage: upstreamEventMessage, completion: completion, resultHandler: nil)
+    }
+    
+    func send(upstreamEventMessage: UpstreamEventMessage, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+        send(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: resultHandler)
+    }
+    
+    // MARK: - Default Implement for send attachment
+    func send(upstreamAttachment: UpstreamAttachment) {
+        send(upstreamAttachment: upstreamAttachment, completion: nil, resultHandler: nil)
+    }
+    
+    func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)?) {
+        send(upstreamAttachment: upstreamAttachment, completion: completion, resultHandler: nil)
+    }
+    
+    func send(upstreamAttachment: UpstreamAttachment, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+        send(upstreamAttachment: upstreamAttachment, completion: nil, resultHandler: resultHandler)
+    }
 }

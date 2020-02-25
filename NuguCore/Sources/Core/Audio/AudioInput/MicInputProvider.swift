@@ -27,6 +27,7 @@ public class MicInputProvider: AudioProvidable {
     }
     
     public var audioFormat: AVAudioFormat?
+    private let audioBus = 0
     private var streamWriter: AudioStreamWritable?
     private let audioEngine = AVAudioEngine()
     private let audioQueue = DispatchQueue(label: "romain_mic_input_audio_queue")
@@ -34,9 +35,9 @@ public class MicInputProvider: AudioProvidable {
     public init(inputFormat: AVAudioFormat? = nil) {
         guard inputFormat != nil else {
             self.audioFormat = AVAudioFormat(commonFormat: MicInputConst.defaultFormat,
-                          sampleRate: MicInputConst.defaultSampleRate,
-                          channels: MicInputConst.defaultChannelCount,
-                          interleaved: MicInputConst.defaultInterLeavingSetting)
+                                             sampleRate: MicInputConst.defaultSampleRate,
+                                             channels: MicInputConst.defaultChannelCount,
+                                             interleaved: MicInputConst.defaultInterLeavingSetting)
             return
         }
         
@@ -70,19 +71,20 @@ public class MicInputProvider: AudioProvidable {
         self.streamWriter?.finish()
         self.streamWriter = nil
         
-        self.audioEngine.inputNode.removeTap(onBus: 1)
+        self.audioEngine.inputNode.removeTap(onBus: audioBus)
         self.audioEngine.stop()
     }
     
     private func beginTappingMicrophone(streamWriter: AudioStreamWritable) throws {
         let inputNode = audioEngine.inputNode
-        let inputFormat = inputNode.inputFormat(forBus: 1)
+        let inputFormat = inputNode.inputFormat(forBus: audioBus)
         
         guard let recordingFormat = audioFormat else {
             log.error("cannot make audioFormat")
             throw MicInputError.audioFormatError
         }
 
+        log.info("convert from: \(inputFormat) to: \(recordingFormat)")
         guard let formatConverter = AVAudioConverter(from: inputFormat, to: recordingFormat) else {
             log.error("cannot make audio converter")
             throw MicInputError.resamplerError(source: inputFormat, dest: recordingFormat)
@@ -90,13 +92,11 @@ public class MicInputProvider: AudioProvidable {
         
         self.streamWriter = streamWriter
         
-        log.info("convert from: \(inputFormat) to: \(recordingFormat)")
-        
-        if let error = ObjcExceptionCatcher.objcTry({
-            inputNode.removeTap(onBus: 1)
-            inputNode.installTap(onBus: 1, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, _) in
-                guard let self = self else { return }
-                
+        if let error = ObjcExceptionCatcher.objcTry({ [weak self] in
+            guard let self = self else { return }
+            
+            inputNode.removeTap(onBus: self.audioBus)
+            inputNode.installTap(onBus: self.audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { (buffer, _) in
                 self.audioQueue.sync {
                     let convertedFrameCount = AVAudioFrameCount((Double(buffer.frameLength) / inputFormat.sampleRate) * recordingFormat.sampleRate)
                     guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: convertedFrameCount) else {
@@ -119,14 +119,23 @@ public class MicInputProvider: AudioProvidable {
                         try self.streamWriter?.write(pcmBuffer)
                     } catch {
                         log.error(error)
-                        inputNode.removeTap(onBus: 1)
+                        inputNode.removeTap(onBus: self.audioBus)
                     }
                 }
             }
         }) {
+            log.error("installTap error: \(error)\n" +
+                "\t\trequested format: \(inputFormat)\n" +
+                "\t\tengine output format: \(audioEngine.inputNode.outputFormat(forBus: audioBus))\n" +
+                "\t\tinput format: \(audioEngine.inputNode.inputFormat(forBus: audioBus))")
+            log.error("\n\t\t\(AVAudioSession.sharedInstance().category)\n" +
+                "\t\t\(AVAudioSession.sharedInstance().categoryOptions)\n" +
+                "\t\taudio session sampleRate: \(AVAudioSession.sharedInstance().sampleRate)")
+            
             throw error
         }
-                
+        
+        // installTap() must be called before prepare() or start() on iOS 11.
         audioEngine.prepare()
         do {
             try audioEngine.start()

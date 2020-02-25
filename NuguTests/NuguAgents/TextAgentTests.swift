@@ -1,8 +1,8 @@
 //
-//  LocationAgentTests.swift
+//  TextAgentTests.swift
 //  NuguTests
 //
-//  Created by yonghoonKwon on 2020/02/10.
+//  Created by yonghoonKwon on 2020/02/18.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,38 +23,42 @@ import XCTest
 @testable import NuguAgents
 @testable import NuguCore
 
-class LocationAgentTests: XCTestCase {
+class TextAgentTests: XCTestCase {
     
     // NuguCore(Mock)
     let contextManager: ContextManageable = MockContextManager()
+    let upstreamDataSender: UpstreamDataSendable = MockStreamDataRouter()
+    let focusManager: FocusManageable = MockFocusManager()
     
     // NuguAgents
-    lazy var locationAgent: LocationAgent = LocationAgent(contextManager: contextManager)
+    lazy var textAgent: TextAgent = TextAgent(
+        contextManager: contextManager,
+        upstreamDataSender: upstreamDataSender,
+        focusManager: focusManager
+    )
     
     // Override
     override func setUp() {
-        locationAgent.delegate = self
+        
     }
     
     override func tearDown() {
-        locationAgent.delegate = nil
+        
     }
     
-    // MARK: Context
+    // MARK: Contexts
     
     func testContext() {
         /* Expected context
-        {
-            "Location": {
-                "version": "1.0",
-                "current": {
-                    "latitude": "{{STRING}}",
-                    "longitude": "{{STRING}}"
-                }
-            }
-        }
-        */
-        locationAgent.contextInfoRequestContext { [weak self] contextInfo in
+         {
+             "Text": {
+                 "version" : "1.0"
+              }
+         }
+         */
+        let contextExpectation = expectation(description: "Get contextInfo")
+        
+        textAgent.contextInfoRequestContext { [weak self] (contextInfo) in
             guard let self = self else {
                 XCTFail("self is nil")
                 return
@@ -65,30 +69,22 @@ class LocationAgentTests: XCTestCase {
                 return
             }
             
-            XCTAssertEqual(contextInfo.name, self.locationAgent.capabilityAgentProperty.name)
+            XCTAssertEqual(contextInfo.name, self.textAgent.capabilityAgentProperty.name)
             
             guard let payload = contextInfo.payload as? [String: Any] else {
                 XCTFail("payload is nil or not dictionary")
                 return
             }
             
-            XCTAssertEqual(payload["version"] as? String, self.locationAgent.capabilityAgentProperty.version)
+            XCTAssertEqual(payload["version"] as? String, self.textAgent.capabilityAgentProperty.version)
             
-            guard let current = payload["current"] as? [String: Any] else {
-                XCTFail("payload[\"current\"] is nil or not dictionary")
-                return
-            }
-            
-            XCTAssertEqual(current["latitude"] as? String, "10.1")
-            XCTAssertEqual(current["longitude"] as? String, "20.9")
+            contextExpectation.fulfill()
         }
+        
+        // Check if it can get `contextInfo` within 50ms (include processing)
+        wait(for: [contextExpectation], timeout: 0.05)
     }
-}
-
-// MARK: - LocationAgentDelegate
-
-extension LocationAgentTests: LocationAgentDelegate {
-    func locationAgentRequestLocationInfo() -> LocationInfo? {
-        return LocationInfo(latitude: String(10.1), longitude: String(20.9))
-    }
+    
+    // MARK: Events
+    // TODO: - Need to add events
 }
