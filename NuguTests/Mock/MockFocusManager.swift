@@ -1,9 +1,9 @@
 //
-//  CapabilityDirectiveAgentable.swift
-//  NuguAgents
+//  MockFocusManager.swift
+//  NuguTests
 //
-//  Created by yonghoonKwon on 2019/12/19.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/02/18.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -22,16 +22,26 @@ import Foundation
 
 import NuguCore
 
-public protocol CapabilityDirectiveAgentable: CapabilityAgentable, HandleDirectiveDelegate {
-    // CHECK-ME: var storedDirective: Downstream.Directive? { get }
+class MockFocusManager: FocusManageable {
+    var delegate: FocusDelegate?
     
-    associatedtype DirectiveTypeInfo: DirectiveTypeInforable, CaseIterable
-}
-
-// MARK: - Default HandleDirectiveDelegate
-
-extension CapabilityDirectiveAgentable {
-    public func handleDirectiveTypeInfos() -> DirectiveTypeInfos {
-        DirectiveTypeInfo.allDictionaryCases
+    func add(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func remove(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func requestFocus(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func releaseFocus(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func stopForegroundActivity() {
+        //
     }
 }

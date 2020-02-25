@@ -24,15 +24,14 @@ import NuguCore
 
 import RxSwift
 
-final public class DisplayAgent: DisplayAgentProtocol, CapabilityDirectiveAgentable, CapabilityEventAgentable {
+public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.1")
     
-    // CapabilityEventAgentable
-    public let upstreamDataSender: UpstreamDataSendable
-    
     // Private
     private let playSyncManager: PlaySyncManageable
+    private let directiveSequencer: DirectiveSequenceable
+    private let upstreamDataSender: UpstreamDataSendable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -47,6 +46,31 @@ final public class DisplayAgent: DisplayAgentProtocol, CapabilityDirectiveAgenta
     private var currentItem: DisplayTemplate?
     
     private var disposeBag = DisposeBag()
+    
+    // Handleable Directives
+    private lazy var handleableDirectiveInfos = [
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", medium: .visual, isBlocking: false, directiveHandler: handleClose),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather5", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullImage", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", medium: .visual, isBlocking: false, directiveHandler: handleDisplay)
+    ]
   
     public init(
         upstreamDataSender: UpstreamDataSendable,
@@ -58,13 +82,15 @@ final public class DisplayAgent: DisplayAgentProtocol, CapabilityDirectiveAgenta
         
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
-        directiveSequencer.add(handleDirectiveDelegate: self)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
         log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -90,41 +116,12 @@ public extension DisplayAgent {
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
                 let template = info.currentItem else { return }
             
-            self.sendEvent(
-                Event(playServiceId: template.playServiceId, typeInfo: .elementSelected(token: token)),
-                dialogRequestId: TimeUUID().hexString,
-                messageId: TimeUUID().hexString
-            )
+            self.upstreamDataSender.send(upstreamEventMessage: Event(playServiceId: template.playServiceId, typeInfo: .elementSelected(token: token)).makeEventMessage(agent: self))
         }
     }
     
     func stopRenderingTimer(templateId: String) {
         timerInfos[templateId] = false
-    }
-}
-
-// MARK: - HandleDirectiveDelegate
-
-extension DisplayAgent: HandleDirectiveDelegate {
-    public func handleDirective(
-        _ directive: Downstream.Directive,
-        completionHandler: @escaping (Result<Void, Error>) -> Void
-    ) {
-        let result = Result<DirectiveTypeInfo, Error>(catching: {
-            guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Unknown directive")
-            }
-            
-            return directiveTypeInfo
-        }).flatMap({ (typeInfo) -> Result<Void, Error> in
-            switch typeInfo {
-            case .close:
-                return close(directive: directive)
-            default:
-                return display(directive: directive)
-            }
-        })
-        completionHandler(result)
     }
 }
 
@@ -219,70 +216,70 @@ extension DisplayAgent: PlaySyncDelegate {
 // MARK: - Private(Directive, Event)
 
 private extension DisplayAgent {
-    func close(directive: Downstream.Directive) -> Result<Void, Error> {
-        return Result { [weak self] in
-            guard let self = self else { return }
-            guard let data = directive.payload.data(using: .utf8) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-            }
-            let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
-            guard let item = self.currentItem, item.playServiceId == payload.playServiceId else {
-                self.sendEvent(
-                    Event(playServiceId: payload.playServiceId, typeInfo: .closeFailed),
-                    dialogRequestId: TimeUUID().hexString,
-                    messageId: TimeUUID().hexString
-                )
-                return
-            }
-            
-            self.sendEvent(
-                Event(playServiceId: payload.playServiceId, typeInfo: .closeSucceeded),
-                dialogRequestId: TimeUUID().hexString,
-                messageId: TimeUUID().hexString
+    func handleClose() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8) else {
+                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+                    }
+
+                    let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
+                    
+                    self.upstreamDataSender.send(
+                        upstreamEventMessage: Event(
+                            playServiceId: payload.playServiceId,
+                            typeInfo: self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
+                        ).makeEventMessage(agent: self)
+                    )
+                    
+                    if let item = self.currentItem, item.playServiceId == payload.playServiceId {
+                        self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
+                    }
+                }
             )
-            
-            self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
         }
     }
     
-    func display(directive: Downstream.Directive) -> Result<Void, Error> {
-        log.info("\(directive.header.type)")
+    func handleDisplay() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            log.info("\(directive.header.type)")
 
-        return Result { [weak self] in
-            guard let self = self else { return }
-            
-            guard let directiveTypeInfo = directive.typeInfo(for: DirectiveTypeInfo.self) else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-            }
-            
-            guard let payloadAsData = directive.payload.data(using: .utf8),
-                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
-                let token = payloadDictionary["token"] as? String,
-                let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
-            }
-            
-            let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-            let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
-                        
-            self.currentItem = DisplayTemplate(
-                type: directiveTypeInfo.type,
-                payload: directive.payload,
-                templateId: directive.header.messageId,
-                dialogRequestId: directive.header.dialogRequestId,
-                token: token,
-                playServiceId: playServiceId,
-                playStackServiceId: playStackServiceId,
-                duration: DisplayTemplate.Duration(rawValue: duration)
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    
+                    guard let payloadAsData = directive.payload.data(using: .utf8),
+                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                        let token = payloadDictionary["token"] as? String,
+                        let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
+                    }
+                    
+                    let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
+                    let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
+                    
+                    self.currentItem = DisplayTemplate(
+                        type: directive.header.type,
+                        payload: directive.payload,
+                        templateId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId,
+                        token: token,
+                        playServiceId: playServiceId,
+                        playStackServiceId: playStackServiceId,
+                        duration: DisplayTemplate.Duration(rawValue: duration)
+                    )
+                    
+                    if let item = self.currentItem {
+                        self.playSyncManager.startSync(
+                            delegate: self,
+                            dialogRequestId: item.dialogRequestId,
+                            playServiceId: item.playStackServiceId
+                        )
+                    }
+                }
             )
-            
-            if let item = self.currentItem {
-                self.playSyncManager.startSync(
-                    delegate: self,
-                    dialogRequestId: item.dialogRequestId,
-                    playServiceId: item.playStackServiceId
-                )
-            }
         }
     }
 }

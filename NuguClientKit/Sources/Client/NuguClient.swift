@@ -101,14 +101,12 @@ public class NuguClient {
         
         // dialog
         asrAgent = ASRAgent(focusManager: focusManager,
-                            channelPriority: .recognition,
                             upstreamDataSender: streamDataRouter,
                             contextManager: contextManager,
                             audioStream: sharedAudioStream,
                             directiveSequencer: directiveSequencer)
         
         ttsAgent = TTSAgent(focusManager: focusManager,
-                            channelPriority: .information,
                             upstreamDataSender: streamDataRouter,
                             playSyncManager: playSyncManager,
                             contextManager: contextManager,
@@ -116,8 +114,7 @@ public class NuguClient {
 
         textAgent = TextAgent(contextManager: contextManager,
                               upstreamDataSender: streamDataRouter,
-                              focusManager: focusManager,
-                              channelPriority: .recognition)
+                              focusManager: focusManager)
         
         dialogStateAggregator = DialogStateAggregator()
         asrAgent.add(delegate: dialogStateAggregator)
@@ -127,7 +124,6 @@ public class NuguClient {
         // audio player
         audioPlayerAgent = AudioPlayerAgent(
             focusManager: focusManager,
-            channelPriority: .content,
             upstreamDataSender: streamDataRouter,
             playSyncManager: playSyncManager,
             contextManager: contextManager,

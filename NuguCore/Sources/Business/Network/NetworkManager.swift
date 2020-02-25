@@ -66,9 +66,9 @@ public class NetworkManager: NetworkManageable {
                 }
                 
                 return self.iterateSetEndPoint(with: policy.serverPolicies)
-            }.subscribe(onCompleted: {
-                self.receiveMessage()
-                self.networkStatus = .connected
+            }.subscribe(onCompleted: { [weak self] in
+                self?.receiveMessage()
+                self?.networkStatus = .connected
                 completion?(.success(()))
             }, onError: { [weak self] (error) in
                 completion?(.failure(error))
@@ -78,10 +78,10 @@ public class NetworkManager: NetworkManageable {
     
     // TODO: NetworkManageable 에 추가? 중복코드 제거.
     func connect(serverPolicies: [Policy.ServerPolicy], completion: ((Result<Void, Error>) -> Void)? = nil) {
-        self.iterateSetEndPoint(with: serverPolicies)
-            .subscribe(onCompleted: {
-                self.receiveMessage()
-                self.networkStatus = .connected
+        iterateSetEndPoint(with: serverPolicies)
+            .subscribe(onCompleted: { [weak self] in
+                self?.receiveMessage()
+                self?.networkStatus = .connected
                 completion?(.success(()))
             }, onError: { [weak self] (error) in
                 completion?(.failure(error))
@@ -212,8 +212,10 @@ private extension NetworkManager {
     
     func setEndPoint(policy: Policy.ServerPolicy) -> Single<NuguApiProvider?> {
         let apiProvider = NuguApiProvider(url: "https://" + "\(policy.hostname):\(policy.port)")
-        return Completable.create { (completer) -> Disposable in
+        return Completable.create { [weak self]  (completer) -> Disposable in
             let disposable = Disposables.create()
+            
+            guard let self = self else { return disposable }
             
             apiProvider.directive
                 .retryWhen { (error: Observable<Error>) -> Observable<Int> in
