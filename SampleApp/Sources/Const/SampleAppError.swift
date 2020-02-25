@@ -41,8 +41,10 @@ extension SampleAppError: LocalizedError {
             return "Record permission denied"
         case .loginFailed(let error):
             return "login has failed (reason: \(error))"
-        case .loginUnauthorized(let reason):
-            return reason.description
+        case .loginUnauthorized:
+            // Sample application does not present any detail informations about unauthorized reason.
+            // Please check APIErrorReason for detail reason of unauthorization.
+            return "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "NuguSample")의 누구 서비스가 종료되었습니다."
         case .loginWithRefreshTokenFailed:
             return "Login with refresh token has failed"
         }
