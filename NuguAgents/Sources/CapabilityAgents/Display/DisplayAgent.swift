@@ -131,7 +131,7 @@ public extension DisplayAgent {
 
 extension DisplayAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completionHandler: @escaping (ContextInfo?) -> Void) {
-        DispatchQueue.main.async { [weak self] in
+        let sendContext = { [weak self] in
             guard let self = self else {
                 completionHandler(nil)
                 return
@@ -147,6 +147,12 @@ extension DisplayAgent: ContextInfoDelegate {
                 payload["visibleTokenList"] = delegate.displayAgentVisibleTokenList()
             }
             completionHandler(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
+        }
+        
+        if Thread.current.isMainThread {
+            sendContext()
+        } else {
+            DispatchQueue.main.sync { sendContext() }
         }
     }
 }
