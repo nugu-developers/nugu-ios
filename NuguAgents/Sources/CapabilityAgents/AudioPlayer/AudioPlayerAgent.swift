@@ -205,6 +205,7 @@ public extension AudioPlayerAgent {
     
     func pause() {
         audioPlayerDispatchQueue.async { [weak self] in
+            self?.currentMedia?.blockResume = true
             self?.currentMedia?.player.pause()
         }
     }
@@ -246,16 +247,14 @@ extension AudioPlayerAgent: FocusChannelDelegate {
                 self.currentMedia?.player.play()
             // Directive 에 의한 Pause 인경우 재생하지 않음.
             case (.foreground, let playerState)  where [.paused, .temporalPaused].contains(playerState):
-                // Directive 에 의한 Pause 인경우 재생하지 않음.
-                if self.currentMedia?.temporalPaused {
-                    self.currentMedia?.temporalPaused = false
+                // 명시적(Directive, 사용자) 에 의한 Pause 인경우 재생하지 않음.
+                if self.currentMedia?.blockResume == false {
                     self.currentMedia?.player.resume()
                 }
             // Foreground. playing 무시
             case (.foreground, _):
                 break
             case (.background, .playing):
-                self.currentMedia?.temporalPaused = true
                 self.currentMedia?.player.pause()
             // background. idle, pause, stopped, finished 무시
             case (.background, _):
@@ -285,10 +284,10 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 self.audioPlayerState = .playing
                 self.sendEvent(media: media, typeInfo: .playbackStarted)
             case .resume:
-                let previousState = self.audioPlayerState
                 self.audioPlayerState = .playing
                 // Do not send `AudioPlayer.PlaybackResumed` event when `AudioPlayerState.temporalPaused`
-                if previousState != .temporalPaused {
+                if media.blockResume {
+                    self.currentMedia?.blockResume = false
                     self.sendEvent(media: media, typeInfo: .playbackResumed)
                 }
             case .finish:
@@ -307,11 +306,11 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 }
             case .pause:
                 // Do not send `AudioPlayer.PlaybackPaused` event when `AudioPlayerState.temporalPaused`
-                if media.temporalPaused {
-                    self.audioPlayerState = .temporalPaused
-                } else {
+                if media.blockResume {
                     self.audioPlayerState = .paused
                     self.sendEvent(media: media, typeInfo: .playbackPaused)
+                } else {
+                    self.audioPlayerState = .temporalPaused
                 }
             case .stop:
                 self.audioPlayerState = .stopped
@@ -474,7 +473,6 @@ private extension AudioPlayerAgent {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.currentMedia != nil else { return }
-            self.currentMedia?.temporalPaused = true
             self.focusManager.requestFocus(channelDelegate: self)
         }
     }

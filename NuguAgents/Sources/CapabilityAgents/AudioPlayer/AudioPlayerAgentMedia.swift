@@ -26,7 +26,7 @@ struct AudioPlayerAgentMedia {
     let dialogRequestId: String
     let player: MediaPlayable
     let payload: Payload
-    var temporalPaused: Bool = true
+    var blockResume: Bool = false
     var cancelAssociation: Bool = false
     
     init(dialogRequestId: String, player: MediaPlayable, payload: Payload) {
