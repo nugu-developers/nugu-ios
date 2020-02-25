@@ -55,7 +55,7 @@ final class DisplayBodyListView: DisplayView {
         view.frame = bounds
         addSubview(view)
         addBorderToTitleContainerView()
-        tableView.backgroundColor = UIColor(named: "BackgroundColor")
+        tableView.backgroundColor = UIColor.white
         tableView.register(UINib(nibName: "DisplayBodyListViewCell", bundle: nil), forCellReuseIdentifier: "DisplayBodyListViewCell")
     }
 }

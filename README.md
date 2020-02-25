@@ -57,19 +57,18 @@ For more information, See the [Carthage for Application](https://github.com/Cart
 
 ### Get Started
 Using `NUGU SDK for iOS` is easy after some setup.
-Here are some basic examples for some capability agent.
-#### Initialize & Connect
-Before using `NUGU SDK for iOS`, connect to nugu when using NuguClientKit. like this:
-```swift
-let capabilityAgentFactory = BuiltInCapabilityAgentFactory() // If possible, avoid using `BuiltInCapabilityAgentFactory` and make only what you need. 
-let client = NuguClient(capabilityAgentFactory: capabilityAgentFactory)
+Here are some basic examples for some capability-agent.
+#### Initialize & Enable
+Before using `NUGU SDK for iOS`, enable to nugu when using NuguClientKit. like this:
+```swift 
+let client = NuguClient()
 
-client.networkManager.connect()
+client.enable()
 ```
 
 #### Using ASRAgent (Automatic Speech Recognition Agent)
 ```swift
-client.asrAgent.startRecognition()
+client.asrAgent.startRecognition(initiator: .user)
 ```
 
 #### Using TTSAgent (Text To Speech Agent)

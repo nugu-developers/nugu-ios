@@ -39,8 +39,7 @@ public final class TTSAgent: TTSAgentProtocol {
     
     private var ttsState: TTSState = .idle {
         didSet {
-            log.info("\(oldValue) \(ttsState)")
-            guard oldValue != ttsState else { return }
+            log.info("state changed from: \(oldValue) to: \(ttsState)")
             guard let media = currentMedia else {
                 log.error("TTSMedia is nil")
                 return
@@ -71,8 +70,12 @@ public final class TTSAgent: TTSAgentProtocol {
             default:
                 break
             }
-            delegates.notify { delegate in
-                delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
+            
+            // Notify delegates only if the agent's status changes.
+            if oldValue != ttsState {
+                delegates.notify { delegate in
+                    delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
+                }
             }
         }
     }
@@ -233,12 +236,13 @@ extension TTSAgent: MediaPlayerDelegate {
             case .resume, .bufferRefilled:
                 self.ttsState = .playing
             case .finish:
+                self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
+                self.ttsState = .finished
+                
                 // Release focus after receiving directive
                 self.sendEvent(media: media, info: .speechFinished) { [weak self] _ in
                     self?.releaseFocusIfNeeded()
                 }
-                self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
-                self.ttsState = .finished
             case .pause:
                 self.stop(cancelAssociation: false)
             case .stop:
@@ -436,6 +440,9 @@ private extension TTSAgent {
     func sendEvent(media: TTSMedia, info: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
         guard let playServiceId = media.payload.playServiceId else {
             log.debug("TTSMedia does not have playServiceId")
+            
+            let error = NSError(domain: "com.sktelecom.romaine.tts_agent", code: 1000, userInfo: nil)
+            resultHandler?(.failure(error))
             return
         }
         
