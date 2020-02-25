@@ -25,16 +25,9 @@ enum SampleAppError: Error {
     case nilValue(description: String?)
     case recordPermissionError
     
-    case onDisconnected
     case loginFailed(error: Error)
-    case loginUnauthorized(error: UnauthorizedError)
+    case loginUnauthorized(reason: APIErrorReason)
     case loginWithRefreshTokenFailed
-    
-    enum UnauthorizedError: Error {
-        case serviceFinished
-        case serviceDropped
-        case unknown
-    }
 }
 
 // MARK: - LocalizedError
@@ -46,17 +39,10 @@ extension SampleAppError: LocalizedError {
             return description
         case .recordPermissionError:
             return "Record permission denied"
-        case .onDisconnected:
-            return "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요."
         case .loginFailed(let error):
             return "login has failed (reason: \(error))"
-        case .loginUnauthorized(let error):
-            switch error {
-            case .serviceDropped, .unknown:
-                return "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "NuguSample")는 누구 서비스를 지원하지 않습니다."
-            case .serviceFinished:
-                return "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "NuguSample")의 누구 서비스가 종료되었습니다."
-            }
+        case .loginUnauthorized(let reason):
+            return reason.description
         case .loginWithRefreshTokenFailed:
             return "Login with refresh token has failed"
         }
@@ -71,13 +57,6 @@ extension SampleAppError {
             case .invalidStatusCode(let apiErrorReason) = apiError else {
             return .loginFailed(error: error)
         }
-        switch apiErrorReason.description {
-        case "FINISHED":
-            return .loginUnauthorized(error: .serviceFinished)
-        case "DROP":
-            return .loginUnauthorized(error: .serviceDropped)
-        default:
-            return .loginUnauthorized(error: .unknown)
-        }
+        return .loginUnauthorized(reason: apiErrorReason)
     }
 }

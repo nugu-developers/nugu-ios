@@ -238,16 +238,14 @@ private extension NuguCentralManager {
     
     func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
         DispatchQueue.main.async { [weak self] in
-            defer {
-                self?.logout()
-            }
-            guard case .loginUnauthorized = sampleAppError else {
+            switch sampleAppError {
+            case .loginUnauthorized:
+                self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated)
+            default:
                 self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError)
-                NuguToastManager.shared.showToast(message: SampleAppError.onDisconnected.errorDescription)
-                return
             }
-            self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated)
             NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
+            self?.logout()
         }
     }
 }
