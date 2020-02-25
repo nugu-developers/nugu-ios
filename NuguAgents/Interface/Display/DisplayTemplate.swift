@@ -58,8 +58,6 @@ public extension DisplayTemplate {
     // TODO: PlaySyncDuration과 같음.
     enum Duration: String {
         /// <#Description#>
-        case none = "NONE"
-        /// <#Description#>
         case short = "SHORT"
         /// <#Description#>
         case mid = "MID"
@@ -73,7 +71,6 @@ public extension DisplayTemplate {
 public extension DisplayTemplate.Duration {
     var time: DispatchTimeInterval {
         switch self {
-        case .none: return .seconds(0)
         case .short: return .seconds(7)
         case .mid: return .seconds(15)
         case .long: return .seconds(30)
