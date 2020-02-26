@@ -80,6 +80,10 @@ private extension IntroViewController {
                 switch sampleAppError {
                 case .loginWithRefreshTokenFailed:
                     self?.presentLoginWithRefreshTokenErrorPopup()
+                case .loginFailed, .loginUnauthorized:
+                    DispatchQueue.main.async {
+                        NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
+                    }
                 default: break
                 }
             }
