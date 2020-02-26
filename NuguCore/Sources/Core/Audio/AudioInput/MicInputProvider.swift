@@ -49,7 +49,7 @@ public class MicInputProvider: AudioProvidable {
             log.warning("audio engine is already running")
             return
         }
-
+        
         try beginTappingMicrophone(streamWriter: streamWriter)
         
         // when audio session interrupted, audio engine will be stopped automatically. so we have to handle it.
@@ -65,17 +65,21 @@ public class MicInputProvider: AudioProvidable {
     }
     
     public func stop() {
+        log.debug("try to stop")
+        
         NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: .AVAudioEngineConfigurationChange, object: nil)
         
-        self.streamWriter?.finish()
-        self.streamWriter = nil
+        streamWriter?.finish()
+        streamWriter = nil
         
-        self.audioEngine.inputNode.removeTap(onBus: audioBus)
-        self.audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: audioBus)
+        audioEngine.stop()
     }
     
     private func beginTappingMicrophone(streamWriter: AudioStreamWritable) throws {
+        log.debug("begin tapping to engine's input node")
+        
         let inputNode = audioEngine.inputNode
         let inputFormat = inputNode.inputFormat(forBus: audioBus)
         
@@ -83,7 +87,7 @@ public class MicInputProvider: AudioProvidable {
             log.error("cannot make audioFormat")
             throw MicInputError.audioFormatError
         }
-
+        
         log.info("convert from: \(inputFormat) to: \(recordingFormat)")
         guard let formatConverter = AVAudioConverter(from: inputFormat, to: recordingFormat) else {
             log.error("cannot make audio converter")
@@ -96,14 +100,18 @@ public class MicInputProvider: AudioProvidable {
             guard let self = self else { return }
             
             inputNode.removeTap(onBus: self.audioBus)
-            inputNode.installTap(onBus: self.audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { (buffer, _) in
+            inputNode.installTap(
+                onBus: self.audioBus,
+                bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10),
+                format: inputFormat
+            ) { (buffer, _) in
                 self.audioQueue.sync {
                     let convertedFrameCount = AVAudioFrameCount((Double(buffer.frameLength) / inputFormat.sampleRate) * recordingFormat.sampleRate)
                     guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: convertedFrameCount) else {
                         log.error("cannot make pcm buffer")
                         return
                     }
-
+                    
                     var error: NSError?
                     formatConverter.convert(to: pcmBuffer, error: &error) { _, outStatus in
                         outStatus.pointee = AVAudioConverterInputStatus.haveData
@@ -114,11 +122,11 @@ public class MicInputProvider: AudioProvidable {
                         log.error("audio convert error: \(error!)")
                         return
                     }
-
+                    
                     do {
                         try self.streamWriter?.write(pcmBuffer)
                     } catch {
-                        log.error(error)
+                        log.error("error: \(error)")
                         inputNode.removeTap(onBus: self.audioBus)
                     }
                 }
@@ -171,8 +179,8 @@ public class MicInputProvider: AudioProvidable {
         
         guard audioEngine.isRunning == false else { return }
         guard let streamWriter = streamWriter else { return }
-
+        
         try? beginTappingMicrophone(streamWriter: streamWriter)
-
+        
     }
 }

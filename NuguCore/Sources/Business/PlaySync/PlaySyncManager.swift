@@ -183,7 +183,7 @@ private extension PlaySyncManager {
         playSyncInfos.insert(playSyncInfo, at: 0)
         
         delegate.playSyncDidChange(state: playSyncState, dialogRequestId: dialogRequestId)
-        log.debug(playSyncInfos)
+        log.debug("set playSyncInfos: \(playSyncInfos)")
     }
     
     func update(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
@@ -199,6 +199,6 @@ private extension PlaySyncManager {
         }
         
         delegate.playSyncDidChange(state: playSyncState, dialogRequestId: dialogRequestId)
-        log.debug(playSyncInfos)
+        log.debug("updated playSyncInfos: \(playSyncInfos)")
     }
 }

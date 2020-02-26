@@ -95,7 +95,7 @@ class OpusDecoder {
 
             log.debug("original opus data file: \(originalFilename)")
         } catch {
-            log.error(error)
+            log.error("error: \(error)")
         }
     }
     #endif

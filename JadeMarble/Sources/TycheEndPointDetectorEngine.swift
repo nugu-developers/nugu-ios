@@ -157,7 +157,7 @@ extension TycheEndPointDetectorEngine: StreamDelegate {
 
         switch eventCode {
         case .hasBytesAvailable:
-            guard engineHandle != nil else {
+            guard let engineHandle = engineHandle else {
                 stop()
                 return
             }
@@ -227,7 +227,7 @@ extension TycheEndPointDetectorEngine: StreamDelegate {
                     inputData.removeAll()
                     outputData.removeAll()
                 } catch {
-                    log.debug(error)
+                    log.error("error: \(error)")
                 }
             }
             #endif

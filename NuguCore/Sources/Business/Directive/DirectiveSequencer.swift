@@ -123,13 +123,13 @@ private extension DirectiveSequencer {
                         self.handleDirectiveSubject.onNext(directive)
                     case .failure(let error):
                         self.upstreamDataSender.sendCrashReport(error: error)
-                        log.error(error)
+                        log.error("error: \(error)")
                     }
                 })
             })
             .do(onError: { [weak self] error in
                 self?.upstreamDataSender.sendCrashReport(error: error)
-                log.error(error)
+                log.error("error: \(error)")
             })
             .retry()
             .subscribe().disposed(by: disposeBag)
@@ -184,12 +184,12 @@ private extension DirectiveSequencer {
                     remove(handler)
                     if case .failure(let error) = result {
                         self?.upstreamDataSender.sendCrashReport(error: error)
-                        log.error(error)
+                        log.error("error: \(error)")
                     }
                 }
             }, onError: { [weak self] error in
                 self?.upstreamDataSender.sendCrashReport(error: error)
-                log.error(error)
+                log.error("error: \(error)")
             })
             .retry()
             .subscribe().disposed(by: disposeBag)

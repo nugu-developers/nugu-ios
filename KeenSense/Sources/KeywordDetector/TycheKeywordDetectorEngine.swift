@@ -103,7 +103,6 @@ public class TycheKeywordDetectorEngine: NSObject {
         }
         kwdQueue.async(execute: workItem!)
         kwdWorkItem = workItem
-        log.debug("kwd tried to start")
     }
     
     public func stop() {
@@ -179,7 +178,7 @@ extension TycheKeywordDetectorEngine {
             log.debug("detected filenlame: \(filename)")
             try detectedData.write(to: filename)
         } catch {
-            log.debug(error)
+            log.error("error: \(error)")
         }
         #endif
         

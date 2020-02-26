@@ -222,7 +222,7 @@ extension TTSAgent: ContextInfoDelegate {
 
 extension TTSAgent: MediaPlayerDelegate {
     public func mediaPlayerDidChange(state: MediaPlayerState) {
-        log.info(state)
+        log.info("media state: \(state)")
         
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -427,7 +427,7 @@ private extension TTSAgent {
                     }
                 } catch {
                     self.upstreamDataSender.sendCrashReport(error: error)
-                    log.error(error)
+                    log.error("error: \(error)")
                 }
             }
         }

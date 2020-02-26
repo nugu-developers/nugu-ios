@@ -50,15 +50,13 @@ class NuguApiProvider: NSObject {
     }
     
     static var policies: Single<Policy> {
-        var urlSession: URLSession! = URLSession(configuration: .default)
-        
         var urlComponent = URLComponents(string: (NuguServerInfo.registryAddress + NuguApi.policy.path))
         urlComponent?.queryItems = [
             URLQueryItem(name: "protocol", value: "H2")
         ]
         
         guard let url = urlComponent?.url else {
-            log.error(NetworkError.invalidParameter)
+            log.error("invalid prameter")
             return Single.error(NetworkError.invalidParameter)
         }
         
@@ -66,13 +64,8 @@ class NuguApiProvider: NSObject {
         request.httpMethod = NuguApi.policy.method.rawValue
         request.allHTTPHeaderFields = NuguApi.policy.header
         
-        return request.rxDataTask(urlSession: urlSession)
-            .map { data -> Policy in
-                try JSONDecoder().decode(Policy.self, from: data)
-        }
-        .do(onDispose: {
-            urlSession = nil
-        })
+        return request.rxDataTask(urlSession: URLSession.shared)
+            .map { try JSONDecoder().decode(Policy.self, from: $0) }
     }
     
     var directive: Observable<MultiPartParser.Part> {
@@ -153,7 +146,7 @@ extension NuguApiProvider: NuguApiProvidable {
                 log.debug("message was sent successfully")
                 completion?(.success(data))
             }, onError: { error in
-                log.error(error)
+                log.error("error: \(error)")
                 completion?(.failure(error))
             }).disposed(by: disposeBag)
     }
