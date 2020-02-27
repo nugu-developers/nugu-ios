@@ -91,8 +91,8 @@ extension AudioPlayerDisplayManager {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerDisplayManager: PlaySyncDelegate {
-    public func playSyncIsDisplay() -> Bool {
-        return true
+    public func playSyncContextType() -> PlaySyncContextType {
+        return .display
     }
     
     public func playSyncDuration() -> PlaySyncDuration {

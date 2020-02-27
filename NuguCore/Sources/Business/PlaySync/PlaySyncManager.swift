@@ -85,7 +85,7 @@ public extension PlaySyncManager {
             self.set(delegate: delegate, playServiceId: playServiceId, playSyncState: .synced)
             
             // If the play sync layers contains only display layer, release it by itself after the duration.
-            if delegate.playSyncIsDisplay() && !hasAnotherLayer {
+            if delegate.playSyncContextType() == .display && !hasAnotherLayer {
                 log.debug("Display only layer(\(playServiceId)) will release after \(delegate.playSyncDuration().time)")
                 let disposable = Completable.create { [weak self] event -> Disposable in
                     guard let self = self else { return Disposables.create() }
@@ -137,7 +137,7 @@ public extension PlaySyncManager {
                 .flatMap({ [weak self] (info) -> Observable<PlaySyncInfo> in
                     guard let self = self else { return Observable.empty() }
                     let latency: DispatchTimeInterval
-                    if info.playSyncState != .releasing && (info.isDisplay || isSingleLayer) {
+                    if info.playSyncState != .releasing && (info.contextType == .display || isSingleLayer) {
                         latency = info.duration.time
                     } else {
                         latency = .milliseconds(0)
@@ -149,7 +149,7 @@ public extension PlaySyncManager {
                 .do(onNext: {  [weak self] (info) in
                     guard let self = self else { return }
                     guard let target = info.delegate else { return }
-                    if !info.isDisplay || info.playSyncState == .releasing {
+                    if info.contextType != .display || info.playSyncState == .releasing {
                         self.update(delegate: target, playServiceId: playServiceId, playSyncState: .released)
                     } else {
                         self.update(delegate: target, playServiceId: playServiceId, playSyncState: .releasing)

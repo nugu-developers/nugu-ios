@@ -264,8 +264,8 @@ extension TTSAgent: MediaPlayerDelegate {
 // MARK: - PlaySyncDelegate
 
 extension TTSAgent: PlaySyncDelegate {
-    public func playSyncIsDisplay() -> Bool {
-        return false
+    public func playSyncContextType() -> PlaySyncContextType {
+        return .sound
     }
     
     public func playSyncDuration() -> PlaySyncDuration {

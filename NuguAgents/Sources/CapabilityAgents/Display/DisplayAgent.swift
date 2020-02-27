@@ -141,8 +141,8 @@ extension DisplayAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension DisplayAgent: PlaySyncDelegate {
-    public func playSyncIsDisplay() -> Bool {
-        return true
+    public func playSyncContextType() -> PlaySyncContextType {
+        return .display
     }
     
     public func playSyncDuration() -> PlaySyncDuration {

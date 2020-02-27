@@ -26,14 +26,14 @@ struct PlaySyncInfo {
     
     let playServiceId: String?
     let playSyncState: PlaySyncState
-    let isDisplay: Bool
+    let contextType: PlaySyncContextType
     let duration: PlaySyncDuration
     
     init(delegate: PlaySyncDelegate, playServiceId: String?, playSyncState: PlaySyncState) {
         self.delegate = delegate
         self.playServiceId = playServiceId
         self.playSyncState = playSyncState
-        self.isDisplay = delegate.playSyncIsDisplay()
+        self.contextType = delegate.playSyncContextType()
         self.duration = delegate.playSyncDuration()
     }
 }

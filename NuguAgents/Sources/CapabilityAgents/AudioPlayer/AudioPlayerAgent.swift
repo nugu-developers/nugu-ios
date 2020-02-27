@@ -336,8 +336,8 @@ extension AudioPlayerAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerAgent: PlaySyncDelegate {
-    public func playSyncIsDisplay() -> Bool {
-        return false
+    public func playSyncContextType() -> PlaySyncContextType {
+        return .sound
     }
     
     public func playSyncDuration() -> PlaySyncDuration {
