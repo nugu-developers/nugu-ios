@@ -25,5 +25,5 @@ public protocol PlaySyncDelegate: class {
     
     func playSyncDuration() -> PlaySyncDuration
     
-    func playSyncDidChange(state: PlaySyncState, playServiceId: String)
+    func playSyncDidChange(state: PlaySyncState, dialogRequestId: String)
 }

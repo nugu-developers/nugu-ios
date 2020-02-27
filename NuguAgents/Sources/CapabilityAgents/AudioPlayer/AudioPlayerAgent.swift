@@ -68,6 +68,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 stopPauseTimeout()
                 playSyncManager.startSync(
                     delegate: self,
+                    dialogRequestId: media.dialogRequestId,
                     playServiceId: media.payload.playStackControl?.playServiceId
                 )
             case .stopped, .finished:
@@ -75,11 +76,13 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 stopPauseTimeout()
                 if media.cancelAssociation {
                     playSyncManager.releaseSyncImmediately(
+                        dialogRequestId: media.dialogRequestId,
                         playServiceId: media.payload.playStackControl?.playServiceId
                     )
                 } else {
                     playSyncManager.releaseSync(
                         delegate: self,
+                        dialogRequestId: media.dialogRequestId,
                         playServiceId: media.payload.playStackControl?.playServiceId
                     )
                 }
@@ -344,11 +347,11 @@ extension AudioPlayerAgent: PlaySyncDelegate {
         return .short
     }
     
-    public func playSyncDidChange(state: PlaySyncState, playServiceId: String) {
+    public func playSyncDidChange(state: PlaySyncState, dialogRequestId: String) {
         log.info("\(state)")
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let media = self.currentMedia, media.payload.playStackControl?.playServiceId == playServiceId else { return }
+            guard let media = self.currentMedia, media.dialogRequestId == dialogRequestId else { return }
             
             if [.releasing, .released].contains(state) {
                 self.stop(cancelAssociation: false)
@@ -410,6 +413,7 @@ private extension AudioPlayerAgent {
                         }
                         self.playSyncManager.prepareSync(
                             delegate: self,
+                            dialogRequestId: directive.header.dialogRequestId,
                             playServiceId: payload.playStackControl?.playServiceId
                         )
                         
