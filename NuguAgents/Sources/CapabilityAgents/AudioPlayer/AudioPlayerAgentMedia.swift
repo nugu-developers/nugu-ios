@@ -26,7 +26,7 @@ struct AudioPlayerAgentMedia {
     let dialogRequestId: String
     let player: MediaPlayable
     let payload: Payload
-    var temporalPaused: Bool = true
+    var pauseReason: PauseReason = .nothing
     var cancelAssociation: Bool = false
     
     init(dialogRequestId: String, player: MediaPlayable, payload: Payload) {
@@ -67,6 +67,12 @@ struct AudioPlayerAgentMedia {
                 }
             }
         }
+    }
+
+    enum PauseReason {
+        case nothing
+        case focus
+        case user
     }
 }
 
