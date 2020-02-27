@@ -55,7 +55,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 asrRequest = nil
                 releaseFocusIfNeeded()
             }
-            
+
             // Stop EPD
             if [.listening, .recognizing].contains(asrState) == false &&
                 [.start, .listening].contains(Self.endPointDetector?.state) {
@@ -110,9 +110,9 @@ public final class ASRAgent: ASRAgentProtocol {
                 asrState = .idle
             }
             
-            self.asrDelegates.notify({ (delegate) in
+            asrDelegates.notify { (delegate) in
                 delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.dialogRequestId)
-            })
+            }
         }
     }
     
@@ -182,7 +182,7 @@ public extension ASRAgent {
     func startRecognition(initiator: ASRInitiator = .user) {
         log.debug("startRecognition, initiator: \(initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
-        let reader = self.audioStream.makeAudioStreamReader()
+        let reader = audioStream.makeAudioStreamReader()
         
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
