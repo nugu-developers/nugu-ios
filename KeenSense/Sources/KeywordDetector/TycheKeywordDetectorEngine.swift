@@ -178,7 +178,7 @@ extension TycheKeywordDetectorEngine {
             log.debug("detected filenlame: \(filename)")
             try detectedData.write(to: filename)
         } catch {
-            log.error("error: \(error)")
+            log.debug(error)
         }
         #endif
         
