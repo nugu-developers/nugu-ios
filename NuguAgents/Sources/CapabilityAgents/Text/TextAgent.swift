@@ -40,7 +40,6 @@ public final class TextAgent: TextAgentProtocol {
     private var textAgentState: TextAgentState = .idle {
         didSet {
             log.info("from: \(oldValue) to: \(textAgentState)")
-            guard oldValue != textAgentState else { return }
             
             // release textRequest
             if textAgentState == .idle {
@@ -48,8 +47,11 @@ public final class TextAgent: TextAgentProtocol {
                 releaseFocusIfNeeded()
             }
             
-            delegates.notify { delegate in
-                delegate.textAgentDidChange(state: textAgentState)
+            // Notify delegates only if the agent's status changes.
+            if oldValue != textAgentState {
+                delegates.notify { delegate in
+                    delegate.textAgentDidChange(state: textAgentState)
+                }
             }
         }
     }
@@ -179,16 +181,17 @@ private extension TextAgent {
                     text: textRequest.text,
                     expectSpeech: textRequest.expectSpeech
                 )
-            ).makeEventMessage(agent: self)
-        ) { [weak self] result in
-            guard let self = self else { return }
-            guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
-            
-            let result = result.map { _ in () }
-            self.delegates.notify({ (delegate) in
-                delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
-            })
-            self.textAgentState = .idle
-        }
+            ).makeEventMessage(agent: self),
+            resultHandler: { [weak self] result in
+                guard let self = self else { return }
+                guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
+                
+                let result = result.map { _ in () }
+                self.delegates.notify({ (delegate) in
+                    delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
+                })
+                self.textAgentState = .idle
+            }
+        )
     }
 }

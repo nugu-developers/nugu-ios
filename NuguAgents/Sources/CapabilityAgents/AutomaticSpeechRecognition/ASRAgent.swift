@@ -44,7 +44,6 @@ public final class ASRAgent: ASRAgentProtocol {
     private var asrState: ASRState = .idle {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
-            guard oldValue != asrState else { return }
             
             // dispose expectingSpeechTimeout
             if asrState != .expectingSpeech {
@@ -63,8 +62,11 @@ public final class ASRAgent: ASRAgentProtocol {
                 Self.endPointDetector?.stop()
             }
             
-            asrDelegates.notify { delegate in
-                delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+            // Notify delegates only if the agent's status changes.
+            if oldValue != asrState {
+                asrDelegates.notify { delegate in
+                    delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+                }
             }
         }
     }
@@ -88,17 +90,17 @@ public final class ASRAgent: ASRAgentProtocol {
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
                 currentExpectSpeech = nil
             case .cancel:
-                sendEvent(type: .stopRecognize)
+                sendEvent(asrRequest: asrRequest, type: .stopRecognize)
                 currentExpectSpeech = nil
                 asrState = .idle
             case .error(let error):
                 switch error {
                 case NetworkError.timeout:
-                    sendEvent(type: .responseTimeout)
+                    sendEvent(asrRequest: asrRequest, type: .responseTimeout)
                 case ASRError.listeningTimeout:
-                    sendEvent(type: .listenTimeout)
+                    sendEvent(asrRequest: asrRequest, type: .listenTimeout)
                 case ASRError.listenFailed:
-                    sendEvent(type: .listenFailed)
+                    sendEvent(asrRequest: asrRequest, type: .listenFailed)
                 case ASRError.recognizeFailed:
                     break
                 default:
@@ -178,7 +180,7 @@ public extension ASRAgent {
     }
     
     func startRecognition(initiator: ASRInitiator = .user) {
-        log.debug("")
+        log.debug("startRecognition, initiator: \(initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = self.audioStream.makeAudioStreamReader()
         
@@ -432,63 +434,7 @@ private extension ASRAgent {
 // MARK: - Private (Event, Attachment)
 
 private extension ASRAgent {
-    func sendRequestEvent(asrRequest: ASRRequest, completion: ((Result<Data, Error>) -> Void)? = nil) {
-        var wakeUpInfo: (data: Data, padding: Int)? {
-            guard case let .wakeUpKeyword(data, padding) = asrRequest.initiator else { return nil }
-            
-            return (data: data, padding: padding)
-        }
-        
-        var eventWakeUpInfo: ASRAgent.Event.WakeUpInfo? {
-            guard let (data, padding) = wakeUpInfo else {
-                return nil
-            }
-
-            /**
-             KeywordDetector use 16k mono (bit depth: 16).
-             so, You can calculate sample count by (dataCount / 2)
-             */
-            let totalFrameCount = data.count / 2
-            let paddingFrameCount = padding / 2
-            return Event.WakeUpInfo(start: 0, end: totalFrameCount - paddingFrameCount, detection: totalFrameCount)
-        }
-        let eventTypeInfo = Event.TypeInfo.recognize(wakeUpInfo: eventWakeUpInfo)
-        sendEvent(type: eventTypeInfo, completion: completion)
-
-        // send wake up voice data
-        if let wakeUpData = wakeUpInfo?.data {
-            if let speexData = try? SpeexEncoder(sampleRate: 16000, inputType: .linearPcm16).encode(data: wakeUpData) {
-                let attachmentHeader = UpstreamHeader(
-                    namespace: capabilityAgentProperty.name,
-                    name: "Recognize",
-                    version: capabilityAgentProperty.version,
-                    dialogRequestId: asrRequest.dialogRequestId,
-                    messageId: TimeUUID().hexString
-                )
-                
-                let attachment = UpstreamAttachment(header: attachmentHeader, content: speexData, seq: attachmentSeq, isEnd: false)
-                upstreamDataSender.send(upstreamAttachment: attachment, completion: nil, resultHandler: nil)
-                self.attachmentSeq += 1
-                
-                #if DEBUG
-                let wakeUpFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("wakeUpVoice.speex")
-                do {
-                    try speexData.write(to: wakeUpFilename)
-                    log.debug("wake up voice file: \(wakeUpFilename)")
-                } catch {
-                    log.error("file write error: \(error)")
-                }
-                #endif
-            }
-        }
-    }
-    
-    func sendEvent(type: Event.TypeInfo, completion: ((Result<Data, Error>) -> Void)? = nil) {
-        guard let asrRequest = asrRequest else {
-            log.warning("ASRRequest not exist")
-            return
-        }
-        
+    func sendEvent(asrRequest: ASRRequest, type: Event.TypeInfo, completion: ((Result<Data, Error>) -> Void)? = nil) {
         upstreamDataSender.send(
             upstreamEventMessage: Event(
                 typeInfo: type,
@@ -548,14 +494,13 @@ private extension ASRAgent {
         
         asrState = .listening
         
-        // TODO: asrRequest를 넘기는 이유가 명확하지 않으면 개선 필요
-        sendRequestEvent(asrRequest: asrRequest) { [weak self] (status) in
+        sendEvent(asrRequest: asrRequest, type: .recognize(wakeUpInfo: nil), completion: { [weak self] (status) in
             guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
             guard case .success = status else {
                 self?.asrResult = .error(ASRError.recognizeFailed)
                 return
             }
-        }
+        })
     }
     
     /// asrDispatchQueue

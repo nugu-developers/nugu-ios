@@ -56,11 +56,29 @@ public extension UpstreamDataSendable {
         send(crashReports: [crashReport])
     }
     
-    func send(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Data, Error>) -> Void)? = nil, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
-        send(upstreamEventMessage: upstreamEventMessage, completion: completion, resultHandler: resultHandler)
+    // MARK: - Default Implement for send event message
+    func send(upstreamEventMessage: UpstreamEventMessage) {
+        send(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: nil)
     }
     
-    func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)? = nil, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
-        send(upstreamAttachment: upstreamAttachment, completion: completion, resultHandler: resultHandler)
+    func send(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Data, Error>) -> Void)?) {
+        send(upstreamEventMessage: upstreamEventMessage, completion: completion, resultHandler: nil)
+    }
+    
+    func send(upstreamEventMessage: UpstreamEventMessage, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+        send(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: resultHandler)
+    }
+    
+    // MARK: - Default Implement for send attachment
+    func send(upstreamAttachment: UpstreamAttachment) {
+        send(upstreamAttachment: upstreamAttachment, completion: nil, resultHandler: nil)
+    }
+    
+    func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)?) {
+        send(upstreamAttachment: upstreamAttachment, completion: completion, resultHandler: nil)
+    }
+    
+    func send(upstreamAttachment: UpstreamAttachment, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+        send(upstreamAttachment: upstreamAttachment, completion: nil, resultHandler: resultHandler)
     }
 }

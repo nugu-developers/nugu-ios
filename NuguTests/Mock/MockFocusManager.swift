@@ -1,9 +1,9 @@
 //
-//  ASRRequest.swift
-//  NuguAgents
+//  MockFocusManager.swift
+//  NuguTests
 //
-//  Created by MinChul Lee on 13/05/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/02/18.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -22,15 +22,26 @@ import Foundation
 
 import NuguCore
 
-struct ASRRequest {
-    let contextPayload: ContextPayload
-    let reader: AudioStreamReadable
-    let dialogRequestId: String
-    let initiator: ASRInitiator
-}
-
-public enum ASRInitiator {
-    case wakeUpKeyword
-    case user
-    case scenario
+class MockFocusManager: FocusManageable {
+    var delegate: FocusDelegate?
+    
+    func add(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func remove(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func requestFocus(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func releaseFocus(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func stopForegroundActivity() {
+        //
+    }
 }
