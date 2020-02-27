@@ -103,6 +103,7 @@ public class TycheKeywordDetectorEngine: NSObject {
         }
         kwdQueue.async(execute: workItem!)
         kwdWorkItem = workItem
+        log.debug("kwd tried to start")
     }
     
     public func stop() {
