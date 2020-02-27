@@ -100,18 +100,14 @@ public class MicInputProvider: AudioProvidable {
             guard let self = self else { return }
             
             inputNode.removeTap(onBus: self.audioBus)
-            inputNode.installTap(
-                onBus: self.audioBus,
-                bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10),
-                format: inputFormat
-            ) { (buffer, _) in
+            inputNode.installTap(onBus: self.audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { (buffer, _) in
                 self.audioQueue.sync {
                     let convertedFrameCount = AVAudioFrameCount((Double(buffer.frameLength) / inputFormat.sampleRate) * recordingFormat.sampleRate)
                     guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: convertedFrameCount) else {
                         log.error("cannot make pcm buffer")
                         return
                     }
-                    
+
                     var error: NSError?
                     formatConverter.convert(to: pcmBuffer, error: &error) { _, outStatus in
                         outStatus.pointee = AVAudioConverterInputStatus.haveData
@@ -122,11 +118,11 @@ public class MicInputProvider: AudioProvidable {
                         log.error("audio convert error: \(error!)")
                         return
                     }
-                    
+
                     do {
                         try self.streamWriter?.write(pcmBuffer)
                     } catch {
-                        log.error("error: \(error)")
+                        log.error(error)
                         inputNode.removeTap(onBus: self.audioBus)
                     }
                 }

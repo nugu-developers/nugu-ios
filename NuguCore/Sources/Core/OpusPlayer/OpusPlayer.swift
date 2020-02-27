@@ -361,7 +361,7 @@ private extension OpusPlayer {
                                 log.debug("consumed data to file :\(consumedFilename)")
                             }
                         } catch {
-                            log.error("error: \(error)")
+                            log.debug(error)
                         }
                         #endif
                         

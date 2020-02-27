@@ -74,7 +74,7 @@ extension URLRequest {
 private extension URLRequest {
     func urlTaskResponseParser(data: Data?, response: URLResponse?, error: Error?) -> SingleEvent<Data> {
         guard error == nil else {
-            log.error("error: \(error)")
+            log.error(error!)
             return .error(error!)
         }
         

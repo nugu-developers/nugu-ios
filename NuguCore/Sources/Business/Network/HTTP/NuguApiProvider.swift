@@ -56,7 +56,7 @@ class NuguApiProvider: NSObject {
         ]
         
         guard let url = urlComponent?.url else {
-            log.error("invalid prameter")
+            log.error(NetworkError.invalidParameter)
             return Single.error(NetworkError.invalidParameter)
         }
         
@@ -146,7 +146,7 @@ extension NuguApiProvider: NuguApiProvidable {
                 log.debug("message was sent successfully")
                 completion?(.success(data))
             }, onError: { error in
-                log.error("error: \(error)")
+                log.error(error)
                 completion?(.failure(error))
             }).disposed(by: disposeBag)
     }

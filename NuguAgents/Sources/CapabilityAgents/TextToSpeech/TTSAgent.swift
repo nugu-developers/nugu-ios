@@ -427,7 +427,7 @@ private extension TTSAgent {
                     }
                 } catch {
                     self.upstreamDataSender.sendCrashReport(error: error)
-                    log.error("error: \(error)")
+                    log.error(error)
                 }
             }
         }
