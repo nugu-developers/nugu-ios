@@ -265,13 +265,8 @@ extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
         return renderingContext
     }
     
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
-        switch reason {
-        case .timer:
-            remove()
-        case .directive:
-            remove()
-        }
+    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) {
+        remove()
     }
 }
 

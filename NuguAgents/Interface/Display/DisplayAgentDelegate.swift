@@ -30,8 +30,7 @@ public protocol DisplayAgentDelegate: class {
     /// Tells the delegate that the specified template should be removed from the screen.
     ///
     /// - Parameter template: The template to remove from the screen.
-    /// - Parameter reason: Reason to clear the template.
-    func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason)
+    func displayAgentShouldClear(template: DisplayTemplate)
     
     /// Tells the delegate that the displayed template should move focus with given direction.
     /// Should return whether succeeded or not.

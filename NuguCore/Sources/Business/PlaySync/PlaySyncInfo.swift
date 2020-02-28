@@ -22,11 +22,13 @@ import Foundation
 
 struct PlaySyncInfo {
     let playServiceId: String
+    let dialogRequestId: String
     let playSyncState: PlaySyncState
     let duration: DispatchTimeInterval
     
-    init(playServiceId: String, playSyncState: PlaySyncState, duration: DispatchTimeInterval) {
+    init(playServiceId: String, dialogRequestId: String, playSyncState: PlaySyncState, duration: DispatchTimeInterval) {
         self.playServiceId = playServiceId
+        self.dialogRequestId = dialogRequestId
         self.playSyncState = playSyncState
         self.duration = duration
     }

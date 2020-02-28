@@ -34,7 +34,6 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
     private let playSyncManager: PlaySyncManageable
     
     private var renderingInfos = [AudioPlayerDisplayRenderingInfo]()
-    private var timerInfos = [String: Bool]()
     
     // Current display info
     private var currentItem: AudioPlayerDisplayTemplate?
@@ -76,10 +75,11 @@ extension AudioPlayerDisplayManager {
                     self.currentItem = nil
                 } else {
                     self.playSyncManager.startPlay(
-                        layerType: .info,
+                        layerType: .media,
                         contextType: .display,
                         duration: .never,
-                        playServiceId: item.playStackServiceId
+                        playServiceId: item.playStackServiceId,
+                        dialogRequestId: item.dialogRequestId
                     )
                 }
             }
@@ -99,8 +99,8 @@ extension AudioPlayerDisplayManager {
         }
     }
     
-    func stopRenderingTimer(templateId: String) {
-        timerInfos[templateId] = false
+    func notifyUserInteraction() {
+        self.playSyncManager.resetTimer(layerType: .media, contextType: .display)
     }
 }
 
@@ -111,7 +111,7 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
         log.info("\(state)")
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard state == .released, let item = self.currentItem, layerType == .media else { return }
+            guard state == .released, let item = self.currentItem, layerType == .media, contextType == .display else { return }
             
             self.currentItem = nil
             self.renderingInfos
@@ -122,7 +122,7 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
                 .compactMap { $0.delegate }
                 .forEach { delegate in
                     DispatchQueue.main.sync {
-                        delegate.audioPlayerDisplayShouldClear(template: item, reason: .directive)
+                        delegate.audioPlayerDisplayShouldClear(template: item)
                     }
             }
         }
@@ -155,7 +155,7 @@ private extension AudioPlayerDisplayManager {
                 if self.removeRenderedTemplate(delegate: delegate, template: template),
                     self.hasRenderedDisplay(template: template) == false {
                     // Release sync when removed all of template(May be closed by user).
-                    self.playSyncManager.stopPlay(layerType: .media)
+                    self.playSyncManager.stopPlay(dialogRequestId: template.dialogRequestId)
                 }
             }).disposed(by: disposeBag)
         return true
@@ -168,7 +168,6 @@ private extension AudioPlayerDisplayManager {
             ) else { return false }
         
         self.replace(delegate: delegate, template: nil)
-        self.timerInfos.removeValue(forKey: template.templateId)
         
         return true
     }

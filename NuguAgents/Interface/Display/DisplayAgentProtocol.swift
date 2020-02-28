@@ -39,8 +39,6 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
     /// - Parameter token: The unique identifier for the element.
     func elementDidSelect(templateId: String, token: String)
     
-    /// Stops the timer for deleting template by `DisplayTemplate.Duration`.
-    ///
-    /// - Parameter templateId: The unique identifier for the template.
-    func stopRenderingTimer(templateId: String)
+    /// Resets the timer for deleting template by `DisplayTemplate.Duration`.
+    func notifyUserInteraction()
 }

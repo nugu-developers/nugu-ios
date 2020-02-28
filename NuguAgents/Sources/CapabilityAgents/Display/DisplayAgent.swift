@@ -40,7 +40,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
     )
     
     private var renderingInfos = [DisplayRenderingInfo]()
-    private var timerInfos = [String: Bool]()
     
     // Current display info
     private var currentItem: DisplayTemplate?
@@ -123,8 +122,9 @@ public extension DisplayAgent {
         }
     }
     
-    func stopRenderingTimer(templateId: String) {
-        timerInfos[templateId] = false
+    func notifyUserInteraction() {
+        self.playSyncManager.resetTimer(layerType: .info, contextType: .display)
+        self.playSyncManager.resetTimer(layerType: .info, contextType: .sound)
     }
 }
 
@@ -165,7 +165,7 @@ extension DisplayAgent: PlaySyncDelegate {
         log.info("\(state)")
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard state == .released, let item = self.currentItem, layerType == .info else { return }
+            guard state == .released, let item = self.currentItem, layerType == .info, contextType == .display else { return }
             
             self.currentItem = nil
             self.renderingInfos
@@ -176,7 +176,7 @@ extension DisplayAgent: PlaySyncDelegate {
                 .compactMap { $0.delegate }
                 .forEach { delegate in
                     DispatchQueue.main.sync {
-                        delegate.displayAgentShouldClear(template: item, reason: .directive)
+                        delegate.displayAgentShouldClear(template: item)
                     }
             }
         }
@@ -205,7 +205,7 @@ private extension DisplayAgent {
                     )
                     
                     if let item = self.currentItem, item.playServiceId == payload.playServiceId {
-                        self.playSyncManager.stopPlay(layerType: .info)
+                        self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
                     }
                 }
             )
@@ -330,7 +330,8 @@ private extension DisplayAgent {
                                     layerType: .info,
                                     contextType: .display,
                                     duration: item.duration.time,
-                                    playServiceId: item.playStackServiceId
+                                    playServiceId: item.playStackServiceId,
+                                    dialogRequestId: item.dialogRequestId
                                 )
                             }
                         }
@@ -367,7 +368,7 @@ private extension DisplayAgent {
                 if self.removeRenderedTemplate(delegate: delegate, template: template),
                     self.hasRenderedDisplay(template: template) == false {
                     // Release sync when removed all of template(May be closed by user).
-                    self.playSyncManager.stopPlay(layerType: .info)
+                    self.playSyncManager.stopPlay(dialogRequestId: template.dialogRequestId)
                 }
             }).disposed(by: disposeBag)
         return true
@@ -380,7 +381,6 @@ private extension DisplayAgent {
             ) else { return false }
         
         self.replace(delegate: delegate, template: nil)
-        self.timerInfos.removeValue(forKey: template.templateId)
         
         return true
     }

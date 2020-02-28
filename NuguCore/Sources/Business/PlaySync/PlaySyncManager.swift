@@ -60,19 +60,21 @@ public extension PlaySyncManager {
         delegates.remove(delegate)
     }
     
-    func startPlay(layerType: PlaySyncLayerType, contextType: PlaySyncContextType, duration: DispatchTimeInterval, playServiceId: String?) {
+    func startPlay(layerType: PlaySyncLayerType, contextType: PlaySyncContextType, duration: DispatchTimeInterval, playServiceId: String?, dialogRequestId: String) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let playServiceId = playServiceId else { return }
             
+            log.debug("\(layerType) \(contextType)")
+            
             // Push to play stack
-            self.pushToPlayStack(layerType: layerType, contextType: contextType, duration: duration, playServiceId: playServiceId)
+            self.pushToPlayStack(layerType: layerType, contextType: contextType, duration: duration, playServiceId: playServiceId, dialogRequestId: dialogRequestId)
 
             // Cancel timers
             self.cancelTimer(layerType: layerType)
             
-            // Start display timer
-            if contextType == .display {
+            // Start display only timer
+            if contextType == .display && self.playContexts[layerType]?[.sound] == nil {
                 self.startTimer(layerType: layerType, contextType: contextType, duration: duration)
             }
         }
@@ -82,6 +84,8 @@ public extension PlaySyncManager {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let playLayer = self.playContexts[layerType] else { return }
+            
+            log.debug("\(layerType) \(contextType)")
             
             // Start timers
             if let info = playLayer[.display] {
@@ -101,34 +105,38 @@ public extension PlaySyncManager {
         }
     }
     
-    func stopPlay(layerType: PlaySyncLayerType) {
+    func stopPlay(dialogRequestId: String) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            
-            // Cancel timers
-            self.cancelTimer(layerType: layerType)
 
-            // Pop from play stack
-            self.popFromPlayStack(layerType: layerType, contextType: .display)
-            self.popFromPlayStack(layerType: layerType, contextType: .sound)
+            log.debug(dialogRequestId)
+            self.playContexts.forEach { (layerType, playLayer) in
+                playLayer.forEach { (contextType, info) in
+                    if info.dialogRequestId == dialogRequestId {
+                        // Cancel timers
+                        self.cancelTimer(layerType: layerType, contextType: contextType)
+
+                        // Pop from play stack
+                        self.popFromPlayStack(layerType: layerType, contextType: contextType)
+                    }
+                }
+            }
         }
     }
     
-    func resetTimer(layerType: PlaySyncLayerType) {
+    func resetTimer(layerType: PlaySyncLayerType, contextType: PlaySyncContextType) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let playLayer = self.playContexts[layerType] else { return }
+            guard let info = self.playContexts[layerType]?[contextType] else { return }
+            guard self.playContextTimers[layerType]?[contextType] != nil else { return }
+
+            log.debug("\(layerType) \(contextType)")
             
             // Cancel timers
-            self.cancelTimer(layerType: layerType)
-            
+            self.cancelTimer(layerType: layerType, contextType: contextType)
+
             // Start timers
-            if let info = playLayer[.display] {
-                self.startTimer(layerType: layerType, contextType: .display, duration: info.duration)
-            }
-            if let info = playLayer[.sound] {
-                self.startTimer(layerType: layerType, contextType: .sound, duration: info.duration)
-            }
+            self.startTimer(layerType: layerType, contextType: contextType, duration: info.duration)
         }
     }
 }
@@ -143,8 +151,8 @@ extension PlaySyncManager: ContextInfoDelegate {
 // MARK: - Private
 
 private extension PlaySyncManager {
-    func pushToPlayStack(layerType: PlaySyncLayerType, contextType: PlaySyncContextType, duration: DispatchTimeInterval, playServiceId: String) {
-        let info = PlaySyncInfo(playServiceId: playServiceId, playSyncState: .synced, duration: duration)
+    func pushToPlayStack(layerType: PlaySyncLayerType, contextType: PlaySyncContextType, duration: DispatchTimeInterval, playServiceId: String, dialogRequestId: String) {
+        let info = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, playSyncState: .synced, duration: duration)
         
         var playLayer = playContexts[layerType] ?? [:]
         playLayer[contextType] = info
@@ -181,12 +189,12 @@ private extension PlaySyncManager {
     }
     
     func startTimer(layerType: PlaySyncLayerType, contextType: PlaySyncContextType, duration: DispatchTimeInterval) {
-        log.debug("Start layerType \(layerType) contextType \(contextType) duration \(duration)")
+        log.debug("Start \(layerType) \(contextType) duration \(duration)")
         let disposeBag = DisposeBag()
         Completable.create { [weak self] (event) -> Disposable in
             guard let self = self else { return Disposables.create() }
 
-            log.debug("End layerType \(layerType) contextType \(contextType) duration \(duration)")
+            log.debug("End \(layerType) \(contextType) duration \(duration)")
             self.popFromPlayStack(layerType: layerType, contextType: contextType)
             
             event(.completed)
@@ -203,12 +211,12 @@ private extension PlaySyncManager {
     }
 
     func cancelTimer(layerType: PlaySyncLayerType) {
-        log.debug("layerType \(layerType)")
+        log.debug(layerType)
         playContextTimers[layerType] = nil
     }
     
     func cancelTimer(layerType: PlaySyncLayerType, contextType: PlaySyncContextType) {
-        log.debug("layerType \(layerType) contextType \(contextType)")
+        log.debug("\(layerType) \(contextType)")
         playContextTimers[layerType]?[contextType] = nil
         
         if playContextTimers[layerType]?.isEmpty == true {

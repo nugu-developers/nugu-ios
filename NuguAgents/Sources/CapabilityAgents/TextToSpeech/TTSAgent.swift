@@ -52,11 +52,12 @@ public final class TTSAgent: TTSAgentProtocol {
                     layerType: .info,
                     contextType: .sound,
                     duration: .seconds(7),
-                    playServiceId: media.payload.playStackControl?.playServiceId
+                    playServiceId: media.payload.playStackControl?.playServiceId,
+                    dialogRequestId: media.dialogRequestId
                 )
             case .finished, .stopped:
                 if media.cancelAssociation {
-                    playSyncManager.stopPlay(layerType: .info)
+                    playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 } else {
                     playSyncManager.endPlay(layerType: .info, contextType: .sound)
                 }
@@ -266,7 +267,7 @@ extension TTSAgent: PlaySyncDelegate {
         log.info("\(state)")
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard state == .released, self.currentMedia != nil, layerType == .info else { return }
+            guard state == .released, self.currentMedia != nil, layerType == .info, contextType == .sound else { return }
             
             self.stop(cancelAssociation: false)
         }

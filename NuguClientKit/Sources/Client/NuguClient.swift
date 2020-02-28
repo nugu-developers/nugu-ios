@@ -135,6 +135,7 @@ public class NuguClient {
         setupAuthorizationStore()
         setupAudioSessionRequester()
         setupNetworkInfoFoward()
+        setupDialogStateAggregator()
     }
 }
     
@@ -257,5 +258,17 @@ extension NuguClient: NetworkStatusDelegate, ReceiveMessageDelegate {
     
     public func receiveMessageDidReceive(header: [String: String], body: Data) {
         delegate?.nuguClientDidReceiveMessage(header: header, body: body)
+    }
+}
+
+// MARK: - DialogStateDelegate
+
+extension NuguClient: DialogStateDelegate {
+    private func setupDialogStateAggregator() {
+        dialogStateAggregator.add(delegate: self)
+    }
+    
+    public func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
+        displayAgent.notifyUserInteraction()
     }
 }

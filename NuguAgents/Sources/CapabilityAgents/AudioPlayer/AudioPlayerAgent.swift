@@ -66,17 +66,11 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             case .playing:
                 startProgressReport()
                 stopPauseTimeout()
-                playSyncManager.startPlay(
-                    layerType: .media,
-                    contextType: .sound,
-                    duration: .never,
-                    playServiceId: media.payload.playStackControl?.playServiceId
-                )
             case .stopped, .finished:
                 stopProgressReport()
                 stopPauseTimeout()
                 if media.cancelAssociation {
-                    playSyncManager.stopPlay(layerType: .media)
+                    playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 } else {
                     playSyncManager.endPlay(layerType: .media, contextType: .sound)
                 }
@@ -219,8 +213,8 @@ public extension AudioPlayerAgent {
         audioPlayerDisplayManager.remove(delegate: displayDelegate)
     }
     
-    func stopRenderingTimer(templateId: String) {
-        audioPlayerDisplayManager.stopRenderingTimer(templateId: templateId)
+    func notifyUserInteraction() {
+        audioPlayerDisplayManager.notifyUserInteraction()
     }
 }
 
@@ -337,7 +331,7 @@ extension AudioPlayerAgent: PlaySyncDelegate {
         log.info("\(state)")
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard state == .released, self.currentMedia != nil, layerType == .media else { return }
+            guard state == .released, self.currentMedia != nil, layerType == .media, contextType == .sound else { return }
             
             self.stop(cancelAssociation: false)
         }
@@ -403,6 +397,16 @@ private extension AudioPlayerAgent {
                                 messageId: directive.header.messageId,
                                 dialogRequestId: directive.header.dialogRequestId,
                                 playStackServiceId: payload.playStackControl?.playServiceId
+                            )
+                        }
+                        
+                        if let media = self.currentMedia {
+                            self.playSyncManager.startPlay(
+                                layerType: .media,
+                                contextType: .sound,
+                                duration: .never,
+                                playServiceId: media.payload.playStackControl?.playServiceId,
+                                dialogRequestId: media.dialogRequestId
                             )
                         }
                     }).flatMapError({ (error) -> Result<Void, Error> in
