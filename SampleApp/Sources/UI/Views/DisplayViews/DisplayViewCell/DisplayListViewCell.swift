@@ -37,8 +37,8 @@ final class DisplayListViewCell: UITableViewCell {
             displayImageView.isHidden = true
         }
         
-        titleLabel.text = item?.header.text
-        titleLabel.textColor = UIColor.textColor(rgbHexString: item?.header.color)
+        titleLabel.text = item?.header?.text
+        titleLabel.textColor = UIColor.textColor(rgbHexString: item?.header?.color)
         subTitleLabel.text = item?.footer?.text
         subTitleLabel.textColor = UIColor.textColor(rgbHexString: item?.footer?.color)
     }
