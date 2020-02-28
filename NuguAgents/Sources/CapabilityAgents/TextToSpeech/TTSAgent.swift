@@ -149,7 +149,7 @@ public extension TTSAgent {
             guard let self = self else { return }
             
             let dialogRequestId = TimeUUID().hexString
-            self.upstreamDataSender.send(
+            self.upstreamDataSender.sendEvent(
                 upstreamEventMessage: Event(
                     token: nil,
                     playServiceId: playServiceId,
@@ -239,9 +239,9 @@ extension TTSAgent: MediaPlayerDelegate {
                 self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                 self.ttsState = .finished
                 // Release focus after receiving directive
-                self.sendEvent(media: media, info: .speechFinished) { [weak self] _ in
+                self.sendEvent(media: media, info: .speechFinished, resultHandler: { [weak self] _ in
                     self?.releaseFocusIfNeeded()
-                }
+                })
             case .pause:
                 self.stop(cancelAssociation: false)
             case .stop:
@@ -445,7 +445,7 @@ private extension TTSAgent {
             return
         }
         
-        self.upstreamDataSender.send(
+        self.upstreamDataSender.sendEvent(
             upstreamEventMessage: Event(
                 token: media.payload.token,
                 playServiceId: playServiceId,

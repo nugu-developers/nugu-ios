@@ -28,8 +28,7 @@ public final class SystemAgent: SystemAgentProtocol {
     
     // Private
     private let contextManager: ContextManageable
-    private let networkManager: NetworkManageable
-    private let upstreamDataSender: UpstreamDataSendable
+    private let streamDataRouter: StreamDataRoutable
     private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
@@ -45,19 +44,16 @@ public final class SystemAgent: SystemAgentProtocol {
     
     public init(
         contextManager: ContextManageable,
-        networkManager: NetworkManageable,
-        upstreamDataSender: UpstreamDataSendable,
+        streamDataRouter: StreamDataRoutable,
         directiveSequencer: DirectiveSequenceable
     ) {
         log.info("initiated")
         
         self.contextManager = contextManager
-        self.networkManager = networkManager
-        self.upstreamDataSender = upstreamDataSender
+        self.streamDataRouter = streamDataRouter
         self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
-        networkManager.add(statusDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
@@ -93,6 +89,7 @@ extension SystemAgent: ContextInfoDelegate {
 // MARK: - NetworkStatusDelegate
 
 extension SystemAgent: NetworkStatusDelegate {
+    // TODO: StreamDataRouter로 변경할 것.
     public func networkStatusDidChange(_ status: NetworkStatus) {
         switch status {
         case .connected:
@@ -118,7 +115,7 @@ private extension SystemAgent {
                     self?.systemDispatchQueue.async { [weak self] in
                         // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
                         log.info("try to handoff policy: \(serverPolicy)")
-                        self?.networkManager.connect()
+                        self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
                     }
                 }
             )
@@ -166,7 +163,7 @@ private extension SystemAgent {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
-            self.upstreamDataSender.send(
+            self.streamDataRouter.sendEvent(
                 upstreamEventMessage: Event(
                     typeInfo: .synchronizeState
                 ).makeEventMessage(

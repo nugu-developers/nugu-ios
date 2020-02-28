@@ -23,15 +23,15 @@ import Foundation
 /// <#Description#>
 public enum NetworkError: Error {
     /// <#Description#>
+    case noSuitableResourceServer
+    /// <#Description#>
     case invalidParameter
     /// <#Description#>
     case badRequest
-    
     /// <#Description#>
     case authError
     /// <#Description#>
     case streamInitializeFailed
-    
     /// <#Description#>
     case nilResponse
     /// <#Description#>
@@ -71,6 +71,8 @@ extension NetworkError: LocalizedError {
             return "server error"
         case .unknown:
             return "Unknown error occur"
+        case .noSuitableResourceServer:
+            return "No suitable resource server"
         }
     }
 }

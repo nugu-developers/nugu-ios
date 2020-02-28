@@ -26,9 +26,15 @@ public protocol UpstreamDataSendable {
     /// - Parameters:
     ///   - upstreamEventMessage: <#upstreamEventMessage description#>
     ///   - completion: <#completion description#>
-    func send(
+    func sendEvent(
         upstreamEventMessage: UpstreamEventMessage,
-        completion: ((Result<Data, Error>) -> Void)?,
+        completion: ((Result<Void, Error>) -> Void)?,
+        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
+    )
+    
+    func sendStream(
+        upstreamEventMessage: UpstreamEventMessage,
+        completion: ((Result<Void, Error>) -> Void)?,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
     )
     
@@ -36,10 +42,9 @@ public protocol UpstreamDataSendable {
     /// - Parameters:
     ///   - upstreamAttachment: <#upstreamAttachment description#>
     ///   - completion: <#completion description#>
-    func send(
+    func sendStream(
         upstreamAttachment: UpstreamAttachment,
-        completion: ((Result<Data, Error>) -> Void)?,
-        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
+        completion: ((Result<Void, Error>) -> Void)?
     )
     
     /// <#Description#>
@@ -57,28 +62,20 @@ public extension UpstreamDataSendable {
     }
     
     // MARK: - Default Implement for send event message
-    func send(upstreamEventMessage: UpstreamEventMessage) {
-        send(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: nil)
+    func sendEvent(upstreamEventMessage: UpstreamEventMessage) {
+        sendEvent(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: nil)
     }
     
-    func send(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Data, Error>) -> Void)?) {
-        send(upstreamEventMessage: upstreamEventMessage, completion: completion, resultHandler: nil)
+    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Void, Error>) -> Void)?) {
+        sendEvent(upstreamEventMessage: upstreamEventMessage, completion: completion, resultHandler: nil)
     }
     
-    func send(upstreamEventMessage: UpstreamEventMessage, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
-        send(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: resultHandler)
+    func sendEvent(upstreamEventMessage: UpstreamEventMessage, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+        sendEvent(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: resultHandler)
     }
     
     // MARK: - Default Implement for send attachment
-    func send(upstreamAttachment: UpstreamAttachment) {
-        send(upstreamAttachment: upstreamAttachment, completion: nil, resultHandler: nil)
-    }
-    
-    func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)?) {
-        send(upstreamAttachment: upstreamAttachment, completion: completion, resultHandler: nil)
-    }
-    
-    func send(upstreamAttachment: UpstreamAttachment, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
-        send(upstreamAttachment: upstreamAttachment, completion: nil, resultHandler: resultHandler)
+    func sendStream(upstreamAttachment: UpstreamAttachment) {
+        sendStream(upstreamAttachment: upstreamAttachment, completion: nil)
     }
 }

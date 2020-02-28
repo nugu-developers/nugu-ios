@@ -23,7 +23,7 @@ import Foundation
 /// HTTP method definitions.
 ///
 /// See https://tools.ietf.org/html/rfc7231#section-4.3
-public enum HTTPMethod: String {
+enum HTTPMethod: String {
     case options = "OPTIONS"
     case get     = "GET"
     case head    = "HEAD"
@@ -35,7 +35,7 @@ public enum HTTPMethod: String {
     case connect = "CONNECT"
 }
 
-public enum HTTPStatusCode: Int {
+enum HTTPStatusCode: Int {
     case ok = 200
     case badRequest = 400
     case unauthorized = 401
@@ -44,9 +44,10 @@ public enum HTTPStatusCode: Int {
     case serverError = 500
 }
 
-public enum HTTPConst {
-    public static let boundary = "this-is-a-boundary"
-    public static let carriageReturn = "\r".data(using: .utf8)![0]
-    public static let LineFeed = "\n".data(using: .utf8)![0]
-    public static let colon = ":".data(using: .utf8)![0]
+enum HTTPConst {
+    static let boundary = "this-is-a-boundary"
+    static let carriageReturn = "\r".data(using: .utf8)![0]
+    static let lineFeed = "\n".data(using: .utf8)![0]
+    static let crlf = "\r\n"
+    static let colon = ":".data(using: .utf8)![0]
 }

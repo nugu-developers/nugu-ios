@@ -1,9 +1,9 @@
 //
-//  NuguApiRequest.swift
+//  EventResponseProcessor.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 2019/12/10.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2020/03/05.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,16 +20,15 @@
 
 import Foundation
 
-public struct NuguApiRequest {
-    public let path: String
-    public let method: String
-    public let header: [String: String]
-    public let queryItems: [String: String?]
+import RxSwift
+
+class EventResponseProcessor: MultiPartProcessable {
+    let inputStream: InputStream
+    var parser: MultiPartParser?
+    var data = Data()
+    let subject = PublishSubject<Data>()
     
-    public init(path: String, method: String, header: [String: String], bodyData: Data, queryItems: [String: String?]) {
-        self.path = path
-        self.method = method
-        self.header = header
-        self.queryItems = queryItems
+    init(inputStream: InputStream) {
+        self.inputStream = inputStream
     }
 }

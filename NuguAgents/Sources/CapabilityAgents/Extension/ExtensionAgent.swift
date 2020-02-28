@@ -62,15 +62,12 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 
 public extension ExtensionAgent {
     func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?) {
-        upstreamDataSender.send(
+        upstreamDataSender.sendEvent(
             upstreamEventMessage: Event(
                 playServiceId: playServiceId,
                 typeInfo: .commandIssued(data: data)
             ).makeEventMessage(agent: self),
-            resultHandler: { result in
-                let result = result.map { _ in () }
-                completion?(result)
-            }
+            completion: completion
         )
     }
 }
@@ -114,7 +111,7 @@ private extension ExtensionAgent {
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    self.upstreamDataSender.send(
+                    self.upstreamDataSender.sendEvent(
                         upstreamEventMessage: Event(
                             playServiceId: item.playServiceId,
                             typeInfo: isSuccess ? .actionSucceeded : .actionFailed

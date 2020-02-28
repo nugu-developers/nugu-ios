@@ -175,7 +175,7 @@ private extension TextAgent {
         
         textAgentState = .busy
         
-        self.upstreamDataSender.send(
+        self.upstreamDataSender.sendEvent(
             upstreamEventMessage: Event(
                 typeInfo: .textInput(
                     text: textRequest.text,
@@ -183,6 +183,7 @@ private extension TextAgent {
                 )
             ).makeEventMessage(agent: self),
             resultHandler: { [weak self] result in
+                // TODO: 사용하고 있는 곳이 없다면 completion으로 바꾸고 state만 idle로 바꾸는 것을 고려.
                 guard let self = self else { return }
                 guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
                 

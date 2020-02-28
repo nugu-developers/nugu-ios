@@ -20,29 +20,31 @@
 
 import Foundation
 
+import RxSwift
+
 /// <#Description#>
 public protocol NetworkManageable: class {
-    var apiProvider: NuguApiProvidable? { get }
-    /// <#Description#>
-    var connected: Bool { get }
-    /// <#Description#>
-    /// - Parameter completion: <#completion description#>
+    /**
+     Connection state of stream receive server-initiated directive
+     */
+    var isConnected: Bool { get }
+
+    /**
+     Connect stream receive server-initiated directive
+     */
     func connect(completion: ((Result<Void, Error>) -> Void)?)
-    /// <#Description#>
+    
+    /**
+     Disconnect stream receive server-initiated directive
+     */
     func disconnect()
-    /// <#Description#>
-    /// - Parameter statusDelegate: <#statusDelegate description#>
+    
+    func sendMessage(inputStream: InputStream) -> Observable<MultiPartParser.Part>
+
     func add(statusDelegate: NetworkStatusDelegate)
-    /// <#Description#>
-    /// - Parameter statusDelegate: <#statusDelegate description#>
     func remove(statusDelegate: NetworkStatusDelegate)
-    
-    /// <#Description#>
-    /// - Parameter receiveMessageDelegate: <#receiveMessageDelegate description#>
+
     func add(receiveMessageDelegate: ReceiveMessageDelegate)
-    
-    /// <#Description#>
-    /// - Parameter receiveMessageDelegate: <#receiveMessageDelegate description#>
     func remove(receiveMessageDelegate: ReceiveMessageDelegate)
 }
 

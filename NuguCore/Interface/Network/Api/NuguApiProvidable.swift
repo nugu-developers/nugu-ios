@@ -20,6 +20,13 @@
 
 import Foundation
 
+struct NuguApiProviderOptions: OptionSet {
+    let rawValue: Int
+
+    static let chargingFree = NuguApiProviderOptions(rawValue: 1 << 0)
+    static let receiveServerSideEvent = NuguApiProviderOptions(rawValue: 1 << 1)
+}
+
 /// <#Description#>
 public protocol NuguApiProvidable {
     /// <#Description#>

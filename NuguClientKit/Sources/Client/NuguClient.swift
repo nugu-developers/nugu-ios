@@ -29,7 +29,6 @@ public class NuguClient {
     // core
     public let contextManager: ContextManageable
     public let focusManager: FocusManageable
-    public let networkManager: NetworkManageable
     public let streamDataRouter: StreamDataRoutable
     public let directiveSequencer: DirectiveSequenceable
     public let playSyncManager: PlaySyncManageable
@@ -90,13 +89,11 @@ public class NuguClient {
         // core
         contextManager = ContextManager()
         focusManager = FocusManager()
-        networkManager = NetworkManager()
-        streamDataRouter = StreamDataRouter(networkManager: networkManager)
+        streamDataRouter = StreamDataRouter()
         directiveSequencer = DirectiveSequencer(streamDataRouter: streamDataRouter)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
         systemAgent = SystemAgent(contextManager: contextManager,
-                                  networkManager: networkManager,
-                                  upstreamDataSender: streamDataRouter,
+                                  streamDataRouter: streamDataRouter,
                                   directiveSequencer: directiveSequencer)
         
         // dialog
@@ -142,11 +139,9 @@ public class NuguClient {
 
 public extension NuguClient {
     func connect() {
-        networkManager.connect()
     }
     
     func disconnect() {
-        networkManager.disconnect()
     }
     
     func enable() {
@@ -247,8 +242,8 @@ extension NuguClient: FocusDelegate {
 
 extension NuguClient: NetworkStatusDelegate, ReceiveMessageDelegate {
     private func setupNetworkInfoFoward() {
-        networkManager.add(receiveMessageDelegate: self)
-        networkManager.add(statusDelegate: self)
+//        networkManager.add(receiveMessageDelegate: self)
+//        networkManager.add(statusDelegate: self)
     }
     
     public func networkStatusDidChange(_ status: NetworkStatus) {
