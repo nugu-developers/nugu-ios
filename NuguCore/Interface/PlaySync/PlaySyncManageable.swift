@@ -21,11 +21,21 @@
 import Foundation
 
 public protocol PlaySyncManageable: ContextInfoDelegate {
-    var playServiceIds: [String] { get }
+    /// Register `PlaySyncDelegate` to `PlaySyncManageable`.
+    /// - Parameter delegate: The object to register.
+    func add(delegate: PlaySyncDelegate)
     
-    func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?)
+    /// Unregister `PlaySyncDelegate` from `PlaySyncManageable`.
+    /// - Parameter delegate: The object to unregister.
+    func remove(delegate: PlaySyncDelegate)
+    
+    func startPlay(
+        layerType: PlaySyncLayerType,
+        contextType: PlaySyncContextType,
+        duration: DispatchTimeInterval,
+        playServiceId: String?
+    )
+    func endPlay(layerType: PlaySyncLayerType, contextType: PlaySyncContextType)
+    func stopPlay(layerType: PlaySyncLayerType)
+    func resetTimer(layerType: PlaySyncLayerType)
 }

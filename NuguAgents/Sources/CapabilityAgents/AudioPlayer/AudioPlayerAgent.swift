@@ -44,7 +44,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private let focusManager: FocusManageable
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
-    private let audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager()
+    private let audioPlayerDisplayManager: AudioPlayerDisplayManageable
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
@@ -66,25 +66,19 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             case .playing:
                 startProgressReport()
                 stopPauseTimeout()
-                playSyncManager.startSync(
-                    delegate: self,
-                    dialogRequestId: media.dialogRequestId,
+                playSyncManager.startPlay(
+                    layerType: .media,
+                    contextType: .sound,
+                    duration: .never,
                     playServiceId: media.payload.playStackControl?.playServiceId
                 )
             case .stopped, .finished:
                 stopProgressReport()
                 stopPauseTimeout()
                 if media.cancelAssociation {
-                    playSyncManager.releaseSyncImmediately(
-                        dialogRequestId: media.dialogRequestId,
-                        playServiceId: media.payload.playStackControl?.playServiceId
-                    )
+                    playSyncManager.stopPlay(layerType: .media)
                 } else {
-                    playSyncManager.releaseSync(
-                        delegate: self,
-                        dialogRequestId: media.dialogRequestId,
-                        playServiceId: media.payload.playStackControl?.playServiceId
-                    )
+                    playSyncManager.endPlay(layerType: .media, contextType: .sound)
                 }
                 currentMedia = nil
             case .paused:
@@ -142,12 +136,12 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         self.playSyncManager = playSyncManager
         self.directiveSequencer = directiveSequencer
         self.audioPlayerPauseTimeout = audioPlayerPauseTimeout
+        self.audioPlayerDisplayManager = AudioPlayerDisplayManager(playSyncManager: playSyncManager)
         
+        playSyncManager.add(delegate: self)
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        
-        audioPlayerDisplayManager.playSyncManager = playSyncManager
     }
 
     deinit {
@@ -339,23 +333,13 @@ extension AudioPlayerAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerAgent: PlaySyncDelegate {
-    public func playSyncContextType() -> PlaySyncContextType {
-        return .sound
-    }
-    
-    public func playSyncDuration() -> PlaySyncDuration {
-        return .short
-    }
-    
-    public func playSyncDidChange(state: PlaySyncState, dialogRequestId: String) {
+    public func playSyncDidChange(state: PlaySyncState, layerType: PlaySyncLayerType, contextType: PlaySyncContextType, playServiceId: String) {
         log.info("\(state)")
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let media = self.currentMedia, media.dialogRequestId == dialogRequestId else { return }
+            guard state == .released, self.currentMedia != nil, layerType == .media else { return }
             
-            if [.releasing, .released].contains(state) {
-                self.stop(cancelAssociation: false)
-            }
+            self.stop(cancelAssociation: false)
         }
     }
 }
@@ -411,11 +395,6 @@ private extension AudioPlayerAgent {
                             // Set mediaplayer
                             try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
                         }
-                        self.playSyncManager.prepareSync(
-                            delegate: self,
-                            dialogRequestId: directive.header.dialogRequestId,
-                            playServiceId: payload.playStackControl?.playServiceId
-                        )
                         
                         if let metaData = payload.audioItem.metadata,
                             ((metaData["disableTemplate"] as? Bool) ?? false) == false {

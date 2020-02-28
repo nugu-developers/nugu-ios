@@ -48,23 +48,17 @@ public final class TTSAgent: TTSAgentProtocol {
             // `PlaySyncState` -> `TTSMedia` -> `TTSAgentDelegate`
             switch ttsState {
             case .playing:
-                playSyncManager.startSync(
-                    delegate: self,
-                    dialogRequestId: media.dialogRequestId,
+                playSyncManager.startPlay(
+                    layerType: .info,
+                    contextType: .sound,
+                    duration: .seconds(7),
                     playServiceId: media.payload.playStackControl?.playServiceId
                 )
             case .finished, .stopped:
                 if media.cancelAssociation {
-                    playSyncManager.releaseSyncImmediately(
-                        dialogRequestId: media.dialogRequestId,
-                        playServiceId: media.payload.playStackControl?.playServiceId
-                    )
+                    playSyncManager.stopPlay(layerType: .info)
                 } else {
-                    playSyncManager.releaseSync(
-                        delegate: self,
-                        dialogRequestId: media.dialogRequestId,
-                        playServiceId: media.payload.playStackControl?.playServiceId
-                    )
+                    playSyncManager.endPlay(layerType: .info, contextType: .sound)
                 }
                 currentMedia = nil
             default:
@@ -113,6 +107,7 @@ public final class TTSAgent: TTSAgentProtocol {
         self.playSyncManager = playSyncManager
         self.directiveSequencer = directiveSequencer
         
+        playSyncManager.add(delegate: self)
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
@@ -267,23 +262,13 @@ extension TTSAgent: MediaPlayerDelegate {
 // MARK: - PlaySyncDelegate
 
 extension TTSAgent: PlaySyncDelegate {
-    public func playSyncContextType() -> PlaySyncContextType {
-        return .sound
-    }
-    
-    public func playSyncDuration() -> PlaySyncDuration {
-        return .short
-    }
-    
-    public func playSyncDidChange(state: PlaySyncState, dialogRequestId: String) {
+    public func playSyncDidChange(state: PlaySyncState, layerType: PlaySyncLayerType, contextType: PlaySyncContextType, playServiceId: String) {
         log.info("\(state)")
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let media = self.currentMedia, media.dialogRequestId == dialogRequestId else { return }
+            guard state == .released, self.currentMedia != nil, layerType == .info else { return }
             
-            if [.releasing, .released].contains(state) {
-                self.stop(cancelAssociation: false)
-            }
+            self.stop(cancelAssociation: false)
         }
     }
 }
@@ -334,12 +319,6 @@ private extension TTSAgent {
                             player: mediaPlayer,
                             payload: payload,
                             dialogRequestId: directive.header.dialogRequestId
-                        )
-                        
-                        self.playSyncManager.prepareSync(
-                            delegate: self,
-                            dialogRequestId: directive.header.dialogRequestId,
-                            playServiceId: payload.playStackControl?.playServiceId
                         )
                     })
                 )

@@ -44,9 +44,9 @@
 		1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */; };
 		1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */; };
 		1F9C5B8223F664340086CC04 /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
+		1F9C5B8823FA82D90086CC04 /* ExtensionAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */; };
 		1F9C5B8A23FBA3A20086CC04 /* TextAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8923FBA3A20086CC04 /* TextAgentTests.swift */; };
 		1F9C5B8C23FBA7400086CC04 /* MockFocusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */; };
-		1F9C5B8823FA82D90086CC04 /* ExtensionAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -270,7 +270,6 @@
 		7315304223E11EDF00F843C3 /* AuthorizationStoreDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */; };
 		7315304323E11EDF00F843C3 /* AuthorizationStoreable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */; };
 		7315304423E11EDF00F843C3 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* Eventable.swift */; };
-		7315304623E1221100F843C3 /* PlaySyncDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7315304523E1221100F843C3 /* PlaySyncDuration.swift */; };
 		7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2642375703000C9A177 /* DisplayAgentProtocol.swift */; };
 		7315305123E1246F00F843C3 /* DisplayAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2652375703000C9A177 /* DisplayAgentDelegate.swift */; };
 		7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2662375703000C9A177 /* DisplayTemplate.swift */; };
@@ -325,6 +324,7 @@
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
 		7E26C57F239FC2E300716E44 /* NuguApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3642375707000C9A177 /* NuguApi.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
+		7E2D81832407974600ED5119 /* PlaySyncLayerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2D81822407974600ED5119 /* PlaySyncLayerType.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EB6D0DF238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB6D0DE238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
@@ -537,9 +537,9 @@
 		1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockContextManager.swift; sourceTree = "<group>"; };
 		1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
 		1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentTests.swift; sourceTree = "<group>"; };
+		1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionAgentTests.swift; sourceTree = "<group>"; };
 		1F9C5B8923FBA3A20086CC04 /* TextAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentTests.swift; sourceTree = "<group>"; };
 		1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFocusManager.swift; sourceTree = "<group>"; };
-		1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionAgentTests.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -812,7 +812,6 @@
 		73152F9D23E0405900F843C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73152FD923E0443500F843C3 /* ASREncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASREncoding.swift; sourceTree = "<group>"; };
 		73152FDB23E0451900F843C3 /* NuguAgents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAgents.swift; sourceTree = "<group>"; };
-		7315304523E1221100F843C3 /* PlaySyncDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncDuration.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
 		7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngineDelegate.swift; sourceTree = "<group>"; };
 		7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TycheEndpointDetectorEngine+State.swift"; sourceTree = "<group>"; };
@@ -829,6 +828,7 @@
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
 		7E26C57D239FBF1300716E44 /* NuguApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguApiRequest.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
+		7E2D81822407974600ED5119 /* PlaySyncLayerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncLayerType.swift; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
 		7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreable.swift; sourceTree = "<group>"; };
@@ -1422,11 +1422,11 @@
 		1FFFF2822375703000C9A177 /* PlaySync */ = {
 			isa = PBXGroup;
 			children = (
-				7315304523E1221100F843C3 /* PlaySyncDuration.swift */,
 				1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */,
 				1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */,
 				1FFFF2842375703000C9A177 /* PlaySyncState.swift */,
 				7EF56DD6240763B800C5A103 /* PlaySyncContextType.swift */,
+				7E2D81822407974600ED5119 /* PlaySyncLayerType.swift */,
 			);
 			path = PlaySync;
 			sourceTree = "<group>";
@@ -2882,6 +2882,7 @@
 				1FFFF3822375707000C9A177 /* OpusPlayerError.swift in Sources */,
 				7315302423E11EDF00F843C3 /* NuguApiRequest.swift in Sources */,
 				1FFFF3BD2375707100C9A177 /* MultiPartParserError.swift in Sources */,
+				7E2D81832407974600ED5119 /* PlaySyncLayerType.swift in Sources */,
 				1FFFF3842375707000C9A177 /* OpusDecoder.swift in Sources */,
 				7334F47723FD172700EA5E58 /* DirectiveHandleInfo.swift in Sources */,
 				7315302A23E11EDF00F843C3 /* PlaySyncManageable.swift in Sources */,
@@ -2914,7 +2915,6 @@
 				1FFFF3CB2375707100C9A177 /* DirectiveSequencer.swift in Sources */,
 				1FFFF3892375707000C9A177 /* SharedBufferError.swift in Sources */,
 				7315304223E11EDF00F843C3 /* AuthorizationStoreDelegate.swift in Sources */,
-				7315304623E1221100F843C3 /* PlaySyncDuration.swift in Sources */,
 				7315302F23E11EDF00F843C3 /* FocusChannelDelegate.swift in Sources */,
 				7315303223E11EDF00F843C3 /* StreamDataRoutable.swift in Sources */,
 				1FFFF3882375707000C9A177 /* SharedBufferIndex.swift in Sources */,

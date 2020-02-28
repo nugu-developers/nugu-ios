@@ -1,8 +1,8 @@
 //
-//  PlaySyncState.swift
+//  PlaySyncLayerType.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 2019/07/16.
+//  Created by MinChul Lee on 2020/02/27.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@
 
 import Foundation
 
-public enum PlaySyncState {
-    case synced
-    case released
+public enum PlaySyncLayerType {
+    case info
+    case media
 }

@@ -24,8 +24,6 @@ import NuguCore
 
 /// The `AudioPlayerAgent` handles directives for controlling player template display.
 protocol AudioPlayerDisplayManageable: PlaySyncDelegate {
-    var playSyncManager: PlaySyncManageable! { get set }
-    
     func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playStackServiceId: String?)
     
     /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.

@@ -21,22 +21,14 @@
 import Foundation
 
 struct PlaySyncInfo {
-    // TODO: delegate 를 struct 에서 가지고 있지 않도록 구조 수정.
-    weak var delegate: PlaySyncDelegate?
-    
-    let dialogRequestId: String
-    let playServiceId: String?
+    let playServiceId: String
     let playSyncState: PlaySyncState
-    let contextType: PlaySyncContextType
-    let duration: PlaySyncDuration
+    let duration: DispatchTimeInterval
     
-    init(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
-        self.delegate = delegate
-        self.dialogRequestId = dialogRequestId
+    init(playServiceId: String, playSyncState: PlaySyncState, duration: DispatchTimeInterval) {
         self.playServiceId = playServiceId
         self.playSyncState = playSyncState
-        self.contextType = delegate.playSyncContextType()
-        self.duration = delegate.playSyncDuration()
+        self.duration = duration
     }
 }
 
@@ -44,48 +36,6 @@ struct PlaySyncInfo {
 
 extension PlaySyncInfo: CustomStringConvertible {
     var description: String {
-        if let delegate = delegate {
-            return "\nPlaySyncInfo: \(delegate), \(playServiceId ?? ""), \(playSyncState), \(dialogRequestId)"
-        } else {
-            return ""
-        }
-    }
-}
-
-// MARK: - Equatable
-
-extension PlaySyncInfo: Equatable {
-    static func == (lhs: PlaySyncInfo, rhs: PlaySyncInfo) -> Bool {
-        lhs.delegate === rhs.delegate && lhs.dialogRequestId == rhs.dialogRequestId
-    }
-}
-
-// MARK: - Array + PlaySyncInfo
-
-extension Array where Element == PlaySyncInfo {
-    /// Replaces and returns the original element
-    mutating func replace(info: PlaySyncInfo) -> PlaySyncInfo? {
-        removeAll { $0.delegate == nil }
-        if let index = firstIndex(of: info) {
-            let originalInfo = remove(at: index)
-            insert(info, at: 0)
-            return originalInfo
-        }
-        return nil
-    }
-    
-    /// Removes and returns the original element
-    @discardableResult mutating func remove(delegate: PlaySyncDelegate, dialogRequestId: String) -> PlaySyncInfo? {
-        removeAll { $0.delegate == nil }
-        if let info = object(forDelegate: delegate, dialogRequestId: dialogRequestId),
-            let index = firstIndex(of: info) {
-            return remove(at: index)
-        }
-        return nil
-    }
-    
-    /// Returns the element for delegate
-    func object(forDelegate delegate: PlaySyncDelegate, dialogRequestId: String) -> PlaySyncInfo? {
-        first { $0.delegate === delegate && $0.dialogRequestId == dialogRequestId}
+        return "\nPlaySyncInfo: \(playServiceId), \(playSyncState), \(duration)"
     }
 }

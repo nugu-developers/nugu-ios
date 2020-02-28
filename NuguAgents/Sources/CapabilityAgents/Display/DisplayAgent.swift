@@ -84,6 +84,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
         self.playSyncManager = playSyncManager
         self.directiveSequencer = directiveSequencer
         
+        playSyncManager.add(delegate: self)
         contextManager.add(provideContextDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
@@ -141,73 +142,23 @@ extension DisplayAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension DisplayAgent: PlaySyncDelegate {
-    public func playSyncContextType() -> PlaySyncContextType {
-        return .display
-    }
-    
-    public func playSyncDuration() -> PlaySyncDuration {
-        var playSyncDuration: PlaySyncDuration {
-            switch currentItem?.duration {
-            case .short:
-                return .short
-            case .mid:
-                return .mid
-            case .long:
-                return .long
-            case .longest:
-                return .longest
-            default:
-                return .short
-            }
-        }
-
-        return playSyncDuration
-    }
-    
-    public func playSyncDidChange(state: PlaySyncState, dialogRequestId: String) {
+    public func playSyncDidChange(state: PlaySyncState, layerType: PlaySyncLayerType, contextType: PlaySyncContextType, playServiceId: String) {
         log.info("\(state)")
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let item = self.currentItem, item.dialogRequestId == dialogRequestId else { return }
+            guard state == .released, let item = self.currentItem, layerType == .info else { return }
             
-            switch state {
-            case .synced:
-                var rendered = false
-                self.renderingInfos
-                    .compactMap { $0.delegate }
-                    .forEach { delegate in
-                        rendered = self.setRenderedTemplate(delegate: delegate, template: item) || rendered
-                }
-                if rendered == false {
-                    self.currentItem = nil
-                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
-                }
-            case .releasing:
-                if self.timerInfos[item.templateId] != false {
-                    self.renderingInfos
-                        .filter { $0.currentItem?.templateId == item.templateId }
-                        .compactMap { $0.delegate }
-                        .forEach { delegate in
-                            DispatchQueue.main.sync {
-                                delegate.displayAgentShouldClear(template: item, reason: .timer)
-                            }
+            self.currentItem = nil
+            self.renderingInfos
+                .filter({ (rederingInfo) -> Bool in
+                    guard let template = rederingInfo.currentItem, let delegate = rederingInfo.delegate else { return false}
+                    return self.removeRenderedTemplate(delegate: delegate, template: template)
+                })
+                .compactMap { $0.delegate }
+                .forEach { delegate in
+                    DispatchQueue.main.sync {
+                        delegate.displayAgentShouldClear(template: item, reason: .directive)
                     }
-                }
-            case .released:
-                self.currentItem = nil
-                self.renderingInfos
-                    .filter({ (rederingInfo) -> Bool in
-                        guard let template = rederingInfo.currentItem, let delegate = rederingInfo.delegate else { return false}
-                        return self.removeRenderedTemplate(delegate: delegate, template: template)
-                    })
-                    .compactMap { $0.delegate }
-                    .forEach { delegate in
-                        DispatchQueue.main.sync {
-                            delegate.displayAgentShouldClear(template: item, reason: .directive)
-                        }
-                }
-            case .prepared:
-                break
             }
         }
     }
@@ -235,7 +186,7 @@ private extension DisplayAgent {
                     )
                     
                     if let item = self.currentItem, item.playServiceId == payload.playServiceId {
-                        self.playSyncManager.releaseSyncImmediately(dialogRequestId: item.dialogRequestId, playServiceId: item.playStackServiceId)
+                        self.playSyncManager.stopPlay(layerType: .info)
                     }
                 }
             )
@@ -245,41 +196,52 @@ private extension DisplayAgent {
     func handleDisplay() -> HandleDirective {
         return { [weak self] directive, completionHandler in
             log.info("\(directive.header.type)")
-
-            completionHandler(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    
-                    guard let payloadAsData = directive.payload.data(using: .utf8),
-                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
-                        let token = payloadDictionary["token"] as? String,
-                        let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
-                    }
-                    
-                    let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-                    let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
-                    
-                    self.currentItem = DisplayTemplate(
-                        type: directive.header.type,
-                        payload: directive.payload,
-                        templateId: directive.header.messageId,
-                        dialogRequestId: directive.header.dialogRequestId,
-                        token: token,
-                        playServiceId: playServiceId,
-                        playStackServiceId: playStackServiceId,
-                        duration: DisplayTemplate.Duration(rawValue: duration)
-                    )
-                    
-                    if let item = self.currentItem {
-                        self.playSyncManager.startSync(
-                            delegate: self,
-                            dialogRequestId: item.dialogRequestId,
-                            playServiceId: item.playStackServiceId
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                completionHandler(
+                    Result { [weak self] in
+                        guard let self = self else { return }
+                        
+                        guard let payloadAsData = directive.payload.data(using: .utf8),
+                            let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                            let token = payloadDictionary["token"] as? String,
+                            let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                                throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
+                        }
+                        
+                        let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
+                        let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
+                        
+                        self.currentItem = DisplayTemplate(
+                            type: directive.header.type,
+                            payload: directive.payload,
+                            templateId: directive.header.messageId,
+                            dialogRequestId: directive.header.dialogRequestId,
+                            token: token,
+                            playServiceId: playServiceId,
+                            playStackServiceId: playStackServiceId,
+                            duration: DisplayTemplate.Duration(rawValue: duration)
                         )
+                        
+                        if let item = self.currentItem {
+                            let rendered = self.renderingInfos
+                                .compactMap { $0.delegate }
+                                .map { self.setRenderedTemplate(delegate: $0, template: item) }
+                                .contains { $0 }
+                            if rendered == false {
+                                self.currentItem = nil
+                            } else {
+                                self.playSyncManager.startPlay(
+                                    layerType: .info,
+                                    contextType: .display,
+                                    duration: item.duration.time,
+                                    playServiceId: item.playStackServiceId
+                                )
+                            }
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
@@ -310,7 +272,7 @@ private extension DisplayAgent {
                 if self.removeRenderedTemplate(delegate: delegate, template: template),
                     self.hasRenderedDisplay(template: template) == false {
                     // Release sync when removed all of template(May be closed by user).
-                    self.playSyncManager.releaseSyncImmediately(dialogRequestId: template.dialogRequestId, playServiceId: template.playStackServiceId)
+                    self.playSyncManager.stopPlay(layerType: .info)
                 }
             }).disposed(by: disposeBag)
         return true

@@ -21,9 +21,10 @@
 import Foundation
 
 public protocol PlaySyncDelegate: class {
-    func playSyncContextType() -> PlaySyncContextType
-    
-    func playSyncDuration() -> PlaySyncDuration
-    
-    func playSyncDidChange(state: PlaySyncState, dialogRequestId: String)
+    func playSyncDidChange(
+        state: PlaySyncState,
+        layerType: PlaySyncLayerType,
+        contextType: PlaySyncContextType,
+        playServiceId: String
+    )
 }
