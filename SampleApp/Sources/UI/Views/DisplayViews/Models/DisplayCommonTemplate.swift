@@ -64,22 +64,16 @@ struct DisplayCommonTemplate: Decodable {
         }
         
         enum Duration {
+            case none
             case short
             case mid
             case long
             case longest
         }
         
-        public struct BadgeNumberStyle: Decodable {
-            public let background: String
-            public let color: String
-            public let borderRadius: String
-            
-            enum CodingKeys: String, CodingKey {
-                case background
-                case color
-                case borderRadius = "border-radius"
-            }
+        enum BadgeNumberMode {
+            case immutability
+            case page
         }
     }
 }
@@ -101,11 +95,24 @@ extension DisplayCommonTemplate.Common.Duration: Decodable {
         let value = try decoder.singleValueContainer().decode(String.self)
         
         switch value {
+        case "NONE": self = .none
         case "SHORT": self = .short
         case "MID": self = .mid
         case "LONG": self = .long
         case "LONGEST": self = .longest
         default: self = .short
+        }
+    }
+}
+
+extension DisplayCommonTemplate.Common.BadgeNumberMode: Decodable {
+    public init(from decoder: Decoder) throws {
+        let value = try decoder.singleValueContainer().decode(String.self)
+        
+        switch value {
+        case "IMMUTABILITY": self = .immutability
+        case "PAGE": self = .page
+        default: self = .immutability
         }
     }
 }

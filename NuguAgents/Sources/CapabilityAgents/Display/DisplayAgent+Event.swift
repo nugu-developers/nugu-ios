@@ -33,6 +33,10 @@ extension DisplayAgent {
             case elementSelected(token: String)
             case closeSucceeded
             case closeFailed
+            case controlFocusSucceeded
+            case controlFocusFailed
+            case controlScrollSucceeded
+            case controlScrollFailed
         }
     }
 }
@@ -61,6 +65,14 @@ extension DisplayAgent.Event: Eventable {
             return "CloseSucceeded"
         case .closeFailed:
             return "CloseFailed"
+        case .controlFocusSucceeded:
+            return "ControlFocusSucceeded"
+        case .controlFocusFailed:
+            return "ControlFocusFailed"
+        case .controlScrollSucceeded:
+            return "ControlScrollSucceeded"
+        case .controlScrollFailed:
+            return "ControlScrollFailed"
         }
     }
 }
