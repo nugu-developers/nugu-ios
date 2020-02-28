@@ -75,9 +75,9 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
     public func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State) {
         switch state {
         case .active:
-            delegate?.keywordDetectorStateDidChange(.active)
+            self.state = .active
         case .inactive:
-            delegate?.keywordDetectorStateDidChange(.inactive)
+            self.state = .inactive
         }
     }
 }
