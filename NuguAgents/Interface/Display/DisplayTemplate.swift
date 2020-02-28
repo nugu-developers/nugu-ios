@@ -29,6 +29,7 @@ public struct DisplayTemplate {
     public let playServiceId: String
     public let playStackServiceId: String?
     public let duration: Duration
+    public let focusable: Bool?
     
     public init(
         type: String,
@@ -38,7 +39,8 @@ public struct DisplayTemplate {
         token: String,
         playServiceId: String,
         playStackServiceId: String?,
-        duration: Duration?
+        duration: Duration?,
+        focusable: Bool?
     ) {
         self.type = type
         self.payload = payload
@@ -48,6 +50,7 @@ public struct DisplayTemplate {
         self.playServiceId = playServiceId
         self.playStackServiceId = playStackServiceId
         self.duration = duration ?? .short
+        self.focusable = focusable
     }
 }
 

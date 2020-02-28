@@ -32,4 +32,20 @@ public protocol DisplayAgentDelegate: class {
     /// - Parameter template: The template to remove from the screen.
     /// - Parameter reason: Reason to clear the template.
     func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason)
+    
+    /// Tells the delegate that the displayed template should move focus with given direction.
+    /// Should return whether succeeded or not.
+    /// - Parameter direction: Direction to move focus.
+    func displayAgentShouldMoveFocus(direction: DisplayControlPayload.Direction) -> Bool
+    
+    /// Tells the delegate that the displayed template should scroll with given direction.
+    /// Should return whether succeeded or not.
+    /// - Parameter reason: Direction to scroll.
+    func displayAgentShouldScroll(direction: DisplayControlPayload.Direction) -> Bool
+    
+    /// Should return currently focused item token.
+    func displayAgentFocusedItemToken() -> String?
+    
+    /// Should return currently visible item's token.
+    func displayAgentVisibleTokenList() -> [String]?
 }
