@@ -3,6 +3,53 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.8.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.8.0)
+Released on 2020-02-27
+
+#### Fixed
+- Fix `TTSAgent` bug where `completionHandler` is not called. (#136)
+- Fix event payload in `TTSAgent` (#140)
+- Fix `DisplayAgent` bug where deallocated observer is not called. (#167)
+- Fix a bug where `TTSState` does not set properly. (#173)
+- Fix `TextAgent` bug in initializer (#195)
+
+#### Updated
+- Update `DisplayAgent` to version 1.1 (#153)
+- Update `ExtensionAgent` to version 1.1 (#179) 
+- Separate `NuguCore` and `NuguAgents` (#196) 
+- Update `SystemAgent` for sending extra error code (#105) (#124) 
+- Improve `JadeMarble` and `KeenSense` for API Stability (#130) (#131)
+- Refactor related to `ContextManager` (#91) (#133)
+- Update `LocationAgent` by changed location Interface (#19) (#138)
+- Update `TimeUUID` version from 1 to 2. (#183) 
+- Move variables related `NattyLog` to global variables (#151) (#152)
+- Move `EndPointDetector` to `NuguCore` (#180) 
+- Move `DialogStateAggregator` from `NuguCore` to `NuguClientKit` (#177)
+- Update `LoginError` to be more detailed (#197) 
+- Refactoring `MediaPlayable` (#122) (#123)
+- Refactoring `FocusChannelConfigurable` (#156) (#158) 
+- Refactoring `AuthorizationManager`. (#145) (#176) 
+
+#### Added
+- Adds `CHANGELOG.md` (#18) (#125)
+- Adds `PULL_REQUEST_TEMPLATE.md` (#154) (#159)
+- Add `DownStreamDataTimeoutPreprocessor` to drop the timed out messages (#118)
+- Add `cancelAssociation` parameter to `TTS.stop` to call `PlaySyncManager.releaseSyncImmediately` properly. (#161)
+- Generate 'Device-Uniqud-Id' in `NuguLoginKit` (#104) (#163) 
+- Add `.travis.yml` for Travis-CI (#204)
+- Add test-case for `LocationAgent`, `SystemAgent`, `ExtensionAgent`, `TextAgent`  (#210)(#211) (#221)(#222)
+
+#### Removed
+- Remove `NuguInterface` (#196)
+- Remove `PermissionAgent` (#60) (#135)
+- Remove `CapabilityConfigurable` protocol (#169) 
+
+## [0.7.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.7.1)
+Released on 2020-02-20
+
+#### Fixed
+- Fix `TTSAgent` bug where `completionHandler` is not called. (#136)
+
 ## [0.7.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.7.0)
 Released on 2019-11-29
 
