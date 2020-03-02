@@ -30,9 +30,9 @@ public class SharedBuffer<Element> {
     private var array: [Element?]
     @Atomic private var lastIndex: SharedBufferIndex
 
-    weak var writer: Writer?
-    let writeQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.write")
-    let writeSubject: PublishSubject<Element> = PublishSubject<Element>()
+    private var writer: Writer?
+    private let writeQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.write")
+    private let writeSubject: PublishSubject<Element> = PublishSubject<Element>()
     private var readers: NSHashTable<Reader> = NSHashTable.weakObjects()
     private let disposeBag = DisposeBag()
     
@@ -76,9 +76,8 @@ public class SharedBuffer<Element> {
     }
     
     public func makeBufferWriter() -> Writer {
-        let writer = Writer(buffer: self)
-        self.writer = writer
-        return writer
+        writer = Writer(buffer: self)
+        return writer!
     }
     
     public func makeBufferReader() -> Reader {
@@ -89,24 +88,28 @@ public class SharedBuffer<Element> {
 // MARK: - Writer/Reader
 extension SharedBuffer {
     public class Writer {
-        let buffer: SharedBuffer
+        private weak var buffer: SharedBuffer?
         
         init(buffer: SharedBuffer) {
             self.buffer = buffer
         }
         
         public func write(_ element: Element) throws {
-            guard buffer.writer === self else {
+            guard buffer?.writer === self else {
                 throw SharedBufferError.writePermissionDenied
             }
             
-            buffer.write(element)
+            buffer?.write(element)
         }
         
         public func finish() {
-            log.debug("readers cnt: \(buffer.readers.allObjects.count)")
-            buffer.readers.allObjects.forEach { (reader) in
+            log.debug("readers cnt: \(buffer?.readers.allObjects.count ?? 0)")
+            buffer?.readers.allObjects.forEach { (reader) in
                 reader.readDisposable?.dispose()
+            }
+
+            if let buffer = buffer, buffer.writer === self {
+                buffer.writer = nil
             }
         }
     }
