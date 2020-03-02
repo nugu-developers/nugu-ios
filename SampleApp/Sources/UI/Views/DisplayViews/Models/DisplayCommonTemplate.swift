@@ -35,7 +35,7 @@ struct DisplayCommonTemplate: Decodable {
         }
 
         struct Title: Decodable {
-            let logo: Image
+            let logo: Image?
             let text: Text
             let subtext: Text?
             let subicon: Image?
@@ -64,7 +64,6 @@ struct DisplayCommonTemplate: Decodable {
         }
         
         enum Duration {
-            case none
             case short
             case mid
             case long
@@ -95,7 +94,6 @@ extension DisplayCommonTemplate.Common.Duration: Decodable {
         let value = try decoder.singleValueContainer().decode(String.self)
         
         switch value {
-        case "NONE": self = .none
         case "SHORT": self = .short
         case "MID": self = .mid
         case "LONG": self = .long
