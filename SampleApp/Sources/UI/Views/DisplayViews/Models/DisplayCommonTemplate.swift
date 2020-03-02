@@ -75,6 +75,22 @@ struct DisplayCommonTemplate: Decodable {
             case immutability
             case page
         }
+        
+        struct Toggle: Decodable {
+            let style: Style
+            let status: Status
+            let token: String
+            
+            enum Style: String, Decodable {
+                case image
+                case text
+            }
+            
+            enum Status: String, Decodable {
+                case on
+                case off
+            }
+        }
     }
 }
 

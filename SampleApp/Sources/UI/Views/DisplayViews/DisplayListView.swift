@@ -70,6 +70,9 @@ extension DisplayListView: UITableViewDataSource {
         let displayListViewCell = tableView.dequeueReusableCell(withIdentifier: "DisplayListViewCell") as! DisplayListViewCell
         // swiftlint:enable force_cast
         displayListViewCell.configure(index: String(indexPath.row + 1), item: templateListItems?[indexPath.row])
+        displayListViewCell.onToggleSelect = { [weak self] token in
+            self?.onItemSelect?(token)
+        }
         return displayListViewCell
     }
 }

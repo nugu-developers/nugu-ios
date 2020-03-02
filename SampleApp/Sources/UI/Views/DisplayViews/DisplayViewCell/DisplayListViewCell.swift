@@ -27,6 +27,13 @@ final class DisplayListViewCell: UITableViewCell {
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var subTitleLabel: UILabel!
     
+    @IBOutlet private weak var imageToggle: UIButton!
+    @IBOutlet private weak var textToggle: UIButton!
+    
+    private var token: String?
+    
+    var onToggleSelect: ((String) -> Void)?
+    
     func configure(index: String?, item: DisplayListTemplate.Item?) {
         numberLabel.text = index
         
@@ -41,5 +48,33 @@ final class DisplayListViewCell: UITableViewCell {
         titleLabel.textColor = UIColor.textColor(rgbHexString: item?.header?.color)
         subTitleLabel.text = item?.footer?.text
         subTitleLabel.textColor = UIColor.textColor(rgbHexString: item?.footer?.color)
+        
+        guard let toggle = item?.toggle else {
+            imageToggle.isHidden = true
+            textToggle.isHidden = true
+            token = nil
+            return
+        }
+        
+        switch toggle.style {
+        case .image:
+            imageToggle.isHidden = false
+            textToggle.isHidden = true
+            imageToggle.isSelected = (toggle.status == .on)
+        case .text:
+            imageToggle.isHidden = true
+            textToggle.isHidden = false
+            textToggle.isSelected = (toggle.status == .on)
+            textToggle.layer.cornerRadius = textToggle.bounds.size.height/2.0
+            textToggle.backgroundColor = (toggle.status == .on) ? UIColor(rgbHexString: "009dff") : UIColor(rgbHexString: "acacac")
+        }
+        token = toggle.token
+    }
+}
+
+private extension DisplayListViewCell {
+    @IBAction func onToggleDidChange(toggleButton: UIButton) {
+        guard let token = token else { return }
+        onToggleSelect?(token)
     }
 }

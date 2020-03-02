@@ -55,6 +55,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", medium: .visual, isBlocking: false, directiveHandler: handleScroll),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),

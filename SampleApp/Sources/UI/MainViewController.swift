@@ -281,7 +281,7 @@ private extension MainViewController {
         displayView?.removeFromSuperview()
         
         switch displayTemplate.type {
-        case "Display.FullText1", "Display.FullText2",
+        case "Display.FullText1", "Display.FullText2", "Display.FullText3",
              "Display.ImageText1", "Display.ImageText2", "Display.ImageText3", "Display.ImageText4":
             displayView = DisplayBodyView(frame: view.frame)
         case "Display.TextList1", "Display.TextList2",
