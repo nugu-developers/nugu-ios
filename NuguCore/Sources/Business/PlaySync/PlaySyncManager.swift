@@ -144,6 +144,7 @@ public extension PlaySyncManager {
 // MARK: - ContextInfoDelegate
 extension PlaySyncManager: ContextInfoDelegate {
     public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+        log.debug(playStack)
         completionHandler(ContextInfo(contextType: .client, name: "playStack", payload: playStack))
     }
 }
@@ -157,8 +158,10 @@ private extension PlaySyncManager {
         var playLayer = playContexts[layerType] ?? [:]
         playLayer[contextType] = info
         playContexts[layerType] = playLayer
-
-        playStack.removeAll { $0 == playServiceId }
+        
+        playStack.removeAll { id in
+            id == playServiceId || playContextInfos.contains(where: { $0.playServiceId == id }) == false
+        }
         playStack.insert(playServiceId, at: 0)
         
         delegates.notify { (delegate) in
@@ -176,8 +179,8 @@ private extension PlaySyncManager {
             playContexts[layerType] = nil
         }
         
-        if playContextInfos.contains(where: { $0.playServiceId == info.playServiceId }) == false {
-            playStack.removeAll { $0 == info.playServiceId }
+        playStack.removeAll { playServiceId in
+            playContextInfos.contains(where: { $0.playServiceId == playServiceId }) == false
         }
         
         delegates.notify { (delegate) in
