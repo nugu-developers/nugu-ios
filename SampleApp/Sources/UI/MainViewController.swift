@@ -322,6 +322,13 @@ private extension MainViewController {
         return displayView
     }
     
+    func updateDisplayView(displayTemplate: DisplayTemplate) {
+        guard let currentDisplayView = displayView else {
+            return
+        }
+        currentDisplayView.update(updatePayload: displayTemplate.payload)
+    }
+    
     func dismissDisplayView() {
         stopDisplayContextReleaseTimer()
         UIView.animate(
@@ -600,6 +607,10 @@ extension MainViewController: DisplayAgentDelegate {
     
     func displayAgentDidRender(template: DisplayTemplate) -> AnyObject? {
         return addDisplayView(displayTemplate: template)
+    }
+    
+    func displayAgentShouldUpdate(template: DisplayTemplate) {
+        updateDisplayView(displayTemplate: template)
     }
     
     func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason) {

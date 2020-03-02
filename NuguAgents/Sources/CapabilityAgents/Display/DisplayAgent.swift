@@ -361,28 +361,22 @@ private extension DisplayAgent {
                             throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
                     }
                     
-                    let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-                    let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
-                    let focusable = payloadDictionary["focusable"] as? Bool
-                    
-                    self.currentItem = DisplayTemplate(
+                    let updateDisplayTemplate = DisplayTemplate(
                         type: directive.header.type,
                         payload: directive.payload,
                         templateId: directive.header.messageId,
                         dialogRequestId: directive.header.dialogRequestId,
                         token: token,
                         playServiceId: playServiceId,
-                        playStackServiceId: playStackServiceId,
-                        duration: DisplayTemplate.Duration(rawValue: duration),
-                        focusable: focusable
+                        playStackServiceId: nil,
+                        duration: nil,
+                        focusable: nil
                     )
                     
-                    if let item = self.currentItem {
-                        self.playSyncManager.startSync(
-                            delegate: self,
-                            dialogRequestId: item.dialogRequestId,
-                            playServiceId: item.playStackServiceId
-                        )
+                    guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == updateDisplayTemplate.templateId }),
+                        let delegate = info.delegate else { return }
+                    DispatchQueue.main.async {
+                        delegate.displayAgentShouldUpdate(template: updateDisplayTemplate)
                     }
                 }
             )

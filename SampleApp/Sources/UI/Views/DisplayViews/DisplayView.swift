@@ -51,6 +51,18 @@ class DisplayView: UIView {
         titleContainerView.layer.borderWidth = 1.0
     }
     
+    func update(updatePayload: String) {
+        guard let displayingPayloadData = displayPayload?.data(using: .utf8),
+            let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: Any],
+            let updatePayloadData = updatePayload.data(using: .utf8),
+            let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayloadData, options: []) as? [String: Any] else {
+                return
+        }
+        let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
+        guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
+        displayPayload = String(data: mergedPayloadData, encoding: .utf8)
+    }
+    
     @IBAction func closeButtonDidClick(_ button: UIButton) {
         onCloseButtonClick?()
     }
