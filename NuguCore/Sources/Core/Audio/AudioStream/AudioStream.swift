@@ -49,9 +49,9 @@ extension AudioStream {
                 log.debug("audio reference count: \(oldValue) -> \(refCnt)")
                 switch (oldValue, refCnt) {
                 case (_, 0):
-                    self.streamDelegate?.audioStreamDidStop()
+                    streamDelegate?.audioStreamDidStop()
                 case (0, 1):
-                    self.streamDelegate?.audioStreamWillStart()
+                    streamDelegate?.audioStreamWillStart()
                 default:
                     break
                 }
@@ -72,41 +72,21 @@ extension AudioStream {
             }
         }
         
-        public override func makeBufferWriter() -> SharedBuffer<AVAudioPCMBuffer>.Writer {
-            let writer = AudioBufferWriter(buffer: self)
-            self.writer = writer
-            return writer
-        }
-        
-        public class AudioBufferWriter: SharedBuffer<AVAudioPCMBuffer>.Writer {
-            /** Copy AVAudioBuffer and store it.
-             So, we can have independent life cycle.
-             */
-            public override func write(_ element: AVAudioPCMBuffer) throws {
-                guard let newElement = element.copy() as? AVAudioPCMBuffer else {
-                    try super.write(element)
-                    return
-                }
-                
-                try super.write(newElement)
-            }
-        }
-        
         public override func makeBufferReader() -> SharedBuffer<AVAudioPCMBuffer>.Reader {
             return AudioBufferReader(buffer: self)
         }
         
         public class AudioBufferReader: SharedBuffer<AVAudioPCMBuffer>.Reader {
-            private let audioBuffer: AudioBuffer
+            private weak var audioBuffer: AudioBuffer?
             
             init(buffer: AudioBuffer) {
                 audioBuffer = buffer
                 super.init(buffer: buffer)
-                audioBuffer.increaseRef()
+                audioBuffer?.increaseRef()
             }
             
             deinit {
-                audioBuffer.decreaseRef()
+                audioBuffer?.decreaseRef()
             }
         }
     }
