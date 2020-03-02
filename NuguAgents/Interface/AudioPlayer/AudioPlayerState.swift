@@ -29,12 +29,12 @@ public enum AudioPlayerState {
     /// Indicates that audio playback was stopped due to an error or a directive which stops or replaces the current stream.
     case stopped
     /// Indicates that the audio stream has been paused.
-    case paused
-    /// Indicates taht the audio stream has been paused by `FocusState.background`.
+    ///
+    /// `temporary` true: Indicates taht the audio stream has been paused by `FocusState.background`.
     /// It will be resume when changed to `FocusState.foreground`.
     ///
     /// In this case, "playerActivity" in `AudioPlayerAgent`'s context is "PLAYING"
-    case temporalPaused
+    case paused(temporary: Bool)
     /// Indicates that playback has finished.
     case finished
 }
@@ -45,9 +45,10 @@ extension AudioPlayerState {
         case .idle: return "IDLE"
         case .playing: return "PLAYING"
         case .stopped: return "STOPPED"
-        case .paused: return "PAUSED"
-        case .temporalPaused: return "PLAYING"
+        case .paused(let temporary): return temporary ? "PLAYING" : "PAUSED"
         case .finished: return "FINISHED"
         }
     }
 }
+
+extension AudioPlayerState: Equatable {}
