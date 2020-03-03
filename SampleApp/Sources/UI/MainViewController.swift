@@ -344,6 +344,9 @@ private extension MainViewController {
             self.dismissDisplayAudioPlayerView()
             NuguCentralManager.shared.displayPlayerController?.remove()
         }
+        audioPlayerView.onUserInteraction = {
+            NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
+        }
 
         view.insertSubview(audioPlayerView, belowSubview: nuguButton)
         displayAudioPlayerView = audioPlayerView

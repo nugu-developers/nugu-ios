@@ -37,5 +37,22 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
     )
     func endPlay(property: PlaySyncProperty)
     func stopPlay(dialogRequestId: String)
+    
+    /// Start new timer to release `PlaySyncProperty`.
+    /// - Parameters:
+    ///   - property: The object to release by timer.
+    ///   - duration: The duration for timer.
+    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval)
+    
+    /// Restart exist timer to release `PlaySyncProperty`.
+    ///
+    /// If the timer for `PlaySyncProperty` not exist then `resetTimer` call ignored.
+    /// - Parameter property: The object to release by timer.
     func resetTimer(property: PlaySyncProperty)
+    
+    /// Cancel exist timer to release `PlaySyncProperty`.
+    ///
+    /// If the timer for `PlaySyncProperty` not exist then `resetTimer` call ignored.
+    /// - Parameter property: The object to release.
+    func cancelTimer(property: PlaySyncProperty)
 }

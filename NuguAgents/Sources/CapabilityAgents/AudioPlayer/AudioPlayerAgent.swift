@@ -38,14 +38,18 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         return currentMedia?.player.duration.truncatedSeconds
     }
     
-    public let audioPlayerPauseTimeout: DispatchTimeInterval
      
     // Private
     private let playSyncManager: PlaySyncManageable
     private let focusManager: FocusManageable
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
-    private let audioPlayerDisplayManager: AudioPlayerDisplayManageable
+    private let audioPlayerPauseTimeout: DispatchTimeInterval
+    private lazy var audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager(
+        audioPlayerPauseTimeout: audioPlayerPauseTimeout,
+        audioPlayerAgent: self,
+        playSyncManager: playSyncManager
+    )
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
@@ -66,10 +70,9 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             switch audioPlayerState {
             case .playing:
                 startProgressReport()
-                stopPauseTimeout()
+                playSyncManager.cancelTimer(property: playSyncProperty)
             case .stopped, .finished:
                 stopProgressReport()
-                stopPauseTimeout()
                 if media.cancelAssociation {
                     playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 } else {
@@ -78,7 +81,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 currentMedia = nil
             case .paused:
                 stopProgressReport()
-                startPauseTimeout()
+                playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
             default:
                 break
             }
@@ -104,9 +107,6 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // ProgressReporter
     private var intervalReporter: Disposable?
     
-    // Pause timeout
-    private var pauseTimeout: Disposable?
-    
     private lazy var disposeBag = DisposeBag()
     
     // Handleable Directives
@@ -131,8 +131,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         self.playSyncManager = playSyncManager
         self.directiveSequencer = directiveSequencer
         self.audioPlayerPauseTimeout = audioPlayerPauseTimeout
-        self.audioPlayerDisplayManager = AudioPlayerDisplayManager(playSyncManager: playSyncManager)
-        
+
         playSyncManager.add(delegate: self)
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
@@ -215,7 +214,11 @@ public extension AudioPlayerAgent {
     }
     
     func notifyUserInteraction() {
-        audioPlayerDisplayManager.notifyUserInteraction()
+        if audioPlayerState == .paused {
+            playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
+        } else {
+            playSyncManager.resetTimer(property: playSyncProperty)
+        }
     }
 }
 
@@ -404,7 +407,7 @@ private extension AudioPlayerAgent {
                         if let media = self.currentMedia {
                             self.playSyncManager.startPlay(
                                 property: self.playSyncProperty,
-                                duration: .never,
+                                duration: .seconds(7),
                                 playServiceId: media.payload.playStackControl?.playServiceId,
                                 dialogRequestId: media.dialogRequestId
                             )
@@ -541,25 +544,6 @@ private extension AudioPlayerAgent {
     
     func stopProgressReport() {
         intervalReporter?.dispose()
-    }
-    
-    func startPauseTimeout() {
-        stopPauseTimeout()
-        
-        guard audioPlayerPauseTimeout != .never else {
-            return
-        }
-        
-        pauseTimeout = Observable<Int>
-            .timer(audioPlayerPauseTimeout, scheduler: audioPlayerScheduler)
-            .subscribe(onNext: { [weak self] _ in
-                self?.stop(cancelAssociation: true)
-            })
-        pauseTimeout?.disposed(by: disposeBag)
-    }
-    
-    func stopPauseTimeout() {
-        pauseTimeout?.dispose()
     }
 }
 

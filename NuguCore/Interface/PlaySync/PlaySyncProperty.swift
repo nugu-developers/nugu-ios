@@ -40,4 +40,9 @@ public struct PlaySyncProperty {
     }
 }
 
-extension PlaySyncProperty: Equatable {}
+extension PlaySyncProperty: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(layerType.hashValue)
+        hasher.combine(contextType.hashValue)
+    }
+}

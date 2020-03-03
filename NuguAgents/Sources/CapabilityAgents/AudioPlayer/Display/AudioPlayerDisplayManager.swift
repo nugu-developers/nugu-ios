@@ -33,6 +33,7 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
         internalSerialQueueName: "com.sktelecom.romaine.audio_player_display"
     )
     
+    private let audioPlayerPauseTimeout: DispatchTimeInterval
     private let playSyncManager: PlaySyncManageable
     
     private var renderingInfos = [AudioPlayerDisplayRenderingInfo]()
@@ -42,9 +43,31 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
     
     private var disposeBag = DisposeBag()
     
-    init(playSyncManager: PlaySyncManageable) {
+    
+    private var audioPlayerState: AudioPlayerState = .idle {
+        didSet {
+            switch audioPlayerState {
+            case .playing:
+                playSyncManager.cancelTimer(property: playSyncProperty)
+            case .stopped, .finished:
+                playSyncManager.endPlay(property: playSyncProperty)
+            case .paused:
+                playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
+            default:
+                break
+            }
+        }
+    }
+    
+    init(
+        audioPlayerPauseTimeout: DispatchTimeInterval,
+        audioPlayerAgent: AudioPlayerAgentProtocol,
+        playSyncManager: PlaySyncManageable
+    ) {
+        self.audioPlayerPauseTimeout = audioPlayerPauseTimeout
         self.playSyncManager = playSyncManager
         
+        audioPlayerAgent.add(delegate: self)
         playSyncManager.add(delegate: self)
     }
 }
@@ -78,7 +101,7 @@ extension AudioPlayerDisplayManager {
                 } else {
                     self.playSyncManager.startPlay(
                         property: self.playSyncProperty,
-                        duration: .never,
+                        duration: .seconds(7),
                         playServiceId: item.playStackServiceId,
                         dialogRequestId: item.dialogRequestId
                     )
@@ -101,7 +124,22 @@ extension AudioPlayerDisplayManager {
     }
     
     func notifyUserInteraction() {
-        self.playSyncManager.resetTimer(property: playSyncProperty)
+        if audioPlayerState == .paused {
+            playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
+        } else {
+            playSyncManager.resetTimer(property: playSyncProperty)
+        }
+    }
+}
+
+// MARK: - AudioPlayerAgentDelegate
+extension AudioPlayerDisplayManager: AudioPlayerAgentDelegate {
+    func audioPlayerAgentDidChange(state: AudioPlayerState) {
+        displayDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.audioPlayerState = state
+        }
     }
 }
 

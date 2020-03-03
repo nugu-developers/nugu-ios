@@ -66,6 +66,6 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// - Parameter displayDelegate: The object to remove.
     func remove(displayDelegate: AudioPlayerDisplayDelegate)
     
-    /// Resets the timer for deleting template by timeout.
+    /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
     func notifyUserInteraction()
 }

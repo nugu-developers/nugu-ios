@@ -53,6 +53,8 @@ final class DisplayAudioPlayerView: UIView {
     
     var onCloseButtonClick: (() -> Void)?
     
+    var onUserInteraction: (() -> Void)?
+    
     var displayItem: AudioPlayerDisplayTemplate.AudioPlayer? {
         didSet {
             let template = displayItem?.template
@@ -101,6 +103,11 @@ final class DisplayAudioPlayerView: UIView {
         addSubview(view)
         albumImageView.layer.cornerRadius = 4.0
         addBorderToTitleContainerView()
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        onUserInteraction?()
+        return super.hitTest(point, with: event)
     }
     
     private func addBorderToTitleContainerView() {
