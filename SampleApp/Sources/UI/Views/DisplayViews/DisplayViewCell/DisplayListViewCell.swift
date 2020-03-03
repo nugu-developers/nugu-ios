@@ -32,7 +32,7 @@ final class DisplayListViewCell: UITableViewCell {
     
     private var token: String?
     
-    var onToggleSelect: ((String) -> Void)?
+    var onToggleSelect: ((_ token: String) -> Void)?
     
     func configure(index: String?, item: DisplayListTemplate.Item?) {
         numberLabel.text = index

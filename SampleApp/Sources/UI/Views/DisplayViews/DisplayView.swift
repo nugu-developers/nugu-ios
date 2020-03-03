@@ -27,7 +27,7 @@ class DisplayView: UIView {
     
     var onCloseButtonClick: (() -> Void)?
     
-    var onItemSelect: ((String?) -> Void)?
+    var onItemSelect: ((_ token: String?) -> Void)?
     
     var onUserInteraction: (() -> Void)?
     
