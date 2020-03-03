@@ -45,6 +45,7 @@ public final class ASRAgent: ASRAgentProtocol {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
             
+            // `expectingSpeechTimeout` -> `ASRRequest` -> `FocusState` -> EndPointDetector` -> `ASRAgentDelegate`
             // dispose expectingSpeechTimeout
             if asrState != .expectingSpeech {
                 expectingSpeechTimeout?.dispose()
@@ -80,6 +81,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 return
             }
             
+            // ASRExpectSpeech -> `ASRState` -> Event -> `ASRAgentDelegate`
             switch asrResult {
             case .none:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
@@ -90,10 +92,12 @@ public final class ASRAgent: ASRAgentProtocol {
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
                 currentExpectSpeech = nil
             case .cancel:
-                sendEvent(asrRequest: asrRequest, type: .stopRecognize)
                 currentExpectSpeech = nil
                 asrState = .idle
+                sendEvent(asrRequest: asrRequest, type: .stopRecognize)
             case .error(let error):
+                currentExpectSpeech = nil
+                asrState = .idle
                 switch error {
                 case NetworkError.timeout:
                     sendEvent(asrRequest: asrRequest, type: .responseTimeout)
@@ -106,8 +110,6 @@ public final class ASRAgent: ASRAgentProtocol {
                 default:
                     break
                 }
-                currentExpectSpeech = nil
-                asrState = .idle
             }
             
             asrDelegates.notify { (delegate) in
