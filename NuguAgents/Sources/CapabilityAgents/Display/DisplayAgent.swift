@@ -27,6 +27,7 @@ import RxSwift
 public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.2")
+    private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .display)
     
     // Private
     private let playSyncManager: PlaySyncManageable
@@ -123,8 +124,7 @@ public extension DisplayAgent {
     }
     
     func notifyUserInteraction() {
-        self.playSyncManager.resetTimer(layerType: .info, contextType: .display)
-        self.playSyncManager.resetTimer(layerType: .info, contextType: .sound)
+        self.playSyncManager.resetTimer(property: playSyncProperty)
     }
 }
 
@@ -161,11 +161,11 @@ extension DisplayAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension DisplayAgent: PlaySyncDelegate {
-    public func playSyncDidChange(state: PlaySyncState, layerType: PlaySyncLayerType, contextType: PlaySyncContextType, playServiceId: String) {
+    public func playSyncDidChange(state: PlaySyncState, property: PlaySyncProperty, playServiceId: String) {
         log.info("\(state)")
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard state == .released, let item = self.currentItem, layerType == .info, contextType == .display else { return }
+            guard property == self.playSyncProperty, state == .released, let item = self.currentItem else { return }
             
             self.currentItem = nil
             self.renderingInfos
@@ -327,8 +327,7 @@ private extension DisplayAgent {
                                 self.currentItem = nil
                             } else {
                                 self.playSyncManager.startPlay(
-                                    layerType: .info,
-                                    contextType: .display,
+                                    property: self.playSyncProperty,
                                     duration: item.duration.time,
                                     playServiceId: item.playStackServiceId,
                                     dialogRequestId: item.dialogRequestId

@@ -1,8 +1,8 @@
 //
-//  PlaySyncContextType.swift
+//  PlaySyncProperty.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 2020/02/27.
+//  Created by MinChul Lee on 2020/03/03.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,24 @@
 
 import Foundation
 
-public enum PlaySyncContextType {
-    case sound
-    case display
+public struct PlaySyncProperty {
+    public let layerType: LayerType
+    public let contextType: ContextType
+    
+    public init(layerType: LayerType, contextType: ContextType) {
+        self.layerType = layerType
+        self.contextType = contextType
+    }
+    
+    public enum LayerType {
+        case info
+        case media
+    }
+
+    public enum ContextType {
+        case sound
+        case display
+    }
 }
+
+extension PlaySyncProperty: Equatable {}

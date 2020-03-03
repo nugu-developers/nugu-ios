@@ -324,13 +324,12 @@
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
 		7E26C57F239FC2E300716E44 /* NuguApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3642375707000C9A177 /* NuguApi.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
-		7E2D81832407974600ED5119 /* PlaySyncLayerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2D81822407974600ED5119 /* PlaySyncLayerType.swift */; };
+		7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EB6D0DF238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB6D0DE238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
 		7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28D2375703000C9A177 /* DialogState.swift */; };
-		7EF56DD7240763B800C5A103 /* PlaySyncContextType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF56DD6240763B800C5A103 /* PlaySyncContextType.swift */; };
 		A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1519AAB23F3EC8700FF4159 /* DisplayControlPayload.swift */; };
 		A17B065E2394D22800D739E9 /* device_GW_error_002.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06572394D22700D739E9 /* device_GW_error_002.wav */; };
 		A17B065F2394D22800D739E9 /* device_GW_error_001.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06582394D22700D739E9 /* device_GW_error_001.wav */; };
@@ -830,8 +829,8 @@
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
 		7E26C57D239FBF1300716E44 /* NuguApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguApiRequest.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
-		7E2D81822407974600ED5119 /* PlaySyncLayerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncLayerType.swift; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
+		7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
 		7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreable.swift; sourceTree = "<group>"; };
 		7E98BAD6239FA43B00B9582D /* NuguApiProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguApiProvidable.swift; sourceTree = "<group>"; };
@@ -841,7 +840,6 @@
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
 		7EDCF2AA23852AEA006F96B6 /* DownstreamDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownstreamDataDelegate.swift; sourceTree = "<group>"; };
 		7EF12B2223C822520000E158 /* DisplayClosePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayClosePayload.swift; sourceTree = "<group>"; };
-		7EF56DD6240763B800C5A103 /* PlaySyncContextType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncContextType.swift; sourceTree = "<group>"; };
 		A1519AAB23F3EC8700FF4159 /* DisplayControlPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayControlPayload.swift; sourceTree = "<group>"; };
 		A17B06572394D22700D739E9 /* device_GW_error_002.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_002.wav; sourceTree = "<group>"; };
 		A17B06582394D22700D739E9 /* device_GW_error_001.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_001.wav; sourceTree = "<group>"; };
@@ -1429,8 +1427,7 @@
 				1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */,
 				1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */,
 				1FFFF2842375703000C9A177 /* PlaySyncState.swift */,
-				7EF56DD6240763B800C5A103 /* PlaySyncContextType.swift */,
-				7E2D81822407974600ED5119 /* PlaySyncLayerType.swift */,
+				7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */,
 			);
 			path = PlaySync;
 			sourceTree = "<group>";
@@ -2888,7 +2885,6 @@
 				1FFFF3822375707000C9A177 /* OpusPlayerError.swift in Sources */,
 				7315302423E11EDF00F843C3 /* NuguApiRequest.swift in Sources */,
 				1FFFF3BD2375707100C9A177 /* MultiPartParserError.swift in Sources */,
-				7E2D81832407974600ED5119 /* PlaySyncLayerType.swift in Sources */,
 				1FFFF3842375707000C9A177 /* OpusDecoder.swift in Sources */,
 				7334F47723FD172700EA5E58 /* DirectiveHandleInfo.swift in Sources */,
 				7315302A23E11EDF00F843C3 /* PlaySyncManageable.swift in Sources */,
@@ -2907,6 +2903,7 @@
 				7315303723E11EDF00F843C3 /* UpstreamHeader.swift in Sources */,
 				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
 				7315302C23E11EDF00F843C3 /* PlaySyncState.swift in Sources */,
+				7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */,
 				7315303A23E11EDF00F843C3 /* CrashReport.swift in Sources */,
 				7315304323E11EDF00F843C3 /* AuthorizationStoreable.swift in Sources */,
 				7EB6D0DF238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift in Sources */,
@@ -2939,7 +2936,6 @@
 				7315301F23E11EDF00F843C3 /* NuguTimeInterval.swift in Sources */,
 				7315303923E11EDF00F843C3 /* UpstreamAttachment.swift in Sources */,
 				1FFFF3802375707000C9A177 /* MediaAVPlayerItem.swift in Sources */,
-				7EF56DD7240763B800C5A103 /* PlaySyncContextType.swift in Sources */,
 				1FFFF3C32375707100C9A177 /* PlaySyncManager.swift in Sources */,
 				7315302B23E11EDF00F843C3 /* PlaySyncDelegate.swift in Sources */,
 				1FFFF3BC2375707100C9A177 /* HTTPConst.swift in Sources */,
@@ -3125,7 +3121,7 @@
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
 				7315306C23E1248300F843C3 /* ASRAgentDelegate.swift in Sources */,
 				73152FAE23E0413700F843C3 /* SpeakerMuteInfo.swift in Sources */,
-                A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
+				A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
 				7315306423E1248300F843C3 /* SpeakerVolumeDelegate.swift in Sources */,
 				7315307123E1248300F843C3 /* SystemAgentProtocol.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,

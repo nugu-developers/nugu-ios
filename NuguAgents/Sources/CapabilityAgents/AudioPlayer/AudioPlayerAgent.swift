@@ -27,6 +27,7 @@ import RxSwift
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
+    private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
     public var offset: Int? {
@@ -72,7 +73,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 if media.cancelAssociation {
                     playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 } else {
-                    playSyncManager.endPlay(layerType: .media, contextType: .sound)
+                    playSyncManager.endPlay(property: playSyncProperty)
                 }
                 currentMedia = nil
             case .paused:
@@ -327,11 +328,11 @@ extension AudioPlayerAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerAgent: PlaySyncDelegate {
-    public func playSyncDidChange(state: PlaySyncState, layerType: PlaySyncLayerType, contextType: PlaySyncContextType, playServiceId: String) {
+    public func playSyncDidChange(state: PlaySyncState, property: PlaySyncProperty, playServiceId: String) {
         log.info("\(state)")
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard state == .released, self.currentMedia != nil, layerType == .media, contextType == .sound else { return }
+            guard property == self.playSyncProperty, state == .released, self.currentMedia != nil else { return }
             
             self.stop(cancelAssociation: false)
         }
@@ -402,8 +403,7 @@ private extension AudioPlayerAgent {
                         
                         if let media = self.currentMedia {
                             self.playSyncManager.startPlay(
-                                layerType: .media,
-                                contextType: .sound,
+                                property: self.playSyncProperty,
                                 duration: .never,
                                 playServiceId: media.payload.playStackControl?.playServiceId,
                                 dialogRequestId: media.dialogRequestId
@@ -553,7 +553,7 @@ private extension AudioPlayerAgent {
         pauseTimeout = Observable<Int>
             .timer(audioPlayerPauseTimeout, scheduler: audioPlayerScheduler)
             .subscribe(onNext: { [weak self] _ in
-                self?.stop(cancelAssociation: false)
+                self?.stop(cancelAssociation: true)
             })
         pauseTimeout?.disposed(by: disposeBag)
     }

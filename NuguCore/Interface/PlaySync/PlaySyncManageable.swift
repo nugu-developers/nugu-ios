@@ -30,13 +30,12 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
     func remove(delegate: PlaySyncDelegate)
     
     func startPlay(
-        layerType: PlaySyncLayerType,
-        contextType: PlaySyncContextType,
+        property: PlaySyncProperty,
         duration: DispatchTimeInterval,
         playServiceId: String?,
         dialogRequestId: String
     )
-    func endPlay(layerType: PlaySyncLayerType, contextType: PlaySyncContextType)
+    func endPlay(property: PlaySyncProperty)
     func stopPlay(dialogRequestId: String)
-    func resetTimer(layerType: PlaySyncLayerType, contextType: PlaySyncContextType)
+    func resetTimer(property: PlaySyncProperty)
 }

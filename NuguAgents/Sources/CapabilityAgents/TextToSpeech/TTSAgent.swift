@@ -27,6 +27,7 @@ import RxSwift
 public final class TTSAgent: TTSAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
+    private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .sound)
     
     // Private
     private let playSyncManager: PlaySyncManageable
@@ -49,8 +50,7 @@ public final class TTSAgent: TTSAgentProtocol {
             switch ttsState {
             case .playing:
                 playSyncManager.startPlay(
-                    layerType: .info,
-                    contextType: .sound,
+                    property: playSyncProperty,
                     duration: .seconds(7),
                     playServiceId: media.payload.playStackControl?.playServiceId,
                     dialogRequestId: media.dialogRequestId
@@ -59,7 +59,7 @@ public final class TTSAgent: TTSAgentProtocol {
                 if media.cancelAssociation {
                     playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 } else {
-                    playSyncManager.endPlay(layerType: .info, contextType: .sound)
+                    playSyncManager.endPlay(property: playSyncProperty)
                 }
                 currentMedia = nil
             default:
@@ -263,11 +263,11 @@ extension TTSAgent: MediaPlayerDelegate {
 // MARK: - PlaySyncDelegate
 
 extension TTSAgent: PlaySyncDelegate {
-    public func playSyncDidChange(state: PlaySyncState, layerType: PlaySyncLayerType, contextType: PlaySyncContextType, playServiceId: String) {
+    public func playSyncDidChange(state: PlaySyncState, property: PlaySyncProperty, playServiceId: String) {
         log.info("\(state)")
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard state == .released, self.currentMedia != nil, layerType == .info, contextType == .sound else { return }
+            guard property == self.playSyncProperty, state == .released, self.currentMedia != nil else { return }
             
             self.stop(cancelAssociation: false)
         }

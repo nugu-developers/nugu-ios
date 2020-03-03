@@ -25,6 +25,8 @@ import NuguCore
 import RxSwift
 
 final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
+    private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .display)
+    
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_player_display", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
         queue: displayDispatchQueue,
@@ -75,8 +77,7 @@ extension AudioPlayerDisplayManager {
                     self.currentItem = nil
                 } else {
                     self.playSyncManager.startPlay(
-                        layerType: .media,
-                        contextType: .display,
+                        property: self.playSyncProperty,
                         duration: .never,
                         playServiceId: item.playStackServiceId,
                         dialogRequestId: item.dialogRequestId
@@ -100,18 +101,18 @@ extension AudioPlayerDisplayManager {
     }
     
     func notifyUserInteraction() {
-        self.playSyncManager.resetTimer(layerType: .media, contextType: .display)
+        self.playSyncManager.resetTimer(property: playSyncProperty)
     }
 }
 
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerDisplayManager: PlaySyncDelegate {
-    public func playSyncDidChange(state: PlaySyncState, layerType: PlaySyncLayerType, contextType: PlaySyncContextType, playServiceId: String) {
+    public func playSyncDidChange(state: PlaySyncState, property: PlaySyncProperty, playServiceId: String) {
         log.info("\(state)")
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard state == .released, let item = self.currentItem, layerType == .media, contextType == .display else { return }
+            guard property == self.playSyncProperty, state == .released, let item = self.currentItem else { return }
             
             self.currentItem = nil
             self.renderingInfos
