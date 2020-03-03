@@ -289,35 +289,35 @@ private extension DisplayAgent {
     func handleDisplay() -> HandleDirective {
         return { [weak self] directive, completionHandler in
             log.info("\(directive.header.type)")
-            self?.displayDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                completionHandler(
-                    Result { [weak self] in
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    
+                    guard let payloadAsData = directive.payload.data(using: .utf8),
+                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                        let token = payloadDictionary["token"] as? String,
+                        let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
+                    }
+                    
+                    let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
+                    let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
+                    let focusable = payloadDictionary["focusable"] as? Bool
+                    
+                    self.currentItem = DisplayTemplate(
+                        type: directive.header.type,
+                        payload: directive.payload,
+                        templateId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId,
+                        token: token,
+                        playServiceId: playServiceId,
+                        playStackServiceId: playStackServiceId,
+                        duration: DisplayTemplate.Duration(rawValue: duration),
+                        focusable: focusable
+                    )
+                    
+                    self.displayDispatchQueue.async { [weak self] in
                         guard let self = self else { return }
-                        
-                        guard let payloadAsData = directive.payload.data(using: .utf8),
-                            let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
-                            let token = payloadDictionary["token"] as? String,
-                            let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                                throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
-                        }
-                        
-                        let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-                        let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
-                        let focusable = payloadDictionary["focusable"] as? Bool
-                        
-                        self.currentItem = DisplayTemplate(
-                            type: directive.header.type,
-                            payload: directive.payload,
-                            templateId: directive.header.messageId,
-                            dialogRequestId: directive.header.dialogRequestId,
-                            token: token,
-                            playServiceId: playServiceId,
-                            playStackServiceId: playStackServiceId,
-                            duration: DisplayTemplate.Duration(rawValue: duration),
-                            focusable: focusable
-                        )
-                        
                         if let item = self.currentItem {
                             let rendered = self.renderingInfos
                                 .compactMap { $0.delegate }
@@ -335,8 +335,8 @@ private extension DisplayAgent {
                             }
                         }
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
