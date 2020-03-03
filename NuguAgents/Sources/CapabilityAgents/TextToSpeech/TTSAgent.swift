@@ -228,17 +228,16 @@ extension TTSAgent: MediaPlayerDelegate {
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
-            // Event -> `TTSResult` -> `TTSState` -> `FocusState`
+            // `TTSResult` -> `TTSState` -> Event -> `FocusState`
             switch state {
             case .start:
-                self.sendEvent(media: media, info: .speechStarted)
                 self.ttsState = .playing
+                self.sendEvent(media: media, info: .speechStarted)
             case .resume, .bufferRefilled:
                 self.ttsState = .playing
             case .finish:
                 self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                 self.ttsState = .finished
-                
                 // Release focus after receiving directive
                 self.sendEvent(media: media, info: .speechFinished) { [weak self] _ in
                     self?.releaseFocusIfNeeded()
@@ -246,18 +245,18 @@ extension TTSAgent: MediaPlayerDelegate {
             case .pause:
                 self.stop(cancelAssociation: false)
             case .stop:
-                self.sendEvent(media: media, info: .speechStopped)
                 self.ttsResultSubject.onNext(
                     (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
                 )
                 self.ttsState = .stopped
+                self.sendEvent(media: media, info: .speechStopped)
                 self.releaseFocusIfNeeded()
             case .bufferUnderrun:
                 break
             case .error(let error):
-                self.sendEvent(media: media, info: .speechStopped)
                 self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .error(error)))
                 self.ttsState = .stopped
+                self.sendEvent(media: media, info: .speechStopped)
                 self.releaseFocusIfNeeded()
             }
         }
@@ -398,14 +397,14 @@ private extension TTSAgent {
     /// Stop previously playing TTS
     func stopSilently() {
         guard let media = currentMedia else { return }
-        // Event -> `TTSResult` -> `TTSState`
+        // `TTSResult` -> `TTSState` -> Event
         media.player.delegate = nil
         media.player.stop()
-        sendEvent(media: media, info: .speechStopped)
         ttsResultSubject.onNext(
             (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
         )
         ttsState = .stopped
+        sendEvent(media: media, info: .speechStopped)
     }
     
     func handleAttachment() -> HandleAttachment {
