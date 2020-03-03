@@ -219,6 +219,7 @@ public extension AudioPlayerAgent {
         } else {
             playSyncManager.resetTimer(property: playSyncProperty)
         }
+        audioPlayerDisplayManager.notifyUserInteraction()
     }
 }
 
