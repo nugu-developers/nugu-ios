@@ -73,7 +73,7 @@ final class DisplayListViewCell: UITableViewCell {
 }
 
 private extension DisplayListViewCell {
-    @IBAction func onToggleDidChange(toggleButton: UIButton) {
+    @IBAction func toggleButtonDidClick(toggleButton: UIButton) {
         guard let token = token else { return }
         onToggleSelect?(token)
     }

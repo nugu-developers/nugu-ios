@@ -83,7 +83,7 @@
                                 <state key="normal" image="btn_list_like_off"/>
                                 <state key="selected" image="btn_list_like_on"/>
                                 <connections>
-                                    <action selector="onToggleDidChangeWithToggleButton:" destination="eiu-v3-oaX" eventType="touchUpInside" id="3FJ-O2-t3s"/>
+                                    <action selector="toggleButtonDidClickWithToggleButton:" destination="eiu-v3-oaX" eventType="touchUpInside" id="smo-Xk-RvM"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UIJ-1R-XFA">
@@ -93,7 +93,7 @@
                                 </constraints>
                                 <state key="normal" title="버튼"/>
                                 <connections>
-                                    <action selector="onToggleDidChangeWithToggleButton:" destination="eiu-v3-oaX" eventType="touchUpInside" id="16c-zQ-yFA"/>
+                                    <action selector="toggleButtonDidClickWithToggleButton:" destination="eiu-v3-oaX" eventType="touchUpInside" id="FJb-EH-GzQ"/>
                                 </connections>
                             </button>
                         </subviews>
