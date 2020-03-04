@@ -23,6 +23,8 @@ import Foundation
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
+    public weak var upstreamDataDelegate: UpstreamDataDelegate?
+    
     private let delegates = DelegateSet<DownstreamDataDelegate>()
     private var preprocessors = [DownstreamDataPreprocessable]()
     private let downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
@@ -93,9 +95,11 @@ extension StreamDataRouter: UpstreamDataSendable {
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
     ) {
         guard let apiProvider = networkManager.apiProvider else {
+            let error = NetworkError.unavailable
+            upstreamDataDelegate?.upstreamDataDidSend(upstreamEventMessage: upstreamEventMessage, result: .failure(error))
             // TODO: HTTP/2 전이중 방식으로 변경시 completion, resultHandler 통합
-            completion?(.failure(NetworkError.unavailable))
-            resultHandler?(.failure(NetworkError.unavailable))
+            completion?(.failure(error))
+            resultHandler?(.failure(error))
             return
         }
         // body
@@ -104,7 +108,11 @@ extension StreamDataRouter: UpstreamDataSendable {
             + "\"header\": \(upstreamEventMessage.headerString)"
             + ",\"payload\": \(upstreamEventMessage.payloadString) }"
             + " }").data(using: .utf8) else {
-                completion?(.failure(NetworkError.invalidParameter))
+                let error = NetworkError.invalidParameter
+                upstreamDataDelegate?.upstreamDataDidSend(upstreamEventMessage: upstreamEventMessage, result: .failure(error))
+                // TODO: HTTP/2 전이중 방식으로 변경시 completion, resultHandler 통합
+                completion?(.failure(error))
+                resultHandler?(.failure(error))
                 return
         }
         
@@ -117,6 +125,8 @@ extension StreamDataRouter: UpstreamDataSendable {
         )
         apiProvider.request(with: request) { [weak self] result in
             guard let self = self else { return }
+            self.upstreamDataDelegate?.upstreamDataDidSend(upstreamEventMessage: upstreamEventMessage, result: result)
+            // TODO: HTTP/2 전이중 방식으로 변경시 completion, resultHandler 통합
             completion?(result)
             switch result {
             case .success:
@@ -135,7 +145,11 @@ extension StreamDataRouter: UpstreamDataSendable {
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
     ) {
         guard let apiProvider = networkManager.apiProvider else {
-            completion?(.failure(NetworkError.unavailable))
+            let error = NetworkError.unavailable
+            upstreamDataDelegate?.upstreamDataDidSend(upstreamAttachment: upstreamAttachment, result: .failure(error))
+            // TODO: HTTP/2 전이중 방식으로 변경시 completion, resultHandler 통합
+            completion?(.failure(error))
+            resultHandler?(.failure(error))
             return
         }
         
@@ -162,6 +176,8 @@ extension StreamDataRouter: UpstreamDataSendable {
         
         apiProvider.request(with: request) { [weak self] result in
             guard let self = self else { return }
+            self.upstreamDataDelegate?.upstreamDataDidSend(upstreamAttachment: upstreamAttachment, result: result)
+            // TODO: HTTP/2 전이중 방식으로 변경시 completion, resultHandler 통합
             completion?(result)
             switch result {
             case .success:

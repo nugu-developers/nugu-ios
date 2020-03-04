@@ -64,6 +64,8 @@ final class NuguCentralManager {
         client.delegate = self
         client.locationAgent.delegate = self
         client.systemAgent.add(systemAgentDelegate: self)
+        // Using `UpstreamDataDelegate` to gather network statistics
+        client.streamDataRouter.upstreamDataDelegate = self
 
         NuguLocationManager.shared.startUpdatingLocation()
         
@@ -392,6 +394,20 @@ extension NuguCentralManager: SystemAgentDelegate {
         case .unauthorizedRequestException:
             handleAuthError()
         }
+    }
+}
+
+// MARK: - UpstreamDataDelegate
+
+extension NuguCentralManager: UpstreamDataDelegate {
+    func upstreamDataDidSend(upstreamEventMessage: UpstreamEventMessage, result: Result<Data, Error>) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(upstreamEventMessage.header.namespace).\(upstreamEventMessage.header.name) \(result)")
+    }
+    
+    func upstreamDataDidSend(upstreamAttachment: UpstreamAttachment, result: Result<Data, Error>) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(upstreamAttachment.header.namespace).\(upstreamAttachment.header.name) \(result)")
     }
 }
 
