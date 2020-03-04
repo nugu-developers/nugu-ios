@@ -212,7 +212,7 @@ private extension PlaySyncManager {
         }
         
         delegates.notify { (delegate) in
-            delegate.playSyncDidRelease(property: property, playServiceId: info.playServiceId)
+            delegate.playSyncDidRelease(property: property, dialogRequestId: info.dialogRequestId)
         }
     }
     

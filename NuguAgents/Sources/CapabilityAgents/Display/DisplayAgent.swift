@@ -161,10 +161,10 @@ extension DisplayAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension DisplayAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, playServiceId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, let item = self.currentItem else { return }
+            guard property == self.playSyncProperty, let item = self.currentItem, item.dialogRequestId == dialogRequestId else { return }
             
             self.currentItem = nil
             self.renderingInfos
