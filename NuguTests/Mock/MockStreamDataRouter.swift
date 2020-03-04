@@ -23,6 +23,8 @@ import Foundation
 import NuguCore
 
 class MockStreamDataRouter: StreamDataRoutable {
+    weak var upstreamDataDelegate: UpstreamDataDelegate?
+    
     func add(preprocessor: DownstreamDataPreprocessable) {
         //
     }
