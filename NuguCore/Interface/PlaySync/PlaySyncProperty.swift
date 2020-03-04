@@ -29,20 +29,42 @@ public struct PlaySyncProperty {
         self.contextType = contextType
     }
     
-    public enum LayerType {
+    public enum LayerType: String {
         case info
         case media
     }
 
-    public enum ContextType {
+    public enum ContextType: String {
         case sound
         case display
     }
 }
 
+// MARK: - Hashable
+
 extension PlaySyncProperty: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(layerType.hashValue)
         hasher.combine(contextType.hashValue)
+    }
+}
+
+// MARK: - CustomStringConvertible
+
+extension PlaySyncProperty.LayerType: CustomStringConvertible {
+    public var description: String {
+        return rawValue
+    }
+}
+
+extension PlaySyncProperty.ContextType: CustomStringConvertible {
+    public var description: String {
+        return rawValue
+    }
+}
+
+extension PlaySyncProperty: CustomStringConvertible {
+    public var description: String {
+        return "Layer: \(layerType).\(contextType)"
     }
 }
