@@ -129,10 +129,11 @@ public extension PlaySyncManager {
         }
     }
     
-    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
+    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval?) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard self.playContexts[property.layerType]?[property.contextType] != nil else { return }
+            guard let info = self.playContexts[property.layerType]?[property.contextType] else { return }
+            let duration = duration ?? info.duration
             
             log.debug("\(property) \(duration)")
             
@@ -163,6 +164,7 @@ public extension PlaySyncManager {
     func cancelTimer(property: PlaySyncProperty) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard self.playContextTimers[property] != nil else { return }
             
             log.debug(property)
             
