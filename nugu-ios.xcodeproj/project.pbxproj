@@ -247,7 +247,6 @@
 		7315302923E11EDF00F843C3 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27D2375703000C9A177 /* NetworkError.swift */; };
 		7315302A23E11EDF00F843C3 /* PlaySyncManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */; };
 		7315302B23E11EDF00F843C3 /* PlaySyncDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */; };
-		7315302C23E11EDF00F843C3 /* PlaySyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2842375703000C9A177 /* PlaySyncState.swift */; };
 		7315302D23E11EDF00F843C3 /* FocusManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28B2375703000C9A177 /* FocusManageable.swift */; };
 		7315302E23E11EDF00F843C3 /* FocusDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2872375703000C9A177 /* FocusDelegate.swift */; };
 		7315302F23E11EDF00F843C3 /* FocusChannelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28A2375703000C9A177 /* FocusChannelDelegate.swift */; };
@@ -633,7 +632,6 @@
 		1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiveMessageDelegate.swift; sourceTree = "<group>"; };
 		1FFFF27F2375703000C9A177 /* NetworkManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManageable.swift; sourceTree = "<group>"; };
 		1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncDelegate.swift; sourceTree = "<group>"; };
-		1FFFF2842375703000C9A177 /* PlaySyncState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncState.swift; sourceTree = "<group>"; };
 		1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncManageable.swift; sourceTree = "<group>"; };
 		1FFFF2872375703000C9A177 /* FocusDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2882375703000C9A177 /* FocusState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusState.swift; sourceTree = "<group>"; };
@@ -1426,7 +1424,6 @@
 			children = (
 				1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */,
 				1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */,
-				1FFFF2842375703000C9A177 /* PlaySyncState.swift */,
 				7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */,
 			);
 			path = PlaySync;
@@ -2902,7 +2899,6 @@
 				7315301D23E11EDF00F843C3 /* ContextType.swift in Sources */,
 				7315303723E11EDF00F843C3 /* UpstreamHeader.swift in Sources */,
 				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
-				7315302C23E11EDF00F843C3 /* PlaySyncState.swift in Sources */,
 				7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */,
 				7315303A23E11EDF00F843C3 /* CrashReport.swift in Sources */,
 				7315304323E11EDF00F843C3 /* AuthorizationStoreable.swift in Sources */,
@@ -3121,7 +3117,7 @@
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
 				7315306C23E1248300F843C3 /* ASRAgentDelegate.swift in Sources */,
 				73152FAE23E0413700F843C3 /* SpeakerMuteInfo.swift in Sources */,
-                A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
+				A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
 				7315306423E1248300F843C3 /* SpeakerVolumeDelegate.swift in Sources */,
 				7315307123E1248300F843C3 /* SystemAgentProtocol.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,

@@ -197,10 +197,6 @@ private extension PlaySyncManager {
         
         playStack.removeAll { $0 == playServiceId }
         playStack.insert(playServiceId, at: 0)
-        
-        delegates.notify { (delegate) in
-            delegate.playSyncDidChange(state: .synced, property: property, playServiceId: playServiceId)
-        }
     }
     
     func popFromPlayStack(property: PlaySyncProperty) {
@@ -216,7 +212,7 @@ private extension PlaySyncManager {
         }
         
         delegates.notify { (delegate) in
-            delegate.playSyncDidChange(state: .released, property: property, playServiceId: info.playServiceId)
+            delegate.playSyncDidRelease(property: property, playServiceId: info.playServiceId)
         }
     }
     

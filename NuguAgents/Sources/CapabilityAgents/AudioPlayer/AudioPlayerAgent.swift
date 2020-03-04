@@ -342,11 +342,10 @@ extension AudioPlayerAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerAgent: PlaySyncDelegate {
-    public func playSyncDidChange(state: PlaySyncState, property: PlaySyncProperty, playServiceId: String) {
-        log.info("\(state)")
+    public func playSyncDidRelease(property: PlaySyncProperty, playServiceId: String) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, state == .released, self.currentMedia != nil else { return }
+            guard property == self.playSyncProperty, self.currentMedia != nil else { return }
             
             self.stop(cancelAssociation: false)
         }
