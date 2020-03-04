@@ -319,15 +319,16 @@ private extension MainViewController {
     }
     
     func dismissDisplayView() {
+        guard let view = displayView else { return }
         UIView.animate(
             withDuration: 0.3,
-            animations: { [weak self] in
-                self?.displayView?.alpha = 0
+            animations: {
+                view.alpha = 0
             },
-            completion: { [weak self] _ in
-                self?.displayView?.removeFromSuperview()
-                self?.displayView = nil
+            completion: { _ in
+                view.removeFromSuperview()
         })
+        displayView = nil
     }
 }
 
@@ -347,15 +348,27 @@ private extension MainViewController {
         audioPlayerView.onUserInteraction = {
             NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
         }
-
+        
+        audioPlayerView.alpha = 0
         view.insertSubview(audioPlayerView, belowSubview: nuguButton)
         displayAudioPlayerView = audioPlayerView
+        UIView.animate(withDuration: 0.3) {
+            audioPlayerView.alpha = 1.0
+        }
         
         return audioPlayerView
     }
     
     func dismissDisplayAudioPlayerView() {
-        displayAudioPlayerView?.removeFromSuperview()
+        guard let view = displayAudioPlayerView else { return }
+        UIView.animate(
+            withDuration: 0.3,
+            animations: {
+                view.alpha = 0
+            },
+            completion: { _ in
+                view.removeFromSuperview()
+        })
         displayAudioPlayerView = nil
     }
 }
