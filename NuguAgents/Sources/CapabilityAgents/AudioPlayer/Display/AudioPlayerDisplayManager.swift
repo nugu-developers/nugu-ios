@@ -46,6 +46,8 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
     
     private var audioPlayerState: AudioPlayerState = .idle {
         didSet {
+            guard currentItem != nil else { return }
+            
             switch audioPlayerState {
             case .playing:
                 playSyncManager.cancelTimer(property: playSyncProperty)

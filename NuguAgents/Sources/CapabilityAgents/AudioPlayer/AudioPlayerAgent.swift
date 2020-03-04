@@ -477,6 +477,7 @@ private extension AudioPlayerAgent {
     func stopSilently() {
         guard let media = self.currentMedia else { return }
             
+        currentMedia?.cancelAssociation = true
         // `AudioPlayerState` -> Event
         switch self.audioPlayerState {
         case .playing, .paused:

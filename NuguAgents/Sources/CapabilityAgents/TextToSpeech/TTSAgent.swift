@@ -376,6 +376,8 @@ private extension TTSAgent {
     /// Stop previously playing TTS
     func stopSilently() {
         guard let media = currentMedia else { return }
+        
+        currentMedia?.cancelAssociation = true
         // `TTSResult` -> `TTSState` -> Event
         media.player.delegate = nil
         media.player.stop()
