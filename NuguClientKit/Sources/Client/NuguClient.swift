@@ -114,7 +114,7 @@ public class NuguClient {
 
         textAgent = TextAgent(contextManager: contextManager,
                               upstreamDataSender: streamDataRouter,
-                              focusManager: focusManager)
+                              directiveSequencer: directiveSequencer)
         
         dialogStateAggregator = DialogStateAggregator()
         asrAgent.add(delegate: dialogStateAggregator)

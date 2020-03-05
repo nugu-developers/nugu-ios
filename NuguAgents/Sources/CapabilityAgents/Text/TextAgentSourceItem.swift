@@ -1,8 +1,8 @@
 //
-//  TextRequest.swift
+//  TextAgentSourceItem.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2019/07/19.
+//  Created by yonghoonKwon on 2020/03/05.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,7 @@
 
 import Foundation
 
-import NuguCore
-
-struct TextRequest {
-    let contextPayload: ContextPayload
+struct TextAgentSourceItem: Decodable {
     let text: String
-    let dialogRequestId: String
-    let token: String?
-    let expectSpeech: ASRExpectSpeech?
+    let token: String
 }

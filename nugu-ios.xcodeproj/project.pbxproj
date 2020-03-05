@@ -36,6 +36,7 @@
 		1F2E803923966D9D00569C59 /* KeywordSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803823966D9D00569C59 /* KeywordSource.swift */; };
 		1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */; };
 		1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */; };
+		1F5DD4B72410CB8600719FBC /* TextAgentSourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */; };
 		1F9C5B5E23C30B4B0086CC04 /* NuguOAuthApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */; };
 		1F9C5B7223F27AB30086CC04 /* MockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7123F27AB30086CC04 /* MockNetworkManager.swift */; };
 		1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */; };
@@ -529,6 +530,7 @@
 		1F2E803823966D9D00569C59 /* KeywordSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSource.swift; sourceTree = "<group>"; };
 		1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordDetectorState.swift; sourceTree = "<group>"; };
 		1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetectorDelegate.swift; sourceTree = "<group>"; };
+		1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentSourceItem.swift; sourceTree = "<group>"; };
 		1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguOAuthApi.swift; sourceTree = "<group>"; };
 		1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguAgents.podspec; sourceTree = "<group>"; };
 		1F9C5B6B23EBEF810086CC04 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .travis.yml; sourceTree = "<group>"; };
@@ -1698,6 +1700,7 @@
 				1FFFF35B2375707000C9A177 /* TextAgent.swift */,
 				1FFFF35A2375707000C9A177 /* TextAgent+Event.swift */,
 				1FFFF35C2375707000C9A177 /* TextRequest.swift */,
+				1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -3158,6 +3161,7 @@
 				73152FC123E0414F00F843C3 /* SystemAgent.swift in Sources */,
 				7315305E23E1246F00F843C3 /* CapabilityAgentProperty.swift in Sources */,
 				7315305123E1246F00F843C3 /* DisplayAgentDelegate.swift in Sources */,
+				1F5DD4B72410CB8600719FBC /* TextAgentSourceItem.swift in Sources */,
 				73152FC323E0414F00F843C3 /* SystemAgent+Event.swift in Sources */,
 				7315306D23E1248300F843C3 /* ASRState.swift in Sources */,
 				7315307223E1248300F843C3 /* SystemAgentDelegate.swift in Sources */,
