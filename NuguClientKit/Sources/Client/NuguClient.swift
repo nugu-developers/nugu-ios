@@ -119,7 +119,6 @@ public class NuguClient {
         dialogStateAggregator = DialogStateAggregator()
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
-        textAgent.add(delegate: dialogStateAggregator)
         
         // audio player
         audioPlayerAgent = AudioPlayerAgent(
