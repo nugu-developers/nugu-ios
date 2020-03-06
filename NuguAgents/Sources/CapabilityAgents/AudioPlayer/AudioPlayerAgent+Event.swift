@@ -44,7 +44,16 @@ extension AudioPlayerAgent {
             case previousCommandIssued
             case playCommandIssued
             case pauseCommandIssued
-            case stopCommandIssued
+            case stopCommandIssued            
+            case favoriteCommandIssued
+            case repeatCommandIssued
+            case shuffleCommandIssued
+            case showLyricsSucceeded
+            case showLyricsFailed
+            case hideLyricsSucceeded
+            case hideLyricsFailed
+            case controlLyricsPageSucceeded
+            case controlLyricsPageFailed
         }
     }
 }
@@ -115,6 +124,24 @@ extension AudioPlayerAgent.Event: Eventable {
             return "PauseCommandIssued"
         case .stopCommandIssued:
             return "StopCommandIssued"
+        case .favoriteCommandIssued:
+            return "FavoriteCommandIssued"
+        case .repeatCommandIssued:
+            return "RepeatCommandIssued"
+        case .shuffleCommandIssued:
+            return "ShuffleCommandIssued"
+        case .showLyricsSucceeded:
+            return "ShowLyricsSucceeded"
+        case .showLyricsFailed:
+            return "ShowLyricsFailed"
+        case .hideLyricsSucceeded:
+            return "HideLyricsSucceeded"
+        case .hideLyricsFailed:
+            return "HideLyricsFailed"
+        case .controlLyricsPageSucceeded:
+            return "ControlLyricsPageSucceeded"
+        case .controlLyricsPageFailed:
+            return "ControlLyricsPageFailed"
         }
     }
 }

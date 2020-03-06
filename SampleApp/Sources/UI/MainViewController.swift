@@ -627,6 +627,13 @@ extension MainViewController: AudioPlayerDisplayDelegate {
             dismissDisplayAudioPlayerView()
         }
     }
+    
+    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings) {
+        guard let displayAudioPlayerView = displayAudioPlayerView else {
+            return
+        }
+        displayAudioPlayerView.updateSettings(settings: payload)
+    }
 }
 
 // MARK: - AudioPlayerAgentDelegate

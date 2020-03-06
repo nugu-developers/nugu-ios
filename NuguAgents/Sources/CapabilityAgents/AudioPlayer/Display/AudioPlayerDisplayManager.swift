@@ -71,6 +71,19 @@ extension AudioPlayerDisplayManager {
         }
     }
     
+    func updateMetadata(payload: AudioPlayerDisplayUpdateMetadataPayload, templateId: String) {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
+            let delegate = info.delegate else { return }
+        let updateMetadataPayload = AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings(
+            favorite: payload.metadata?.template?.content?.settings?.favorite,
+            repeat: payload.metadata?.template?.content?.settings?.repeat,
+            shuffle: payload.metadata?.template?.content?.settings?.shuffle
+        )
+        DispatchQueue.main.async {
+            delegate.audioPlayerDisplayShouldUpdateMetadata(payload: updateMetadataPayload)
+        }
+    }
+    
     func add(delegate: AudioPlayerDisplayDelegate) {
         remove(delegate: delegate)
         

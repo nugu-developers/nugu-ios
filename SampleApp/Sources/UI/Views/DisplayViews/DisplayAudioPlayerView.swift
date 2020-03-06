@@ -110,6 +110,31 @@ final class DisplayAudioPlayerView: UIView {
     }
 }
 
+// MARK: - Update
+
+extension DisplayAudioPlayerView {
+    func updateSettings(settings: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings) {
+        if let favorite = settings.favorite {
+            
+        }
+        
+        if let `repeat` = settings.repeat {
+            switch `repeat` {
+            case .all:
+                break
+            case .one:
+                break
+            case .none:
+                break
+            }
+        }
+        
+        if let shuffle = settings.shuffle {
+            
+        }
+    }
+}
+
 // MARK: - IBActions
 
 private extension DisplayAudioPlayerView {

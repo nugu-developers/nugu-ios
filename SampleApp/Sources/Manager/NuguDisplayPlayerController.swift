@@ -265,6 +265,8 @@ extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
         return renderingContext
     }
     
+    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings) { }
+    
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
         switch reason {
         case .timer:

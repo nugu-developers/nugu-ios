@@ -61,6 +61,48 @@ public extension AudioPlayerDisplayTemplate {
                 public let backgroundColor: String?
                 /// <#Description#>
                 public let backgroundImageUrl: String?
+                /// <#Description#>
+                public let badgeImageUrl: String?
+                /// <#Description#>
+                public let badgeMessage: String?
+                /// <#Description#>
+                public let lyrics: Lyrics?
+                /// <#Description#>
+                public let settings: Settings?
+                                
+                /// <#Description#>
+                public struct Lyrics: Decodable {
+                    /// <#Description#>
+                    let title: String
+                    /// <#Description#>
+                    let lyricsType: String
+                    /// <#Description#>
+                    let lyricsInfoList: [LyricsInfo]
+                    
+                    /// <#Description#>
+                    public struct LyricsInfo: Decodable {
+                        /// <#Description#>
+                        let time: Int
+                        /// <#Description#>
+                        let text: String
+                    }
+                }
+                
+                /// <#Description#>
+                public struct Settings: Decodable {
+                    /// <#Description#>
+                    public let favorite: Bool?
+                    /// <#Description#>
+                    public let `repeat`: Repeat?
+                    /// <#Description#>
+                    public let shuffle: Bool?
+                    
+                    public enum Repeat: String, Decodable {
+                        case all = "ALL"
+                        case one = "ONE"
+                        case none = "NONE"
+                    }
+                }
             }
         }
     }

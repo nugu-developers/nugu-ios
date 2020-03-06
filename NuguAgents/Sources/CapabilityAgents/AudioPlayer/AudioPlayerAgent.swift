@@ -124,7 +124,12 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", medium: .audio, isBlocking: false, preFetch: prefetchPlay, directiveHandler: handlePlay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", medium: .audio, isBlocking: false, directiveHandler: handleStop),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", medium: .visual, isBlocking: false, directiveHandler: handleUpdateMetadata)
+//        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", medium: .visual, isBlocking: false, directiveHandler: handleShowLyrics),
+//        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", medium: .visual, isBlocking: false, directiveHandler: handleHideLyrics),
+//        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", medium: .visual, isBlocking: false, directiveHandler: handleControlLyricsPage
+//        )
     ]
     
     public init(
@@ -464,6 +469,20 @@ private extension AudioPlayerAgent {
         return { [weak self] _, completionHandler in
             self?.pause()
             completionHandler(.success(()))
+        }
+    }
+    
+    private func handleUpdateMetadata() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8),
+                        let payload = try? JSONDecoder().decode(AudioPlayerDisplayUpdateMetadataPayload.self, from: data) else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+                    }
+                    self.audioPlayerDisplayManager.updateMetadata(payload: payload, templateId: directive.header.messageId)
+            })
         }
     }
 
