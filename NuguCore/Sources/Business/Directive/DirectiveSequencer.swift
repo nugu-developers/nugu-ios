@@ -111,8 +111,12 @@ private extension DirectiveSequencer {
                         return disposable
                     }
                     
-                    preFetch(directive) { result in
-                        event(.success(result))
+                    do {
+                        try preFetch(directive) { result in
+                            event(.success(result))
+                        }
+                    } catch {
+                        event(.success(.failure(error)))
                     }
                     
                     return disposable
@@ -180,12 +184,19 @@ private extension DirectiveSequencer {
                 }
 
                 handlingTypeInfos.append(handler)
-                handler.directiveHandler(directive) { [weak self] result in
-                    remove(handler)
-                    if case .failure(let error) = result {
-                        self?.upstreamDataSender.sendCrashReport(error: error)
-                        log.error(error)
+                
+                do {
+                    try handler.directiveHandler(directive) { [weak self] result in
+                        remove(handler)
+                        if case .failure(let error) = result {
+                            self?.upstreamDataSender.sendCrashReport(error: error)
+                            log.error(error)
+                        }
                     }
+                } catch {
+                    remove(handler)
+                    self.upstreamDataSender.sendCrashReport(error: error)
+                    log.error(error)
                 }
             }, onError: { [weak self] error in
                 self?.upstreamDataSender.sendCrashReport(error: error)
