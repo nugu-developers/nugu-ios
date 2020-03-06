@@ -56,7 +56,7 @@ public extension AudioPlayerDisplayTemplate {
                 /// <#Description#>
                 public let subtitle2: String?
                 /// <#Description#>
-                public let imageUrl: String?
+                public let imageUrl: String
                 /// <#Description#>
                 public let durationSec: Int?
                 /// <#Description#>
