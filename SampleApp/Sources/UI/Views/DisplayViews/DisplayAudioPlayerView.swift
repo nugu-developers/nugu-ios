@@ -35,13 +35,18 @@ final class DisplayAudioPlayerView: UIView {
     @IBOutlet private weak var albumImageContainerView: UIView!
     @IBOutlet private weak var albumImageView: UIImageView!
     
+    @IBOutlet private weak var favoriteButtonContainerView: UIView!
+    @IBOutlet private weak var favoriteButton: UIButton!
+    
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var subtitle1Label: UILabel!
     @IBOutlet private weak var subtitle2Label: UILabel!
     
+    @IBOutlet private weak var repeatButton: UIButton!
     @IBOutlet private weak var prevButton: UIButton!
     @IBOutlet private weak var playPauseButton: UIButton!
     @IBOutlet private weak var nextButton: UIButton!
+    @IBOutlet private weak var shuffleButton: UIButton!
     
     @IBOutlet private weak var progressView: UIProgressView!
     
@@ -71,6 +76,27 @@ final class DisplayAudioPlayerView: UIView {
             subtitle2Label.text = template?.content.subtitle2
             backgroundImageView.loadImage(from: template?.content.backgroundImageUrl)
             
+            if let favorite = template?.content.settings?.favorite {
+                favoriteButtonContainerView.isHidden = false
+                favoriteButton.isSelected = favorite
+            } else {
+                favoriteButtonContainerView.isHidden = true
+            }
+            
+            if let `repeat` = template?.content.settings?.repeat {
+                repeatButton.isHidden = false
+                repeatState = `repeat`
+            } else {
+                repeatButton.isHidden = true
+            }
+            
+            if let shuffle = template?.content.settings?.shuffle {
+                shuffleButton.isHidden = false
+                shuffleButton.isSelected = shuffle
+            } else {
+                shuffleButton.isHidden = true
+            }
+            
             startProgressTimer()
         }
     }
@@ -78,6 +104,20 @@ final class DisplayAudioPlayerView: UIView {
     var audioPlayerState: AudioPlayerState? {
         didSet {
             playPauseButton.isSelected = (audioPlayerState == .playing)
+        }
+    }
+    
+    private var repeatState: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings.Repeat? {
+        didSet {
+            guard let repeatState = repeatState else { return }
+            switch repeatState {
+            case .all:
+                repeatButton.setImage(UIImage(named: "btn_repeat_on"), for: .normal)
+            case .one:
+                repeatButton.setImage(UIImage(named: "btn_repeat_1_on"), for: .normal)
+            case .none:
+                repeatButton.setImage(UIImage(named: "btn_repeat_off"), for: .normal)
+            }
         }
     }
     
@@ -115,22 +155,18 @@ final class DisplayAudioPlayerView: UIView {
 extension DisplayAudioPlayerView {
     func updateSettings(settings: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings) {
         if let favorite = settings.favorite {
-            
+            favoriteButtonContainerView.isHidden = false
+            favoriteButton.isSelected = favorite
         }
         
         if let `repeat` = settings.repeat {
-            switch `repeat` {
-            case .all:
-                break
-            case .one:
-                break
-            case .none:
-                break
-            }
+            repeatButton.isHidden = false
+            repeatState = `repeat`
         }
         
         if let shuffle = settings.shuffle {
-            
+            shuffleButton.isHidden = false
+            shuffleButton.isSelected = shuffle
         }
     }
 }
@@ -138,11 +174,11 @@ extension DisplayAudioPlayerView {
 // MARK: - IBActions
 
 private extension DisplayAudioPlayerView {
-    @IBAction private func previousButtonDidClick(_ button: UIButton) {
+    @IBAction func previousButtonDidClick(_ button: UIButton) {
         NuguCentralManager.shared.client.audioPlayerAgent.prev()
     }
     
-    @IBAction private func playPauseDidClick(_ button: UIButton) {
+    @IBAction func playPauseDidClick(_ button: UIButton) {
         if button.isSelected {
             NuguCentralManager.shared.client.audioPlayerAgent.pause()
         } else {
@@ -150,12 +186,32 @@ private extension DisplayAudioPlayerView {
         }
     }
     
-    @IBAction private func nextButtonDidClick(_ button: UIButton) {
+    @IBAction func nextButtonDidClick(_ button: UIButton) {
         NuguCentralManager.shared.client.audioPlayerAgent.next()
     }
     
-    @IBAction private func closeButtonDidClick(_ button: UIButton) {
+    @IBAction func closeButtonDidClick(_ button: UIButton) {
         onCloseButtonClick?()
+    }
+    
+    @IBAction func favoriteButtonDidClick(_ button: UIButton) {
+        favoriteButton.isSelected = !favoriteButton.isSelected
+    }
+    
+    @IBAction func repeatButtonDidClick(_ button: UIButton) {
+        guard let repeatState = repeatState else { return }
+        switch repeatState {
+        case .all:
+            self.repeatState = AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings.Repeat.one
+        case .one:
+            self.repeatState = AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings.Repeat.none
+        case .none:
+            self.repeatState = AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings.Repeat.all
+        }
+    }
+    
+    @IBAction func shuffleButtonDidClick(_ button: UIButton) {
+        shuffleButton.isSelected = !shuffleButton.isSelected
     }
 }
 
