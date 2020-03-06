@@ -31,7 +31,7 @@ struct AudioPlayerDisplayUpdateMetadataPayload: Decodable {
             let content: Content?
             
             struct Content: Decodable {
-                let settings: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings?
+                let settings: AudioPlayerDisplaySettingsTemplate?
             }
         }
     }

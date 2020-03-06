@@ -45,9 +45,9 @@ extension AudioPlayerAgent {
             case playCommandIssued
             case pauseCommandIssued
             case stopCommandIssued            
-            case favoriteCommandIssued
-            case repeatCommandIssued
-            case shuffleCommandIssued
+            case favoriteCommandIssued(isOn: Bool)
+            case repeatCommandIssued(mode: AudioPlayerDisplaySettingsTemplate.Repeat)
+            case shuffleCommandIssued(isOn: Bool)
             case showLyricsSucceeded
             case showLyricsFailed
             case hideLyricsSucceeded
@@ -88,6 +88,21 @@ extension AudioPlayerAgent.Event: Eventable {
             eventPayload["error"] = [
                 "type": type,
                 "message": error.localizedDescription
+            ]
+        case .favoriteCommandIssued(let isOn):
+            return [
+                "playServiceId": playServiceId,
+                "favorite": isOn
+            ]
+        case .repeatCommandIssued(let mode):
+            return [
+                "playServiceId": playServiceId,
+                "repeat": mode
+            ]
+        case .shuffleCommandIssued(let isOn):
+            return [
+                "playServiceId": playServiceId,
+                "shuffle": isOn
             ]
         default:
             break

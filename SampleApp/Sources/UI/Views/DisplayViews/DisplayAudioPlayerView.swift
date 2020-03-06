@@ -85,7 +85,7 @@ final class DisplayAudioPlayerView: UIView {
             
             if let `repeat` = template?.content.settings?.repeat {
                 repeatButton.isHidden = false
-                repeatState = `repeat`
+                repeatMode = `repeat`
             } else {
                 repeatButton.isHidden = true
             }
@@ -107,10 +107,10 @@ final class DisplayAudioPlayerView: UIView {
         }
     }
     
-    private var repeatState: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings.Repeat? {
+    private var repeatMode: AudioPlayerDisplaySettingsTemplate.Repeat? {
         didSet {
-            guard let repeatState = repeatState else { return }
-            switch repeatState {
+            guard let repeatMode = repeatMode else { return }
+            switch repeatMode {
             case .all:
                 repeatButton.setImage(UIImage(named: "btn_repeat_on"), for: .normal)
             case .one:
@@ -153,7 +153,7 @@ final class DisplayAudioPlayerView: UIView {
 // MARK: - Update
 
 extension DisplayAudioPlayerView {
-    func updateSettings(settings: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings) {
+    func updateSettings(settings: AudioPlayerDisplaySettingsTemplate) {
         if let favorite = settings.favorite {
             favoriteButtonContainerView.isHidden = false
             favoriteButton.isSelected = favorite
@@ -161,7 +161,7 @@ extension DisplayAudioPlayerView {
         
         if let `repeat` = settings.repeat {
             repeatButton.isHidden = false
-            repeatState = `repeat`
+            repeatMode = `repeat`
         }
         
         if let shuffle = settings.shuffle {
@@ -196,22 +196,27 @@ private extension DisplayAudioPlayerView {
     
     @IBAction func favoriteButtonDidClick(_ button: UIButton) {
         favoriteButton.isSelected = !favoriteButton.isSelected
+        NuguCentralManager.shared.client.audioPlayerAgent.favorite(isOn: favoriteButton.isSelected)
     }
     
     @IBAction func repeatButtonDidClick(_ button: UIButton) {
-        guard let repeatState = repeatState else { return }
-        switch repeatState {
+        guard let repeatMode = repeatMode else { return }
+        var changedRepeatMode: AudioPlayerDisplaySettingsTemplate.Repeat
+        switch repeatMode {
         case .all:
-            self.repeatState = AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings.Repeat.one
+            changedRepeatMode = AudioPlayerDisplaySettingsTemplate.Repeat.one
         case .one:
-            self.repeatState = AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings.Repeat.none
+            changedRepeatMode = AudioPlayerDisplaySettingsTemplate.Repeat.none
         case .none:
-            self.repeatState = AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings.Repeat.all
+            changedRepeatMode = AudioPlayerDisplaySettingsTemplate.Repeat.all
         }
+        self.repeatMode = changedRepeatMode
+        NuguCentralManager.shared.client.audioPlayerAgent.repeatMode(repeatMode: changedRepeatMode)
     }
     
     @IBAction func shuffleButtonDidClick(_ button: UIButton) {
         shuffleButton.isSelected = !shuffleButton.isSelected
+        NuguCentralManager.shared.client.audioPlayerAgent.shuffle(isOn: shuffleButton.isSelected)
     }
 }
 

@@ -20,6 +20,8 @@
 
 import Foundation
 
+public typealias AudioPlayerDisplaySettingsTemplate = AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings
+
 public extension AudioPlayerDisplayTemplate {
     /// <#Description#>
     struct AudioPlayer: Decodable {

@@ -61,8 +61,7 @@ final class NuguDisplayPlayerController {
     func unuse() {
         // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
         guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
-        
-        
+                
         audioPlayerAgent.remove(displayDelegate: self)
         audioPlayerAgent.remove(delegate: self)
     }
@@ -265,7 +264,7 @@ extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
         return renderingContext
     }
     
-    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerDisplayTemplate.AudioPlayer.Template.Content.Settings) { }
+    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerDisplaySettingsTemplate) {}
     
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
         switch reason {

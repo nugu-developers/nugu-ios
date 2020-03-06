@@ -215,6 +215,33 @@ public extension AudioPlayerAgent {
         }
     }
     
+    func favorite(isOn: Bool) {
+        guard let media = self.currentMedia else { return }
+        
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendEvent(media: media, typeInfo: .favoriteCommandIssued(isOn: isOn))
+        }
+    }
+    
+    func repeatMode(repeatMode: AudioPlayerDisplaySettingsTemplate.Repeat) {
+        guard let media = self.currentMedia else { return }
+        
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendEvent(media: media, typeInfo: .repeatCommandIssued(mode: repeatMode))
+        }
+    }
+    
+    func shuffle(isOn: Bool) {
+        guard let media = self.currentMedia else { return }
+        
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendEvent(media: media, typeInfo: .shuffleCommandIssued(isOn: isOn))
+        }
+    }
+    
     func seek(to offset: Int) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
