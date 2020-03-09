@@ -83,33 +83,33 @@ extension AudioPlayerDisplayManager {
         guard let data = try? JSONSerialization.data(withJSONObject: metaData, options: []),
             let displayItem = try? JSONDecoder().decode(AudioPlayerDisplayTemplate.AudioPlayer.self, from: data) else {
                 log.error("Invalid metaData")
-            return
+                return
         }
+        
+        let item = AudioPlayerDisplayTemplate(
+            type: displayItem.template.type,
+            payload: displayItem,
+            templateId: messageId,
+            dialogRequestId: dialogRequestId,
+            playStackServiceId: playStackServiceId
+        )
         
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.currentItem = AudioPlayerDisplayTemplate(
-                type: displayItem.template.type,
-                payload: displayItem,
-                templateId: messageId,
-                dialogRequestId: dialogRequestId,
-                playStackServiceId: playStackServiceId
-            )
-            if let item = self.currentItem {
-                let rendered = self.renderingInfos
-                    .compactMap { $0.delegate }
-                    .map { self.setRenderedTemplate(delegate: $0, template: item) }
-                    .contains { $0 }
-                if rendered == false {
-                    self.currentItem = nil
-                } else {
-                    self.playSyncManager.startPlay(
-                        property: self.playSyncProperty,
-                        duration: .seconds(7),
-                        playServiceId: item.playStackServiceId,
-                        dialogRequestId: item.dialogRequestId
-                    )
-                }
+            
+            let rendered = self.renderingInfos
+                .compactMap { $0.delegate }
+                .map { self.setRenderedTemplate(delegate: $0, template: item) }
+                .contains { $0 }
+            if rendered == true {
+                self.currentItem = item
+                
+                self.playSyncManager.startPlay(
+                    property: self.playSyncProperty,
+                    duration: .seconds(7),
+                    playServiceId: item.playStackServiceId,
+                    dialogRequestId: item.dialogRequestId
+                )
             }
         }
     }
