@@ -29,6 +29,14 @@ public struct ASRExpectSpeech {
     public let sessionId: String
     public let property: String?
     public let domainTypes: [String?]?
+    public let asrContext: ASRContext?
+    
+    public struct ASRContext {
+        public let task: String?
+        public let sceneId: String?
+        public let sceneText: [String?]?
+    }
+    
 }
 
 // MARK: - ASRExpectSpeech: Decodable
@@ -40,6 +48,7 @@ extension ASRExpectSpeech: Decodable {
         case sessionId
         case property
         case domainTypes
+        case asrContext
     }
     
     public init(from decoder: Decoder) throws {
@@ -49,9 +58,29 @@ extension ASRExpectSpeech: Decodable {
         sessionId = try container.decode(String.self, forKey: .sessionId)
         property = try? container.decode(String.self, forKey: .property)
         domainTypes = try? container.decode([String?].self, forKey: .domainTypes)
+        asrContext = try? container.decode(ASRContext.self, forKey: .asrContext)
+    }
+}
+
+// MARK: - ASRExpectSpeech.ASRContext: Decodable
+
+extension ASRExpectSpeech.ASRContext: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case task
+        case sceneId
+        case sceneText
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        task = try? container.decode(String.self, forKey: .task)
+        sceneId = try? container.decode(String.self, forKey: .sceneId)
+        sceneText = try? container.decode([String?].self, forKey: .sceneText)
     }
 }
 
 // MARK: - Equatable
 
 extension ASRExpectSpeech: Equatable {}
+
+extension ASRExpectSpeech.ASRContext: Equatable {}
