@@ -21,14 +21,12 @@
 import Foundation
 
 /// <#Description#>
-public protocol StreamDataRoutable: ReceiveMessageDelegate, UpstreamDataSendable {
-    /// <#Description#>
-    /// - Parameter delegate:
-    func add(delegate: DownstreamDataDelegate)
+public protocol StreamDataRoutable: class, UpstreamDataSendable {
+    var delegate: DownstreamDataDelegate? { get set }
+    var isCSLBEnabled: Bool { get set }
+    var isChargingFree: Bool { get set }
     
-    /// <#Description#>
-    /// - Parameter delegate:
-    func remove(delegate: DownstreamDataDelegate)
-    
+    func startReceiveServerInitiatedDirective(resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?)
+    func stopReceiveServerInitiatedDirective()
     func handOffResourceServer(to serverPolicy: Policy.ServerPolicy)
 }

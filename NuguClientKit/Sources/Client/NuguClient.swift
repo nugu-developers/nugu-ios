@@ -138,21 +138,28 @@ public class NuguClient {
 // MARK: - Helper functions
 
 public extension NuguClient {
-    func connect() {
+    func startReceiveServerInitiatedDirective(resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
+        streamDataRouter.startReceiveServerInitiatedDirective(resultHandler: resultHandler)
     }
     
-    func disconnect() {
+    func stopReceiveServerInitiatedDirective() {
+        streamDataRouter.stopReceiveServerInitiatedDirective()
     }
     
     func enable() {
-        connect()
     }
     
     func disable() {
         focusManager.stopForegroundActivity()
         inputProvider.stop()
-        
-        disconnect()
+        stopReceiveServerInitiatedDirective()
+    }
+    
+    func setChargingFreeUrl(_ url: String) {
+        log.debug("charging free url: \(url)")
+        NuguServerInfo.registryAddress = url
+        NuguServerInfo.resourceServerAddress = nil
+        streamDataRouter.isChargingFree = true
     }
 }
 

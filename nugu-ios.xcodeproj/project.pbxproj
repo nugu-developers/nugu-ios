@@ -236,7 +236,6 @@
 		7315302223E11EDF00F843C3 /* DelegateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23A2375703000C9A177 /* DelegateSet.swift */; };
 		7315302323E11EDF00F843C3 /* NuguApiProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BAD6239FA43B00B9582D /* NuguApiProvidable.swift */; };
 		7315302423E11EDF00F843C3 /* NuguApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C57D239FBF1300716E44 /* NuguApiRequest.swift */; };
-		7315302523E11EDF00F843C3 /* NetworkManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27F2375703000C9A177 /* NetworkManageable.swift */; };
 		7315302623E11EDF00F843C3 /* ReceiveMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */; };
 		7315302723E11EDF00F843C3 /* NetworkStatusDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2702375703000C9A177 /* NetworkStatusDelegate.swift */; };
 		7315302823E11EDF00F843C3 /* NetworkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2712375703000C9A177 /* NetworkStatus.swift */; };
@@ -630,7 +629,6 @@
 		1FFFF2712375703000C9A177 /* NetworkStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkStatus.swift; sourceTree = "<group>"; };
 		1FFFF27D2375703000C9A177 /* NetworkError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiveMessageDelegate.swift; sourceTree = "<group>"; };
-		1FFFF27F2375703000C9A177 /* NetworkManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManageable.swift; sourceTree = "<group>"; };
 		1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2842375703000C9A177 /* PlaySyncState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncState.swift; sourceTree = "<group>"; };
 		1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncManageable.swift; sourceTree = "<group>"; };
@@ -1420,7 +1418,6 @@
 			isa = PBXGroup;
 			children = (
 				7E98BAD3239F997C00B9582D /* Api */,
-				1FFFF27F2375703000C9A177 /* NetworkManageable.swift */,
 				1FFFF27E2375703000C9A177 /* ReceiveMessageDelegate.swift */,
 				1FFFF2702375703000C9A177 /* NetworkStatusDelegate.swift */,
 				1FFFF2712375703000C9A177 /* NetworkStatus.swift */,
@@ -2986,7 +2983,6 @@
 				7315302623E11EDF00F843C3 /* ReceiveMessageDelegate.swift in Sources */,
 				7315302723E11EDF00F843C3 /* NetworkStatusDelegate.swift in Sources */,
 				7315301A23E11EDF00F843C3 /* ContextManageable.swift in Sources */,
-				7315302523E11EDF00F843C3 /* NetworkManageable.swift in Sources */,
 				7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */,
 				735A4CE1241173F4004E7A41 /* EventSender.swift in Sources */,
 				1FFFF37E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift in Sources */,

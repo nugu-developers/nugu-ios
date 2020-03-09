@@ -33,7 +33,6 @@ class EventSender: NSObject {
     private let nuguApiProvider: NuguApiProvider
     private let boundary = "dummy-boundary-replace-it" // TODO: create!!
     private let eventQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_queue")
-    private let eventSemaphore = DispatchSemaphore(value: 0)
     private let streamQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_stream_queue")
     private var streamWorkItem: DispatchWorkItem?
     private let streamStateSubject = BehaviorSubject<Bool>(value: false)
@@ -50,9 +49,9 @@ class EventSender: NSObject {
         log.debug("initiated")
         
         streamWorkItem = DispatchWorkItem { [weak self] in
-            log.debug("bound stream task start")
+            log.debug("network bound stream task start")
             guard let self = self else { return }
-            log.debug("bound stream task is eligible for running")
+            log.debug("network bound stream task is eligible for running")
 
             self.streams.output.delegate = self
             self.streams.output.schedule(in: .current, forMode: .default)
@@ -62,7 +61,7 @@ class EventSender: NSObject {
                 RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
             }
 
-            log.debug("bound stream task is going to stop")
+            log.debug("network bound stream task is going to stop")
         }
         streamQueue.async(execute: streamWorkItem!)
     }
@@ -73,89 +72,70 @@ class EventSender: NSObject {
      You can call this api only once. because stream cannot be opened twice or more.
      
      - Parameter event: UpstreamEventMessage you want to send.
-     - Parameter completeHandler: It will be called when the event sent.
-     - Parameter resultHandler: It can be called multiple time If the reponse causes multple responses.
      */
-    func send(_ event: UpstreamEventMessage, resultHandler: ((Result<EventSenderResult, Error>) -> Void)? = nil) {
-        eventQueue.async { [weak self] in
-            guard let self = self else { return }
+    func send(_ event: UpstreamEventMessage) -> Observable<EventSenderResult> {
+        return Observable<EventSenderResult>.create { [weak self] (observer) -> Disposable in
+            let disposable = Disposables.create()
+            guard let self = self else { return disposable }
             
             guard self.streams.input.streamStatus == .notOpen else {
-                resultHandler?(.failure(EventSenderError.requestMultipleEvents))
-                return
+                observer.onError(EventSenderError.requestMultipleEvents)
+                return disposable
             }
             
+            // request event as multi part stream
             self.nuguApiProvider.events(inputStream: self.streams.input)
                 .subscribe(onNext: { (part) in
-                    resultHandler?(.success(.received(part: part)))
+                    observer.onNext(.received(part: part))
                 }, onError: { (error) in
                     log.error("error: \(error)")
-                    resultHandler?(.failure(error))
-                }, onDisposed: {
-                    log.debug("disposed")
-                    resultHandler?(.success(.finished))
+                    observer.onError(error)
+                }, onCompleted: {
+                    log.debug("completed")
+                    observer.onCompleted()
                 })
                 .disposed(by: self.disposeBag)
             
+            // send UpstreamEventMessage as a part data
             self.streamStateSubject
-                .filter { $0 == true }
+                .filter { $0 }
                 .take(1)
-                .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
-                    
-                    let result = self.sendData(self.makeMultipartData(event))
-                        .map { _ in EventSenderResult.sent }
-                        .mapError { $0 as Error }
-                    resultHandler?(result)
-
-                    self.eventSemaphore.signal()
+                .asSingle()
+                .flatMapCompletable { [weak self] _ in
+                    guard let self = self else { return Completable.empty() }
+                    return self.sendData(self.makeMultipartData(event))
+                }
+                .subscribe(onCompleted: {
+                    observer.onNext(.sent)
+                }, onError: { error in
+                    observer.onError(error)
                 })
                 .disposed(by: self.disposeBag)
             
-            self.eventSemaphore.wait()
+            return disposable
         }
+        .do(onDispose: { [weak self] in
+            self?.streamStateSubject.dispose()
+            self?.streamWorkItem?.cancel()
+            self?.streams.output.close()
+        })
+        .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "event_queue_\(event.header.dialogRequestId)"))
     }
     
     /**
      Send attachment through pre-opened stream
-     - Parameter completeHandler: It will be called when the attachment sent.
      */
-    public func send(_ attachment: UpstreamAttachment, completeHandler: ((Result<Void, Error>) -> Void)? = nil) {
+    public func send(_ attachment: UpstreamAttachment) -> Completable {
         self.streamStateSubject
-            .filter { $0 == true }
+            .filter { $0 }
             .take(1)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                completeHandler?(self.sendData(self.makeMultipartData(attachment)).mapError { $0 as Error })
-            })
-            .disposed(by: self.disposeBag)
-    }
-    
-    @discardableResult private func sendData(_ data: Data) -> Result<Void, EventSenderError> {
-        #if DEBUG
-        sentData.append(data)
-        #endif
-
-        let result = data.withUnsafeBytes { ptrBuffer -> Int in
-            guard let ptrData = ptrBuffer.bindMemory(to: UInt8.self).baseAddress else {
-                return -1
+            .asSingle()
+            .flatMapCompletable { [weak self] _ in
+                guard let self = self else { return Completable.empty() }
+                return self.sendData(self.makeMultipartData(attachment))
             }
+            .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "attachment_queue_\(attachment.header.dialogRequestId)"))
 
-            return self.streams.output.write(ptrData, maxLength: data.count)
-        }
-        
-        switch result {
-        case ..<0:
-            guard let error = self.streams.output.streamError else {
-                return .failure(.cannotBindMemory)
-            }
-
-            return .failure(.streamError(error))
-        case 0:
-            return .failure(.streamBlocked)
-        default:
-            return .success(())
-        }
     }
     
     /**
@@ -165,14 +145,16 @@ class EventSender: NSObject {
         streamStateSubject
             .filter { $0 }
             .take(1)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+            .asSingle()
+            .flatMapCompletable { [weak self] _ in
+                guard let self = self else { return Completable.empty() }
                 log.debug("write last boundary: --\(self.boundary)--")
                 
-                guard let lastBoundaryData = ("--\(self.boundary)--" + HTTPConst.crlf).data(using: .utf8) else { return }
-                if case .failure(let error) = self.sendData(lastBoundaryData) {
-                    log.error("send last boundary failed with \(error). but stream will be closed")
-                }
+                guard let lastBoundaryData = ("--\(self.boundary)--" + HTTPConst.crlf).data(using: .utf8) else { return Completable.empty() }
+                return self.sendData(lastBoundaryData)
+            }
+            .subscribe { [weak self] _ in
+                guard let self = self else { return }
                 
                 #if DEBUG
                 do {
@@ -188,8 +170,46 @@ class EventSender: NSObject {
                 self.streamStateSubject.dispose()
                 self.streamWorkItem?.cancel()
                 self.streams.output.close()
-            })
+            }
             .disposed(by: disposeBag)
+    }
+    
+    /**
+     Write data to output stream.
+     */
+    private func sendData(_ data: Data) -> Completable {
+        return Completable.create { [weak self] (event) -> Disposable in
+            let disposable = Disposables.create()
+            guard let self = self else { return disposable }
+            
+            #if DEBUG
+            self.sentData.append(data)
+            #endif
+            
+            let result = data.withUnsafeBytes { ptrBuffer -> Int in
+                guard let ptrData = ptrBuffer.bindMemory(to: UInt8.self).baseAddress else {
+                    return -1
+                }
+                
+                return self.streams.output.write(ptrData, maxLength: data.count)
+            }
+            
+            switch result {
+            case ..<0:
+                guard let error = self.streams.output.streamError else {
+                    event(.error(EventSenderError.cannotBindMemory))
+                    return disposable
+                }
+                
+                event(.error(EventSenderError.streamError(error)))
+            case 0:
+                event(.error(EventSenderError.streamBlocked))
+            default:
+                event(.completed)
+            }
+            
+            return disposable
+        }
     }
 }
 
@@ -200,29 +220,6 @@ extension EventSender {
         case sent
         case received(part: MultiPartParser.Part)
         case finished
-    }
-}
-
-// MARK: - StreamDelegate
-
-extension EventSender: StreamDelegate {
-    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        guard let outputStream = aStream as? OutputStream,
-            outputStream === streams.output else {
-                return
-        }
-        
-        switch eventCode {
-        case .hasSpaceAvailable:
-            log.debug("hasSpaceAvailable")
-            streamStateSubject.onNext(true)
-        case .endEncountered,
-             .errorOccurred:
-            streamStateSubject.onNext(false)
-            streamStateSubject.onCompleted()
-        default:
-            break
-        }
     }
 }
 
@@ -261,5 +258,27 @@ private extension EventSender {
         partData.append(HTTPConst.crlf.data(using: .utf8)!)
         
         return partData
+    }
+}
+
+// MARK: - StreamDelegate
+
+extension EventSender: StreamDelegate {
+    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+        guard let outputStream = aStream as? OutputStream,
+            outputStream === streams.output else {
+                return
+        }
+        
+        switch eventCode {
+        case .hasSpaceAvailable:
+            streamStateSubject.onNext(true)
+        case .endEncountered,
+             .errorOccurred:
+            streamStateSubject.onNext(false)
+            streamStateSubject.onCompleted()
+        default:
+            break
+        }
     }
 }

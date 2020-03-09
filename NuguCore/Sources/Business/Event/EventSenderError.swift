@@ -20,10 +20,25 @@
 
 import Foundation
 
-enum EventSenderError: Error {
+enum EventSenderError: Error, CustomStringConvertible {
     case requestMultipleEvents
     case noEventRequested
     case streamBlocked
     case streamError(_ streamError: Error)
     case cannotBindMemory
+    
+    var description: String {
+        switch self {
+        case .requestMultipleEvents:
+            return "Request multiple events"
+        case .noEventRequested:
+            return "No event Requested before"
+        case .streamBlocked:
+            return "Stream is blocked"
+        case .streamError(let error):
+            return "Stream error: \(error)"
+        case .cannotBindMemory:
+            return "Cannot bind memory"
+        }
+    }
 }

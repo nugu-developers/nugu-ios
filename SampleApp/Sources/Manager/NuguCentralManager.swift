@@ -78,6 +78,7 @@ final class NuguCentralManager {
 extension NuguCentralManager {
     func enable() {
         client.enable()
+        client.startReceiveServerInitiatedDirective()
     }
     
     func disable() {

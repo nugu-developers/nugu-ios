@@ -34,7 +34,7 @@ public class DirectiveSequencer: DirectiveSequenceable {
         log.debug("")
         
         self.upstreamDataSender = streamDataRouter
-        streamDataRouter.add(delegate: self)
+        streamDataRouter.delegate = self
 
         prefetchDirective()
         handleDirective()

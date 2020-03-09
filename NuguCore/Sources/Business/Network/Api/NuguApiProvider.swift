@@ -23,7 +23,8 @@ import Foundation
 import RxSwift
 
 class NuguApiProvider: NSObject {
-    private var url: String?
+    private var url: String? = NuguServerInfo.resourceServerAddress
+    private let requestTimeout: TimeInterval
     private var candidateResourceServers: [String]?
     private var disposeBag = DisposeBag()
     private var sessionConfig: URLSessionConfiguration
@@ -39,7 +40,25 @@ class NuguApiProvider: NSObject {
     private var serverSideEventProcessor: ServerSideEventProcessor?
     
     // flag of client side load balanceing
-    private var isCSLBEnabled: Bool
+    var isCSLBEnabled = false {
+        didSet {
+            log.debug("client side load balancing: \(isCSLBEnabled)")
+
+            if oldValue == false, isCSLBEnabled == true {
+                url = nil
+            }
+        }
+    }
+    
+    var isChargingFree = false {
+        didSet {
+            log.debug("charging free: \(isChargingFree)")
+            
+            if isChargingFree {
+                isCSLBEnabled = true
+            }
+        }
+    }
     
     /**
      Initiate NuguApiProvider
@@ -47,39 +66,16 @@ class NuguApiProvider: NSObject {
      - Parameter registryServerUrl: server url for client load balancing
      - Parameter options: api options.
      */
-    init?(resourceServerUrl: String? = nil, registryServerUrl: String? = nil, options: NuguApiProviderOptions? = nil) {
-        switch options {
-        case [.receiveServerSideEvent, .chargingFree]:
-            guard let registryServerUrl = registryServerUrl else {
-                return nil
-            }
-
-            url = nil
-            NuguServerInfo.registryAddress = registryServerUrl
-            
-        case [.chargingFree]:
-            guard let resourceServerUrl = resourceServerUrl else {
-                return nil
-            }
-            
-            url = resourceServerUrl
-
-        case [.receiveServerSideEvent]:
-            url = nil
-            
-        default:
-            url = "https://fill.me:port"
-        }
-        
-        isCSLBEnabled = options?.contains(.receiveServerSideEvent) ?? false
+    init(timeout: TimeInterval = 10.0) {
         sessionConfig = URLSessionConfiguration.ephemeral
+        requestTimeout = timeout
         super.init()
     }
     
     /**
      Find available device gateway (resource server)
     */
-    let policies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
+    private let policies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
         let disposable = Disposables.create()
         
         var urlComponent = URLComponents(string: (NuguServerInfo.registryAddress + NuguApi.policy.path))
@@ -105,6 +101,61 @@ class NuguApiProvider: NSObject {
     .map { try JSONDecoder().decode(Policy.self, from: $0) }
     .share()
     .asSingle()
+    
+    private lazy var internalDirective: Observable<MultiPartParser.Part> = {
+        return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
+            let disposable = Disposables.create()
+            
+            guard let self = self else { return disposable }
+            
+            // enable client side load balance and find new resource server for directive and event both.
+            self.isCSLBEnabled = true
+            
+            guard let resourceServerUrl = self.url else {
+                single(.error(NetworkError.noSuitableResourceServer))
+                return disposable
+            }
+            
+            if self.serverSideEventProcessor == nil {
+                self.serverSideEventProcessor = ServerSideEventProcessor()
+                
+                // connect downstream.
+                guard let downstreamUrl = URL(string: resourceServerUrl+"/"+NuguApi.directives.path) else {
+                    log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.directives.path)")
+                    single(.error(NetworkError.noSuitableResourceServer))
+                    return disposable
+                }
+                
+                var downstreamRequest = URLRequest(url: downstreamUrl, cachePolicy: .useProtocolCachePolicy, timeoutInterval: Double.infinity)
+                downstreamRequest.httpMethod = NuguApi.directives.method.rawValue
+                downstreamRequest.allHTTPHeaderFields = NuguApi.directives.header
+                self.session.dataTask(with: downstreamRequest).resume()
+                log.debug("directive request header:\n\(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
+            }
+            
+            single(.success(self.serverSideEventProcessor!.subject))
+            return disposable
+        }
+        .asObservable()
+        .flatMap { $0 }
+        .concatMap { [weak self] (data) -> Observable<MultiPartParser.Part?> in
+            self?.serverSideEventProcessor?.data.append(data)
+            guard let parts = self?.serverSideEventProcessor?.parseData() else {
+                return Observable<MultiPartParser.Part?>.just(nil)
+            }
+            
+            return Observable.from(parts)
+        }
+        .compactMap { $0 }
+        .retryWhen(retry)
+        .do(onDispose: { [weak self] in
+            self?.url = NuguServerInfo.resourceServerAddress
+            
+            if self?.isChargingFree == false {
+                self?.isCSLBEnabled = false
+            }
+        })
+    }().share()
 }
 
 // MARK: - Retry policy
@@ -149,7 +200,8 @@ private extension NuguApiProvider {
                         return Observable.error(NetworkError.unavailable)
                     }
                     
-                    return Observable<Int>.timer(.seconds(1), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                    return Observable<Int>
+                        .timer(.seconds(1), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                         .take(1)
                 }
                 
@@ -158,14 +210,17 @@ private extension NuguApiProvider {
                 }
                 
                 guard let error = error as? NetworkError else {
-                    return self.chooseResourceServer
+                    let waitTime = Int.random(in: 1..<(30*(index+1)))
+                    return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                        .take(1)
+                        .flatMap { _ in self.chooseResourceServer }
                 }
                 
                 if error == NetworkError.noSuitableResourceServer {
                     return self.chooseResourceServer
                 }
                 
-                return Observable.error(NetworkError.unavailable)
+                return Observable.error(error)
         }
     }
 }
@@ -181,13 +236,13 @@ extension NuguApiProvider {
         
         return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
             let disposable = Disposables.create()
-
+            
             guard let self = self else { return disposable }
             guard let resourceServerUrl = self.url else {
                 single(.error(NetworkError.noSuitableResourceServer))
                 return disposable
             }
-
+            
             guard let urlComponent = URLComponents(string: resourceServerUrl+"/"+NuguApi.events.path),
                 let url = urlComponent.url else {
                     log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.events.path)")
@@ -195,7 +250,7 @@ extension NuguApiProvider {
                     return disposable
             }
             
-            var streamRequest = URLRequest(url: url)
+            var streamRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: self.requestTimeout)
             streamRequest.httpMethod = NuguApi.events.method.rawValue
             streamRequest.allHTTPHeaderFields = NuguApi.events.header
             
@@ -231,56 +286,10 @@ extension NuguApiProvider {
     }
     
     /**
-     Start to receive data which is not requested but sent by server. (server side event)
-     */
+    Start to receive data which is not requested but sent by server. (server side event)
+    */
     var directive: Observable<MultiPartParser.Part> {
-        return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
-            let disposable = Disposables.create()
-            
-            guard let self = self else { return disposable }
-            guard let resourceServerUrl = self.url else {
-                single(.error(NetworkError.noSuitableResourceServer))
-                return disposable
-            }
-            
-            if self.serverSideEventProcessor == nil {
-                self.serverSideEventProcessor = ServerSideEventProcessor()
-                
-                // enable client side load balance and find new resource server for directive and event both.
-                if self.isCSLBEnabled == false {
-                    self.isCSLBEnabled = true
-                    self.url = nil
-                }
-                
-                // connect downstream.
-                guard let downstreamUrl = URL(string: resourceServerUrl+"/"+NuguApi.directives.path) else {
-                    log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.directives.path)")
-                    single(.error(NetworkError.noSuitableResourceServer))
-                    return disposable
-                }
-                
-                var downstreamRequest = URLRequest(url: downstreamUrl, cachePolicy: .useProtocolCachePolicy, timeoutInterval: Double.infinity)
-                downstreamRequest.httpMethod = NuguApi.directives.method.rawValue
-                downstreamRequest.allHTTPHeaderFields = NuguApi.directives.header
-                self.session.dataTask(with: downstreamRequest).resume()
-                log.debug("directive request header:\n\(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
-            }
-            
-            single(.success(self.serverSideEventProcessor!.subject))
-            return disposable
-        }
-        .asObservable()
-        .flatMap { $0 }
-        .concatMap { [weak self] (data) -> Observable<MultiPartParser.Part?> in
-            self?.serverSideEventProcessor?.data.append(data)
-            guard let parts = self?.serverSideEventProcessor?.parseData() else {
-                return Observable<MultiPartParser.Part?>.just(nil)
-            }
-            
-            return Observable.from(parts)
-        }
-        .compactMap { $0 }
-        .retryWhen(retry)
+        return internalDirective
     }
     
     /**
@@ -300,13 +309,6 @@ extension NuguApiProvider {
         return request.rxDataTask(urlSession: session)
             .asCompletable()
             .retryWhen(retry)
-    }
-    
-    /**
-     Stop receive server side event
-     */
-    func disconnect() {
-        serverSideEventProcessor = nil
     }
 }
 
