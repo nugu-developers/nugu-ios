@@ -26,7 +26,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.1")
     
     // AudioPlayerAgentProtocol
     public var offset: Int? {
@@ -125,11 +125,11 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", medium: .audio, isBlocking: false, preFetch: prefetchPlay, directiveHandler: handlePlay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", medium: .audio, isBlocking: false, directiveHandler: handleStop),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", medium: .visual, isBlocking: false, directiveHandler: handleUpdateMetadata)
-//        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", medium: .visual, isBlocking: false, directiveHandler: handleShowLyrics),
-//        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", medium: .visual, isBlocking: false, directiveHandler: handleHideLyrics),
-//        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", medium: .visual, isBlocking: false, directiveHandler: handleControlLyricsPage
-//        )
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", medium: .visual, isBlocking: false, directiveHandler: handleUpdateMetadata),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", medium: .visual, isBlocking: false, directiveHandler: handleShowLyrics),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", medium: .visual, isBlocking: false, directiveHandler: handleHideLyrics),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", medium: .visual, isBlocking: false, directiveHandler: handleControlLyricsPage
+        )
     ]
     
     public init(
@@ -478,28 +478,28 @@ private extension AudioPlayerAgent {
         }
     }
     
-    private func handlePlay() -> HandleDirective {
+    func handlePlay() -> HandleDirective {
         return { [weak self] _, completionHandler in
             self?.resume()
             completionHandler(.success(()))
         }
     }
     
-    private func handleStop() -> HandleDirective {
+    func handleStop() -> HandleDirective {
         return { [weak self] _, completionHandler in
             self?.stop(cancelAssociation: true)
             completionHandler(.success(()))
         }
     }
     
-    private func handlePause() -> HandleDirective {
+    func handlePause() -> HandleDirective {
         return { [weak self] _, completionHandler in
             self?.pause()
             completionHandler(.success(()))
         }
     }
     
-    private func handleUpdateMetadata() -> HandleDirective {
+    func handleUpdateMetadata() -> HandleDirective {
         return { [weak self] directive, completionHandler in
             completionHandler(
                 Result { [weak self] in
@@ -508,7 +508,54 @@ private extension AudioPlayerAgent {
                         let payload = try? JSONDecoder().decode(AudioPlayerDisplayUpdateMetadataPayload.self, from: data) else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
-                    self.audioPlayerDisplayManager.updateMetadata(payload: payload, templateId: directive.header.messageId)
+                    self.audioPlayerDisplayManager.updateMetadata(payload: payload)
+            })
+        }
+    }
+    
+    func handleShowLyrics() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8),
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+                    }
+                    guard let media = self.currentMedia else { return }
+                    self.sendEvent(media: media, typeInfo: self.audioPlayerDisplayManager.showLylics(playServiceId: playServiceId) ? .showLyricsSucceeded : .showLyricsFailed)
+            })
+        }
+    }
+    
+    func handleHideLyrics() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8),
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+                    }
+                    guard let media = self.currentMedia else { return }
+                    self.sendEvent(media: media, typeInfo: self.audioPlayerDisplayManager.hideLylics(playServiceId: playServiceId) ? .hideLyricsSucceeded : .hideLyricsFailed)
+            })
+        }
+    }
+    
+    func handleControlLyricsPage() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8),
+                        let payload = try? JSONDecoder().decode(AudioPlayerDisplayControlLylicsPagePayload.self, from: data) else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+                    }
+                    guard let media = self.currentMedia else { return }
+                    self.sendEvent(media: media, typeInfo: self.audioPlayerDisplayManager.controlLylicsPage(payload: payload) ? .controlLyricsPageSucceeded : .controlLyricsPageFailed)
             })
         }
     }

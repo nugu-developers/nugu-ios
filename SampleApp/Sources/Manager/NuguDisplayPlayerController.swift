@@ -258,6 +258,13 @@ private extension NuguDisplayPlayerController {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
+    //TODO: - Should be implemented
+    func audioPlayerDisplayShouldShowLyrics() -> Bool { return false }
+    
+    func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
+    
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlLylicsPagePayload.Direction) -> Bool { return false }
+    
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
         renderingContext = NSObject()
         update(newItem: template)
