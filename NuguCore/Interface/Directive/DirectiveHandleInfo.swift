@@ -21,7 +21,7 @@
 import Foundation
 
 public typealias DirectiveHandleInfos = [String: DirectiveHandleInfo]
-public typealias HandleDirective = (_ directive: Downstream.Directive, _ completionHandler: @escaping (Result<Void, Error>) -> Void) throws -> Void
+public typealias HandleDirective = (_ directive: Downstream.Directive, _ completionHandler: @escaping (Result<Void, Error>) -> Void) -> Void
 public typealias HandleAttachment = (_ attachment: Downstream.Attachment) -> Void
 
 public struct DirectiveHandleInfo: Hashable {

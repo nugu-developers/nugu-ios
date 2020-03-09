@@ -339,10 +339,11 @@ private extension DisplayAgent {
         return { [weak self] directive, completionHandler in
             guard let self = self else { return completionHandler(.success(())) }
             guard let payloadAsData = directive.payload.data(using: .utf8),
-                let payloadDictionary = try JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
                 let token = payloadDictionary["token"] as? String,
                 let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
+                    completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")))
+                    return
             }
             
             log.info("\(directive.header.type)")
