@@ -36,11 +36,11 @@ public protocol AudioPlayerDisplayDelegate: class {
     /// Tells the delegate that the specified template should be updated from the screen.
     ///
     /// - Parameter template: The template to update the screen.
-    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerDisplaySettingsTemplate)
+    func audioPlayerDisplayShouldUpdateMetadata(payload: String)
     
     func audioPlayerDisplayShouldShowLyrics() -> Bool
     
     func audioPlayerDisplayShouldHideLyrics() -> Bool
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlLylicsPagePayload.Direction) -> Bool
+    func audioPlayerDisplayShouldControlLyricsPage(direction: String) -> Bool
 }

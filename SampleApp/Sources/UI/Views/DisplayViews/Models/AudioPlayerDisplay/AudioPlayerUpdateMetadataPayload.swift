@@ -1,6 +1,6 @@
 //
-//  AudioPlayerDisplayControlLylicsPagePayload.swift
-//  NuguAgents
+//  AudioPlayerUpdateMetadataPayload.swift
+//  SampleApp
 //
 //  Created by jin kim on 2020/03/06.
 //  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
@@ -18,14 +18,19 @@
 //  limitations under the License.
 //
 
-import Foundation
-
-public struct AudioPlayerDisplayControlLylicsPagePayload: Decodable {
+struct AudioPlayerUpdateMetadataPayload: Decodable {
     let playServiceId: String
-    let direction: Direction
+    let metadata: Metadata?
     
-    public enum Direction: String, Decodable {
-        case previous = "PREVIOUS"
-        case next = "NEXT"
+    struct Metadata: Decodable {
+        let template: Template?
+        
+        struct Template: Decodable {
+            let content: Content?
+            
+            struct Content: Decodable {
+                let settings: AudioPlayerSettingsTemplate?
+            }
+        }
     }
 }

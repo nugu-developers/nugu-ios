@@ -110,6 +110,14 @@ private extension NuguDisplayPlayerController {
             remove()
             return
         }
+        
+        guard let payloadAsData = try? JSONSerialization.data(withJSONObject: playerItem.payload, options: []),
+            let payload = try? JSONDecoder().decode(AudioPlayerTemplate.self, from: payloadAsData) else {
+                log.debug("invalid payload")
+                remove()
+                return
+        }
+        
         nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
         
         let duration: Int
@@ -118,9 +126,9 @@ private extension NuguDisplayPlayerController {
         let imageUrl: String?
         
         duration = audioPlayerAgent.duration ?? 0
-        title = playerItem.payload.template.title.text
-        albumTitle = playerItem.payload.template.content.title
-        imageUrl = playerItem.payload.template.content.imageUrl
+        title = payload.template.title.text
+        albumTitle = payload.template.content.title
+        imageUrl = payload.template.content.imageUrl
         
         // Set nowPlayingInfo display properties
         var nowPlayingInfo = nowPlayingInfoCenter?.nowPlayingInfo ?? [:]
@@ -263,15 +271,15 @@ extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
     
     func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlLylicsPagePayload.Direction) -> Bool { return false }
+    func audioPlayerDisplayShouldControlLyricsPage(direction: String) -> Bool { return false }
+    
+    func audioPlayerDisplayShouldUpdateMetadata(payload: String) {}
     
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
         renderingContext = NSObject()
         update(newItem: template)
         return renderingContext
     }
-    
-    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerDisplaySettingsTemplate) {}
     
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
         switch reason {

@@ -46,7 +46,7 @@ extension AudioPlayerAgent {
             case pauseCommandIssued
             case stopCommandIssued            
             case favoriteCommandIssued(isOn: Bool)
-            case repeatCommandIssued(mode: AudioPlayerDisplaySettingsTemplate.Repeat)
+            case repeatCommandIssued(mode: String)
             case shuffleCommandIssued(isOn: Bool)
             case showLyricsSucceeded
             case showLyricsFailed

@@ -343,7 +343,7 @@ private extension MainViewController {
         displayAudioPlayerView?.removeFromSuperview()
 
         let audioPlayerView = DisplayAudioPlayerView(frame: view.frame)
-        audioPlayerView.displayItem = audioPlayerDisplayTemplate.payload
+        audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         audioPlayerView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
             self.dismissDisplayAudioPlayerView()
@@ -620,7 +620,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     
     func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlLylicsPagePayload.Direction) -> Bool { return false }
+    func audioPlayerDisplayShouldControlLyricsPage(direction: String) -> Bool { return false }
     
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
@@ -635,11 +635,11 @@ extension MainViewController: AudioPlayerDisplayDelegate {
         }
     }
     
-    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerDisplaySettingsTemplate) {
+    func audioPlayerDisplayShouldUpdateMetadata(payload: String) {
         guard let displayAudioPlayerView = displayAudioPlayerView else {
             return
         }
-        displayAudioPlayerView.updateSettings(settings: payload)
+        displayAudioPlayerView.updateSettings(payload: payload)
     }
 }
 

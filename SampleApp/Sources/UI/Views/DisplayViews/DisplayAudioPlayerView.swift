@@ -58,39 +58,36 @@ final class DisplayAudioPlayerView: UIView {
     
     var onCloseButtonClick: (() -> Void)?
     
-    var displayItem: AudioPlayerDisplayTemplate.AudioPlayer? {
+    var displayPayload: [String: Any]? {
         didSet {
-            let template = displayItem?.template
-            serviceLabel.text = template?.title.text
-            serviceIconImageView.loadImage(from: template?.title.iconUrl)
+            guard let displayPayload = displayPayload,
+                let payloadData = try? JSONSerialization.data(withJSONObject: displayPayload, options: []),
+                let displayItem = try? JSONDecoder().decode(AudioPlayerTemplate.self, from: payloadData) else { return }
             
-            if let imageUrl = template?.content.imageUrl {
-                albumImageView.loadImage(from: imageUrl)
-                albumImageContainerView.isHidden = false
-            } else {
-                albumImageContainerView.isHidden = true
-            }
+            let template = displayItem.template
+            serviceLabel.text = template.title.text
+            serviceIconImageView.loadImage(from: template.title.iconUrl)
+            albumImageView.loadImage(from: template.content.imageUrl)
+            titleLabel.text = template.content.title
+            subtitle1Label.text = template.content.subtitle ?? template.content.subtitle1
+            subtitle2Label.text = template.content.subtitle2
+            backgroundImageView.loadImage(from: template.content.backgroundImageUrl)
             
-            titleLabel.text = template?.content.title
-            subtitle1Label.text = template?.content.subtitle ?? template?.content.subtitle1
-            subtitle2Label.text = template?.content.subtitle2
-            backgroundImageView.loadImage(from: template?.content.backgroundImageUrl)
-            
-            if let favorite = template?.content.settings?.favorite {
+            if let favorite = template.content.settings?.favorite {
                 favoriteButtonContainerView.isHidden = false
                 favoriteButton.isSelected = favorite
             } else {
                 favoriteButtonContainerView.isHidden = true
             }
             
-            if let `repeat` = template?.content.settings?.repeat {
+            if let `repeat` = template.content.settings?.repeat {
                 repeatButton.isHidden = false
                 repeatMode = `repeat`
             } else {
                 repeatButton.isHidden = true
             }
             
-            if let shuffle = template?.content.settings?.shuffle {
+            if let shuffle = template.content.settings?.shuffle {
                 shuffleButton.isHidden = false
                 shuffleButton.isSelected = shuffle
             } else {
@@ -107,7 +104,7 @@ final class DisplayAudioPlayerView: UIView {
         }
     }
     
-    private var repeatMode: AudioPlayerDisplaySettingsTemplate.Repeat? {
+    private var repeatMode: AudioPlayerSettingsTemplate.Repeat? {
         didSet {
             guard let repeatMode = repeatMode else { return }
             switch repeatMode {
@@ -153,18 +150,24 @@ final class DisplayAudioPlayerView: UIView {
 // MARK: - Update
 
 extension DisplayAudioPlayerView {
-    func updateSettings(settings: AudioPlayerDisplaySettingsTemplate) {
-        if let favorite = settings.favorite {
+    func updateSettings(payload: String) {
+        guard let payloadAsData = payload.data(using: .utf8),
+            let payload = try? JSONDecoder().decode(AudioPlayerUpdateMetadataPayload.self, from: payloadAsData) else {
+                log.error("invalid payload")
+                return
+        }
+        
+        if let favorite = payload.metadata?.template?.content?.settings?.favorite {
             favoriteButtonContainerView.isHidden = false
             favoriteButton.isSelected = favorite
         }
         
-        if let `repeat` = settings.repeat {
+        if let `repeat` = payload.metadata?.template?.content?.settings?.repeat {
             repeatButton.isHidden = false
             repeatMode = `repeat`
         }
         
-        if let shuffle = settings.shuffle {
+        if let shuffle = payload.metadata?.template?.content?.settings?.shuffle {
             shuffleButton.isHidden = false
             shuffleButton.isSelected = shuffle
         }
@@ -201,17 +204,17 @@ private extension DisplayAudioPlayerView {
     
     @IBAction func repeatButtonDidClick(_ button: UIButton) {
         guard let repeatMode = repeatMode else { return }
-        var changedRepeatMode: AudioPlayerDisplaySettingsTemplate.Repeat
+        var changedRepeatMode: AudioPlayerSettingsTemplate.Repeat
         switch repeatMode {
         case .all:
-            changedRepeatMode = AudioPlayerDisplaySettingsTemplate.Repeat.one
+            changedRepeatMode = AudioPlayerSettingsTemplate.Repeat.one
         case .one:
-            changedRepeatMode = AudioPlayerDisplaySettingsTemplate.Repeat.none
+            changedRepeatMode = AudioPlayerSettingsTemplate.Repeat.none
         case .none:
-            changedRepeatMode = AudioPlayerDisplaySettingsTemplate.Repeat.all
+            changedRepeatMode = AudioPlayerSettingsTemplate.Repeat.all
         }
         self.repeatMode = changedRepeatMode
-        NuguCentralManager.shared.client.audioPlayerAgent.repeatMode(repeatMode: changedRepeatMode)
+        NuguCentralManager.shared.client.audioPlayerAgent.repeatMode(repeatMode: changedRepeatMode.rawValue)
     }
     
     @IBAction func shuffleButtonDidClick(_ button: UIButton) {

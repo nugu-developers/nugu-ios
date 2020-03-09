@@ -46,17 +46,17 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 
 extension AudioPlayerDisplayManager {
     func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playStackServiceId: String?) {
-        guard let data = try? JSONSerialization.data(withJSONObject: metaData, options: []),
-            let displayItem = try? JSONDecoder().decode(AudioPlayerDisplayTemplate.AudioPlayer.self, from: data) else {
+        guard let template = metaData["template"] as? [String: Any],
+            let type = template["type"] as? String else {
                 log.error("Invalid metaData")
-            return
+                return
         }
         
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             self.currentItem = AudioPlayerDisplayTemplate(
-                type: displayItem.template.type,
-                payload: displayItem,
+                type: type,
+                payload: metaData,
                 templateId: messageId,
                 dialogRequestId: dialogRequestId,
                 playStackServiceId: playStackServiceId
@@ -71,16 +71,11 @@ extension AudioPlayerDisplayManager {
         }
     }
     
-    func updateMetadata(payload: AudioPlayerDisplayUpdateMetadataPayload) {
-        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == payload.playServiceId }),
+    func updateMetadata(payload: String, playServiceId: String) {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else { return }
-        let updateMetadataPayload = AudioPlayerDisplaySettingsTemplate(
-            favorite: payload.metadata?.template?.content?.settings?.favorite,
-            repeat: payload.metadata?.template?.content?.settings?.repeat,
-            shuffle: payload.metadata?.template?.content?.settings?.shuffle
-        )
         DispatchQueue.main.async {
-            delegate.audioPlayerDisplayShouldUpdateMetadata(payload: updateMetadataPayload)
+            delegate.audioPlayerDisplayShouldUpdateMetadata(payload: payload)
         }
     }
     
@@ -114,17 +109,17 @@ extension AudioPlayerDisplayManager {
         return result
     }
     
-    func controlLylicsPage(payload: AudioPlayerDisplayControlLylicsPagePayload) -> Bool {
-        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == payload.playServiceId }),
+    func controlLylicsPage(payload: String, playServiceId: String) -> Bool {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else {
                 return false
         }
         var result = false
         if Thread.current.isMainThread {
-            return delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction)
+            return delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload)
         }
         DispatchQueue.main.sync {
-            result = delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction)
+            result = delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload)
         }
         return result
     }

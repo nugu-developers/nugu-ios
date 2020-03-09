@@ -224,7 +224,7 @@ public extension AudioPlayerAgent {
         }
     }
     
-    func repeatMode(repeatMode: AudioPlayerDisplaySettingsTemplate.Repeat) {
+    func repeatMode(repeatMode: String) {
         guard let media = self.currentMedia else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
@@ -505,10 +505,11 @@ private extension AudioPlayerAgent {
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
-                        let payload = try? JSONDecoder().decode(AudioPlayerDisplayUpdateMetadataPayload.self, from: data) else {
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
-                    self.audioPlayerDisplayManager.updateMetadata(payload: payload)
+                    self.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId)
             })
         }
     }
@@ -549,13 +550,14 @@ private extension AudioPlayerAgent {
         return { [weak self] directive, completionHandler in
             completionHandler(
                 Result { [weak self] in
-                    guard let self = self else { return }
+                    guard let self = self,
+                        let media = self.currentMedia else { return }
                     guard let data = directive.payload.data(using: .utf8),
-                        let payload = try? JSONDecoder().decode(AudioPlayerDisplayControlLylicsPagePayload.self, from: data) else {
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
-                    guard let media = self.currentMedia else { return }
-                    self.sendEvent(media: media, typeInfo: self.audioPlayerDisplayManager.controlLylicsPage(payload: payload) ? .controlLyricsPageSucceeded : .controlLyricsPageFailed)
+                    self.sendEvent(media: media, typeInfo: self.audioPlayerDisplayManager.controlLylicsPage(payload: directive.payload, playServiceId: playServiceId) ? .controlLyricsPageSucceeded : .controlLyricsPageFailed)
             })
         }
     }
