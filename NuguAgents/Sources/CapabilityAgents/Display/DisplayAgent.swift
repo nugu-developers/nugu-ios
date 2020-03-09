@@ -191,16 +191,7 @@ extension DisplayAgent: PlaySyncDelegate {
             
             switch state {
             case .synced:
-                var rendered = false
-                self.renderingInfos
-                    .compactMap { $0.delegate }
-                    .forEach { delegate in
-                        rendered = self.setRenderedTemplate(delegate: delegate, template: item) || rendered
-                }
-                if rendered == false {
-                    self.currentItem = nil
-                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
-                }
+                break
             case .releasing:
                 if self.timerInfos[item.templateId] != false {
                     self.renderingInfos
