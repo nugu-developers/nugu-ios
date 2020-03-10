@@ -23,32 +23,38 @@ import Foundation
 import NuguCore
 
 class MockStreamDataRouter: StreamDataRoutable {
-    func add(preprocessor: DownstreamDataPreprocessable) {
-        //
+    var delegate: DownstreamDataDelegate?
+    
+    var isCSLBEnabled: Bool = false
+    
+    var isChargingFree: Bool = false
+    
+    func startReceiveServerInitiatedDirective(resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+
     }
     
-    func add(delegate: DownstreamDataDelegate) {
-        //
+    func stopReceiveServerInitiatedDirective() {
+
     }
     
-    func remove(delegate: DownstreamDataDelegate) {
-        //
+    func handOffResourceServer(to serverPolicy: Policy.ServerPolicy) {
+
     }
     
-    func receiveMessageDidReceive(header: [String : String], body: Data) {
-        //
-    }
-    
-    func send(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Data, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
-        //
-    }
-    
-    func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
-        //
+    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Void, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+
     }
     
     func send(crashReports: [CrashReport]) {
-        //
+
+    }
+    
+    func sendStream(upstreamAttachment: UpstreamAttachment, completion: ((Result<Void, Error>) -> Void)?) {
+
+    }
+    
+    func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Void, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+
     }
     
     
