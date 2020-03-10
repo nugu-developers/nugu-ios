@@ -131,7 +131,6 @@ public class NuguClient {
         setupAudioStream()
         setupAuthorizationStore()
         setupAudioSessionRequester()
-        setupNetworkInfoFoward()
     }
 }
     
@@ -242,22 +241,5 @@ extension NuguClient: FocusDelegate {
     
     public func focusShouldRelease() {
         delegate?.nuguClientDidReleaseAudioSession()
-    }
-}
-
-// MARK: - Delegates releated Network
-
-extension NuguClient: NetworkStatusDelegate, ReceiveMessageDelegate {
-    private func setupNetworkInfoFoward() {
-//        networkManager.add(receiveMessageDelegate: self)
-//        networkManager.add(statusDelegate: self)
-    }
-    
-    public func networkStatusDidChange(_ status: NetworkStatus) {
-        delegate?.nuguClientConnectionStatusChanged(status: status)
-    }
-    
-    public func receiveMessageDidReceive(header: [String: String], body: Data) {
-        delegate?.nuguClientDidReceiveMessage(header: header, body: body)
     }
 }

@@ -89,17 +89,17 @@ extension SystemAgent: ContextInfoDelegate {
 
 // MARK: - NetworkStatusDelegate
 
-extension SystemAgent: NetworkStatusDelegate {
-    // TODO: StreamDataRouter로 변경할 것.
-    public func networkStatusDidChange(_ status: NetworkStatus) {
-        switch status {
-        case .connected:
-            sendSynchronizeStateEvent()
-        default:
-            break
-        }
-    }
-}
+// TODO: v2에서는 "네트워크가 연결되면"이라는 상태가 없음. 초기에 context를 전송하는 로직 수정해야 함.
+//extension SystemAgent: NetworkStatusDelegate {
+//    public func networkStatusDidChange(_ status: NetworkStatus) {
+//        switch status {
+//        case .connected:
+//            sendSynchronizeStateEvent()
+//        default:
+//            break
+//        }
+//    }
+//}
 
 // MARK: - Private (handle directive)
 
