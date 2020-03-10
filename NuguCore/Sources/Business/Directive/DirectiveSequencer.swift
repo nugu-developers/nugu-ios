@@ -180,6 +180,7 @@ private extension DirectiveSequencer {
                 }
 
                 handlingTypeInfos.append(handler)
+                
                 handler.directiveHandler(directive) { [weak self] result in
                     remove(handler)
                     if case .failure(let error) = result {
