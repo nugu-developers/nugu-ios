@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayListViewCell" customModule="SampleApp_iOS" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayListViewCell" customModule="SampleApp" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="DisplayListViewCell" rowHeight="72" id="eiu-v3-oaX" customClass="DisplayListViewCell" customModule="SampleApp_iOS" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="DisplayListViewCell" rowHeight="72" id="eiu-v3-oaX" customClass="DisplayListViewCell" customModule="SampleApp" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eiu-v3-oaX" id="Wrn-k9-Ffw">
@@ -44,10 +44,10 @@
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OIz-V2-7Om">
-                                <rect key="frame" x="64" y="0.0" width="215" height="52"/>
+                                <rect key="frame" x="64" y="0.0" width="51" height="52"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zsc-LN-2sw">
-                                        <rect key="frame" x="0.0" y="0.0" width="215" height="28"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="51" height="28"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="28" id="RBE-sl-4JW"/>
                                         </constraints>
@@ -56,7 +56,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tJD-1G-CE5">
-                                        <rect key="frame" x="0.0" y="30" width="215" height="22"/>
+                                        <rect key="frame" x="0.0" y="30" width="51" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="22" id="AxY-Ck-6uf"/>
                                         </constraints>
@@ -75,6 +75,27 @@
                                     <constraint firstAttribute="bottom" secondItem="tJD-1G-CE5" secondAttribute="bottom" id="p2u-Jy-vBd"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tyq-7o-mh5">
+                                <rect key="frame" x="127" y="0.0" width="52" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="tyq-7o-mh5" secondAttribute="height" multiplier="1:1" id="nMb-cT-55z"/>
+                                </constraints>
+                                <state key="normal" image="btn_list_like_off"/>
+                                <state key="selected" image="btn_list_like_on"/>
+                                <connections>
+                                    <action selector="toggleButtonDidClickWithToggleButton:" destination="eiu-v3-oaX" eventType="touchUpInside" id="smo-Xk-RvM"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UIJ-1R-XFA">
+                                <rect key="frame" x="191" y="0.0" width="88" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="UIJ-1R-XFA" secondAttribute="height" multiplier="22:13" id="jmf-pz-cPa"/>
+                                </constraints>
+                                <state key="normal" title="버튼"/>
+                                <connections>
+                                    <action selector="toggleButtonDidClickWithToggleButton:" destination="eiu-v3-oaX" eventType="touchUpInside" id="FJb-EH-GzQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </stackView>
                 </subviews>
@@ -94,11 +115,17 @@
             <viewLayoutGuide key="safeArea" id="bPX-2V-VBR"/>
             <connections>
                 <outlet property="displayImageView" destination="2YO-pQ-WA7" id="SfR-AK-y3X"/>
+                <outlet property="imageToggle" destination="tyq-7o-mh5" id="4Ha-Ww-xxH"/>
                 <outlet property="numberLabel" destination="DSe-8e-8Qb" id="pig-O4-XZ6"/>
                 <outlet property="subTitleLabel" destination="tJD-1G-CE5" id="XaU-dG-xr7"/>
+                <outlet property="textToggle" destination="UIJ-1R-XFA" id="cUe-qo-eRG"/>
                 <outlet property="titleLabel" destination="Zsc-LN-2sw" id="ZEe-X0-4Gb"/>
             </connections>
             <point key="canvasLocation" x="35.507246376811594" y="34.821428571428569"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="btn_list_like_off" width="100" height="100"/>
+        <image name="btn_list_like_on" width="100" height="100"/>
+    </resources>
 </document>
