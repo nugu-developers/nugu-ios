@@ -39,7 +39,7 @@ public final class SpeakerAgent: SpeakerAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetMute", medium: .audio, isBlocking: false, directiveHandler: handleSetMute)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetMute", medium: .audio, isBlocking: true, directiveHandler: handleSetMute)
     ]
     
     public init(
