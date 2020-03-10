@@ -155,10 +155,7 @@ public extension NuguClient {
     }
     
     func setChargingFreeUrl(_ url: String) {
-        log.debug("charging free url: \(url)")
-        NuguServerInfo.registryAddress = url
-        NuguServerInfo.resourceServerAddress = nil
-        streamDataRouter.isChargingFree = true
+          streamDataRouter.chargingFreeUrl = url
     }
 }
 

@@ -25,9 +25,7 @@ import NuguCore
 class MockStreamDataRouter: StreamDataRoutable {
     var delegate: DownstreamDataDelegate?
     
-    var isCSLBEnabled: Bool = false
-    
-    var isChargingFree: Bool = false
+    var chargingFreeUrl: String = ""
     
     func startReceiveServerInitiatedDirective(resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
 

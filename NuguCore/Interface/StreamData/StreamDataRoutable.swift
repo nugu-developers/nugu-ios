@@ -23,8 +23,7 @@ import Foundation
 /// <#Description#>
 public protocol StreamDataRoutable: class, UpstreamDataSendable {
     var delegate: DownstreamDataDelegate? { get set }
-    var isCSLBEnabled: Bool { get set }
-    var isChargingFree: Bool { get set }
+    var chargingFreeUrl: String { get set }
     
     func startReceiveServerInitiatedDirective(resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?)
     func stopReceiveServerInitiatedDirective()

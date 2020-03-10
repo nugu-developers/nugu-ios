@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import CFNetwork
 
 import RxSwift
 
@@ -40,7 +41,7 @@ class NuguApiProvider: NSObject {
     private var serverSideEventProcessor: ServerSideEventProcessor?
     
     // flag of client side load balanceing
-    var isCSLBEnabled = false {
+    private var isCSLBEnabled = false {
         didSet {
             log.debug("client side load balancing: \(isCSLBEnabled)")
 
@@ -195,20 +196,11 @@ private extension NuguApiProvider {
         return observer
             .enumerated()
             .flatMap { [weak self] (index, error) -> Observable<Int> in
-                guard self?.isCSLBEnabled == true else {
-                    guard index < 3 else {
-                        return Observable.error(NetworkError.unavailable)
-                    }
-                    
-                    return Observable<Int>
-                        .timer(.seconds(1), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                        .take(1)
-                }
-                
                 guard let self = self else {
                     return Observable.error(NetworkError.unavailable)
                 }
                 
+                // TODO: server policy대로 retry하도록 수정.
                 guard let error = error as? NetworkError else {
                     let waitTime = Int.random(in: 1..<(30*(index+1)))
                     return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
@@ -259,7 +251,7 @@ extension NuguApiProvider {
             
             uploadTask = self.session.uploadTask(withStreamedRequest: streamRequest)
             uploadTask.resume()
-            
+
             let eventResponse = EventResponseProcessor(inputStream: inputStream)
             self.eventResponseProcessors[uploadTask] = eventResponse
             
@@ -282,7 +274,18 @@ extension NuguApiProvider {
             return Observable.from(parts)
         }
         .compactMap { $0 }
-        .retryWhen(retry)
+        .retryWhen { (error) -> Observable<Int> in
+            error
+                .enumerated()
+                .flatMap { [weak self] (_, error) -> Observable<Int> in
+                    guard let self = self,
+                        (error as? NetworkError) == NetworkError.noSuitableResourceServer else {
+                        return Observable.error(error)
+                    }
+                    
+                    return self.chooseResourceServer
+            }
+        }
     }
     
     /**

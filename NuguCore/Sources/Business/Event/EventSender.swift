@@ -29,21 +29,19 @@ import RxSwift
  - Note: You can send event only once. because stream cannot be opened after close.
  */
 class EventSender: NSObject {
-    private let streams = BoundStreams()
-    private let nuguApiProvider: NuguApiProvider
     private let boundary = "dummy-boundary-replace-it" // TODO: create!!
     private let eventQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_queue")
     private let streamQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_stream_queue")
     private var streamWorkItem: DispatchWorkItem?
     private let streamStateSubject = BehaviorSubject<Bool>(value: false)
     private let disposeBag = DisposeBag()
+    let streams = BoundStreams()
     
     #if DEBUG
     private var sentData = Data()
     #endif
     
-    init(nuguApiProvider: NuguApiProvider) {
-        self.nuguApiProvider = nuguApiProvider
+    override init() {
         super.init()
         
         log.debug("initiated")
@@ -73,52 +71,28 @@ class EventSender: NSObject {
      
      - Parameter event: UpstreamEventMessage you want to send.
      */
-    func send(_ event: UpstreamEventMessage) -> Observable<EventSenderResult> {
-        return Observable<EventSenderResult>.create { [weak self] (observer) -> Disposable in
+    func send(_ event: UpstreamEventMessage) -> Completable {
+        return Completable.create { [weak self] (complete) -> Disposable in
             let disposable = Disposables.create()
-            guard let self = self else { return disposable }
-            
-            guard self.streams.input.streamStatus == .notOpen else {
-                observer.onError(EventSenderError.requestMultipleEvents)
+
+            // check input stream was opened before.
+            guard self?.streams.input.streamStatus == .notOpen else {
+                complete(.error(EventSenderError.requestMultipleEvents))
                 return disposable
             }
             
-            // request event as multi part stream
-            self.nuguApiProvider.events(inputStream: self.streams.input)
-                .subscribe(onNext: { (part) in
-                    observer.onNext(.received(part: part))
-                }, onError: { (error) in
-                    log.error("error: \(error)")
-                    observer.onError(error)
-                }, onCompleted: {
-                    log.debug("completed")
-                    observer.onCompleted()
-                })
-                .disposed(by: self.disposeBag)
-            
-            // send UpstreamEventMessage as a part data
-            self.streamStateSubject
-                .filter { $0 }
-                .take(1)
-                .asSingle()
-                .flatMapCompletable { [weak self] _ in
-                    guard let self = self else { return Completable.empty() }
-                    return self.sendData(self.makeMultipartData(event))
-                }
-                .subscribe(onCompleted: {
-                    observer.onNext(.sent)
-                }, onError: { error in
-                    observer.onError(error)
-                })
-                .disposed(by: self.disposeBag)
-            
+            complete(.completed)
             return disposable
         }
-        .do(onDispose: { [weak self] in
-            self?.streamStateSubject.dispose()
-            self?.streamWorkItem?.cancel()
-            self?.streams.output.close()
-        })
+        .andThen(self.streamStateSubject)
+        .filter { $0 }
+        .take(1)
+        .asSingle()
+        .flatMapCompletable { [weak self] _ in
+            // send UpstreamEventMessage as a part data
+            guard let self = self else { return Completable.empty() }
+            return self.sendData(self.makeMultipartData(event))
+        }
         .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "event_queue_\(event.header.dialogRequestId)"))
     }
     
@@ -126,7 +100,7 @@ class EventSender: NSObject {
      Send attachment through pre-opened stream
      */
     public func send(_ attachment: UpstreamAttachment) -> Completable {
-        self.streamStateSubject
+        streamStateSubject
             .filter { $0 }
             .take(1)
             .asSingle()

@@ -32,23 +32,12 @@ public class StreamDataRouter: StreamDataRoutable {
     private var serverSideEventDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
-    public var isCSLBEnabled: Bool {
-        get {
-            nuguApiProvider.isCSLBEnabled
-        }
-        
-        set {
-            nuguApiProvider.isCSLBEnabled = newValue
-        }
-    }
-    
-    public var isChargingFree: Bool {
-        get {
-            nuguApiProvider.isChargingFree
-        }
-        
-        set {
-            nuguApiProvider.isChargingFree = newValue
+    public var chargingFreeUrl: String = "" {
+        didSet {
+            log.debug("charging free url: \(chargingFreeUrl)")
+            NuguServerInfo.registryAddress = chargingFreeUrl
+            NuguServerInfo.resourceServerAddress = nil
+            nuguApiProvider.isChargingFree = true
         }
     }
     
@@ -60,12 +49,13 @@ public class StreamDataRouter: StreamDataRoutable {
 extension StreamDataRouter {
     public func startReceiveServerInitiatedDirective(resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
         log.debug("start receive server initiated directives")
-        serverSideEventDisposable = nuguApiProvider.directive.subscribe(onNext: { [weak self] in
-            self?.notifyMessage(with: $0, resultHandler: resultHandler)
-        }, onError: {
-            log.error("error: \($0)")
-            resultHandler?(.failure($0))
-        })
+        serverSideEventDisposable = nuguApiProvider.directive
+            .subscribe(onNext: { [weak self] in
+                self?.notifyMessage(with: $0, resultHandler: resultHandler)
+                }, onError: {
+                    log.error("error: \($0)")
+                    resultHandler?(.failure($0))
+            })
         serverSideEventDisposable?.disposed(by: disposeBag)
     }
     
@@ -95,30 +85,27 @@ extension StreamDataRouter: UpstreamDataSendable {
         completion: ((Result<Void, Error>) -> Void)?,
         resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
     ) {
-        let eventSender = EventSender(nuguApiProvider: nuguApiProvider)
+        let eventSender = EventSender()
         eventSenders[upstreamEventMessage.header.dialogRequestId] = eventSender
-
+        
+        // write event data to the stream
         eventSender.send(upstreamEventMessage)
-            .subscribe(onNext: { [weak self] (result) in
-                switch result {
-                case .sent:
-                    completion?(.success(()))
-                case .received(let part):
-                    self?.notifyMessage(with: part, resultHandler: resultHandler)
-                case .finished:
-                    self?.eventSenders[upstreamEventMessage.header.dialogRequestId] = nil
-                }
+            .subscribe(onCompleted: {
+                completion?(.success(()))
             }, onError: { (error) in
-                guard (error as? EventSenderError) != nil else {
-                    // response error
-                    resultHandler?(.failure(error))
-                    return
-                }
-                
-                // request error
                 completion?(.failure(error))
+            })
+            .disposed(by: self.disposeBag)
+        
+        // request event as multi part stream
+        nuguApiProvider.events(inputStream: eventSender.streams.input)
+            .subscribe(onNext: { [weak self] (part) in
+                self?.notifyMessage(with: part, resultHandler: resultHandler)
+            }, onError: { (error) in
+                log.error("error: \(error)")
+                resultHandler?(.failure(error))
             }, onDisposed: { [weak self] in
-                 self?.eventSenders[upstreamEventMessage.header.dialogRequestId] = nil
+                self?.eventSenders[upstreamEventMessage.header.dialogRequestId] = nil
             })
             .disposed(by: self.disposeBag)
     }
@@ -145,6 +132,9 @@ extension StreamDataRouter: UpstreamDataSendable {
             .disposed(by: disposeBag)
     }
     
+    /**
+     Preprocess directive and Call delegate's method and handler closure.
+     */
     private func notifyMessage(with part: MultiPartParser.Part, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
         if let contentType = part.header["Content-Type"], contentType.contains("application/json") {
             guard let bodyDictionary = try? JSONSerialization.jsonObject(with: part.body, options: []) as? [String: Any],

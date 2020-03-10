@@ -25,11 +25,11 @@ import RxSwift
 class ServerSideEventReceiver {
     private let apiProvider: NuguApiProvider
     private var pingDisposable: Disposable?
-    private let networkSubject = PublishSubject<NetworkStatus>()
+    private let networkSubject = PublishSubject<ServerSideEventReceiverState>()
     private lazy var directive = apiProvider.directive.share()
     private let disposeBag = DisposeBag()
     
-    var networkStatus: NetworkStatus = .disconnected() {
+    var networkStatus: ServerSideEventReceiverState = .disconnected() {
         didSet {
             if oldValue != networkStatus {
                 log.info("From:\(oldValue) To:\(networkStatus)")
@@ -71,7 +71,7 @@ class ServerSideEventReceiver {
         .flatMap { $0 }
     }
     
-    var networkObserver: Observable<NetworkStatus> {
+    var networkObserver: Observable<ServerSideEventReceiverState> {
         return networkSubject
     }
 }
