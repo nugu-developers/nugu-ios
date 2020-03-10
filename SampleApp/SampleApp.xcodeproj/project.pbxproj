@@ -36,16 +36,35 @@
 		73F284F823815CC9004EBBDF /* ImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C423815CC9004EBBDF /* ImageDataLoader.swift */; };
 		73F284F923815CC9004EBBDF /* SampleAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C623815CC9004EBBDF /* SampleAppError.swift */; };
 		73F284FA23815CC9004EBBDF /* SampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C723815CC9004EBBDF /* SampleApp.swift */; };
-		73F284FB23815CC9004EBBDF /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C923815CC9004EBBDF /* SoundPlayer.swift */; };
 		73F284FC23815CC9004EBBDF /* NuguCentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CA23815CC9004EBBDF /* NuguCentralManager.swift */; };
 		73F284FD23815CC9004EBBDF /* NuguDisplayPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CB23815CC9004EBBDF /* NuguDisplayPlayerController.swift */; };
 		73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CC23815CC9004EBBDF /* AppDelegate.swift */; };
 		73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CE23815CC9004EBBDF /* UserDefaults+Romaine.swift */; };
-		73F2850023815CC9004EBBDF /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CF23815CC9004EBBDF /* UserDefaultsWrapper.swift */; };
 		73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */; };
-		73F2850223815CC9004EBBDF /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 73F284D423815CC9004EBBDF /* asrStart.wav */; };
-		73F2850323815CC9004EBBDF /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 73F284D523815CC9004EBBDF /* asrSuccess.wav */; };
-		73F2850423815CC9004EBBDF /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 73F284D623815CC9004EBBDF /* asrFail.wav */; };
+		7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */; };
+		7E6A0B0C2410849C00C7A19E /* ASRBeepPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */; };
+		7E6A0B0D2410849C00C7A19E /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */; };
+		7E6A0B14241084C000C7A19E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B0F241084C000C7A19E /* Assets.xcassets */; };
+		7E6A0B15241084C000C7A19E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B10241084C000C7A19E /* LaunchScreen.storyboard */; };
+		7E6A0B16241084C000C7A19E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B12241084C000C7A19E /* Main.storyboard */; };
+		7E6A0B1C2410853600C7A19E /* DisplayWeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B172410853500C7A19E /* DisplayWeatherView.swift */; };
+		7E6A0B1E2410853600C7A19E /* DisplayWeatherListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B192410853500C7A19E /* DisplayWeatherListView.xib */; };
+		7E6A0B1F2410853600C7A19E /* DisplayWeatherView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B1A2410853500C7A19E /* DisplayWeatherView.xib */; };
+		7E6A0B202410853600C7A19E /* DisplayWeatherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B1B2410853600C7A19E /* DisplayWeatherListView.swift */; };
+		7E6A0B232410853C00C7A19E /* DisplayWeatherListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B212410853C00C7A19E /* DisplayWeatherListViewCell.swift */; };
+		7E6A0B242410853C00C7A19E /* DisplayWeatherListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B222410853C00C7A19E /* DisplayWeatherListViewCell.xib */; };
+		7E6A0B272410854600C7A19E /* DisplayWeatherTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B252410854600C7A19E /* DisplayWeatherTemplate.swift */; };
+		7E6A0B282410854600C7A19E /* DisplayWeatherListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B262410854600C7A19E /* DisplayWeatherListTemplate.swift */; };
+		7E6A0B362410888000C7A19E /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2B2410888000C7A19E /* asrStart.wav */; };
+		7E6A0B372410888000C7A19E /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2C2410888000C7A19E /* asrSuccess.wav */; };
+		7E6A0B382410888000C7A19E /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2D2410888000C7A19E /* asrFail.wav */; };
+		7E6A0B392410888000C7A19E /* device_GW_error_003.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2F2410888000C7A19E /* device_GW_error_003.wav */; };
+		7E6A0B3A2410888000C7A19E /* device_GW_error_002.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B302410888000C7A19E /* device_GW_error_002.wav */; };
+		7E6A0B3B2410888000C7A19E /* device_GW_error_001.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B312410888000C7A19E /* device_GW_error_001.wav */; };
+		7E6A0B3C2410888000C7A19E /* poc_end_error.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B322410888000C7A19E /* poc_end_error.wav */; };
+		7E6A0B3D2410888000C7A19E /* device_GW_error_005.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B332410888000C7A19E /* device_GW_error_005.wav */; };
+		7E6A0B3E2410888000C7A19E /* device_GW_error_004.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B342410888000C7A19E /* device_GW_error_004.wav */; };
+		7E6A0B3F2410888000C7A19E /* device_GW_error_006.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B352410888000C7A19E /* device_GW_error_006.wav */; };
 		7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */; };
 		7EBD76292391130100CA9C9C /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD76272391130100CA9C9C /* NuguLocationManager.swift */; };
 /* End PBXBuildFile section */
@@ -82,18 +101,37 @@
 		73F284C423815CC9004EBBDF /* ImageDataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataLoader.swift; sourceTree = "<group>"; };
 		73F284C623815CC9004EBBDF /* SampleAppError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleAppError.swift; sourceTree = "<group>"; };
 		73F284C723815CC9004EBBDF /* SampleApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleApp.swift; sourceTree = "<group>"; };
-		73F284C923815CC9004EBBDF /* SoundPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
 		73F284CA23815CC9004EBBDF /* NuguCentralManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguCentralManager.swift; sourceTree = "<group>"; };
 		73F284CB23815CC9004EBBDF /* NuguDisplayPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguDisplayPlayerController.swift; sourceTree = "<group>"; };
 		73F284CC23815CC9004EBBDF /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		73F284CE23815CC9004EBBDF /* UserDefaults+Romaine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Romaine.swift"; sourceTree = "<group>"; };
-		73F284CF23815CC9004EBBDF /* UserDefaultsWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsWrapper.swift; sourceTree = "<group>"; };
 		73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Standard.swift"; sourceTree = "<group>"; };
 		73F284D223815CC9004EBBDF /* SampleApp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SampleApp.entitlements; sourceTree = "<group>"; };
-		73F284D423815CC9004EBBDF /* asrStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrStart.wav; sourceTree = "<group>"; };
-		73F284D523815CC9004EBBDF /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
-		73F284D623815CC9004EBBDF /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
 		73F284D823815CC9004EBBDF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
+		7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
+		7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsWrapper.swift; sourceTree = "<group>"; };
+		7E6A0B0F241084C000C7A19E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7E6A0B11241084C000C7A19E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7E6A0B13241084C000C7A19E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7E6A0B172410853500C7A19E /* DisplayWeatherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherView.swift; sourceTree = "<group>"; };
+		7E6A0B192410853500C7A19E /* DisplayWeatherListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayWeatherListView.xib; sourceTree = "<group>"; };
+		7E6A0B1A2410853500C7A19E /* DisplayWeatherView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayWeatherView.xib; sourceTree = "<group>"; };
+		7E6A0B1B2410853600C7A19E /* DisplayWeatherListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListView.swift; sourceTree = "<group>"; };
+		7E6A0B212410853C00C7A19E /* DisplayWeatherListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListViewCell.swift; sourceTree = "<group>"; };
+		7E6A0B222410853C00C7A19E /* DisplayWeatherListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayWeatherListViewCell.xib; sourceTree = "<group>"; };
+		7E6A0B252410854600C7A19E /* DisplayWeatherTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherTemplate.swift; sourceTree = "<group>"; };
+		7E6A0B262410854600C7A19E /* DisplayWeatherListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListTemplate.swift; sourceTree = "<group>"; };
+		7E6A0B2B2410888000C7A19E /* asrStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrStart.wav; sourceTree = "<group>"; };
+		7E6A0B2C2410888000C7A19E /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
+		7E6A0B2D2410888000C7A19E /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
+		7E6A0B2F2410888000C7A19E /* device_GW_error_003.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_003.wav; sourceTree = "<group>"; };
+		7E6A0B302410888000C7A19E /* device_GW_error_002.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_002.wav; sourceTree = "<group>"; };
+		7E6A0B312410888000C7A19E /* device_GW_error_001.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_001.wav; sourceTree = "<group>"; };
+		7E6A0B322410888000C7A19E /* poc_end_error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = poc_end_error.wav; sourceTree = "<group>"; };
+		7E6A0B332410888000C7A19E /* device_GW_error_005.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_005.wav; sourceTree = "<group>"; };
+		7E6A0B342410888000C7A19E /* device_GW_error_004.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_004.wav; sourceTree = "<group>"; };
+		7E6A0B352410888000C7A19E /* device_GW_error_006.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_006.wav; sourceTree = "<group>"; };
 		7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguAudioSessionManager.swift; sourceTree = "<group>"; };
 		7EBD76272391130100CA9C9C /* NuguLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
 		970814E73D7C771F9B37F9A1 /* Pods-SampleApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleApp.debug.xcconfig"; path = "Target Support Files/Pods-SampleApp/Pods-SampleApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -149,6 +187,7 @@
 		73F28422238157A7004EBBDF /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
+				7E6A0B0E241084C000C7A19E /* Resources */,
 				73F284A323815CC9004EBBDF /* Sources */,
 				73F284D123815CC9004EBBDF /* Supporting Files */,
 			);
@@ -158,6 +197,8 @@
 		73F284A323815CC9004EBBDF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7E6A0B062410849C00C7A19E /* MediaPlayer */,
+				7E6A0B092410849C00C7A19E /* PropertyWrappers */,
 				73F284A423815CC9004EBBDF /* UI */,
 				73F284C023815CC9004EBBDF /* Util */,
 				73F284C323815CC9004EBBDF /* Network */,
@@ -194,6 +235,10 @@
 		73F284AB23815CC9004EBBDF /* DisplayViews */ = {
 			isa = PBXGroup;
 			children = (
+				7E6A0B1B2410853600C7A19E /* DisplayWeatherListView.swift */,
+				7E6A0B192410853500C7A19E /* DisplayWeatherListView.xib */,
+				7E6A0B172410853500C7A19E /* DisplayWeatherView.swift */,
+				7E6A0B1A2410853500C7A19E /* DisplayWeatherView.xib */,
 				73F284AC23815CC9004EBBDF /* DisplayBodyView.xib */,
 				73F284AD23815CC9004EBBDF /* DisplayViewCell */,
 				73F284B223815CC9004EBBDF /* DisplayBodyListView.swift */,
@@ -212,6 +257,8 @@
 		73F284AD23815CC9004EBBDF /* DisplayViewCell */ = {
 			isa = PBXGroup;
 			children = (
+				7E6A0B212410853C00C7A19E /* DisplayWeatherListViewCell.swift */,
+				7E6A0B222410853C00C7A19E /* DisplayWeatherListViewCell.xib */,
 				73F284AE23815CC9004EBBDF /* DisplayBodyListViewCell.swift */,
 				73F284AF23815CC9004EBBDF /* DisplayListViewCell.xib */,
 				73F284B023815CC9004EBBDF /* DisplayBodyListViewCell.xib */,
@@ -223,6 +270,8 @@
 		73F284B423815CC9004EBBDF /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7E6A0B262410854600C7A19E /* DisplayWeatherListTemplate.swift */,
+				7E6A0B252410854600C7A19E /* DisplayWeatherTemplate.swift */,
 				73F284B523815CC9004EBBDF /* DisplayBodyTemplate.swift */,
 				73F284B623815CC9004EBBDF /* DisplayBodyListTemplate.swift */,
 				73F284B723815CC9004EBBDF /* DisplayCommonTemplate.swift */,
@@ -262,7 +311,6 @@
 			children = (
 				7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */,
 				7EBD76272391130100CA9C9C /* NuguLocationManager.swift */,
-				73F284C923815CC9004EBBDF /* SoundPlayer.swift */,
 				73F284CA23815CC9004EBBDF /* NuguCentralManager.swift */,
 				73F284CB23815CC9004EBBDF /* NuguDisplayPlayerController.swift */,
 			);
@@ -273,7 +321,6 @@
 			isa = PBXGroup;
 			children = (
 				73F284CE23815CC9004EBBDF /* UserDefaults+Romaine.swift */,
-				73F284CF23815CC9004EBBDF /* UserDefaultsWrapper.swift */,
 				73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */,
 			);
 			path = Store;
@@ -282,21 +329,71 @@
 		73F284D123815CC9004EBBDF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7E6A0B292410888000C7A19E /* SoundResource */,
 				73F284D223815CC9004EBBDF /* SampleApp.entitlements */,
-				73F284D323815CC9004EBBDF /* SoundResource */,
 				73F284D823815CC9004EBBDF /* Info.plist */,
 			);
 			path = "Supporting Files";
 			sourceTree = SOURCE_ROOT;
 		};
-		73F284D323815CC9004EBBDF /* SoundResource */ = {
+		7E6A0B062410849C00C7A19E /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				73F284D423815CC9004EBBDF /* asrStart.wav */,
-				73F284D523815CC9004EBBDF /* asrSuccess.wav */,
-				73F284D623815CC9004EBBDF /* asrFail.wav */,
+				7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */,
+				7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */,
+			);
+			path = MediaPlayer;
+			sourceTree = "<group>";
+		};
+		7E6A0B092410849C00C7A19E /* PropertyWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */,
+			);
+			path = PropertyWrappers;
+			sourceTree = "<group>";
+		};
+		7E6A0B0E241084C000C7A19E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A0B0F241084C000C7A19E /* Assets.xcassets */,
+				7E6A0B10241084C000C7A19E /* LaunchScreen.storyboard */,
+				7E6A0B12241084C000C7A19E /* Main.storyboard */,
+			);
+			path = Resources;
+			sourceTree = SOURCE_ROOT;
+		};
+		7E6A0B292410888000C7A19E /* SoundResource */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A0B2A2410888000C7A19E /* AsrBeep */,
+				7E6A0B2E2410888000C7A19E /* LocalTts */,
 			);
 			path = SoundResource;
+			sourceTree = "<group>";
+		};
+		7E6A0B2A2410888000C7A19E /* AsrBeep */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A0B2B2410888000C7A19E /* asrStart.wav */,
+				7E6A0B2C2410888000C7A19E /* asrSuccess.wav */,
+				7E6A0B2D2410888000C7A19E /* asrFail.wav */,
+			);
+			path = AsrBeep;
+			sourceTree = "<group>";
+		};
+		7E6A0B2E2410888000C7A19E /* LocalTts */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A0B2F2410888000C7A19E /* device_GW_error_003.wav */,
+				7E6A0B302410888000C7A19E /* device_GW_error_002.wav */,
+				7E6A0B312410888000C7A19E /* device_GW_error_001.wav */,
+				7E6A0B322410888000C7A19E /* poc_end_error.wav */,
+				7E6A0B332410888000C7A19E /* device_GW_error_005.wav */,
+				7E6A0B342410888000C7A19E /* device_GW_error_004.wav */,
+				7E6A0B352410888000C7A19E /* device_GW_error_006.wav */,
+			);
+			path = LocalTts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -359,15 +456,28 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73F2850223815CC9004EBBDF /* asrStart.wav in Resources */,
-				73F2850323815CC9004EBBDF /* asrSuccess.wav in Resources */,
 				73F284E423815CC9004EBBDF /* DisplayBodyView.xib in Resources */,
+				7E6A0B16241084C000C7A19E /* Main.storyboard in Resources */,
 				73F284E623815CC9004EBBDF /* DisplayListViewCell.xib in Resources */,
+				7E6A0B1E2410853600C7A19E /* DisplayWeatherListView.xib in Resources */,
+				7E6A0B14241084C000C7A19E /* Assets.xcassets in Resources */,
+				7E6A0B3C2410888000C7A19E /* poc_end_error.wav in Resources */,
+				7E6A0B3F2410888000C7A19E /* device_GW_error_006.wav in Resources */,
+				7E6A0B382410888000C7A19E /* asrFail.wav in Resources */,
 				73F284E723815CC9004EBBDF /* DisplayBodyListViewCell.xib in Resources */,
-				73F2850423815CC9004EBBDF /* asrFail.wav in Resources */,
+				7E6A0B1F2410853600C7A19E /* DisplayWeatherView.xib in Resources */,
+				7E6A0B242410853C00C7A19E /* DisplayWeatherListViewCell.xib in Resources */,
 				73F284EA23815CC9004EBBDF /* DisplayBodyListView.xib in Resources */,
+				7E6A0B3E2410888000C7A19E /* device_GW_error_004.wav in Resources */,
 				73F284F123815CC9004EBBDF /* DisplayListView.xib in Resources */,
+				7E6A0B392410888000C7A19E /* device_GW_error_003.wav in Resources */,
+				7E6A0B3D2410888000C7A19E /* device_GW_error_005.wav in Resources */,
+				7E6A0B15241084C000C7A19E /* LaunchScreen.storyboard in Resources */,
+				7E6A0B362410888000C7A19E /* asrStart.wav in Resources */,
 				73F284F423815CC9004EBBDF /* DisplayAudioPlayerView.xib in Resources */,
+				7E6A0B372410888000C7A19E /* asrSuccess.wav in Resources */,
+				7E6A0B3A2410888000C7A19E /* device_GW_error_002.wav in Resources */,
+				7E6A0B3B2410888000C7A19E /* device_GW_error_001.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,7 +530,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73F2850023815CC9004EBBDF /* UserDefaultsWrapper.swift in Sources */,
+				7E6A0B232410853C00C7A19E /* DisplayWeatherListViewCell.swift in Sources */,
 				73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */,
 				73F284E523815CC9004EBBDF /* DisplayBodyListViewCell.swift in Sources */,
 				73F284FD23815CC9004EBBDF /* NuguDisplayPlayerController.swift in Sources */,
@@ -428,33 +538,58 @@
 				7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */,
 				73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */,
 				73F284EE23815CC9004EBBDF /* DisplayListTemplate.swift in Sources */,
+				7E6A0B272410854600C7A19E /* DisplayWeatherTemplate.swift in Sources */,
 				73F284F223815CC9004EBBDF /* DisplayView.swift in Sources */,
 				73F284EC23815CC9004EBBDF /* DisplayBodyListTemplate.swift in Sources */,
 				73F284EF23815CC9004EBBDF /* DisplayAudioPlayerView.swift in Sources */,
 				73F284DF23815CC9004EBBDF /* SettingViewController.swift in Sources */,
 				73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */,
+				7E6A0B0D2410849C00C7A19E /* UserDefaultsWrapper.swift in Sources */,
 				73F284E023815CC9004EBBDF /* IntroViewController.swift in Sources */,
+				7E6A0B1C2410853600C7A19E /* DisplayWeatherView.swift in Sources */,
 				73F284F023815CC9004EBBDF /* DisplayBodyView.swift in Sources */,
 				73F284F523815CC9004EBBDF /* NuguToastManager.swift in Sources */,
 				73F284F923815CC9004EBBDF /* SampleAppError.swift in Sources */,
-				73F284FB23815CC9004EBBDF /* SoundPlayer.swift in Sources */,
 				73F284ED23815CC9004EBBDF /* DisplayCommonTemplate.swift in Sources */,
 				73F284E323815CC9004EBBDF /* NuguWebView.swift in Sources */,
+				7E6A0B202410853600C7A19E /* DisplayWeatherListView.swift in Sources */,
 				73F284FC23815CC9004EBBDF /* NuguCentralManager.swift in Sources */,
 				73F284E823815CC9004EBBDF /* DisplayListViewCell.swift in Sources */,
 				73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */,
 				73F284E223815CC9004EBBDF /* WebViewController.swift in Sources */,
 				73F284F323815CC9004EBBDF /* DisplayListView.swift in Sources */,
+				7E6A0B282410854600C7A19E /* DisplayWeatherListTemplate.swift in Sources */,
 				73F284E923815CC9004EBBDF /* DisplayBodyListView.swift in Sources */,
 				73F284FA23815CC9004EBBDF /* SampleApp.swift in Sources */,
 				73F284F823815CC9004EBBDF /* ImageDataLoader.swift in Sources */,
+				7E6A0B0C2410849C00C7A19E /* ASRBeepPlayer.swift in Sources */,
 				73F284EB23815CC9004EBBDF /* DisplayBodyTemplate.swift in Sources */,
+				7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */,
 				73F284F623815CC9004EBBDF /* UIColor+Convenience.swift in Sources */,
 				73F284F723815CC9004EBBDF /* Int+Convenience.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		7E6A0B10241084C000C7A19E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7E6A0B11241084C000C7A19E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		7E6A0B12241084C000C7A19E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7E6A0B13241084C000C7A19E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		73F28432238157A9004EBBDF /* Debug */ = {
