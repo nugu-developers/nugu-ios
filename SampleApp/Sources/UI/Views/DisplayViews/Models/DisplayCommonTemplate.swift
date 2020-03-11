@@ -35,7 +35,7 @@ struct DisplayCommonTemplate: Decodable {
         }
 
         struct Title: Decodable {
-            let logo: Image
+            let logo: Image?
             let text: Text
             let subtext: Text?
             let subicon: Image?
@@ -74,6 +74,22 @@ struct DisplayCommonTemplate: Decodable {
         enum BadgeNumberMode {
             case immutability
             case page
+        }
+        
+        struct Toggle: Decodable {
+            let style: Style
+            let status: Status
+            let token: String
+            
+            enum Style: String, Decodable {
+                case image
+                case text
+            }
+            
+            enum Status: String, Decodable {
+                case on
+                case off
+            }
         }
     }
 }

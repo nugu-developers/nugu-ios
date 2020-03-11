@@ -52,8 +52,10 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", medium: .none, isBlocking: false, directiveHandler: handleClose),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Focus", medium: .none, isBlocking: false, directiveHandler: handleFocus),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Scroll", medium: .none, isBlocking: false, directiveHandler: handleScroll),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", medium: .none, isBlocking: false, directiveHandler: handleUpdate),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
@@ -71,6 +73,17 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather4", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather5", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullImage", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Score1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Score2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SearchList1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SearchList2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceList", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceOption", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommercePrice", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceInfo", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", medium: .audio, isBlocking: true, directiveHandler: handleDisplay)
     ]
   
@@ -282,6 +295,42 @@ private extension DisplayAgent {
                         )
                     }
             })
+        }
+    }
+    
+    func handleUpdate() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            log.info("\(directive.header.type)")
+            completionHandler(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    
+                    guard let payloadAsData = directive.payload.data(using: .utf8),
+                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                        let token = payloadDictionary["token"] as? String,
+                        let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
+                    }
+                    
+                    let updateDisplayTemplate = DisplayTemplate(
+                        type: directive.header.type,
+                        payload: directive.payload,
+                        templateId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId,
+                        token: token,
+                        playServiceId: playServiceId,
+                        playStackServiceId: nil,
+                        duration: nil,
+                        focusable: nil
+                    )
+                    
+                    guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == updateDisplayTemplate.templateId }),
+                        let delegate = info.delegate else { return }
+                    DispatchQueue.main.async {
+                        delegate.displayAgentShouldUpdate(template: updateDisplayTemplate)
+                    }
+                }
+            )
         }
     }
     
