@@ -36,22 +36,24 @@
 		1F2E803923966D9D00569C59 /* KeywordSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803823966D9D00569C59 /* KeywordSource.swift */; };
 		1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */; };
 		1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */; };
-		1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentTests.swift */; };
+		1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentSpec.swift */; };
 		1F5DD4AC240CF0D600719FBC /* MockPlaySyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */; };
-		1F5DD4AE240CF7D100719FBC /* ASRAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AD240CF7D100719FBC /* ASRAgentTests.swift */; };
+		1F5DD4AE240CF7D100719FBC /* ASRAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AD240CF7D100719FBC /* ASRAgentSpec.swift */; };
 		1F5DD4B0240CF89500719FBC /* MockAudioStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AF240CF89500719FBC /* MockAudioStream.swift */; };
-		1F5DD4B3240CFC8800719FBC /* TTSAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B2240CFC8800719FBC /* TTSAgentTests.swift */; };
-		1F5DD4B5240CFEEB00719FBC /* DisplayAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B4240CFEEB00719FBC /* DisplayAgentTests.swift */; };
+		1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B2240CFC8800719FBC /* TTSAgentSpec.swift */; };
+		1F5DD4B5240CFEEB00719FBC /* DisplayAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B4240CFEEB00719FBC /* DisplayAgentSpec.swift */; };
+		1F721C66241767E100023EF8 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F721C64241767E100023EF8 /* Quick.framework */; };
+		1F721C67241767E100023EF8 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F721C65241767E100023EF8 /* Nimble.framework */; };
 		1F9C5B5E23C30B4B0086CC04 /* NuguOAuthApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */; };
 		1F9C5B7223F27AB30086CC04 /* MockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7123F27AB30086CC04 /* MockNetworkManager.swift */; };
 		1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */; };
 		1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */; };
 		1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */; };
-		1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */; };
-		1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */; };
+		1F9C5B7C23F4E8C40086CC04 /* SystemAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7A23F4E8C40086CC04 /* SystemAgentSpec.swift */; };
+		1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7B23F4E8C40086CC04 /* LocationAgentSpec.swift */; };
 		1F9C5B8223F664340086CC04 /* KeenSense.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03E23753FB200C9A177 /* KeenSense.framework */; };
-		1F9C5B8823FA82D90086CC04 /* ExtensionAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */; };
-		1F9C5B8A23FBA3A20086CC04 /* TextAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8923FBA3A20086CC04 /* TextAgentTests.swift */; };
+		1F9C5B8823FA82D90086CC04 /* ExtensionAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8723FA82D90086CC04 /* ExtensionAgentSpec.swift */; };
+		1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8923FBA3A20086CC04 /* TextAgentSpec.swift */; };
 		1F9C5B8C23FBA7400086CC04 /* MockFocusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
@@ -180,7 +182,6 @@
 		1FFFF517237674DF00C9A177 /* NuguLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF01723753F7D00C9A177 /* NuguLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FFFF51A237674DF00C9A177 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
 		1FFFF51B237674DF00C9A177 /* NuguUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF525237676BE00C9A177 /* NuguTests.swift */; };
 		7303C68A23C5C00F00610343 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68923C5C00F00610343 /* BoundStreams.swift */; };
 		73152F9E23E0405900F843C3 /* NuguAgents.h in Headers */ = {isa = PBXBuildFile; fileRef = 73152F9C23E0405900F843C3 /* NuguAgents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		73152FA123E0405900F843C3 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
@@ -535,12 +536,14 @@
 		1F2E803823966D9D00569C59 /* KeywordSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSource.swift; sourceTree = "<group>"; };
 		1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordDetectorState.swift; sourceTree = "<group>"; };
 		1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetectorDelegate.swift; sourceTree = "<group>"; };
-		1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentTests.swift; sourceTree = "<group>"; };
+		1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentSpec.swift; sourceTree = "<group>"; };
 		1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPlaySyncManager.swift; sourceTree = "<group>"; };
-		1F5DD4AD240CF7D100719FBC /* ASRAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRAgentTests.swift; sourceTree = "<group>"; };
+		1F5DD4AD240CF7D100719FBC /* ASRAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRAgentSpec.swift; sourceTree = "<group>"; };
 		1F5DD4AF240CF89500719FBC /* MockAudioStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAudioStream.swift; sourceTree = "<group>"; };
-		1F5DD4B2240CFC8800719FBC /* TTSAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSAgentTests.swift; sourceTree = "<group>"; };
-		1F5DD4B4240CFEEB00719FBC /* DisplayAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayAgentTests.swift; sourceTree = "<group>"; };
+		1F5DD4B2240CFC8800719FBC /* TTSAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSAgentSpec.swift; sourceTree = "<group>"; };
+		1F5DD4B4240CFEEB00719FBC /* DisplayAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayAgentSpec.swift; sourceTree = "<group>"; };
+		1F721C64241767E100023EF8 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
+		1F721C65241767E100023EF8 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 		1F9C5B5D23C30B4B0086CC04 /* NuguOAuthApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguOAuthApi.swift; sourceTree = "<group>"; };
 		1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguAgents.podspec; sourceTree = "<group>"; };
 		1F9C5B6B23EBEF810086CC04 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .travis.yml; sourceTree = "<group>"; };
@@ -548,10 +551,10 @@
 		1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStreamDataRouter.swift; sourceTree = "<group>"; };
 		1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDirectiveSequencer.swift; sourceTree = "<group>"; };
 		1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockContextManager.swift; sourceTree = "<group>"; };
-		1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentTests.swift; sourceTree = "<group>"; };
-		1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentTests.swift; sourceTree = "<group>"; };
-		1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionAgentTests.swift; sourceTree = "<group>"; };
-		1F9C5B8923FBA3A20086CC04 /* TextAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentTests.swift; sourceTree = "<group>"; };
+		1F9C5B7A23F4E8C40086CC04 /* SystemAgentSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentSpec.swift; sourceTree = "<group>"; };
+		1F9C5B7B23F4E8C40086CC04 /* LocationAgentSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationAgentSpec.swift; sourceTree = "<group>"; };
+		1F9C5B8723FA82D90086CC04 /* ExtensionAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionAgentSpec.swift; sourceTree = "<group>"; };
+		1F9C5B8923FBA3A20086CC04 /* TextAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentSpec.swift; sourceTree = "<group>"; };
 		1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFocusManager.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
@@ -803,7 +806,6 @@
 		1FFFF4DB237672F100C9A177 /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
 		1FFFF50C2376748E00C9A177 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1FFFF523237676BE00C9A177 /* NuguTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NuguTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1FFFF525237676BE00C9A177 /* NuguTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguTests.swift; sourceTree = "<group>"; };
 		1FFFF527237676BE00C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D9C42A92274599D000A6585 /* nugu-ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "nugu-ios.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D9C42B7227459D6000A6585 /* nugu-ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "nugu-ios.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -961,6 +963,8 @@
 				1F2E800F238FCD4400569C59 /* NuguUIKit.framework in Frameworks */,
 				1F2E8007238FCCDB00569C59 /* RxSwift.framework in Frameworks */,
 				1F2E8008238FCCE100569C59 /* NattyLog.framework in Frameworks */,
+				1F721C66241767E100023EF8 /* Quick.framework in Frameworks */,
+				1F721C67241767E100023EF8 /* Nimble.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1142,14 +1146,14 @@
 		1FD1CFD923A75B040000FB8C /* NuguAgents */ = {
 			isa = PBXGroup;
 			children = (
-				1F9C5B8723FA82D90086CC04 /* ExtensionAgentTests.swift */,
-				1F9C5B7B23F4E8C40086CC04 /* LocationAgentTests.swift */,
-				1F9C5B7A23F4E8C40086CC04 /* SystemAgentTests.swift */,
-				1F9C5B8923FBA3A20086CC04 /* TextAgentTests.swift */,
-				1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentTests.swift */,
-				1F5DD4AD240CF7D100719FBC /* ASRAgentTests.swift */,
-				1F5DD4B2240CFC8800719FBC /* TTSAgentTests.swift */,
-				1F5DD4B4240CFEEB00719FBC /* DisplayAgentTests.swift */,
+				1F9C5B8723FA82D90086CC04 /* ExtensionAgentSpec.swift */,
+				1F9C5B7B23F4E8C40086CC04 /* LocationAgentSpec.swift */,
+				1F9C5B7A23F4E8C40086CC04 /* SystemAgentSpec.swift */,
+				1F9C5B8923FBA3A20086CC04 /* TextAgentSpec.swift */,
+				1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentSpec.swift */,
+				1F5DD4AD240CF7D100719FBC /* ASRAgentSpec.swift */,
+				1F5DD4B2240CFC8800719FBC /* TTSAgentSpec.swift */,
+				1F5DD4B4240CFEEB00719FBC /* DisplayAgentSpec.swift */,
 			);
 			path = NuguAgents;
 			sourceTree = "<group>";
@@ -1281,6 +1285,8 @@
 		1FFFF22323756C0500C9A177 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F721C65241767E100023EF8 /* Nimble.framework */,
+				1F721C64241767E100023EF8 /* Quick.framework */,
 				1F10090A23792A0000D90FEE /* RxSwift.framework */,
 				1F100907237929FB00D90FEE /* NattyLog.framework */,
 				1FFFF41123757C9600C9A177 /* Foundation.framework */,
@@ -2142,7 +2148,6 @@
 				1F9C5B7023F27A8F0086CC04 /* Mock */,
 				1F9C5B7923F2D7440086CC04 /* NuguCore */,
 				1FD1CFD923A75B040000FB8C /* NuguAgents */,
-				1FFFF525237676BE00C9A177 /* NuguTests.swift */,
 				1FFFF527237676BE00C9A177 /* Info.plist */,
 			);
 			path = NuguTests;
@@ -2861,6 +2866,8 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/NattyLog.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Quick.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
 			);
 			outputFileListPaths = (
 			);
@@ -3093,19 +3100,18 @@
 				1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */,
 				1F5DD4AC240CF0D600719FBC /* MockPlaySyncManager.swift in Sources */,
 				1F9C5B7223F27AB30086CC04 /* MockNetworkManager.swift in Sources */,
-				1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentTests.swift in Sources */,
+				1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentSpec.swift in Sources */,
 				1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */,
 				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,
-				1FFFF526237676BE00C9A177 /* NuguTests.swift in Sources */,
-				1F9C5B8A23FBA3A20086CC04 /* TextAgentTests.swift in Sources */,
+				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
-				1F9C5B7D23F4E8C40086CC04 /* LocationAgentTests.swift in Sources */,
-				1F5DD4B3240CFC8800719FBC /* TTSAgentTests.swift in Sources */,
+				1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */,
+				1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */,
 				1F5DD4B0240CF89500719FBC /* MockAudioStream.swift in Sources */,
-				1F9C5B7C23F4E8C40086CC04 /* SystemAgentTests.swift in Sources */,
-				1F5DD4AE240CF7D100719FBC /* ASRAgentTests.swift in Sources */,
-				1F9C5B8823FA82D90086CC04 /* ExtensionAgentTests.swift in Sources */,
-				1F5DD4B5240CFEEB00719FBC /* DisplayAgentTests.swift in Sources */,
+				1F9C5B7C23F4E8C40086CC04 /* SystemAgentSpec.swift in Sources */,
+				1F5DD4AE240CF7D100719FBC /* ASRAgentSpec.swift in Sources */,
+				1F9C5B8823FA82D90086CC04 /* ExtensionAgentSpec.swift in Sources */,
+				1F5DD4B5240CFEEB00719FBC /* DisplayAgentSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
