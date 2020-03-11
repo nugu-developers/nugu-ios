@@ -37,5 +37,6 @@ struct DisplayListTemplate: Decodable {
         let header: DisplayCommonTemplate.Common.Text?
         let body: DisplayCommonTemplate.Common.Text?
         let footer: DisplayCommonTemplate.Common.Text?
+        let toggle: DisplayCommonTemplate.Common.Toggle?
     }
 }

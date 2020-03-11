@@ -34,7 +34,7 @@ final class DisplayBodyListView: DisplayView {
             titleLabel.text = displayItem.title.text.text
             titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)
             backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
-            if let logoUrl = displayItem.title.logo.sources.first?.url {
+            if let logoUrl = displayItem.title.logo?.sources.first?.url {
                 logoImageView.loadImage(from: logoUrl)
                 logoImageView.isHidden = false
             } else {
