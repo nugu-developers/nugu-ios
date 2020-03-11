@@ -31,28 +31,8 @@ public class PlaySyncManager: PlaySyncManageable {
     
     private let delegates = DelegateSet<PlaySyncDelegate>()
     
-    private var displayTimerDisposeBag = DisposeBag()
-    private var soundTimerDisposeBag = DisposeBag()
-    
-    private var playContexts = [PlaySyncProperty.LayerType: [PlaySyncProperty.ContextType: PlaySyncInfo]]() {
-        didSet {
-            playStack.removeAll {
-                playContexts
-                    .flatMap { $1 }
-                    .compactMap { $0.value.playServiceId }
-                    .contains($0) == false
-            }
-            
-            log.debug(playContexts)
-        }
-    }
-
+    private var playStack = PlayStack()
     private var playContextTimers = [PlaySyncProperty: DisposeBag]()
-    private var playStack = [String]() {
-        didSet {
-            log.debug(playStack)
-        }
-    }
     
     public init(contextManager: ContextManageable) {
         log.debug("initiated")
@@ -86,8 +66,7 @@ public extension PlaySyncManager {
             // Push to play stack
             self.pushToPlayStack(property: property, duration: duration, playServiceId: playServiceId, dialogRequestId: dialogRequestId)
             
-            let playGroup = self.playGroup(dialogRequestId: dialogRequestId)
-                .filter { $0.layerType == property.layerType }
+            let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: dialogRequestId)
             // Cancel timers
             playGroup.forEach(self.removeTimer)
             
@@ -101,20 +80,19 @@ public extension PlaySyncManager {
     func endPlay(property: PlaySyncProperty) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let info = self.playContexts[property.layerType]?[property.contextType] else { return }
+            guard let info = self.playStack[property] else { return }
             
             log.debug("\(property) \(info.playServiceId)")
             
             // Set timers
-            self.playGroup(dialogRequestId: info.dialogRequestId)
-                .filter { $0.layerType == property.layerType }
+            self.playStack.playGroup(layerType: property.layerType, dialogRequestId: info.dialogRequestId)
                 .forEach {
-                    guard let duration = self.playContexts[$0.layerType]?[$0.contextType]?.duration else { return }
+                    guard let duration = self.playStack[$0]?.duration else { return }
                     self.addTimer(property: $0, duration: duration)
             }
             
             // Multi-layer exceptions
-            if self.playContexts.count > 1 {
+            if self.playStack.multiLayerSynced {
                 // Pop from play stack
                 self.popFromPlayStack(property: property)
             }
@@ -128,14 +106,14 @@ public extension PlaySyncManager {
             log.debug(dialogRequestId)
             
             // Pop from play stack
-            self.playGroup(dialogRequestId: dialogRequestId).forEach(self.popFromPlayStack)
+            self.playStack.playGroup(dialogRequestId: dialogRequestId).forEach(self.popFromPlayStack)
         }
     }
     
     func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard self.playContexts[property.layerType]?[property.contextType] != nil else { return }
+            guard self.playStack[property] != nil else { return }
             
             log.debug("\(property) \(duration)")
             
@@ -151,7 +129,7 @@ public extension PlaySyncManager {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.playContextTimers[property] != nil else { return }
-            guard let info = self.playContexts[property.layerType]?[property.contextType] else { return }
+            guard let info = self.playStack[property] else { return }
 
             log.debug(property)
             
@@ -180,7 +158,7 @@ public extension PlaySyncManager {
 extension PlaySyncManager: ContextInfoDelegate {
     public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
         log.debug(playStack)
-        completionHandler(ContextInfo(contextType: .client, name: "playStack", payload: playStack))
+        completionHandler(ContextInfo(contextType: .client, name: "playStack", payload: playStack.playServiceIds))
     }
 }
 
@@ -195,25 +173,17 @@ private extension PlaySyncManager {
 
         let info = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, duration: duration)
         
-        var playLayer = playContexts[property.layerType] ?? [:]
-        playLayer[property.contextType] = info
-        playContexts[property.layerType] = playLayer
-        
-        playStack.removeAll { $0 == playServiceId }
-        playStack.insert(playServiceId, at: 0)
+        playStack[property] = info
     }
     
     func popFromPlayStack(property: PlaySyncProperty) {
-        guard let info = playContexts[property.layerType]?.removeValue(forKey: property.contextType) else { return }
+        guard let info = playStack[property] else { return }
+        playStack[property] = nil
 
         log.debug("\(property) \(info.playServiceId)")
         
         // Cancel timers
         removeTimer(property: property)
-
-        if playContexts[property.layerType]?.isEmpty == true {
-            playContexts[property.layerType] = nil
-        }
         
         delegates.notify { (delegate) in
             delegate.playSyncDidRelease(property: property, dialogRequestId: info.dialogRequestId)
@@ -244,12 +214,5 @@ private extension PlaySyncManager {
     func removeTimer(property: PlaySyncProperty) {
         log.debug(property)
         playContextTimers[property] = nil
-    }
-    
-    func playGroup(dialogRequestId: String) -> [PlaySyncProperty] {
-        playContexts.flatMap { (layerType, playLayer) -> [PlaySyncProperty] in
-            playLayer.filter { $0.value.dialogRequestId == dialogRequestId }
-                .map { PlaySyncProperty(layerType: layerType, contextType: $0.key) }
-        }
     }
 }
