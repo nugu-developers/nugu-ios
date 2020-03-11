@@ -68,10 +68,12 @@ public extension PlaySyncManager {
             
             let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: dialogRequestId)
             // Cancel timers
+            log.debug("Cancel layer timer \(playGroup)")
             playGroup.forEach(self.removeTimer)
             
             // Start display only timer
             if property.contextType == .display && playGroup.count == 1 {
+                log.debug("Add display only timer \(property) \(duration)")
                 self.addTimer(property: property, duration: duration)
             }
         }
@@ -85,10 +87,11 @@ public extension PlaySyncManager {
             log.debug("\(property) \(info.playServiceId)")
             
             // Set timers
-            self.playStack.playGroup(layerType: property.layerType, dialogRequestId: info.dialogRequestId)
-                .forEach {
-                    guard let duration = self.playStack[$0]?.duration else { return }
-                    self.addTimer(property: $0, duration: duration)
+            let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: info.dialogRequestId)
+            log.debug("Start layer timer \(playGroup)")
+            playGroup.forEach {
+                guard let duration = self.playStack[$0]?.duration else { return }
+                self.addTimer(property: $0, duration: duration)
             }
             
             // Multi-layer exceptions
@@ -130,8 +133,8 @@ public extension PlaySyncManager {
             guard let self = self else { return }
             guard self.playContextTimers[property] != nil else { return }
             guard let info = self.playStack[property] else { return }
-
-            log.debug(property)
+            
+            log.debug("\(property) \(info.duration)")
             
             // Cancel timers
             self.removeTimer(property: property)
@@ -157,7 +160,7 @@ public extension PlaySyncManager {
 // MARK: - ContextInfoDelegate
 extension PlaySyncManager: ContextInfoDelegate {
     public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
-        log.debug(playStack)
+        log.debug("\(playStack.playServiceIds)")
         completionHandler(ContextInfo(contextType: .client, name: "playStack", payload: playStack.playServiceIds))
     }
 }
@@ -166,24 +169,19 @@ extension PlaySyncManager: ContextInfoDelegate {
 
 private extension PlaySyncManager {
     func pushToPlayStack(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String, dialogRequestId: String) {
-        log.debug("\(property) \(playServiceId)")
-        
         // Cancel timers
         removeTimer(property: property)
 
-        let info = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, duration: duration)
-        
-        playStack[property] = info
+        playStack[property] = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, duration: duration)
     }
     
     func popFromPlayStack(property: PlaySyncProperty) {
         guard let info = playStack[property] else { return }
-        playStack[property] = nil
-
-        log.debug("\(property) \(info.playServiceId)")
         
         // Cancel timers
         removeTimer(property: property)
+        
+        playStack[property] = nil
         
         delegates.notify { (delegate) in
             delegate.playSyncDidRelease(property: property, dialogRequestId: info.dialogRequestId)
@@ -193,12 +191,11 @@ private extension PlaySyncManager {
     func addTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
         guard duration != .never else { return }
         
-        log.debug("Start \(property) duration \(duration)")
         let disposeBag = DisposeBag()
         Completable.create { [weak self] (event) -> Disposable in
             guard let self = self else { return Disposables.create() }
 
-            log.debug("End \(property) duration \(duration)")
+            log.debug("Timer fired. \(property) duration \(duration)")
             self.popFromPlayStack(property: property)
             
             event(.completed)
@@ -212,7 +209,6 @@ private extension PlaySyncManager {
     }
     
     func removeTimer(property: PlaySyncProperty) {
-        log.debug(property)
         playContextTimers[property] = nil
     }
 }
