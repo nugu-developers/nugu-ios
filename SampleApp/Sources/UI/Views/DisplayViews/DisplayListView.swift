@@ -34,7 +34,7 @@ final class DisplayListView: DisplayView {
             titleLabel.text = displayItem.title.text.text
             titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)
             backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
-            if let logoUrl = displayItem.title.logo.sources.first?.url {
+            if let logoUrl = displayItem.title.logo?.sources.first?.url {
                 logoImageView.loadImage(from: logoUrl)
                 logoImageView.isHidden = false
             } else {
@@ -70,6 +70,9 @@ extension DisplayListView: UITableViewDataSource {
         let displayListViewCell = tableView.dequeueReusableCell(withIdentifier: "DisplayListViewCell") as! DisplayListViewCell
         // swiftlint:enable force_cast
         displayListViewCell.configure(index: String(indexPath.row + 1), item: templateListItems?[indexPath.row])
+        displayListViewCell.onToggleSelect = { [weak self] token in
+            self?.onItemSelect?(token)
+        }
         return displayListViewCell
     }
 }
