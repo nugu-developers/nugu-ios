@@ -54,7 +54,7 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
             case .stopped, .finished:
                 playSyncManager.endPlay(property: playSyncProperty)
             case .paused(let temporary):
-                if temporary == false{
+                if temporary == false {
                     playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
                 }
             default:
@@ -128,10 +128,15 @@ extension AudioPlayerDisplayManager {
     }
     
     func notifyUserInteraction() {
-        if audioPlayerState == .paused(temporary: false) {
-            playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
-        } else {
+        switch audioPlayerState {
+        case .stopped, .finished:
             playSyncManager.resetTimer(property: playSyncProperty)
+        case .paused(let temporary):
+            if temporary == false {
+                playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
+            }
+        default:
+            break
         }
     }
 }

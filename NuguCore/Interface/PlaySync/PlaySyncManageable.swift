@@ -43,7 +43,7 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
     /// - Parameters:
     ///   - property: The object to release by timer.
     ///   - duration: The duration for timer.
-    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval?)
+    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval)
     
     /// Restart exist timer to release `PlaySyncProperty`.
     ///
@@ -51,21 +51,8 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
     /// - Parameter property: The object to release by timer.
     func resetTimer(property: PlaySyncProperty)
     
-    /// Cancel exist timer to release `PlaySyncProperty`.
+    /// Stop and remove exist timer to release `PlaySyncProperty`.
     ///
-    /// If the timer for `PlaySyncProperty` not exist then `resetTimer` call ignored.
-    /// - Parameter property: The object to release.
+    /// - Parameter property: The object to release by timer.
     func cancelTimer(property: PlaySyncProperty)
-}
-
-// MARK: - Default
-
-public extension PlaySyncManageable {
-    /// Start new timer to release `PlaySyncProperty`.
-    ///
-    /// - Parameters:
-    ///   - property: The object to release by timer.
-    func startTimer(property: PlaySyncProperty) {
-        startTimer(property: property, duration: nil)
-    }
 }

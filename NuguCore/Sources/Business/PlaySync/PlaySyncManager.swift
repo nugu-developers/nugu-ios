@@ -87,6 +87,7 @@ public extension PlaySyncManager {
             self.pushToPlayStack(property: property, duration: duration, playServiceId: playServiceId, dialogRequestId: dialogRequestId)
             
             let playGroup = self.playGroup(dialogRequestId: dialogRequestId)
+                .filter { $0.layerType == property.layerType }
             // Cancel timers
             playGroup.forEach(self.removeTimer)
             
@@ -105,9 +106,11 @@ public extension PlaySyncManager {
             log.debug("\(property) \(info.playServiceId)")
             
             // Set timers
-            self.playGroup(dialogRequestId: info.dialogRequestId).forEach {
-                guard let duration = self.playContexts[$0.layerType]?[$0.contextType]?.duration else { return }
-                self.addTimer(property: $0, duration: duration)
+            self.playGroup(dialogRequestId: info.dialogRequestId)
+                .filter { $0.layerType == property.layerType }
+                .forEach {
+                    guard let duration = self.playContexts[$0.layerType]?[$0.contextType]?.duration else { return }
+                    self.addTimer(property: $0, duration: duration)
             }
             
             // Multi-layer exceptions
@@ -129,11 +132,10 @@ public extension PlaySyncManager {
         }
     }
     
-    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval?) {
+    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let info = self.playContexts[property.layerType]?[property.contextType] else { return }
-            let duration = duration ?? info.duration
+            guard self.playContexts[property.layerType]?[property.contextType] != nil else { return }
             
             log.debug("\(property) \(duration)")
             
@@ -169,7 +171,7 @@ public extension PlaySyncManager {
             log.debug(property)
             
             // Cancel timers
-            self.removeTimer(property: property)
+            self.playContextTimers[property] = DisposeBag()
         }
     }
 }

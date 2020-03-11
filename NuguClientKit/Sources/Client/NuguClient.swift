@@ -271,9 +271,11 @@ extension NuguClient: DialogStateDelegate {
     public func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
         switch state {
         case .idle:
-            playSyncManager.startTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
-        default:
+            playSyncManager.resetTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+        case .listening:
             playSyncManager.cancelTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+        default:
+            break
         }
     }
 }
