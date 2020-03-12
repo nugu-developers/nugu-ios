@@ -48,4 +48,7 @@ public protocol DisplayAgentDelegate: class {
     
     /// Should return currently visible item's token.
     func displayAgentVisibleTokenList() -> [String]?
+    
+    /// Should update proper displaying view with given template.
+    func displayAgentShouldUpdate(template: DisplayTemplate)
 }
