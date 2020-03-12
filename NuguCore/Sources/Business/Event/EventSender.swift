@@ -187,16 +187,6 @@ class EventSender: NSObject {
     }
 }
 
-// MARK: - State
-
-extension EventSender {
-    enum EventSenderResult {
-        case sent
-        case received(part: MultiPartParser.Part)
-        case finished
-    }
-}
-
 // MARK: - Multipart
 
 private extension EventSender {

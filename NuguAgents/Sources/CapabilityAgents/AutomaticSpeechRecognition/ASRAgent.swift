@@ -505,16 +505,13 @@ private extension ASRAgent {
                 agent: self,
                 dialogRequestId: asrRequest.dialogRequestId,
                 contextPayload: asrRequest.contextPayload
-            ),
-            completion: { [weak self] (status) in
+            )) { [weak self] (result) in
                 guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
-                guard case .success = status else {
+
+                if case .failure = result {
                     self?.asrResult = .error(ASRError.recognizeFailed)
-                    return
                 }
-            },
-            resultHandler: nil
-        )
+        }
     }
     
     /// asrDispatchQueue

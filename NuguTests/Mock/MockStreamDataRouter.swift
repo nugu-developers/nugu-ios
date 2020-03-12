@@ -54,6 +54,4 @@ class MockStreamDataRouter: StreamDataRoutable {
     func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Void, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
 
     }
-    
-    
 }

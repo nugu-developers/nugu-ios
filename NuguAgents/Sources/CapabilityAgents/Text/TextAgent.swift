@@ -181,9 +181,7 @@ private extension TextAgent {
                     text: textRequest.text,
                     expectSpeech: textRequest.expectSpeech
                 )
-            ).makeEventMessage(agent: self),
-            resultHandler: { [weak self] result in
-                // TODO: 사용하고 있는 곳이 없다면 completion으로 바꾸고 state만 idle로 바꾸는 것을 고려.
+            ).makeEventMessage(agent: self)) { [weak self] result in
                 guard let self = self else { return }
                 guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
                 
@@ -192,7 +190,6 @@ private extension TextAgent {
                     delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
                 })
                 self.textAgentState = .idle
-            }
-        )
+        }
     }
 }

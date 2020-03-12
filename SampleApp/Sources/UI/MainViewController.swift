@@ -69,6 +69,7 @@ final class MainViewController: UIViewController {
             object: nil
         )
         
+        // TODO: network status를 sdk로부터 전달받을 수 없음.
 //        NotificationCenter.default.addObserver(
 //            self,
 //            selector: #selector(networkStatusDidChange(_:)),
@@ -387,6 +388,7 @@ private extension MainViewController {
     }
 }
 
+// TODO: network status를 nugu sdk로부터 전달받을 수 없음.
 // MARK: - NuguNetworkStatus
 //
 //extension MainViewController {

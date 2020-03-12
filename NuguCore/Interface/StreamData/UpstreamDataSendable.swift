@@ -22,59 +22,39 @@ import Foundation
 
 /// <#Description#>
 public protocol UpstreamDataSendable {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - upstreamEventMessage: <#upstreamEventMessage description#>
-    ///   - completion: <#completion description#>
-    func sendEvent(
-        upstreamEventMessage: UpstreamEventMessage,
-        completion: ((Result<Void, Error>) -> Void)?,
-        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
-    )
+    /**
+     Send a event.
+     */
+    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)?)
+
+    /**
+     Send a event and keep the stream for future attachment
+     */
+    func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)?)
     
-    func sendStream(
-        upstreamEventMessage: UpstreamEventMessage,
-        completion: ((Result<Void, Error>) -> Void)?,
-        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
-    )
+    /**
+     Send a attachment using the stream set before.
+     
+     Every event and attachment have `DialogRequestId`.
+     This method finds the suitable stream using that id
+     */
+    func sendStream(upstreamAttachment: UpstreamAttachment, completion: ((Result<Void, Error>) -> Void)?)
     
-    /// <#Description#>
-    /// - Parameters:
-    ///   - upstreamAttachment: <#upstreamAttachment description#>
-    ///   - completion: <#completion description#>
-    func sendStream(
-        upstreamAttachment: UpstreamAttachment,
-        completion: ((Result<Void, Error>) -> Void)?
-    )
-    
-    /// <#Description#>
-    /// - Parameter crashReports: <#crashReports description#>
+    /**
+     Send a event to report crash
+     */
     func send(crashReports: [CrashReport])
 }
 
 public extension UpstreamDataSendable {
-    /// <#Description#>
-    /// - Parameter error: <#error description#>
-    /// - Parameter detail: <#detail description#>
     func sendCrashReport(error: Error, detail: String = "") {
         let crashReport = CrashReport(level: .error, message: error.localizedDescription, detail: detail)
         send(crashReports: [crashReport])
     }
-    
-    // MARK: - Default Implement for send event message
     func sendEvent(upstreamEventMessage: UpstreamEventMessage) {
-        sendEvent(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: nil)
+        sendEvent(upstreamEventMessage: upstreamEventMessage, completion: nil)
     }
     
-    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Void, Error>) -> Void)?) {
-        sendEvent(upstreamEventMessage: upstreamEventMessage, completion: completion, resultHandler: nil)
-    }
-    
-    func sendEvent(upstreamEventMessage: UpstreamEventMessage, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
-        sendEvent(upstreamEventMessage: upstreamEventMessage, completion: nil, resultHandler: resultHandler)
-    }
-    
-    // MARK: - Default Implement for send attachment
     func sendStream(upstreamAttachment: UpstreamAttachment) {
         sendStream(upstreamAttachment: upstreamAttachment, completion: nil)
     }

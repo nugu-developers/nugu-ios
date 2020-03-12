@@ -77,12 +77,13 @@ final class NuguCentralManager {
 
 extension NuguCentralManager {
     func enable() {
-        client.enable()
+        // TODO: enable/disable 의미 불명확함.
         client.startReceiveServerInitiatedDirective()
     }
     
     func disable() {
-        client.disable()
+        // TODO: enable/disable 의미 불명확함.
+        client.stopReceiveServerInitiatedDirective()
     }
 }
 
