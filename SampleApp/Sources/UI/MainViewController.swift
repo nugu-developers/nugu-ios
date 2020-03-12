@@ -282,7 +282,7 @@ private extension MainViewController {
         displayView?.removeFromSuperview()
         
         switch displayTemplate.type {
-        case "Display.FullText1", "Display.FullText2",
+        case "Display.FullText1", "Display.FullText2", "Display.FullText3",
              "Display.ImageText1", "Display.ImageText2", "Display.ImageText3", "Display.ImageText4":
             displayView = DisplayBodyView(frame: view.frame)
         case "Display.TextList1", "Display.TextList2",
@@ -321,6 +321,13 @@ private extension MainViewController {
         }
         
         return displayView
+    }
+    
+    func updateDisplayView(displayTemplate: DisplayTemplate) {
+        guard let currentDisplayView = displayView else {
+            return
+        }
+        currentDisplayView.update(updatePayload: displayTemplate.payload)
     }
     
     func dismissDisplayView() {
@@ -602,6 +609,10 @@ extension MainViewController: DisplayAgentDelegate {
     
     func displayAgentDidRender(template: DisplayTemplate) -> AnyObject? {
         return addDisplayView(displayTemplate: template)
+    }
+    
+    func displayAgentShouldUpdate(template: DisplayTemplate) {
+        updateDisplayView(displayTemplate: template)
     }
     
     func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason) {
