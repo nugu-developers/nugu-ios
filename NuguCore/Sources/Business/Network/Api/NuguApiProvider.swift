@@ -106,7 +106,6 @@ class NuguApiProvider: NSObject {
     private lazy var internalDirective: Observable<MultiPartParser.Part> = {
         return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
             let disposable = Disposables.create()
-            
             guard let self = self else { return disposable }
             
             // enable client side load balance and find new resource server for directive and event both.
@@ -148,7 +147,7 @@ class NuguApiProvider: NSObject {
             return Observable.from(parts)
         }
         .compactMap { $0 }
-        .retryWhen(retry)
+        .retryWhen(retryDirective)
         .do(onDispose: { [weak self] in
             self?.url = NuguServerInfo.resourceServerAddress
             
@@ -192,17 +191,18 @@ private extension NuguApiProvider {
         }
     }
     
-    func retry(observer: Observable<Error>) -> Observable<Int> {
+    func retryDirective(observer: Observable<Error>) -> Observable<Int> {
         return observer
             .enumerated()
             .flatMap { [weak self] (index, error) -> Observable<Int> in
+                log.error("recover network error: \(error)")
                 guard let self = self else {
                     return Observable.error(NetworkError.unavailable)
                 }
                 
                 // TODO: server policy대로 retry하도록 수정.
                 guard let error = error as? NetworkError else {
-                    let waitTime = Int.random(in: 1..<(30*(index+1)))
+                    let waitTime = Int.random(in: 1...(30 * index + 1))
                     return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                         .take(1)
                         .flatMap { _ in self.chooseResourceServer }
@@ -312,7 +312,7 @@ extension NuguApiProvider {
         
         return request.rxDataTask(urlSession: session)
             .asCompletable()
-            .retryWhen(retry)
+            .retryWhen(retryDirective)
     }
 }
 

@@ -26,10 +26,11 @@ public class StreamDataRouter: StreamDataRoutable {
     public weak var delegate: DownstreamDataDelegate?
     private let downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
     
-    private var eventSenders = [String: EventSender]()
     private let nuguApiProvider = NuguApiProvider()
+    private var eventSenders = [String: EventSender]()
+    private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
     
-    private var serverSideEventDisposable: Disposable?
+    private var serverInitiatedDirectiveDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
     public var chargingFreeUrl: String = "" {
@@ -41,7 +42,9 @@ public class StreamDataRouter: StreamDataRoutable {
         }
     }
     
-    public init() {}
+    public init() {
+        serverInitiatedDirectiveRecever = ServerSideEventReceiver(apiProvider: nuguApiProvider)
+    }
 }
 
 // MARK: - Server side event
@@ -49,19 +52,19 @@ public class StreamDataRouter: StreamDataRoutable {
 extension StreamDataRouter {
     public func startReceiveServerInitiatedDirective(completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
         log.debug("start receive server initiated directives")
-        serverSideEventDisposable = nuguApiProvider.directive
+        serverInitiatedDirectiveDisposable = serverInitiatedDirectiveRecever.directive
             .subscribe(onNext: { [weak self] in
                     self?.notifyMessage(with: $0, completion: completion)
                 }, onError: {
                     log.error("error: \($0)")
                     completion?(.failure($0))
                 })
-        serverSideEventDisposable?.disposed(by: disposeBag)
+        serverInitiatedDirectiveDisposable?.disposed(by: disposeBag)
     }
     
     public func stopReceiveServerInitiatedDirective() {
         log.debug("stop receive server initiated directives")
-        serverSideEventDisposable?.dispose()
+        serverInitiatedDirectiveDisposable?.dispose()
     }
 }
 

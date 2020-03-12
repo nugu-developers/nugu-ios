@@ -25,54 +25,46 @@ import RxSwift
 class ServerSideEventReceiver {
     private let apiProvider: NuguApiProvider
     private var pingDisposable: Disposable?
-    private let networkSubject = PublishSubject<ServerSideEventReceiverState>()
-    private lazy var directive = apiProvider.directive.share()
+    private let stateSubject = PublishSubject<ServerSideEventReceiverState>()
     private let disposeBag = DisposeBag()
     
-    var networkStatus: ServerSideEventReceiverState = .disconnected() {
+    var state: ServerSideEventReceiverState = .disconnected() {
         didSet {
-            if oldValue != networkStatus {
-                log.info("From:\(oldValue) To:\(networkStatus)")
+            if oldValue != state {
+                log.info("From:\(oldValue) To:\(state)")
 
-                networkSubject.onNext(networkStatus)
-                networkStatus == .connected ? startPing() : stopPing()
+                stateSubject.onNext(state)
+                state == .connected ? startPing() : stopPing()
             }
         }
     }
     
     var isConnected: Bool {
-        return networkStatus == .connected
+        return state == .connected
     }
     
     init(apiProvider: NuguApiProvider) {
         self.apiProvider = apiProvider
     }
     
-    var serverSideEvent: Observable<MultiPartParser.Part> {
-        return Single<Observable<MultiPartParser.Part>>.create { [weak self] (event) -> Disposable in
-            let disposable = Disposables.create()
-            
-            guard let self = self else { return disposable }
-            
-            self.directive
-                .take(1)
-                .subscribe(onNext: { (part) in
-                    log.debug("downstream is establisehd. consume connection data blow:\n\(part)")
-                    self.networkStatus = .connected
-                    event(.success(self.directive))
-                }, onError: { (error) in
-                    event(.error(error))
-                })
-                .disposed(by: self.disposeBag)
-            
-            return disposable
-        }
-        .asObservable()
-        .flatMap { $0 }
+    var directive: Observable<MultiPartParser.Part> {
+        return self.apiProvider.directive
+            .take(1)
+            .concatMap { [weak self] part -> Observable<MultiPartParser.Part> in
+                guard let self = self else { return Observable.empty() }
+                
+                self.state = .connected
+                return self.apiProvider.directive.startWith(part)
+            }
+            .do(onError: { [weak self] (error) in
+                self?.state = .disconnected(error: error)
+            }, onCompleted: { [weak self] in
+                self?.state = .disconnected(error: nil)
+            })
     }
-    
-    var networkObserver: Observable<ServerSideEventReceiverState> {
-        return networkSubject
+
+    var stateObserver: Observable<ServerSideEventReceiverState> {
+        return stateSubject
     }
 }
 
@@ -80,7 +72,9 @@ class ServerSideEventReceiver {
 
 private extension ServerSideEventReceiver {
     func startPing() {
-        let randomPingTime = Int.random(in: 180..<300)
+        // TODO: restore
+//        let randomPingTime = Int.random(in: 180..<300)
+        let randomPingTime = Int.random(in: 18..<30)
         
         pingDisposable?.dispose()
         pingDisposable = Observable<Int>.interval(.seconds(randomPingTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
