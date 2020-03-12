@@ -29,9 +29,9 @@ import RxSwift
  - Note: You can send event only once. because stream cannot be opened after close.
  */
 class EventSender: NSObject {
-    private let boundary = "dummy-boundary-replace-it" // TODO: create!!
-    private let eventQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_queue")
-    private let streamQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_stream_queue")
+    private let boundary: String
+    private let eventQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_event")
+    private let streamQueue: DispatchQueue
     private var streamWorkItem: DispatchWorkItem?
     private let streamStateSubject = BehaviorSubject<Bool>(value: false)
     private let disposeBag = DisposeBag()
@@ -41,13 +41,14 @@ class EventSender: NSObject {
     private var sentData = Data()
     #endif
     
-    override init() {
+    public init(boundary: String) {
+        self.boundary = boundary
+        streamQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_stream_\(boundary)")
         super.init()
-        
         log.debug("initiated")
         
         streamWorkItem = DispatchWorkItem { [weak self] in
-            log.debug("network bound stream task start")
+            log.debug("network bound stream task start.")
             guard let self = self else { return }
             log.debug("network bound stream task is eligible for running")
 

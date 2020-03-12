@@ -45,9 +45,12 @@ enum HTTPStatusCode: Int {
 }
 
 enum HTTPConst {
-    static let boundary = "this-is-a-boundary"
     static let carriageReturn = "\r".data(using: .utf8)![0]
     static let lineFeed = "\n".data(using: .utf8)![0]
     static let crlf = "\r\n"
     static let colon = ":".data(using: .utf8)![0]
+    
+    static let contentTypeKey = "Content-Type"
+    static let eventContentTypePrefix = "multipart/form-data; boundary="
+    static let boundaryPrefix = "nugusdk.boundary."
 }

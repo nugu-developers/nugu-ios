@@ -223,7 +223,7 @@ extension NuguApiProvider {
     /**
      Request to device gateway (resource server)
      */
-    func events(inputStream: InputStream) -> Observable<MultiPartParser.Part> {
+    func events(boundary: String, inputStream: InputStream) -> Observable<MultiPartParser.Part> {
         var uploadTask: URLSessionUploadTask!
         
         return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
@@ -245,6 +245,7 @@ extension NuguApiProvider {
             var streamRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: self.requestTimeout)
             streamRequest.httpMethod = NuguApi.events.method.rawValue
             streamRequest.allHTTPHeaderFields = NuguApi.events.header
+            streamRequest.allHTTPHeaderFields?[HTTPConst.contentTypeKey] = HTTPConst.eventContentTypePrefix+boundary
             
             log.debug("request url: \(url)")
             log.debug("request event header: \(streamRequest.allHTTPHeaderFields ?? [:])")

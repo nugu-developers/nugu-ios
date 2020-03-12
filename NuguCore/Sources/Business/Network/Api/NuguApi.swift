@@ -100,11 +100,9 @@ extension NuguApi {
                 "User-Agent": NetworkConst.userAgent
             ]
         case .events:
-            // TODO: replace boundary!!
              return [
                 "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
-                "User-Agent": NetworkConst.userAgent,
-                "Content-Type": "multipart/form-data; boundary=dummy-boundary-replace-it"
+                "User-Agent": NetworkConst.userAgent
                 ]
         case .eventAttachment:
             return [

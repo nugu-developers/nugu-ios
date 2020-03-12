@@ -80,7 +80,8 @@ extension StreamDataRouter: UpstreamDataSendable {
     }
     
     public func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
-        let eventSender = EventSender()
+        let boundary = HTTPConst.boundaryPrefix + upstreamEventMessage.header.dialogRequestId
+        let eventSender = EventSender(boundary: boundary)
         eventSenders[upstreamEventMessage.header.dialogRequestId] = eventSender
         
         // write event data to the stream
@@ -93,7 +94,7 @@ extension StreamDataRouter: UpstreamDataSendable {
             .disposed(by: self.disposeBag)
         
         // request event as multi part stream
-        nuguApiProvider.events(inputStream: eventSender.streams.input)
+        nuguApiProvider.events(boundary: boundary, inputStream: eventSender.streams.input)
             .subscribe(onNext: { [weak self] (part) in
                 self?.notifyMessage(with: part, completion: completion)
             }, onError: { (error) in
