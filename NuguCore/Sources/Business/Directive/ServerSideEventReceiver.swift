@@ -24,6 +24,7 @@ import RxSwift
 
 class ServerSideEventReceiver {
     private let apiProvider: NuguApiProvider
+    private var serverPolicies = [Policy.ServerPolicy]()
     private var pingDisposable: Disposable?
     private let stateSubject = PublishSubject<ServerSideEventReceiverState>()
     private let disposeBag = DisposeBag()
@@ -46,9 +47,9 @@ class ServerSideEventReceiver {
     init(apiProvider: NuguApiProvider) {
         self.apiProvider = apiProvider
     }
-    
+
     var directive: Observable<MultiPartParser.Part> {
-        return self.apiProvider.directive
+        return apiProvider.directive
             .take(1)
             .concatMap { [weak self] part -> Observable<MultiPartParser.Part> in
                 guard let self = self else { return Observable.empty() }
@@ -56,6 +57,7 @@ class ServerSideEventReceiver {
                 self.state = .connected
                 return self.apiProvider.directive.startWith(part)
             }
+            .retryWhen(retryDirective)
             .do(onError: { [weak self] (error) in
                 self?.state = .disconnected(error: error)
             }, onCompleted: { [weak self] in
@@ -68,13 +70,44 @@ class ServerSideEventReceiver {
     }
 }
 
+// MARK: - Retry policy
+
+private extension ServerSideEventReceiver {
+    func retryDirective(observer: Observable<Error>) -> Observable<Int> {
+        return observer
+            .enumerated()
+            .flatMap { [weak self] (index, error) -> Observable<Int> in
+                guard let self = self else { return Observable<Int>.empty() }
+                log.error("recover network error: \(error), try count: \(index+1)")
+                
+                guard 0 < self.serverPolicies.count else {
+                    // if server policy does not exist, get it using `policies` api.
+                    let waitTime = (error as? NetworkError) == .noSuitableResourceServer ? 0 : Int.random(in: 1...(30 * index + 1))
+                    return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                        .take(1)
+                        .flatMap { _ in self.apiProvider.policies }
+                        .map {
+                            self.serverPolicies = $0.serverPolicies
+                            let policy = self.serverPolicies.removeFirst()
+                            self.apiProvider.url = "https://\(policy.hostname):\(policy.port)"
+                            
+                            return index
+                        }
+                }
+                
+                let policy = self.serverPolicies.removeFirst()
+                self.apiProvider.url = "https://\(policy.hostname):\(policy.port)"
+                return Observable<Int>.timer(.seconds(0), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                    .take(1)
+        }
+    }
+}
+
 // MARK: - ping
 
 private extension ServerSideEventReceiver {
     func startPing() {
-        // TODO: restore
-//        let randomPingTime = Int.random(in: 180..<300)
-        let randomPingTime = Int.random(in: 18..<30)
+        let randomPingTime = Int.random(in: 180..<300)
         
         pingDisposable?.dispose()
         pingDisposable = Observable<Int>.interval(.seconds(randomPingTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))

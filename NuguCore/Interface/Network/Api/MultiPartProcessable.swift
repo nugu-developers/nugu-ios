@@ -22,14 +22,14 @@ import Foundation
 
 import RxSwift
 
-protocol MultiPartProcessable {
+protocol MultiPartProcessable: class {
     var parser: MultiPartParser? { get set }
     var data: Data { get set }
     var subject: PublishSubject<Data> { get }
 }
 
 extension MultiPartProcessable {
-    mutating func parseData() -> [MultiPartParser.Part]? {
+    func parseData() -> [MultiPartParser.Part]? {
         guard let parser = self.parser else {
             return nil
         }

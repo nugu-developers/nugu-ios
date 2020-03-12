@@ -24,7 +24,6 @@ import CFNetwork
 import RxSwift
 
 class NuguApiProvider: NSObject {
-    private var url: String? = NuguServerInfo.resourceServerAddress
     private let requestTimeout: TimeInterval
     private var candidateResourceServers: [String]?
     private var disposeBag = DisposeBag()
@@ -33,6 +32,12 @@ class NuguApiProvider: NSObject {
     private lazy var session: URLSession = URLSession(configuration: sessionConfig,
                                                       delegate: self,
                                                       delegateQueue: sessionQueue)
+    
+    @Atomic var url: String? = NuguServerInfo.resourceServerAddress {
+        didSet {
+            log.debug("resource server url: \(url ?? "nil")")
+        }
+    }
 
     // handle response for upload task.
     private var eventResponseProcessors = [URLSessionTask: EventResponseProcessor]()
@@ -43,8 +48,10 @@ class NuguApiProvider: NSObject {
     // flag of client side load balanceing
     private var isCSLBEnabled = false {
         didSet {
-            log.debug("client side load balancing: \(isCSLBEnabled)")
-
+            if oldValue != isCSLBEnabled {
+                log.debug("client side load balancing changed: \(oldValue) -> \(isCSLBEnabled)")
+            }
+            
             if oldValue == false, isCSLBEnabled == true {
                 url = nil
             }
@@ -76,7 +83,7 @@ class NuguApiProvider: NSObject {
     /**
      Find available device gateway (resource server)
     */
-    private let policies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
+    let policies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
         let disposable = Disposables.create()
         
         var urlComponent = URLComponents(string: (NuguServerInfo.registryAddress + NuguApi.policy.path))
@@ -97,9 +104,9 @@ class NuguApiProvider: NSObject {
         event(.success(request))
         return disposable
     }
-    .asObservable()
     .flatMap { $0.rxDataTask(urlSession: URLSession.shared) }
     .map { try JSONDecoder().decode(Policy.self, from: $0) }
+    .asObservable()
     .share()
     .asSingle()
     
@@ -138,17 +145,15 @@ class NuguApiProvider: NSObject {
         }
         .asObservable()
         .flatMap { $0 }
-        .concatMap { [weak self] (data) -> Observable<MultiPartParser.Part?> in
-            self?.serverSideEventProcessor?.data.append(data)
-            guard let parts = self?.serverSideEventProcessor?.parseData() else {
-                return Observable<MultiPartParser.Part?>.just(nil)
+        .concatMap { [weak self] (data) -> Observable<MultiPartParser.Part> in
+            guard let self = self,
+                let serverSideEventProcessor = self.serverSideEventProcessor else {
+                    return Observable.error(NetworkError.streamInitializeFailed)
             }
-            
-            return Observable.from(parts)
+
+            return self.makePart(with: data, processor: serverSideEventProcessor)
         }
-        .compactMap { $0 }
-        .retryWhen(retryDirective)
-        .do(onDispose: { [weak self] in
+        .do(onCompleted: { [weak self] in
             self?.url = NuguServerInfo.resourceServerAddress
             
             if self?.isChargingFree == false {
@@ -156,64 +161,19 @@ class NuguApiProvider: NSObject {
             }
         })
     }().share()
-}
-
-// MARK: - Retry policy
-
-private extension NuguApiProvider {
-    var chooseResourceServer: Observable<Int> {
-        return Observable<Int>.create { [weak self] (observer) -> Disposable in
-            let disposable = Disposables.create()
-            guard let self = self else { return disposable }
-            
-            if let candidateResourceServers = self.candidateResourceServers,
-                1 < candidateResourceServers.count {
-                self.url = candidateResourceServers[0]
-                self.candidateResourceServers?.remove(at: 0)
-                
-                observer.onNext(self.candidateResourceServers?.count ?? 0)
-                return disposable
-            }
-            
-            self.policies
-                .subscribe(onSuccess: { (policy) in
-                    self.candidateResourceServers = policy.serverPolicies
-                        .map { "https://" + "\($0.hostname):\($0.port)" }
-                    self.url = self.candidateResourceServers?[0]
-                    self.candidateResourceServers?.remove(at: 0)
-                    observer.onNext(self.candidateResourceServers?.count ?? 0)
-                }, onError: { (error) in
-                    observer.onError(error)
-                })
-                .disposed(by: self.disposeBag)
-            
-            return disposable
-        }
-    }
     
-    func retryDirective(observer: Observable<Error>) -> Observable<Int> {
-        return observer
-            .enumerated()
-            .flatMap { [weak self] (index, error) -> Observable<Int> in
-                log.error("recover network error: \(error)")
-                guard let self = self else {
-                    return Observable.error(NetworkError.unavailable)
-                }
-                
-                // TODO: server policy대로 retry하도록 수정.
-                guard let error = error as? NetworkError else {
-                    let waitTime = Int.random(in: 1...(30 * index + 1))
-                    return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                        .take(1)
-                        .flatMap { _ in self.chooseResourceServer }
-                }
-                
-                if error == NetworkError.noSuitableResourceServer {
-                    return self.chooseResourceServer
-                }
-                
-                return Observable.error(error)
+    private func makePart(with data: Data, processor: MultiPartProcessable) -> Observable<MultiPartParser.Part> {
+        processor.data.append(data)
+        
+        var partObserver: Observable<MultiPartParser.Part?> {
+            guard let parts = processor.parseData() else {
+                return Observable<MultiPartParser.Part?>.just(nil)
+            }
+                       
+            return Observable.from(parts)
         }
+        
+        return partObserver.compactMap { $0 }
     }
 }
 
@@ -261,31 +221,13 @@ extension NuguApiProvider {
         }
         .asObservable()
         .flatMap { $0 }
-        .concatMap { [weak self] (data) -> Observable<MultiPartParser.Part?> in
+        .concatMap { [weak self] (data) -> Observable<MultiPartParser.Part> in
             guard let self = self,
-                var eventResponse = self.eventResponseProcessors[uploadTask] else {
+                let processor = self.eventResponseProcessors[uploadTask] else {
                     return Observable.error(NetworkError.streamInitializeFailed)
             }
             
-            eventResponse.data.append(data)
-            guard let parts = eventResponse.parseData() else {
-                return Observable<MultiPartParser.Part?>.just(nil)
-            }
-            
-            return Observable.from(parts)
-        }
-        .compactMap { $0 }
-        .retryWhen { (error) -> Observable<Int> in
-            error
-                .enumerated()
-                .flatMap { [weak self] (_, error) -> Observable<Int> in
-                    guard let self = self,
-                        (error as? NetworkError) == NetworkError.noSuitableResourceServer else {
-                        return Observable.error(error)
-                    }
-                    
-                    return self.chooseResourceServer
-            }
+            return self.makePart(with: data, processor: processor)
         }
     }
     
@@ -312,7 +254,6 @@ extension NuguApiProvider {
         
         return request.rxDataTask(urlSession: session)
             .asCompletable()
-            .retryWhen(retryDirective)
     }
 }
 
