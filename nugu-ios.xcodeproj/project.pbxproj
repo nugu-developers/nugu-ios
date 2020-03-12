@@ -36,6 +36,7 @@
 		1F2E803923966D9D00569C59 /* KeywordSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803823966D9D00569C59 /* KeywordSource.swift */; };
 		1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */; };
 		1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */; };
+		1F5DD4B72410CB8600719FBC /* TextAgentSourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */; };
 		1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentTests.swift */; };
 		1F5DD4AC240CF0D600719FBC /* MockPlaySyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */; };
 		1F5DD4AE240CF7D100719FBC /* ASRAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AD240CF7D100719FBC /* ASRAgentTests.swift */; };
@@ -282,7 +283,6 @@
 		7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2662375703000C9A177 /* DisplayTemplate.swift */; };
 		7315305323E1246F00F843C3 /* TextAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF26C2375703000C9A177 /* TextAgentProtocol.swift */; };
 		7315305423E1246F00F843C3 /* TextAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF26D2375703000C9A177 /* TextAgentDelegate.swift */; };
-		7315305523E1246F00F843C3 /* TextAgentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF26A2375703000C9A177 /* TextAgentState.swift */; };
 		7315305623E1246F00F843C3 /* LocationAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24E2375703000C9A177 /* LocationAgentProtocol.swift */; };
 		7315305723E1246F00F843C3 /* LocationAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24F2375703000C9A177 /* LocationAgentDelegate.swift */; };
 		7315305823E1246F00F843C3 /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2502375703000C9A177 /* LocationInfo.swift */; };
@@ -536,6 +536,7 @@
 		1F2E803823966D9D00569C59 /* KeywordSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSource.swift; sourceTree = "<group>"; };
 		1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordDetectorState.swift; sourceTree = "<group>"; };
 		1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetectorDelegate.swift; sourceTree = "<group>"; };
+		1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentSourceItem.swift; sourceTree = "<group>"; };
 		1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentTests.swift; sourceTree = "<group>"; };
 		1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPlaySyncManager.swift; sourceTree = "<group>"; };
 		1F5DD4AD240CF7D100719FBC /* ASRAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRAgentTests.swift; sourceTree = "<group>"; };
@@ -632,7 +633,6 @@
 		1FFFF2652375703000C9A177 /* DisplayAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2662375703000C9A177 /* DisplayTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayTemplate.swift; sourceTree = "<group>"; };
 		1FFFF2672375703000C9A177 /* CapabilityAgentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityAgentable.swift; sourceTree = "<group>"; };
-		1FFFF26A2375703000C9A177 /* TextAgentState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextAgentState.swift; sourceTree = "<group>"; };
 		1FFFF26C2375703000C9A177 /* TextAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextAgentProtocol.swift; sourceTree = "<group>"; };
 		1FFFF26D2375703000C9A177 /* TextAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2702375703000C9A177 /* NetworkStatusDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkStatusDelegate.swift; sourceTree = "<group>"; };
@@ -1423,7 +1423,6 @@
 			children = (
 				1FFFF26C2375703000C9A177 /* TextAgentProtocol.swift */,
 				1FFFF26D2375703000C9A177 /* TextAgentDelegate.swift */,
-				1FFFF26A2375703000C9A177 /* TextAgentState.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -1718,6 +1717,7 @@
 				1FFFF35B2375707000C9A177 /* TextAgent.swift */,
 				1FFFF35A2375707000C9A177 /* TextAgent+Event.swift */,
 				1FFFF35C2375707000C9A177 /* TextRequest.swift */,
+				1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -3123,7 +3123,6 @@
 				7315306923E1248300F843C3 /* AudioPlayerAgentDelegate.swift in Sources */,
 				73152FAB23E0413700F843C3 /* SpeakerAgent.swift in Sources */,
 				736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */,
-				7315305523E1246F00F843C3 /* TextAgentState.swift in Sources */,
 				7315306123E1248300F843C3 /* SpeakerAgentProtocol.swift in Sources */,
 				73152FC823E0415400F843C3 /* TTSMedia.swift in Sources */,
 				73152FDC23E0451900F843C3 /* NuguAgents.swift in Sources */,
@@ -3149,7 +3148,7 @@
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
 				7315306C23E1248300F843C3 /* ASRAgentDelegate.swift in Sources */,
 				73152FAE23E0413700F843C3 /* SpeakerMuteInfo.swift in Sources */,
-                A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
+				A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
 				7315306423E1248300F843C3 /* SpeakerVolumeDelegate.swift in Sources */,
 				7315307123E1248300F843C3 /* SystemAgentProtocol.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,
@@ -3186,6 +3185,7 @@
 				73152FC123E0414F00F843C3 /* SystemAgent.swift in Sources */,
 				7315305E23E1246F00F843C3 /* CapabilityAgentProperty.swift in Sources */,
 				7315305123E1246F00F843C3 /* DisplayAgentDelegate.swift in Sources */,
+				1F5DD4B72410CB8600719FBC /* TextAgentSourceItem.swift in Sources */,
 				73152FC323E0414F00F843C3 /* SystemAgent+Event.swift in Sources */,
 				7315306D23E1248300F843C3 /* ASRState.swift in Sources */,
 				7315307223E1248300F843C3 /* SystemAgentDelegate.swift in Sources */,
