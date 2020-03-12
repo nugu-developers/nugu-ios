@@ -23,25 +23,35 @@ import Foundation
 import NuguCore
 
 class MockPlaySyncManager: PlaySyncManageable {
-    var playServiceIds: [String] = []
-    
-    func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+    func add(delegate: PlaySyncDelegate) {
         //
     }
     
-    func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+    func remove(delegate: PlaySyncDelegate) {
         //
     }
     
-    func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+    func startPlay(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, dialogRequestId: String) {
         //
     }
     
-    func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+    func endPlay(property: PlaySyncProperty) {
         //
     }
     
-    func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?) {
+    func stopPlay(dialogRequestId: String) {
+        //
+    }
+    
+    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
+        //
+    }
+    
+    func resetTimer(property: PlaySyncProperty) {
+        //
+    }
+    
+    func cancelTimer(property: PlaySyncProperty) {
         //
     }
     
