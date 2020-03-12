@@ -27,7 +27,7 @@ class MockStreamDataRouter: StreamDataRoutable {
     
     var chargingFreeUrl: String = ""
     
-    func startReceiveServerInitiatedDirective(resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+    func startReceiveServerInitiatedDirective(completion: ((Result<StreamDataResult, Error>) -> Void)?) {
 
     }
     
@@ -39,7 +39,7 @@ class MockStreamDataRouter: StreamDataRoutable {
 
     }
     
-    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Void, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)?) {
 
     }
     
@@ -51,7 +51,7 @@ class MockStreamDataRouter: StreamDataRoutable {
 
     }
     
-    func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Void, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
+    func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)?) {
 
     }
 }
