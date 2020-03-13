@@ -46,14 +46,6 @@ public class DialogStateAggregator {
     private var asrState: ASRState = .idle
     private var expectSpeech: ASRExpectSpeech?
     private var ttsState: TTSState = .finished
-
-    public init() {
-        log.info("")
-    }
-
-    deinit {
-        log.info("")
-    }
 }
 
 // MARK: - DialogStateAggregatable
