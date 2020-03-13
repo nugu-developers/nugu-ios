@@ -28,8 +28,7 @@ public final class SystemAgent: SystemAgentProtocol {
     
     // Private
     private let contextManager: ContextManageable
-    private let networkManager: NetworkManageable
-    private let upstreamDataSender: UpstreamDataSendable
+    private let streamDataRouter: StreamDataRoutable
     private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
@@ -40,29 +39,24 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandoffConnection", medium: .none, isBlocking: false, directiveHandler: handleHandOffConnection),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", medium: .none, isBlocking: false, directiveHandler: handleUpdateState),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", medium: .none, isBlocking: false, directiveHandler: handleException),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", medium: .none, isBlocking: false, directiveHandler: { { $1(.success(())) } })
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", medium: .none, isBlocking: false, directiveHandler: { { $1(.success(())) } }),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", medium: .none, isBlocking: false, directiveHandler: { { $1(.success(())) } })
     ]
     
     public init(
         contextManager: ContextManageable,
-        networkManager: NetworkManageable,
-        upstreamDataSender: UpstreamDataSendable,
+        streamDataRouter: StreamDataRoutable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("initiated")
-        
         self.contextManager = contextManager
-        self.networkManager = networkManager
-        self.upstreamDataSender = upstreamDataSender
+        self.streamDataRouter = streamDataRouter
         self.directiveSequencer = directiveSequencer
         
         contextManager.add(provideContextDelegate: self)
-        networkManager.add(statusDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
-        log.info("deinit")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
@@ -92,16 +86,17 @@ extension SystemAgent: ContextInfoDelegate {
 
 // MARK: - NetworkStatusDelegate
 
-extension SystemAgent: NetworkStatusDelegate {
-    public func networkStatusDidChange(_ status: NetworkStatus) {
-        switch status {
-        case .connected:
-            sendSynchronizeStateEvent()
-        default:
-            break
-        }
-    }
-}
+// TODO: v2에서는 "네트워크가 연결되면"이라는 상태가 없음. 초기에 context를 전송하는 로직 수정해야 함.
+//extension SystemAgent: NetworkStatusDelegate {
+//    public func networkStatusDidChange(_ status: NetworkStatus) {
+//        switch status {
+//        case .connected:
+//            sendSynchronizeStateEvent()
+//        default:
+//            break
+//        }
+//    }
+//}
 
 // MARK: - Private (handle directive)
 
@@ -118,7 +113,7 @@ private extension SystemAgent {
                     self?.systemDispatchQueue.async { [weak self] in
                         // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
                         log.info("try to handoff policy: \(serverPolicy)")
-                        self?.networkManager.connect()
+                        self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
                     }
                 }
             )
@@ -166,7 +161,7 @@ private extension SystemAgent {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
-            self.upstreamDataSender.send(
+            self.streamDataRouter.sendEvent(
                 upstreamEventMessage: Event(
                     typeInfo: .synchronizeState
                 ).makeEventMessage(

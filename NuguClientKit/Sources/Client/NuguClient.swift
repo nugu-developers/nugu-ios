@@ -29,7 +29,6 @@ public class NuguClient {
     // core
     public let contextManager: ContextManageable
     public let focusManager: FocusManageable
-    public let networkManager: NetworkManageable
     public let streamDataRouter: StreamDataRoutable
     public let directiveSequencer: DirectiveSequenceable
     public let playSyncManager: PlaySyncManageable
@@ -90,13 +89,11 @@ public class NuguClient {
         // core
         contextManager = ContextManager()
         focusManager = FocusManager()
-        networkManager = NetworkManager()
-        streamDataRouter = StreamDataRouter(networkManager: networkManager)
+        streamDataRouter = StreamDataRouter()
         directiveSequencer = DirectiveSequencer(streamDataRouter: streamDataRouter)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
         systemAgent = SystemAgent(contextManager: contextManager,
-                                  networkManager: networkManager,
-                                  upstreamDataSender: streamDataRouter,
+                                  streamDataRouter: streamDataRouter,
                                   directiveSequencer: directiveSequencer)
         
         // dialog
@@ -114,12 +111,11 @@ public class NuguClient {
 
         textAgent = TextAgent(contextManager: contextManager,
                               upstreamDataSender: streamDataRouter,
-                              focusManager: focusManager)
+                              directiveSequencer: directiveSequencer)
         
         dialogStateAggregator = DialogStateAggregator()
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
-        textAgent.add(delegate: dialogStateAggregator)
         
         // audio player
         audioPlayerAgent = AudioPlayerAgent(
@@ -134,30 +130,22 @@ public class NuguClient {
         setupAudioStream()
         setupAuthorizationStore()
         setupAudioSessionRequester()
-        setupNetworkInfoFoward()
     }
 }
     
 // MARK: - Helper functions
 
 public extension NuguClient {
-    func connect() {
-        networkManager.connect()
+    func startReceiveServerInitiatedDirective(completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+        streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
     }
     
-    func disconnect() {
-        networkManager.disconnect()
+    func stopReceiveServerInitiatedDirective() {
+        streamDataRouter.stopReceiveServerInitiatedDirective()
     }
     
-    func enable() {
-        connect()
-    }
-    
-    func disable() {
-        focusManager.stopForegroundActivity()
-        inputProvider.stop()
-        
-        disconnect()
+    func setChargingFreeUrl(_ url: String) {
+          streamDataRouter.chargingFreeUrl = url
     }
 }
 
@@ -240,22 +228,5 @@ extension NuguClient: FocusDelegate {
     
     public func focusShouldRelease() {
         delegate?.nuguClientDidReleaseAudioSession()
-    }
-}
-
-// MARK: - Delegates releated Network
-
-extension NuguClient: NetworkStatusDelegate, ReceiveMessageDelegate {
-    private func setupNetworkInfoFoward() {
-        networkManager.add(receiveMessageDelegate: self)
-        networkManager.add(statusDelegate: self)
-    }
-    
-    public func networkStatusDidChange(_ status: NetworkStatus) {
-        delegate?.nuguClientConnectionStatusChanged(status: status)
-    }
-    
-    public func receiveMessageDidReceive(header: [String: String], body: Data) {
-        delegate?.nuguClientDidReceiveMessage(header: header, body: body)
     }
 }

@@ -1,9 +1,9 @@
 //
-//  NuguApiProvidable.swift
+//  StreamDataResult.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 2019/12/10.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2020/03/12.
+//  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -16,15 +16,11 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-//
 
 import Foundation
 
-/// <#Description#>
-public protocol NuguApiProvidable {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - request: <#request description#>
-    ///   - completion: <#completion description#>
-    func request(with request: NuguApiRequest, completion: ((Result<Data, Error>) -> Void)?)
+public enum StreamDataResult {
+    case sent
+    case received(part: Downstream.Directive)
+    case finished
 }

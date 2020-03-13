@@ -24,7 +24,7 @@ public protocol DownstreamMessageable {
     var header: Downstream.Header { get }
 }
 
-public struct Downstream {
+public enum Downstream {
     public struct Directive: DownstreamMessageable, Decodable {
         public let header: Header
         public let payload: String
