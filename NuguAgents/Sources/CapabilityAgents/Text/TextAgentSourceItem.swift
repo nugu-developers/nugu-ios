@@ -1,8 +1,8 @@
 //
-//  TextAgentState.swift
+//  TextAgentSourceItem.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2019/07/19.
+//  Created by yonghoonKwon on 2020/03/05.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,7 @@
 
 import Foundation
 
-/// A state of text recognition.
-public enum TextAgentState {
-    /// The state that can send text command.
-    case idle
-    
-    /// The state of waiting for a text command to be recognized by the device-gateway.
-    case busy
+struct TextAgentSourceItem: Decodable {
+    let text: String
+    let token: String
 }
