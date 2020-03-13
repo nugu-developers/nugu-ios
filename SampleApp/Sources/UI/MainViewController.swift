@@ -636,10 +636,12 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     func audioPlayerDisplayShouldControlLyricsPage(direction: String) -> Bool { return false }
     
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
+        NuguCentralManager.shared.nuguAudioPlayerDelegate?.nuguAudioPlayerDisplayDidRender(template: template)
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
+        NuguCentralManager.shared.nuguAudioPlayerDelegate?.nuguAudioPlayerDisplayShouldClear()
         switch reason {
         case .timer:
             dismissDisplayAudioPlayerView()
@@ -660,6 +662,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState) {
+        NuguCentralManager.shared.nuguAudioPlayerDelegate?.nuguAudioPlayerAgentDidChange(state: state)
         switch state {
         case .paused, .playing:
             NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()

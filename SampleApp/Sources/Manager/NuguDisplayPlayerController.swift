@@ -29,8 +29,6 @@ final class NuguDisplayPlayerController {
     
     // MARK: Properties
     
-    private let audioPlayerAgent: AudioPlayerAgentProtocol
-    
     private var playCommandTarget: Any?
     private var pauseCommandTarget: Any?
     private var previousCommandTarget: Any?
@@ -43,27 +41,16 @@ final class NuguDisplayPlayerController {
     
     private var renderingContext: AnyObject?
     
-    // MARK: Initialize
-    
-    init?(audioPlayerAgent: AudioPlayerAgentProtocol?) {
-        guard let audioPlayerAgent = audioPlayerAgent else { return nil }
-        
-        self.audioPlayerAgent = audioPlayerAgent
-    }
-    
     func use() {
         // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
         guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
-        audioPlayerAgent.add(displayDelegate: self)
-        audioPlayerAgent.add(delegate: self)
+        NuguCentralManager.shared.nuguAudioPlayerDelegate = self
     }
     
     func unuse() {
         // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
         guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
-                
-        audioPlayerAgent.remove(displayDelegate: self)
-        audioPlayerAgent.remove(delegate: self)
+        NuguCentralManager.shared.nuguAudioPlayerDelegate = nil
     }
     
     func remove() {
@@ -125,7 +112,7 @@ private extension NuguDisplayPlayerController {
         let albumTitle: String
         let imageUrl: String?
         
-        duration = audioPlayerAgent.duration ?? 0
+        duration = NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0
         title = payload.template.title.text
         albumTitle = payload.template.content.title
         imageUrl = payload.template.content.imageUrl
@@ -137,7 +124,7 @@ private extension NuguDisplayPlayerController {
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
         nowPlayingInfo[MPMediaItemPropertyArtwork] = nil
     
-        let offset = audioPlayerAgent.offset ?? 0
+        let offset = NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0
         switch state {
         case .playing:
             addRemoteCommands()
@@ -187,8 +174,8 @@ private extension NuguDisplayPlayerController {
         
         if playCommandTarget == nil {
             playCommandTarget = MPRemoteCommandCenter.shared()
-                .playCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
-                    self?.audioPlayerAgent.play()
+                .playCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
+                    NuguCentralManager.shared.client.audioPlayerAgent.play()
                     return .success
             }
         }
@@ -198,8 +185,8 @@ private extension NuguDisplayPlayerController {
         guard pauseCommandTarget == nil else { return }
         
         pauseCommandTarget = MPRemoteCommandCenter.shared()
-            .pauseCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
-                self?.audioPlayerAgent.pause()
+            .pauseCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
+                NuguCentralManager.shared.client.audioPlayerAgent.pause()
                 return .success
         }
     }
@@ -208,8 +195,8 @@ private extension NuguDisplayPlayerController {
         guard previousCommandTarget == nil else { return }
         
         previousCommandTarget = MPRemoteCommandCenter.shared()
-            .previousTrackCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
-                self?.audioPlayerAgent.prev()
+            .previousTrackCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
+                NuguCentralManager.shared.client.audioPlayerAgent.prev()
                 return .success
         }
     }
@@ -218,8 +205,8 @@ private extension NuguDisplayPlayerController {
         guard nextCommandTarget == nil else { return }
         
         nextCommandTarget = MPRemoteCommandCenter.shared()
-            .nextTrackCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
-                self?.audioPlayerAgent.next()
+            .nextTrackCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
+                NuguCentralManager.shared.client.audioPlayerAgent.next()
                 return .success
         }
     }
@@ -228,9 +215,9 @@ private extension NuguDisplayPlayerController {
         guard seekCommandTarget == nil else { return }
         
         seekCommandTarget = MPRemoteCommandCenter.shared()
-            .changePlaybackPositionCommand.addTarget { [weak self] (event) -> MPRemoteCommandHandlerStatus in
+            .changePlaybackPositionCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
                 guard let event = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
-                self?.audioPlayerAgent.seek(to: Int(event.positionTime))
+                NuguCentralManager.shared.client.audioPlayerAgent.seek(to: Int(event.positionTime))
                 return .success
         }
     }
@@ -263,38 +250,22 @@ private extension NuguDisplayPlayerController {
     }
 }
 
-// MARK: - DisplayPlayerAgentDelegate
+// MARK: - NuguAudioPlayerAgentDelegate
 
-extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
-    //TODO: - Should be implemented
-    func audioPlayerDisplayShouldShowLyrics() -> Bool { return false }
-    
-    func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
-    
-    func audioPlayerDisplayShouldControlLyricsPage(direction: String) -> Bool { return false }
-    
-    func audioPlayerDisplayShouldUpdateMetadata(payload: String) {}
-    
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
-        renderingContext = NSObject()
-        update(newItem: template)
-        return renderingContext
-    }
-    
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
-        switch reason {
-        case .timer:
-            remove()
-        case .directive:
-            remove()
+extension NuguDisplayPlayerController: NuguAudioPlayerAgentDelegate {
+    func nuguAudioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
+        DispatchQueue.main.async { [weak self] in
+            self?.update(newItem: template)
         }
     }
-}
-
-// MARK: - AudioPlayerAgentDelegate
-
-extension NuguDisplayPlayerController: AudioPlayerAgentDelegate {
-    func audioPlayerAgentDidChange(state: AudioPlayerState) {
+    
+    func nuguAudioPlayerDisplayShouldClear() {
+        DispatchQueue.main.async { [weak self] in
+            self?.remove()
+        }
+    }
+    
+    func nuguAudioPlayerAgentDidChange(state: AudioPlayerState) {
         DispatchQueue.main.async { [weak self] in
             self?.update(newState: state)
         }

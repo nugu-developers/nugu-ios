@@ -31,7 +31,7 @@ final class NuguCentralManager {
     let client = NuguClient()
     let localTTSAgent: LocalTTSAgent
 
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController(audioPlayerAgent: client.audioPlayerAgent)
+    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController()
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
             return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
@@ -52,6 +52,8 @@ final class NuguCentralManager {
 //            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
 //        }
 //    }
+    
+    weak var nuguAudioPlayerDelegate: NuguAudioPlayerAgentDelegate?
     
     private init() {
         // local tts agent
