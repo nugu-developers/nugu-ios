@@ -47,8 +47,6 @@ public final class TextAgent: TextAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
@@ -58,7 +56,7 @@ public final class TextAgent: TextAgentProtocol {
     }
     
     deinit {
-        log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
@@ -126,22 +124,20 @@ private extension TextAgent {
                     expectSpeech: expectSpeech
                 )
                 
-                self.upstreamDataSender.send(
+                self.upstreamDataSender.sendEvent(
                     upstreamEventMessage: Event(
                         typeInfo: .textInput(
                             text: textRequest.text,
                             expectSpeech: textRequest.expectSpeech
                         )
-                    ).makeEventMessage(agent: self),
-                    resultHandler: { [weak self] result in
+                    ).makeEventMessage(agent: self)) { [weak self] result in
                         guard let self = self else { return }
                         
                         let result = result.map { _ in () }
                         self.delegates.notify({ (delegate) in
                             delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
                         })
-                    }
-                )
+                }
             }
         }
     }

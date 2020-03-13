@@ -1,9 +1,9 @@
 //
-//  NetworkStatus.swift
+//  ServerSideEventReceiverState.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 16/04/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2020/03/10.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@
 import Foundation
 
 /// <#Description#>
-public enum NetworkStatus: Equatable {
+public enum ServerSideEventReceiverState: Equatable {
     case connected
     /// Connection closed.
     /// - Parameter error: If Connection closed because of the error.
     case disconnected(error: Error? = nil)
     
-    public static func == (lhs: NetworkStatus, rhs: NetworkStatus) -> Bool {
+    public static func == (lhs: ServerSideEventReceiverState, rhs: ServerSideEventReceiverState) -> Bool {
         switch (lhs, rhs) {
         case (.connected, .connected):
             return true

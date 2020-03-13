@@ -93,8 +93,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.directiveSequencer = directiveSequencer
@@ -104,7 +102,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
     }
     
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
@@ -131,7 +128,12 @@ public extension DisplayAgent {
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
                 let template = info.currentItem else { return }
             
-            self.upstreamDataSender.send(upstreamEventMessage: Event(playServiceId: template.playServiceId, typeInfo: .elementSelected(token: token)).makeEventMessage(agent: self))
+            self.upstreamDataSender.sendEvent(
+                upstreamEventMessage: Event(
+                    playServiceId: template.playServiceId,
+                    typeInfo: .elementSelected(token: token)
+                ).makeEventMessage(agent: self)
+            )
         }
     }
     
@@ -250,7 +252,7 @@ private extension DisplayAgent {
                     
                     let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
                     
-                    self.upstreamDataSender.send(
+                    self.upstreamDataSender.sendEvent(
                         upstreamEventMessage: Event(
                             playServiceId: payload.playServiceId,
                             typeInfo: self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
@@ -280,7 +282,7 @@ private extension DisplayAgent {
                         item.playServiceId == payload.playServiceId,
                         let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
                         let delegate = info.delegate else {
-                            self.upstreamDataSender.send(
+                            self.upstreamDataSender.sendEvent(
                                 upstreamEventMessage: Event(
                                     playServiceId: payload.playServiceId,
                                     typeInfo: .controlFocusFailed
@@ -291,7 +293,7 @@ private extension DisplayAgent {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
-                        self.upstreamDataSender.send(
+                        self.upstreamDataSender.sendEvent(
                             upstreamEventMessage: Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed
@@ -317,7 +319,7 @@ private extension DisplayAgent {
                         item.playServiceId == payload.playServiceId,
                         let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
                         let delegate = info.delegate else {
-                            self.upstreamDataSender.send(
+                            self.upstreamDataSender.sendEvent(
                                 upstreamEventMessage: Event(
                                     playServiceId: payload.playServiceId,
                                     typeInfo: .controlScrollFailed
@@ -328,7 +330,7 @@ private extension DisplayAgent {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
-                        self.upstreamDataSender.send(
+                        self.upstreamDataSender.sendEvent(
                             upstreamEventMessage: Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed

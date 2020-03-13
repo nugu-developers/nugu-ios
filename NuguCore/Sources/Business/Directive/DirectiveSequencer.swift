@@ -31,17 +31,11 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private let disposeBag = DisposeBag()
 
     public init(streamDataRouter: StreamDataRoutable) {
-        log.debug("")
-        
         self.upstreamDataSender = streamDataRouter
-        streamDataRouter.add(delegate: self)
+        streamDataRouter.delegate = self
 
         prefetchDirective()
         handleDirective()
-    }
-
-    deinit {
-        log.debug("")
     }
 }
 
