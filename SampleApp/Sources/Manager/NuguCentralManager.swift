@@ -177,15 +177,16 @@ extension NuguCentralManager {
     }
     
     func logout() {
-        guard
-            let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else {
-                return
+        DispatchQueue.main.async { [weak self] in
+            guard
+                let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else {
+                    return
+            }
+            self?.disable()
+            UserDefaults.Standard.clear()
+            rootNavigationViewController.popToRootViewController(animated: true)
         }
-        
-        disable()
-        UserDefaults.Standard.clear()
-        rootNavigationViewController.popToRootViewController(animated: true)
     }
 }
 
@@ -237,29 +238,33 @@ private extension NuguCentralManager {
             completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
-    
-    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
-        DispatchQueue.main.async { [weak self] in
-            switch sampleAppError {
-            case .loginUnauthorized:
-                self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated)
-            default:
-                self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError)
-            }
-            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
-            self?.logout()
-        }
-    }
 }
 
 // MARK: - Internal (ASR)
 
 extension NuguCentralManager {
+    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
+        DispatchQueue.main.async { [weak self] in
+            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
+            switch sampleAppError {
+            case .loginUnauthorized:
+                self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
+                    self?.logout()
+                })
+            default:
+                self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
+                    self?.logout()
+                })
+            }
+        }
+    }
+    
     func startRecognize(initiator: ASRInitiator, completion: ((Result<Void, Error>) -> Void)? = nil) {
         NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
+                self.localTTSAgent.stopLocalTTS()
                 self.client.asrAgent.startRecognition(initiator: initiator)
             })
             completion?(result)
@@ -395,6 +400,10 @@ extension NuguCentralManager: SystemAgentDelegate {
         case .unauthorizedRequestException:
             handleAuthError()
         }
+    }
+    
+    func systemAgentDidReceiveRevokeDevice() {
+        logoutAfterErrorHandling(sampleAppError: .deviceRevoked)
     }
 }
 
