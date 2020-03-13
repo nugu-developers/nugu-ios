@@ -43,8 +43,6 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("initiated")
-        
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
         
@@ -53,7 +51,6 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
     }
     
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }

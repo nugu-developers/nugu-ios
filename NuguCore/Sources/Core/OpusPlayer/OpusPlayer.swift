@@ -85,7 +85,6 @@ public class OpusPlayer: MediaPlayable {
     }
     
     public init() {
-        log.debug("Opus Player initialize")
         // unless channels argument is more than 2, init() won't return nil.
         // we use fixed-audio-format because tts server does.
         self.audioFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: OpusPlayerConst.audioSampleRate, channels: 1, interleaved: false)!
@@ -334,8 +333,10 @@ private extension OpusPlayer {
         audioQueue.async { [weak self] in
             guard let self = self else { return }
             
-            self.player.scheduleBuffer(audioBuffer) {
-                self.audioQueue.async {
+            self.player.scheduleBuffer(audioBuffer) { [weak self] in
+                self?.audioQueue.async { [weak self] in
+                    guard let self = self else { return }
+                    
                     #if DEBUG
                     if let channelData = audioBuffer.floatChannelData?.pointee {
                         let scheduledData = Data(bytes: channelData, count: Int(audioBuffer.frameLength)*4)

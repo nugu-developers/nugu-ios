@@ -135,8 +135,6 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         directiveSequencer: DirectiveSequenceable,
         audioPlayerPauseTimeout: DispatchTimeInterval = .milliseconds(600000)
     ) {
-        log.info("")
-        
         self.focusManager = focusManager
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
@@ -151,8 +149,8 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     }
 
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        currentMedia?.player.stop()
     }
 }
 

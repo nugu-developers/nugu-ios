@@ -33,13 +33,7 @@ public class ContextManager: ContextManageable {
     
     private let disposeBag = DisposeBag()
 
-    public init() {
-        log.info("")
-    }
-
-    deinit {
-        log.info("")
-    }
+    public init() {}
 }
 
 // MARK: - ContextManageable

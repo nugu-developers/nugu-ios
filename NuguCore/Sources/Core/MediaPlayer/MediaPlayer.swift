@@ -27,13 +27,7 @@ public class MediaPlayer: MediaPlayable {
     private var player: AVQueuePlayer?
     private var playerItem: MediaAVPlayerItem?
     
-    public init() {
-        log.info("")
-    }
-    
-    deinit {
-        log.info("")
-    }
+    public init() {}
 }
 
 // MARK: - MediaPlayable

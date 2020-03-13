@@ -48,8 +48,6 @@ public final class SystemAgent: SystemAgentProtocol {
         streamDataRouter: StreamDataRoutable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("initiated")
-        
         self.contextManager = contextManager
         self.streamDataRouter = streamDataRouter
         self.directiveSequencer = directiveSequencer
@@ -59,7 +57,6 @@ public final class SystemAgent: SystemAgentProtocol {
     }
     
     deinit {
-        log.info("deinit")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
