@@ -49,8 +49,6 @@ public final class SystemAgent: SystemAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("initiated")
-        
         self.contextManager = contextManager
         self.networkManager = networkManager
         self.upstreamDataSender = upstreamDataSender
@@ -62,7 +60,6 @@ public final class SystemAgent: SystemAgentProtocol {
     }
     
     deinit {
-        log.info("deinit")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }

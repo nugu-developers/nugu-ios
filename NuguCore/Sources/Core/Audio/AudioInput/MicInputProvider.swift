@@ -100,7 +100,9 @@ public class MicInputProvider: AudioProvidable {
             guard let self = self else { return }
             
             inputNode.removeTap(onBus: self.audioBus)
-            inputNode.installTap(onBus: self.audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { (buffer, _) in
+            inputNode.installTap(onBus: self.audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, _) in
+                guard let self = self else { return }
+                
                 self.audioQueue.sync {
                     let convertedFrameCount = AVAudioFrameCount((Double(buffer.frameLength) / inputFormat.sampleRate) * recordingFormat.sampleRate)
                     guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: convertedFrameCount) else {

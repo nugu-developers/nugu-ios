@@ -93,8 +93,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.directiveSequencer = directiveSequencer
@@ -104,7 +102,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
     }
     
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }

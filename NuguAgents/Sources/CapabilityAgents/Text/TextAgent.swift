@@ -47,8 +47,6 @@ public final class TextAgent: TextAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
@@ -58,7 +56,7 @@ public final class TextAgent: TextAgentProtocol {
     }
     
     deinit {
-        log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 

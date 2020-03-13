@@ -106,8 +106,6 @@ public final class TTSAgent: TTSAgentProtocol {
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.focusManager = focusManager
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
@@ -128,8 +126,8 @@ public final class TTSAgent: TTSAgentProtocol {
     }
     
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        currentMedia?.player.stop()
     }
 }
 

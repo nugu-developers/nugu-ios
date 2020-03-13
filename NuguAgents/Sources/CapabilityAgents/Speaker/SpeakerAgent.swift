@@ -47,8 +47,6 @@ public final class SpeakerAgent: SpeakerAgentProtocol {
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
         
@@ -57,7 +55,6 @@ public final class SpeakerAgent: SpeakerAgentProtocol {
     }
     
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
