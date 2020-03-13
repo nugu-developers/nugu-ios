@@ -20,24 +20,24 @@
 
 import Foundation
 
-public enum NuguApi {
+enum NuguApi {
     case policy
     case directives
-    case event
+    case events
     case eventAttachment
     case ping
     case crashReport
 }
 
 extension NuguApi: CustomStringConvertible {
-    public var description: String {
+    var description: String {
         switch self {
         case .policy:
             return "policy"
         case .directives:
             return "directives"
-        case .event:
-            return "event"
+        case .events:
+            return "events"
         case .eventAttachment:
             return "attachment for event"
         case .ping:
@@ -48,27 +48,36 @@ extension NuguApi: CustomStringConvertible {
     }
 }
 
-public extension NuguApi {
+extension NuguApi {
+    var version: String {
+        switch self {
+        case .events:
+            return "v2"
+        default:
+            return "v1"
+        }
+    }
+
     var path: String {
         switch self {
         case .policy:
             return "policies"
-        case .event:
-            return "event"
+        case .events:
+            return version + "/events"
         case .eventAttachment:
-            return "event-attachment"
+            return version + "/event-attachment"
         case .directives:
-            return "directives"
+            return version + "/directives"
         case .ping:
-            return "ping"
+            return version + "/ping"
         case .crashReport:
-            return "crash"
+            return version + "/crash"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .event,
+        case .events,
              .eventAttachment,
              .crashReport:
             return .post
@@ -90,17 +99,16 @@ public extension NuguApi {
                 "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent
             ]
-        case .event:
+        case .events:
              return [
                 "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
-                "User-Agent": NetworkConst.userAgent,
-                "Content-Type": "application/json"
+                "User-Agent": NetworkConst.userAgent
                 ]
         case .eventAttachment:
             return [
                 "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent,
-                "Content-Type": "application/octet-stream"
+                "Content-Type": "audio/speex"
             ]
         case .ping:
             return [

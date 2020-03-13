@@ -1,8 +1,8 @@
 //
-//  NuguApiRequest.swift
+//  StreamDataRoutable.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 2019/12/10.
+//  Created by MinChul Lee on 11/22/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,18 +20,12 @@
 
 import Foundation
 
-public struct NuguApiRequest {
-    public let path: String
-    public let method: String
-    public let header: [String: String]
-    public let bodyData: Data
-    public let queryItems: [String: String?]
+/// <#Description#>
+public protocol StreamDataRoutable: class, UpstreamDataSendable {
+    var delegate: DownstreamDataDelegate? { get set }
+    var chargingFreeUrl: String { get set }
     
-    public init(path: String, method: String, header: [String: String], bodyData: Data, queryItems: [String: String?]) {
-        self.path = path
-        self.method = method
-        self.header = header
-        self.bodyData = bodyData
-        self.queryItems = queryItems
-    }
+    func startReceiveServerInitiatedDirective(completion: ((Result<StreamDataResult, Error>) -> Void)?)
+    func stopReceiveServerInitiatedDirective()
+    func handOffResourceServer(to serverPolicy: Policy.ServerPolicy)
 }
