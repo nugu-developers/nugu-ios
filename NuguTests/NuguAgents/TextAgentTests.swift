@@ -28,13 +28,13 @@ class TextAgentTests: XCTestCase {
     // NuguCore(Mock)
     let contextManager: ContextManageable = MockContextManager()
     let upstreamDataSender: UpstreamDataSendable = MockStreamDataRouter()
-    let focusManager: FocusManageable = MockFocusManager()
+    let directiveSequencer: DirectiveSequenceable = MockDirectiveSequencer()
     
     // NuguAgents
     lazy var textAgent: TextAgent = TextAgent(
         contextManager: contextManager,
         upstreamDataSender: upstreamDataSender,
-        focusManager: focusManager
+        directiveSequencer: directiveSequencer
     )
     
     // Override

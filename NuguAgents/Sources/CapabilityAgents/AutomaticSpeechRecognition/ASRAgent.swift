@@ -341,8 +341,8 @@ extension ASRAgent: EndPointDetectorDelegate {
                 dialogRequestId: asrRequest.dialogRequestId,
                 messageId: TimeUUID().hexString
             )
-            let attachment = UpstreamAttachment(header: attachmentHeader, content: speechData, seq: self.attachmentSeq, isEnd: false)
-            self.upstreamDataSender.send(upstreamAttachment: attachment, completion: nil, resultHandler: nil)
+            let attachment = UpstreamAttachment(header: attachmentHeader, content: speechData, type: "audio/speex", seq: self.attachmentSeq, isEnd: false)
+            self.upstreamDataSender.sendStream(upstreamAttachment: attachment)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
         }
@@ -437,8 +437,8 @@ private extension ASRAgent {
 // MARK: - Private (Event, Attachment)
 
 private extension ASRAgent {
-    func sendEvent(asrRequest: ASRRequest, type: Event.TypeInfo, completion: ((Result<Data, Error>) -> Void)? = nil) {
-        upstreamDataSender.send(
+    func sendEvent(asrRequest: ASRRequest, type: Event.TypeInfo) {
+        upstreamDataSender.sendEvent(
             upstreamEventMessage: Event(
                 typeInfo: type,
                 encoding: asrEncoding,
@@ -447,8 +447,7 @@ private extension ASRAgent {
                 agent: self,
                 dialogRequestId: asrRequest.dialogRequestId,
                 contextPayload: asrRequest.contextPayload
-            ),
-            completion: completion
+            )
         )
     }
 }
@@ -497,13 +496,22 @@ private extension ASRAgent {
         
         asrState = .listening
         
-        sendEvent(asrRequest: asrRequest, type: .recognize(wakeUpInfo: nil), completion: { [weak self] (status) in
-            guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
-            guard case .success = status else {
-                self?.asrResult = .error(ASRError.recognizeFailed)
-                return
-            }
-        })
+        upstreamDataSender.sendStream(
+            upstreamEventMessage: Event(
+                typeInfo: .recognize(wakeUpInfo: nil),
+                encoding: asrEncoding,
+                expectSpeech: currentExpectSpeech
+            ).makeEventMessage(
+                agent: self,
+                dialogRequestId: asrRequest.dialogRequestId,
+                contextPayload: asrRequest.contextPayload
+            )) { [weak self] (result) in
+                guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
+
+                if case .failure = result {
+                    self?.asrResult = .error(ASRError.recognizeFailed)
+                }
+        }
     }
     
     /// asrDispatchQueue
@@ -530,8 +538,8 @@ private extension ASRAgent {
             dialogRequestId: asrRequest.dialogRequestId,
             messageId: TimeUUID().hexString
         )
-        let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), seq: attachmentSeq, isEnd: true)
-        upstreamDataSender.send(upstreamAttachment: attachment, completion: nil) { [weak self] result in
+        let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), type: "audio/speex", seq: attachmentSeq, isEnd: true)
+        upstreamDataSender.sendStream(upstreamAttachment: attachment) { [weak self] result in
             guard let self = self else { return }
             guard asrRequest.dialogRequestId == self.asrRequest?.dialogRequestId else { return }
             

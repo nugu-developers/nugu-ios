@@ -1,8 +1,8 @@
 //
-//  StreamDataRoutable.swift
+//  UpstreamAttachment.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 11/22/2019.
+//  Created by MinChul Lee on 22/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,16 +21,28 @@
 import Foundation
 
 /// <#Description#>
-public protocol StreamDataRoutable: ReceiveMessageDelegate, UpstreamDataSendable {
+public struct UpstreamAttachment {
     /// <#Description#>
-    /// - Parameter preprocessor: <#preprocessor description#>
-    func add(preprocessor: DownstreamDataPreprocessable)
+    public let header: UpstreamHeader
+    /// <#Description#>
+    public let content: Data
+    /// <#Description#>
+    public let seq: Int32
+    /// <#Description#>
+    public let isEnd: Bool
+    /// <#Description#>
+    public let type: String
     
     /// <#Description#>
-    /// - Parameter delegate:
-    func add(delegate: DownstreamDataDelegate)
-    
-    /// <#Description#>
-    /// - Parameter delegate:
-    func remove(delegate: DownstreamDataDelegate)
+    /// - Parameter header: <#header description#>
+    /// - Parameter content: <#content description#>
+    /// - Parameter seq: <#seq description#>
+    /// - Parameter isEnd: <#isEnd description#>
+    public init(header: UpstreamHeader, content: Data, type: String, seq: Int32, isEnd: Bool) {
+        self.header = header
+        self.content = content
+        self.type = type
+        self.seq = seq
+        self.isEnd = isEnd
+    }
 }

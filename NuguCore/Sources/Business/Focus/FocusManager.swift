@@ -29,13 +29,7 @@ public class FocusManager: FocusManageable {
     
     private var releaseFocusWorkItem: DispatchWorkItem?
     
-    public init() {
-        log.info("")
-    }
-
-    deinit {
-        log.info("")
-    }
+    public init() {}
 }
 
 // MARK: - FocusManageable
