@@ -41,6 +41,8 @@
 		73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CC23815CC9004EBBDF /* AppDelegate.swift */; };
 		73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CE23815CC9004EBBDF /* UserDefaults+Romaine.swift */; };
 		73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */; };
+		7E56DD252419FF88004A3508 /* DisplayControllable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E56DD242419FF88004A3508 /* DisplayControllable.swift */; };
+		7E56DD272419FF9C004A3508 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */; };
 		7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */; };
 		7E6A0B0C2410849C00C7A19E /* ASRBeepPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */; };
 		7E6A0B0D2410849C00C7A19E /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */; };
@@ -108,6 +110,8 @@
 		73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Standard.swift"; sourceTree = "<group>"; };
 		73F284D223815CC9004EBBDF /* SampleApp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SampleApp.entitlements; sourceTree = "<group>"; };
 		73F284D823815CC9004EBBDF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7E56DD242419FF88004A3508 /* DisplayControllable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DisplayControllable.swift; path = DisplayViews/DisplayControllable.swift; sourceTree = "<group>"; };
+		7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
 		7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsWrapper.swift; sourceTree = "<group>"; };
@@ -225,6 +229,7 @@
 		73F284A923815CC9004EBBDF /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7E56DD242419FF88004A3508 /* DisplayControllable.swift */,
 				73F284AA23815CC9004EBBDF /* NuguWebView.swift */,
 				73F284AB23815CC9004EBBDF /* DisplayViews */,
 				73F284BF23815CC9004EBBDF /* NuguToastManager.swift */,
@@ -283,6 +288,7 @@
 		73F284C023815CC9004EBBDF /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */,
 				73F284C123815CC9004EBBDF /* UIColor+Convenience.swift */,
 				73F284C223815CC9004EBBDF /* Int+Convenience.swift */,
 			);
@@ -531,11 +537,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E6A0B232410853C00C7A19E /* DisplayWeatherListViewCell.swift in Sources */,
+				7E56DD252419FF88004A3508 /* DisplayControllable.swift in Sources */,
 				73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */,
 				73F284E523815CC9004EBBDF /* DisplayBodyListViewCell.swift in Sources */,
 				73F284FD23815CC9004EBBDF /* NuguDisplayPlayerController.swift in Sources */,
 				7EBD76292391130100CA9C9C /* NuguLocationManager.swift in Sources */,
 				7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */,
+				7E56DD272419FF9C004A3508 /* Dictionary+Convenience.swift in Sources */,
 				73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */,
 				73F284EE23815CC9004EBBDF /* DisplayListTemplate.swift in Sources */,
 				7E6A0B272410854600C7A19E /* DisplayWeatherTemplate.swift in Sources */,

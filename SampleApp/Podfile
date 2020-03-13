@@ -3,7 +3,11 @@ platform :ios, '10.0'
 target 'SampleApp' do
   use_frameworks!
 
-  pod 'NuguClientKit'
-  pod 'NuguUIKit'
-  pod 'NuguLoginKit'
+  pod 'NuguClientKit', :path => '../'
+  pod 'NuguUIKit', :path => '../'
+  pod 'NuguLoginKit', :path => '../'
+  pod 'JadeMarble', :path => '../'
+  pod 'KeenSense', :path => '../'
+  pod 'NuguAgents', :path => '../'
+  pod 'NuguCore', :path => '../'
 end
