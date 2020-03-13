@@ -294,14 +294,14 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 // Release focus after receiving directive
                 self.sendEvent(media: media, typeInfo: .playbackFinished) { [weak self] result in
                     guard let self = self else { return }
-                    guard case let .success(directive) = result else {
-                        self.releaseFocusIfNeeded()
+
+                    // TODO: handleStop()에서 해도 되는지 고려.
+                    guard case let .success(.received(directive)) = result,
+                        directive.header.type != "AudioPlayer.Play" else {
                         return
                     }
                     
-                    if directive.header.type != "AudioPlayer.Play" {
-                        self.releaseFocusIfNeeded()
-                    }
+                    self.releaseFocusIfNeeded()
                 }
             case .pause:
                 if media.pauseReason != .focus {
@@ -505,15 +505,15 @@ private extension AudioPlayerAgent {
 // MARK: - Private (Event)
 
 private extension AudioPlayerAgent {
-    func sendEvent(media: AudioPlayerAgentMedia, typeInfo: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
-        upstreamDataSender.send(
+    func sendEvent(media: AudioPlayerAgentMedia, typeInfo: Event.TypeInfo, completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+        upstreamDataSender.sendEvent(
             upstreamEventMessage: Event(
                 token: media.payload.audioItem.stream.token,
                 offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
             ).makeEventMessage(agent: self),
-            resultHandler: resultHandler
+            completion: completion
         )
     }
 }

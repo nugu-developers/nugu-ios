@@ -149,7 +149,7 @@ public extension TTSAgent {
             guard let self = self else { return }
             
             let dialogRequestId = TimeUUID().hexString
-            self.upstreamDataSender.send(
+            self.upstreamDataSender.sendEvent(
                 upstreamEventMessage: Event(
                     token: nil,
                     playServiceId: playServiceId,
@@ -238,9 +238,12 @@ extension TTSAgent: MediaPlayerDelegate {
             case .finish:
                 self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                 self.ttsState = .finished
-                // Release focus after receiving directive
-                self.sendEvent(media: media, info: .speechFinished) { [weak self] _ in
-                    self?.releaseFocusIfNeeded()
+                self.sendEvent(media: media, info: .speechFinished) { [weak self] result in
+                    // TODO: 여러번 호출돼도 괜찮은지 확인 필요.
+                    // Release focus after receiving directive
+                    if case .success(.received) = result {
+                        self?.releaseFocusIfNeeded()
+                    }
                 }
             case .pause:
                 self.stop(cancelAssociation: false)
@@ -436,22 +439,22 @@ private extension TTSAgent {
 // MARK: - Private (Event)
 
 private extension TTSAgent {
-    func sendEvent(media: TTSMedia, info: Event.TypeInfo, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)? = nil) {
+    func sendEvent(media: TTSMedia, info: Event.TypeInfo, completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
         guard let playServiceId = media.payload.playServiceId else {
             log.debug("TTSMedia does not have playServiceId")
             
             let error = NSError(domain: "com.sktelecom.romaine.tts_agent", code: 1000, userInfo: nil)
-            resultHandler?(.failure(error))
+            completion?(.failure(error))
             return
         }
         
-        self.upstreamDataSender.send(
+        self.upstreamDataSender.sendEvent(
             upstreamEventMessage: Event(
                 token: media.payload.token,
                 playServiceId: playServiceId,
                 typeInfo: info
             ).makeEventMessage(agent: self),
-            resultHandler: resultHandler
+            completion: completion
         )
     }
 }

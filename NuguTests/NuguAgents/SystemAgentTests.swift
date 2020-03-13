@@ -28,15 +28,13 @@ class SystemAgentTests: XCTestCase {
     
     // NuguCore(Mock)
     let contextManager = MockContextManager()
-    let networkManager = MockNetworkManager()
     let upstreamDataSender = MockStreamDataRouter()
     let directiveSequencer = MockDirectiveSequencer()
     
     // NuguAgents
     lazy var systemAgent: SystemAgent = SystemAgent(
         contextManager: contextManager,
-        networkManager: networkManager,
-        upstreamDataSender: upstreamDataSender,
+        streamDataRouter: upstreamDataSender,
         directiveSequencer: directiveSequencer
     )
     

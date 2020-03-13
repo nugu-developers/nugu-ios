@@ -47,11 +47,11 @@ final class NuguCentralManager {
         }
     }
     
-    var networkStatus: NetworkStatus = .disconnected(error: nil) {
-        didSet {
-            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
-        }
-    }
+//    var networkStatus: NetworkStatus = .disconnected(error: nil) {
+//        didSet {
+//            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
+//        }
+//    }
     
     private init() {
         // local tts agent
@@ -77,11 +77,13 @@ final class NuguCentralManager {
 
 extension NuguCentralManager {
     func enable() {
-        client.enable()
+        // TODO: enable/disable 의미 불명확함.
+        client.startReceiveServerInitiatedDirective()
     }
     
     func disable() {
-        client.disable()
+        // TODO: enable/disable 의미 불명확함.
+        client.stopReceiveServerInitiatedDirective()
     }
 }
 
@@ -359,9 +361,10 @@ extension NuguCentralManager: NuguClientDelegate {
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
     
-    func nuguClientConnectionStatusChanged(status: NetworkStatus) {
-        networkStatus = status
-    }
+    // TODO: 더이상 nugu client에서 network 상태를 전달하지 않음.
+//    func nuguClientConnectionStatusChanged(status: NetworkStatus) {
+//        networkStatus = status
+//    }
     
     func nuguClientWillOpenInputSource() {
         inputStatus = true
