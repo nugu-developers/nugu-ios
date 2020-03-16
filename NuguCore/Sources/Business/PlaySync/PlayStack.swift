@@ -55,4 +55,11 @@ struct PlayStack {
     func playGroup(layerType: PlaySyncProperty.LayerType, dialogRequestId: String) -> [PlaySyncProperty] {
         return playGroup(dialogRequestId: dialogRequestId).filter { $0.layerType == layerType }
     }
+    
+    func previousPlayGroup(layerType: PlaySyncProperty.LayerType, dialogRequestId: String) -> [PlaySyncProperty] {
+        stack
+            .filter { $0.info.dialogRequestId != dialogRequestId }
+            .filter { $0.property.layerType != layerType }
+            .map { $0.property }
+    }
 }

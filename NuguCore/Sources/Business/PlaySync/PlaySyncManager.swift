@@ -166,7 +166,14 @@ private extension PlaySyncManager {
     func pushToPlayStack(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String, dialogRequestId: String) {
         // Cancel timers
         removeTimer(property: property)
-
+        
+        // Context layer policy v.1.2.9-8. NUGU service layer policy
+        // TODO: Call layer.
+        playStack
+            .previousPlayGroup(layerType: property.layerType, dialogRequestId: dialogRequestId)
+            .filter { $0.layerType != .media }
+            .forEach { popFromPlayStack(property: $0) }
+        
         playStack[property] = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, duration: duration)
     }
     
