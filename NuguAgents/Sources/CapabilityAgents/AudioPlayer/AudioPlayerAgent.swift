@@ -289,17 +289,20 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 }
             case .finish:
                 self.audioPlayerState = .finished
-                // Release focus after receiving directive
+                // Release focus when stream finished.
                 self.sendEvent(media: media, typeInfo: .playbackFinished) { [weak self] result in
-                    guard let self = self else { return }
-
-                    // TODO: handleStop()에서 해도 되는지 고려.
-                    guard case let .success(.received(directive)) = result,
-                        directive.header.type != "AudioPlayer.Play" else {
-                        return
+                    self?.audioPlayerDispatchQueue.async { [weak self] in
+                        guard let self = self else { return }
+                        
+                        switch result {
+                        case .success(.finished) where self.currentMedia == nil:
+                            self.releaseFocusIfNeeded()
+                        case .failure:
+                            self.releaseFocusIfNeeded()
+                        default:
+                            break
+                        }
                     }
-                    
-                    self.releaseFocusIfNeeded()
                 }
             case .pause:
                 if media.pauseReason != .focus {

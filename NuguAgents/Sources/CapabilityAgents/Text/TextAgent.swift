@@ -133,7 +133,6 @@ private extension TextAgent {
                     ).makeEventMessage(agent: self)) { [weak self] result in
                         guard let self = self else { return }
                         
-                        let result = result.map { _ in () }
                         self.delegates.notify({ (delegate) in
                             delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
                         })

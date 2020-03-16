@@ -236,11 +236,19 @@ extension TTSAgent: MediaPlayerDelegate {
             case .finish:
                 self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                 self.ttsState = .finished
+                // Release focus when stream finished.
                 self.sendEvent(media: media, info: .speechFinished) { [weak self] result in
-                    // TODO: 여러번 호출돼도 괜찮은지 확인 필요.
-                    // Release focus after receiving directive
-                    if case .success(.received) = result {
-                        self?.releaseFocusIfNeeded()
+                    self?.ttsDispatchQueue.async { [weak self] in
+                        guard let self = self else { return }
+                        
+                        switch result {
+                        case .success(.finished) where self.currentMedia == nil:
+                            self.releaseFocusIfNeeded()
+                        case .failure:
+                            self.releaseFocusIfNeeded()
+                        default:
+                            break
+                        }
                     }
                 }
             case .pause:
