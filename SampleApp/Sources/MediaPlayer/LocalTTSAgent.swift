@@ -134,6 +134,8 @@ private extension LocalTTSAgent {
         player?.stop()
         player = nil
         requestedTTSType = nil
+        playCompletion?()
+        playCompletion = nil
     }
 }
 
@@ -157,8 +159,6 @@ extension LocalTTSAgent: FocusChannelDelegate {
             player?.pause()
         case .nothing:
             stop()
-            playCompletion?()
-            playCompletion = nil
         }
     }
 }
