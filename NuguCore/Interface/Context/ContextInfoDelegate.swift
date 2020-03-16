@@ -25,5 +25,5 @@ public protocol ContextInfoDelegate: class {
     /// A request to provide the context.
     ///
     /// It should perform minimum processing and return quickly
-    func contextInfoRequestContext(completionHandler: @escaping (ContextInfo?) -> Void)
+    func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void)
 }

@@ -79,9 +79,9 @@ extension TextAgent {
 // MARK: - ContextInfoDelegate
 
 extension TextAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let payload: [String: Any] = ["version": capabilityAgentProperty.version]        
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -89,7 +89,7 @@ extension TextAgent: ContextInfoDelegate {
 
 private extension TextAgent {
     func handleTextSource() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
+        return { [weak self] directive, completion in
             self?.textDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
@@ -102,7 +102,7 @@ private extension TextAgent {
                     self.sendTextInput(text: payload.text, token: payload.token, expectSpeech: nil)
                 }
                 
-                completionHandler(result)
+                completion(result)
             }
         }
     }
