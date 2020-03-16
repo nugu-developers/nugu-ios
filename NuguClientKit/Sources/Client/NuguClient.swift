@@ -136,7 +136,7 @@ public class NuguClient {
 // MARK: - Helper functions
 
 public extension NuguClient {
-    func startReceiveServerInitiatedDirective(completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+    func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
         streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
     }
     

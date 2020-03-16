@@ -130,12 +130,11 @@ private extension TextAgent {
                             text: textRequest.text,
                             expectSpeech: textRequest.expectSpeech
                         )
-                    ).makeEventMessage(agent: self)) { [weak self] result in
+                    ).makeEventMessage(agent: self)) { [weak self] state in
                         guard let self = self else { return }
-                        
-                        let result = result.map { _ in () }
+
                         self.delegates.notify({ (delegate) in
-                            delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
+                            delegate.textAgentDidStreamStateChanged(dialogRequestId: textRequest.dialogRequestId, state: state)
                         })
                 }
             }

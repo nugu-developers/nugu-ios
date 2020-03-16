@@ -82,7 +82,7 @@ private extension ServerSideEventReceiver {
                 
                 guard 0 < self.serverPolicies.count else {
                     // if server policy does not exist, get it using `policies` api.
-                    let waitTime = (error as? NetworkError) == .noSuitableResourceServer ? 0 : Int.random(in: 1...(30 * index + 1))
+                    let waitTime = (error as? NetworkError) == .noSuitableResourceServer ? 0 : Int.random(in: 0...(30*index))
                     return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                         .take(1)
                         .flatMap { _ in self.apiProvider.policies }
