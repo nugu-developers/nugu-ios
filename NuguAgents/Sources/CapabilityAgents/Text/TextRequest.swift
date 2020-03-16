@@ -26,5 +26,6 @@ struct TextRequest {
     let contextPayload: ContextPayload
     let text: String
     let dialogRequestId: String
+    let token: String?
     let expectSpeech: ASRExpectSpeech?
 }

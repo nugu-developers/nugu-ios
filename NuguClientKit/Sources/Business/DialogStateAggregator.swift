@@ -46,15 +46,6 @@ public class DialogStateAggregator {
     private var asrState: ASRState = .idle
     private var expectSpeech: ASRExpectSpeech?
     private var ttsState: TTSState = .finished
-    private var textAgentState: TextAgentState = .idle
-
-    public init() {
-        log.info("")
-    }
-
-    deinit {
-        log.info("")
-    }
 }
 
 // MARK: - DialogStateAggregatable
@@ -102,34 +93,22 @@ extension DialogStateAggregator: TTSAgentDelegate {
     }
 }
 
-// MARK: - TextAgentDelegate
-
-extension DialogStateAggregator: TextAgentDelegate {
-    public func textAgentDidChange(state: TextAgentState) {
-        dialogStateDispatchQueue.async { [weak self] in
-            self?.textAgentState = state
-            self?.applyState()
-        }
-    }
-}
-
 // MARK: - Private
 
 private extension DialogStateAggregator {
     /// dialogStateDispatchQueue
     func applyState() {
         log.info("\(asrState)\(ttsState)")
-        switch (asrState, textAgentState, ttsState) {
-        case (_, _, .playing):
+        switch (asrState, ttsState) {
+        case (_, .playing):
             dialogState = .speaking
-        case (.expectingSpeech, _, _):
+        case (.expectingSpeech, _):
             dialogState = .expectingSpeech
-        case (.listening, _, _):
+        case (.listening, _):
             dialogState = .listening
-        case (.recognizing, _, _):
+        case (.recognizing, _):
             dialogState = .recognizing
-        case (.busy, _, _),
-             (_, .busy, _):
+        case (.busy, _):
             dialogState = .thinking
         default:
             tryEnterIdleState()
@@ -143,8 +122,8 @@ private extension DialogStateAggregator {
         multiturnSpeakingToListeningTimer?.cancel()
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
-            switch (self.asrState, self.textAgentState, self.ttsState) {
-            case (.idle, .idle, let ttsState) where [.idle, .finished, .stopped].contains(ttsState):
+            switch (self.asrState, self.ttsState) {
+            case (.idle, let ttsState) where [.idle, .finished, .stopped].contains(ttsState):
                 self.dialogState = .idle
             default:
                 break

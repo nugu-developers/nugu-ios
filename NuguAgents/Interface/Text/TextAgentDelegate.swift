@@ -24,10 +24,6 @@ import Foundation
 ///
 /// The methods of this protocol are all optional.
 public protocol TextAgentDelegate: class {
-    /// Tells the delegate that `TextAgent` changed state.
-    /// - Parameter state: The state for text recognition.
-    func textAgentDidChange(state: TextAgentState)
-    
     /// Tells the delegate that `TextAgent` received result.
     /// - Parameter result: The result of text recognition.
     func textAgentDidReceive(result: Result<Void, Error>, dialogRequestId: String)
@@ -36,6 +32,5 @@ public protocol TextAgentDelegate: class {
 // MARK: - Optional
 
 public extension TextAgentDelegate {
-    func textAgentDidChange(state: TextAgentState) {}
     func textAgentDidReceive(result: Result<Void, Error>, dialogRequestId: String) {}
 }

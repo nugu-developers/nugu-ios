@@ -39,7 +39,7 @@ public final class SpeakerAgent: SpeakerAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetMute", medium: .audio, isBlocking: false, directiveHandler: handleSetMute)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetMute", medium: .audio, isBlocking: true, directiveHandler: handleSetMute)
     ]
     
     public init(
@@ -47,8 +47,6 @@ public final class SpeakerAgent: SpeakerAgentProtocol {
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
         
@@ -57,7 +55,6 @@ public final class SpeakerAgent: SpeakerAgentProtocol {
     }
     
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
@@ -125,7 +122,7 @@ private extension SpeakerAgent {
                         let succeeded = results.allSatisfy { $0 }
                         let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
                         
-                        self.upstreamDataSender.send(
+                        self.upstreamDataSender.sendEvent(
                             upstreamEventMessage: Event(
                                 typeInfo: typeInfo,
                                 volumes: self.controllerVolumes,

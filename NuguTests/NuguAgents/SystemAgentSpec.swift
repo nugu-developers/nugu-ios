@@ -28,16 +28,14 @@ class SystemAgentSpec: QuickSpec {
     
     // NuguCore(Mock)
     let contextManager = MockContextManager()
-    let networkManager = MockNetworkManager()
-    let upstreamDataSender = MockStreamDataRouter()
+    let streamDataRouter = MockStreamDataRouter()
     let directiveSequencer = MockDirectiveSequencer()
     
     override func spec() {
         describe("SystemAgent") {
             let systemAgent: SystemAgent = SystemAgent(
                 contextManager: contextManager,
-                networkManager: networkManager,
-                upstreamDataSender: upstreamDataSender,
+                streamDataRouter: streamDataRouter,
                 directiveSequencer: directiveSequencer
             )
             

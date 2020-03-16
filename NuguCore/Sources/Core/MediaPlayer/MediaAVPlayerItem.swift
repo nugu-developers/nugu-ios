@@ -54,9 +54,6 @@ final class MediaAVPlayerItem: AVPlayerItem {
     override init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) {
         super.init(asset: asset,
                    automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        
-        log.debug("")
-        
         addPlayerItemObservers()
         addNotificationObservers()
     }
@@ -64,8 +61,6 @@ final class MediaAVPlayerItem: AVPlayerItem {
     deinit {
         removePlayerItemObservers()
         removeNotificationObservers()
-        
-        log.debug("")
     }
     
     // AVPlayer has a bug when using the new block based KVO API

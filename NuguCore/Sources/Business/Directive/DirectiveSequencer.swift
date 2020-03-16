@@ -31,17 +31,11 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private let disposeBag = DisposeBag()
 
     public init(streamDataRouter: StreamDataRoutable) {
-        log.debug("")
-        
         self.upstreamDataSender = streamDataRouter
-        streamDataRouter.add(delegate: self)
+        streamDataRouter.delegate = self
 
         prefetchDirective()
         handleDirective()
-    }
-
-    deinit {
-        log.debug("")
     }
 }
 
@@ -180,6 +174,7 @@ private extension DirectiveSequencer {
                 }
 
                 handlingTypeInfos.append(handler)
+                
                 handler.directiveHandler(directive) { [weak self] result in
                     remove(handler)
                     if case .failure(let error) = result {

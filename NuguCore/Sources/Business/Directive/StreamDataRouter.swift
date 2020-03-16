@@ -23,205 +23,150 @@ import Foundation
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
-    private let delegates = DelegateSet<DownstreamDataDelegate>()
-    private var preprocessors = [DownstreamDataPreprocessable]()
+    public weak var delegate: DownstreamDataDelegate?
     private let downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
     
-    private let networkManager: NetworkManageable
+    private let nuguApiProvider = NuguApiProvider()
+    private var eventSenders = [String: EventSender]()
+    private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
     
+    private var serverInitiatedDirectiveDisposable: Disposable?
     private let disposeBag = DisposeBag()
-    private let directiveSubject = PublishSubject<Downstream.Directive>()
     
-    public init(networkManager: NetworkManageable) {
-        self.networkManager = networkManager
-        networkManager.add(receiveMessageDelegate: self)
-        
-        add(preprocessor: downstreamDataTimeoutPreprocessor)
+    public var chargingFreeUrl: String = "" {
+        didSet {
+            log.debug("charging free url: \(chargingFreeUrl)")
+            NuguServerInfo.registryAddress = chargingFreeUrl
+            NuguServerInfo.resourceServerAddress = nil
+            nuguApiProvider.isChargingFree = true
+        }
     }
     
-    public func add(preprocessor: DownstreamDataPreprocessable) {
-        preprocessors.append(preprocessor)
-    }
-    
-    public func add(delegate: DownstreamDataDelegate) {
-        delegates.add(delegate)
-    }
-    
-    public func remove(delegate: DownstreamDataDelegate) {
-        delegates.remove(delegate)
+    public init() {
+        serverInitiatedDirectiveRecever = ServerSideEventReceiver(apiProvider: nuguApiProvider)
     }
 }
 
-// MARK: - ReceiveMessageDelegate
+// MARK: - Server side event
 
-extension StreamDataRouter: ReceiveMessageDelegate {
-    public func receiveMessageDidReceive(header: [String: String], body: Data) {
-        if let contentType = header["Content-Type"], contentType.contains("application/json") {
-            guard let bodyDictionary = try? JSONSerialization.jsonObject(with: body, options: []) as? [String: Any],
-                let directiveArray = bodyDictionary["directives"] as? [[String: Any]] else {
-                    log.error("Decode Message failed")
-                return
-            }
-            let directivies = directiveArray
-                .compactMap(Downstream.Directive.init)
-                .compactMap(preprocess)
-            
-            directivies.forEach { directive in
-                directiveSubject.onNext(directive)
-                delegates.notify { delegate in
-                    delegate.downstreamDataDidReceive(directive: directive)
-                }
-            }
-        } else if let attachment = Downstream.Attachment(headerDictionary: header, body: body) {
-            if let attachment = preprocess(message: attachment) {
-                delegates.notify { delegate in
-                    delegate.downstreamDataDidReceive(attachment: attachment)
-                }
-            }
-        } else {
-            log.error("Invalid data \(header)")
-        }
+extension StreamDataRouter {
+    public func startReceiveServerInitiatedDirective(completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+        log.debug("start receive server initiated directives")
+        serverInitiatedDirectiveDisposable = serverInitiatedDirectiveRecever.directive
+            .subscribe(onNext: { [weak self] in
+                    self?.notifyMessage(with: $0, completion: completion)
+                }, onError: {
+                    log.error("error: \($0)")
+                    completion?(.failure($0))
+                })
+        serverInitiatedDirectiveDisposable?.disposed(by: disposeBag)
+    }
+    
+    public func stopReceiveServerInitiatedDirective() {
+        log.debug("stop receive server initiated directives")
+        serverInitiatedDirectiveDisposable?.dispose()
     }
 }
 
 // MARK: - UpstreamDataSendable
 
 extension StreamDataRouter: UpstreamDataSendable {
-    public func send(
-        upstreamEventMessage: UpstreamEventMessage,
-        completion: ((Result<Data, Error>) -> Void)?,
-        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
-    ) {
-        guard let apiProvider = networkManager.apiProvider else {
-            // TODO: HTTP/2 전이중 방식으로 변경시 completion, resultHandler 통합
-            completion?(.failure(NetworkError.unavailable))
-            resultHandler?(.failure(NetworkError.unavailable))
-            return
-        }
-        // body
-        guard let bodyData = ("{ \"context\": \(upstreamEventMessage.contextString)"
-            + ",\"event\": {"
-            + "\"header\": \(upstreamEventMessage.headerString)"
-            + ",\"payload\": \(upstreamEventMessage.payloadString) }"
-            + " }").data(using: .utf8) else {
-                completion?(.failure(NetworkError.invalidParameter))
-                return
-        }
-        
-        let request = NuguApiRequest(
-            path: NuguApi.event.path,
-            method: NuguApi.event.method.rawValue,
-            header: NuguApi.event.header,
-            bodyData: bodyData,
-            queryItems: [:]
-        )
-        apiProvider.request(with: request) { [weak self] result in
-            guard let self = self else { return }
-            completion?(result)
-            switch result {
-            case .success:
-                if let resultHandler = resultHandler {
-                    self.observeResultDirective(dialogRequestId: upstreamEventMessage.header.dialogRequestId, resultHandler: resultHandler)
-                }
-            case .failure(let error):
-                resultHandler?(.failure(error))
+    public func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+        sendStream(upstreamEventMessage: upstreamEventMessage) { [weak self] result in
+            // close stream automatically.
+            if case .success(.sent) = result {
+                self?.eventSenders[upstreamEventMessage.header.dialogRequestId]?.finish()
             }
+
+            completion?(result)
         }
     }
     
-    public func send(
-        upstreamAttachment: UpstreamAttachment,
-        completion: ((Result<Data, Error>) -> Void)?,
-        resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?
-    ) {
-        guard let apiProvider = networkManager.apiProvider else {
-            completion?(.failure(NetworkError.unavailable))
+    public func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+        let boundary = HTTPConst.boundaryPrefix + upstreamEventMessage.header.dialogRequestId
+        let eventSender = EventSender(boundary: boundary)
+        eventSenders[upstreamEventMessage.header.dialogRequestId] = eventSender
+        
+        // write event data to the stream
+        eventSender.send(upstreamEventMessage)
+            .subscribe(onCompleted: {
+                completion?(.success(.sent))
+            }, onError: { (error) in
+                completion?(.failure(error))
+            })
+            .disposed(by: self.disposeBag)
+        
+        // request event as multi part stream
+        nuguApiProvider.events(boundary: boundary, inputStream: eventSender.streams.input)
+            .subscribe(onNext: { [weak self] (part) in
+                self?.notifyMessage(with: part, completion: completion)
+            }, onError: { (error) in
+                log.error("error: \(error)")
+                completion?(.failure(error))
+            }, onDisposed: { [weak self] in
+                self?.eventSenders[upstreamEventMessage.header.dialogRequestId] = nil
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
+    public func sendStream(upstreamAttachment: UpstreamAttachment, completion: ((Result<Void, Error>) -> Void)? = nil) {
+        guard let eventSender = eventSenders[upstreamAttachment.header.dialogRequestId] else {
+            completion?(.failure(EventSenderError.noEventRequested))
             return
         }
         
-        let queryItems = [
-            "User-Agent": NetworkConst.userAgent,
-            "Content-Type": "application/octet-stream",
-            "namespace": upstreamAttachment.header.namespace,
-            "name": upstreamAttachment.header.name,
-            "dialogRequestId": upstreamAttachment.header.dialogRequestId,
-            "messageId": upstreamAttachment.header.messageId,
-            "version": upstreamAttachment.header.version,
-            "parentMessageId": upstreamAttachment.header.messageId,
-            "seq": String(upstreamAttachment.seq),
-            "isEnd": upstreamAttachment.isEnd ? "true" : "false"
-        ]
-        
-        let request = NuguApiRequest(
-            path: NuguApi.eventAttachment.path,
-            method: NuguApi.eventAttachment.method.rawValue,
-            header: NuguApi.eventAttachment.header,
-            bodyData: upstreamAttachment.content,
-            queryItems: queryItems
-        )
-        
-        apiProvider.request(with: request) { [weak self] result in
-            guard let self = self else { return }
-            completion?(result)
-            switch result {
-            case .success:
-                if let resultHandler = resultHandler {
-                    self.observeResultDirective(dialogRequestId: upstreamAttachment.header.dialogRequestId, resultHandler: resultHandler)
+        eventSender.send(upstreamAttachment)
+            .subscribe(onCompleted: {
+                if upstreamAttachment.isEnd {
+                    eventSender.finish()
                 }
-            case .failure(let error):
-                resultHandler?(.failure(error))
+
+                completion?(.success(()))
+            }, onError: { (error) in
+                completion?(.failure(error))
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    /**
+     Preprocess directive and Call delegate's method and handler closure.
+     */
+    private func notifyMessage(with part: MultiPartParser.Part, completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+        if let contentType = part.header["Content-Type"], contentType.contains("application/json") {
+            guard let bodyDictionary = try? JSONSerialization.jsonObject(with: part.body, options: []) as? [String: Any],
+                let directiveArray = bodyDictionary["directives"] as? [[String: Any]] else {
+                    log.error("Decode Message failed")
+                    completion?(.failure(NetworkError.invalidMessageReceived))
+                    return
             }
+
+            directiveArray
+                .compactMap(Downstream.Directive.init)
+                .compactMap(self.downstreamDataTimeoutPreprocessor.preprocess)
+                .forEach { directive in
+                    delegate?.downstreamDataDidReceive(directive: directive)
+                    completion?(.success(.received(part: directive)))
+            }
+        } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
+            if let attachment = self.downstreamDataTimeoutPreprocessor.preprocess(message: attachment) {
+                delegate?.downstreamDataDidReceive(attachment: attachment)
+            }
+        } else {
+            log.error("Invalid data \(part.header)")
         }
-        apiProvider.request(with: request, completion: completion)
     }
     
     public func send(crashReports: [CrashReport]) {
-        guard let apiProvider = networkManager.apiProvider else { return }
-        guard let bodyData = try? JSONEncoder().encode(crashReports) else { return }
-        
-        let request = NuguApiRequest(
-            path: NuguApi.crashReport.path,
-            method: NuguApi.crashReport.method.rawValue,
-            header: NuguApi.crashReport.header,
-            bodyData: bodyData,
-            queryItems: [:]
-        )
-        apiProvider.request(with: request, completion: nil)
+        // TODO: send crash
+//        guard let bodyData = try? JSONEncoder().encode(crashReports) else { return }
     }
 }
 
-// MARK: - Private
+// MARK: - resource server
 
 extension StreamDataRouter {
-    func preprocess<T>(message: T) -> T? where T: DownstreamMessageable {
-        return preprocessors.reduce(message) { (result, preprocessor) -> T? in
-            guard let result = result else { return nil}
-            return preprocessor.preprocess(message: result)
-        }
-    }
-    
-    func observeResultDirective(dialogRequestId: String, resultHandler: @escaping (Result<Downstream.Directive, Error>) -> Void) {
-        directiveSubject
-            .filter { $0.header.dialogRequestId == dialogRequestId }
-            // Ignore ASR.NotifyResult directive to take result directive.
-            // TODO: HTTP/2 전이중 방식으로 변경시 최종 개선
-            .filter { $0.header.type != "ASR.NotifyResult" }
-            .take(1)
-            .timeout(NuguConfiguration.deviceGatewayResponseTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-            .catchError({ [weak self] error -> Observable<Downstream.Directive> in
-                guard case RxError.timeout = error else {
-                    return Observable.error(error)
-                }
-                
-                self?.downstreamDataTimeoutPreprocessor.appendTimeoutDialogRequestId(dialogRequestId)
-                return Observable.error(NetworkError.timeout)
-            })
-            .do(onNext: { directive in
-                resultHandler(.success(directive))
-            }, onError: { error in
-                resultHandler(.failure(error))
-            })
-            .subscribe().disposed(by: disposeBag)
+    public func handOffResourceServer(to serverPolicy: Policy.ServerPolicy) {
+        // TODO: handoff
     }
 }
 

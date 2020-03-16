@@ -29,14 +29,14 @@ class TextAgentSpec: QuickSpec {
     // NuguCore(Mock)
     let contextManager: ContextManageable = MockContextManager()
     let upstreamDataSender: UpstreamDataSendable = MockStreamDataRouter()
-    let focusManager: FocusManageable = MockFocusManager()
+    let directiveSequencer: DirectiveSequenceable = MockDirectiveSequencer()
     
     override func spec() {
         describe("TextAgent") {
             let textAgent: TextAgent = TextAgent(
                 contextManager: contextManager,
                 upstreamDataSender: upstreamDataSender,
-                focusManager: focusManager
+                directiveSequencer: directiveSequencer
             )
             
             describe("context") {

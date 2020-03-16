@@ -64,7 +64,7 @@ public class MultiPartParser {
     }
     
     private func findSeparatorIndex(from data: Data) -> Int? {
-        return data.range(of: "\r\n\r\n".data(using: .utf8)!)?.lowerBound
+        return data.range(of: (HTTPConst.crlf + HTTPConst.crlf).data(using: .utf8)!)?.lowerBound
     }
     
     private func parsePartHeader(data: Data) throws -> [String: String] {
@@ -72,7 +72,7 @@ public class MultiPartParser {
         var headerData = data
         
         while true {
-            guard headerData.range(of: "\r\n".data(using: .utf8)!) != nil else {
+            guard headerData.range(of: HTTPConst.crlf.data(using: .utf8)!) != nil else {
                 return header
             }
             

@@ -49,29 +49,42 @@ public final class DisplayAgent: DisplayAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", medium: .visual, isBlocking: false, directiveHandler: handleClose),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Focus", medium: .visual, isBlocking: false, directiveHandler: handleFocus),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Scroll", medium: .visual, isBlocking: false, directiveHandler: handleScroll),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather1", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather2", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather3", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather4", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather5", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullImage", medium: .visual, isBlocking: false, directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", medium: .visual, isBlocking: false, directiveHandler: handleDisplay)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", medium: .none, isBlocking: false, directiveHandler: handleClose),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Focus", medium: .none, isBlocking: false, directiveHandler: handleFocus),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Scroll", medium: .none, isBlocking: false, directiveHandler: handleScroll),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", medium: .none, isBlocking: false, directiveHandler: handleUpdate),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText4", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList4", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather4", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather5", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullImage", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Score1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Score2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SearchList1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SearchList2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceList", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceOption", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommercePrice", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceInfo", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call1", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call2", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call3", medium: .audio, isBlocking: true, directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", medium: .audio, isBlocking: true, directiveHandler: handleDisplay)
     ]
   
     public init(
@@ -80,8 +93,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.directiveSequencer = directiveSequencer
@@ -91,7 +102,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
     }
     
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
@@ -118,7 +128,12 @@ public extension DisplayAgent {
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
                 let template = info.currentItem else { return }
             
-            self.upstreamDataSender.send(upstreamEventMessage: Event(playServiceId: template.playServiceId, typeInfo: .elementSelected(token: token)).makeEventMessage(agent: self))
+            self.upstreamDataSender.sendEvent(
+                upstreamEventMessage: Event(
+                    playServiceId: template.playServiceId,
+                    typeInfo: .elementSelected(token: token)
+                ).makeEventMessage(agent: self)
+            )
         }
     }
     
@@ -191,16 +206,7 @@ extension DisplayAgent: PlaySyncDelegate {
             
             switch state {
             case .synced:
-                var rendered = false
-                self.renderingInfos
-                    .compactMap { $0.delegate }
-                    .forEach { delegate in
-                        rendered = self.setRenderedTemplate(delegate: delegate, template: item) || rendered
-                }
-                if rendered == false {
-                    self.currentItem = nil
-                    self.playSyncManager.cancelSync(delegate: self, dialogRequestId: dialogRequestId, playServiceId: item.playStackServiceId)
-                }
+                break
             case .releasing:
                 if self.timerInfos[item.templateId] != false {
                     self.renderingInfos
@@ -246,7 +252,7 @@ private extension DisplayAgent {
                     
                     let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
                     
-                    self.upstreamDataSender.send(
+                    self.upstreamDataSender.sendEvent(
                         upstreamEventMessage: Event(
                             playServiceId: payload.playServiceId,
                             typeInfo: self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
@@ -276,7 +282,7 @@ private extension DisplayAgent {
                         item.playServiceId == payload.playServiceId,
                         let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
                         let delegate = info.delegate else {
-                            self.upstreamDataSender.send(
+                            self.upstreamDataSender.sendEvent(
                                 upstreamEventMessage: Event(
                                     playServiceId: payload.playServiceId,
                                     typeInfo: .controlFocusFailed
@@ -287,7 +293,7 @@ private extension DisplayAgent {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
-                        self.upstreamDataSender.send(
+                        self.upstreamDataSender.sendEvent(
                             upstreamEventMessage: Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed
@@ -313,7 +319,7 @@ private extension DisplayAgent {
                         item.playServiceId == payload.playServiceId,
                         let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
                         let delegate = info.delegate else {
-                            self.upstreamDataSender.send(
+                            self.upstreamDataSender.sendEvent(
                                 upstreamEventMessage: Event(
                                     playServiceId: payload.playServiceId,
                                     typeInfo: .controlScrollFailed
@@ -324,7 +330,7 @@ private extension DisplayAgent {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
-                        self.upstreamDataSender.send(
+                        self.upstreamDataSender.sendEvent(
                             upstreamEventMessage: Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed
@@ -335,7 +341,7 @@ private extension DisplayAgent {
         }
     }
     
-    func handleDisplay() -> HandleDirective {
+    func handleUpdate() -> HandleDirective {
         return { [weak self] directive, completionHandler in
             log.info("\(directive.header.type)")
             completionHandler(
@@ -349,31 +355,78 @@ private extension DisplayAgent {
                             throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
                     }
                     
-                    let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-                    let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
-                    let focusable = payloadDictionary["focusable"] as? Bool
-                    
-                    self.currentItem = DisplayTemplate(
+                    let updateDisplayTemplate = DisplayTemplate(
                         type: directive.header.type,
                         payload: directive.payload,
                         templateId: directive.header.messageId,
                         dialogRequestId: directive.header.dialogRequestId,
                         token: token,
                         playServiceId: playServiceId,
-                        playStackServiceId: playStackServiceId,
-                        duration: DisplayTemplate.Duration(rawValue: duration),
-                        focusable: focusable
+                        playStackServiceId: nil,
+                        duration: nil,
+                        focusable: nil
                     )
                     
-                    if let item = self.currentItem {
-                        self.playSyncManager.startSync(
-                            delegate: self,
-                            dialogRequestId: item.dialogRequestId,
-                            playServiceId: item.playStackServiceId
-                        )
+                    guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == updateDisplayTemplate.templateId }),
+                        let delegate = info.delegate else { return }
+                    DispatchQueue.main.async {
+                        delegate.displayAgentShouldUpdate(template: updateDisplayTemplate)
                     }
                 }
             )
+        }
+    }
+    
+    func handleDisplay() -> HandleDirective {
+        return { [weak self] directive, completionHandler in
+            guard let self = self else { return completionHandler(.success(())) }
+            guard let payloadAsData = directive.payload.data(using: .utf8),
+                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                let token = payloadDictionary["token"] as? String,
+                let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                    completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")))
+                    return
+            }
+            
+            log.info("\(directive.header.type)")
+            
+            let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
+            let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
+            let focusable = payloadDictionary["focusable"] as? Bool
+            
+            let item = DisplayTemplate(
+                type: directive.header.type,
+                payload: directive.payload,
+                templateId: directive.header.messageId,
+                dialogRequestId: directive.header.dialogRequestId,
+                token: token,
+                playServiceId: playServiceId,
+                playStackServiceId: playStackServiceId,
+                duration: DisplayTemplate.Duration(rawValue: duration),
+                focusable: focusable
+            )
+
+            self.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return completionHandler(.success(())) }
+                self.currentItem = item
+                
+                var rendered = false
+                self.renderingInfos
+                    .compactMap { $0.delegate }
+                    .forEach { delegate in
+                        rendered = self.setRenderedTemplate(delegate: delegate, template: item) || rendered
+                }
+                if rendered == true {
+                    self.currentItem = item
+                    self.playSyncManager.startSync(
+                        delegate: self,
+                        dialogRequestId: item.dialogRequestId,
+                        playServiceId: item.playStackServiceId
+                    )
+                }
+                
+                completionHandler(.success(()))
+            }
         }
     }
 }

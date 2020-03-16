@@ -39,12 +39,7 @@ public class PlaySyncManager: PlaySyncManageable {
     }
     
     public init(contextManager: ContextManageable) {
-        log.debug("initiated")
         contextManager.add(provideContextDelegate: self)
-    }
-    
-    deinit {
-        log.debug("deinitiated")
     }
 }
 
