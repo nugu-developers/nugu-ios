@@ -55,7 +55,7 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     func favorite(isOn: Bool)
     
     /// Set repeatMode as all / one / none.
-    func repeatMode(repeatMode: String)
+    func `repeat`(mode: AudioPlayerDisplayRepeat)
     
     /// Set shuffle as on / off.
     func shuffle(isOn: Bool)

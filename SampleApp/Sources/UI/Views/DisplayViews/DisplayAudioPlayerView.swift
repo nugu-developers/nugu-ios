@@ -104,7 +104,7 @@ final class DisplayAudioPlayerView: UIView {
         }
     }
     
-    private var repeatMode: AudioPlayerSettingsTemplate.Repeat? {
+    private var repeatMode: AudioPlayerDisplayRepeat? {
         didSet {
             guard let repeatMode = repeatMode else { return }
             switch repeatMode {
@@ -204,17 +204,17 @@ private extension DisplayAudioPlayerView {
     
     @IBAction func repeatButtonDidClick(_ button: UIButton) {
         guard let repeatMode = repeatMode else { return }
-        var changedRepeatMode: AudioPlayerSettingsTemplate.Repeat
+        var changedRepeatMode: AudioPlayerDisplayRepeat
         switch repeatMode {
         case .all:
-            changedRepeatMode = AudioPlayerSettingsTemplate.Repeat.one
+            changedRepeatMode = AudioPlayerDisplayRepeat.one
         case .one:
-            changedRepeatMode = AudioPlayerSettingsTemplate.Repeat.none
+            changedRepeatMode = AudioPlayerDisplayRepeat.none
         case .none:
-            changedRepeatMode = AudioPlayerSettingsTemplate.Repeat.all
+            changedRepeatMode = AudioPlayerDisplayRepeat.all
         }
         self.repeatMode = changedRepeatMode
-        NuguCentralManager.shared.client.audioPlayerAgent.repeatMode(repeatMode: changedRepeatMode.rawValue)
+        NuguCentralManager.shared.client.audioPlayerAgent.repeat(mode: changedRepeatMode)
     }
     
     @IBAction func shuffleButtonDidClick(_ button: UIButton) {

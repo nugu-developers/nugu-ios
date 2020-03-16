@@ -1,8 +1,8 @@
 //
-//  AudioPlayerSettingsTemplate.swift
-//  SampleApp
+//  AudioPlayerDisplayControlPayload.swift
+//  NuguAgents
 //
-//  Created by jin kim on 2020/03/13.
+//  Created by jin kim on 2020/03/16.
 //  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,23 +18,30 @@
 //  limitations under the License.
 //
 
-import NuguAgents
+import Foundation
 
-struct AudioPlayerSettingsTemplate: Decodable {
-    let favorite: Bool?
-    let `repeat`: AudioPlayerDisplayRepeat?
-    let shuffle: Bool?
+public struct AudioPlayerDisplayControlPayload {
+    let playServiceId: String
+    let direction: Direction
     
+    public enum Direction: String, Decodable {
+        case previous = "PREVIOUS"
+        case next = "NEXT"
+    }
+}
+
+// MARK: - Decodable
+
+extension AudioPlayerDisplayControlPayload: Decodable {
     enum CodingKeys: String, CodingKey {
-        case favorite
-        case `repeat`
-        case shuffle
+        case playServiceId
+        case direction
     }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        favorite = try? container.decodeIfPresent(Bool.self, forKey: .favorite)
-        `repeat` = try? container.decodeIfPresent(AudioPlayerDisplayRepeat.self, forKey: .repeat)
-        shuffle = try? container.decodeIfPresent(Bool.self, forKey: .shuffle)
+        
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        direction = try container.decode(Direction.self, forKey: .direction)
     }
 }

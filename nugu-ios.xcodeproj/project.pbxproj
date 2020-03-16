@@ -192,7 +192,7 @@
 		73152FB123E0413F00F843C3 /* AudioPlayerDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */; };
 		73152FB223E0413F00F843C3 /* AudioPlayerDisplayRenderingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF33C2375707000C9A177 /* AudioPlayerDisplayRenderingInfo.swift */; };
 		73152FB323E0413F00F843C3 /* AudioPlayerAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF33F2375707000C9A177 /* AudioPlayerAgent.swift */; };
-		73152FB523E0413F00F843C3 /* AudioPlayerAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3392375707000C9A177 /* AudioPlayerAgent+Event.swift */; };
+		73152FB523E0413F00F843C3 /* AudioPlayerAgent+PlayEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3392375707000C9A177 /* AudioPlayerAgent+PlayEvent.swift */; };
 		73152FB623E0413F00F843C3 /* AudioPlayerAgentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */; };
 		73152FB723E0414700F843C3 /* EndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68523C5BFD400610343 /* EndPointDetector.swift */; };
 		73152FB823E0414700F843C3 /* EndPointDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68323C5BFD400610343 /* EndPointDetectorDelegate.swift */; };
@@ -336,8 +336,11 @@
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
 		7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28D2375703000C9A177 /* DialogState.swift */; };
+		A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */; };
+		A135E668241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */; };
+		A135E669241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E667241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift */; };
+		A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E66A241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift */; };
 		A15050952416272500671568 /* AudioPlayerUpdateMetadataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15050922416272400671568 /* AudioPlayerUpdateMetadataPayload.swift */; };
-		A15050962416272500671568 /* AudioPlayerControlLylicsPagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15050932416272400671568 /* AudioPlayerControlLylicsPagePayload.swift */; };
 		A15050972416272500671568 /* AudioPlayerTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15050942416272500671568 /* AudioPlayerTemplate.swift */; };
 		A15050CF241B2B7000671568 /* AudioPlayerLyricsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15050CE241B2B7000671568 /* AudioPlayerLyricsTemplate.swift */; };
 		A15050D1241B2BCF00671568 /* AudioPlayerSettingsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15050D0241B2BCF00671568 /* AudioPlayerSettingsTemplate.swift */; };
@@ -683,7 +686,7 @@
 		1FFFF3352375707000C9A177 /* SpeakerMuteInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerMuteInfo.swift; sourceTree = "<group>"; };
 		1FFFF3362375707000C9A177 /* SpeakerAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerAgent.swift; sourceTree = "<group>"; };
 		1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentMedia.swift; sourceTree = "<group>"; };
-		1FFFF3392375707000C9A177 /* AudioPlayerAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+Event.swift"; sourceTree = "<group>"; };
+		1FFFF3392375707000C9A177 /* AudioPlayerAgent+PlayEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+PlayEvent.swift"; sourceTree = "<group>"; };
 		1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayManager.swift; sourceTree = "<group>"; };
 		1FFFF33C2375707000C9A177 /* AudioPlayerDisplayRenderingInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayRenderingInfo.swift; sourceTree = "<group>"; };
 		1FFFF33D2375707000C9A177 /* AudioPlayerDisplayManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayManageable.swift; sourceTree = "<group>"; };
@@ -858,8 +861,11 @@
 		7EB6D0DE238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownstreamDataTimeoutPreprocessor.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
 		7EF12B2223C822520000E158 /* DisplayClosePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayClosePayload.swift; sourceTree = "<group>"; };
+		A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+SettingsEvent.swift"; sourceTree = "<group>"; };
+		A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayControlPayload.swift; sourceTree = "<group>"; };
+		A135E667241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayRepeat.swift; sourceTree = "<group>"; };
+		A135E66A241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+LyricsEvent.swift"; sourceTree = "<group>"; };
 		A15050922416272400671568 /* AudioPlayerUpdateMetadataPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerUpdateMetadataPayload.swift; sourceTree = "<group>"; };
-		A15050932416272400671568 /* AudioPlayerControlLylicsPagePayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerControlLylicsPagePayload.swift; sourceTree = "<group>"; };
 		A15050942416272500671568 /* AudioPlayerTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerTemplate.swift; sourceTree = "<group>"; };
 		A15050CE241B2B7000671568 /* AudioPlayerLyricsTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerLyricsTemplate.swift; sourceTree = "<group>"; };
 		A15050D0241B2BCF00671568 /* AudioPlayerSettingsTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerSettingsTemplate.swift; sourceTree = "<group>"; };
@@ -1645,7 +1651,9 @@
 			children = (
 				1FFFF33A2375707000C9A177 /* Display */,
 				1FFFF33F2375707000C9A177 /* AudioPlayerAgent.swift */,
-				1FFFF3392375707000C9A177 /* AudioPlayerAgent+Event.swift */,
+				1FFFF3392375707000C9A177 /* AudioPlayerAgent+PlayEvent.swift */,
+				A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */,
+				A135E66A241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift */,
 				1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */,
 			);
 			path = AudioPlayer;
@@ -1657,6 +1665,8 @@
 				1FFFF33D2375707000C9A177 /* AudioPlayerDisplayManageable.swift */,
 				1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */,
 				1FFFF33C2375707000C9A177 /* AudioPlayerDisplayRenderingInfo.swift */,
+				A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */,
+				A135E667241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -2385,7 +2395,6 @@
 				A15050CE241B2B7000671568 /* AudioPlayerLyricsTemplate.swift */,
 				A15050D0241B2BCF00671568 /* AudioPlayerSettingsTemplate.swift */,
 				A15050922416272400671568 /* AudioPlayerUpdateMetadataPayload.swift */,
-				A15050932416272400671568 /* AudioPlayerControlLylicsPagePayload.swift */,
 			);
 			path = AudioPlayerDisplay;
 			sourceTree = "<group>";
@@ -3113,7 +3122,6 @@
 				1FFFF4FF237672F100C9A177 /* UserDefaults+Romaine.swift in Sources */,
 				7547B703240CD5C200C57A34 /* Dictionary+Convenience.swift in Sources */,
 				1FFFF4EE237672F100C9A177 /* DisplayListTemplate.swift in Sources */,
-				A15050962416272500671568 /* AudioPlayerControlLylicsPagePayload.swift in Sources */,
 				A1B741BA23E1641500D862F7 /* DisplayControllable.swift in Sources */,
 				1FFFF4F2237672F100C9A177 /* DisplayView.swift in Sources */,
 				1FFFF4EC237672F100C9A177 /* DisplayBodyListTemplate.swift in Sources */,
@@ -3189,7 +3197,7 @@
 				73152FC823E0415400F843C3 /* TTSMedia.swift in Sources */,
 				73152FDC23E0451900F843C3 /* NuguAgents.swift in Sources */,
 				7315305D23E1246F00F843C3 /* CapabilityAgentCategory.swift in Sources */,
-				73152FB523E0413F00F843C3 /* AudioPlayerAgent+Event.swift in Sources */,
+				73152FB523E0413F00F843C3 /* AudioPlayerAgent+PlayEvent.swift in Sources */,
 				73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */,
 				73152FB623E0413F00F843C3 /* AudioPlayerAgentMedia.swift in Sources */,
 				7315305423E1246F00F843C3 /* TextAgentDelegate.swift in Sources */,
@@ -3203,12 +3211,14 @@
 				7315307723E1248300F843C3 /* TTSResult.swift in Sources */,
 				7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */,
 				7315307323E1248300F843C3 /* SystemAgentExceptionCode.swift in Sources */,
+				A135E669241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift in Sources */,
 				73152FB323E0413F00F843C3 /* AudioPlayerAgent.swift in Sources */,
 				7315305723E1246F00F843C3 /* LocationAgentDelegate.swift in Sources */,
 				73152FC723E0415400F843C3 /* TTSAgent+Event.swift in Sources */,
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
 				7315306C23E1248300F843C3 /* ASRAgentDelegate.swift in Sources */,
 				73152FAE23E0413700F843C3 /* SpeakerMuteInfo.swift in Sources */,
+				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
 				7315306423E1248300F843C3 /* SpeakerVolumeDelegate.swift in Sources */,
 				7315307123E1248300F843C3 /* SystemAgentProtocol.swift in Sources */,
@@ -3225,6 +3235,7 @@
 				73152FA723E0412700F843C3 /* ExtensionAgent.swift in Sources */,
 				73152FBF23E0414700F843C3 /* ASRRequest.swift in Sources */,
 				73152FAA23E0412D00F843C3 /* ExtensionAgentItem.swift in Sources */,
+				A135E668241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift in Sources */,
 				73152FDA23E0443500F843C3 /* ASREncoding.swift in Sources */,
 				7315307423E1248300F843C3 /* TTSAgentProtocol.swift in Sources */,
 				7315306023E1248300F843C3 /* ExtensionAgentDelegate.swift in Sources */,
@@ -3237,6 +3248,7 @@
 				73152FDE23E045C700F843C3 /* TimeUUID.swift in Sources */,
 				73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */,
 				73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */,
+				A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */,
 				73152FB823E0414700F843C3 /* EndPointDetectorDelegate.swift in Sources */,
 				7315305823E1246F00F843C3 /* LocationInfo.swift in Sources */,
 				7315305623E1246F00F843C3 /* LocationAgentProtocol.swift in Sources */,

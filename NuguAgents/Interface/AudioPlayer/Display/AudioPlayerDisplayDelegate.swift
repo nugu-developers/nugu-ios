@@ -42,5 +42,5 @@ public protocol AudioPlayerDisplayDelegate: class {
     
     func audioPlayerDisplayShouldHideLyrics() -> Bool
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: String) -> Bool
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool
 }

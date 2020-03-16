@@ -1,5 +1,5 @@
 //
-//  AudioPlayerAgent+Event.swift
+//  AudioPlayerAgent+PlayEvent.swift
 //  NuguAgents
 //
 //  Created by yonghoonKwon on 11/06/2019.
@@ -25,7 +25,7 @@ import NuguCore
 // MARK: - CapabilityEventAgentable
 
 extension AudioPlayerAgent {
-    public struct Event {
+    public struct PlayEvent {
         let token: String
         let offsetInMilliseconds: Int
         let playServiceId: String
@@ -44,23 +44,14 @@ extension AudioPlayerAgent {
             case previousCommandIssued
             case playCommandIssued
             case pauseCommandIssued
-            case stopCommandIssued            
-            case favoriteCommandIssued(isOn: Bool)
-            case repeatCommandIssued(mode: String)
-            case shuffleCommandIssued(isOn: Bool)
-            case showLyricsSucceeded
-            case showLyricsFailed
-            case hideLyricsSucceeded
-            case hideLyricsFailed
-            case controlLyricsPageSucceeded
-            case controlLyricsPageFailed
+            case stopCommandIssued
         }
     }
 }
 
 // MARK: - Eventable
 
-extension AudioPlayerAgent.Event: Eventable {
+extension AudioPlayerAgent.PlayEvent: Eventable {
     public var payload: [String: Any] {
         var eventPayload: [String: Any] = [
             "token": token,
@@ -88,21 +79,6 @@ extension AudioPlayerAgent.Event: Eventable {
             eventPayload["error"] = [
                 "type": type,
                 "message": error.localizedDescription
-            ]
-        case .favoriteCommandIssued(let isOn):
-            return [
-                "playServiceId": playServiceId,
-                "favorite": isOn
-            ]
-        case .repeatCommandIssued(let mode):
-            return [
-                "playServiceId": playServiceId,
-                "repeat": mode
-            ]
-        case .shuffleCommandIssued(let isOn):
-            return [
-                "playServiceId": playServiceId,
-                "shuffle": isOn
             ]
         default:
             break
@@ -139,32 +115,14 @@ extension AudioPlayerAgent.Event: Eventable {
             return "PauseCommandIssued"
         case .stopCommandIssued:
             return "StopCommandIssued"
-        case .favoriteCommandIssued:
-            return "FavoriteCommandIssued"
-        case .repeatCommandIssued:
-            return "RepeatCommandIssued"
-        case .shuffleCommandIssued:
-            return "ShuffleCommandIssued"
-        case .showLyricsSucceeded:
-            return "ShowLyricsSucceeded"
-        case .showLyricsFailed:
-            return "ShowLyricsFailed"
-        case .hideLyricsSucceeded:
-            return "HideLyricsSucceeded"
-        case .hideLyricsFailed:
-            return "HideLyricsFailed"
-        case .controlLyricsPageSucceeded:
-            return "ControlLyricsPageSucceeded"
-        case .controlLyricsPageFailed:
-            return "ControlLyricsPageFailed"
         }
     }
 }
 
 // MARK: - Equatable
 
-extension AudioPlayerAgent.Event.TypeInfo: Equatable {
-    public static func == (lhs: AudioPlayerAgent.Event.TypeInfo, rhs: AudioPlayerAgent.Event.TypeInfo) -> Bool {
+extension AudioPlayerAgent.PlayEvent.TypeInfo: Equatable {
+    public static func == (lhs: AudioPlayerAgent.PlayEvent.TypeInfo, rhs: AudioPlayerAgent.PlayEvent.TypeInfo) -> Bool {
         switch (lhs, rhs) {
         case (.playbackFailed(let lhsParam), .playbackFailed(let rhsParam)):
             return lhsParam.localizedDescription == rhsParam.localizedDescription
@@ -174,4 +132,4 @@ extension AudioPlayerAgent.Event.TypeInfo: Equatable {
     }
 }
 
-extension AudioPlayerAgent.Event: Equatable {}
+extension AudioPlayerAgent.PlayEvent: Equatable {}

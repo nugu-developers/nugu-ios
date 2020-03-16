@@ -109,17 +109,17 @@ extension AudioPlayerDisplayManager {
         return result
     }
     
-    func controlLylicsPage(payload: String, playServiceId: String) -> Bool {
-        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
+    func controlLylicsPage(payload: AudioPlayerDisplayControlPayload) -> Bool {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == payload.playServiceId }),
             let delegate = info.delegate else {
                 return false
         }
         var result = false
         if Thread.current.isMainThread {
-            return delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload)
+            return delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction)
         }
         DispatchQueue.main.sync {
-            result = delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload)
+            result = delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction)
         }
         return result
     }

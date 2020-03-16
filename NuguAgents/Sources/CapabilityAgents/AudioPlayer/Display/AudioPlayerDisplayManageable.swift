@@ -34,7 +34,7 @@ protocol AudioPlayerDisplayManageable: PlaySyncDelegate {
     
     func hideLylics(playServiceId: String) -> Bool
     
-    func controlLylicsPage(payload: String, playServiceId: String) -> Bool
+    func controlLylicsPage(payload: AudioPlayerDisplayControlPayload) -> Bool
     
     /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
     ///

@@ -633,7 +633,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     
     func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: String) -> Bool { return false }
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool { return false }
     
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
         NuguCentralManager.shared.nuguAudioPlayerDelegate?.nuguAudioPlayerDisplayDidRender(template: template)

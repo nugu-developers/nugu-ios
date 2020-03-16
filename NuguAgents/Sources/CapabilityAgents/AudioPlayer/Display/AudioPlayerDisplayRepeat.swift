@@ -1,6 +1,6 @@
 //
-//  AudioPlayerControlLylicsPagePayload.swift
-//  SampleApp
+//  AudioPlayerDisplayRepeat.swift
+//  NuguAgents
 //
 //  Created by jin kim on 2020/03/06.
 //  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
@@ -18,12 +18,8 @@
 //  limitations under the License.
 //
 
-struct AudioPlayerControlLylicsPagePayload: Decodable {
-    let playServiceId: String
-    let direction: Direction
-    
-    enum Direction: String, Decodable {
-        case previous = "PREVIOUS"
-        case next = "NEXT"
-    }
+public enum AudioPlayerDisplayRepeat: String, Decodable, CodingKey {
+    case all = "ALL"
+    case one = "ONE"
+    case none = "NONE"
 }
