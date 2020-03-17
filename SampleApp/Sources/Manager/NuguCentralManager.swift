@@ -183,7 +183,7 @@ extension NuguCentralManager {
     }
 }
 
-// MARK: - Private (Auth)
+// MARK: - Private (Logout)
 
 private extension NuguCentralManager {
     func popToRootViewController() {
@@ -213,7 +213,11 @@ private extension NuguCentralManager {
             }
         }
     }
-    
+}
+
+// MARK: - Private (Auth)
+
+private extension NuguCentralManager {
     func authorizationCodeLogin(from viewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
         guard
             let clientId = SampleApp.clientId,
