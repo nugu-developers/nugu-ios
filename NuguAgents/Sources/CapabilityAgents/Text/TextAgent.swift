@@ -134,7 +134,7 @@ private extension TextAgent {
                         guard let self = self else { return }
 
                         self.delegates.notify({ (delegate) in
-                            delegate.textAgentDidStreamStateChanged(dialogRequestId: textRequest.dialogRequestId, state: state)
+                            delegate.textAgentDidStreamStateChanged(state: state, dialogRequestId: textRequest.dialogRequestId)
                         })
                 }
             }

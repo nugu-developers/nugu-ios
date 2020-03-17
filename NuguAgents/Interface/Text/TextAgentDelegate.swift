@@ -28,11 +28,11 @@ import NuguCore
 public protocol TextAgentDelegate: class {
     /// Tells the delegate that `TextAgent` received result.
     /// - Parameter result: The result of text recognition.
-    func textAgentDidStreamStateChanged(dialogRequestId: String, state: StreamDataState)
+    func textAgentDidStreamStateChanged(state: StreamDataState, dialogRequestId: String)
 }
 
 // MARK: - Optional
 
 public extension TextAgentDelegate {
-    func textAgentDidStreamStateChanged(dialogRequestId: String, state: StreamDataState) {}
+    func textAgentDidStreamStateChanged(state: StreamDataState, dialogRequestId: String) {}
 }
