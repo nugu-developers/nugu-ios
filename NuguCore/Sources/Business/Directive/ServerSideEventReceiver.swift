@@ -35,6 +35,7 @@ class ServerSideEventReceiver {
         didSet {
             if oldValue != state {
                 log.debug("\(oldValue) -> \(state)")
+                stateSubject.onNext(state)
                 state == .connected ? startPing() : stopPing()
             }
         }
