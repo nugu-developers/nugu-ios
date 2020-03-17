@@ -62,7 +62,6 @@ final class NuguDisplayPlayerController {
         // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
         guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
         
-        
         audioPlayerAgent.remove(displayDelegate: self)
         audioPlayerAgent.remove(delegate: self)
     }

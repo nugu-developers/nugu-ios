@@ -23,13 +23,11 @@ import Foundation
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
-    public weak var delegate: DownstreamDataDelegate?
-    private let downstreamDataTimeoutPreprocessor = DownstreamDataTimeoutPreprocessor()
-    
     private let nuguApiProvider = NuguApiProvider()
+    private let directiveSequencer: DirectiveSequenceable
     private var eventSenders = [String: EventSender]()
     private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
-    
+    private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
@@ -42,8 +40,9 @@ public class StreamDataRouter: StreamDataRoutable {
         }
     }
     
-    public init() {
+    public init(directiveSequencer: DirectiveSequenceable) {
         serverInitiatedDirectiveRecever = ServerSideEventReceiver(apiProvider: nuguApiProvider)
+        self.directiveSequencer = directiveSequencer
     }
 }
 
@@ -51,6 +50,10 @@ public class StreamDataRouter: StreamDataRoutable {
 
 public extension StreamDataRouter {
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
+        // Store completion closure to use continuously.
+        // Though the resource is changed by handoff command from server.
+        serverInitiatedDirectiveCompletion = completion
+        
         log.debug("start receive server initiated directives")
         serverInitiatedDirectiveDisposable = serverInitiatedDirectiveRecever.directive
             .subscribe(onNext: { [weak self] in
@@ -65,10 +68,17 @@ public extension StreamDataRouter {
     func stopReceiveServerInitiatedDirective() {
         log.debug("stop receive server initiated directives")
         serverInitiatedDirectiveDisposable?.dispose()
+        serverInitiatedDirectiveCompletion = nil
     }
     
-    public func handOffResourceServer(to serverPolicy: Policy.ServerPolicy) {
-        // TODO: handoff
+    func handOffResourceServer(to serverPolicy: Policy.ServerPolicy) {
+        log.debug("change resource server to: https://\(serverPolicy.hostname).\(serverPolicy.port)")
+        stopReceiveServerInitiatedDirective()
+        serverInitiatedDirectiveRecever.serverPolicies.removeAll()
+        serverInitiatedDirectiveRecever.serverPolicies.append(serverPolicy)
+        
+        // Use stored completion closure before.
+        startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
     }
 }
 
@@ -150,11 +160,6 @@ public extension StreamDataRouter {
             })
             .disposed(by: disposeBag)
     }
-    
-    func send(crashReports: [CrashReport]) {
-        // TODO: send crash
-//        guard let bodyData = try? JSONEncoder().encode(crashReports) else { return }
-    }
 }
 
 // MARK: - private
@@ -173,15 +178,12 @@ extension StreamDataRouter {
             
             directiveArray
                 .compactMap(Downstream.Directive.init)
-                .compactMap(self.downstreamDataTimeoutPreprocessor.preprocess)
                 .forEach { directive in
-                    delegate?.downstreamDataDidReceive(directive: directive)
+                    directiveSequencer.processDirective(directive)
                     completion?(.received(part: directive))
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
-            if let attachment = self.downstreamDataTimeoutPreprocessor.preprocess(message: attachment) {
-                delegate?.downstreamDataDidReceive(attachment: attachment)
-            }
+            directiveSequencer.processAttachment(attachment)
         } else {
             log.error("Invalid data \(part.header)")
         }
@@ -190,7 +192,7 @@ extension StreamDataRouter {
 
 // MARK: - Downstream.Attachment initializer
 
-extension Downstream.Attachment {
+private extension Downstream.Attachment {
     init?(headerDictionary: [String: String], body: Data) {
         guard let header = Downstream.Header(headerDictionary: headerDictionary),
             let fileInfo = headerDictionary["Filename"]?.split(separator: ";"),
@@ -207,7 +209,7 @@ extension Downstream.Attachment {
 
 // MARK: - Downstream.Directive initializer
 
-extension Downstream.Directive {
+private extension Downstream.Directive {
     init?(directiveDictionary: [String: Any]) {
         guard let headerDictionary = directiveDictionary["header"] as? [String: Any],
             let headerData = try? JSONSerialization.data(withJSONObject: headerDictionary, options: []),
@@ -224,7 +226,7 @@ extension Downstream.Directive {
 
 // MARK: - Downstream.Header initializer
 
-extension Downstream.Header {
+private extension Downstream.Header {
     init?(headerDictionary: [String: String]) {
         guard let namespace = headerDictionary["Namespace"],
             let name = headerDictionary["Name"],

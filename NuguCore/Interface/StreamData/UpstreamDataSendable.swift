@@ -39,18 +39,9 @@ public protocol UpstreamDataSendable {
      This method finds the suitable stream using that id
      */
     func sendStream(upstreamAttachment: UpstreamAttachment, completion: ((StreamDataState) -> Void)?)
-    
-    /**
-     Send a event to report crash
-     */
-    func send(crashReports: [CrashReport])
 }
 
 public extension UpstreamDataSendable {
-    func sendCrashReport(error: Error, detail: String = "") {
-        let crashReport = CrashReport(level: .error, message: error.localizedDescription, detail: detail)
-        send(crashReports: [crashReport])
-    }
     func sendEvent(upstreamEventMessage: UpstreamEventMessage) {
         sendEvent(upstreamEventMessage: upstreamEventMessage, completion: nil)
     }

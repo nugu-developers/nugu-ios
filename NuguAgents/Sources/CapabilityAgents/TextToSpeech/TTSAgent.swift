@@ -114,15 +114,6 @@ public final class TTSAgent: TTSAgentProtocol {
         contextManager.add(provideContextDelegate: self)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        
-        ttsResultSubject.subscribe(onNext: { [weak self] (_, result) in
-            // Send error
-            switch result {
-            case .error(let error):
-                self?.upstreamDataSender.sendCrashReport(error: error)
-            default: break
-            }
-        }).disposed(by: disposeBag)
     }
     
     deinit {
@@ -433,7 +424,6 @@ private extension TTSAgent {
                         try player?.lastDataAppended()
                     }
                 } catch {
-                    self.upstreamDataSender.sendCrashReport(error: error)
                     log.error(error)
                 }
             }

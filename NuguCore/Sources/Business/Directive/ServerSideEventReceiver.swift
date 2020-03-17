@@ -24,24 +24,20 @@ import RxSwift
 
 class ServerSideEventReceiver {
     private let apiProvider: NuguApiProvider
-    private var serverPolicies = [Policy.ServerPolicy]()
     private var pingDisposable: Disposable?
     private let stateSubject = PublishSubject<ServerSideEventReceiverState>()
     private let disposeBag = DisposeBag()
     
+    /// Resource server array
+    var serverPolicies = [Policy.ServerPolicy]()
+    
     var state: ServerSideEventReceiverState = .disconnected() {
         didSet {
             if oldValue != state {
-                log.info("From:\(oldValue) To:\(state)")
-
-                stateSubject.onNext(state)
+                log.debug("\(oldValue) -> \(state)")
                 state == .connected ? startPing() : stopPing()
             }
         }
-    }
-    
-    var isConnected: Bool {
-        return state == .connected
     }
     
     init(apiProvider: NuguApiProvider) {
@@ -79,6 +75,10 @@ private extension ServerSideEventReceiver {
             .flatMap { [weak self] (index, error) -> Observable<Int> in
                 guard let self = self else { return Observable<Int>.empty() }
                 log.error("recover network error: \(error), try count: \(index+1)")
+                
+                guard (error as? NetworkError) != NetworkError.authError else {
+                    return Observable.error(error)
+                }
                 
                 guard 0 < self.serverPolicies.count else {
                     // if server policy does not exist, get it using `policies` api.

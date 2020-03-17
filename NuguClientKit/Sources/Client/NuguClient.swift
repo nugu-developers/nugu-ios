@@ -89,8 +89,8 @@ public class NuguClient {
         // core
         contextManager = ContextManager()
         focusManager = FocusManager()
-        streamDataRouter = StreamDataRouter()
-        directiveSequencer = DirectiveSequencer(streamDataRouter: streamDataRouter)
+        directiveSequencer = DirectiveSequencer()
+        streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
         systemAgent = SystemAgent(contextManager: contextManager,
                                   streamDataRouter: streamDataRouter,

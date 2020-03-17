@@ -80,10 +80,7 @@ class NuguApiProvider: NSObject {
         super.init()
     }
     
-    /**
-     Find available device gateway (resource server)
-    */
-    let policies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
+    private let internalPolicies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
         let disposable = Disposables.create()
         
         var urlComponent = URLComponents(string: (NuguServerInfo.registryAddress + NuguApi.policy.path))
@@ -232,6 +229,13 @@ extension NuguApiProvider {
     }
     
     /**
+     Find available device gateway (resource server)
+    */
+    var policies: Single<Policy> {
+        return internalPolicies
+    }
+    
+    /**
     Start to receive data which is not requested but sent by server. (server side event)
     */
     var directive: Observable<MultiPartParser.Part> {
@@ -263,7 +267,7 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         log.debug("didReceive response:\n\(response)\n")
         
-        guard var processor: MultiPartProcessable = eventResponseProcessors[dataTask] ?? serverSideEventProcessor else {
+        guard let processor: MultiPartProcessable = eventResponseProcessors[dataTask] ?? serverSideEventProcessor else {
             log.error("unknown response: \(response)")
             completionHandler(.cancel)
             return

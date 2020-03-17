@@ -319,7 +319,6 @@
 		735A4CD724117384004E7A41 /* Downstream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CCE24117384004E7A41 /* Downstream.swift */; };
 		735A4CD824117384004E7A41 /* UpstreamAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CCF24117384004E7A41 /* UpstreamAttachment.swift */; };
 		735A4CD924117384004E7A41 /* UpstreamHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CD024117384004E7A41 /* UpstreamHeader.swift */; };
-		735A4CDA24117384004E7A41 /* CrashReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CD124117384004E7A41 /* CrashReport.swift */; };
 		735A4CDB24117384004E7A41 /* StreamDataRoutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CD224117384004E7A41 /* StreamDataRoutable.swift */; };
 		735A4CDD241173C5004E7A41 /* MultiPartProcessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CDC241173C5004E7A41 /* MultiPartProcessable.swift */; };
 		735A4CE1241173F4004E7A41 /* EventSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CDF241173F4004E7A41 /* EventSender.swift */; };
@@ -836,7 +835,6 @@
 		735A4CCE24117384004E7A41 /* Downstream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downstream.swift; sourceTree = "<group>"; };
 		735A4CCF24117384004E7A41 /* UpstreamAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpstreamAttachment.swift; sourceTree = "<group>"; };
 		735A4CD024117384004E7A41 /* UpstreamHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpstreamHeader.swift; sourceTree = "<group>"; };
-		735A4CD124117384004E7A41 /* CrashReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrashReport.swift; sourceTree = "<group>"; };
 		735A4CD224117384004E7A41 /* StreamDataRoutable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamDataRoutable.swift; sourceTree = "<group>"; };
 		735A4CDC241173C5004E7A41 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
 		735A4CDF241173F4004E7A41 /* EventSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSender.swift; sourceTree = "<group>"; };
@@ -2313,11 +2311,11 @@
 			isa = PBXGroup;
 			children = (
 				7334E050241F5D110060BCA4 /* StreamDataState.swift */,
+				735A4CD224117384004E7A41 /* StreamDataRoutable.swift */,
 				735A4CC924117384004E7A41 /* DownstreamDataPreprocessable.swift */,
 				735A4CCA24117384004E7A41 /* DownstreamDataDelegate.swift */,
 				735A4CCB24117384004E7A41 /* UpstreamDataSendable.swift */,
 				735A4CCC24117384004E7A41 /* Model */,
-				735A4CD224117384004E7A41 /* StreamDataRoutable.swift */,
 			);
 			path = StreamData;
 			sourceTree = "<group>";
@@ -2329,7 +2327,6 @@
 				735A4CCE24117384004E7A41 /* Downstream.swift */,
 				735A4CCF24117384004E7A41 /* UpstreamAttachment.swift */,
 				735A4CD024117384004E7A41 /* UpstreamHeader.swift */,
-				735A4CD124117384004E7A41 /* CrashReport.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2977,7 +2974,6 @@
 				7315304023E11EDF00F843C3 /* AudioProvidable.swift in Sources */,
 				735A4CD924117384004E7A41 /* UpstreamHeader.swift in Sources */,
 				1FFFF3C42375707100C9A177 /* PlaySyncInfo.swift in Sources */,
-				735A4CDA24117384004E7A41 /* CrashReport.swift in Sources */,
 				7315303023E11EDF00F843C3 /* FocusChannelPriority.swift in Sources */,
 				735A4CBE241172F1004E7A41 /* EventResponseProcessor.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
