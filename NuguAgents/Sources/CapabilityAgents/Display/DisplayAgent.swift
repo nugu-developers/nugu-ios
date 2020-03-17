@@ -145,10 +145,10 @@ public extension DisplayAgent {
 // MARK: - ContextInfoDelegate
 
 extension DisplayAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: @escaping (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         let sendContext = { [weak self] in
             guard let self = self else {
-                completionHandler(nil)
+                completion(nil)
                 return
             }
             var payload: [String: Any?] = [
@@ -161,7 +161,7 @@ extension DisplayAgent: ContextInfoDelegate {
                 payload["focusedItemToken"] = (info.currentItem?.focusable ?? false) ? delegate.displayAgentFocusedItemToken() : nil
                 payload["visibleTokenList"] = delegate.displayAgentVisibleTokenList()
             }
-            completionHandler(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
+            completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
         }
         
         if Thread.current.isMainThread {
@@ -242,8 +242,8 @@ extension DisplayAgent: PlaySyncDelegate {
 
 private extension DisplayAgent {
     func handleClose() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8) else {
@@ -268,8 +268,8 @@ private extension DisplayAgent {
     }
     
     func handleFocus() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8) else {
@@ -305,8 +305,8 @@ private extension DisplayAgent {
     }
         
     func handleScroll() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8) else {
@@ -342,9 +342,9 @@ private extension DisplayAgent {
     }
     
     func handleUpdate() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
+        return { [weak self] directive, completion in
             log.info("\(directive.header.type)")
-            completionHandler(
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     
@@ -378,13 +378,13 @@ private extension DisplayAgent {
     }
     
     func handleDisplay() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            guard let self = self else { return completionHandler(.success(())) }
+        return { [weak self] directive, completion in
+            guard let self = self else { return completion(.success(())) }
             guard let payloadAsData = directive.payload.data(using: .utf8),
                 let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
                 let token = payloadDictionary["token"] as? String,
                 let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")))
+                    completion(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")))
                     return
             }
             
@@ -407,7 +407,7 @@ private extension DisplayAgent {
             )
 
             self.displayDispatchQueue.async { [weak self] in
-                guard let self = self else { return completionHandler(.success(())) }
+                guard let self = self else { return completion(.success(())) }
                 self.currentItem = item
                 
                 var rendered = false
@@ -425,7 +425,7 @@ private extension DisplayAgent {
                     )
                 }
                 
-                completionHandler(.success(()))
+                completion(.success(()))
             }
         }
     }
