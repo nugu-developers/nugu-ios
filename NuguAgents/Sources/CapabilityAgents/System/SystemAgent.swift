@@ -157,13 +157,13 @@ private extension SystemAgent {
     }
     
     func handleRevoke() -> HandleDirective {
-        return { [weak self] _, completionHandler in
+        return { [weak self] _, completion in
             self?.systemDispatchQueue.async { [weak self] in
                 self?.delegates.notify { delegate in
                     delegate.systemAgentDidReceiveRevokeDevice()
                 }
             }
-            completionHandler(.success(()))
+            completion(.success(()))
         }
     }
 }
