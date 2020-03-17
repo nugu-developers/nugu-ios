@@ -177,15 +177,41 @@ extension NuguCentralManager {
     }
     
     func logout() {
-        guard
-            let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else {
-                return
-        }
-        
+        popToRootViewController()
         disable()
         UserDefaults.Standard.clear()
-        rootNavigationViewController.popToRootViewController(animated: true)
+    }
+}
+
+// MARK: - Private (Logout)
+
+private extension NuguCentralManager {
+    func popToRootViewController() {
+        DispatchQueue.main.async {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
+            rootNavigationViewController.popToRootViewController(animated: true)
+        }
+    }
+    
+    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
+        DispatchQueue.main.async { [weak self] in
+            self?.client.audioPlayerAgent.stop()
+            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
+            self?.popToRootViewController()
+            switch sampleAppError {
+            case .loginUnauthorized:
+                self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
+                    self?.disable()
+                    UserDefaults.Standard.clear()
+                })
+            default:
+                self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
+                    self?.disable()
+                    UserDefaults.Standard.clear()
+                })
+            }
+        }
     }
 }
 
@@ -237,19 +263,6 @@ private extension NuguCentralManager {
             completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
-    
-    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
-        DispatchQueue.main.async { [weak self] in
-            switch sampleAppError {
-            case .loginUnauthorized:
-                self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated)
-            default:
-                self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError)
-            }
-            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
-            self?.logout()
-        }
-    }
 }
 
 // MARK: - Internal (ASR)
@@ -260,6 +273,7 @@ extension NuguCentralManager {
             guard let self = self else { return }
             let result = Result<Void, Error>(catching: {
                 guard isGranted else { throw SampleAppError.recordPermissionError }
+                self.localTTSAgent.stopLocalTTS()
                 self.client.asrAgent.startRecognition(initiator: initiator)
             })
             completion?(result)
@@ -395,6 +409,10 @@ extension NuguCentralManager: SystemAgentDelegate {
         case .unauthorizedRequestException:
             handleAuthError()
         }
+    }
+    
+    func systemAgentDidReceiveRevokeDevice() {
+        logoutAfterErrorHandling(sampleAppError: .deviceRevoked)
     }
 }
 
