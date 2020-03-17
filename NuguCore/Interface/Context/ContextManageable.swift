@@ -36,6 +36,6 @@ public protocol ContextManageable: class {
     /// Request the ContextManager for context.
     ///
     /// Request will be sent to the ContextInfoDelegate via the contextInfoRequestContext requests.
-    /// - Parameter completionHandler: A completion handler block to execute when all of the requests are finished.
-    func getContexts(completionHandler: @escaping (ContextPayload) -> Void)
+    /// - Parameter completion: A completion handler block to execute when all of the requests are finished.
+    func getContexts(completion: @escaping (ContextPayload) -> Void)
 }

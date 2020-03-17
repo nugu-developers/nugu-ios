@@ -39,6 +39,7 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandoffConnection", medium: .none, isBlocking: false, directiveHandler: handleHandOffConnection),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", medium: .none, isBlocking: false, directiveHandler: handleUpdateState),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", medium: .none, isBlocking: false, directiveHandler: handleException),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Revoke", medium: .none, isBlocking: false, directiveHandler: handleRevoke),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", medium: .none, isBlocking: false, directiveHandler: { { $1(.success(())) } }),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", medium: .none, isBlocking: false, directiveHandler: { { $1(.success(())) } })
     ]
@@ -76,11 +77,11 @@ public extension SystemAgent {
 // MARK: - ContextInfoDelegate
 
 extension SystemAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version
         ]
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -102,8 +103,8 @@ extension SystemAgent: ContextInfoDelegate {
 
 private extension SystemAgent {
     func handleHandOffConnection() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let data = directive.payload.data(using: .utf8) else {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -121,19 +122,19 @@ private extension SystemAgent {
     }
     
     func handleUpdateState() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
+        return { [weak self] directive, completion in
             self?.systemDispatchQueue.async { [weak self] in
                 self?.sendSynchronizeStateEvent()
             }
             
-            completionHandler(.success(()))
+            completion(.success(()))
         }
         
     }
     
     func handleException() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let data = directive.payload.data(using: .utf8) else {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -152,6 +153,17 @@ private extension SystemAgent {
                     }
                 }
             )
+        }
+    }
+    
+    func handleRevoke() -> HandleDirective {
+        return { [weak self] _, completion in
+            self?.systemDispatchQueue.async { [weak self] in
+                self?.delegates.notify { delegate in
+                    delegate.systemAgentDidReceiveRevokeDevice()
+                }
+            }
+            completion(.success(()))
         }
     }
 }

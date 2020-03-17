@@ -28,6 +28,8 @@ enum SampleAppError: Error {
     case loginFailed(error: Error)
     case loginUnauthorized(reason: APIErrorReason)
     case loginWithRefreshTokenFailed
+    
+    case deviceRevoked
 }
 
 // MARK: - LocalizedError
@@ -47,6 +49,8 @@ extension SampleAppError: LocalizedError {
             return "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "NuguSample")의 누구 서비스가 종료되었습니다."
         case .loginWithRefreshTokenFailed:
             return "Login with refresh token has failed"
+        case .deviceRevoked:
+            return "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요."
         }
     }
 }

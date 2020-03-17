@@ -55,7 +55,7 @@ class MockPlaySyncManager: PlaySyncManageable {
         //
     }
     
-    func contextInfoRequestContext(completionHandler: @escaping (ContextInfo?) -> Void) {
-        completionHandler(nil)
+    func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
+        completion(nil)
     }
 }

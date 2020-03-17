@@ -275,12 +275,12 @@ extension ASRAgent: FocusChannelDelegate {
 // MARK: - ContextInfoDelegate
 
 extension ASRAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version,
             "engine": "skt"
         ]
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -353,8 +353,8 @@ extension ASRAgent: EndPointDetectorDelegate {
 
 private extension ASRAgent {
     func prefetchExpectSpeech() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let data = directive.payload.data(using: .utf8) else {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -368,8 +368,8 @@ private extension ASRAgent {
     }
 
     func handleExpectSpeech() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard self.currentExpectSpeech != nil else {
@@ -402,8 +402,8 @@ private extension ASRAgent {
     }
     
     func handleNotifyResult() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let data = directive.payload.data(using: .utf8) else {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")

@@ -202,13 +202,13 @@ extension TTSAgent: FocusChannelDelegate {
 // MARK: - ContextInfoDelegate
 
 extension TTSAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
             "engine": "skt"
         ]
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -294,11 +294,11 @@ extension TTSAgent: SpeakerVolumeDelegate {
 
 private extension TTSAgent {
     func prefetchPlay() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
+        return { [weak self] directive, completion in
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                completionHandler(
+                completion(
                     Result<Void, Error>(catching: {
                         guard let data = directive.payload.data(using: .utf8) else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -327,15 +327,15 @@ private extension TTSAgent {
     }
     
     func handlePlay() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
+        return { [weak self] directive, completion in
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else {
-                    completionHandler(.success(()))
+                    completion(.success(()))
                     return
                 }
                 guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
                     log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
-                    completionHandler(.success(()))
+                    completion(.success(()))
                     return
                 }
                 
@@ -347,7 +347,7 @@ private extension TTSAgent {
                     .filter { $0.dialogRequestId == media.dialogRequestId }
                     .take(1)
                     .do(onNext: { (_, _) in
-                        completionHandler(.success(()))
+                        completion(.success(()))
                     })
                     .subscribe().disposed(by: self.disposeBag)
                 
@@ -357,9 +357,9 @@ private extension TTSAgent {
     }
     
     func handleStop() -> HandleDirective {
-        return { [weak self] _, completionHandler in
+        return { [weak self] _, completion in
             guard let self = self else { return }
-            completionHandler(self.stop(cancelAssociation: true))
+            completion(self.stop(cancelAssociation: true))
         }
 
     }
