@@ -77,11 +77,11 @@ public extension SystemAgent {
 // MARK: - ContextInfoDelegate
 
 extension SystemAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let payload: [String: Any] = [
             "version": capabilityAgentProperty.version
         ]
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -103,8 +103,8 @@ extension SystemAgent: ContextInfoDelegate {
 
 private extension SystemAgent {
     func handleHandOffConnection() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let data = directive.payload.data(using: .utf8) else {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -122,19 +122,19 @@ private extension SystemAgent {
     }
     
     func handleUpdateState() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
+        return { [weak self] directive, completion in
             self?.systemDispatchQueue.async { [weak self] in
                 self?.sendSynchronizeStateEvent()
             }
             
-            completionHandler(.success(()))
+            completion(.success(()))
         }
         
     }
     
     func handleException() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let data = directive.payload.data(using: .utf8) else {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")

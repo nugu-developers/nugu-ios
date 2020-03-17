@@ -72,13 +72,13 @@ public extension ExtensionAgent {
 // MARK: - ContextInfoDelegate
 
 extension ExtensionAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "data": delegate?.extensionAgentRequestContext()
         ]
         
-        completionHandler(
+        completion(
             ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
         )
     }
@@ -88,9 +88,9 @@ extension ExtensionAgent: ContextInfoDelegate {
 
 private extension ExtensionAgent {
     func handleAction() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
+        return { [weak self] directive, completion in
             guard let data = directive.payload.data(using: .utf8) else {
-                completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
+                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
                 return
             }
             
@@ -98,7 +98,7 @@ private extension ExtensionAgent {
             do {
                 item = try JSONDecoder().decode(ExtensionAgentItem.self, from: data)
             } catch {
-                completionHandler(.failure(error))
+                completion(.failure(error))
                 return
             }
             
@@ -116,7 +116,7 @@ private extension ExtensionAgent {
                     )
             })
             
-            completionHandler(.success(()))
+            completion(.success(()))
         }
     }
 }

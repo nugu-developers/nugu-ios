@@ -85,11 +85,11 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
 // MARK: - ContextInfoDelegate
 
 extension KeywordDetector: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         guard let keyword = keywordSource?.keyword else {
-            completionHandler(nil)
+            completion(nil)
             return
         }
-        completionHandler(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword.description))
+        completion(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword.description))
     }
 }

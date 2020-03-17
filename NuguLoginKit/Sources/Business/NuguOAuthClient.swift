@@ -65,7 +65,7 @@ public extension NuguOAuthClient {
     /// - Parameter parentViewController: The `parentViewController` will present a safariViewController.
     /// - Parameter completion: The closure to receive result for authorization.
     func authorize(grant: AuthorizationCodeGrant, parentViewController: UIViewController, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
-        grant.stateController.completionHandler = completion
+        grant.stateController.completion = completion
         let state = grant.stateController.makeState()
         var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/oauth/authorize")
         
@@ -79,7 +79,7 @@ public extension NuguOAuthClient {
         urlComponents?.queryItems = queries
         
         guard let url = urlComponents?.url else {
-            grant.stateController.completionHandler?(.failure(NuguLoginKitError.invalidRequestURL))
+            grant.stateController.completion?(.failure(NuguLoginKitError.invalidRequestURL))
             grant.stateController.clearState()
             return
         }
@@ -88,7 +88,7 @@ public extension NuguOAuthClient {
         func complete(result: Result<AuthorizationInfo, NuguLoginKitError>) {
             DispatchQueue.main.async {
                 grant.stateController.dismissSafariViewController(completion: {
-                    grant.stateController.completionHandler?(result)
+                    grant.stateController.completion?(result)
                     grant.stateController.clearState()
                 })
             }

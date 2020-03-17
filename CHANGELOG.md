@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 Released on 2020-02-27
 
 #### Fixed
-- Fix `TTSAgent` bug where `completionHandler` is not called. (#136)
+- Fix `TTSAgent` bug where `completion` is not called. (#136)
 - Fix event payload in `TTSAgent` (#140)
 - Fix `DisplayAgent` bug where deallocated observer is not called. (#167)
 - Fix a bug where `TTSState` does not set properly. (#173)
@@ -48,7 +48,7 @@ Released on 2020-02-27
 Released on 2020-02-20
 
 #### Fixed
-- Fix `TTSAgent` bug where `completionHandler` is not called. (#136)
+- Fix `TTSAgent` bug where `completion` is not called. (#136)
 
 ## [0.7.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.7.0)
 Released on 2019-11-29
