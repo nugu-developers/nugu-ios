@@ -47,7 +47,7 @@ extension ContextManager {
         provideContextDelegates.remove(delegate)
     }
 
-    public func getContexts(completionHandler: @escaping (ContextPayload) -> Void) {
+    public func getContexts(completion: @escaping (ContextPayload) -> Void) {
         var requests = [Single<ContextInfo?>]()
         provideContextDelegates.notify { delegate in
             requests.append(getContext(delegate: delegate))
@@ -66,7 +66,7 @@ extension ContextManager {
                         client: contextDictionary[.client] ?? []
                     )
                     
-                    completionHandler(payload)
+                    completion(payload)
             })
             .subscribe()
             .disposed(by: disposeBag)
