@@ -143,10 +143,6 @@ public extension NuguClient {
     func stopReceiveServerInitiatedDirective() {
         streamDataRouter.stopReceiveServerInitiatedDirective()
     }
-    
-    func setChargingFreeUrl(_ url: String) {
-          streamDataRouter.chargingFreeUrl = url
-    }
 }
 
 // MARK: - Audio Stream Control

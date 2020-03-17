@@ -58,16 +58,6 @@ class NuguApiProvider: NSObject {
         }
     }
     
-    var isChargingFree = false {
-        didSet {
-            log.debug("charging free: \(isChargingFree)")
-            
-            if isChargingFree {
-                isCSLBEnabled = true
-            }
-        }
-    }
-    
     /**
      Initiate NuguApiProvider
      - Parameter resourceServerUrl: resource server url.
@@ -83,7 +73,7 @@ class NuguApiProvider: NSObject {
     private let internalPolicies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
         let disposable = Disposables.create()
         
-        var urlComponent = URLComponents(string: (NuguServerInfo.registryAddress + NuguApi.policy.path))
+        var urlComponent = URLComponents(string: (NuguServerInfo.registryServerAddress + NuguApi.policy.path))
         urlComponent?.queryItems = [
             URLQueryItem(name: "protocol", value: "H2")
         ]
@@ -108,9 +98,14 @@ class NuguApiProvider: NSObject {
     .asSingle()
     
     private lazy var internalDirective: Observable<MultiPartParser.Part> = {
+        var error: Error?
+        
         return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
             let disposable = Disposables.create()
             guard let self = self else { return disposable }
+            
+            // reset error
+            error = nil
             
             // enable client side load balance and find new resource server for directive and event both.
             self.isCSLBEnabled = true
@@ -150,14 +145,18 @@ class NuguApiProvider: NSObject {
 
             return self.makePart(with: data, processor: serverSideEventProcessor)
         }
-        .do(onCompleted: { [weak self] in
-            self?.url = NuguServerInfo.resourceServerAddress
-            
-            if self?.isChargingFree == false {
+        .do(onError: {
+            error = $0
+        }, onDispose: { [weak self] in
+            self?.self.serverSideEventProcessor = nil
+
+            if error == nil {
                 self?.isCSLBEnabled = false
+                self?.url = NuguServerInfo.resourceServerAddress
             }
         })
-    }().share()
+        .share()
+    }()
     
     private func makePart(with data: Data, processor: MultiPartProcessable) -> Observable<MultiPartParser.Part> {
         processor.data.append(data)

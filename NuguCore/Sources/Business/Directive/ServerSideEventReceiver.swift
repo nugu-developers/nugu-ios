@@ -46,6 +46,8 @@ class ServerSideEventReceiver {
     }
 
     var directive: Observable<MultiPartParser.Part> {
+        var error: Error?
+        
         return apiProvider.directive
             .take(1)
             .concatMap { [weak self] part -> Observable<MultiPartParser.Part> in
@@ -55,10 +57,10 @@ class ServerSideEventReceiver {
                 return self.apiProvider.directive.startWith(part)
             }
             .retryWhen(retryDirective)
-            .do(onError: { [weak self] (error) in
+            .do(onError: {
+                error = $0
+            }, onDispose: { [weak self] in
                 self?.state = .disconnected(error: error)
-            }, onCompleted: { [weak self] in
-                self?.state = .disconnected(error: nil)
             })
     }
 

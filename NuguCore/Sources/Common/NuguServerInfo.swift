@@ -21,6 +21,6 @@
 import Foundation
 
 public enum NuguServerInfo {
-    public static var resourceServerAddress: String? = "https://gw-http.sktnugu.com"
-    public static var registryAddress: String = "https://reg-http.sktnugu.com:443/v1/"
+    public static var resourceServerAddress: String = "https://gw-http.sktnugu.com"
+    public static var registryServerAddress: String = "https://reg-http.sktnugu.com:443/v1/"
 }

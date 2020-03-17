@@ -31,15 +31,6 @@ public class StreamDataRouter: StreamDataRoutable {
     private var serverInitiatedDirectiveDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
-    public var chargingFreeUrl: String = "" {
-        didSet {
-            log.debug("charging free url: \(chargingFreeUrl)")
-            NuguServerInfo.registryAddress = chargingFreeUrl
-            NuguServerInfo.resourceServerAddress = nil
-            nuguApiProvider.isChargingFree = true
-        }
-    }
-    
     public init(directiveSequencer: DirectiveSequenceable) {
         serverInitiatedDirectiveRecever = ServerSideEventReceiver(apiProvider: nuguApiProvider)
         self.directiveSequencer = directiveSequencer
@@ -55,12 +46,16 @@ public extension StreamDataRouter {
         serverInitiatedDirectiveCompletion = completion
         
         log.debug("start receive server initiated directives")
+
+        serverInitiatedDirectiveDisposable?.dispose()
         serverInitiatedDirectiveDisposable = serverInitiatedDirectiveRecever.directive
             .subscribe(onNext: { [weak self] in
                     self?.notifyMessage(with: $0, completion: completion)
                 }, onError: {
                     log.error("error: \($0)")
                     completion?(.error($0))
+                }, onDisposed: {
+                    log.debug("server initiated directive is stopeed")
                 })
         serverInitiatedDirectiveDisposable?.disposed(by: disposeBag)
     }
