@@ -562,7 +562,7 @@ extension MainViewController: ASRAgentDelegate {
 // MARK: - TextAgentDelegate
 
 extension MainViewController: TextAgentDelegate {
-    func textAgentDidStreamStateChanged(dialogRequestId: String, state: StreamDataState) {
+    func textAgentDidStreamStateChanged(state: StreamDataState, dialogRequestId: String) {
         switch state {
         case .finished:
             DispatchQueue.main.async {
