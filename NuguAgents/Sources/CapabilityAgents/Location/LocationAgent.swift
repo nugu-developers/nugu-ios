@@ -37,7 +37,7 @@ public final class LocationAgent: LocationAgentProtocol {
 // MARK: - ContextInfoDelegate
 
 extension LocationAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version
         ]
@@ -47,6 +47,6 @@ extension LocationAgent: ContextInfoDelegate {
                 "longitude": locationInfo.longitude
             ]
         }
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
