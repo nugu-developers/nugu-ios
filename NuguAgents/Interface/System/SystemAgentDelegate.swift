@@ -23,4 +23,5 @@ import Foundation
 /// The `SystemAgentDelegate` protocol defines methods that action when `SystemAgent` receives a directive.
 public protocol SystemAgentDelegate: class {
     func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail)
+    func systemAgentDidReceiveRevokeDevice()
 }

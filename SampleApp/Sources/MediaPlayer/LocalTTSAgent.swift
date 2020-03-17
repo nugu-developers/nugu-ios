@@ -46,6 +46,8 @@ final class LocalTTSAgent: NSObject {
     
     private var requestedTTSType: TTSType?
     
+    private var playCompletion: (() -> Void)?
+    
     enum TTSType {
         case deviceGatewayNetworkError
         case deviceGatewayAuthServerError
@@ -91,9 +93,16 @@ final class LocalTTSAgent: NSObject {
 // MARK: Internal (play)
     
 extension LocalTTSAgent {
-    func playLocalTTS(type: TTSType) {
+    func playLocalTTS(type: TTSType, completion: (() -> Void)? = nil) {
         requestedTTSType = type
         focusManager.requestFocus(channelDelegate: self)
+        playCompletion = completion
+    }
+    
+    func stopLocalTTS() {
+        if requestedTTSType != nil {
+            focusManager.releaseFocus(channelDelegate: self)
+        }
     }
 }
 
@@ -125,6 +134,8 @@ private extension LocalTTSAgent {
         player?.stop()
         player = nil
         requestedTTSType = nil
+        playCompletion?()
+        playCompletion = nil
     }
 }
 
