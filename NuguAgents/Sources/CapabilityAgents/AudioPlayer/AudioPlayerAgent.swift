@@ -359,7 +359,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
 // MARK: - ContextInfoDelegate
 
 extension AudioPlayerAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         var payload: [String: Any?] = [
             "version": capabilityAgentProperty.version,
             "playerActivity": audioPlayerState.playerActivity,
@@ -370,7 +370,7 @@ extension AudioPlayerAgent: ContextInfoDelegate {
         if let duration = duration {
             payload["durationInMilliseconds"] = duration * 1000
         }
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
@@ -419,10 +419,10 @@ extension AudioPlayerAgent: SpeakerVolumeDelegate {
 
 private extension AudioPlayerAgent {
     func prefetchPlay() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
+        return { [weak self] directive, completion in
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                completionHandler(
+                completion(
                     Result<Void, Error>(catching: {
                         guard let data = directive.payload.data(using: .utf8) else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
@@ -476,30 +476,30 @@ private extension AudioPlayerAgent {
         }
     }
     
-    func handlePlay() -> HandleDirective {
-        return { [weak self] _, completionHandler in
+   func handlePlay() -> HandleDirective {
+        return { [weak self] _, completion in
             self?.resume()
-            completionHandler(.success(()))
+            completion(.success(()))
         }
     }
     
-    func handleStop() -> HandleDirective {
-        return { [weak self] _, completionHandler in
+   func handleStop() -> HandleDirective {
+        return { [weak self] _, completion in
             self?.stop(cancelAssociation: true)
-            completionHandler(.success(()))
+            completion(.success(()))
         }
     }
     
-    func handlePause() -> HandleDirective {
-        return { [weak self] _, completionHandler in
+   func handlePause() -> HandleDirective {
+        return { [weak self] _, completion in
             self?.pause()
-            completionHandler(.success(()))
+            completion(.success(()))
         }
     }
     
     func handleUpdateMetadata() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
@@ -513,8 +513,8 @@ private extension AudioPlayerAgent {
     }
     
     func handleShowLyrics() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
@@ -531,8 +531,8 @@ private extension AudioPlayerAgent {
     }
     
     func handleHideLyrics() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
@@ -549,8 +549,8 @@ private extension AudioPlayerAgent {
     }
     
     func handleControlLyricsPage() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
+        return { [weak self] directive, completion in
+            completion(
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8) else {
