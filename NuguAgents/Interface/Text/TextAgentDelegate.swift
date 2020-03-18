@@ -20,17 +20,19 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `TextAgentDelegate` protocol defines method that changed state or received result.
 ///
 /// The methods of this protocol are all optional.
 public protocol TextAgentDelegate: class {
     /// Tells the delegate that `TextAgent` received result.
     /// - Parameter result: The result of text recognition.
-    func textAgentDidReceive(result: Result<Void, Error>, dialogRequestId: String)
+    func textAgentDidStreamStateChanged(state: StreamDataState, dialogRequestId: String)
 }
 
 // MARK: - Optional
 
 public extension TextAgentDelegate {
-    func textAgentDidReceive(result: Result<Void, Error>, dialogRequestId: String) {}
+    func textAgentDidStreamStateChanged(state: StreamDataState, dialogRequestId: String) {}
 }

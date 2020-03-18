@@ -20,7 +20,28 @@
 
 import Foundation
 
-public protocol DirectiveSequenceable: DownstreamDataDelegate {
+public protocol DirectiveSequenceable {
+    /**
+     Add directive handler.
+     
+     You can add attachment handler also.
+     */
     func add(directiveHandleInfos: DirectiveHandleInfos)
+    
+    /**
+     Remove directive handler.
+     
+     You can remove attachment handler also.
+     */
     func remove(directiveHandleInfos: DirectiveHandleInfos)
+    
+    /**
+     Dispatch directive to pre-registered handler
+     */
+    func processDirective(_ directive: Downstream.Directive)
+    
+    /**
+     Dispatch attachment to pre-registered handler
+     */
+    func processAttachment(_ attachment: Downstream.Attachment)
 }

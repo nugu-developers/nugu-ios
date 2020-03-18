@@ -23,17 +23,13 @@ import Foundation
 import RxSwift
 
 public class DirectiveSequencer: DirectiveSequenceable {
-    private let upstreamDataSender: UpstreamDataSendable
     private let prefetchDirectiveSubject = PublishSubject<Downstream.Directive>()
     private let handleDirectiveSubject = PublishSubject<Downstream.Directive>()
     private var directiveHandleInfos = DirectiveHandleInfos()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
     private let disposeBag = DisposeBag()
 
-    public init(streamDataRouter: StreamDataRoutable) {
-        self.upstreamDataSender = streamDataRouter
-        streamDataRouter.delegate = self
-
+    public init() {
         prefetchDirective()
         handleDirective()
     }
@@ -57,11 +53,10 @@ extension DirectiveSequencer {
 
 // MARK: - DownstreamDataDelegate
 
-extension DirectiveSequencer: DownstreamDataDelegate {
-    public func downstreamDataDidReceive(directive: Downstream.Directive) {
+public extension DirectiveSequencer {
+    func processDirective(_ directive: Downstream.Directive) {
         log.info("\(directive.header.messageId)")
         guard directiveHandleInfos[directive.header.type] != nil else {
-            upstreamDataSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: directive.header.type))
             log.warning("No handler registered \(directive.header.messageId)")
             return
         }
@@ -69,10 +64,9 @@ extension DirectiveSequencer: DownstreamDataDelegate {
         prefetchDirectiveSubject.onNext(directive)
     }
     
-    public func downstreamDataDidReceive(attachment: Downstream.Attachment) {
+    func processAttachment(_ attachment: Downstream.Attachment) {
         log.info("attachment messageId: \(attachment.header.messageId)")
         guard let handler = directiveHandleInfos[attachment.header.type] else {
-            upstreamDataSender.sendCrashReport(error: HandleDirectiveError.handlerNotFound(type: attachment.header.type))
             log.warning("No handler registered \(attachment.header.messageId)")
             return
         }
@@ -116,14 +110,12 @@ private extension DirectiveSequencer {
                     case .success:
                         self.handleDirectiveSubject.onNext(directive)
                     case .failure(let error):
-                        self.upstreamDataSender.sendCrashReport(error: error)
                         log.error(error)
                     }
                 })
             })
-            .do(onError: { [weak self] error in
-                self?.upstreamDataSender.sendCrashReport(error: error)
-                log.error(error)
+            .do(onError: {
+                log.error($0)
             })
             .retry()
             .subscribe().disposed(by: disposeBag)
@@ -175,16 +167,14 @@ private extension DirectiveSequencer {
 
                 handlingTypeInfos.append(handler)
                 
-                handler.directiveHandler(directive) { [weak self] result in
+                handler.directiveHandler(directive) {
                     remove(handler)
-                    if case .failure(let error) = result {
-                        self?.upstreamDataSender.sendCrashReport(error: error)
+                    if case .failure(let error) = $0 {
                         log.error(error)
                     }
                 }
-            }, onError: { [weak self] error in
-                self?.upstreamDataSender.sendCrashReport(error: error)
-                log.error(error)
+            }, onError: {
+                log.error($0)
             })
             .retry()
             .subscribe().disposed(by: disposeBag)

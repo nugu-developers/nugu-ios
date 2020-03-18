@@ -23,15 +23,19 @@ import Foundation
 import NuguCore
 
 class MockDirectiveSequencer: DirectiveSequenceable {
+    func processDirective(_ directive: Downstream.Directive) {
+        //
+    }
+    
+    func processAttachment(_ attachment: Downstream.Attachment) {
+        //
+    }
+    
     func add(directiveHandleInfos: DirectiveHandleInfos) {
         //
     }
     
     func remove(directiveHandleInfos: DirectiveHandleInfos) {
-        //
-    }
-    
-    func downstreamDataDidReceive(directive: Downstream.Directive) {
         //
     }
 }
