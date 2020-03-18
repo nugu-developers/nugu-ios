@@ -1,9 +1,9 @@
 //
-//  StreamDataRoutable.swift
+//  StreamDataDelegate.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 11/22/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by MinChul Lee on 2020/03/18.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,11 +20,9 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol StreamDataRoutable: class, UpstreamDataSendable {
-    var delegate: StreamDataDelegate? { get set }
-    
-    func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?)
-    func stopReceiveServerInitiatedDirective()
-    func handOffResourceServer(to serverPolicy: Policy.ServerPolicy)
+public protocol StreamDataDelegate: class {
+    func streamDataDidReceive(direcive: Downstream.Directive)
+    func streamDataDidReceive(attachment: Downstream.Attachment)
+    func streamDataDidSend(event: Upstream.Event, error: Error?)
+    func streamDataDidSend(attachment: Upstream.Attachment, error: Error?)
 }

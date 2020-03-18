@@ -328,6 +328,7 @@
 		7547B703240CD5C200C57A34 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
 		7E6450F72421CCB600D91129 /* Upstream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F62421CCB600D91129 /* Upstream.swift */; };
+		7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F82421D82300D91129 /* StreamDataDelegate.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
@@ -840,6 +841,7 @@
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
 		7E6450F62421CCB600D91129 /* Upstream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upstream.swift; sourceTree = "<group>"; };
+		7E6450F82421D82300D91129 /* StreamDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataDelegate.swift; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
 		7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreable.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
@@ -2306,6 +2308,7 @@
 			children = (
 				7334E050241F5D110060BCA4 /* StreamDataState.swift */,
 				735A4CD224117384004E7A41 /* StreamDataRoutable.swift */,
+				7E6450F82421D82300D91129 /* StreamDataDelegate.swift */,
 				735A4CCB24117384004E7A41 /* UpstreamDataSendable.swift */,
 				735A4CCC24117384004E7A41 /* Model */,
 			);
@@ -2962,6 +2965,7 @@
 				7315304023E11EDF00F843C3 /* AudioProvidable.swift in Sources */,
 				1FFFF3C42375707100C9A177 /* PlaySyncInfo.swift in Sources */,
 				7315303023E11EDF00F843C3 /* FocusChannelPriority.swift in Sources */,
+				7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */,
 				735A4CBE241172F1004E7A41 /* EventResponseProcessor.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
 				7315301F23E11EDF00F843C3 /* NuguTimeInterval.swift in Sources */,

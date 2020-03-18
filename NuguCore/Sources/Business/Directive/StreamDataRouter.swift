@@ -23,6 +23,8 @@ import Foundation
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
+    public weak var delegate: StreamDataDelegate?
+    
     private let nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
     private var eventSenders = [String: EventSender]()
@@ -111,18 +113,24 @@ public extension StreamDataRouter {
         eventSender.send(event)
             .subscribe(onCompleted: {
                 completion?(.sent)
-            }, onError: { (error) in
+            }, onError: { [weak self] (error) in
                 completion?(.error(error))
+                self?.delegate?.streamDataDidSend(event: event, error: error)
             })
             .disposed(by: self.disposeBag)
         
         // request event as multi part stream
         nuguApiProvider.events(boundary: boundary, inputStream: eventSender.streams.input)
-            .subscribe(onNext: { [weak self] (part) in
+            .enumerated()
+            .subscribe(onNext: { [weak self] (index, part) in
+                if index == 0 {
+                    self?.delegate?.streamDataDidSend(event: event, error: nil)
+                }
                 self?.notifyMessage(with: part, completion: completion)
-            }, onError: { (error) in
+            }, onError: { [weak self] (error) in
                 log.error("error: \(error)")
                 completion?(.error(error))
+                self?.delegate?.streamDataDidSend(event: event, error: error)
             }, onCompleted: {
                 completion?(.finished)
             }, onDisposed: { [weak self] in
@@ -140,18 +148,21 @@ public extension StreamDataRouter {
     func sendStream(attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[attachment.header.dialogRequestId] else {
             completion?(.error(EventSenderError.noEventRequested))
+            delegate?.streamDataDidSend(attachment: attachment, error: EventSenderError.noEventRequested)
             return
         }
         
         eventSender.send(attachment)
-            .subscribe(onCompleted: {
+            .subscribe(onCompleted: { [weak self] in
                 if attachment.isEnd {
                     eventSender.finish()
                 }
 
                 completion?(.sent)
-            }, onError: { (error) in
+                self?.delegate?.streamDataDidSend(attachment: attachment, error: nil)
+            }, onError: { [weak self] (error) in
                 completion?(.error(error))
+                self?.delegate?.streamDataDidSend(attachment: attachment, error: error)
             })
             .disposed(by: disposeBag)
     }
@@ -176,9 +187,11 @@ extension StreamDataRouter {
                 .forEach { directive in
                     directiveSequencer.processDirective(directive)
                     completion?(.received(part: directive))
+                    delegate?.streamDataDidReceive(direcive: directive)
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
             directiveSequencer.processAttachment(attachment)
+            delegate?.streamDataDidReceive(attachment: attachment)
         } else {
             log.error("Invalid data \(part.header)")
         }
