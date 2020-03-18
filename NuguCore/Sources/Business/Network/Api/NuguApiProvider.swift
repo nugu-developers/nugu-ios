@@ -29,6 +29,7 @@ class NuguApiProvider: NSObject {
     private var disposeBag = DisposeBag()
     private var sessionConfig: URLSessionConfiguration
     private let sessionQueue = OperationQueue()
+    private let processorQueue = DispatchQueue(label: "com.skt.Romaine.nugu_api_provider.processor")
     private lazy var session: URLSession = URLSession(configuration: sessionConfig,
                                                       delegate: self,
                                                       delegateQueue: sessionQueue)
@@ -155,6 +156,7 @@ class NuguApiProvider: NSObject {
                 self?.url = NuguServerInfo.resourceServerAddress
             }
         })
+        .subscribeOn(SerialDispatchQueueScheduler(queue: processorQueue, internalSerialQueueName: "\(processorQueue.label).directive"))
         .share()
     }()
     
@@ -225,6 +227,7 @@ extension NuguApiProvider {
             
             return self.makePart(with: data, processor: processor)
         }
+        .subscribeOn(SerialDispatchQueueScheduler(queue: processorQueue, internalSerialQueueName: "\(processorQueue.label).events"))
     }
     
     /**
@@ -321,7 +324,9 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         defer {
-            eventResponseProcessors.keys.contains(task) ? (eventResponseProcessors[task] = nil) : (serverSideEventProcessor = nil)
+            processorQueue.async { [weak self] in
+                self?.eventResponseProcessors.keys.contains(task) == true ? (self?.eventResponseProcessors[task] = nil) : (self?.serverSideEventProcessor = nil)
+            }
         }
         
         let processor: MultiPartProcessable? = eventResponseProcessors[task] ?? serverSideEventProcessor
