@@ -23,10 +23,6 @@ import Foundation
 import NuguCore
 
 class MockStreamDataRouter: StreamDataRoutable {
-    var delegate: DownstreamDataDelegate?
-    
-    var chargingFreeUrl: String = ""
-    
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?) {
         
     }
