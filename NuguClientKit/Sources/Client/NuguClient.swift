@@ -89,8 +89,8 @@ public class NuguClient {
         // core
         contextManager = ContextManager()
         focusManager = FocusManager()
-        streamDataRouter = StreamDataRouter()
-        directiveSequencer = DirectiveSequencer(streamDataRouter: streamDataRouter)
+        directiveSequencer = DirectiveSequencer()
+        streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
         systemAgent = SystemAgent(contextManager: contextManager,
                                   streamDataRouter: streamDataRouter,
@@ -137,16 +137,12 @@ public class NuguClient {
 // MARK: - Helper functions
 
 public extension NuguClient {
-    func startReceiveServerInitiatedDirective(completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+    func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
         streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
     }
     
     func stopReceiveServerInitiatedDirective() {
         streamDataRouter.stopReceiveServerInitiatedDirective()
-    }
-    
-    func setChargingFreeUrl(_ url: String) {
-          streamDataRouter.chargingFreeUrl = url
     }
 }
 

@@ -58,7 +58,7 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 // MARK: - ExtensionAgentProtocol
 
 public extension ExtensionAgent {
-    func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<StreamDataResult, Error>) -> Void)?) {
+    func requestCommand(playServiceId: String, data: [String: Any], completion: ((StreamDataState) -> Void)?) {
         upstreamDataSender.sendEvent(
             upstreamEventMessage: Event(
                 playServiceId: playServiceId,

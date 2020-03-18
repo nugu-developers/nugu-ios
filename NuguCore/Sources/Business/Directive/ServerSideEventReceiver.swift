@@ -24,24 +24,21 @@ import RxSwift
 
 class ServerSideEventReceiver {
     private let apiProvider: NuguApiProvider
-    private var serverPolicies = [Policy.ServerPolicy]()
     private var pingDisposable: Disposable?
     private let stateSubject = PublishSubject<ServerSideEventReceiverState>()
     private let disposeBag = DisposeBag()
     
+    /// Resource server array
+    var serverPolicies = [Policy.ServerPolicy]()
+    
     var state: ServerSideEventReceiverState = .disconnected() {
         didSet {
             if oldValue != state {
-                log.info("From:\(oldValue) To:\(state)")
-
+                log.debug("\(oldValue) -> \(state)")
                 stateSubject.onNext(state)
                 state == .connected ? startPing() : stopPing()
             }
         }
-    }
-    
-    var isConnected: Bool {
-        return state == .connected
     }
     
     init(apiProvider: NuguApiProvider) {
@@ -49,6 +46,8 @@ class ServerSideEventReceiver {
     }
 
     var directive: Observable<MultiPartParser.Part> {
+        var error: Error?
+        
         return apiProvider.directive
             .take(1)
             .concatMap { [weak self] part -> Observable<MultiPartParser.Part> in
@@ -58,10 +57,10 @@ class ServerSideEventReceiver {
                 return self.apiProvider.directive.startWith(part)
             }
             .retryWhen(retryDirective)
-            .do(onError: { [weak self] (error) in
+            .do(onError: {
+                error = $0
+            }, onDispose: { [weak self] in
                 self?.state = .disconnected(error: error)
-            }, onCompleted: { [weak self] in
-                self?.state = .disconnected(error: nil)
             })
     }
 
@@ -80,9 +79,13 @@ private extension ServerSideEventReceiver {
                 guard let self = self else { return Observable<Int>.empty() }
                 log.error("recover network error: \(error), try count: \(index+1)")
                 
+                guard (error as? NetworkError) != NetworkError.authError else {
+                    return Observable.error(error)
+                }
+                
                 guard 0 < self.serverPolicies.count else {
                     // if server policy does not exist, get it using `policies` api.
-                    let waitTime = (error as? NetworkError) == .noSuitableResourceServer ? 0 : Int.random(in: 1...(30 * index + 1))
+                    let waitTime = (error as? NetworkError) == .noSuitableResourceServer ? 0 : Int.random(in: 0...(30*index))
                     return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                         .take(1)
                         .flatMap { _ in self.apiProvider.policies }

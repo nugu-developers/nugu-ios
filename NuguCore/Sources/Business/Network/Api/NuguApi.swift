@@ -26,7 +26,6 @@ enum NuguApi {
     case events
     case eventAttachment
     case ping
-    case crashReport
 }
 
 extension NuguApi: CustomStringConvertible {
@@ -42,8 +41,6 @@ extension NuguApi: CustomStringConvertible {
             return "attachment for event"
         case .ping:
             return "ping"
-        case .crashReport:
-            return "crash report"
         }
     }
 }
@@ -70,16 +67,13 @@ extension NuguApi {
             return version + "/directives"
         case .ping:
             return version + "/ping"
-        case .crashReport:
-            return version + "/crash"
         }
     }
     
     var method: HTTPMethod {
         switch self {
         case .events,
-             .eventAttachment,
-             .crashReport:
+             .eventAttachment:
             return .post
         case .policy,
              .directives,
@@ -114,12 +108,6 @@ extension NuguApi {
             return [
                 "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
                 "User-Agent": NetworkConst.userAgent
-            ]
-        case .crashReport:
-            return [
-                "Authorization": AuthorizationStore.shared.authorizationToken ?? "",
-                "User-Agent": NetworkConst.userAgent,
-                "Content-Type": "application/json"
             ]
         }
     }
