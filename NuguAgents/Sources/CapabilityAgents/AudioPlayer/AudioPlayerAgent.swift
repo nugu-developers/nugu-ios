@@ -55,7 +55,10 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     private var audioPlayerState: AudioPlayerState = .idle {
         didSet {
-            log.info("\(oldValue) \(audioPlayerState)")
+            if oldValue != audioPlayerState {
+                log.info("AudioPlayerAgent state changed \(oldValue) -> \(audioPlayerState)")
+            }
+            
             guard let media = self.currentMedia else {
                 log.error("AudioPlayerAgentMedia is nil")
                 return
@@ -289,17 +292,20 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 }
             case .finish:
                 self.audioPlayerState = .finished
-                // Release focus after receiving directive
-                self.sendEvent(media: media, typeInfo: .playbackFinished) { [weak self] result in
-                    guard let self = self else { return }
-
-                    // TODO: handleStop()에서 해도 되는지 고려.
-                    guard case let .success(.received(directive)) = result,
-                        directive.header.type != "AudioPlayer.Play" else {
-                        return
+                self.sendEvent(media: media, typeInfo: .playbackFinished) { [weak self] state in
+                    // Release focus when stream finished.
+                    self?.audioPlayerDispatchQueue.async { [weak self] in
+                        guard let self = self else { return }
+                        
+                        switch state {
+                        case .finished where self.currentMedia == nil:
+                            self.releaseFocusIfNeeded()
+                        case .error:
+                            self.releaseFocusIfNeeded()
+                        default:
+                            break
+                        }
                     }
-                    
-                    self.releaseFocusIfNeeded()
                 }
             case .pause:
                 if media.pauseReason != .focus {
@@ -503,7 +509,7 @@ private extension AudioPlayerAgent {
 // MARK: - Private (Event)
 
 private extension AudioPlayerAgent {
-    func sendEvent(media: AudioPlayerAgentMedia, typeInfo: Event.TypeInfo, completion: ((Result<StreamDataResult, Error>) -> Void)? = nil) {
+    func sendEvent(media: AudioPlayerAgentMedia, typeInfo: Event.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
         upstreamDataSender.sendEvent(
             upstreamEventMessage: Event(
                 token: media.payload.audioItem.stream.token,

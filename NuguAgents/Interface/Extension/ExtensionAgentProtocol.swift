@@ -35,5 +35,5 @@ public protocol ExtensionAgentProtocol: CapabilityAgentable {
     ///   - data: Custom data as a Dictionary. Should be available converting JSON format.
     ///           see [JSONSerialization.isValidJSONObject].
     ///   - completion: The completion handler to call when the request is complete.
-    func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<StreamDataResult, Error>) -> Void)?)
+    func requestCommand(playServiceId: String, data: [String: Any], completion: ((StreamDataState) -> Void)?)
 }
