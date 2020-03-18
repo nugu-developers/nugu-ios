@@ -22,8 +22,8 @@ import Foundation
 import NuguCore
 
 extension Eventable {
-    func makeEventMessage(agent: CapabilityAgentable, dialogRequestId: String? = nil, contextPayload: ContextPayload? = nil) -> UpstreamEventMessage {
-        let header = UpstreamHeader(
+    func makeEventMessage(agent: CapabilityAgentable, dialogRequestId: String? = nil, contextPayload: ContextPayload? = nil) -> Upstream.Event {
+        let header = Upstream.Header(
             namespace: agent.capabilityAgentProperty.name,
             name: name,
             version: agent.capabilityAgentProperty.version,
@@ -42,7 +42,7 @@ extension Eventable {
             }
         }
         
-        return UpstreamEventMessage(
+        return Upstream.Event(
             payload: payload,
             header: header,
             contextPayload: contextPayload!
