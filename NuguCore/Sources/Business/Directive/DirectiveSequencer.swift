@@ -114,10 +114,6 @@ private extension DirectiveSequencer {
                     }
                 })
             })
-            .do(onError: {
-                log.error($0)
-            })
-            .retry()
             .subscribe().disposed(by: disposeBag)
     }
     
@@ -151,7 +147,7 @@ private extension DirectiveSequencer {
         
         handleDirectiveSubject.asObserver()
             .observeOn(handleDirectiveScheduler)
-            .do(onNext: { [weak self] directive in
+            .subscribe(onNext: { [weak self] directive in
                 guard let self = self else { return }
                 guard let handler = self.directiveHandleInfos[directive.header.type] else {
                     log.error("No handler registered \(directive.header.messageId)")
@@ -173,10 +169,6 @@ private extension DirectiveSequencer {
                         log.error(error)
                     }
                 }
-            }, onError: {
-                log.error($0)
-            })
-            .retry()
-            .subscribe().disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
     }
 }
