@@ -21,7 +21,7 @@
 import Foundation
 
 struct PlayStack {
-    private var stack = [(property: PlaySyncProperty, info: PlaySyncInfo)]()
+    private var stack = [(property: PlaySyncProperty, play: PlaySyncInfo)]()
     
     var multiLayerSynced: Bool {
         stack
@@ -31,13 +31,13 @@ struct PlayStack {
     }
     var playServiceIds: [String] {
         stack
-            .map { $0.info.playServiceId }
+            .map { $0.play.playServiceId }
             .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
     }
     
     subscript(property: PlaySyncProperty) -> PlaySyncInfo? {
         get {
-            return stack.first { $0.property == property }?.info
+            return stack.first { $0.property == property }?.play
         }
         set {
             stack.removeAll { $0.property == property }
@@ -49,7 +49,7 @@ struct PlayStack {
     }
     
     func playGroup(dialogRequestId: String) -> [PlaySyncProperty] {
-        return stack.filter { $0.info.dialogRequestId == dialogRequestId }.map { $0.property }
+        return stack.filter { $0.play.dialogRequestId == dialogRequestId }.map { $0.property }
     }
     
     func playGroup(layerType: PlaySyncProperty.LayerType, dialogRequestId: String) -> [PlaySyncProperty] {
@@ -58,7 +58,7 @@ struct PlayStack {
     
     func previousPlayGroup(layerType: PlaySyncProperty.LayerType, dialogRequestId: String) -> [PlaySyncProperty] {
         stack
-            .filter { $0.info.dialogRequestId != dialogRequestId }
+            .filter { $0.play.dialogRequestId != dialogRequestId }
             .filter { $0.property.layerType != layerType }
             .map { $0.property }
     }

@@ -77,12 +77,12 @@ public extension PlaySyncManager {
     func endPlay(property: PlaySyncProperty) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let info = self.playStack[property] else { return }
+            guard let play = self.playStack[property] else { return }
             
-            log.debug("\(property) \(info.playServiceId)")
+            log.debug("\(property) \(play.playServiceId)")
             
             // Set timers
-            let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: info.dialogRequestId)
+            let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: play.dialogRequestId)
             log.debug("Start layer timer \(playGroup)")
             playGroup.forEach {
                 guard let duration = self.playStack[$0]?.duration else { return }
@@ -127,15 +127,15 @@ public extension PlaySyncManager {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.playContextTimers[property] != nil else { return }
-            guard let info = self.playStack[property] else { return }
+            guard let play = self.playStack[property] else { return }
             
-            log.debug("\(property) \(info.duration)")
+            log.debug("\(property) \(play.duration)")
             
             // Cancel timers
             self.removeTimer(property: property)
 
             // Start timers
-            self.addTimer(property: property, duration: info.duration)
+            self.addTimer(property: property, duration: play.duration)
         }
     }
     
@@ -171,14 +171,15 @@ private extension PlaySyncManager {
         // TODO: Call layer.
         playStack
             .previousPlayGroup(layerType: property.layerType, dialogRequestId: dialogRequestId)
-            .filter { $0.layerType != .media }
+            .filter { $0.layerType != .media || ($0.layerType == property.layerType) }
+            .filter { $0.contextType == .display && property.contextType == .display }
             .forEach { popFromPlayStack(property: $0) }
         
         playStack[property] = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, duration: duration)
     }
     
     func popFromPlayStack(property: PlaySyncProperty) {
-        guard let info = playStack[property] else { return }
+        guard let play = playStack[property] else { return }
         
         // Cancel timers
         removeTimer(property: property)
@@ -186,7 +187,7 @@ private extension PlaySyncManager {
         playStack[property] = nil
         
         delegates.notify { (delegate) in
-            delegate.playSyncDidRelease(property: property, dialogRequestId: info.dialogRequestId)
+            delegate.playSyncDidRelease(property: property, dialogRequestId: play.dialogRequestId)
         }
     }
     
