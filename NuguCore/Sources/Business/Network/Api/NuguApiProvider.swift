@@ -29,6 +29,7 @@ class NuguApiProvider: NSObject {
     private var disposeBag = DisposeBag()
     private var sessionConfig: URLSessionConfiguration
     private let sessionQueue = OperationQueue()
+    private let processorQueue = DispatchQueue(label: "com.skt.Romaine.nugu_api_provider.processor")
     private lazy var session: URLSession = URLSession(configuration: sessionConfig,
                                                       delegate: self,
                                                       delegateQueue: sessionQueue)
@@ -101,38 +102,40 @@ class NuguApiProvider: NSObject {
         var error: Error?
         
         return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
+            // reset error
+            error = nil
             let disposable = Disposables.create()
             guard let self = self else { return disposable }
             
-            // reset error
-            error = nil
-            
-            // enable client side load balance and find new resource server for directive and event both.
-            self.isCSLBEnabled = true
-            
-            guard let resourceServerUrl = self.url else {
-                single(.error(NetworkError.noSuitableResourceServer))
-                return disposable
-            }
-            
-            if self.serverSideEventProcessor == nil {
-                self.serverSideEventProcessor = ServerSideEventProcessor()
+            self.processorQueue.async {
+                // enable client side load balance and find new resource server for directive and event both.
+                self.isCSLBEnabled = true
                 
-                // connect downstream.
-                guard let downstreamUrl = URL(string: resourceServerUrl+"/"+NuguApi.directives.path) else {
-                    log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.directives.path)")
+                guard let resourceServerUrl = self.url else {
                     single(.error(NetworkError.noSuitableResourceServer))
-                    return disposable
+                    return
                 }
                 
-                var downstreamRequest = URLRequest(url: downstreamUrl, cachePolicy: .useProtocolCachePolicy, timeoutInterval: Double.infinity)
-                downstreamRequest.httpMethod = NuguApi.directives.method.rawValue
-                downstreamRequest.allHTTPHeaderFields = NuguApi.directives.header
-                self.session.dataTask(with: downstreamRequest).resume()
-                log.debug("directive request header:\n\(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
+                if self.serverSideEventProcessor == nil {
+                    self.serverSideEventProcessor = ServerSideEventProcessor()
+                    
+                    // connect downstream.
+                    guard let downstreamUrl = URL(string: resourceServerUrl+"/"+NuguApi.directives.path) else {
+                        log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.directives.path)")
+                        single(.error(NetworkError.noSuitableResourceServer))
+                        return
+                    }
+                    
+                    var downstreamRequest = URLRequest(url: downstreamUrl, cachePolicy: .useProtocolCachePolicy, timeoutInterval: Double.infinity)
+                    downstreamRequest.httpMethod = NuguApi.directives.method.rawValue
+                    downstreamRequest.allHTTPHeaderFields = NuguApi.directives.header
+                    self.session.dataTask(with: downstreamRequest).resume()
+                    log.debug("directive request header:\n\(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
+                }
+                
+                single(.success(self.serverSideEventProcessor!.subject))
             }
             
-            single(.success(self.serverSideEventProcessor!.subject))
             return disposable
         }
         .asObservable()
@@ -148,11 +151,13 @@ class NuguApiProvider: NSObject {
         .do(onError: {
             error = $0
         }, onDispose: { [weak self] in
-            self?.self.serverSideEventProcessor = nil
-
-            if error == nil {
-                self?.isCSLBEnabled = false
-                self?.url = NuguServerInfo.resourceServerAddress
+            self?.processorQueue.async {
+                self?.serverSideEventProcessor = nil
+                
+                if error == nil {
+                    self?.isCSLBEnabled = false
+                    self?.url = NuguServerInfo.resourceServerAddress
+                }
             }
         })
         .share()
@@ -184,35 +189,37 @@ extension NuguApiProvider {
         
         return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
             let disposable = Disposables.create()
-            
             guard let self = self else { return disposable }
-            guard let resourceServerUrl = self.url else {
-                single(.error(NetworkError.noSuitableResourceServer))
-                return disposable
+            
+            self.processorQueue.async {
+                guard let resourceServerUrl = self.url else {
+                    single(.error(NetworkError.noSuitableResourceServer))
+                    return
+                }
+                
+                guard let urlComponent = URLComponents(string: resourceServerUrl+"/"+NuguApi.events.path),
+                    let url = urlComponent.url else {
+                        log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.events.path)")
+                        single(.error(NetworkError.badRequest))
+                        return
+                }
+                
+                var streamRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: self.requestTimeout)
+                streamRequest.httpMethod = NuguApi.events.method.rawValue
+                streamRequest.allHTTPHeaderFields = NuguApi.events.header
+                streamRequest.allHTTPHeaderFields?[HTTPConst.contentTypeKey] = HTTPConst.eventContentTypePrefix+boundary
+                
+                log.debug("request url: \(url)")
+                log.debug("request event header: \(streamRequest.allHTTPHeaderFields ?? [:])")
+                
+                uploadTask = self.session.uploadTask(withStreamedRequest: streamRequest)
+                uploadTask.resume()
+                
+                let eventResponse = EventResponseProcessor(inputStream: inputStream)
+                self.eventResponseProcessors[uploadTask] = eventResponse
+                
+                single(.success(eventResponse.subject))
             }
-            
-            guard let urlComponent = URLComponents(string: resourceServerUrl+"/"+NuguApi.events.path),
-                let url = urlComponent.url else {
-                    log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.events.path)")
-                    single(.error(NetworkError.badRequest))
-                    return disposable
-            }
-            
-            var streamRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: self.requestTimeout)
-            streamRequest.httpMethod = NuguApi.events.method.rawValue
-            streamRequest.allHTTPHeaderFields = NuguApi.events.header
-            streamRequest.allHTTPHeaderFields?[HTTPConst.contentTypeKey] = HTTPConst.eventContentTypePrefix+boundary
-            
-            log.debug("request url: \(url)")
-            log.debug("request event header: \(streamRequest.allHTTPHeaderFields ?? [:])")
-            
-            uploadTask = self.session.uploadTask(withStreamedRequest: streamRequest)
-            uploadTask.resume()
-
-            let eventResponse = EventResponseProcessor(inputStream: inputStream)
-            self.eventResponseProcessors[uploadTask] = eventResponse
-            
-            single(.success(eventResponse.subject))
             return disposable
         }
         .asObservable()
@@ -321,7 +328,9 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         defer {
-            eventResponseProcessors.keys.contains(task) ? (eventResponseProcessors[task] = nil) : (serverSideEventProcessor = nil)
+            processorQueue.async { [weak self] in
+                self?.eventResponseProcessors.keys.contains(task) == true ? (self?.eventResponseProcessors[task] = nil) : (self?.serverSideEventProcessor = nil)
+            }
         }
         
         let processor: MultiPartProcessable? = eventResponseProcessors[task] ?? serverSideEventProcessor

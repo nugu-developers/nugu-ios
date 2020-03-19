@@ -160,7 +160,10 @@ public extension StreamDataRouter {
 // MARK: - private
 extension StreamDataRouter {
     /**
-     Preprocess directive and Call delegate's method and handler closure.
+     Send directive or attachment to `DirectiveSequencer` and Call closure
+     
+     Multiple Directives can be delivered at once.
+     But we can process every single directive separately using this method
      */
     private func notifyMessage(with part: MultiPartParser.Part, completion: ((StreamDataState) -> Void)? = nil) {
         if let contentType = part.header["Content-Type"], contentType.contains("application/json") {

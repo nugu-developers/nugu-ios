@@ -82,17 +82,23 @@ private extension ServerSideEventReceiver {
                 guard (error as? NetworkError) != NetworkError.authError else {
                     return Observable.error(error)
                 }
-                
+
+                // if server policy does not exist, get it using `policies` api.
                 guard 0 < self.serverPolicies.count else {
-                    // if server policy does not exist, get it using `policies` api.
-                    let waitTime = (error as? NetworkError) == .noSuitableResourceServer ? 0 : Int.random(in: 0...(30*index))
+                    // The more try attempt, the more time to wait. But It is limited 180 seconds.
+                    let waitTime = Int.random(in: 0...min(30*index, 180))
+                    log.debug("retry \(waitTime) seconds later.")
                     return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                         .take(1)
                         .flatMap { _ in self.apiProvider.policies }
+                        .map { $0 as Policy? }
+                        .catchError { _ in Observable<Policy?>.just(nil) }
                         .map {
-                            self.serverPolicies = $0.serverPolicies
-                            let policy = self.serverPolicies.removeFirst()
-                            self.apiProvider.url = "https://\(policy.hostname):\(policy.port)"
+                            guard let networkPolicies = $0 else { return index }
+
+                            self.serverPolicies = networkPolicies.serverPolicies
+                            let currentPolicy = self.serverPolicies.removeFirst()
+                            self.apiProvider.url = "https://\(currentPolicy.hostname):\(currentPolicy.port)"
                             
                             return index
                         }
