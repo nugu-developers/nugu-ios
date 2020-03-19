@@ -88,7 +88,7 @@ public extension StreamDataRouter {
      This method is for the event which is not related attachment.
      */
     func sendEvent(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)? = nil) {
-        sendStream(event: event) { [weak self] result in
+        sendStream(event) { [weak self] result in
             // close stream automatically.
             if case .sent = result {
                 self?.eventSenders[event.header.dialogRequestId]?.finish()
@@ -104,7 +104,7 @@ public extension StreamDataRouter {
      Event must be sent before sending attachment.
      And It cannot be sent twice.
      */
-    func sendStream(event: Upstream.Event, completion: ((StreamDataState) -> Void)? = nil) {
+    func sendStream(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)? = nil) {
         let boundary = HTTPConst.boundaryPrefix + event.header.dialogRequestId
         let eventSender = EventSender(boundary: boundary)
         eventSenders[event.header.dialogRequestId] = eventSender
@@ -145,7 +145,7 @@ public extension StreamDataRouter {
      It won't emit received or finished state on completion.
      because those states will be emitted to event-reqeust's completion.
      */
-    func sendStream(attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
+    func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[attachment.header.dialogRequestId] else {
             completion?(.error(EventSenderError.noEventRequested))
             delegate?.streamDataDidSend(attachment: attachment, error: EventSenderError.noEventRequested)
