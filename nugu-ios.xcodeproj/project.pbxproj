@@ -331,6 +331,7 @@
 		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
 		7547B703240CD5C200C57A34 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */; };
+		7E1FA2B224244F79006B8BA9 /* BlockingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EB6D0DF238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB6D0DE238B755A00E65FDC /* DownstreamDataTimeoutPreprocessor.swift */; };
@@ -847,6 +848,7 @@
 		739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiverState.swift; sourceTree = "<group>"; };
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
 		7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
+		7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockingPolicy.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
@@ -1469,6 +1471,7 @@
 				1FFFF2912375703000C9A177 /* DirectiveSequenceable.swift */,
 				1FFFF2942375703000C9A177 /* HandleDirectiveError.swift */,
 				1FFFF2952375703000C9A177 /* DirectiveTypeInfoError.swift */,
+				7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */,
 			);
 			path = Directive;
 			sourceTree = "<group>";
@@ -2925,6 +2928,7 @@
 				7315303F23E11EDF00F843C3 /* DirectiveTypeInfoError.swift in Sources */,
 				1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */,
 				1FFFF3CD2375707100C9A177 /* NuguConfiguration.swift in Sources */,
+				7E1FA2B224244F79006B8BA9 /* BlockingPolicy.swift in Sources */,
 				7315303E23E11EDF00F843C3 /* HandleDirectiveError.swift in Sources */,
 				7315301723E11EDF00F843C3 /* MediaPlayerState.swift in Sources */,
 				7315302E23E11EDF00F843C3 /* FocusDelegate.swift in Sources */,
