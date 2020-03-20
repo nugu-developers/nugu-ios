@@ -121,18 +121,15 @@ public extension StreamDataRouter {
         
         // request event as multi part stream
         nuguApiProvider.events(boundary: boundary, inputStream: eventSender.streams.input)
-            .enumerated()
-            .subscribe(onNext: { [weak self] (index, part) in
-                if index == 0 {
-                    self?.delegate?.streamDataDidSend(event: event, error: nil)
-                }
+            .subscribe(onNext: { [weak self] (part) in
                 self?.notifyMessage(with: part, completion: completion)
             }, onError: { [weak self] (error) in
                 log.error("error: \(error)")
                 completion?(.error(error))
                 self?.delegate?.streamDataDidSend(event: event, error: error)
-            }, onCompleted: {
+            }, onCompleted: { [weak self] in
                 completion?(.finished)
+                self?.delegate?.streamDataDidSend(event: event, error: nil)
             }, onDisposed: { [weak self] in
                 self?.eventSenders[event.header.dialogRequestId] = nil
             })
