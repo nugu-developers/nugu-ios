@@ -1,9 +1,9 @@
 //
-//  DownstreamDataPreprocessable.swift
+//  StreamDataDelegate.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 2019/11/25.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by MinChul Lee on 2020/03/18.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@
 
 import Foundation
 
-public protocol DownstreamDataPreprocessable {
-    func preprocess<T>(message: T) -> T? where T: DownstreamMessageable
+public protocol StreamDataDelegate: class {
+    func streamDataDidReceive(direcive: Downstream.Directive)
+    func streamDataDidReceive(attachment: Downstream.Attachment)
+    func streamDataDidSend(event: Upstream.Event, error: Error?)
+    func streamDataDidSend(attachment: Upstream.Attachment, error: Error?)
 }
