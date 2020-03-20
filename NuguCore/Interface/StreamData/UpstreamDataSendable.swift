@@ -25,12 +25,12 @@ public protocol UpstreamDataSendable {
     /**
      Send a event.
      */
-    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)?)
+    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((StreamDataState) -> Void)?)
 
     /**
      Send a event and keep the stream for future attachment
      */
-    func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<StreamDataResult, Error>) -> Void)?)
+    func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((StreamDataState) -> Void)?)
     
     /**
      Send a attachment using the stream set before.
@@ -38,19 +38,10 @@ public protocol UpstreamDataSendable {
      Every event and attachment have `DialogRequestId`.
      This method finds the suitable stream using that id
      */
-    func sendStream(upstreamAttachment: UpstreamAttachment, completion: ((Result<Void, Error>) -> Void)?)
-    
-    /**
-     Send a event to report crash
-     */
-    func send(crashReports: [CrashReport])
+    func sendStream(upstreamAttachment: UpstreamAttachment, completion: ((StreamDataState) -> Void)?)
 }
 
 public extension UpstreamDataSendable {
-    func sendCrashReport(error: Error, detail: String = "") {
-        let crashReport = CrashReport(level: .error, message: error.localizedDescription, detail: detail)
-        send(crashReports: [crashReport])
-    }
     func sendEvent(upstreamEventMessage: UpstreamEventMessage) {
         sendEvent(upstreamEventMessage: upstreamEventMessage, completion: nil)
     }

@@ -505,11 +505,18 @@ private extension ASRAgent {
                 agent: self,
                 dialogRequestId: asrRequest.dialogRequestId,
                 contextPayload: asrRequest.contextPayload
-            )) { [weak self] (result) in
-                guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
-
-                if case .failure = result {
-                    self?.asrResult = .error(ASRError.recognizeFailed)
+            )) { [weak self] (state) in
+                self?.asrDispatchQueue.async { [weak self] in
+                    guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
+                    
+                    switch state {
+                    case .finished:
+                        self?.asrState = .idle
+                    case .error(let error):
+                        self?.asrResult = .error(error)
+                    default:
+                        break
+                    }
                 }
         }
     }
@@ -539,17 +546,7 @@ private extension ASRAgent {
             messageId: TimeUUID().hexString
         )
         let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), type: "audio/speex", seq: attachmentSeq, isEnd: true)
-        upstreamDataSender.sendStream(upstreamAttachment: attachment) { [weak self] result in
-            guard let self = self else { return }
-            guard asrRequest.dialogRequestId == self.asrRequest?.dialogRequestId else { return }
-            
-            switch result {
-            case .success:
-                self.asrState = .idle
-            case .failure(let error):
-                self.asrResult = .error(error)
-            }
-        }
+        upstreamDataSender.sendStream(upstreamAttachment: attachment)
     }
 }
 
