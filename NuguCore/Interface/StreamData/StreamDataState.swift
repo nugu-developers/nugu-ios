@@ -1,5 +1,5 @@
 //
-//  StreamDataResult.swift
+//  StreamDataState.swift
 //  NuguCore
 //
 //  Created by childc on 2020/03/12.
@@ -19,8 +19,27 @@
 
 import Foundation
 
-public enum StreamDataResult {
+/**
+ State of Stream data.
+ */
+public enum StreamDataState {
+    /**
+     Data sent
+     */
     case sent
+    
+    /**
+     Response received
+     */
     case received(part: Downstream.Directive)
+    
+    /**
+     All of responses are received and stream is closed.
+     */
     case finished
+    
+    /**
+     Error occured
+     */
+    case error(_ error: Error)
 }
