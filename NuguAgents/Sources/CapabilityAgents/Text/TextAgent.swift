@@ -125,7 +125,7 @@ private extension TextAgent {
                 )
                 
                 self.upstreamDataSender.sendEvent(
-                    upstreamEventMessage: Event(
+                    Event(
                         typeInfo: .textInput(
                             text: textRequest.text,
                             expectSpeech: textRequest.expectSpeech

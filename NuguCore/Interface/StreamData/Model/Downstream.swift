@@ -20,12 +20,8 @@
 
 import Foundation
 
-public protocol DownstreamMessageable {
-    var header: Downstream.Header { get }
-}
-
 public enum Downstream {
-    public struct Directive: DownstreamMessageable, Decodable {
+    public struct Directive: Decodable {
         public let header: Header
         public let payload: String
         
@@ -35,7 +31,7 @@ public enum Downstream {
         }
     }
     
-    public struct Attachment: DownstreamMessageable, Decodable {
+    public struct Attachment: Decodable {
         public let header: Header
         public let seq: Int
         public let content: Data

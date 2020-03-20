@@ -37,23 +37,19 @@ public class DirectiveSequencer: DirectiveSequenceable {
 
 // MARK: - DirectiveSequenceable
 
-extension DirectiveSequencer {
-    public func add(directiveHandleInfos: DirectiveHandleInfos) {
+public extension DirectiveSequencer {
+    func add(directiveHandleInfos: DirectiveHandleInfos) {
         log.debug("add directive handles: \(directiveHandleInfos)")
         self.directiveHandleInfos.merge(directiveHandleInfos)
     }
     
-    public func remove(directiveHandleInfos: DirectiveHandleInfos) {
+    func remove(directiveHandleInfos: DirectiveHandleInfos) {
         log.debug("remove directive handles: \(directiveHandleInfos)")
         directiveHandleInfos.keys.forEach { key in
             self.directiveHandleInfos.removeValue(forKey: key)
         }
     }
-}
-
-// MARK: - DownstreamDataDelegate
-
-public extension DirectiveSequencer {
+    
     func processDirective(_ directive: Downstream.Directive) {
         log.info("\(directive.header.messageId)")
         guard directiveHandleInfos[directive.header.type] != nil else {
