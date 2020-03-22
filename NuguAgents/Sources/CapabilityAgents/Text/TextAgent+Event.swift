@@ -29,7 +29,7 @@ extension TextAgent {
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case textInput(text: String, expectSpeech: ASRExpectSpeech?)
+            case textInput(text: String, token: String?, expectSpeech: ASRExpectSpeech?)
         }
     }
 }
@@ -40,9 +40,10 @@ extension TextAgent.Event: Eventable {
     public var payload: [String: Any] {
         var payload: [String: Any?]
         switch typeInfo {
-        case .textInput(let text, let expectSpeech):
+        case .textInput(let text, let token, let expectSpeech):
             payload = [
                 "text": text,
+                "token": token,
                 "sessionId": expectSpeech?.sessionId,
                 "playServiceId": expectSpeech?.playServiceId,
                 "property": expectSpeech?.property,

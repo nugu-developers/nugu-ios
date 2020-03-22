@@ -172,7 +172,7 @@ private extension MainViewController {
         NuguCentralManager.shared.client.keywordDetector.delegate = self
         NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
         NuguCentralManager.shared.client.asrAgent.add(delegate: self)
-        NuguCentralManager.shared.client.textAgent.add(delegate: self)
+        NuguCentralManager.shared.client.textAgent.delegate = self
         NuguCentralManager.shared.client.displayAgent.add(delegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
@@ -562,19 +562,12 @@ extension MainViewController: ASRAgentDelegate {
 // MARK: - TextAgentDelegate
 
 extension MainViewController: TextAgentDelegate {
-    func textAgentDidStreamStateChanged(state: StreamDataState, dialogRequestId: String) {
-        switch state {
-        case .finished:
-            DispatchQueue.main.async {
-                ASRBeepPlayer.shared.beep(type: .success)
-            }
-        case .error:
-            DispatchQueue.main.async {
-                ASRBeepPlayer.shared.beep(type: .fail)
-            }
-        default:
-            break
-        }
+    func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool {
+        return true
+    }
+    
+    func textAgentDidRequestExpectSpeech() -> ASRExpectSpeech? {
+        return NuguCentralManager.shared.client.asrAgent.expectSpeech
     }
 }
 

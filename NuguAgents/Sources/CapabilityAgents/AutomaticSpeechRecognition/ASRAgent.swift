@@ -67,7 +67,7 @@ public final class ASRAgent: ASRAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != asrState {
                 asrDelegates.notify { delegate in
-                    delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+                    delegate.asrAgentDidChange(state: asrState, expectSpeech: expectSpeech)
                 }
             }
         }
@@ -86,18 +86,18 @@ public final class ASRAgent: ASRAgentProtocol {
             switch asrResult {
             case .none:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
-                currentExpectSpeech = nil
+                expectSpeech = nil
             case .partial:
                 break
             case .complete:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
-                currentExpectSpeech = nil
+                expectSpeech = nil
             case .cancel:
-                currentExpectSpeech = nil
+                expectSpeech = nil
                 asrState = .idle
                 sendEvent(asrRequest: asrRequest, type: .stopRecognize)
             case .error(let error):
-                currentExpectSpeech = nil
+                expectSpeech = nil
                 asrState = .idle
                 switch error {
                 case NetworkError.timeout:
@@ -123,12 +123,12 @@ public final class ASRAgent: ASRAgentProtocol {
     public let asrEncoding: ASREncoding
     private var asrRequest: ASRRequest?
     private var attachmentSeq: Int32 = 0
-    private var currentExpectSpeech: ASRExpectSpeech? {
+    public private(set) var expectSpeech: ASRExpectSpeech? {
         didSet {
-            guard oldValue != currentExpectSpeech else { return }
+            guard oldValue != expectSpeech else { return }
             
             asrDelegates.notify { delegate in
-                delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+                delegate.asrAgentDidChange(state: asrState, expectSpeech: expectSpeech)
             }
         }
     }
@@ -232,7 +232,7 @@ public extension ASRAgent {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             // TODO: cancelAssociation = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
-            self.currentExpectSpeech = nil
+            self.expectSpeech = nil
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
                 return
@@ -360,7 +360,7 @@ private extension ASRAgent {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
                     }
                     
-                    self?.currentExpectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: data)
+                    self?.expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: data)
                 }
             )
         }
@@ -372,7 +372,7 @@ private extension ASRAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard self.currentExpectSpeech != nil else {
+                    guard self.expectSpeech != nil else {
                         throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
                     }
                     switch self.asrState {
@@ -442,7 +442,7 @@ private extension ASRAgent {
             Event(
                 typeInfo: type,
                 encoding: asrEncoding,
-                expectSpeech: currentExpectSpeech
+                expectSpeech: expectSpeech
             ).makeEventMessage(
                 agent: self,
                 dialogRequestId: asrRequest.dialogRequestId,
@@ -479,7 +479,7 @@ private extension ASRAgent {
         attachmentSeq = 0
         
         var timeout: Int {
-            guard let expectTimeout = currentExpectSpeech?.timeoutInMilliseconds else {
+            guard let expectTimeout = expectSpeech?.timeoutInMilliseconds else {
                 return ASRConst.timeout
             }
             
@@ -500,7 +500,7 @@ private extension ASRAgent {
             Event(
                 typeInfo: .recognize(wakeUpInfo: nil),
                 encoding: asrEncoding,
-                expectSpeech: currentExpectSpeech
+                expectSpeech: expectSpeech
             ).makeEventMessage(
                 agent: self,
                 dialogRequestId: asrRequest.dialogRequestId,
