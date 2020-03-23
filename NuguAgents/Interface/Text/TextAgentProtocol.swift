@@ -35,6 +35,8 @@ public protocol TextAgentProtocol: CapabilityAgentable {
     @discardableResult func requestTextInput(text: String, completion: ((StreamDataState) -> Void)?) -> String
 }
 
+// MARK: - Default
+
 public extension TextAgentProtocol {
     @discardableResult func requestTextInput(text: String) -> String {
         return requestTextInput(text: text, completion: nil)

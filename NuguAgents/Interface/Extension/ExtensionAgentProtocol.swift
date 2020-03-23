@@ -39,6 +39,8 @@ public protocol ExtensionAgentProtocol: CapabilityAgentable {
     @discardableResult func requestCommand(data: [String: Any], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
 }
 
+// MARK: - Default
+
 public extension ExtensionAgentProtocol {
     @discardableResult func requestCommand(data: [String: Any], playServiceId: String) -> String {
         return requestCommand(data: data, playServiceId: playServiceId, completion: nil)

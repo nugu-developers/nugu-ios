@@ -53,6 +53,8 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
     func stopRecognition()
 }
 
+// MARK: - Default
+
 public extension ASRAgentProtocol {
     @discardableResult func startRecognition(initiator: ASRInitiator) -> String {
         return startRecognition(initiator: initiator, completion: nil)

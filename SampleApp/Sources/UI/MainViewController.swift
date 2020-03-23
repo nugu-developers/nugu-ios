@@ -650,7 +650,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 // MARK: - AudioPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerAgentDelegate {
-    func audioPlayerAgentDidChange(state: AudioPlayerState) {
+    func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
         switch state {
         case .paused, .playing:
             NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()

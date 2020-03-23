@@ -277,7 +277,7 @@ extension NuguDisplayPlayerController: AudioPlayerDisplayDelegate {
 // MARK: - AudioPlayerAgentDelegate
 
 extension NuguDisplayPlayerController: AudioPlayerAgentDelegate {
-    func audioPlayerAgentDidChange(state: AudioPlayerState) {
+    func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
         DispatchQueue.main.async { [weak self] in
             self?.update(newState: state)
         }
