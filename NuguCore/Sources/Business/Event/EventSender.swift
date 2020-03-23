@@ -72,7 +72,7 @@ class EventSender: NSObject {
      
      - Parameter event: UpstreamEventMessage you want to send.
      */
-    func send(_ event: UpstreamEventMessage) -> Completable {
+    func send(_ event: Upstream.Event) -> Completable {
         return Completable.create { [weak self] (complete) -> Disposable in
             let disposable = Disposables.create()
 
@@ -100,7 +100,7 @@ class EventSender: NSObject {
     /**
      Send attachment through pre-opened stream
      */
-    public func send(_ attachment: UpstreamAttachment) -> Completable {
+    public func send(_ attachment: Upstream.Attachment) -> Completable {
         streamStateSubject
             .filter { $0 }
             .take(1)
@@ -191,7 +191,7 @@ class EventSender: NSObject {
 // MARK: - Multipart
 
 private extension EventSender {
-    func makeMultipartData(_ event: UpstreamEventMessage) -> Data {
+    func makeMultipartData(_ event: Upstream.Event) -> Data {
         let headerLines = ["--\(boundary)",
             "Content-Disposition: form-data; name=\"event\"",
             "Content-Type: application/json",
@@ -209,7 +209,7 @@ private extension EventSender {
         return partData
     }
     
-    func makeMultipartData(_ attachment: UpstreamAttachment) -> Data {
+    func makeMultipartData(_ attachment: Upstream.Attachment) -> Data {
         let headerLines = [
             "--\(boundary)",
             "Content-Disposition: form-data; name=\"attachment\"; filename=\"\(attachment.seq);\(attachment.isEnd ? "end" : "continued")\"",
