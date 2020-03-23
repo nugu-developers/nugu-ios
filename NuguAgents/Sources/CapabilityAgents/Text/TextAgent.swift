@@ -99,7 +99,7 @@ private extension TextAgent {
                     }
                     let payload = try JSONDecoder().decode(TextAgentSourceItem.self, from: data)
                     
-                    self.sendTextInput(text: payload.text, token: payload.token, expectSpeech: nil)
+                    self.sendTextInput(text: payload.text, token: payload.token, expectSpeech: nil, directive: directive)
                 }
                 
                 completion(result)
@@ -111,7 +111,7 @@ private extension TextAgent {
 // MARK: - Private(Event)
 
 private extension TextAgent {
-    func sendTextInput(text: String, token: String?, expectSpeech: ASRExpectSpeech?) {
+    func sendTextInput(text: String, token: String?, expectSpeech: ASRExpectSpeech? = nil, directive: Downstream.Directive? = nil) {
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -125,17 +125,14 @@ private extension TextAgent {
                 )
                 
                 self.upstreamDataSender.sendEvent(
-                    Event(
-                        typeInfo: .textInput(
-                            text: textRequest.text,
-                            expectSpeech: textRequest.expectSpeech
-                        )
-                    ).makeEventMessage(agent: self)) { [weak self] state in
-                        guard let self = self else { return }
-
-                        self.delegates.notify({ (delegate) in
-                            delegate.textAgentDidStreamStateChanged(state: state, dialogRequestId: textRequest.dialogRequestId)
-                        })
+                    Event(typeInfo: .textInput(text: textRequest.text, expectSpeech: textRequest.expectSpeech))
+                        .makeEventMessage(agent: self, referrerDialogRequestId: directive?.header.dialogRequestId)
+                ) { [weak self] state in
+                    guard let self = self else { return }
+                    
+                    self.delegates.notify({ (delegate) in
+                        delegate.textAgentDidStreamStateChanged(state: state, dialogRequestId: textRequest.dialogRequestId)
+                    })
                 }
             }
         }
