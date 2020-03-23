@@ -24,17 +24,4 @@ struct AudioPlayerSettingsTemplate: Decodable {
     let favorite: Bool?
     let `repeat`: AudioPlayerDisplayRepeat?
     let shuffle: Bool?
-    
-    enum CodingKeys: String, CodingKey {
-        case favorite
-        case `repeat`
-        case shuffle
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        favorite = try? container.decodeIfPresent(Bool.self, forKey: .favorite)
-        `repeat` = try? container.decodeIfPresent(AudioPlayerDisplayRepeat.self, forKey: .repeat)
-        shuffle = try? container.decodeIfPresent(Bool.self, forKey: .shuffle)
-    }
 }

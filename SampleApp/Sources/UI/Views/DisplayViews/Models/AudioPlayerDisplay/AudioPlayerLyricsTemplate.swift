@@ -23,32 +23,8 @@ struct AudioPlayerLyricsTemplate: Decodable {
     let lyricsType: String
     let lyricsInfoList: [LyricsInfo]
     
-    enum CodingKeys: String, CodingKey {
-        case title
-        case lyricsType
-        case lyricsInfoList
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        title = try container.decode(String.self, forKey: .title)
-        lyricsType = try container.decode(String.self, forKey: .lyricsType)
-        lyricsInfoList = try container.decode([LyricsInfo].self, forKey: .lyricsInfoList)
-    }
-    
     struct LyricsInfo: Decodable {
         let time: Int
         let text: String
-        
-        enum CodingKeys: String, CodingKey {
-            case time
-            case text
-        }
-        
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            time = try container.decode(Int.self, forKey: .time)
-            text = try container.decode(String.self, forKey: .text)
-        }
     }
 }
