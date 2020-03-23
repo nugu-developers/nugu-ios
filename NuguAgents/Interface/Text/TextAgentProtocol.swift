@@ -32,5 +32,11 @@ public protocol TextAgentProtocol: CapabilityAgentable {
     ///   - text: The `text` to be recognized
     ///   - completion: The completion handler to call when the request is complete.
     /// - Returns: The dialogRequestId for request.
-    func requestTextInput(text: String, completion: ((StreamDataState) -> Void)?) -> String
+    @discardableResult func requestTextInput(text: String, completion: ((StreamDataState) -> Void)?) -> String
+}
+
+public extension TextAgentProtocol {
+    @discardableResult func requestTextInput(text: String) -> String {
+        return requestTextInput(text: text, completion: nil)
+    }
 }

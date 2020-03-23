@@ -113,9 +113,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 }
             }
             
-            asrDelegates.notify { (delegate) in
-                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.dialogRequestId)
-            }
+            asrRequest.completion?(asrResult, asrRequest.dialogRequestId)
         }
     }
     
@@ -182,16 +180,20 @@ public extension ASRAgent {
         asrDelegates.remove(delegate)
     }
     
-    func startRecognition(initiator: ASRInitiator = .user) {
+    @discardableResult func startRecognition(
+        initiator: ASRInitiator = .user,
+        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)? = nil
+    ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = audioStream.makeAudioStreamReader()
-        
+        let dialogRequestId = TimeUUID().hexString
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
             guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
                 log.warning("Not permitted in current state \(self.asrState)")
+                completion?(.cancel, dialogRequestId)
                 return
             }
             
@@ -201,13 +203,15 @@ public extension ASRAgent {
                 self.asrRequest = ASRRequest(
                     contextPayload: contextPayload,
                     reader: reader,
-                    dialogRequestId: TimeUUID().hexString,
-                    initiator: initiator
+                    dialogRequestId: dialogRequestId,
+                    initiator: initiator,
+                    completion: completion
                 )
                 
                 self.focusManager.requestFocus(channelDelegate: self)
             }
         }
+        return dialogRequestId
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -263,7 +267,7 @@ extension ASRAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Background 허용 안함.
-            case (_, let asrState) where asrState != .idle:
+            case _ where self.asrRequest != nil:
                 self.asrResult = .cancel
             default:
                 break

@@ -247,31 +247,68 @@ private extension MainViewController {
 private extension MainViewController {
     func presentVoiceChrome(initiator: ASRInitiator) {
         voiceChromeDismissWorkItem?.cancel()
-        NuguCentralManager.shared.startRecognize(initiator: initiator)
         
-        nuguVoiceChrome.removeFromSuperview()
-        nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
-        nuguVoiceChrome.onCloseButtonClick = { [weak self] in
-            self?.dismissVoiceChrome()
-        }
-        view.addSubview(nuguVoiceChrome)
-        
-        UIView.animate(withDuration: 0.3) { [weak self] in
+        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
-            self.nuguVoiceChrome.frame = CGRect(x: 0, y: self.view.frame.size.height - (NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight), width: self.view.frame.size.width, height: 256 + SampleApp.bottomSafeAreaHeight)
+            guard isGranted else {
+                log.error(SampleAppError.recordPermissionError)
+                return
+            }
+            NuguCentralManager.shared.localTTSAgent.stopLocalTTS()
+            NuguCentralManager.shared.client.asrAgent.startRecognition(initiator: initiator) { [weak self] (asrResult, _) in
+                self?.updateVoiceChrome(asrResult)
+            }
+            
+            self.nuguVoiceChrome.removeFromSuperview()
+            self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
+            self.nuguVoiceChrome.onCloseButtonClick = { [weak self] in
+                self?.dismissVoiceChrome()
+            }
+            self.view.addSubview(self.nuguVoiceChrome)
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                guard let self = self else { return }
+                self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
+            }
         }
     }
     
     func dismissVoiceChrome() {
         voiceChromeDismissWorkItem?.cancel()
-        NuguCentralManager.shared.stopRecognize()
+        NuguCentralManager.shared.client.asrAgent.stopRecognition()
         
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
-            self.nuguVoiceChrome.frame = CGRect(x: 0, y: self.view.frame.size.height + SampleApp.bottomSafeAreaHeight, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight)
+            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: self.nuguVoiceChrome.bounds.height)
         }, completion: { [weak self] _ in
             self?.nuguVoiceChrome.removeFromSuperview()
         })
+    }
+    
+    private func updateVoiceChrome(_ asrResult: ASRResult) {
+        switch asrResult {
+        case .complete(let text):
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.setRecognizedText(text: text)
+                ASRBeepPlayer.shared.beep(type: .success)
+            }
+        case .partial(let text):
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguVoiceChrome.setRecognizedText(text: text)
+            }
+        case .error(let error):
+            DispatchQueue.main.async { [weak self] in
+                switch error {
+                case ASRError.listenFailed:
+                    ASRBeepPlayer.shared.beep(type: .fail)
+                    self?.nuguVoiceChrome.changeState(state: .speakingError)
+                case ASRError.recognizeFailed:
+                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                default:
+                    ASRBeepPlayer.shared.beep(type: .fail)
+                }
+            }
+        default: break
+        }
     }
 }
 
@@ -528,33 +565,6 @@ extension MainViewController: ASRAgentDelegate {
             NuguCentralManager.shared.stopWakeUpDetector()
         default:
             break
-        }
-    }
-    
-    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        switch result {
-        case .complete(let text):
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.setRecognizedText(text: text)
-                ASRBeepPlayer.shared.beep(type: .success)
-            }
-        case .partial(let text):
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.setRecognizedText(text: text)
-            }
-        case .error(let error):
-            DispatchQueue.main.async { [weak self] in
-                switch error {
-                case ASRError.listenFailed:
-                    ASRBeepPlayer.shared.beep(type: .fail)
-                    self?.nuguVoiceChrome.changeState(state: .speakingError)
-                case ASRError.recognizeFailed:
-                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                default:
-                    ASRBeepPlayer.shared.beep(type: .fail)
-                }
-            }
-        default: break
         }
     }
 }
