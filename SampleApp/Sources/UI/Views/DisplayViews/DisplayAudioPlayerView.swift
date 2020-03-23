@@ -198,28 +198,26 @@ private extension DisplayAudioPlayerView {
     }
     
     @IBAction func favoriteButtonDidClick(_ button: UIButton) {
-        favoriteButton.isSelected = !favoriteButton.isSelected
         NuguCentralManager.shared.client.audioPlayerAgent.favorite(isOn: favoriteButton.isSelected)
+        favoriteButton.isSelected = !favoriteButton.isSelected
     }
     
     @IBAction func repeatButtonDidClick(_ button: UIButton) {
         guard let repeatMode = repeatMode else { return }
-        var changedRepeatMode: AudioPlayerDisplayRepeat
+        NuguCentralManager.shared.client.audioPlayerAgent.repeat(mode: repeatMode)
         switch repeatMode {
         case .all:
-            changedRepeatMode = AudioPlayerDisplayRepeat.one
+            self.repeatMode = AudioPlayerDisplayRepeat.one
         case .one:
-            changedRepeatMode = AudioPlayerDisplayRepeat.none
+            self.repeatMode = AudioPlayerDisplayRepeat.none
         case .none:
-            changedRepeatMode = AudioPlayerDisplayRepeat.all
+            self.repeatMode = AudioPlayerDisplayRepeat.all
         }
-        self.repeatMode = changedRepeatMode
-        NuguCentralManager.shared.client.audioPlayerAgent.repeat(mode: changedRepeatMode)
     }
     
     @IBAction func shuffleButtonDidClick(_ button: UIButton) {
-        shuffleButton.isSelected = !shuffleButton.isSelected
         NuguCentralManager.shared.client.audioPlayerAgent.shuffle(isOn: shuffleButton.isSelected)
+        shuffleButton.isSelected = !shuffleButton.isSelected
     }
 }
 

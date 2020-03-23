@@ -98,7 +98,7 @@
                                     </constraints>
                                 </imageView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="jgw-DZ-X1U" firstAttribute="top" secondItem="vQg-4e-67G" secondAttribute="top" id="6Qb-M4-lV2"/>
                                 <constraint firstItem="jgw-DZ-X1U" firstAttribute="centerX" secondItem="vQg-4e-67G" secondAttribute="centerX" id="T7Z-Aw-cAp"/>
@@ -204,7 +204,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="FL0-vc-VOd" secondAttribute="bottom" id="1bD-zk-qaq"/>
                         <constraint firstItem="FL0-vc-VOd" firstAttribute="leading" secondItem="OMR-Lr-pEC" secondAttribute="trailing" constant="20" id="JLo-bO-rfC"/>
