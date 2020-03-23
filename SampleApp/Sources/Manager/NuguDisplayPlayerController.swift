@@ -41,16 +41,22 @@ final class NuguDisplayPlayerController {
     
     private var renderingContext: AnyObject?
     
-    func use() {
-        // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
-        guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
-        NuguCentralManager.shared.nuguAudioPlayerDelegate = self
+    func nuguAudioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
+        DispatchQueue.main.async { [weak self] in
+            self?.update(newItem: template)
+        }
     }
     
-    func unuse() {
-        // MPNowPlayingInfoCenter ignores update when .mixWithOthers option is on
-        guard NuguAudioSessionManager.shared.supportMixWithOthersOption == false else { return }
-        NuguCentralManager.shared.nuguAudioPlayerDelegate = nil
+    func nuguAudioPlayerDisplayShouldClear() {
+        DispatchQueue.main.async { [weak self] in
+            self?.remove()
+        }
+    }
+    
+    func nuguAudioPlayerAgentDidChange(state: AudioPlayerState) {
+        DispatchQueue.main.async { [weak self] in
+            self?.update(newState: state)
+        }
     }
     
     func remove() {
@@ -247,27 +253,5 @@ private extension NuguDisplayPlayerController {
     func removeChangePlaybackPositionCommand() {
         MPRemoteCommandCenter.shared().changePlaybackPositionCommand.removeTarget(seekCommandTarget)
         seekCommandTarget = nil
-    }
-}
-
-// MARK: - NuguAudioPlayerAgentDelegate
-
-extension NuguDisplayPlayerController: NuguAudioPlayerAgentDelegate {
-    func nuguAudioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.update(newItem: template)
-        }
-    }
-    
-    func nuguAudioPlayerDisplayShouldClear() {
-        DispatchQueue.main.async { [weak self] in
-            self?.remove()
-        }
-    }
-    
-    func nuguAudioPlayerAgentDidChange(state: AudioPlayerState) {
-        DispatchQueue.main.async { [weak self] in
-            self?.update(newState: state)
-        }
     }
 }

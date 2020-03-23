@@ -31,7 +31,11 @@ final class NuguCentralManager {
     let client = NuguClient()
     let localTTSAgent: LocalTTSAgent
 
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController()
+    // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
+    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = {
+        return NuguAudioSessionManager.shared.supportMixWithOthersOption ? nil : NuguDisplayPlayerController()
+    }()
+    
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
             return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
@@ -52,8 +56,6 @@ final class NuguCentralManager {
 //            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
 //        }
 //    }
-    
-    weak var nuguAudioPlayerDelegate: NuguAudioPlayerAgentDelegate?
     
     private init() {
         // local tts agent

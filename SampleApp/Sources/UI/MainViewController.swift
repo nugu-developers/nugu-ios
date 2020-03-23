@@ -176,8 +176,6 @@ private extension MainViewController {
         NuguCentralManager.shared.client.displayAgent.add(delegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
-
-        NuguCentralManager.shared.displayPlayerController?.use()
     }
     
     /// Show nugu usage guide webpage after successful login process
@@ -638,12 +636,12 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool { return false }
     
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
-        NuguCentralManager.shared.nuguAudioPlayerDelegate?.nuguAudioPlayerDisplayDidRender(template: template)
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidRender(template: template)
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
-        NuguCentralManager.shared.nuguAudioPlayerDelegate?.nuguAudioPlayerDisplayShouldClear()
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayShouldClear()
         switch reason {
         case .timer:
             dismissDisplayAudioPlayerView()
@@ -664,7 +662,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState) {
-        NuguCentralManager.shared.nuguAudioPlayerDelegate?.nuguAudioPlayerAgentDidChange(state: state)
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerAgentDidChange(state: state)
         switch state {
         case .paused, .playing:
             NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
