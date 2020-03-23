@@ -614,7 +614,7 @@ private extension AudioPlayerAgent {
 private extension AudioPlayerAgent {
     func sendPlayEvent(media: AudioPlayerAgentMedia, typeInfo: PlayEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
         upstreamDataSender.sendEvent(
-            upstreamEventMessage: PlayEvent(
+            PlayEvent(
                 token: media.payload.audioItem.stream.token,
                 offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,
@@ -626,7 +626,7 @@ private extension AudioPlayerAgent {
     
     func sendSettingsEvent(playServiceId: String, typeInfo: SettingsEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
         upstreamDataSender.sendEvent(
-            upstreamEventMessage: SettingsEvent(
+            SettingsEvent(
                 playServiceId: playServiceId,
                 typeInfo: typeInfo
             ).makeEventMessage(agent: self),
@@ -636,7 +636,7 @@ private extension AudioPlayerAgent {
     
     func sendLyricsEvent(playServiceId: String, typeInfo: LyricsEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
         upstreamDataSender.sendEvent(
-            upstreamEventMessage: LyricsEvent(
+            LyricsEvent(
                 playServiceId: playServiceId,
                 typeInfo: typeInfo
             ).makeEventMessage(agent: self),

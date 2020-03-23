@@ -25,12 +25,12 @@ public protocol UpstreamDataSendable {
     /**
      Send a event.
      */
-    func sendEvent(upstreamEventMessage: UpstreamEventMessage, completion: ((StreamDataState) -> Void)?)
+    func sendEvent(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)?)
 
     /**
      Send a event and keep the stream for future attachment
      */
-    func sendStream(upstreamEventMessage: UpstreamEventMessage, completion: ((StreamDataState) -> Void)?)
+    func sendStream(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)?)
     
     /**
      Send a attachment using the stream set before.
@@ -38,15 +38,15 @@ public protocol UpstreamDataSendable {
      Every event and attachment have `DialogRequestId`.
      This method finds the suitable stream using that id
      */
-    func sendStream(upstreamAttachment: UpstreamAttachment, completion: ((StreamDataState) -> Void)?)
+    func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)?)
 }
 
 public extension UpstreamDataSendable {
-    func sendEvent(upstreamEventMessage: UpstreamEventMessage) {
-        sendEvent(upstreamEventMessage: upstreamEventMessage, completion: nil)
+    func sendEvent(_ event: Upstream.Event) {
+        sendEvent(event, completion: nil)
     }
     
-    func sendStream(upstreamAttachment: UpstreamAttachment) {
-        sendStream(upstreamAttachment: upstreamAttachment, completion: nil)
+    func sendStream(_ attachment: Upstream.Attachment) {
+        sendStream(attachment, completion: nil)
     }
 }

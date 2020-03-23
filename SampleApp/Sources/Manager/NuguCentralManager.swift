@@ -389,6 +389,28 @@ extension NuguCentralManager: NuguClientDelegate {
     func nuguClientDidCloseInputSource() {
         inputStatus = false
     }
+    
+    func nuguClientDidReceive(direcive: Downstream.Directive) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(direcive.header.namespace).\(direcive.header.name)")
+    }
+    
+    func nuguClientDidReceive(attachment: Downstream.Attachment) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(attachment.header.namespace).\(attachment.header.name)")
+    }
+    
+    func nuguClientDidSend(event: Upstream.Event, error: Error?) {
+        // Use some analytics SDK(or API) here.
+        // Error: URLError or NetworkError or EventSenderError
+        log.debug("\(error?.localizedDescription ?? ""): \(event.header.namespace).\(event.header.name)")
+    }
+    
+    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
+        // Use some analytics SDK(or API) here.
+        // Error: EventSenderError
+        log.debug("\(error.debugDescription): \(attachment.header.namespace).\(attachment.header.name)")
+    }
 }
 
 // MARK: - LocationAgentDelegate
