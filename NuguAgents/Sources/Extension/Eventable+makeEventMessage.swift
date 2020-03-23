@@ -23,7 +23,7 @@ import NuguCore
 
 extension Eventable {
     func makeEventMessage(agent: CapabilityAgentable, dialogRequestId: String? = nil, contextPayload: ContextPayload? = nil) -> Upstream.Event {
-        let header = Upstream.Header(
+        let header = Upstream.Event.Header(
             namespace: agent.capabilityAgentProperty.name,
             name: name,
             version: agent.capabilityAgentProperty.version,

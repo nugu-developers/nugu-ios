@@ -334,7 +334,7 @@ extension ASRAgent: EndPointDetectorDelegate {
                 return
             }
             
-            let attachmentHeader = Upstream.Header(
+            let attachmentHeader = Upstream.Attachment.Header(
                 namespace: self.capabilityAgentProperty.name,
                 name: "Recognize",
                 version: self.capabilityAgentProperty.version,
@@ -538,7 +538,7 @@ private extension ASRAgent {
         
         asrState = .busy
         
-        let attachmentHeader = Upstream.Header(
+        let attachmentHeader = Upstream.Attachment.Header(
             namespace: capabilityAgentProperty.name,
             name: "Recognize",
             version: capabilityAgentProperty.version,
