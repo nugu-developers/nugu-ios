@@ -85,8 +85,7 @@ private extension DirectiveSequencer {
         }
         
         // Directives should be prefetch sequentially.
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
+        let semaphore = DispatchSemaphore(value: 0)
         preFetch(directive) { [weak self] result in
             switch result {
             case .success:
@@ -96,9 +95,9 @@ private extension DirectiveSequencer {
             case .failure(let error):
                 log.error(error)
             }
-            dispatchGroup.leave()
+            semaphore.signal()
         }
-        dispatchGroup.wait()
+        semaphore.wait()
     }
     
     func handleDirective(_ directive: Downstream.Directive) {
