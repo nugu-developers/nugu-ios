@@ -88,7 +88,7 @@ class ExtensionAgentSpec: QuickSpec {
 // MARK: - MockExtensionAgentDelegate
 
 class MockExtensionAgentDelegate: ExtensionAgentDelegate {
-    func extensionAgentRequestContext() -> [String: Any]? {
+    func extensionAgentRequestContext() -> [String: AnyHashable]? {
         return [
             "test": "context"
         ]
