@@ -153,10 +153,10 @@ public extension TTSAgent {
             self.ttsResultSubject
                 .filter { $0.dialogRequestId == dialogRequestId }
                 .take(1)
-                .do(onNext: { (dialogRequestId, result) in
+                .subscribe(onNext: { (dialogRequestId, result) in
                     handler?(result, dialogRequestId)
                 })
-                .subscribe().disposed(by: self.disposeBag)
+                .disposed(by: self.disposeBag)
         }
         return dialogRequestId
     }
@@ -370,10 +370,10 @@ private extension TTSAgent {
                 self.ttsResultSubject
                     .filter { $0.dialogRequestId == media.dialogRequestId }
                     .take(1)
-                    .do(onNext: { (_, _) in
+                    .subscribe(onNext: { (_, _) in
                         completion(.success(()))
                     })
-                    .subscribe().disposed(by: self.disposeBag)
+                    .disposed(by: self.disposeBag)
                 
                 self.focusManager.requestFocus(channelDelegate: self)
             }

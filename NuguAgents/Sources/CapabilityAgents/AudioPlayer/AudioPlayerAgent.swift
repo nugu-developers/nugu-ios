@@ -562,7 +562,7 @@ private extension AudioPlayerAgent {
             })
             .filter { $0 > 0 }
             .filter { $0 != lastOffset}
-            .do(onNext: { [weak self] (offset) in
+            .subscribe(onNext: { [weak self] (offset) in
                 log.debug("offset: \(offset)")
                 if delayReportTime > 0, offset == delayReportTime {
                     self?.sendEvent(media: media, typeInfo: .progressReportDelayElapsed)
@@ -572,7 +572,6 @@ private extension AudioPlayerAgent {
                 }
                 lastOffset = offset
             })
-            .subscribe()
         
         intervalReporter?.disposed(by: disposeBag)
     }
