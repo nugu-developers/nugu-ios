@@ -27,7 +27,6 @@ public struct ASRExpectSpeech {
     public let timeoutInMilliseconds: Int?
     public let playServiceId: String?
     public let sessionId: String
-    public let property: String?
     public let domainTypes: [AnyHashable]?
     public let asrContext: [String: AnyHashable]?
 }
@@ -39,7 +38,6 @@ extension ASRExpectSpeech: Decodable {
         case timeoutInMilliseconds
         case playServiceId
         case sessionId
-        case property
         case domainTypes
         case asrContext
     }
@@ -49,7 +47,6 @@ extension ASRExpectSpeech: Decodable {
         timeoutInMilliseconds = try? container.decode(Int.self, forKey: .timeoutInMilliseconds)
         playServiceId = try? container.decode(String.self, forKey: .playServiceId)
         sessionId = try container.decode(String.self, forKey: .sessionId)
-        property = try? container.decode(String.self, forKey: .property)
         domainTypes = try? container.decode([AnyHashable].self, forKey: .domainTypes)
         asrContext = try? container.decode([String: AnyHashable].self, forKey: .asrContext)
     }

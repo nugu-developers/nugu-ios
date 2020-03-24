@@ -45,8 +45,8 @@ extension TextAgent.Event: Eventable {
                 "text": text,
                 "sessionId": expectSpeech?.sessionId,
                 "playServiceId": expectSpeech?.playServiceId,
-                "property": expectSpeech?.property,
-                "domainTypes": expectSpeech?.domainTypes
+                "domainTypes": expectSpeech?.domainTypes,
+                "asrContext": expectSpeech?.asrContext
             ]
         }
         
