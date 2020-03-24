@@ -133,11 +133,15 @@ public extension TTSAgent {
         delegates.remove(delegate)
     }
     
-    func requestTTS(text: String, playServiceId: String?, handler: ((TTSResult) -> Void)?) {
+    func requestTTS(
+        text: String,
+        playServiceId: String?,
+        handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)?
+    ) -> String {
+        let dialogRequestId = TimeUUID().hexString
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
-            let dialogRequestId = TimeUUID().hexString
             self.upstreamDataSender.sendEvent(
                 Event(
                     token: nil,
@@ -149,11 +153,12 @@ public extension TTSAgent {
             self.ttsResultSubject
                 .filter { $0.dialogRequestId == dialogRequestId }
                 .take(1)
-                .do(onNext: { (_, result) in
-                    handler?(result)
+                .do(onNext: { (dialogRequestId, result) in
+                    handler?(result, dialogRequestId)
                 })
                 .subscribe().disposed(by: self.disposeBag)
         }
+        return dialogRequestId
     }
     
     func stopTTS(cancelAssociation: Bool) {
