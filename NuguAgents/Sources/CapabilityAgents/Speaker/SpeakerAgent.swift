@@ -85,7 +85,7 @@ public extension SpeakerAgent {
 
 extension SpeakerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = [
+        let payload: [String: AnyHashable] = [
             "version": capabilityAgentProperty.version,
             "volumes": controllerVolumes.values
         ]

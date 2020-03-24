@@ -37,8 +37,8 @@ extension TextAgent {
 // MARK: - Eventable
 
 extension TextAgent.Event: Eventable {
-    public var payload: [String: Any] {
-        var payload: [String: Any?]
+    public var payload: [String: AnyHashable] {
+        var payload: [String: AnyHashable?]
         switch typeInfo {
         case .textInput(let text, let expectSpeech):
             payload = [

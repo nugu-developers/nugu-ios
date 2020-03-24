@@ -49,8 +49,8 @@ extension ASRAgent {
 // MARK: - Eventable
 
 extension ASRAgent.Event: Eventable {
-    public var payload: [String: Any] {
-        var payload: [String: Any?]
+    public var payload: [String: AnyHashable] {
+        var payload: [String: AnyHashable?]
         switch typeInfo {
         case .recognize(let wakeUpInfo):
             payload = [

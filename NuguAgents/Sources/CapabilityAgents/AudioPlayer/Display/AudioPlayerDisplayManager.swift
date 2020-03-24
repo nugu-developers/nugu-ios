@@ -45,7 +45,7 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 // MARK: - AudioPlayerDisplayManageable
 
 extension AudioPlayerDisplayManager {
-    func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playStackServiceId: String?) {
+    func display(metaData: [String: AnyHashable], messageId: String, dialogRequestId: String, playStackServiceId: String?) {
         guard let data = try? JSONSerialization.data(withJSONObject: metaData, options: []),
             let displayItem = try? JSONDecoder().decode(AudioPlayerDisplayTemplate.AudioPlayer.self, from: data) else {
                 log.error("Invalid metaData")

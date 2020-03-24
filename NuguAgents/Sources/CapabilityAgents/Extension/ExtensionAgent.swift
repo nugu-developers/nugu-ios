@@ -58,7 +58,7 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 // MARK: - ExtensionAgentProtocol
 
 public extension ExtensionAgent {
-    func requestCommand(playServiceId: String, data: [String: Any], completion: ((StreamDataState) -> Void)?) {
+    func requestCommand(playServiceId: String, data: [String: AnyHashable], completion: ((StreamDataState) -> Void)?) {
         upstreamDataSender.sendEvent(
             Event(
                 playServiceId: playServiceId,
@@ -73,7 +73,7 @@ public extension ExtensionAgent {
 
 extension ExtensionAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any?] = [
+        let payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
             "data": delegate?.extensionAgentRequestContext()
         ]

@@ -33,7 +33,7 @@ struct SpeakerMuteInfo: Decodable {
 // MARK: - Array + SpeakerMuteInfo.Volume
 
 extension Array where Element == SpeakerMuteInfo.Volume {
-    var values: [[String: Any]] {
+    var values: [[String: AnyHashable]] {
         return map { ["name": $0.name.rawValue, "mute": $0.mute] }
     }
 }

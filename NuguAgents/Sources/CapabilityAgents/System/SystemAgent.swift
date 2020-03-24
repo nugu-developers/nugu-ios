@@ -78,7 +78,7 @@ public extension SystemAgent {
 
 extension SystemAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = [
+        let payload: [String: AnyHashable] = [
             "version": capabilityAgentProperty.version
         ]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))

@@ -40,7 +40,7 @@ extension SpeakerAgent {
 // MARK: - Eventable
 
 extension SpeakerAgent.Event: Eventable {
-    public var payload: [String: Any] {
+    public var payload: [String: AnyHashable] {
         return [
             "playServiceId": playServiceId,
             "volumes": volumes.values

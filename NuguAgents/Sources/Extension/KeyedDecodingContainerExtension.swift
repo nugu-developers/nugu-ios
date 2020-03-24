@@ -35,21 +35,21 @@ private struct JSONCodingKeys: CodingKey {
 }
 
 extension KeyedDecodingContainer {
-    func decode(_ type: [String: Any].Type, forKey key: K) throws -> [String: Any] {
+    func decode(_ type: [String: AnyHashable].Type, forKey key: K) throws -> [String: AnyHashable] {
         let container = try nestedContainer(keyedBy: JSONCodingKeys.self, forKey: key)
         return try container.decode(type)
     }
     
-    func decode(_ type: [Any].Type, forKey key: K) throws -> [Any] {
+    func decode(_ type: [AnyHashable].Type, forKey key: K) throws -> [AnyHashable] {
         var container = try nestedUnkeyedContainer(forKey: key)
         return try container.decode(type)
     }
     
-    func decode(_ type: [String: Any].Type) throws -> [String: Any] {
-        var dictionary = [String: Any]()
+    func decode(_ type: [String: AnyHashable].Type) throws -> [String: AnyHashable] {
+        var dictionary = [String: AnyHashable]()
         
         for key in allKeys {
-            var value: Any {
+            var value: AnyHashable {
                 if let value = try? decode(Bool.self, forKey: key) {
                     return value
                 } else if let value = try? decode(String.self, forKey: key) {
@@ -58,9 +58,9 @@ extension KeyedDecodingContainer {
                     return value
                 } else if let value = try? decode(Double.self, forKey: key) {
                     return value
-                } else if let value = try? decode([String: Any].self, forKey: key) {
+                } else if let value = try? decode([String: AnyHashable].self, forKey: key) {
                     return value
-                } else if let value = try? decode([Any].self, forKey: key) {
+                } else if let value = try? decode([AnyHashable].self, forKey: key) {
                     return value
                 }
                 
@@ -75,8 +75,8 @@ extension KeyedDecodingContainer {
 }
 
 extension UnkeyedDecodingContainer {
-    mutating func decode(_ type: [Any].Type) throws -> [Any] {
-        var array: [Any] = []
+    mutating func decode(_ type: [AnyHashable].Type) throws -> [AnyHashable] {
+        var array: [AnyHashable] = []
         while isAtEnd == false {
             if let value = try? decode(Bool.self) {
                 array.append(value)
@@ -84,16 +84,16 @@ extension UnkeyedDecodingContainer {
                 array.append(value)
             } else if let value = try? decode(String.self) {
                 array.append(value)
-            } else if let nestedDictionary = try? decode([String: Any].self) {
+            } else if let nestedDictionary = try? decode([String: AnyHashable].self) {
                 array.append(nestedDictionary)
-            } else if let nestedArray = try? decode(Array<Any>.self) {
+            } else if let nestedArray = try? decode(Array<AnyHashable>.self) {
                 array.append(nestedArray)
             }
         }
         return array
     }
 
-    mutating func decode(_ type: [String: Any].Type) throws -> [String: Any] {
+    mutating func decode(_ type: [String: AnyHashable].Type) throws -> [String: AnyHashable] {
         let nestedContainer = try self.nestedContainer(keyedBy: JSONCodingKeys.self)
         return try nestedContainer.decode(type)
     }

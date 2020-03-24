@@ -80,7 +80,7 @@ extension TextAgent {
 
 extension TextAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = ["version": capabilityAgentProperty.version]        
+        let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]        
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }

@@ -52,8 +52,8 @@ extension AudioPlayerAgent {
 // MARK: - Eventable
 
 extension AudioPlayerAgent.Event: Eventable {
-    public var payload: [String: Any] {
-        var eventPayload: [String: Any] = [
+    public var payload: [String: AnyHashable] {
+        var eventPayload: [String: AnyHashable] = [
             "token": token,
             "offsetInMilliseconds": offsetInMilliseconds,
             "playServiceId": playServiceId

@@ -198,7 +198,7 @@ extension TTSAgent: FocusChannelDelegate {
 
 extension TTSAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = [
+        let payload: [String: AnyHashable] = [
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
             "engine": "skt"
