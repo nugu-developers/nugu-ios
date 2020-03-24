@@ -505,7 +505,7 @@ private extension AudioPlayerAgent {
 private extension AudioPlayerAgent {
     func sendEvent(media: AudioPlayerAgentMedia, typeInfo: Event.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
         upstreamDataSender.sendEvent(
-            upstreamEventMessage: Event(
+            Event(
                 token: media.payload.audioItem.stream.token,
                 offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,

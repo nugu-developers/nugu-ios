@@ -131,6 +131,7 @@ public class NuguClient {
         setupAuthorizationStore()
         setupAudioSessionRequester()
         setupDialogStateAggregator()
+        setupStreamDataRouter()
     }
 }
     
@@ -215,7 +216,7 @@ extension NuguClient: AuthorizationStoreDelegate {
 // MARK: - FocusManagerDelegate
 
 extension NuguClient: FocusDelegate {
-    public func setupAudioSessionRequester() {
+    private func setupAudioSessionRequester() {
         focusManager.delegate = self
     }
     
@@ -244,5 +245,29 @@ extension NuguClient: DialogStateDelegate {
         default:
             break
         }
+    }
+}
+
+// MARK: - StreamDataDelegate
+
+extension NuguClient: StreamDataDelegate {
+    private func setupStreamDataRouter() {
+        streamDataRouter.delegate = self
+    }
+    
+    public func streamDataDidReceive(direcive: Downstream.Directive) {
+        delegate?.nuguClientDidReceive(direcive: direcive)
+    }
+    
+    public func streamDataDidReceive(attachment: Downstream.Attachment) {
+        delegate?.nuguClientDidReceive(attachment: attachment)
+    }
+    
+    public func streamDataDidSend(event: Upstream.Event, error: Error?) {
+        delegate?.nuguClientDidSend(event: event, error: error)
+    }
+    
+    public func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {
+        delegate?.nuguClientDidSend(attachment: attachment, error: error)
     }
 }

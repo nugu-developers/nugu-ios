@@ -1,8 +1,8 @@
 //
-//  UpstreamEventMessage.swift
+//  Upstream.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 22/05/2019.
+//  Created by MinChul Lee on 2020/03/18.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,26 +20,54 @@
 
 import Foundation
 
-/// <#Description#>
-public struct UpstreamEventMessage {
-    /// <#Description#>
-    public let payload: [String: Any]
-    /// <#Description#>
-    public let header: UpstreamHeader
-    /// <#Description#>
-    public let contextPayload: ContextPayload
-    
-    /// <#Description#>
-    /// - Parameter payload: <#payload description#>
-    /// - Parameter header: <#header description#>
-    /// - Parameter contexts: <#contexts description#>
-    public init(payload: [String: Any], header: UpstreamHeader, contextPayload: ContextPayload) {
-        self.payload = payload
-        self.header = header
-        self.contextPayload = contextPayload
+public enum Upstream {
+    public struct Event {
+        public let payload: [String: Any]
+        public let header: Header
+        public let contextPayload: ContextPayload
+        
+        public init(payload: [String: Any], header: Header, contextPayload: ContextPayload) {
+            self.payload = payload
+            self.header = header
+            self.contextPayload = contextPayload
+        }
     }
-    
-    public var headerString: String {
+
+    public struct Attachment {
+        public let header: Header
+        public let content: Data
+        public let seq: Int32
+        public let isEnd: Bool
+        public let type: String
+        
+        public init(header: Header, content: Data, type: String, seq: Int32, isEnd: Bool) {
+            self.header = header
+            self.content = content
+            self.type = type
+            self.seq = seq
+            self.isEnd = isEnd
+        }
+    }
+
+    public struct Header {
+        public let namespace: String
+        public let name: String
+        public let version: String
+        public let dialogRequestId: String
+        public let messageId: String
+        
+        public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String) {
+            self.namespace = namespace
+            self.name = name
+            self.version = version
+            self.dialogRequestId = dialogRequestId
+            self.messageId = messageId
+        }
+    }
+}
+
+extension Upstream.Event {
+    var headerString: String {
         let headerDictionary = ["namespace": header.namespace,
                                 "name": header.name,
                                 "dialogRequestId": header.dialogRequestId,
@@ -54,8 +82,7 @@ public struct UpstreamEventMessage {
         return headerString
     }
     
-    /// <#Description#>
-    public var payloadString: String {
+    var payloadString: String {
         guard
             let data = try? JSONSerialization.data(withJSONObject: payload, options: []),
             let payloadString = String(data: data, encoding: .utf8) else {
@@ -65,8 +92,7 @@ public struct UpstreamEventMessage {
         return payloadString
     }
     
-    /// <#Description#>
-    public var contextString: String {
+    var contextString: String {
         let supportedInterfaces = contextPayload.supportedInterfaces.reduce(
             into: [String: Any]()
         ) { result, context in

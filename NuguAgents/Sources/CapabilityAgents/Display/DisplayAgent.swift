@@ -130,7 +130,7 @@ public extension DisplayAgent {
                 let template = info.currentItem else { return }
             
             self.upstreamDataSender.sendEvent(
-                upstreamEventMessage: Event(
+                Event(
                     playServiceId: template.playServiceId,
                     typeInfo: .elementSelected(token: token)
                 ).makeEventMessage(agent: self)
@@ -212,7 +212,7 @@ private extension DisplayAgent {
                     let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
                     
                     self.upstreamDataSender.sendEvent(
-                        upstreamEventMessage: Event(
+                        Event(
                             playServiceId: payload.playServiceId,
                             typeInfo: self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
                         ).makeEventMessage(agent: self)
@@ -242,7 +242,7 @@ private extension DisplayAgent {
                         let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
                         let delegate = info.delegate else {
                             self.upstreamDataSender.sendEvent(
-                                upstreamEventMessage: Event(
+                                Event(
                                     playServiceId: payload.playServiceId,
                                     typeInfo: .controlFocusFailed
                                 ).makeEventMessage(agent: self)
@@ -253,7 +253,7 @@ private extension DisplayAgent {
                         guard let self = self else { return }
                         let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
                         self.upstreamDataSender.sendEvent(
-                            upstreamEventMessage: Event(
+                            Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed
                             ).makeEventMessage(agent: self)
@@ -279,7 +279,7 @@ private extension DisplayAgent {
                         let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
                         let delegate = info.delegate else {
                             self.upstreamDataSender.sendEvent(
-                                upstreamEventMessage: Event(
+                                Event(
                                     playServiceId: payload.playServiceId,
                                     typeInfo: .controlScrollFailed
                                 ).makeEventMessage(agent: self)
@@ -290,7 +290,7 @@ private extension DisplayAgent {
                         guard let self = self else { return }
                         let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
                         self.upstreamDataSender.sendEvent(
-                            upstreamEventMessage: Event(
+                            Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed
                             ).makeEventMessage(agent: self)
