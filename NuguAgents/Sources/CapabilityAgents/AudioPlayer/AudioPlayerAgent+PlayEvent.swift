@@ -45,6 +45,12 @@ extension AudioPlayerAgent {
             case playCommandIssued
             case pauseCommandIssued
             case stopCommandIssued
+            
+            case requestResumeCommandIssued
+            case requestNextCommandIssued
+            case requestPreviousCommandIssued
+            case requestPauseCommandIssued
+            case requestStopCommandIssued
         }
     }
 }
@@ -115,6 +121,16 @@ extension AudioPlayerAgent.PlayEvent: Eventable {
             return "PauseCommandIssued"
         case .stopCommandIssued:
             return "StopCommandIssued"
+        case .requestResumeCommandIssued:
+            return "RequestResumeCommandIssued"
+        case .requestNextCommandIssued:
+            return "RequestNextCommandIssued"
+        case .requestPreviousCommandIssued:
+            return "RequestPreviousCommandIssued"
+        case .requestPauseCommandIssued:
+            return "RequestPauseCommandIssued"
+        case .requestStopCommandIssued:
+            return "RequestStopCommandIssued"
         }
     }
 }
