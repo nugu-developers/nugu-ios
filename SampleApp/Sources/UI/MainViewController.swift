@@ -176,8 +176,6 @@ private extension MainViewController {
         NuguCentralManager.shared.client.displayAgent.add(delegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
-
-        NuguCentralManager.shared.displayPlayerController?.use()
     }
     
     /// Show nugu usage guide webpage after successful login process
@@ -351,7 +349,7 @@ private extension MainViewController {
         displayAudioPlayerView?.removeFromSuperview()
 
         let audioPlayerView = DisplayAudioPlayerView(frame: view.frame)
-        audioPlayerView.displayItem = audioPlayerDisplayTemplate.payload
+        audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         audioPlayerView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
             self.dismissDisplayAudioPlayerView()
@@ -630,11 +628,20 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
+    //TODO: - Should be implemented
+    func audioPlayerDisplayShouldShowLyrics() -> Bool { return false }
+    
+    func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
+    
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool { return false }
+    
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidRender(template: template)
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
     func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayShouldClear()
         switch reason {
         case .timer:
             dismissDisplayAudioPlayerView()
@@ -642,12 +649,20 @@ extension MainViewController: AudioPlayerDisplayDelegate {
             dismissDisplayAudioPlayerView()
         }
     }
+    
+    func audioPlayerDisplayShouldUpdateMetadata(payload: String) {
+        guard let displayAudioPlayerView = displayAudioPlayerView else {
+            return
+        }
+        displayAudioPlayerView.updateSettings(payload: payload)
+    }
 }
 
 // MARK: - AudioPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState) {
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerAgentDidChange(state: state)
         switch state {
         case .paused, .playing:
             NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
