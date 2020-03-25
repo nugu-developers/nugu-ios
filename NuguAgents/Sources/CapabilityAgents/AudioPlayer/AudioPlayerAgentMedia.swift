@@ -38,6 +38,7 @@ struct AudioPlayerAgentMedia {
     struct Payload {
         let playStackControl: PlayStackControl?
         let sourceType: SourceType
+        let cacheKey: String?
         let audioItem: AudioItem
         let playServiceId: String
         
@@ -98,6 +99,7 @@ extension AudioPlayerAgentMedia.Payload: Decodable {
     enum CodingKeys: String, CodingKey {
         case playStackControl
         case sourceType
+        case cacheKey
         case audioItem
         case playServiceId
     }
@@ -107,6 +109,7 @@ extension AudioPlayerAgentMedia.Payload: Decodable {
         
         playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
         sourceType = try container.decodeIfPresent(SourceType.self, forKey: .sourceType) ?? .url
+        cacheKey = try? container.decodeIfPresent(String.self, forKey: .cacheKey)
         audioItem = try container.decode(AudioItem.self, forKey: .audioItem)
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
     }
