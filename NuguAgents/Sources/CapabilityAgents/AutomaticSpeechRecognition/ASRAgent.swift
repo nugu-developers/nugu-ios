@@ -95,17 +95,30 @@ public final class ASRAgent: ASRAgentProtocol {
             case .cancel:
                 currentExpectSpeech = nil
                 asrState = .idle
-                sendEvent(asrRequest: asrRequest, type: .stopRecognize)
+                upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
+                upstreamDataSender.sendEvent(
+                    Event(typeInfo: .stopRecognize, expectSpeech: currentExpectSpeech)
+                        .makeEventMessage(agent: self)
+                )
             case .error(let error):
                 currentExpectSpeech = nil
                 asrState = .idle
                 switch error {
                 case NetworkError.timeout:
-                    sendEvent(asrRequest: asrRequest, type: .responseTimeout)
+                    upstreamDataSender.sendEvent(
+                        Event(typeInfo: .responseTimeout, expectSpeech: currentExpectSpeech)
+                            .makeEventMessage(agent: self)
+                    )
                 case ASRError.listeningTimeout:
-                    sendEvent(asrRequest: asrRequest, type: .listenTimeout)
+                    upstreamDataSender.sendEvent(
+                        Event(typeInfo: .listenTimeout, expectSpeech: currentExpectSpeech)
+                            .makeEventMessage(agent: self)
+                    )
                 case ASRError.listenFailed:
-                    sendEvent(asrRequest: asrRequest, type: .listenFailed)
+                    upstreamDataSender.sendEvent(
+                        Event(typeInfo: .listenFailed, expectSpeech: currentExpectSpeech)
+                            .makeEventMessage(agent: self)
+                    )
                 case ASRError.recognizeFailed:
                     break
                 default:
@@ -434,24 +447,6 @@ private extension ASRAgent {
     }
 }
 
-// MARK: - Private (Event, Attachment)
-
-private extension ASRAgent {
-    func sendEvent(asrRequest: ASRRequest, type: Event.TypeInfo) {
-        upstreamDataSender.sendEvent(
-            Event(
-                typeInfo: type,
-                encoding: asrEncoding,
-                expectSpeech: currentExpectSpeech
-            ).makeEventMessage(
-                agent: self,
-                dialogRequestId: asrRequest.dialogRequestId,
-                contextPayload: asrRequest.contextPayload
-            )
-        )
-    }
-}
-
 // MARK: - Private(FocusManager)
 
 private extension ASRAgent {
@@ -498,8 +493,7 @@ private extension ASRAgent {
         
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(wakeUpInfo: nil),
-                encoding: asrEncoding,
+                typeInfo: .recognize(wakeUpInfo: nil, encoding: asrEncoding),
                 expectSpeech: currentExpectSpeech
             ).makeEventMessage(
                 agent: self,

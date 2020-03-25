@@ -206,6 +206,7 @@ private extension EventSender {
             + HTTPConst.crlf).data(using: .utf8)!
         partData.append(bodyData)
 
+        log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
     }
     
@@ -219,6 +220,7 @@ private extension EventSender {
         ]
         
         var partData = headerLines.joined(separator: (HTTPConst.crlf)).data(using: .utf8)!
+        log.debug("Data(\(attachment.content)):\n\(String(data: partData, encoding: .utf8) ?? "")")
         partData.append(attachment.content)
         partData.append(HTTPConst.crlf.data(using: .utf8)!)
         
