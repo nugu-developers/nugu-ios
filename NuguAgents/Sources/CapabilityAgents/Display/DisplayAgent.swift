@@ -256,7 +256,7 @@ private extension DisplayAgent {
                         Event(
                             playServiceId: payload.playServiceId,
                             typeInfo: self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
-                        ).makeEventMessage(agent: self)
+                        ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
                     )
                     
                     if let item = self.currentItem, item.playServiceId == payload.playServiceId {
@@ -297,7 +297,7 @@ private extension DisplayAgent {
                             Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed
-                            ).makeEventMessage(agent: self)
+                            ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
                         )
                     }
             })
@@ -334,7 +334,7 @@ private extension DisplayAgent {
                             Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed
-                            ).makeEventMessage(agent: self)
+                            ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
                         )
                     }
             })
