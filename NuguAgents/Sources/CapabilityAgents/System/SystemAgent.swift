@@ -174,7 +174,7 @@ private extension SystemAgent {
             guard let self = self else { return }
             
             self.streamDataRouter.sendEvent(
-                upstreamEventMessage: Event(
+                Event(
                     typeInfo: .synchronizeState
                 ).makeEventMessage(
                     agent: self,

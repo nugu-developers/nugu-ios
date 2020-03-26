@@ -139,7 +139,7 @@ public extension TTSAgent {
             
             let dialogRequestId = TimeUUID().hexString
             self.upstreamDataSender.sendEvent(
-                upstreamEventMessage: Event(
+                Event(
                     token: nil,
                     playServiceId: playServiceId,
                     typeInfo: .speechPlay(text: text)
@@ -444,7 +444,7 @@ private extension TTSAgent {
         }
         
         self.upstreamDataSender.sendEvent(
-            upstreamEventMessage: Event(
+            Event(
                 token: media.payload.token,
                 playServiceId: playServiceId,
                 typeInfo: info

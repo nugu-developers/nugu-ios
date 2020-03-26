@@ -31,7 +31,11 @@ final class NuguCentralManager {
     let client = NuguClient()
     let localTTSAgent: LocalTTSAgent
 
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController(audioPlayerAgent: client.audioPlayerAgent)
+    // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
+    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = {
+        return NuguAudioSessionManager.shared.supportMixWithOthersOption ? nil : NuguDisplayPlayerController()
+    }()
+    
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
             return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
@@ -386,6 +390,28 @@ extension NuguCentralManager: NuguClientDelegate {
     
     func nuguClientDidCloseInputSource() {
         inputStatus = false
+    }
+    
+    func nuguClientDidReceive(direcive: Downstream.Directive) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(direcive.header.namespace).\(direcive.header.name)")
+    }
+    
+    func nuguClientDidReceive(attachment: Downstream.Attachment) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(attachment.header.namespace).\(attachment.header.name)")
+    }
+    
+    func nuguClientDidSend(event: Upstream.Event, error: Error?) {
+        // Use some analytics SDK(or API) here.
+        // Error: URLError or NetworkError or EventSenderError
+        log.debug("\(error?.localizedDescription ?? ""): \(event.header.namespace).\(event.header.name)")
+    }
+    
+    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
+        // Use some analytics SDK(or API) here.
+        // Error: EventSenderError
+        log.debug("\(error.debugDescription): \(attachment.header.namespace).\(attachment.header.name)")
     }
 }
 

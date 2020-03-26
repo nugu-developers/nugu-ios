@@ -334,15 +334,15 @@ extension ASRAgent: EndPointDetectorDelegate {
                 return
             }
             
-            let attachmentHeader = UpstreamHeader(
+            let attachmentHeader = Upstream.Header(
                 namespace: self.capabilityAgentProperty.name,
                 name: "Recognize",
                 version: self.capabilityAgentProperty.version,
                 dialogRequestId: asrRequest.dialogRequestId,
                 messageId: TimeUUID().hexString
             )
-            let attachment = UpstreamAttachment(header: attachmentHeader, content: speechData, type: "audio/speex", seq: self.attachmentSeq, isEnd: false)
-            self.upstreamDataSender.sendStream(upstreamAttachment: attachment)
+            let attachment = Upstream.Attachment(header: attachmentHeader, content: speechData, type: "audio/speex", seq: self.attachmentSeq, isEnd: false)
+            self.upstreamDataSender.sendStream(attachment)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
         }
@@ -439,7 +439,7 @@ private extension ASRAgent {
 private extension ASRAgent {
     func sendEvent(asrRequest: ASRRequest, type: Event.TypeInfo) {
         upstreamDataSender.sendEvent(
-            upstreamEventMessage: Event(
+            Event(
                 typeInfo: type,
                 encoding: asrEncoding,
                 expectSpeech: currentExpectSpeech
@@ -497,7 +497,7 @@ private extension ASRAgent {
         asrState = .listening
         
         upstreamDataSender.sendStream(
-            upstreamEventMessage: Event(
+            Event(
                 typeInfo: .recognize(wakeUpInfo: nil),
                 encoding: asrEncoding,
                 expectSpeech: currentExpectSpeech
@@ -538,15 +538,15 @@ private extension ASRAgent {
         
         asrState = .busy
         
-        let attachmentHeader = UpstreamHeader(
+        let attachmentHeader = Upstream.Header(
             namespace: capabilityAgentProperty.name,
             name: "Recognize",
             version: capabilityAgentProperty.version,
             dialogRequestId: asrRequest.dialogRequestId,
             messageId: TimeUUID().hexString
         )
-        let attachment = UpstreamAttachment(header: attachmentHeader, content: Data(), type: "audio/speex", seq: attachmentSeq, isEnd: true)
-        upstreamDataSender.sendStream(upstreamAttachment: attachment)
+        let attachment = Upstream.Attachment(header: attachmentHeader, content: Data(), type: "audio/speex", seq: attachmentSeq, isEnd: true)
+        upstreamDataSender.sendStream(attachment)
     }
 }
 

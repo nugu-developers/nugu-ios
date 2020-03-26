@@ -60,7 +60,7 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 public extension ExtensionAgent {
     func requestCommand(playServiceId: String, data: [String: Any], completion: ((StreamDataState) -> Void)?) {
         upstreamDataSender.sendEvent(
-            upstreamEventMessage: Event(
+            Event(
                 playServiceId: playServiceId,
                 typeInfo: .commandIssued(data: data)
             ).makeEventMessage(agent: self),
@@ -109,7 +109,7 @@ private extension ExtensionAgent {
                     guard let self = self else { return }
                     
                     self.upstreamDataSender.sendEvent(
-                        upstreamEventMessage: Event(
+                        Event(
                             playServiceId: item.playServiceId,
                             typeInfo: isSuccess ? .actionSucceeded : .actionFailed
                         ).makeEventMessage(agent: self)

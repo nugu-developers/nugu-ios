@@ -123,7 +123,7 @@ private extension SpeakerAgent {
                         let typeInfo: SpeakerAgent.Event.TypeInfo = succeeded ? .setMuteSucceeded : .setMuteFailed
                         
                         self.upstreamDataSender.sendEvent(
-                            upstreamEventMessage: Event(
+                            Event(
                                 typeInfo: typeInfo,
                                 volumes: self.controllerVolumes,
                                 playServiceId: speakerMuteInfo.playServiceId
