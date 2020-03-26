@@ -411,17 +411,17 @@ private extension TTSAgent {
             log.info("\(attachment.header.messageId)")
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard let media = self.currentMedia, media.dialogRequestId == attachment.header.dialogRequestId else {
-                    log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
+                guard let dataSource = self.currentMedia?.player as? MediaOpusStreamDataSource,
+                    self.currentMedia?.dialogRequestId == attachment.header.dialogRequestId else {
+                    log.warning("MediaOpusStreamDataSource not exist or dialogRequesetId not valid")
                     return
                 }
                 
-                let player = media.player as? MediaOpusStreamDataSource
                 do {
-                    try player?.appendData(attachment.content)
+                    try dataSource.appendData(attachment.content)
                     
                     if attachment.isEnd {
-                        try player?.lastDataAppended()
+                        try dataSource.lastDataAppended()
                     }
                 } catch {
                     log.error(error)
