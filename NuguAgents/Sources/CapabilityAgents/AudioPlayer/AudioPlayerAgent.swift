@@ -90,7 +90,6 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                         playServiceId: media.payload.playStackControl?.playServiceId
                     )
                 }
-                currentMedia = nil
             case .paused:
                 stopProgressReport()
                 startPauseTimeout()
