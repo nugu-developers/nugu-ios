@@ -46,17 +46,17 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 
 extension AudioPlayerDisplayManager {
     func display(metaData: [String: AnyHashable], messageId: String, dialogRequestId: String, playStackServiceId: String?) {
-        guard let data = try? JSONSerialization.data(withJSONObject: metaData, options: []),
-            let displayItem = try? JSONDecoder().decode(AudioPlayerDisplayTemplate.AudioPlayer.self, from: data) else {
+        guard let template = metaData["template"] as? [String: AnyHashable],
+            let type = template["type"] as? String else {
                 log.error("Invalid metaData")
-            return
+                return
         }
         
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             self.currentItem = AudioPlayerDisplayTemplate(
-                type: displayItem.template.type,
-                payload: displayItem,
+                type: type,
+                payload: metaData,
                 templateId: messageId,
                 dialogRequestId: dialogRequestId,
                 playStackServiceId: playStackServiceId
@@ -69,6 +69,59 @@ extension AudioPlayerDisplayManager {
                 )
             }
         }
+    }
+    
+    func updateMetadata(payload: String, playServiceId: String) {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
+            let delegate = info.delegate else { return }
+        DispatchQueue.main.async {
+            delegate.audioPlayerDisplayShouldUpdateMetadata(payload: payload)
+        }
+    }
+    
+    func showLylics(playServiceId: String) -> Bool {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
+            let delegate = info.delegate else {
+                return false
+        }
+        var result = false
+        if Thread.current.isMainThread {
+            return delegate.audioPlayerDisplayShouldShowLyrics()
+        }
+        DispatchQueue.main.sync {
+            result = delegate.audioPlayerDisplayShouldShowLyrics()
+        }
+        return result
+    }
+    
+    func hideLylics(playServiceId: String) -> Bool {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
+            let delegate = info.delegate else {
+                return false
+        }
+        var result = false
+        if Thread.current.isMainThread {
+            return delegate.audioPlayerDisplayShouldHideLyrics()
+        }
+        DispatchQueue.main.sync {
+            result = delegate.audioPlayerDisplayShouldHideLyrics()
+        }
+        return result
+    }
+    
+    func controlLylicsPage(payload: AudioPlayerDisplayControlPayload) -> Bool {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == payload.playServiceId }),
+            let delegate = info.delegate else {
+                return false
+        }
+        var result = false
+        if Thread.current.isMainThread {
+            return delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction)
+        }
+        DispatchQueue.main.sync {
+            result = delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction)
+        }
+        return result
     }
     
     func add(delegate: AudioPlayerDisplayDelegate) {

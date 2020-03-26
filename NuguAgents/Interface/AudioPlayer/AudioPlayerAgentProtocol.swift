@@ -51,6 +51,15 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// Pauses playback.
     func pause()
     
+    /// Set favorite as on / off.
+    func favorite(isOn: Bool)
+    
+    /// Set repeatMode as all / one / none.
+    func `repeat`(mode: AudioPlayerDisplayRepeat)
+    
+    /// Set shuffle as on / off.
+    func shuffle(isOn: Bool)
+    
     /// Sets the current playback time to the specified time.
     ///
     /// - Parameter offset: The time(seconds) to which to seek.

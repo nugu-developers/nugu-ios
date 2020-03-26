@@ -28,6 +28,14 @@ protocol AudioPlayerDisplayManageable: PlaySyncDelegate {
     
     func display(metaData: [String: AnyHashable], messageId: String, dialogRequestId: String, playStackServiceId: String?)
     
+    func updateMetadata(payload: String, playServiceId: String)
+    
+    func showLylics(playServiceId: String) -> Bool
+    
+    func hideLylics(playServiceId: String) -> Bool
+    
+    func controlLylicsPage(payload: AudioPlayerDisplayControlPayload) -> Bool
+    
     /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
     ///
     /// - Parameter delegate: The object to add.
