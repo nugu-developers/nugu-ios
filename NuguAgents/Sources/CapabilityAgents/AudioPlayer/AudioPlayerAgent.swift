@@ -26,7 +26,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.1")
     
     // AudioPlayerAgentProtocol
     public var offset: Int? {
@@ -127,7 +127,12 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", medium: .audio, isBlocking: false, preFetch: prefetchPlay, directiveHandler: handlePlay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", medium: .audio, isBlocking: false, directiveHandler: handleStop),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", medium: .visual, isBlocking: false, directiveHandler: handleUpdateMetadata),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", medium: .visual, isBlocking: false, directiveHandler: handleShowLyrics),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", medium: .visual, isBlocking: false, directiveHandler: handleHideLyrics),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", medium: .visual, isBlocking: false, directiveHandler: handleControlLyricsPage
+        )
     ]
     
     public init(
@@ -192,7 +197,7 @@ public extension AudioPlayerAgent {
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
-            self.sendEvent(media: media, typeInfo: .nextCommandIssued, dialogRequestId: dialogRequestId, completion: completion)
+            self.sendPlayEvent(media: media, typeInfo: .nextCommandIssued, dialogRequestId: dialogRequestId, completion: completion)
         }
         return dialogRequestId
     }
@@ -203,7 +208,7 @@ public extension AudioPlayerAgent {
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
-            self.sendEvent(media: media, typeInfo: .previousCommandIssued, dialogRequestId: dialogRequestId, completion: completion)
+            self.sendPlayEvent(media: media, typeInfo: .previousCommandIssued, dialogRequestId: dialogRequestId, completion: completion)
         }
         return dialogRequestId
     }
@@ -212,6 +217,33 @@ public extension AudioPlayerAgent {
         audioPlayerDispatchQueue.async { [weak self] in
             self?.currentMedia?.pauseReason = .user
             self?.currentMedia?.player.pause()
+        }
+    }
+    
+    func favorite(isOn: Bool) {
+        guard let playServiceId = currentMedia?.payload.playServiceId else { return }
+        
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendSettingsEvent(playServiceId: playServiceId, typeInfo: .favoriteCommandIssued(isOn: isOn))
+        }
+    }
+    
+    func `repeat`(mode: AudioPlayerDisplayRepeat) {
+        guard let playServiceId = currentMedia?.payload.playServiceId else { return }
+        
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendSettingsEvent(playServiceId: playServiceId, typeInfo: .repeatCommandIssued(mode: mode))
+        }
+    }
+    
+    func shuffle(isOn: Bool) {
+        guard let playServiceId = currentMedia?.payload.playServiceId else { return }
+        
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendSettingsEvent(playServiceId: playServiceId, typeInfo: .shuffleCommandIssued(isOn: isOn))
         }
     }
     
@@ -288,15 +320,15 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             switch state {
             case .start:
                 self.audioPlayerState = .playing
-                self.sendEvent(media: media, typeInfo: .playbackStarted)
+                self.sendPlayEvent(media: media, typeInfo: .playbackStarted)
             case .resume:
                 self.audioPlayerState = .playing
                 if media.pauseReason != .focus {
-                    self.sendEvent(media: media, typeInfo: .playbackResumed)
+                    self.sendPlayEvent(media: media, typeInfo: .playbackResumed)
                 }
             case .finish:
                 self.audioPlayerState = .finished
-                self.sendEvent(media: media, typeInfo: .playbackFinished) { [weak self] state in
+                self.sendPlayEvent(media: media, typeInfo: .playbackFinished) { [weak self] state in
                     // Release focus when stream finished.
                     self?.audioPlayerDispatchQueue.async { [weak self] in
                         guard let self = self else { return }
@@ -314,20 +346,20 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             case .pause:
                 if media.pauseReason != .focus {
                     self.audioPlayerState = .paused(temporary: false)
-                    self.sendEvent(media: media, typeInfo: .playbackPaused)
+                    self.sendPlayEvent(media: media, typeInfo: .playbackPaused)
                 } else {
                     self.audioPlayerState = .paused(temporary: true)
                 }
             case .stop:
                 self.audioPlayerState = .stopped
-                self.sendEvent(media: media, typeInfo: .playbackStopped)
+                self.sendPlayEvent(media: media, typeInfo: .playbackStopped)
                 self.releaseFocusIfNeeded()
             case .bufferUnderrun, .bufferRefilled:
                 break
             case .error(let error):
                 log.error("\(state) \(error)")
                 self.audioPlayerState = .stopped
-                self.sendEvent(media: media, typeInfo: .playbackFailed(error: error))
+                self.sendPlayEvent(media: media, typeInfo: .playbackFailed(error: error))
                 self.releaseFocusIfNeeded()
             }
         }
@@ -444,7 +476,7 @@ private extension AudioPlayerAgent {
                         }
                     }).flatMapError({ (error) -> Result<Void, Error> in
                         if let media = self.currentMedia {
-                            self.sendEvent(media: media, typeInfo: .playbackFailed(error: error))
+                            self.sendPlayEvent(media: media, typeInfo: .playbackFailed(error: error))
                         }
                         self.releaseFocusIfNeeded()
                         return .failure(error)
@@ -454,26 +486,97 @@ private extension AudioPlayerAgent {
         }
     }
     
-    private func handlePlay() -> HandleDirective {
+   func handlePlay() -> HandleDirective {
         return { [weak self] _, completion in
             self?.resume()
             completion(.success(()))
         }
     }
     
-    private func handleStop() -> HandleDirective {
+   func handleStop() -> HandleDirective {
         return { [weak self] _, completion in
             self?.stop(cancelAssociation: true)
             completion(.success(()))
         }
     }
     
-    private func handlePause() -> HandleDirective {
+   func handlePause() -> HandleDirective {
         return { [weak self] _, completion in
             self?.pause()
             completion(.success(()))
         }
     }
+    
+    func handleUpdateMetadata() -> HandleDirective {
+        return { [weak self] directive, completion in
+            completion(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8),
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+                    }
+                    self.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId)
+            })
+        }
+    }
+    
+    func handleShowLyrics() -> HandleDirective {
+        return { [weak self] directive, completion in
+            completion(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8),
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+                    }
+                    self.sendLyricsEvent(
+                        playServiceId: playServiceId,
+                        typeInfo: self.audioPlayerDisplayManager.showLylics(playServiceId: playServiceId) ? .showLyricsSucceeded : .showLyricsFailed
+                    )
+            })
+        }
+    }
+    
+    func handleHideLyrics() -> HandleDirective {
+        return { [weak self] directive, completion in
+            completion(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8),
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+                    }
+                    self.sendLyricsEvent(
+                        playServiceId: playServiceId,
+                        typeInfo: self.audioPlayerDisplayManager.hideLylics(playServiceId: playServiceId) ? .hideLyricsSucceeded : .hideLyricsFailed
+                    )
+            })
+        }
+    }
+    
+    func handleControlLyricsPage() -> HandleDirective {
+        return { [weak self] directive, completion in
+            completion(
+                Result { [weak self] in
+                    guard let self = self else { return }
+                    guard let data = directive.payload.data(using: .utf8) else {
+                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
+                    }
+                    
+                    let payload = try JSONDecoder().decode(AudioPlayerDisplayControlPayload.self, from: data)
+                    
+                    self.sendLyricsEvent(
+                        playServiceId: payload.playServiceId,
+                        typeInfo: self.audioPlayerDisplayManager.controlLylicsPage(payload: payload) ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)
+                    )
+            })
+        }
+    }
+    
 
     func resume() {
         audioPlayerDispatchQueue.async { [weak self] in
@@ -503,7 +606,7 @@ private extension AudioPlayerAgent {
             media.player.delegate = nil
             media.player.stop()
             self.audioPlayerState = .stopped
-            self.sendEvent(media: media, typeInfo: .playbackStopped)
+            self.sendPlayEvent(media: media, typeInfo: .playbackStopped)
         case .idle, .stopped, .finished:
             return
         }
@@ -513,19 +616,39 @@ private extension AudioPlayerAgent {
 // MARK: - Private (Event)
 
 private extension AudioPlayerAgent {
-    func sendEvent(
+    func sendPlayEvent(
         media: AudioPlayerAgentMedia,
-        typeInfo: Event.TypeInfo,
+        typeInfo: PlayEvent.TypeInfo,
         dialogRequestId: String = TimeUUID().hexString,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
         upstreamDataSender.sendEvent(
-            Event(
+            PlayEvent(
                 token: media.payload.audioItem.stream.token,
                 offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
             ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId),
+            completion: completion
+        )
+    }
+    
+    func sendSettingsEvent(playServiceId: String, typeInfo: SettingsEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
+        upstreamDataSender.sendEvent(
+            SettingsEvent(
+                playServiceId: playServiceId,
+                typeInfo: typeInfo
+            ).makeEventMessage(agent: self),
+            completion: completion
+        )
+    }
+    
+    func sendLyricsEvent(playServiceId: String, typeInfo: LyricsEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
+        upstreamDataSender.sendEvent(
+            LyricsEvent(
+                playServiceId: playServiceId,
+                typeInfo: typeInfo
+            ).makeEventMessage(agent: self),
             completion: completion
         )
     }
@@ -565,10 +688,10 @@ private extension AudioPlayerAgent {
             .subscribe(onNext: { [weak self] (offset) in
                 log.debug("offset: \(offset)")
                 if delayReportTime > 0, offset == delayReportTime {
-                    self?.sendEvent(media: media, typeInfo: .progressReportDelayElapsed)
+                    self?.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
                 }
                 if intervalReportTime > 0, offset % intervalReportTime == 0 {
-                    self?.sendEvent(media: media, typeInfo: .progressReportIntervalElapsed)
+                    self?.sendPlayEvent(media: media, typeInfo: .progressReportIntervalElapsed)
                 }
                 lastOffset = offset
             })

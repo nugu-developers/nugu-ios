@@ -31,7 +31,11 @@ final class NuguCentralManager {
     let client = NuguClient()
     let localTTSAgent: LocalTTSAgent
 
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController(audioPlayerAgent: client.audioPlayerAgent)
+    // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
+    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = {
+        return NuguAudioSessionManager.shared.supportMixWithOthersOption ? nil : NuguDisplayPlayerController()
+    }()
+    
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
             return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
