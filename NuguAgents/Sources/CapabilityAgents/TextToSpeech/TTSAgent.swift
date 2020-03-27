@@ -28,6 +28,27 @@ public final class TTSAgent: TTSAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
     
+    // TTSAgentProtocol
+    public var offset: Int? {
+        return currentMedia?.player.offset.truncatedSeconds
+    }
+    
+    public var duration: Int? {
+        return currentMedia?.player.duration.truncatedSeconds
+    }
+    
+    public var isMuted: Bool = false {
+        didSet {
+            currentMedia?.player.isMuted = isMuted
+        }
+    }
+    
+    public var volume: Float = 1.0 {
+        didSet {
+            currentMedia?.player.volume = volume
+        }
+    }
+    
     // Private
     private let playSyncManager: PlaySyncManageable
     private let focusManager: FocusManageable
@@ -84,12 +105,6 @@ public final class TTSAgent: TTSAgentProtocol {
     
     // Current play Info
     private var currentMedia: TTSMedia?
-    
-    private var playerIsMuted: Bool = false {
-        didSet {
-            currentMedia?.player.isMuted = playerIsMuted
-        }
-    }
     
     private let disposeBag = DisposeBag()
     
@@ -286,23 +301,6 @@ extension TTSAgent: PlaySyncDelegate {
     }
 }
 
-// MARK: - SpeakerVolumeDelegate
-
-extension TTSAgent: SpeakerVolumeDelegate {
-    public func speakerVolumeType() -> SpeakerVolumeType {
-        return .nugu
-    }
-    
-    public func speakerVolumeIsMuted() -> Bool {
-        return playerIsMuted
-    }
-    
-    public func speakerVolumeShouldChange(muted: Bool) -> Bool {
-        playerIsMuted = muted
-        return true
-    }
-}
-
 // MARK: - Private (Directive)
 
 private extension TTSAgent {
@@ -326,7 +324,8 @@ private extension TTSAgent {
                         
                         let mediaPlayer = OpusPlayer()
                         mediaPlayer.delegate = self
-                        mediaPlayer.isMuted = self.playerIsMuted
+                        mediaPlayer.isMuted = self.isMuted
+                        mediaPlayer.volume = self.volume
                         
                         self.currentMedia = TTSMedia(
                             player: mediaPlayer,

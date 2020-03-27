@@ -185,10 +185,6 @@
 		73152FA723E0412700F843C3 /* ExtensionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF32E2375707000C9A177 /* ExtensionAgent.swift */; };
 		73152FA923E0412D00F843C3 /* ExtensionAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF32D2375707000C9A177 /* ExtensionAgent+Event.swift */; };
 		73152FAA23E0412D00F843C3 /* ExtensionAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF32F2375707000C9A177 /* ExtensionAgentItem.swift */; };
-		73152FAB23E0413700F843C3 /* SpeakerAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3362375707000C9A177 /* SpeakerAgent.swift */; };
-		73152FAD23E0413700F843C3 /* SpeakerAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3332375707000C9A177 /* SpeakerAgent+Event.swift */; };
-		73152FAE23E0413700F843C3 /* SpeakerMuteInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3352375707000C9A177 /* SpeakerMuteInfo.swift */; };
-		73152FAF23E0413700F843C3 /* SpeakerAgentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3322375707000C9A177 /* SpeakerAgentError.swift */; };
 		73152FB023E0413F00F843C3 /* AudioPlayerDisplayManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF33D2375707000C9A177 /* AudioPlayerDisplayManageable.swift */; };
 		73152FB123E0413F00F843C3 /* AudioPlayerDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */; };
 		73152FB223E0413F00F843C3 /* AudioPlayerDisplayRenderingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF33C2375707000C9A177 /* AudioPlayerDisplayRenderingInfo.swift */; };
@@ -272,10 +268,6 @@
 		7315305E23E1246F00F843C3 /* CapabilityAgentProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */; };
 		7315305F23E1248300F843C3 /* ExtensionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23F2375703000C9A177 /* ExtensionAgentProtocol.swift */; };
 		7315306023E1248300F843C3 /* ExtensionAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23E2375703000C9A177 /* ExtensionAgentDelegate.swift */; };
-		7315306123E1248300F843C3 /* SpeakerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2422375703000C9A177 /* SpeakerAgentProtocol.swift */; };
-		7315306223E1248300F843C3 /* SpeakerAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2412375703000C9A177 /* SpeakerAgentDelegate.swift */; };
-		7315306323E1248300F843C3 /* SpeakerVolumeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2432375703000C9A177 /* SpeakerVolumeType.swift */; };
-		7315306423E1248300F843C3 /* SpeakerVolumeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2442375703000C9A177 /* SpeakerVolumeDelegate.swift */; };
 		7315306523E1248300F843C3 /* AudioPlayerDisplayTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24A2375703000C9A177 /* AudioPlayerDisplayTemplate.swift */; };
 		7315306723E1248300F843C3 /* AudioPlayerDisplayDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2482375703000C9A177 /* AudioPlayerDisplayDelegate.swift */; };
 		7315306823E1248300F843C3 /* AudioPlayerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF24B2375703000C9A177 /* AudioPlayerAgentProtocol.swift */; };
@@ -607,10 +599,6 @@
 		1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityAgentProperty.swift; sourceTree = "<group>"; };
 		1FFFF23E2375703000C9A177 /* ExtensionAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF23F2375703000C9A177 /* ExtensionAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionAgentProtocol.swift; sourceTree = "<group>"; };
-		1FFFF2412375703000C9A177 /* SpeakerAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerAgentDelegate.swift; sourceTree = "<group>"; };
-		1FFFF2422375703000C9A177 /* SpeakerAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerAgentProtocol.swift; sourceTree = "<group>"; };
-		1FFFF2432375703000C9A177 /* SpeakerVolumeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerVolumeType.swift; sourceTree = "<group>"; };
-		1FFFF2442375703000C9A177 /* SpeakerVolumeDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerVolumeDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2462375703000C9A177 /* AudioPlayerAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2482375703000C9A177 /* AudioPlayerDisplayDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayDelegate.swift; sourceTree = "<group>"; };
 		1FFFF24A2375703000C9A177 /* AudioPlayerDisplayTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayTemplate.swift; sourceTree = "<group>"; };
@@ -678,10 +666,6 @@
 		1FFFF32D2375707000C9A177 /* ExtensionAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ExtensionAgent+Event.swift"; sourceTree = "<group>"; };
 		1FFFF32E2375707000C9A177 /* ExtensionAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionAgent.swift; sourceTree = "<group>"; };
 		1FFFF32F2375707000C9A177 /* ExtensionAgentItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionAgentItem.swift; sourceTree = "<group>"; };
-		1FFFF3322375707000C9A177 /* SpeakerAgentError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerAgentError.swift; sourceTree = "<group>"; };
-		1FFFF3332375707000C9A177 /* SpeakerAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SpeakerAgent+Event.swift"; sourceTree = "<group>"; };
-		1FFFF3352375707000C9A177 /* SpeakerMuteInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerMuteInfo.swift; sourceTree = "<group>"; };
-		1FFFF3362375707000C9A177 /* SpeakerAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerAgent.swift; sourceTree = "<group>"; };
 		1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentMedia.swift; sourceTree = "<group>"; };
 		1FFFF3392375707000C9A177 /* AudioPlayerAgent+PlayEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+PlayEvent.swift"; sourceTree = "<group>"; };
 		1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayManager.swift; sourceTree = "<group>"; };
@@ -1090,7 +1074,6 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF32C2375707000C9A177 /* Extension */,
-				1FFFF3312375707000C9A177 /* Speaker */,
 				1FFFF3372375707000C9A177 /* AudioPlayer */,
 				1FFFF3422375707000C9A177 /* AutomaticSpeechRecognition */,
 				1FFFF34A2375707000C9A177 /* System */,
@@ -1339,17 +1322,6 @@
 				1FFFF23E2375703000C9A177 /* ExtensionAgentDelegate.swift */,
 			);
 			path = Extension;
-			sourceTree = "<group>";
-		};
-		1FFFF2402375703000C9A177 /* Speaker */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF2422375703000C9A177 /* SpeakerAgentProtocol.swift */,
-				1FFFF2412375703000C9A177 /* SpeakerAgentDelegate.swift */,
-				1FFFF2432375703000C9A177 /* SpeakerVolumeType.swift */,
-				1FFFF2442375703000C9A177 /* SpeakerVolumeDelegate.swift */,
-			);
-			path = Speaker;
 			sourceTree = "<group>";
 		};
 		1FFFF2452375703000C9A177 /* AudioPlayer */ = {
@@ -1627,17 +1599,6 @@
 				1FFFF32F2375707000C9A177 /* ExtensionAgentItem.swift */,
 			);
 			path = Extension;
-			sourceTree = "<group>";
-		};
-		1FFFF3312375707000C9A177 /* Speaker */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF3362375707000C9A177 /* SpeakerAgent.swift */,
-				1FFFF3332375707000C9A177 /* SpeakerAgent+Event.swift */,
-				1FFFF3352375707000C9A177 /* SpeakerMuteInfo.swift */,
-				1FFFF3322375707000C9A177 /* SpeakerAgentError.swift */,
-			);
-			path = Speaker;
 			sourceTree = "<group>";
 		};
 		1FFFF3372375707000C9A177 /* AudioPlayer */ = {
@@ -2262,7 +2223,6 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF23D2375703000C9A177 /* Extension */,
-				1FFFF2402375703000C9A177 /* Speaker */,
 				1FFFF2452375703000C9A177 /* AudioPlayer */,
 				1FFFF2512375703000C9A177 /* AutomaticSpeechRecognition */,
 				1FFFF2592375703000C9A177 /* System */,
@@ -3170,12 +3130,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				73152FB123E0413F00F843C3 /* AudioPlayerDisplayManager.swift in Sources */,
-				73152FAD23E0413700F843C3 /* SpeakerAgent+Event.swift in Sources */,
 				73152FBA23E0414700F843C3 /* ASRAgent.swift in Sources */,
 				7315306923E1248300F843C3 /* AudioPlayerAgentDelegate.swift in Sources */,
-				73152FAB23E0413700F843C3 /* SpeakerAgent.swift in Sources */,
 				736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */,
-				7315306123E1248300F843C3 /* SpeakerAgentProtocol.swift in Sources */,
 				73152FC823E0415400F843C3 /* TTSMedia.swift in Sources */,
 				73152FDC23E0451900F843C3 /* NuguAgents.swift in Sources */,
 				7315305D23E1246F00F843C3 /* CapabilityAgentCategory.swift in Sources */,
@@ -3199,10 +3156,8 @@
 				73152FC723E0415400F843C3 /* TTSAgent+Event.swift in Sources */,
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
 				7315306C23E1248300F843C3 /* ASRAgentDelegate.swift in Sources */,
-				73152FAE23E0413700F843C3 /* SpeakerMuteInfo.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
-				7315306423E1248300F843C3 /* SpeakerVolumeDelegate.swift in Sources */,
 				7315307123E1248300F843C3 /* SystemAgentProtocol.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,
 				7315305923E1246F00F843C3 /* CapabilityAgentable.swift in Sources */,
@@ -3210,7 +3165,6 @@
 				73152FCB23E0415B00F843C3 /* DisplayAgent+Event.swift in Sources */,
 				7315305323E1246F00F843C3 /* TextAgentProtocol.swift in Sources */,
 				73152FA923E0412D00F843C3 /* ExtensionAgent+Event.swift in Sources */,
-				73152FAF23E0413700F843C3 /* SpeakerAgentError.swift in Sources */,
 				73152FE623E0491C00F843C3 /* NSObject+Rx.swift in Sources */,
 				7315306523E1248300F843C3 /* AudioPlayerDisplayTemplate.swift in Sources */,
 				73152FD123E0416600F843C3 /* LocationAgent.swift in Sources */,
@@ -3221,8 +3175,6 @@
 				73152FDA23E0443500F843C3 /* ASREncoding.swift in Sources */,
 				7315307423E1248300F843C3 /* TTSAgentProtocol.swift in Sources */,
 				7315306023E1248300F843C3 /* ExtensionAgentDelegate.swift in Sources */,
-				7315306323E1248300F843C3 /* SpeakerVolumeType.swift in Sources */,
-				7315306223E1248300F843C3 /* SpeakerAgentDelegate.swift in Sources */,
 				7315306823E1248300F843C3 /* AudioPlayerAgentProtocol.swift in Sources */,
 				73152FCF23E0416100F843C3 /* TextAgent+Event.swift in Sources */,
 				7315306B23E1248300F843C3 /* ASRAgentProtocol.swift in Sources */,

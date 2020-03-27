@@ -37,6 +37,18 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         return currentMedia?.player.duration.truncatedSeconds
     }
     
+    public var isMuted: Bool = false {
+        didSet {
+            currentMedia?.player.isMuted = isMuted
+        }
+    }
+    
+    public var volume: Float = 1.0 {
+        didSet {
+            currentMedia?.player.volume = volume
+        }
+    }
+    
     public let audioPlayerPauseTimeout: DispatchTimeInterval
      
     // Private
@@ -108,12 +120,6 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     // Current play info
     private var currentMedia: AudioPlayerAgentMedia?
-    
-    private var playerIsMuted: Bool = false {
-        didSet {
-            currentMedia?.player.isMuted = playerIsMuted
-        }
-    }
     
     // ProgressReporter
     private var intervalReporter: Disposable?
@@ -401,23 +407,6 @@ extension AudioPlayerAgent: PlaySyncDelegate {
                 self.stop(cancelAssociation: false)
             }
         }
-    }
-}
-
-// MARK: - SpeakerVolumeDelegate
-
-extension AudioPlayerAgent: SpeakerVolumeDelegate {
-    public func speakerVolumeType() -> SpeakerVolumeType {
-        return .nugu
-    }
-    
-    public func speakerVolumeIsMuted() -> Bool {
-        return playerIsMuted
-    }
-   
-    public func speakerVolumeShouldChange(muted: Bool) -> Bool {
-        playerIsMuted = muted
-        return true
     }
 }
 
@@ -734,6 +723,7 @@ private extension AudioPlayerAgent {
             offset: NuguTimeInterval(seconds: payload.audioItem.stream.offset)
         )
         
-        mediaPlayer.isMuted = playerIsMuted
+        mediaPlayer.isMuted = isMuted
+        mediaPlayer.volume = volume
     }
 }

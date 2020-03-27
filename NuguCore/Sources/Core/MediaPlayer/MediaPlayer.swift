@@ -127,6 +127,15 @@ extension MediaPlayer {
             player?.isMuted = newValue
         }
     }
+    
+    public var volume: Float {
+        get {
+            return player?.volume ?? 1.0
+        }
+        set {
+            player?.volume = newValue
+        }
+    }
 }
 
 // MARK: - MediaPlayer + MediaUrlDataSource
