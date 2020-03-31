@@ -124,7 +124,7 @@ private extension SystemAgent {
     func handleUpdateState() -> HandleDirective {
         return { [weak self] directive, completion in
             self?.systemDispatchQueue.async { [weak self] in
-                self?.sendSynchronizeStateEvent()
+                self?.sendSynchronizeStateEvent(directive: directive)
             }
             
             completion(.success(()))
@@ -169,7 +169,7 @@ private extension SystemAgent {
 }
 
 private extension SystemAgent {
-    func sendSynchronizeStateEvent() {
+    func sendSynchronizeStateEvent(directive: Downstream.Directive? = nil) {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
@@ -178,6 +178,7 @@ private extension SystemAgent {
                     typeInfo: .synchronizeState
                 ).makeEventMessage(
                     agent: self,
+                    referrerDialogRequestId: directive?.header.dialogRequestId,
                     contextPayload: contextPayload
                 )
             )

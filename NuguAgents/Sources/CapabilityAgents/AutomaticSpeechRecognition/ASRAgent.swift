@@ -98,7 +98,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
                 upstreamDataSender.sendEvent(
                     Event(typeInfo: .stopRecognize, expectSpeech: expectSpeech)
-                        .makeEventMessage(agent: self)
+                        .makeEventMessage(agent: self, referrerDialogRequestId: asrRequest.dialogRequestId)
                 )
             case .error(let error):
                 expectSpeech = nil
@@ -107,17 +107,17 @@ public final class ASRAgent: ASRAgentProtocol {
                 case NetworkError.timeout:
                     upstreamDataSender.sendEvent(
                         Event(typeInfo: .responseTimeout, expectSpeech: expectSpeech)
-                            .makeEventMessage(agent: self)
+                            .makeEventMessage(agent: self, referrerDialogRequestId: asrRequest.dialogRequestId)
                     )
                 case ASRError.listeningTimeout:
                     upstreamDataSender.sendEvent(
                         Event(typeInfo: .listenTimeout, expectSpeech: expectSpeech)
-                            .makeEventMessage(agent: self)
+                            .makeEventMessage(agent: self, referrerDialogRequestId: asrRequest.dialogRequestId)
                     )
                 case ASRError.listenFailed:
                     upstreamDataSender.sendEvent(
                         Event(typeInfo: .listenFailed, expectSpeech: expectSpeech)
-                            .makeEventMessage(agent: self)
+                            .makeEventMessage(agent: self, referrerDialogRequestId: asrRequest.dialogRequestId)
                     )
                 case ASRError.recognizeFailed:
                     break
@@ -197,34 +197,7 @@ public extension ASRAgent {
         initiator: ASRInitiator = .user,
         completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)? = nil
     ) -> String {
-        log.debug("startRecognition, initiator: \(initiator)")
-        // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
-        let reader = audioStream.makeAudioStreamReader()
-        let dialogRequestId = TimeUUID().hexString
-        asrDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
-                log.warning("Not permitted in current state \(self.asrState)")
-                completion?(.cancel, dialogRequestId)
-                return
-            }
-            
-            self.contextManager.getContexts { [weak self] contextPayload in
-                guard let self = self else { return }
-                
-                self.asrRequest = ASRRequest(
-                    contextPayload: contextPayload,
-                    reader: reader,
-                    dialogRequestId: dialogRequestId,
-                    initiator: initiator,
-                    completion: completion
-                )
-                
-                self.focusManager.requestFocus(channelDelegate: self)
-            }
-        }
-        return dialogRequestId
+        return startRecognition(initiator: initiator, by: nil, completion: completion)
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -351,7 +324,7 @@ extension ASRAgent: EndPointDetectorDelegate {
                 return
             }
             
-            let attachmentHeader = Upstream.Header(
+            let attachmentHeader = Upstream.Attachment.Header(
                 namespace: self.capabilityAgentProperty.name,
                 name: "Recognize",
                 version: self.capabilityAgentProperty.version,
@@ -411,7 +384,7 @@ private extension ASRAgent {
                             })
                         self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
                         
-                        self.startRecognition()
+                        self.startRecognition(initiator: .user, by: directive, completion: nil)
                     }
                 }
             )
@@ -536,7 +509,7 @@ private extension ASRAgent {
         
         asrState = .busy
         
-        let attachmentHeader = Upstream.Header(
+        let attachmentHeader = Upstream.Attachment.Header(
             namespace: capabilityAgentProperty.name,
             name: "Recognize",
             version: capabilityAgentProperty.version,
@@ -545,6 +518,43 @@ private extension ASRAgent {
         )
         let attachment = Upstream.Attachment(header: attachmentHeader, content: Data(), type: "audio/speex", seq: attachmentSeq, isEnd: true)
         upstreamDataSender.sendStream(attachment)
+    }
+    
+    @discardableResult func startRecognition(
+        initiator: ASRInitiator,
+        by directive: Downstream.Directive?,
+        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
+    ) -> String {
+        log.debug("startRecognition, initiator: \(initiator)")
+        // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
+        let reader = audioStream.makeAudioStreamReader()
+        let dialogRequestId = TimeUUID().hexString
+        asrDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+
+            guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
+                log.warning("Not permitted in current state \(self.asrState)")
+                completion?(.cancel, dialogRequestId)
+                return
+            }
+
+            self.contextManager.getContexts { [weak self] contextPayload in
+                guard let self = self else { return }
+
+                self.asrRequest = ASRRequest(
+                    contextPayload: contextPayload,
+                    reader: reader,
+                    dialogRequestId: dialogRequestId,
+                    initiator: initiator,
+                    referrerDialogRequestId: directive?.header.dialogRequestId,
+                    completion: completion
+                )
+
+                self.focusManager.requestFocus(channelDelegate: self)
+            }
+        }
+        
+        return dialogRequestId
     }
 }
 
