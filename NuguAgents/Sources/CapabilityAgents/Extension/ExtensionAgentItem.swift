@@ -22,7 +22,7 @@ import Foundation
 
 struct ExtensionAgentItem: Decodable {
     let playServiceId: String
-    let data: [String: Any]
+    let data: [String: AnyHashable]
     
     enum CodingKeys: String, CodingKey {
         case playServiceId
@@ -33,6 +33,6 @@ struct ExtensionAgentItem: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
-        data = try container.decode([String: Any].self, forKey: .data)
+        data = try container.decode([String: AnyHashable].self, forKey: .data)
     }
 }

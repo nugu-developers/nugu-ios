@@ -88,13 +88,13 @@ class ExtensionAgentSpec: QuickSpec {
 // MARK: - MockExtensionAgentDelegate
 
 class MockExtensionAgentDelegate: ExtensionAgentDelegate {
-    func extensionAgentRequestContext() -> [String: Any]? {
+    func extensionAgentRequestContext() -> [String: AnyHashable]? {
         return [
             "test": "context"
         ]
     }
     
-    func extensionAgentDidReceiveAction(data: [String : Any], playServiceId: String, dialogRequestId: String, completion: @escaping (Bool) -> Void) {
+    func extensionAgentDidReceiveAction(data: [String : AnyHashable], playServiceId: String, dialogRequestId: String, completion: @escaping (Bool) -> Void) {
         completion(true)
     }
 }

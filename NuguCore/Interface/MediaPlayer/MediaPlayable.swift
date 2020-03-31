@@ -22,34 +22,41 @@ import Foundation
 
 /// <#Description#>
 public protocol MediaPlayable: class {
-    /// <#Description#>
     var delegate: MediaPlayerDelegate? { get set }
-    /// <#Description#>
-    var offset: TimeIntervallic { get }
-    /// <#Description#>
-    var duration: TimeIntervallic { get }
-    /// <#Description#>
-    var isMuted: Bool { get set }
     
-    /// <#Description#>
+    /// Returns the current time of the current player item.
+    var offset: TimeIntervallic { get }
+    
+    /// The duration of the current player item.
+    var duration: TimeIntervallic { get }
+    
+    /// The audio playback volume for the player.
+    var volume: Float { get set }
+    
+    /// Begins playback of the current item.
     func play()
-    /// <#Description#>
+    
+    /// Stop playback.
     func stop()
-    /// <#Description#>
+    
+    /// Pauses playback.
     func pause()
-    /// <#Description#>
+    
+    /// Begins playback of the current item.
     func resume()
-    /// <#Description#>
-    /// - Parameter offset: <#offset description#>
-    /// - Parameter completion: <#completion description#>
+    
+    /// Sets the current playback time to the specified time.
+    ///
+    /// - Parameter offset: The time(seconds) to which to seek.
     func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?)
 }
 
 // MARK: - MediaPlayable + Optional
 
 public extension MediaPlayable {
-    /// <#Description#>
-    /// - Parameter offset: <#offset description#>
+    /// Sets the current playback time to the specified time.
+    ///
+    /// - Parameter offset: The time(seconds) to which to seek.
     func seek(to offset: TimeIntervallic) {
         seek(to: offset, completion: nil)
     }

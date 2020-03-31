@@ -40,8 +40,8 @@ extension AudioPlayerAgent {
 // MARK: - Eventable
 
 extension AudioPlayerAgent.SettingsEvent: Eventable {
-    public var payload: [String: Any] {
-        var eventPayload: [String: Any] = [
+    public var payload: [String: AnyHashable] {
+        var eventPayload: [String: AnyHashable] = [
             "playServiceId": playServiceId
         ]
         switch typeInfo {

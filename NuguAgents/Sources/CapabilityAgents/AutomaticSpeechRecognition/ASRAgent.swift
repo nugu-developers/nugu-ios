@@ -266,7 +266,7 @@ extension ASRAgent: FocusChannelDelegate {
 
 extension ASRAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = [
+        let payload: [String: AnyHashable] = [
             "version": capabilityAgentProperty.version,
             "engine": "skt"
         ]

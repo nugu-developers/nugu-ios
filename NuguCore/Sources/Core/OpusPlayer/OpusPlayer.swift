@@ -66,15 +66,6 @@ public class OpusPlayer: MediaPlayable {
         return NuguTimeInterval(seconds: Double(chunkSize * audioBuffers.count) / audioFormat.sampleRate)
     }
     
-    public var isMuted: Bool {
-        get {
-            return volume == 0.0
-        }
-        set {
-            volume = newValue ? 0.0 : 1.0
-        }
-    }
-    
     public var volume: Float {
         get {
             return player.volume

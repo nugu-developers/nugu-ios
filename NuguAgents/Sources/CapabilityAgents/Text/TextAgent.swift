@@ -26,7 +26,7 @@ import RxSwift
 
 public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.1")
     
     public weak var delegate: TextAgentDelegate?
     
@@ -72,7 +72,7 @@ extension TextAgent {
 
 extension TextAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = ["version": capabilityAgentProperty.version]        
+        let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]        
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }

@@ -23,7 +23,7 @@ import Foundation
 /// <#Description#>
 public protocol Eventable {
     /// <#Description#>
-    var payload: [String: Any] { get }
+    var payload: [String: AnyHashable] { get }
     /// <#Description#>
     var name: String { get }
 }
