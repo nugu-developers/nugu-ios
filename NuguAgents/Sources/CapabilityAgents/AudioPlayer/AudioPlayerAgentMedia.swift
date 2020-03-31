@@ -37,7 +37,7 @@ struct AudioPlayerAgentMedia {
     
     struct Payload {
         let playStackControl: PlayStackControl?
-        let sourceType: SourceType
+        let sourceType: SourceType?
         let cacheKey: String?
         let audioItem: AudioItem
         let playServiceId: String
@@ -56,7 +56,7 @@ struct AudioPlayerAgentMedia {
             let metadata: [String: AnyHashable]?
             
             struct Stream {
-                let url: String
+                let url: String?
                 private let offsetInMilliseconds: Int
                 fileprivate let progressReport: ProgressReport?
                 let token: String
@@ -108,7 +108,11 @@ extension AudioPlayerAgentMedia.Payload: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
-        sourceType = try container.decodeIfPresent(SourceType.self, forKey: .sourceType) ?? .url
+        if container.contains(.sourceType) {
+            sourceType = try? container.decodeIfPresent(SourceType.self, forKey: .sourceType)
+        } else {
+            sourceType = .url
+        }
         cacheKey = try? container.decodeIfPresent(String.self, forKey: .cacheKey)
         audioItem = try container.decode(AudioItem.self, forKey: .audioItem)
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
@@ -159,7 +163,7 @@ extension AudioPlayerAgentMedia.Payload.AudioItem.Stream: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        url = try container.decode(String.self, forKey: .url)
+        url = try? container.decode(String.self, forKey: .url)
         offsetInMilliseconds = (try? container.decode(Int.self, forKey: .offsetInMilliseconds)) ?? 0
         progressReport = try? container.decode(ProgressReport.self, forKey: .progressReport)
         token = try container.decode(String.self, forKey: .token)

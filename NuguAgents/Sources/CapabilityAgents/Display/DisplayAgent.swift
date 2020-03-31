@@ -50,8 +50,8 @@ public final class DisplayAgent: DisplayAgentProtocol {
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleClose),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Focus", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleFocus),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Scroll", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleScroll),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlFocus", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlFocus),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlScroll", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlScroll),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdate),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
@@ -269,7 +269,7 @@ private extension DisplayAgent {
         }
     }
     
-    func handleFocus() -> HandleDirective {
+    func handleControlFocus() -> HandleDirective {
         return { [weak self] directive, completion in
             completion(
                 Result { [weak self] in
@@ -292,6 +292,7 @@ private extension DisplayAgent {
                             )
                             return
                     }
+                    
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
@@ -306,7 +307,7 @@ private extension DisplayAgent {
         }
     }
         
-    func handleScroll() -> HandleDirective {
+    func handleControlScroll() -> HandleDirective {
         return { [weak self] directive, completion in
             completion(
                 Result { [weak self] in
