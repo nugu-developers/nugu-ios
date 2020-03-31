@@ -27,7 +27,6 @@ public struct Policy: Decodable {
     public struct ServerPolicy: Decodable {
         public let serverPolicyProtocol: String
         public let hostname: String
-        public let address: String
         public let port: Int
         public let retryCountLimit: Int
         public let connectionTimeout: Int
@@ -36,7 +35,6 @@ public struct Policy: Decodable {
         private enum CodingKeys: String, CodingKey {
             case serverPolicyProtocol = "protocol"
             case hostname
-            case address
             case port
             case retryCountLimit
             case connectionTimeout, charge

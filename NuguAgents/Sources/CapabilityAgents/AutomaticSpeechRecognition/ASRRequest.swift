@@ -28,6 +28,7 @@ struct ASRRequest {
     let dialogRequestId: String
     let initiator: ASRInitiator
     let referrerDialogRequestId: String?
+    let completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
 }
 
 public enum ASRInitiator {

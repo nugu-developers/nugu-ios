@@ -27,12 +27,10 @@ import NuguCore
 /// The methods of this protocol are all optional.
 public protocol TextAgentDelegate: class {
     /// Tells the delegate that `TextAgent` received result.
-    /// - Parameter result: The result of text recognition.
-    func textAgentDidStreamStateChanged(state: StreamDataState, dialogRequestId: String)
-}
-
-// MARK: - Optional
-
-public extension TextAgentDelegate {
-    func textAgentDidStreamStateChanged(state: StreamDataState, dialogRequestId: String) {}
+    /// - Parameter directive: The directive of `Text.TextSource` event.
+    /// - Returns: true if handled, otherwise return false
+    func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool
+    
+    /// Indicates `ASRState` is in progress with multiturn.
+    func textAgentDidRequestExpectSpeech() -> ASRExpectSpeech?
 }

@@ -58,7 +58,7 @@ extension ContextManager {
             .map({ (contextInfos) -> [ContextInfo] in
                 return contextInfos.compactMap({ $0 })
             })
-            .do(
+            .subscribe(
                 onSuccess: { (contextInfos) in
                     let contextDictionary = Dictionary(grouping: contextInfos, by: { $0.contextType })
                     let payload = ContextPayload(
@@ -68,7 +68,6 @@ extension ContextManager {
                     
                     completion(payload)
             })
-            .subscribe()
             .disposed(by: disposeBag)
     }
 }

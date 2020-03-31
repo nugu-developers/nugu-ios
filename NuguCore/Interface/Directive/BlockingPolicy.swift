@@ -1,8 +1,8 @@
 //
-//  TextRequest.swift
-//  NuguAgents
+//  BlockingPolicy.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 2019/07/19.
+//  Created by MinChul Lee on 2020/03/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,18 @@
 
 import Foundation
 
-import NuguCore
-
-struct TextRequest {
-    let contextPayload: ContextPayload
-    let text: String
-    let dialogRequestId: String
-    let token: String?
-    let expectSpeech: ASRExpectSpeech?
+public struct BlockingPolicy {
+    public let medium: Medium
+    public let isBlocking: Bool
+    
+    public init(medium: Medium, isBlocking: Bool) {
+        self.medium = medium
+        self.isBlocking = isBlocking
+    }
+    
+    public enum Medium: CaseIterable {
+        case none
+        case audio
+        case visual
+    }
 }
