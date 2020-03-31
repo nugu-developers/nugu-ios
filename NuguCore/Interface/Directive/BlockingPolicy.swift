@@ -1,8 +1,8 @@
 //
-//  SpeakerVolumeDelegate.swift
-//  NuguAgents
+//  BlockingPolicy.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 2019/08/28.
+//  Created by MinChul Lee on 2020/03/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,18 @@
 
 import Foundation
 
-public protocol SpeakerVolumeDelegate: class {
-    func speakerVolumeType() -> SpeakerVolumeType
+public struct BlockingPolicy {
+    public let medium: Medium
+    public let isBlocking: Bool
     
-    func speakerVolumeIsMuted() -> Bool
+    public init(medium: Medium, isBlocking: Bool) {
+        self.medium = medium
+        self.isBlocking = isBlocking
+    }
     
-    func speakerVolumeShouldChange(muted: Bool) -> Bool
+    public enum Medium: CaseIterable {
+        case none
+        case audio
+        case visual
+    }
 }

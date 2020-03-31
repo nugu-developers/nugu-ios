@@ -20,8 +20,25 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `AudioPlayerAgent` handles directives for controlling audio playback.
 public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
+    /// Returns the current time of the current player item.
+    ///
+    /// This function retrieves the offset(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
+    var offset: Int? { get }
+    
+    /// The duration of the current player item.
+    ///
+    /// This function retrieves the duration(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
+    var duration: Int? { get }
+    
+    /// The audio playback volume for the player.
+    ///
+    /// This function retrieves the volume of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
+    var volume: Float { get set }
+    
     /// Adds a delegate to be notified of `AudioPlayerState` changes.
     /// - Parameter delegate: The object to add.
     func add(delegate: AudioPlayerAgentDelegate)
@@ -30,12 +47,6 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// - Parameter delegate: The object to remove.
     func remove(delegate: AudioPlayerAgentDelegate)
     
-    /// This function retrieves the offset(seconds) of the current `MediaPlayable` the `AudioPlayerAgent` is handling.
-    var offset: Int? { get }
-    
-    /// This function retrieves the duration(seconds) of the current `MediaPlayable` the `AudioPlayerAgent` is handling.
-    var duration: Int? { get }
-    
     /// Begins playback of the current item.
     func play()
     
@@ -43,10 +54,16 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     func stop()
     
     /// Initiates playback of the next item.
-    func next()
+    ///
+    /// - Parameter completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func next(completion: ((StreamDataState) -> Void)?) -> String
     
     /// initiates playback of the previous item.
-    func prev()
+    ///
+    /// - Parameter completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func prev(completion: ((StreamDataState) -> Void)?) -> String
     
     /// Pauses playback.
     func pause()
@@ -79,4 +96,17 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     ///
     /// - Parameter templateId: The unique identifier for the template.
     func stopRenderingTimer(templateId: String)
+}
+
+// MARK: - Default
+
+public extension AudioPlayerAgentProtocol {
+    @discardableResult func next() -> String {
+        return next(completion: nil)
+    }
+    
+    /// initiates playback of the previous item.
+    @discardableResult func prev() -> String {
+        return prev(completion: nil)
+    }
 }

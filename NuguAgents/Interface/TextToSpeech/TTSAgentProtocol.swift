@@ -22,6 +22,21 @@ import Foundation
 
 /// The `TTSAgent` handles directives for controlling speech playback.
 public protocol TTSAgentProtocol: CapabilityAgentable {
+    /// Returns the current time of the current player item.
+    ///
+    /// This function retrieves the offset(seconds) of the current `MediaPlayable` handled by the `TTSAgent`.
+    var offset: Int? { get }
+    
+    /// The duration of the current player item.
+    ///
+    /// This function retrieves the duration(seconds) of the current `MediaPlayable` handled by the `TTSAgent`.
+    var duration: Int? { get }
+    
+    /// The audio playback volume for the player.
+    ///
+    /// This function retrieves the volume of the current `MediaPlayable` handled by the `TTSAgent`.
+    var volume: Float { get set }
+    
     /// Adds a delegate to be notified of `TTSState` changes.
     ///
     /// - Parameter delegate: The object to add.
@@ -36,7 +51,11 @@ public protocol TTSAgentProtocol: CapabilityAgentable {
     ///
     /// - Parameter text: The obejct to request speech synthesis.
     /// - Parameter playServiceId: The unique identifier to specify play service.
-    func requestTTS(text: String, playServiceId: String?, handler: ((TTSResult) -> Void)?)
+    @discardableResult func requestTTS(
+        text: String,
+        playServiceId: String?,
+        handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)?
+    ) -> String
     
     /// Stops playback
     /// - Parameter cancelAssociation: true: cancel all associated directives, false : only stop tts
@@ -49,16 +68,16 @@ public extension TTSAgentProtocol {
     /// Request voice synthesis and playback.
     ///
     /// - Parameter text: The obejct to request speech synthesis.
-    func requestTTS(text: String) {
-        requestTTS(text: text, playServiceId: nil, handler: nil)
+    @discardableResult func requestTTS(text: String)  -> String {
+        return requestTTS(text: text, playServiceId: nil, handler: nil)
     }
 
-    func requestTTS(text: String, playServiceId: String?) {
-        requestTTS(text: text, playServiceId: playServiceId, handler: nil)
+    @discardableResult func requestTTS(text: String, playServiceId: String?) -> String {
+        return requestTTS(text: text, playServiceId: playServiceId, handler: nil)
     }
     
-    func requestTTS(text: String, handler: ((TTSResult) -> Void)? = nil) {
-        requestTTS(text: text, playServiceId: nil, handler: handler)
+    @discardableResult func requestTTS(text: String, handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)? = nil) -> String {
+        return requestTTS(text: text, playServiceId: nil, handler: handler)
     }
     
     /// Stops playback
