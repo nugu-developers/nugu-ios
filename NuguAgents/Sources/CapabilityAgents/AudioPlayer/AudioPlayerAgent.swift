@@ -442,7 +442,9 @@ private extension AudioPlayerAgent {
                         }
                         
                         switch self.currentMedia {
-                        case .some(let media) where media.payload.audioItem.stream.token == payload.audioItem.stream.token:
+                        case .some(let media) where
+                            media.payload.audioItem.stream.token == payload.audioItem.stream.token
+                                && media.payload.playServiceId == payload.playServiceId:
                             // Resume and seek
                             self.currentMedia = AudioPlayerAgentMedia(
                                 dialogRequestId: directive.header.dialogRequestId,
