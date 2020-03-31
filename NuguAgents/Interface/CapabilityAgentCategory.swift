@@ -31,8 +31,6 @@ public enum CapabilityAgentCategory: CaseIterable {
     /// <#Description#>
     case display
     /// <#Description#>
-    case speaker
-    /// <#Description#>
     case system
     /// <#Description#>
     case text
@@ -52,7 +50,6 @@ public extension CapabilityAgentCategory {
         case .automaticSpeechRecognition: return "ASR"
         case .textToSpeech: return "TTS"
         case .display: return "Display"
-        case .speaker: return "Speaker"
         case .system: return "System"
         case .text: return "Text"
         case .extension: return "Extension"
