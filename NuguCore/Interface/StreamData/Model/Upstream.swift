@@ -21,19 +21,58 @@
 import Foundation
 
 public enum Upstream {
+    
+    // MARK: Event
+    
     public struct Event {
-        public let payload: [String: Any]
+        public struct Header: Encodable {
+            public let namespace: String
+            public let name: String
+            public let version: String
+            public let dialogRequestId: String
+            public let messageId: String
+            public let referrerDialogRequestId: String?
+            
+            public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String, referrerDialogRequestId: String? = nil) {
+                self.namespace = namespace
+                self.name = name
+                self.version = version
+                self.dialogRequestId = dialogRequestId
+                self.messageId = messageId
+                self.referrerDialogRequestId = referrerDialogRequestId
+            }
+        }
+        
+        public let payload: [String: AnyHashable]
         public let header: Header
         public let contextPayload: ContextPayload
         
-        public init(payload: [String: Any], header: Header, contextPayload: ContextPayload) {
+        public init(payload: [String: AnyHashable], header: Header, contextPayload: ContextPayload) {
             self.payload = payload
             self.header = header
             self.contextPayload = contextPayload
         }
     }
-
+    
+    // MARK: Attachment
+    
     public struct Attachment {
+        public struct Header {
+            public let namespace: String
+            public let name: String
+            public let version: String
+            public let dialogRequestId: String
+            public let messageId: String
+            
+            public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String) {
+                self.namespace = namespace
+                self.name = name
+                self.version = version
+                self.dialogRequestId = dialogRequestId
+                self.messageId = messageId
+            }
+        }
+        
         public let header: Header
         public let content: Data
         public let seq: Int32
@@ -48,38 +87,23 @@ public enum Upstream {
             self.isEnd = isEnd
         }
     }
-
-    public struct Header {
-        public let namespace: String
-        public let name: String
-        public let version: String
-        public let dialogRequestId: String
-        public let messageId: String
-        
-        public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String) {
-            self.namespace = namespace
-            self.name = name
-            self.version = version
-            self.dialogRequestId = dialogRequestId
-            self.messageId = messageId
-        }
-    }
 }
+
+// MARK: - Upstream.Event
 
 extension Upstream.Event {
     var headerString: String {
-        let headerDictionary = ["namespace": header.namespace,
-                                "name": header.name,
-                                "dialogRequestId": header.dialogRequestId,
-                                "messageId": header.messageId,
-                                "version": header.version]
-
-        guard let data = try? JSONSerialization.data(withJSONObject: headerDictionary, options: []),
-            let headerString = String(data: data, encoding: .utf8) else {
-                return ""
+        let jsonData: Data
+        
+        do {
+            jsonData = try JSONEncoder().encode(header)
+        } catch {
+            log.debug("Failed to encoding")
+            return ""
         }
         
-        return headerString
+        let jsonString = String(decoding: jsonData, as: UTF8.self)
+        return jsonString
     }
     
     var payloadString: String {
@@ -94,17 +118,17 @@ extension Upstream.Event {
     
     var contextString: String {
         let supportedInterfaces = contextPayload.supportedInterfaces.reduce(
-            into: [String: Any]()
+            into: [String: AnyHashable]()
         ) { result, context in
             result[context.name] = context.payload
         }
         let client = contextPayload.client.reduce(
-            into: [String: Any]()
+            into: [String: AnyHashable]()
         ) { result, context in
             result[context.name] = context.payload
         }
         
-        let contextDict: [String: Any] = [
+        let contextDict: [String: AnyHashable] = [
             "supportedInterfaces": supportedInterfaces,
             "client": client
         ]

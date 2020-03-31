@@ -212,7 +212,7 @@ extension TTSAgent: FocusChannelDelegate {
 
 extension TTSAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = [
+        let payload: [String: AnyHashable] = [
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
             "engine": "skt"
@@ -350,7 +350,7 @@ private extension TTSAgent {
                     return
                 }
                 guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
-                    log.warning("TextToSpeechItem not exist or dialogRequesetId not valid")
+                    log.warning("TTSMedia is not exist or dialogRequesttId is not valid")
                     completion(.success(()))
                     return
                 }
@@ -445,7 +445,7 @@ private extension TTSAgent {
                 token: media.payload.token,
                 playServiceId: playServiceId,
                 typeInfo: info
-            ).makeEventMessage(agent: self),
+            ).makeEventMessage(agent: self, referrerDialogRequestId: media.dialogRequestId),
             completion: completion
         )
     }

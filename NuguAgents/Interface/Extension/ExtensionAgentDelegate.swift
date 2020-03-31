@@ -32,14 +32,14 @@ public protocol ExtensionAgentDelegate: class {
     /// This context is used by the backend proxy server.
     ///
     /// For more information, see [Backend proxy API Reference].
-    func extensionAgentRequestContext() -> [String: Any]?
+    func extensionAgentRequestContext() -> [String: AnyHashable]?
     
     /// Tells the delegate that `ExtensionAgent` received `action` directive
     ///
     /// When received any data, must call completion block to send an event.
     /// - Parameter data: The message decoded from json to dictionary received by `action` directive.
     /// - Parameter playServiceId: The unique identifier to specify play service.
-    /// - Parameter completion: A block to call when you are finished performing the action.
     /// - Parameter dialogRequestId: The `dialogRequestId` for action.
-    func extensionAgentDidReceiveAction(data: [String: Any], playServiceId: String, dialogRequestId: String, completion: @escaping (Bool) -> Void)
+    /// - Parameter completion: A block to call when you are finished performing the action.
+    func extensionAgentDidReceiveAction(data: [String: AnyHashable], playServiceId: String, dialogRequestId: String, completion: @escaping (Bool) -> Void)
 }

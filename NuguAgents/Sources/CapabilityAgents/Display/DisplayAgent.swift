@@ -153,7 +153,7 @@ extension DisplayAgent: ContextInfoDelegate {
                 completion(nil)
                 return
             }
-            var payload: [String: Any?] = [
+            var payload: [String: AnyHashable?] = [
                 "version": self.capabilityAgentProperty.version,
                 "token": self.currentItem?.token,
                 "playServiceId": self.currentItem?.playServiceId
@@ -258,7 +258,7 @@ private extension DisplayAgent {
                         Event(
                             playServiceId: payload.playServiceId,
                             typeInfo: self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
-                        ).makeEventMessage(agent: self)
+                        ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
                     )
                     
                     if let item = self.currentItem, item.playServiceId == payload.playServiceId {
@@ -300,7 +300,7 @@ private extension DisplayAgent {
                             Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed
-                            ).makeEventMessage(agent: self)
+                            ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
                         )
                     }
             })
@@ -337,7 +337,7 @@ private extension DisplayAgent {
                             Event(
                                 playServiceId: payload.playServiceId,
                                 typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed
-                            ).makeEventMessage(agent: self)
+                            ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
                         )
                     }
             })
@@ -352,7 +352,7 @@ private extension DisplayAgent {
                     guard let self = self else { return }
                     
                     guard let payloadAsData = directive.payload.data(using: .utf8),
-                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: AnyHashable],
                         let token = payloadDictionary["token"] as? String,
                         let playServiceId = payloadDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
@@ -384,7 +384,7 @@ private extension DisplayAgent {
         return { [weak self] directive, completion in
             guard let self = self else { return completion(.success(())) }
             guard let payloadAsData = directive.payload.data(using: .utf8),
-                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: AnyHashable],
                 let token = payloadDictionary["token"] as? String,
                 let playServiceId = payloadDictionary["playServiceId"] as? String else {
                     completion(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")))
@@ -394,7 +394,7 @@ private extension DisplayAgent {
             log.info("\(directive.header.type)")
             
             let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-            let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
+            let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: AnyHashable])?["playServiceId"] as? String
             let focusable = payloadDictionary["focusable"] as? Bool
             
             let item = DisplayTemplate(
