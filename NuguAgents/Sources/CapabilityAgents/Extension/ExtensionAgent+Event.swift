@@ -32,7 +32,7 @@ extension ExtensionAgent {
         public enum TypeInfo {
             case actionSucceeded
             case actionFailed
-            case commandIssued(data: [String: Any])
+            case commandIssued(data: AnyHashable)
         }
     }
 }
@@ -40,8 +40,8 @@ extension ExtensionAgent {
 // MARK: - Eventable
 
 extension ExtensionAgent.Event: Eventable {
-    public var payload: [String: Any] {
-        var payload: [String: Any] = [
+    public var payload: [String: AnyHashable] {
+        var payload: [String: AnyHashable] = [
             "playServiceId": playServiceId
         ]
         switch typeInfo {

@@ -369,7 +369,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
 
 extension AudioPlayerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        var payload: [String: Any?] = [
+        var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
@@ -494,7 +494,7 @@ private extension AudioPlayerAgent {
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
                         let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
@@ -509,7 +509,7 @@ private extension AudioPlayerAgent {
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
                         let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
@@ -527,7 +527,7 @@ private extension AudioPlayerAgent {
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
                         let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }

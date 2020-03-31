@@ -182,8 +182,8 @@ extension StreamDataRouter {
      */
     private func notifyMessage(with part: MultiPartParser.Part, completion: ((StreamDataState) -> Void)? = nil) {
         if let contentType = part.header["Content-Type"], contentType.contains("application/json") {
-            guard let bodyDictionary = try? JSONSerialization.jsonObject(with: part.body, options: []) as? [String: Any],
-                let directiveArray = bodyDictionary["directives"] as? [[String: Any]] else {
+            guard let bodyDictionary = try? JSONSerialization.jsonObject(with: part.body, options: []) as? [String: AnyHashable],
+                let directiveArray = bodyDictionary["directives"] as? [[String: AnyHashable]] else {
                     log.error("Decode Message failed")
                     completion?(.error(NetworkError.invalidMessageReceived))
                     return
@@ -225,11 +225,11 @@ private extension Downstream.Attachment {
 // MARK: - Downstream.Directive initializer
 
 private extension Downstream.Directive {
-    init?(directiveDictionary: [String: Any]) {
-        guard let headerDictionary = directiveDictionary["header"] as? [String: Any],
+    init?(directiveDictionary: [String: AnyHashable]) {
+        guard let headerDictionary = directiveDictionary["header"] as? [String: AnyHashable],
             let headerData = try? JSONSerialization.data(withJSONObject: headerDictionary, options: []),
             let header = try? JSONDecoder().decode(Downstream.Header.self, from: headerData),
-            let payloadDictionary = directiveDictionary["payload"] as? [String: Any],
+            let payloadDictionary = directiveDictionary["payload"] as? [String: AnyHashable],
             let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
             let payload = String(data: payloadData, encoding: .utf8) else {
                 return nil

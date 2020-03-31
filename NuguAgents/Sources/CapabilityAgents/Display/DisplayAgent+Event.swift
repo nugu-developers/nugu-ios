@@ -44,8 +44,8 @@ extension DisplayAgent {
 // MARK: - Eventable
 
 extension DisplayAgent.Event: Eventable {
-    public var payload: [String: Any] {
-        var payload: [String: Any] = [
+    public var payload: [String: AnyHashable] {
+        var payload: [String: AnyHashable] = [
             "playServiceId": playServiceId
         ]
         switch typeInfo {
