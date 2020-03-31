@@ -38,6 +38,12 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         return currentMedia?.player.duration.truncatedSeconds
     }
     
+    public var volume: Float = 1.0 {
+        didSet {
+            currentMedia?.player.volume = volume
+        }
+    }
+    
     public let audioPlayerPauseTimeout: DispatchTimeInterval
      
     // Private
@@ -108,12 +114,6 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     // Current play info
     private var currentMedia: AudioPlayerAgentMedia?
-    
-    private var playerIsMuted: Bool = false {
-        didSet {
-            currentMedia?.player.isMuted = playerIsMuted
-        }
-    }
     
     // ProgressReporter
     private var intervalReporter: Disposable?
@@ -407,23 +407,6 @@ extension AudioPlayerAgent: PlaySyncDelegate {
     }
 }
 
-// MARK: - SpeakerVolumeDelegate
-
-extension AudioPlayerAgent: SpeakerVolumeDelegate {
-    public func speakerVolumeType() -> SpeakerVolumeType {
-        return .nugu
-    }
-    
-    public func speakerVolumeIsMuted() -> Bool {
-        return playerIsMuted
-    }
-   
-    public func speakerVolumeShouldChange(muted: Bool) -> Bool {
-        playerIsMuted = muted
-        return true
-    }
-}
-
 // MARK: - Private (Directive)
 
 private extension AudioPlayerAgent {
@@ -439,7 +422,9 @@ private extension AudioPlayerAgent {
                         let payload = try JSONDecoder().decode(AudioPlayerAgentMedia.Payload.self, from: data)
                         
                         switch self.currentMedia {
-                        case .some(let media) where media.payload.audioItem.stream.token == payload.audioItem.stream.token:
+                        case .some(let media) where
+                            media.payload.audioItem.stream.token == payload.audioItem.stream.token
+                                && media.payload.playServiceId == payload.playServiceId:
                             // Resume and seek
                             self.currentMedia = AudioPlayerAgentMedia(
                                 dialogRequestId: directive.header.dialogRequestId,
@@ -777,6 +762,6 @@ private extension AudioPlayerAgent {
         }
 
         currentMedia?.player.delegate = self
-        currentMedia?.player.isMuted = playerIsMuted
+        currentMedia?.player.volume = volume
     }
 }
