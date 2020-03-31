@@ -27,6 +27,7 @@ struct ASRRequest {
     let reader: AudioStreamReadable
     let dialogRequestId: String
     let initiator: ASRInitiator
+    let completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
 }
 
 public enum ASRInitiator {

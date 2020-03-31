@@ -94,7 +94,7 @@ class MockExtensionAgentDelegate: ExtensionAgentDelegate {
         ]
     }
     
-    func extensionAgentDidReceiveAction(data: [String: Any], playServiceId: String, completion: @escaping (Bool) -> Void) {
+    func extensionAgentDidReceiveAction(data: [String : Any], playServiceId: String, dialogRequestId: String, completion: @escaping (Bool) -> Void) {
         completion(true)
     }
 }

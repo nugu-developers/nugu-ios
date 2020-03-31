@@ -269,31 +269,6 @@ private extension NuguCentralManager {
     }
 }
 
-// MARK: - Internal (ASR)
-
-extension NuguCentralManager {
-    func startRecognize(initiator: ASRInitiator, completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
-            guard let self = self else { return }
-            let result = Result<Void, Error>(catching: {
-                guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.localTTSAgent.stopLocalTTS()
-                self.client.asrAgent.startRecognition(initiator: initiator)
-            })
-            completion?(result)
-        }
-    }
-    
-    func stopRecognize() {
-        client.asrAgent.stopRecognition()
-    }
-    
-    func cancelRecognize() {
-        client.asrAgent.stopRecognition()
-        client.ttsAgent.stopTTS()
-    }
-}
-
 // MARK: - Internal (WakeUpDetector)
 
 extension NuguCentralManager {
