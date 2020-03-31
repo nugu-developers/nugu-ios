@@ -226,29 +226,29 @@ public extension AudioPlayerAgent {
     }
     
     func favorite(isOn: Bool) {
-        guard let playServiceId = currentMedia?.payload.playServiceId else { return }
+        guard let media = currentMedia else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.sendSettingsEvent(playServiceId: playServiceId, typeInfo: .favoriteCommandIssued(isOn: isOn))
+            self.sendSettingsEvent(media: media, typeInfo: .favoriteCommandIssued(isOn: isOn))
         }
     }
     
     func `repeat`(mode: AudioPlayerDisplayRepeat) {
-        guard let playServiceId = currentMedia?.payload.playServiceId else { return }
+        guard let media = currentMedia else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.sendSettingsEvent(playServiceId: playServiceId, typeInfo: .repeatCommandIssued(mode: mode))
+            self.sendSettingsEvent(media: media, typeInfo: .repeatCommandIssued(mode: mode))
         }
     }
     
     func shuffle(isOn: Bool) {
-        guard let playServiceId = currentMedia?.payload.playServiceId else { return }
+        guard let media = currentMedia else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.sendSettingsEvent(playServiceId: playServiceId, typeInfo: .shuffleCommandIssued(isOn: isOn))
+            self.sendSettingsEvent(media: media, typeInfo: .shuffleCommandIssued(isOn: isOn))
         }
     }
     
@@ -375,7 +375,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
 
 extension AudioPlayerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        var payload: [String: Any?] = [
+        var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
@@ -496,7 +496,11 @@ private extension AudioPlayerAgent {
     
     func handleRequestPlayCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            self?.sendRequestPlayEvent(payload: directive.payload, typeInfo: .requestPlayCommandIssued)
+            guard let media = self?.currentMedia else {
+                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
+                return
+            }
+            self?.sendRequestPlayEvent(media: media, payload: directive.payload, typeInfo: .requestPlayCommandIssued)
             completion(.success(()))
         }
     }
@@ -562,7 +566,7 @@ private extension AudioPlayerAgent {
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
                         let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
@@ -577,13 +581,17 @@ private extension AudioPlayerAgent {
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
                         let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
+                    
+                    let isSuccess = self.audioPlayerDisplayManager.showLylics(playServiceId: playServiceId)
+                    
                     self.sendLyricsEvent(
                         playServiceId: playServiceId,
-                        typeInfo: self.audioPlayerDisplayManager.showLylics(playServiceId: playServiceId) ? .showLyricsSucceeded : .showLyricsFailed
+                        referrerDialogRequestId: directive.header.dialogRequestId,
+                        typeInfo: isSuccess ? .showLyricsSucceeded : .showLyricsFailed
                     )
             })
         }
@@ -595,13 +603,17 @@ private extension AudioPlayerAgent {
                 Result { [weak self] in
                     guard let self = self else { return }
                     guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
                         let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
+                    
+                    let isSuccess = self.audioPlayerDisplayManager.hideLylics(playServiceId: playServiceId)
+                    
                     self.sendLyricsEvent(
                         playServiceId: playServiceId,
-                        typeInfo: self.audioPlayerDisplayManager.hideLylics(playServiceId: playServiceId) ? .hideLyricsSucceeded : .hideLyricsFailed
+                        referrerDialogRequestId: directive.header.dialogRequestId,
+                        typeInfo: isSuccess ? .hideLyricsSucceeded : .hideLyricsFailed
                     )
             })
         }
@@ -617,10 +629,12 @@ private extension AudioPlayerAgent {
                     }
                     
                     let payload = try JSONDecoder().decode(AudioPlayerDisplayControlPayload.self, from: data)
+                    let isSuccess = self.audioPlayerDisplayManager.controlLylicsPage(payload: payload)
                     
                     self.sendLyricsEvent(
                         playServiceId: payload.playServiceId,
-                        typeInfo: self.audioPlayerDisplayManager.controlLylicsPage(payload: payload) ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)
+                        referrerDialogRequestId: directive.header.dialogRequestId,
+                        typeInfo: isSuccess ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)
                     )
             })
         }
@@ -701,37 +715,51 @@ private extension AudioPlayerAgent {
                 offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
-            ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId),
+            ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId, referrerDialogRequestId: media.dialogRequestId),
             completion: completion
         )
     }
-    
-    func sendRequestPlayEvent(payload: String, typeInfo: RequestPlayEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
+
+    func sendRequestPlayEvent(
+        media: AudioPlayerAgentMedia,
+        payload: String,
+        typeInfo: RequestPlayEvent.TypeInfo,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
         upstreamDataSender.sendEvent(
             RequestPlayEvent(
                 requestPlayPayload: payload,
                 typeInfo: typeInfo
-            ).makeEventMessage(agent: self),
+            ).makeEventMessage(agent: self, referrerDialogRequestId: media.dialogRequestId),
             completion: completion
         )
     }
-    
-    func sendSettingsEvent(playServiceId: String, typeInfo: SettingsEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
+
+    func sendSettingsEvent(
+        media: AudioPlayerAgentMedia,
+        typeInfo: SettingsEvent.TypeInfo,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
         upstreamDataSender.sendEvent(
             SettingsEvent(
-                playServiceId: playServiceId,
+                playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
-            ).makeEventMessage(agent: self),
+            ).makeEventMessage(agent: self, referrerDialogRequestId: media.dialogRequestId),
             completion: completion
         )
     }
     
-    func sendLyricsEvent(playServiceId: String, typeInfo: LyricsEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
+    func sendLyricsEvent(
+        playServiceId: String,
+        referrerDialogRequestId: String,
+        typeInfo: LyricsEvent.TypeInfo,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
         upstreamDataSender.sendEvent(
             LyricsEvent(
                 playServiceId: playServiceId,
                 typeInfo: typeInfo
-            ).makeEventMessage(agent: self),
+            ).makeEventMessage(agent: self, referrerDialogRequestId: referrerDialogRequestId),
             completion: completion
         )
     }

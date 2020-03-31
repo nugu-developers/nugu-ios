@@ -58,7 +58,7 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 // MARK: - ExtensionAgentProtocol
 
 public extension ExtensionAgent {
-    @discardableResult func requestCommand(data: [String: Any], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
+    @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
         let dialogRequestId = TimeUUID().hexString
         upstreamDataSender.sendEvent(
             Event(
@@ -75,7 +75,7 @@ public extension ExtensionAgent {
 
 extension ExtensionAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any?] = [
+        let payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
             "data": delegate?.extensionAgentRequestContext()
         ]
@@ -112,10 +112,8 @@ private extension ExtensionAgent {
                     guard let self = self else { return }
                     
                     self.upstreamDataSender.sendEvent(
-                        Event(
-                            playServiceId: item.playServiceId,
-                            typeInfo: isSuccess ? .actionSucceeded : .actionFailed
-                        ).makeEventMessage(agent: self)
+                        Event(playServiceId: item.playServiceId, typeInfo: isSuccess ? .actionSucceeded : .actionFailed)
+                            .makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
                     )
             })
             

@@ -26,7 +26,7 @@ import RxSwift
 
 public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.1")
     
     public weak var delegate: TextAgentDelegate?
     
@@ -72,7 +72,7 @@ extension TextAgent {
 
 extension TextAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = ["version": capabilityAgentProperty.version]        
+        let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]        
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
@@ -91,7 +91,13 @@ private extension TextAgent {
                     }
                     let payload = try JSONDecoder().decode(TextAgentSourceItem.self, from: data)
                     
-                    self.sendTextInput(text: payload.text, token: payload.token, completion: nil)
+                    self.sendTextInput(
+                        text: payload.text,
+                        token: payload.token,
+                        expectSpeech: nil,
+                        directive: directive,
+                        completion: nil
+                    )
                 }
                 
                 completion(result)
@@ -103,8 +109,15 @@ private extension TextAgent {
 // MARK: - Private(Event)
 
 private extension TextAgent {
-    @discardableResult func sendTextInput(text: String, token: String?, completion: ((StreamDataState) -> Void)?) -> String {
+    @discardableResult func sendTextInput(
+        text: String,
+        token: String?,
+        expectSpeech: ASRExpectSpeech? = nil,
+        directive: Downstream.Directive? = nil,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String {
         let dialogRequestId = TimeUUID().hexString
+        
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -113,7 +126,7 @@ private extension TextAgent {
                 self.upstreamDataSender.sendEvent(
                     Event(
                         typeInfo: .textInput(text: text, token: token, expectSpeech: expectSpeech)
-                    ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId, contextPayload: contextPayload),
+                    ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId, referrerDialogRequestId: directive?.header.dialogRequestId, contextPayload: contextPayload),
                     completion: completion
                 )
             }

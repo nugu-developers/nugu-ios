@@ -28,9 +28,9 @@ public struct ContextInfo {
     public let name: String
     
     /// The state of the ProvideContextDelegate.
-    public let payload: Any
+    public let payload: AnyHashable
     
-    public init(contextType: ContextType, name: String, payload: Any) {
+    public init(contextType: ContextType, name: String, payload: AnyHashable) {
         self.contextType = contextType
         self.name = name
         self.payload = payload

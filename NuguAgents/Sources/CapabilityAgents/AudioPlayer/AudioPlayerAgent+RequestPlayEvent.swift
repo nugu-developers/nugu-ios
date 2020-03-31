@@ -38,7 +38,7 @@ extension AudioPlayerAgent {
 // MARK: - Eventable
 
 extension AudioPlayerAgent.RequestPlayEvent: Eventable {
-    public var payload: [String : Any] {
+    public var payload: [String : AnyHashable] {
         return ["payload": requestPlayPayload]
     }
     
