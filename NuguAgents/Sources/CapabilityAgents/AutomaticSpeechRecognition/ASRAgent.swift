@@ -95,17 +95,30 @@ public final class ASRAgent: ASRAgentProtocol {
             case .cancel:
                 expectSpeech = nil
                 asrState = .idle
-                sendEvent(asrRequest: asrRequest, type: .stopRecognize)
+                upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
+                upstreamDataSender.sendEvent(
+                    Event(typeInfo: .stopRecognize, expectSpeech: expectSpeech)
+                        .makeEventMessage(agent: self)
+                )
             case .error(let error):
                 expectSpeech = nil
                 asrState = .idle
                 switch error {
                 case NetworkError.timeout:
-                    sendEvent(asrRequest: asrRequest, type: .responseTimeout)
+                    upstreamDataSender.sendEvent(
+                        Event(typeInfo: .responseTimeout, expectSpeech: expectSpeech)
+                            .makeEventMessage(agent: self)
+                    )
                 case ASRError.listeningTimeout:
-                    sendEvent(asrRequest: asrRequest, type: .listenTimeout)
+                    upstreamDataSender.sendEvent(
+                        Event(typeInfo: .listenTimeout, expectSpeech: expectSpeech)
+                            .makeEventMessage(agent: self)
+                    )
                 case ASRError.listenFailed:
-                    sendEvent(asrRequest: asrRequest, type: .listenFailed)
+                    upstreamDataSender.sendEvent(
+                        Event(typeInfo: .listenFailed, expectSpeech: expectSpeech)
+                            .makeEventMessage(agent: self)
+                    )
                 case ASRError.recognizeFailed:
                     break
                 default:
@@ -136,8 +149,8 @@ public final class ASRAgent: ASRAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", medium: .audio, isBlocking: true, preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", medium: .none, isBlocking: false, directiveHandler: handleNotifyResult)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleNotifyResult)
     ]
     
     public init(
@@ -438,24 +451,6 @@ private extension ASRAgent {
     }
 }
 
-// MARK: - Private (Event, Attachment)
-
-private extension ASRAgent {
-    func sendEvent(asrRequest: ASRRequest, type: Event.TypeInfo) {
-        upstreamDataSender.sendEvent(
-            Event(
-                typeInfo: type,
-                encoding: asrEncoding,
-                expectSpeech: expectSpeech
-            ).makeEventMessage(
-                agent: self,
-                dialogRequestId: asrRequest.dialogRequestId,
-                contextPayload: asrRequest.contextPayload
-            )
-        )
-    }
-}
-
 // MARK: - Private(FocusManager)
 
 private extension ASRAgent {
@@ -502,8 +497,7 @@ private extension ASRAgent {
         
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(wakeUpInfo: nil),
-                encoding: asrEncoding,
+                typeInfo: .recognize(wakeUpInfo: nil, encoding: asrEncoding),
                 expectSpeech: expectSpeech
             ).makeEventMessage(
                 agent: self,

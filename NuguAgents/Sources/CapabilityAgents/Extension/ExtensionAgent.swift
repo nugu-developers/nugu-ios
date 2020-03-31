@@ -35,7 +35,7 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Action", medium: .none, isBlocking: false, directiveHandler: handleAction)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Action", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleAction)
     ]
     
     public init(

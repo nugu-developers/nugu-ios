@@ -125,14 +125,13 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", medium: .audio, isBlocking: false, preFetch: prefetchPlay, directiveHandler: handlePlay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", medium: .audio, isBlocking: false, directiveHandler: handleStop),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", medium: .visual, isBlocking: false, directiveHandler: handleUpdateMetadata),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", medium: .visual, isBlocking: false, directiveHandler: handleShowLyrics),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", medium: .visual, isBlocking: false, directiveHandler: handleHideLyrics),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", medium: .visual, isBlocking: false, directiveHandler: handleControlLyricsPage
-        )
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), preFetch: prefetchPlay, directiveHandler: handlePlay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleStop),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handlePause),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateMetadata),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleShowLyrics),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleHideLyrics),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlLyricsPage)
     ]
     
     public init(

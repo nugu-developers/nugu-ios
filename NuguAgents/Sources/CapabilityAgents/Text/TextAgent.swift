@@ -39,7 +39,7 @@ public final class TextAgent: TextAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextSource", medium: .none, isBlocking: false, directiveHandler: handleTextSource)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextSource", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleTextSource)
     ]
     
     public init(
