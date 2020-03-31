@@ -151,8 +151,8 @@ public final class ASRAgent: ASRAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", medium: .audio, isBlocking: true, preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", medium: .none, isBlocking: false, directiveHandler: handleNotifyResult)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleNotifyResult)
     ]
     
     public init(
