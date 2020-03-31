@@ -133,7 +133,7 @@ public extension PlaySyncManager {
                         .do(onNext: { log.debug("\($0) will release after \(latency)") })
                         .delay(latency, scheduler: self.playSyncScheduler)
                 })
-                .do(onNext: {  [weak self] (info) in
+                .subscribe(onNext: {  [weak self] (info) in
                     guard let self = self else { return }
                     guard let target = info.delegate else { return }
                     if !info.isDisplay || info.playSyncState == .releasing {
@@ -142,7 +142,7 @@ public extension PlaySyncManager {
                         self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .releasing)
                     }
                 })
-                .subscribe().disposed(by: self.disposeBag)
+                .disposed(by: self.disposeBag)
         }
     }
     
