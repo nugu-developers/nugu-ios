@@ -36,13 +36,13 @@ public protocol ExtensionAgentProtocol: CapabilityAgentable {
     ///   - playServiceId: The play's unique id
     ///   - completion: The completion handler to call when the request is complete.
     /// - Returns: The dialogRequestId for request.
-    @discardableResult func requestCommand(data: [String: Any], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
+    @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
 }
 
 // MARK: - Default
 
 public extension ExtensionAgentProtocol {
-    @discardableResult func requestCommand(data: [String: Any], playServiceId: String) -> String {
+    @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String) -> String {
         return requestCommand(data: data, playServiceId: playServiceId, completion: nil)
     }
 }
