@@ -27,8 +27,7 @@ public typealias HandleAttachment = (_ attachment: Downstream.Attachment) -> Voi
 public struct DirectiveHandleInfo: Hashable {
     public let namespace: String
     public let name: String
-    public let medium: DirectiveMedium
-    public let isBlocking: Bool
+    public let blockingPolicy: BlockingPolicy
     public let directiveHandler: HandleDirective
     public let preFetch: HandleDirective
     public let attachmentHandler: HandleAttachment?
@@ -40,16 +39,14 @@ public struct DirectiveHandleInfo: Hashable {
     public init(
         namespace: String,
         name: String,
-        medium: DirectiveMedium,
-        isBlocking: Bool,
+        blockingPolicy: BlockingPolicy,
         preFetch: (() -> HandleDirective) = { { $1(.success(())) } },
         directiveHandler: () -> HandleDirective,
         attachmentHandler: (() -> HandleAttachment)? = nil
     ) {
         self.namespace = namespace
         self.name = name
-        self.medium = medium
-        self.isBlocking = isBlocking
+        self.blockingPolicy = blockingPolicy
         self.directiveHandler = directiveHandler()
         self.preFetch = preFetch()
         self.attachmentHandler = attachmentHandler?()
@@ -66,32 +63,9 @@ public struct DirectiveHandleInfo: Hashable {
     }
 }
 
-public enum DirectiveMedium: CaseIterable {
-    case none
-    case audio
-    case visual
-}
-
 // MARK: - Array + DirectiveTypeInforable
 
 public extension Array where Element == DirectiveHandleInfo {
-    /// <#Description#>
-    /// - Parameter element: <#element description#>
-    @discardableResult mutating func remove(element: Element) -> Bool {
-        guard let index = firstIndex(where: { $0.type == element.type
-            && $0.medium == element.medium
-            && $0.isBlocking == element.isBlocking }) else {
-                return false
-        }
-        
-        remove(at: index)
-        return true
-    }
-    
-    func isBlock(medium: DirectiveMedium) -> Bool {
-        return contains { $0.isBlocking && $0.medium == medium }
-    }
-    
     var asDictionary: DirectiveHandleInfos {
         return self.reduce(into: [String: DirectiveHandleInfo]()) { result, directiveTypeInfo in
             result[directiveTypeInfo.type] = directiveTypeInfo
