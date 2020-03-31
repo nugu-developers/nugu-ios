@@ -23,22 +23,27 @@ import Foundation
 /// <#Description#>
 public protocol UpstreamDataSendable {
     /**
-     Send a event.
+     Sends an event.
      */
     func sendEvent(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)?)
 
     /**
-     Send a event and keep the stream for future attachment
+     Sends an event and keep the stream for future attachment
      */
     func sendStream(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)?)
     
     /**
-     Send a attachment using the stream set before.
+     Sends an attachment using the stream set before.
      
      Every event and attachment have `DialogRequestId`.
      This method finds the suitable stream using that id
      */
     func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)?)
+    
+    /// Cancels an event.
+    ///
+    /// - Parameter dialogRequestId: The `dialogRequestId` to cancel event.
+    func cancelEvent(dialogRequestId: String)
 }
 
 public extension UpstreamDataSendable {

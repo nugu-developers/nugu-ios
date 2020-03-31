@@ -27,11 +27,10 @@ import NuguCore
 extension ASRAgent {
     public struct Event {
         let typeInfo: TypeInfo
-        let encoding: ASREncoding
         let expectSpeech: ASRExpectSpeech?
         
         public enum TypeInfo {
-            case recognize(wakeUpInfo: WakeUpInfo?)
+            case recognize(wakeUpInfo: WakeUpInfo?, encoding: ASREncoding)
             case responseTimeout
             case listenTimeout
             case stopRecognize
@@ -52,7 +51,7 @@ extension ASRAgent.Event: Eventable {
     public var payload: [String: Any] {
         var payload: [String: Any?]
         switch typeInfo {
-        case .recognize(let wakeUpInfo):
+        case .recognize(let wakeUpInfo, let encoding):
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
