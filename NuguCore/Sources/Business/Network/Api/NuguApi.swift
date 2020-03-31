@@ -48,7 +48,9 @@ extension NuguApi: CustomStringConvertible {
 extension NuguApi {
     var version: String {
         switch self {
-        case .events:
+        case .events,
+             .directives,
+             .ping:
             return "v2"
         default:
             return "v1"
