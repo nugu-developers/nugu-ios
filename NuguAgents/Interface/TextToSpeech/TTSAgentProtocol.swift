@@ -56,7 +56,11 @@ public protocol TTSAgentProtocol: CapabilityAgentable {
     ///
     /// - Parameter text: The obejct to request speech synthesis.
     /// - Parameter playServiceId: The unique identifier to specify play service.
-    func requestTTS(text: String, playServiceId: String?, handler: ((TTSResult) -> Void)?)
+    @discardableResult func requestTTS(
+        text: String,
+        playServiceId: String?,
+        handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)?
+    ) -> String
     
     /// Stops playback
     /// - Parameter cancelAssociation: true: cancel all associated directives, false : only stop tts
@@ -69,16 +73,16 @@ public extension TTSAgentProtocol {
     /// Request voice synthesis and playback.
     ///
     /// - Parameter text: The obejct to request speech synthesis.
-    func requestTTS(text: String) {
-        requestTTS(text: text, playServiceId: nil, handler: nil)
+    @discardableResult func requestTTS(text: String)  -> String {
+        return requestTTS(text: text, playServiceId: nil, handler: nil)
     }
 
-    func requestTTS(text: String, playServiceId: String?) {
-        requestTTS(text: text, playServiceId: playServiceId, handler: nil)
+    @discardableResult func requestTTS(text: String, playServiceId: String?) -> String {
+        return requestTTS(text: text, playServiceId: playServiceId, handler: nil)
     }
     
-    func requestTTS(text: String, handler: ((TTSResult) -> Void)? = nil) {
-        requestTTS(text: text, playServiceId: nil, handler: handler)
+    @discardableResult func requestTTS(text: String, handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)? = nil) -> String {
+        return requestTTS(text: text, playServiceId: nil, handler: handler)
     }
     
     /// Stops playback

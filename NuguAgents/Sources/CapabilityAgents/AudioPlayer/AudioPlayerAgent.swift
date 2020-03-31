@@ -112,7 +112,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != audioPlayerState {
                 delegates.notify { delegate in
-                    delegate.audioPlayerAgentDidChange(state: audioPlayerState)
+                    delegate.audioPlayerAgentDidChange(state: audioPlayerState, dialogRequestId: media.dialogRequestId)
                 }
             }
         }
@@ -131,14 +131,13 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", medium: .audio, isBlocking: false, preFetch: prefetchPlay, directiveHandler: handlePlay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", medium: .audio, isBlocking: false, directiveHandler: handleStop),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", medium: .audio, isBlocking: false, directiveHandler: handlePause),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", medium: .visual, isBlocking: false, directiveHandler: handleUpdateMetadata),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", medium: .visual, isBlocking: false, directiveHandler: handleShowLyrics),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", medium: .visual, isBlocking: false, directiveHandler: handleHideLyrics),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", medium: .visual, isBlocking: false, directiveHandler: handleControlLyricsPage
-        )
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), preFetch: prefetchPlay, directiveHandler: handlePlay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleStop),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handlePause),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateMetadata),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleShowLyrics),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleHideLyrics),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlLyricsPage)
     ]
     
     public init(
@@ -180,15 +179,15 @@ public extension AudioPlayerAgent {
     }
     
     func play() {
-        guard let media = self.currentMedia else { return }
-        
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard self.currentMedia != nil else { return }
+            
             switch self.audioPlayerState {
             case .paused:
                 self.resume()
             default:
-                self.sendPlayEvent(media: media, typeInfo: .playCommandIssued)
+                log.debug("Skip, not paused state.")
             }
         }
     }
@@ -197,22 +196,26 @@ public extension AudioPlayerAgent {
         stop(cancelAssociation: true)
     }
     
-    func next() {
-        guard let media = self.currentMedia else { return }
-        
+    @discardableResult func next(completion: ((StreamDataState) -> Void)?) -> String {
+        let dialogRequestId = TimeUUID().hexString
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.sendPlayEvent(media: media, typeInfo: .nextCommandIssued)
+            guard let media = self.currentMedia else { return }
+            
+            self.sendPlayEvent(media: media, typeInfo: .nextCommandIssued, dialogRequestId: dialogRequestId, completion: completion)
         }
+        return dialogRequestId
     }
     
-    func prev() {
-        guard let media = self.currentMedia else { return }
-        
+    @discardableResult func prev(completion: ((StreamDataState) -> Void)?) -> String {
+        let dialogRequestId = TimeUUID().hexString
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.sendPlayEvent(media: media, typeInfo: .previousCommandIssued)
+            guard let media = self.currentMedia else { return }
+            
+            self.sendPlayEvent(media: media, typeInfo: .previousCommandIssued, dialogRequestId: dialogRequestId, completion: completion)
         }
+        return dialogRequestId
     }
     
     func pause() {
@@ -601,14 +604,19 @@ private extension AudioPlayerAgent {
 // MARK: - Private (Event)
 
 private extension AudioPlayerAgent {
-    func sendPlayEvent(media: AudioPlayerAgentMedia, typeInfo: PlayEvent.TypeInfo, completion: ((StreamDataState) -> Void)? = nil) {
+    func sendPlayEvent(
+        media: AudioPlayerAgentMedia,
+        typeInfo: PlayEvent.TypeInfo,
+        dialogRequestId: String = TimeUUID().hexString,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
         upstreamDataSender.sendEvent(
             PlayEvent(
                 token: media.payload.audioItem.stream.token,
                 offsetInMilliseconds: (offset ?? 0) * 1000, // This is a mandatory in Play kit.
                 playServiceId: media.payload.playServiceId,
                 typeInfo: typeInfo
-            ).makeEventMessage(agent: self),
+            ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId),
             completion: completion
         )
     }
@@ -665,7 +673,7 @@ private extension AudioPlayerAgent {
             })
             .filter { $0 > 0 }
             .filter { $0 != lastOffset}
-            .do(onNext: { [weak self] (offset) in
+            .subscribe(onNext: { [weak self] (offset) in
                 log.debug("offset: \(offset)")
                 if delayReportTime > 0, offset == delayReportTime {
                     self?.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
@@ -675,7 +683,6 @@ private extension AudioPlayerAgent {
                 }
                 lastOffset = offset
             })
-            .subscribe()
         
         intervalReporter?.disposed(by: disposeBag)
     }

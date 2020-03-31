@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `AudioPlayerAgent` handles directives for controlling audio playback.
 public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// Returns the current time of the current player item.
@@ -57,10 +59,16 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     func stop()
     
     /// Initiates playback of the next item.
-    func next()
+    ///
+    /// - Parameter completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func next(completion: ((StreamDataState) -> Void)?) -> String
     
     /// initiates playback of the previous item.
-    func prev()
+    ///
+    /// - Parameter completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func prev(completion: ((StreamDataState) -> Void)?) -> String
     
     /// Pauses playback.
     func pause()
@@ -93,4 +101,17 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     ///
     /// - Parameter templateId: The unique identifier for the template.
     func stopRenderingTimer(templateId: String)
+}
+
+// MARK: - Default
+
+public extension AudioPlayerAgentProtocol {
+    @discardableResult func next() -> String {
+        return next(completion: nil)
+    }
+    
+    /// initiates playback of the previous item.
+    @discardableResult func prev() -> String {
+        return prev(completion: nil)
+    }
 }
