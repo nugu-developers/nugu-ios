@@ -37,6 +37,7 @@
 		1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */; };
 		1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */; };
 		1F31FD7A241F5774009593EB /* TextAgentSourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */; };
+		1F31FD7C2424CBD8009593EB /* UpstreamSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F31FD7B2424CBD8009593EB /* UpstreamSpec.swift */; };
 		1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentSpec.swift */; };
 		1F5DD4AC240CF0D600719FBC /* MockPlaySyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */; };
 		1F5DD4AE240CF7D100719FBC /* ASRAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AD240CF7D100719FBC /* ASRAgentSpec.swift */; };
@@ -531,6 +532,7 @@
 		1F2E803823966D9D00569C59 /* KeywordSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSource.swift; sourceTree = "<group>"; };
 		1F2E803D2397A27300569C59 /* KeywordDetectorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordDetectorState.swift; sourceTree = "<group>"; };
 		1F2E803F2397A2E500569C59 /* KeywordDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetectorDelegate.swift; sourceTree = "<group>"; };
+		1F31FD7B2424CBD8009593EB /* UpstreamSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpstreamSpec.swift; sourceTree = "<group>"; };
 		1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentSpec.swift; sourceTree = "<group>"; };
 		1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPlaySyncManager.swift; sourceTree = "<group>"; };
 		1F5DD4AD240CF7D100719FBC /* ASRAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRAgentSpec.swift; sourceTree = "<group>"; };
@@ -1119,6 +1121,7 @@
 			isa = PBXGroup;
 			children = (
 				1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */,
+				1F31FD7B2424CBD8009593EB /* UpstreamSpec.swift */,
 			);
 			path = NuguCore;
 			sourceTree = "<group>";
@@ -3120,6 +3123,7 @@
 				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
 				1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */,
+				1F31FD7C2424CBD8009593EB /* UpstreamSpec.swift in Sources */,
 				1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */,
 				1F5DD4B0240CF89500719FBC /* MockAudioStream.swift in Sources */,
 				1F9C5B7C23F4E8C40086CC04 /* SystemAgentSpec.swift in Sources */,

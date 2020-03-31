@@ -138,12 +138,19 @@ private extension ServerSideEventReceiver {
                     return Observable<Int>.timer(.seconds(0), period: .seconds(Int.random(in: 10..<30)), scheduler: ConcurrentDispatchQueueScheduler(qos: .default)).take(1)
             }
         }
-        .subscribe()
+        .subscribe(onError: {
+            log.error("Ping failed: \($0)")
+        }, onDisposed: {
+            log.debug("Ping schedule for server initiated directive is cancelled")
+        })
         
         pingDisposable?.disposed(by: disposeBag)
+        log.debug("Ping schedule for server initiated directive is set. It will be triggered \(randomPingTime) seconds later.")
     }
     
     func stopPing() {
+        log.debug("Try to stop ping schedule")
+        
         pingDisposable?.dispose()
         pingDisposable = nil
     }
