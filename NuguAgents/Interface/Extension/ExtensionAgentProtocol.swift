@@ -31,9 +31,18 @@ public protocol ExtensionAgentProtocol: CapabilityAgentable {
     ///
     /// [JSONSerialization.isValidJSONObject]: apple-reference-documentation://hsLgkBvV03
     /// - Parameters:
-    ///   - playServiceId: The play's unique id
     ///   - data: Custom data as a Dictionary. Should be available converting JSON format.
     ///           see [JSONSerialization.isValidJSONObject].
+    ///   - playServiceId: The play's unique id
     ///   - completion: The completion handler to call when the request is complete.
-    func requestCommand(playServiceId: String, data: [String: Any], completion: ((StreamDataState) -> Void)?)
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func requestCommand(data: [String: Any], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
+}
+
+// MARK: - Default
+
+public extension ExtensionAgentProtocol {
+    @discardableResult func requestCommand(data: [String: Any], playServiceId: String) -> String {
+        return requestCommand(data: data, playServiceId: playServiceId, completion: nil)
+    }
 }

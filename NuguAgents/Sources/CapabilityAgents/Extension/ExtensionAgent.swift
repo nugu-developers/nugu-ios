@@ -58,14 +58,16 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 // MARK: - ExtensionAgentProtocol
 
 public extension ExtensionAgent {
-    func requestCommand(playServiceId: String, data: [String: Any], completion: ((StreamDataState) -> Void)?) {
+    @discardableResult func requestCommand(data: [String: Any], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
+        let dialogRequestId = TimeUUID().hexString
         upstreamDataSender.sendEvent(
             Event(
                 playServiceId: playServiceId,
                 typeInfo: .commandIssued(data: data)
-            ).makeEventMessage(agent: self),
+            ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId),
             completion: completion
         )
+        return dialogRequestId
     }
 }
 
@@ -105,6 +107,7 @@ private extension ExtensionAgent {
             self?.delegate?.extensionAgentDidReceiveAction(
                 data: item.data,
                 playServiceId: item.playServiceId,
+                dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     

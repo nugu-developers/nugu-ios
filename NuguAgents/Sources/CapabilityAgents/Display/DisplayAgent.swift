@@ -122,7 +122,8 @@ public extension DisplayAgent {
         }
     }
     
-    func elementDidSelect(templateId: String, token: String) {
+    @discardableResult func elementDidSelect(templateId: String, token: String, completion: ((StreamDataState) -> Void)?) -> String {
+        let dialogRequestId = TimeUUID().hexString
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
@@ -132,9 +133,10 @@ public extension DisplayAgent {
                 Event(
                     playServiceId: template.playServiceId,
                     typeInfo: .elementSelected(token: token)
-                ).makeEventMessage(agent: self)
+                ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId)
             )
         }
+        return dialogRequestId
     }
     
     func stopRenderingTimer(templateId: String) {
