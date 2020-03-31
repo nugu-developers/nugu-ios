@@ -119,15 +119,6 @@ extension MediaPlayer {
         return asset.duration
     }
     
-    public var isMuted: Bool {
-        get {
-            return player?.isMuted ?? false
-        }
-        set {
-            player?.isMuted = newValue
-        }
-    }
-    
     public var volume: Float {
         get {
             return player?.volume ?? 1.0

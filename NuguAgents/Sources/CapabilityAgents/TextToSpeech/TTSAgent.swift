@@ -37,12 +37,6 @@ public final class TTSAgent: TTSAgentProtocol {
         return currentMedia?.player.duration.truncatedSeconds
     }
     
-    public var isMuted: Bool = false {
-        didSet {
-            currentMedia?.player.isMuted = isMuted
-        }
-    }
-    
     public var volume: Float = 1.0 {
         didSet {
             currentMedia?.player.volume = volume
@@ -329,7 +323,6 @@ private extension TTSAgent {
                         
                         let mediaPlayer = OpusPlayer()
                         mediaPlayer.delegate = self
-                        mediaPlayer.isMuted = self.isMuted
                         mediaPlayer.volume = self.volume
                         
                         self.currentMedia = TTSMedia(

@@ -30,9 +30,6 @@ public protocol MediaPlayable: class {
     /// The duration of the current player item.
     var duration: TimeIntervallic { get }
     
-    /// A Boolean value that indicates whether the audio output of the player is muted.
-    var isMuted: Bool { get set }
-    
     /// The audio playback volume for the player.
     var volume: Float { get set }
     

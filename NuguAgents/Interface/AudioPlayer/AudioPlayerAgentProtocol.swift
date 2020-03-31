@@ -34,11 +34,6 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// This function retrieves the duration(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
     var duration: Int? { get }
     
-    /// A Boolean value that indicates whether the audio output of the player is muted.
-    ///
-    /// This function retrieves muted state of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
-    var isMuted: Bool { get set }
-    
     /// The audio playback volume for the player.
     ///
     /// This function retrieves the volume of the current `MediaPlayable` handled by the `AudioPlayerAgent`.

@@ -32,11 +32,6 @@ public protocol TTSAgentProtocol: CapabilityAgentable {
     /// This function retrieves the duration(seconds) of the current `MediaPlayable` handled by the `TTSAgent`.
     var duration: Int? { get }
     
-    /// A Boolean value that indicates whether the audio output of the player is muted.
-    ///
-    /// This function retrieves muted state of the current `MediaPlayable` handled by the `TTSAgent`.
-    var isMuted: Bool { get set }
-    
     /// The audio playback volume for the player.
     ///
     /// This function retrieves the volume of the current `MediaPlayable` handled by the `TTSAgent`.
