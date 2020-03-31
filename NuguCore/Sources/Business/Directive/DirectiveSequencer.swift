@@ -23,16 +23,14 @@ import Foundation
 import RxSwift
 
 public class DirectiveSequencer: DirectiveSequenceable {
-    private let prefetchDirectiveSubject = PublishSubject<Downstream.Directive>()
-    private let handleDirectiveSubject = PublishSubject<Downstream.Directive>()
+    private var handlingDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
+    private var blockedDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
+    
     private var directiveHandleInfos = DirectiveHandleInfos()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
     private let disposeBag = DisposeBag()
 
-    public init() {
-        prefetchDirective()
-        handleDirective()
-    }
+    public init() { }
 }
 
 // MARK: - DirectiveSequenceable
@@ -52,12 +50,10 @@ public extension DirectiveSequencer {
     
     func processDirective(_ directive: Downstream.Directive) {
         log.info("\(directive.header.messageId)")
-        guard directiveHandleInfos[directive.header.type] != nil else {
-            log.warning("No handler registered \(directive.header.messageId)")
-            return
+        
+        directiveSequencerDispatchQueue.async { [weak self] in
+            self?.prefetchDirective(directive)
         }
-
-        prefetchDirectiveSubject.onNext(directive)
     }
     
     func processAttachment(_ attachment: Downstream.Attachment) {
@@ -78,101 +74,61 @@ public extension DirectiveSequencer {
 
 private extension DirectiveSequencer {
     // Non-blocking 처리
-    func prefetchDirective() {
-        let prefetchHandleDirectiveScheduler = SerialDispatchQueueScheduler(
-            queue: directiveSequencerDispatchQueue,
-            internalSerialQueueName: "nugu.directive.prehandle"
-        )
+    func prefetchDirective(_ directive: Downstream.Directive) {
+        guard let preFetch = directiveHandleInfos[directive.header.type]?.preFetch else {
+            log.warning("No handler registered \(directive.header.messageId)")
+            return
+        }
         
-        prefetchDirectiveSubject.asObserver()
-            .observeOn(prefetchHandleDirectiveScheduler)
-            .concatMap({ [weak self] (directive) -> Single<Result<Void, Error>> in
-                return Single.create(subscribe: { [weak self] (event) -> Disposable in
-                    let disposable = Disposables.create()
-                    
-                    guard let preFetch = self?.directiveHandleInfos[directive.header.type]?.preFetch else {
-                        event(.success(.failure(HandleDirectiveError.handlerNotFound(type: directive.header.type))))
-                        return disposable
-                    }
-                    
-                    preFetch(directive) { result in
-                        event(.success(result))
-                    }
-                    
-                    return disposable
-                }).do(onSuccess: { [weak self] result in
-                    guard let self = self else { return }
-                    switch result {
-                    case .success:
-                        self.handleDirectiveSubject.onNext(directive)
-                    case .failure(let error):
-                        log.error(error)
-                    }
-                })
-            })
-            .do(onError: {
-                log.error($0)
-            })
-            .retry()
-            .subscribe().disposed(by: disposeBag)
+        // Directives should be prefetch sequentially.
+        let semaphore = DispatchSemaphore(value: 0)
+        preFetch(directive) { [weak self] result in
+            switch result {
+            case .success:
+                self?.directiveSequencerDispatchQueue.async { [weak self] in
+                    self?.handleDirective(directive)
+                }
+            case .failure(let error):
+                log.error(error)
+            }
+            semaphore.signal()
+        }
+        semaphore.wait()
     }
     
-    // TypeInfo.isBlocking 인 경우 동일한 Medium 만 blocking 처리
-    func handleDirective() {
-        let handleDirectiveScheduler = SerialDispatchQueueScheduler(
-            queue: directiveSequencerDispatchQueue,
-            internalSerialQueueName: "nugu.directive.handle"
-        )
-        
-        var handlingTypeInfos = [DirectiveHandleInfo]()
-        var blockedDirectives = [DirectiveMedium: [Downstream.Directive]]()
-        for medium in DirectiveMedium.allCases {
-            blockedDirectives[medium] = []
+    func handleDirective(_ directive: Downstream.Directive) {
+        guard let handler = directiveHandleInfos[directive.header.type] else {
+            log.warning("No handler registered \(directive.header.messageId)")
+            return
         }
-
-        let remove: (DirectiveHandleInfo) -> Void = { [weak self] typeInfo in
+        guard handlingDirectives.contains(where: {
+            $0.blockingPolicy.isBlocking == true &&
+                $0.blockingPolicy.medium == handler.blockingPolicy.medium &&
+                $0.directive.header.dialogRequestId == directive.header.dialogRequestId
+        }) == false else {
+            log.debug("Block directive \(directive.header.messageId)")
+            blockedDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
+            return
+        }
+        
+        handlingDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
+        handler.directiveHandler(directive) { [weak self ] in
+            if case .failure(let error) = $0 {
+                log.error(error)
+            }
+            
             self?.directiveSequencerDispatchQueue.async { [weak self] in
-                handlingTypeInfos.remove(element: typeInfo)
+                guard let self = self else { return }
+                
+                self.handlingDirectives.removeAll { directive.header.messageId == $0.directive.header.messageId }
                 
                 // Block 된 Directive 다시시도.
-                if typeInfo.isBlocking {
-                    let directivies = blockedDirectives[typeInfo.medium]
-                    blockedDirectives[typeInfo.medium]?.removeAll()
-                    directivies?.forEach({ [weak self] directive in
-                        self?.handleDirectiveSubject.onNext(directive)
-                    })
+                if handler.blockingPolicy.isBlocking {
+                    let directives = self.blockedDirectives.filter { $0.blockingPolicy.medium == handler.blockingPolicy.medium }
+                    self.blockedDirectives.removeAll { $0.blockingPolicy.medium == handler.blockingPolicy.medium }
+                    directives.map { $0.directive }.forEach(self.handleDirective)
                 }
             }
         }
-        
-        handleDirectiveSubject.asObserver()
-            .observeOn(handleDirectiveScheduler)
-            .do(onNext: { [weak self] directive in
-                guard let self = self else { return }
-                guard let handler = self.directiveHandleInfos[directive.header.type] else {
-                    log.error("No handler registered \(directive.header.messageId)")
-                    return
-                }
-                
-                // Block 되어야 하는 Directive 인지 확인
-                guard handlingTypeInfos.isBlock(medium: handler.medium) == false else {
-                    log.debug("Block directive \(directive.header.messageId)")
-                    blockedDirectives[handler.medium]?.append(directive)
-                    return
-                }
-
-                handlingTypeInfos.append(handler)
-                
-                handler.directiveHandler(directive) {
-                    remove(handler)
-                    if case .failure(let error) = $0 {
-                        log.error(error)
-                    }
-                }
-            }, onError: {
-                log.error($0)
-            })
-            .retry()
-            .subscribe().disposed(by: disposeBag)
     }
 }

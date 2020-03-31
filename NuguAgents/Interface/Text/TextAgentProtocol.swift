@@ -20,17 +20,25 @@
 
 import Foundation
 
+import NuguCore
+
 /// Text-agent is needed to send event-based text recognition.
 public protocol TextAgentProtocol: CapabilityAgentable {
-    /// Adds a delegate to be notified of `TextAgentState` and `TextAgentResult` changes.
-    /// - Parameter delegate: The delegate object to add.
-    func add(delegate: TextAgentDelegate)
-    
-    /// Removes a delegate from `TextAgent`.
-    /// - Parameter delegate: The delegate object to remove.
-    func remove(delegate: TextAgentDelegate)
+    /// The object that acts as the delegate of text-agent
+    var delegate: TextAgentDelegate? { get set }
     
     /// Send event that needs a text-based recognition
-    /// - Parameter text: The `text` to be recognized
-    func requestTextInput(text: String, expectSpeech: ASRExpectSpeech?)
+    /// - Parameters:
+    ///   - text: The `text` to be recognized
+    ///   - completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func requestTextInput(text: String, completion: ((StreamDataState) -> Void)?) -> String
+}
+
+// MARK: - Default
+
+public extension TextAgentProtocol {
+    @discardableResult func requestTextInput(text: String) -> String {
+        return requestTextInput(text: text, completion: nil)
+    }
 }

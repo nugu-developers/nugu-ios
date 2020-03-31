@@ -83,7 +83,7 @@ public extension StreamDataRouter {
 
 public extension StreamDataRouter {
     /**
-     Send a event and close the stream automatically.
+     Sends an event and close the stream automatically.
      
      This method is for the event which is not related attachment.
      */
@@ -99,7 +99,7 @@ public extension StreamDataRouter {
     }
     
     /**
-     Send Event and keep the stream alive for futrue attachment
+     Sends an event and keep the stream alive for futrue attachment.
      
      Event must be sent before sending attachment.
      And It cannot be sent twice.
@@ -124,7 +124,7 @@ public extension StreamDataRouter {
             .subscribe(onNext: { [weak self] (part) in
                 self?.notifyMessage(with: part, completion: completion)
             }, onError: { [weak self] (error) in
-                log.error("error: \(error)")
+                log.error("\(error.localizedDescription)")
                 completion?(.error(error))
                 self?.delegate?.streamDataDidSend(event: event, error: error)
             }, onCompleted: { [weak self] in
@@ -137,7 +137,7 @@ public extension StreamDataRouter {
     }
     
     /**
-     Send attachment.
+     Sends an attachment.
      
      It won't emit received or finished state on completion.
      because those states will be emitted to event-reqeust's completion.
@@ -162,6 +162,13 @@ public extension StreamDataRouter {
                 self?.delegate?.streamDataDidSend(attachment: attachment, error: error)
             })
             .disposed(by: disposeBag)
+    }
+    
+    func cancelEvent(dialogRequestId: String) {
+        guard let eventSender = eventSenders[dialogRequestId] else { return }
+
+        eventSender.finish()
+        // TODO: ASR.Recognize -> ASR.StopRecognize 시 ASR.Recognize 에 대한 timeout 이 발생 함. referrerDialogRequestId 반영 후에도 발생하는지 확인 필요.
     }
 }
 

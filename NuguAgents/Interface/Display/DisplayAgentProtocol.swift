@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `DisplayAgent` handles directives for controlling template display.
 public protocol DisplayAgentProtocol: CapabilityAgentable {
     /// Adds a delegate to be notified of `DisplayTemplate` changes.
@@ -37,10 +39,18 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
     /// The Client should call this when element(view) selected(clicked).
     /// - Parameter templateId: The unique identifier for the template.
     /// - Parameter token: The unique identifier for the element.
-    func elementDidSelect(templateId: String, token: String)
+    @discardableResult func elementDidSelect(templateId: String, token: String, completion: ((StreamDataState) -> Void)?) -> String
     
     /// Stops the timer for deleting template by `DisplayTemplate.Duration`.
     ///
     /// - Parameter templateId: The unique identifier for the template.
     func stopRenderingTimer(templateId: String)
+}
+
+// MARK: - Default
+
+public extension DisplayAgentProtocol {
+    @discardableResult func elementDidSelect(templateId: String, token: String) -> String {
+        return elementDidSelect(templateId: templateId, token: token, completion: nil)
+    }
 }

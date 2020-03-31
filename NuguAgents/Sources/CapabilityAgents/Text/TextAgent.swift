@@ -28,6 +28,8 @@ public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.1")
     
+    public weak var delegate: TextAgentDelegate?
+    
     // Private
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
@@ -35,11 +37,9 @@ public final class TextAgent: TextAgentProtocol {
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
-    private let delegates = DelegateSet<TextAgentDelegate>()
-    
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextSource", medium: .none, isBlocking: false, directiveHandler: handleTextSource)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextSource", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleTextSource)
     ]
     
     public init(
@@ -63,16 +63,8 @@ public final class TextAgent: TextAgentProtocol {
 // MARK: - TextAgentProtocol
 
 extension TextAgent {
-    public func add(delegate: TextAgentDelegate) {
-        delegates.add(delegate)
-    }
-    
-    public func remove(delegate: TextAgentDelegate) {
-        delegates.remove(delegate)
-    }
-    
-    public func requestTextInput(text: String, expectSpeech: ASRExpectSpeech?) {
-        sendTextInput(text: text, token: nil, expectSpeech: expectSpeech)
+    @discardableResult public func requestTextInput(text: String, completion: ((StreamDataState) -> Void)?) -> String {
+        return sendTextInput(text: text, token: nil, completion: completion)
     }
 }
 
@@ -99,7 +91,7 @@ private extension TextAgent {
                     }
                     let payload = try JSONDecoder().decode(TextAgentSourceItem.self, from: data)
                     
-                    self.sendTextInput(text: payload.text, token: payload.token, expectSpeech: nil)
+                    self.sendTextInput(text: payload.text, token: payload.token, completion: nil)
                 }
                 
                 completion(result)
@@ -111,33 +103,21 @@ private extension TextAgent {
 // MARK: - Private(Event)
 
 private extension TextAgent {
-    func sendTextInput(text: String, token: String?, expectSpeech: ASRExpectSpeech?) {
+    @discardableResult func sendTextInput(text: String, token: String?, completion: ((StreamDataState) -> Void)?) -> String {
+        let dialogRequestId = TimeUUID().hexString
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
+            let expectSpeech = self.delegate?.textAgentDidRequestExpectSpeech()
             self.contextManager.getContexts { (contextPayload) in
-                let textRequest = TextRequest(
-                    contextPayload: contextPayload,
-                    text: text,
-                    dialogRequestId: TimeUUID().hexString,
-                    token: token,
-                    expectSpeech: expectSpeech
-                )
-                
                 self.upstreamDataSender.sendEvent(
                     Event(
-                        typeInfo: .textInput(
-                            text: textRequest.text,
-                            expectSpeech: textRequest.expectSpeech
-                        )
-                    ).makeEventMessage(agent: self)) { [weak self] state in
-                        guard let self = self else { return }
-
-                        self.delegates.notify({ (delegate) in
-                            delegate.textAgentDidStreamStateChanged(state: state, dialogRequestId: textRequest.dialogRequestId)
-                        })
-                }
+                        typeInfo: .textInput(text: text, token: token, expectSpeech: expectSpeech)
+                    ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId, contextPayload: contextPayload),
+                    completion: completion
+                )
             }
         }
+        return dialogRequestId
     }
 }
