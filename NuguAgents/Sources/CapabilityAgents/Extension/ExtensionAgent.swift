@@ -112,10 +112,8 @@ private extension ExtensionAgent {
                     guard let self = self else { return }
                     
                     self.upstreamDataSender.sendEvent(
-                        Event(
-                            playServiceId: item.playServiceId,
-                            typeInfo: isSuccess ? .actionSucceeded : .actionFailed
-                        ).makeEventMessage(agent: self)
+                        Event(playServiceId: item.playServiceId, typeInfo: isSuccess ? .actionSucceeded : .actionFailed)
+                            .makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
                     )
             })
             

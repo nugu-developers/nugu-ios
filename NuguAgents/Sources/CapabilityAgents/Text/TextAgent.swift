@@ -91,7 +91,13 @@ private extension TextAgent {
                     }
                     let payload = try JSONDecoder().decode(TextAgentSourceItem.self, from: data)
                     
-                    self.sendTextInput(text: payload.text, token: payload.token, completion: nil)
+                    self.sendTextInput(
+                        text: payload.text,
+                        token: payload.token,
+                        expectSpeech: nil,
+                        directive: directive,
+                        completion: nil
+                    )
                 }
                 
                 completion(result)
@@ -103,8 +109,15 @@ private extension TextAgent {
 // MARK: - Private(Event)
 
 private extension TextAgent {
-    @discardableResult func sendTextInput(text: String, token: String?, completion: ((StreamDataState) -> Void)?) -> String {
+    @discardableResult func sendTextInput(
+        text: String,
+        token: String?,
+        expectSpeech: ASRExpectSpeech? = nil,
+        directive: Downstream.Directive? = nil,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String {
         let dialogRequestId = TimeUUID().hexString
+        
         textDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -113,7 +126,7 @@ private extension TextAgent {
                 self.upstreamDataSender.sendEvent(
                     Event(
                         typeInfo: .textInput(text: text, token: token, expectSpeech: expectSpeech)
-                    ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId, contextPayload: contextPayload),
+                    ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId, referrerDialogRequestId: directive?.header.dialogRequestId, contextPayload: contextPayload),
                     completion: completion
                 )
             }
