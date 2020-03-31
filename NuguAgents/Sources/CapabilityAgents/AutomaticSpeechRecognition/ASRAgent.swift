@@ -67,7 +67,7 @@ public final class ASRAgent: ASRAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != asrState {
                 asrDelegates.notify { delegate in
-                    delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+                    delegate.asrAgentDidChange(state: asrState, expectSpeech: expectSpeech)
                 }
             }
         }
@@ -86,37 +86,37 @@ public final class ASRAgent: ASRAgentProtocol {
             switch asrResult {
             case .none:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
-                currentExpectSpeech = nil
+                expectSpeech = nil
             case .partial:
                 break
             case .complete:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
-                currentExpectSpeech = nil
+                expectSpeech = nil
             case .cancel:
-                currentExpectSpeech = nil
+                expectSpeech = nil
                 asrState = .idle
                 upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
                 upstreamDataSender.sendEvent(
-                    Event(typeInfo: .stopRecognize, expectSpeech: currentExpectSpeech)
+                    Event(typeInfo: .stopRecognize, expectSpeech: expectSpeech)
                         .makeEventMessage(agent: self)
                 )
             case .error(let error):
-                currentExpectSpeech = nil
+                expectSpeech = nil
                 asrState = .idle
                 switch error {
                 case NetworkError.timeout:
                     upstreamDataSender.sendEvent(
-                        Event(typeInfo: .responseTimeout, expectSpeech: currentExpectSpeech)
+                        Event(typeInfo: .responseTimeout, expectSpeech: expectSpeech)
                             .makeEventMessage(agent: self)
                     )
                 case ASRError.listeningTimeout:
                     upstreamDataSender.sendEvent(
-                        Event(typeInfo: .listenTimeout, expectSpeech: currentExpectSpeech)
+                        Event(typeInfo: .listenTimeout, expectSpeech: expectSpeech)
                             .makeEventMessage(agent: self)
                     )
                 case ASRError.listenFailed:
                     upstreamDataSender.sendEvent(
-                        Event(typeInfo: .listenFailed, expectSpeech: currentExpectSpeech)
+                        Event(typeInfo: .listenFailed, expectSpeech: expectSpeech)
                             .makeEventMessage(agent: self)
                     )
                 case ASRError.recognizeFailed:
@@ -126,9 +126,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 }
             }
             
-            asrDelegates.notify { (delegate) in
-                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.dialogRequestId)
-            }
+            asrRequest.completion?(asrResult, asrRequest.dialogRequestId)
         }
     }
     
@@ -136,12 +134,12 @@ public final class ASRAgent: ASRAgentProtocol {
     public let asrEncoding: ASREncoding
     private var asrRequest: ASRRequest?
     private var attachmentSeq: Int32 = 0
-    private var currentExpectSpeech: ASRExpectSpeech? {
+    public private(set) var expectSpeech: ASRExpectSpeech? {
         didSet {
-            guard oldValue != currentExpectSpeech else { return }
+            guard oldValue != expectSpeech else { return }
             
             asrDelegates.notify { delegate in
-                delegate.asrAgentDidChange(state: asrState, expectSpeech: currentExpectSpeech)
+                delegate.asrAgentDidChange(state: asrState, expectSpeech: expectSpeech)
             }
         }
     }
@@ -195,16 +193,20 @@ public extension ASRAgent {
         asrDelegates.remove(delegate)
     }
     
-    func startRecognition(initiator: ASRInitiator = .user) {
+    @discardableResult func startRecognition(
+        initiator: ASRInitiator = .user,
+        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)? = nil
+    ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = audioStream.makeAudioStreamReader()
-        
+        let dialogRequestId = TimeUUID().hexString
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
             guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
                 log.warning("Not permitted in current state \(self.asrState)")
+                completion?(.cancel, dialogRequestId)
                 return
             }
             
@@ -214,13 +216,15 @@ public extension ASRAgent {
                 self.asrRequest = ASRRequest(
                     contextPayload: contextPayload,
                     reader: reader,
-                    dialogRequestId: TimeUUID().hexString,
-                    initiator: initiator
+                    dialogRequestId: dialogRequestId,
+                    initiator: initiator,
+                    completion: completion
                 )
                 
                 self.focusManager.requestFocus(channelDelegate: self)
             }
         }
+        return dialogRequestId
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -245,7 +249,7 @@ public extension ASRAgent {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             // TODO: cancelAssociation = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
-            self.currentExpectSpeech = nil
+            self.expectSpeech = nil
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
                 return
@@ -276,7 +280,7 @@ extension ASRAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Background 허용 안함.
-            case (_, let asrState) where asrState != .idle:
+            case _ where self.asrRequest != nil:
                 self.asrResult = .cancel
             default:
                 break
@@ -373,7 +377,7 @@ private extension ASRAgent {
                         throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
                     }
                     
-                    self?.currentExpectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: data)
+                    self?.expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: data)
                 }
             )
         }
@@ -385,7 +389,7 @@ private extension ASRAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard self.currentExpectSpeech != nil else {
+                    guard self.expectSpeech != nil else {
                         throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
                     }
                     switch self.asrState {
@@ -474,7 +478,7 @@ private extension ASRAgent {
         attachmentSeq = 0
         
         var timeout: Int {
-            guard let expectTimeout = currentExpectSpeech?.timeoutInMilliseconds else {
+            guard let expectTimeout = expectSpeech?.timeoutInMilliseconds else {
                 return ASRConst.timeout
             }
             
@@ -494,7 +498,7 @@ private extension ASRAgent {
         upstreamDataSender.sendStream(
             Event(
                 typeInfo: .recognize(wakeUpInfo: nil, encoding: asrEncoding),
-                expectSpeech: currentExpectSpeech
+                expectSpeech: expectSpeech
             ).makeEventMessage(
                 agent: self,
                 dialogRequestId: asrRequest.dialogRequestId,

@@ -215,7 +215,6 @@
 		73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF12B2223C822520000E158 /* DisplayClosePayload.swift */; };
 		73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF35B2375707000C9A177 /* TextAgent.swift */; };
 		73152FCF23E0416100F843C3 /* TextAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF35A2375707000C9A177 /* TextAgent+Event.swift */; };
-		73152FD023E0416100F843C3 /* TextRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF35C2375707000C9A177 /* TextRequest.swift */; };
 		73152FD123E0416600F843C3 /* LocationAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3412375707000C9A177 /* LocationAgent.swift */; };
 		73152FD223E042B900F843C3 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		73152FD523E042D000F843C3 /* JadeMarble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF03123753FA200C9A177 /* JadeMarble.framework */; };
@@ -706,7 +705,6 @@
 		1FFFF3582375707000C9A177 /* DisplayAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DisplayAgent+Event.swift"; sourceTree = "<group>"; };
 		1FFFF35A2375707000C9A177 /* TextAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextAgent+Event.swift"; sourceTree = "<group>"; };
 		1FFFF35B2375707000C9A177 /* TextAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextAgent.swift; sourceTree = "<group>"; };
-		1FFFF35C2375707000C9A177 /* TextRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextRequest.swift; sourceTree = "<group>"; };
 		1FFFF35E2375707000C9A177 /* NetworkConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConst.swift; sourceTree = "<group>"; };
 		1FFFF3612375707000C9A177 /* HTTPConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPConst.swift; sourceTree = "<group>"; };
 		1FFFF3672375707000C9A177 /* Policy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Policy.swift; sourceTree = "<group>"; };
@@ -1727,7 +1725,6 @@
 			children = (
 				1FFFF35B2375707000C9A177 /* TextAgent.swift */,
 				1FFFF35A2375707000C9A177 /* TextAgent+Event.swift */,
-				1FFFF35C2375707000C9A177 /* TextRequest.swift */,
 				1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */,
 			);
 			path = Text;
@@ -3190,7 +3187,6 @@
 				73152FBE23E0414700F843C3 /* ASRConst.swift in Sources */,
 				7315305F23E1248300F843C3 /* ExtensionAgentProtocol.swift in Sources */,
 				7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */,
-				73152FD023E0416100F843C3 /* TextRequest.swift in Sources */,
 				7315307623E1248300F843C3 /* TTSState.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
