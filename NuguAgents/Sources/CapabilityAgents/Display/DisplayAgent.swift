@@ -50,8 +50,8 @@ public final class DisplayAgent: DisplayAgentProtocol {
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleClose),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Focus", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleFocus),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Scroll", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleScroll),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlFocus", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlFocus),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlScroll", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlScroll),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdate),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
@@ -154,7 +154,7 @@ extension DisplayAgent: ContextInfoDelegate {
                 completion(nil)
                 return
             }
-            var payload: [String: Any?] = [
+            var payload: [String: AnyHashable?] = [
                 "version": self.capabilityAgentProperty.version,
                 "token": self.currentItem?.token,
                 "playServiceId": self.currentItem?.playServiceId
@@ -228,7 +228,7 @@ private extension DisplayAgent {
         }
     }
     
-    func handleFocus() -> HandleDirective {
+    func handleControlFocus() -> HandleDirective {
         return { [weak self] directive, completion in
             completion(
                 Result { [weak self] in
@@ -251,6 +251,7 @@ private extension DisplayAgent {
                             )
                             return
                     }
+                    
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
@@ -265,7 +266,7 @@ private extension DisplayAgent {
         }
     }
         
-    func handleScroll() -> HandleDirective {
+    func handleControlScroll() -> HandleDirective {
         return { [weak self] directive, completion in
             completion(
                 Result { [weak self] in
@@ -310,7 +311,7 @@ private extension DisplayAgent {
                     guard let self = self else { return }
                     
                     guard let payloadAsData = directive.payload.data(using: .utf8),
-                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: AnyHashable],
                         let token = payloadDictionary["token"] as? String,
                         let playServiceId = payloadDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
@@ -342,7 +343,7 @@ private extension DisplayAgent {
         return { [weak self] directive, completion in
             guard let self = self else { return completion(.success(())) }
             guard let payloadAsData = directive.payload.data(using: .utf8),
-                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: Any],
+                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: AnyHashable],
                 let token = payloadDictionary["token"] as? String,
                 let playServiceId = payloadDictionary["playServiceId"] as? String else {
                     completion(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")))
@@ -352,7 +353,7 @@ private extension DisplayAgent {
             log.info("\(directive.header.type)")
             
             let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-            let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: Any])?["playServiceId"] as? String
+            let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: AnyHashable])?["playServiceId"] as? String
             let focusable = payloadDictionary["focusable"] as? Bool
             
             let item = DisplayTemplate(

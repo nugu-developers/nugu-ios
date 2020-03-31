@@ -42,8 +42,8 @@ extension TTSAgent {
 // MARK: - Eventable
 
 extension TTSAgent.Event: Eventable {
-    public var payload: [String: Any] {
-        var eventPayload: [String: Any?] = [
+    public var payload: [String: AnyHashable] {
+        var eventPayload: [String: AnyHashable?] = [
             "playServiceId": playServiceId,
             "token": token
         ]

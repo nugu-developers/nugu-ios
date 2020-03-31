@@ -38,7 +38,7 @@ public final class LocationAgent: LocationAgentProtocol {
 
 extension LocationAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        var payload: [String: Any?] = [
+        var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version
         ]
         if let locationInfo = delegate?.locationAgentRequestLocationInfo() {

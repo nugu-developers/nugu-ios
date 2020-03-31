@@ -24,6 +24,21 @@ import NuguCore
 
 /// The `AudioPlayerAgent` handles directives for controlling audio playback.
 public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
+    /// Returns the current time of the current player item.
+    ///
+    /// This function retrieves the offset(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
+    var offset: Int? { get }
+    
+    /// The duration of the current player item.
+    ///
+    /// This function retrieves the duration(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
+    var duration: Int? { get }
+    
+    /// The audio playback volume for the player.
+    ///
+    /// This function retrieves the volume of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
+    var volume: Float { get set }
+    
     /// Adds a delegate to be notified of `AudioPlayerState` changes.
     /// - Parameter delegate: The object to add.
     func add(delegate: AudioPlayerAgentDelegate)
@@ -31,12 +46,6 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// Removes a delegate from AudioPlayerAgent.
     /// - Parameter delegate: The object to remove.
     func remove(delegate: AudioPlayerAgentDelegate)
-    
-    /// This function retrieves the offset(seconds) of the current `MediaPlayable` the `AudioPlayerAgent` is handling.
-    var offset: Int? { get }
-    
-    /// This function retrieves the duration(seconds) of the current `MediaPlayable` the `AudioPlayerAgent` is handling.
-    var duration: Int? { get }
     
     /// Begins playback of the current item.
     func play()

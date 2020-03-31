@@ -53,9 +53,9 @@ class DisplayView: UIView {
     
     func update(updatePayload: String) {
         guard let displayingPayloadData = displayPayload?.data(using: .utf8),
-            let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: Any],
+            let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: AnyHashable],
             let updatePayloadData = updatePayload.data(using: .utf8),
-            let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayloadData, options: []) as? [String: Any] else {
+            let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayloadData, options: []) as? [String: AnyHashable] else {
                 return
         }
         let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)

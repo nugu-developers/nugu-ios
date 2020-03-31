@@ -79,8 +79,8 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 // MARK: - AudioPlayerDisplayManageable
 
 extension AudioPlayerDisplayManager {
-    func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playStackServiceId: String?) {
-        guard let template = metaData["template"] as? [String: Any],
+    func display(metaData: [String: AnyHashable], messageId: String, dialogRequestId: String, playStackServiceId: String?) {
+        guard let template = metaData["template"] as? [String: AnyHashable],
             let type = template["type"] as? String else {
                 log.error("Invalid metaData")
                 return

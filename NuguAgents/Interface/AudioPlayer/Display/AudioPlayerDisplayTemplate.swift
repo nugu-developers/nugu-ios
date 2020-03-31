@@ -22,12 +22,12 @@ import Foundation
 
 public struct AudioPlayerDisplayTemplate {
     public let type: String
-    public let payload: [String: Any]
+    public let payload: [String: AnyHashable]
     public let templateId: String
     public let dialogRequestId: String
     public let playStackServiceId: String?
     
-    public init(type: String, payload: [String: Any], templateId: String, dialogRequestId: String, playStackServiceId: String?) {
+    public init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, playStackServiceId: String?) {
         self.type = type
         self.payload = payload
         self.templateId = templateId

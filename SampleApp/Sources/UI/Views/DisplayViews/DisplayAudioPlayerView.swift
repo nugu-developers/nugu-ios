@@ -60,7 +60,7 @@ final class DisplayAudioPlayerView: UIView {
     
     var onUserInteraction: (() -> Void)?
     
-    var displayPayload: [String: Any]? {
+    var displayPayload: [String: AnyHashable]? {
         didSet {
             guard let displayPayload = displayPayload,
                 let payloadData = try? JSONSerialization.data(withJSONObject: displayPayload, options: []),

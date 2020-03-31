@@ -24,7 +24,7 @@ import NuguCore
 
 /// The `AudioPlayerAgent` handles directives for controlling player template display.
 protocol AudioPlayerDisplayManageable {
-    func display(metaData: [String: Any], messageId: String, dialogRequestId: String, playStackServiceId: String?)
+    func display(metaData: [String: AnyHashable], messageId: String, dialogRequestId: String, playStackServiceId: String?)
     
     func updateMetadata(payload: String, playServiceId: String)
     
