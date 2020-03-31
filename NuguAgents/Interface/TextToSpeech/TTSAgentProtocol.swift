@@ -22,6 +22,21 @@ import Foundation
 
 /// The `TTSAgent` handles directives for controlling speech playback.
 public protocol TTSAgentProtocol: CapabilityAgentable {
+    /// Returns the current time of the current player item.
+    ///
+    /// This function retrieves the offset(seconds) of the current `MediaPlayable` handled by the `TTSAgent`.
+    var offset: Int? { get }
+    
+    /// The duration of the current player item.
+    ///
+    /// This function retrieves the duration(seconds) of the current `MediaPlayable` handled by the `TTSAgent`.
+    var duration: Int? { get }
+    
+    /// The audio playback volume for the player.
+    ///
+    /// This function retrieves the volume of the current `MediaPlayable` handled by the `TTSAgent`.
+    var volume: Float { get set }
+    
     /// Adds a delegate to be notified of `TTSState` changes.
     ///
     /// - Parameter delegate: The object to add.
