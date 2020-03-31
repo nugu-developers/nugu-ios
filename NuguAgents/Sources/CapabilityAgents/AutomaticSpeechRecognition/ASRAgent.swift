@@ -183,31 +183,7 @@ public extension ASRAgent {
     }
     
     func startRecognition(initiator: ASRInitiator = .user) {
-        log.debug("startRecognition, initiator: \(initiator)")
-        // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
-        let reader = audioStream.makeAudioStreamReader()
-        
-        asrDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
-                log.warning("Not permitted in current state \(self.asrState)")
-                return
-            }
-            
-            self.contextManager.getContexts { [weak self] contextPayload in
-                guard let self = self else { return }
-                
-                self.asrRequest = ASRRequest(
-                    contextPayload: contextPayload,
-                    reader: reader,
-                    dialogRequestId: TimeUUID().hexString,
-                    initiator: initiator
-                )
-                
-                self.focusManager.requestFocus(channelDelegate: self)
-            }
-        }
+        startRecognition(initiator: initiator, by: nil)
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -394,7 +370,7 @@ private extension ASRAgent {
                             })
                         self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
                         
-                        self.startRecognition()
+                        self.startRecognition(initiator: .user, by: directive)
                     }
                 }
             )
@@ -446,6 +422,7 @@ private extension ASRAgent {
             ).makeEventMessage(
                 agent: self,
                 dialogRequestId: asrRequest.dialogRequestId,
+                referrerDialogRequestId: asrRequest.dialogRequestId,
                 contextPayload: asrRequest.contextPayload
             )
         )
@@ -547,6 +524,35 @@ private extension ASRAgent {
         )
         let attachment = Upstream.Attachment(header: attachmentHeader, content: Data(), type: "audio/speex", seq: attachmentSeq, isEnd: true)
         upstreamDataSender.sendStream(attachment)
+    }
+    
+    func startRecognition(initiator: ASRInitiator, by directive: Downstream.Directive?) {
+        log.debug("startRecognition, initiator: \(initiator)")
+        // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
+        let reader = audioStream.makeAudioStreamReader()
+        
+        asrDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
+                log.warning("Not permitted in current state \(self.asrState)")
+                return
+            }
+            
+            self.contextManager.getContexts { [weak self] contextPayload in
+                guard let self = self else { return }
+                
+                self.asrRequest = ASRRequest(
+                    contextPayload: contextPayload,
+                    reader: reader,
+                    dialogRequestId: TimeUUID().hexString,
+                    initiator: initiator,
+                    referrerDialogRequestId: directive?.header.dialogRequestId
+                )
+                
+                self.focusManager.requestFocus(channelDelegate: self)
+            }
+        }
     }
 }
 

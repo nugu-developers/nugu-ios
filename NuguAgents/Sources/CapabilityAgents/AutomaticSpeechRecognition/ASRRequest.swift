@@ -27,6 +27,7 @@ struct ASRRequest {
     let reader: AudioStreamReadable
     let dialogRequestId: String
     let initiator: ASRInitiator
+    let referrerDialogRequestId: String?
 }
 
 public enum ASRInitiator {
