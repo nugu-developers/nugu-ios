@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `AudioPlayerAgent` handles directives for controlling audio playback.
 public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// Adds a delegate to be notified of `AudioPlayerState` changes.
@@ -43,13 +45,28 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     func stop()
     
     /// Initiates playback of the next item.
-    func next()
+    ///
+    /// - Parameter completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func next(completion: ((StreamDataState) -> Void)?) -> String
     
     /// initiates playback of the previous item.
-    func prev()
+    ///
+    /// - Parameter completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func prev(completion: ((StreamDataState) -> Void)?) -> String
     
     /// Pauses playback.
     func pause()
+    
+    /// Set favorite as on / off.
+    func favorite(isOn: Bool)
+    
+    /// Set repeatMode as all / one / none.
+    func `repeat`(mode: AudioPlayerDisplayRepeat)
+    
+    /// Set shuffle as on / off.
+    func shuffle(isOn: Bool)
     
     /// Sets the current playback time to the specified time.
     ///
@@ -68,4 +85,17 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     
     /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
     func notifyUserInteraction()
+}
+
+// MARK: - Default
+
+public extension AudioPlayerAgentProtocol {
+    @discardableResult func next() -> String {
+        return next(completion: nil)
+    }
+    
+    /// initiates playback of the previous item.
+    @discardableResult func prev() -> String {
+        return prev(completion: nil)
+    }
 }

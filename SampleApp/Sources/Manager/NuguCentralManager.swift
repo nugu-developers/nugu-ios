@@ -31,7 +31,11 @@ final class NuguCentralManager {
     let client = NuguClient()
     let localTTSAgent: LocalTTSAgent
 
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController(audioPlayerAgent: client.audioPlayerAgent)
+    // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
+    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = {
+        return NuguAudioSessionManager.shared.supportMixWithOthersOption ? nil : NuguDisplayPlayerController()
+    }()
+    
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
             return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
@@ -262,31 +266,6 @@ private extension NuguCentralManager {
         oauthClient.authorize(grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret)) { (result) in
             completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
-    }
-}
-
-// MARK: - Internal (ASR)
-
-extension NuguCentralManager {
-    func startRecognize(initiator: ASRInitiator, completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
-            guard let self = self else { return }
-            let result = Result<Void, Error>(catching: {
-                guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.localTTSAgent.stopLocalTTS()
-                self.client.asrAgent.startRecognition(initiator: initiator)
-            })
-            completion?(result)
-        }
-    }
-    
-    func stopRecognize() {
-        client.asrAgent.stopRecognition()
-    }
-    
-    func cancelRecognize() {
-        client.asrAgent.stopRecognition()
-        client.ttsAgent.stopTTS()
     }
 }
 

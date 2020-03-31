@@ -20,8 +20,12 @@
 
 import Foundation
 
+import NuguCore
+
 /// `ASRAgent` 는 사용자 음성을 서버로 전송하고 음성 인식 결과 및 연속 발화 directive 를 처리합니다.
 public protocol ASRAgentProtocol: CapabilityAgentable {
+    var expectSpeech: ASRExpectSpeech? { get }
+    
     /// Adds a delegate to be notified of `ASRAgent` state changes.
     /// - Parameter delegate: The object to add.
     func add(delegate: ASRAgentDelegate)
@@ -33,10 +37,26 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
     /// This function asks the `ASRAgent` to send a Recognize Event to Server and start streaming from `AudioStream`, which transitions it to the `recognizing` state.
     ///
     /// This function can be called in `idle` and `expectingSpeech` state.
-    func startRecognition(initiator: ASRInitiator)
+    ///
+    /// - Parameters:
+    ///   - initiator:
+    ///   - completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func startRecognition(
+        initiator: ASRInitiator,
+        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
+    ) -> String
     
     /// This function forces the `ASRAgent` back to the `idle` state.
     ///
     /// This function can be called in any state, and will end any Event which is currently in progress.
     func stopRecognition()
+}
+
+// MARK: - Default
+
+public extension ASRAgentProtocol {
+    @discardableResult func startRecognition(initiator: ASRInitiator) -> String {
+        return startRecognition(initiator: initiator, completion: nil)
+    }
 }

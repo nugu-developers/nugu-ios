@@ -1,9 +1,9 @@
 //
-//  TextRequest.swift
+//  AudioPlayerDisplayRepeat.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2019/07/19.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by jin kim on 2020/03/06.
+//  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,14 +18,8 @@
 //  limitations under the License.
 //
 
-import Foundation
-
-import NuguCore
-
-struct TextRequest {
-    let contextPayload: ContextPayload
-    let text: String
-    let dialogRequestId: String
-    let token: String?
-    let expectSpeech: ASRExpectSpeech?
+public enum AudioPlayerDisplayRepeat: String, Decodable, CodingKey {
+    case all = "ALL"
+    case one = "ONE"
+    case none = "NONE"
 }
