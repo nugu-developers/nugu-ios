@@ -31,7 +31,7 @@ final class NuguCentralManager {
     private let supportServerInitiatedDirective = false
     
     lazy private(set) var client: NuguClient = {
-        let client = NuguClient()
+        let client = NuguClient(delegate: self)
         
         // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
         if NuguAudioSessionManager.shared.supportMixWithOthersOption == false {
@@ -45,7 +45,6 @@ final class NuguCentralManager {
             client.asrAgent.epdFile = epdFile
         }
         
-        client.delegate = self
         client.locationAgent.delegate = self
         client.systemAgent.add(systemAgentDelegate: self)
         

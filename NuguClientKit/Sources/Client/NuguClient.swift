@@ -24,7 +24,7 @@ import NuguCore
 import NuguAgents
 
 public class NuguClient {
-    public weak var delegate: NuguClientDelegate?
+    private weak var delegate: NuguClientDelegate?
     
     // core
     public let contextManager: ContextManageable
@@ -85,7 +85,9 @@ public class NuguClient {
     private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
     private var inputControlWorkItem: DispatchWorkItem?
     
-    public init() {
+    public init(delegate: NuguClientDelegate) {
+        self.delegate = delegate
+        
         // core
         contextManager = ContextManager()
         focusManager = FocusManager()
