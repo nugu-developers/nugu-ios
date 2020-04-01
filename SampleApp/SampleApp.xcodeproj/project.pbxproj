@@ -20,10 +20,6 @@
 		73F284E823815CC9004EBBDF /* DisplayListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B123815CC9004EBBDF /* DisplayListViewCell.swift */; };
 		73F284E923815CC9004EBBDF /* DisplayBodyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B223815CC9004EBBDF /* DisplayBodyListView.swift */; };
 		73F284EA23815CC9004EBBDF /* DisplayBodyListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284B323815CC9004EBBDF /* DisplayBodyListView.xib */; };
-		73F284EB23815CC9004EBBDF /* DisplayBodyTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B523815CC9004EBBDF /* DisplayBodyTemplate.swift */; };
-		73F284EC23815CC9004EBBDF /* DisplayBodyListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B623815CC9004EBBDF /* DisplayBodyListTemplate.swift */; };
-		73F284ED23815CC9004EBBDF /* DisplayCommonTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B723815CC9004EBBDF /* DisplayCommonTemplate.swift */; };
-		73F284EE23815CC9004EBBDF /* DisplayListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B823815CC9004EBBDF /* DisplayListTemplate.swift */; };
 		73F284EF23815CC9004EBBDF /* DisplayAudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B923815CC9004EBBDF /* DisplayAudioPlayerView.swift */; };
 		73F284F023815CC9004EBBDF /* DisplayBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284BA23815CC9004EBBDF /* DisplayBodyView.swift */; };
 		73F284F123815CC9004EBBDF /* DisplayListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284BB23815CC9004EBBDF /* DisplayListView.xib */; };
@@ -41,6 +37,16 @@
 		73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CC23815CC9004EBBDF /* AppDelegate.swift */; };
 		73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CE23815CC9004EBBDF /* UserDefaults+Romaine.swift */; };
 		73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */; };
+		7E0B697A2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */; };
+		7E0B697B2434A0AC00D8C6AD /* AudioPlayerTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69702434A0AC00D8C6AD /* AudioPlayerTemplate.swift */; };
+		7E0B697C2434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */; };
+		7E0B697D2434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69722434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift */; };
+		7E0B697E2434A0AC00D8C6AD /* DisplayBodyTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69742434A0AC00D8C6AD /* DisplayBodyTemplate.swift */; };
+		7E0B697F2434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69752434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift */; };
+		7E0B69802434A0AC00D8C6AD /* DisplayWeatherTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69762434A0AC00D8C6AD /* DisplayWeatherTemplate.swift */; };
+		7E0B69812434A0AC00D8C6AD /* DisplayBodyListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69772434A0AC00D8C6AD /* DisplayBodyListTemplate.swift */; };
+		7E0B69822434A0AC00D8C6AD /* DisplayCommonTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69782434A0AC00D8C6AD /* DisplayCommonTemplate.swift */; };
+		7E0B69832434A0AC00D8C6AD /* DisplayListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69792434A0AC00D8C6AD /* DisplayListTemplate.swift */; };
 		7E56DD252419FF88004A3508 /* DisplayControllable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E56DD242419FF88004A3508 /* DisplayControllable.swift */; };
 		7E56DD272419FF9C004A3508 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */; };
 		7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */; };
@@ -55,8 +61,6 @@
 		7E6A0B202410853600C7A19E /* DisplayWeatherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B1B2410853600C7A19E /* DisplayWeatherListView.swift */; };
 		7E6A0B232410853C00C7A19E /* DisplayWeatherListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B212410853C00C7A19E /* DisplayWeatherListViewCell.swift */; };
 		7E6A0B242410853C00C7A19E /* DisplayWeatherListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B222410853C00C7A19E /* DisplayWeatherListViewCell.xib */; };
-		7E6A0B272410854600C7A19E /* DisplayWeatherTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B252410854600C7A19E /* DisplayWeatherTemplate.swift */; };
-		7E6A0B282410854600C7A19E /* DisplayWeatherListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B262410854600C7A19E /* DisplayWeatherListTemplate.swift */; };
 		7E6A0B362410888000C7A19E /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2B2410888000C7A19E /* asrStart.wav */; };
 		7E6A0B372410888000C7A19E /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2C2410888000C7A19E /* asrSuccess.wav */; };
 		7E6A0B382410888000C7A19E /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2D2410888000C7A19E /* asrFail.wav */; };
@@ -87,10 +91,6 @@
 		73F284B123815CC9004EBBDF /* DisplayListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayListViewCell.swift; sourceTree = "<group>"; };
 		73F284B223815CC9004EBBDF /* DisplayBodyListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyListView.swift; sourceTree = "<group>"; };
 		73F284B323815CC9004EBBDF /* DisplayBodyListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayBodyListView.xib; sourceTree = "<group>"; };
-		73F284B523815CC9004EBBDF /* DisplayBodyTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyTemplate.swift; sourceTree = "<group>"; };
-		73F284B623815CC9004EBBDF /* DisplayBodyListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyListTemplate.swift; sourceTree = "<group>"; };
-		73F284B723815CC9004EBBDF /* DisplayCommonTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayCommonTemplate.swift; sourceTree = "<group>"; };
-		73F284B823815CC9004EBBDF /* DisplayListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayListTemplate.swift; sourceTree = "<group>"; };
 		73F284B923815CC9004EBBDF /* DisplayAudioPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayAudioPlayerView.swift; sourceTree = "<group>"; };
 		73F284BA23815CC9004EBBDF /* DisplayBodyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyView.swift; sourceTree = "<group>"; };
 		73F284BB23815CC9004EBBDF /* DisplayListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayListView.xib; sourceTree = "<group>"; };
@@ -110,6 +110,16 @@
 		73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Standard.swift"; sourceTree = "<group>"; };
 		73F284D223815CC9004EBBDF /* SampleApp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SampleApp.entitlements; sourceTree = "<group>"; };
 		73F284D823815CC9004EBBDF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerSettingsTemplate.swift; sourceTree = "<group>"; };
+		7E0B69702434A0AC00D8C6AD /* AudioPlayerTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerTemplate.swift; sourceTree = "<group>"; };
+		7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerUpdateMetadataPayload.swift; sourceTree = "<group>"; };
+		7E0B69722434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerLyricsTemplate.swift; sourceTree = "<group>"; };
+		7E0B69742434A0AC00D8C6AD /* DisplayBodyTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyTemplate.swift; sourceTree = "<group>"; };
+		7E0B69752434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListTemplate.swift; sourceTree = "<group>"; };
+		7E0B69762434A0AC00D8C6AD /* DisplayWeatherTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherTemplate.swift; sourceTree = "<group>"; };
+		7E0B69772434A0AC00D8C6AD /* DisplayBodyListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyListTemplate.swift; sourceTree = "<group>"; };
+		7E0B69782434A0AC00D8C6AD /* DisplayCommonTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayCommonTemplate.swift; sourceTree = "<group>"; };
+		7E0B69792434A0AC00D8C6AD /* DisplayListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayListTemplate.swift; sourceTree = "<group>"; };
 		7E56DD242419FF88004A3508 /* DisplayControllable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DisplayControllable.swift; path = DisplayViews/DisplayControllable.swift; sourceTree = "<group>"; };
 		7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
@@ -124,8 +134,6 @@
 		7E6A0B1B2410853600C7A19E /* DisplayWeatherListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListView.swift; sourceTree = "<group>"; };
 		7E6A0B212410853C00C7A19E /* DisplayWeatherListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListViewCell.swift; sourceTree = "<group>"; };
 		7E6A0B222410853C00C7A19E /* DisplayWeatherListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayWeatherListViewCell.xib; sourceTree = "<group>"; };
-		7E6A0B252410854600C7A19E /* DisplayWeatherTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherTemplate.swift; sourceTree = "<group>"; };
-		7E6A0B262410854600C7A19E /* DisplayWeatherListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListTemplate.swift; sourceTree = "<group>"; };
 		7E6A0B2B2410888000C7A19E /* asrStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrStart.wav; sourceTree = "<group>"; };
 		7E6A0B2C2410888000C7A19E /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
 		7E6A0B2D2410888000C7A19E /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
@@ -275,12 +283,8 @@
 		73F284B423815CC9004EBBDF /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				7E6A0B262410854600C7A19E /* DisplayWeatherListTemplate.swift */,
-				7E6A0B252410854600C7A19E /* DisplayWeatherTemplate.swift */,
-				73F284B523815CC9004EBBDF /* DisplayBodyTemplate.swift */,
-				73F284B623815CC9004EBBDF /* DisplayBodyListTemplate.swift */,
-				73F284B723815CC9004EBBDF /* DisplayCommonTemplate.swift */,
-				73F284B823815CC9004EBBDF /* DisplayListTemplate.swift */,
+				7E0B696E2434A0AC00D8C6AD /* AudioPlayerDisplay */,
+				7E0B69732434A0AC00D8C6AD /* Display */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -341,6 +345,30 @@
 			);
 			path = "Supporting Files";
 			sourceTree = SOURCE_ROOT;
+		};
+		7E0B696E2434A0AC00D8C6AD /* AudioPlayerDisplay */ = {
+			isa = PBXGroup;
+			children = (
+				7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */,
+				7E0B69702434A0AC00D8C6AD /* AudioPlayerTemplate.swift */,
+				7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */,
+				7E0B69722434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift */,
+			);
+			path = AudioPlayerDisplay;
+			sourceTree = "<group>";
+		};
+		7E0B69732434A0AC00D8C6AD /* Display */ = {
+			isa = PBXGroup;
+			children = (
+				7E0B69742434A0AC00D8C6AD /* DisplayBodyTemplate.swift */,
+				7E0B69752434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift */,
+				7E0B69762434A0AC00D8C6AD /* DisplayWeatherTemplate.swift */,
+				7E0B69772434A0AC00D8C6AD /* DisplayBodyListTemplate.swift */,
+				7E0B69782434A0AC00D8C6AD /* DisplayCommonTemplate.swift */,
+				7E0B69792434A0AC00D8C6AD /* DisplayListTemplate.swift */,
+			);
+			path = Display;
+			sourceTree = "<group>";
 		};
 		7E6A0B062410849C00C7A19E /* MediaPlayer */ = {
 			isa = PBXGroup;
@@ -545,34 +573,38 @@
 				7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */,
 				7E56DD272419FF9C004A3508 /* Dictionary+Convenience.swift in Sources */,
 				73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */,
-				73F284EE23815CC9004EBBDF /* DisplayListTemplate.swift in Sources */,
-				7E6A0B272410854600C7A19E /* DisplayWeatherTemplate.swift in Sources */,
 				73F284F223815CC9004EBBDF /* DisplayView.swift in Sources */,
-				73F284EC23815CC9004EBBDF /* DisplayBodyListTemplate.swift in Sources */,
 				73F284EF23815CC9004EBBDF /* DisplayAudioPlayerView.swift in Sources */,
 				73F284DF23815CC9004EBBDF /* SettingViewController.swift in Sources */,
 				73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */,
 				7E6A0B0D2410849C00C7A19E /* UserDefaultsWrapper.swift in Sources */,
+				7E0B69822434A0AC00D8C6AD /* DisplayCommonTemplate.swift in Sources */,
 				73F284E023815CC9004EBBDF /* IntroViewController.swift in Sources */,
+				7E0B697F2434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift in Sources */,
+				7E0B697C2434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift in Sources */,
 				7E6A0B1C2410853600C7A19E /* DisplayWeatherView.swift in Sources */,
 				73F284F023815CC9004EBBDF /* DisplayBodyView.swift in Sources */,
 				73F284F523815CC9004EBBDF /* NuguToastManager.swift in Sources */,
 				73F284F923815CC9004EBBDF /* SampleAppError.swift in Sources */,
-				73F284ED23815CC9004EBBDF /* DisplayCommonTemplate.swift in Sources */,
+				7E0B697E2434A0AC00D8C6AD /* DisplayBodyTemplate.swift in Sources */,
 				73F284E323815CC9004EBBDF /* NuguWebView.swift in Sources */,
 				7E6A0B202410853600C7A19E /* DisplayWeatherListView.swift in Sources */,
 				73F284FC23815CC9004EBBDF /* NuguCentralManager.swift in Sources */,
 				73F284E823815CC9004EBBDF /* DisplayListViewCell.swift in Sources */,
 				73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */,
 				73F284E223815CC9004EBBDF /* WebViewController.swift in Sources */,
+				7E0B69812434A0AC00D8C6AD /* DisplayBodyListTemplate.swift in Sources */,
 				73F284F323815CC9004EBBDF /* DisplayListView.swift in Sources */,
-				7E6A0B282410854600C7A19E /* DisplayWeatherListTemplate.swift in Sources */,
+				7E0B697D2434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift in Sources */,
 				73F284E923815CC9004EBBDF /* DisplayBodyListView.swift in Sources */,
+				7E0B69832434A0AC00D8C6AD /* DisplayListTemplate.swift in Sources */,
+				7E0B697A2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift in Sources */,
 				73F284FA23815CC9004EBBDF /* SampleApp.swift in Sources */,
 				73F284F823815CC9004EBBDF /* ImageDataLoader.swift in Sources */,
+				7E0B697B2434A0AC00D8C6AD /* AudioPlayerTemplate.swift in Sources */,
 				7E6A0B0C2410849C00C7A19E /* ASRBeepPlayer.swift in Sources */,
-				73F284EB23815CC9004EBBDF /* DisplayBodyTemplate.swift in Sources */,
 				7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */,
+				7E0B69802434A0AC00D8C6AD /* DisplayWeatherTemplate.swift in Sources */,
 				73F284F623815CC9004EBBDF /* UIColor+Convenience.swift in Sources */,
 				73F284F723815CC9004EBBDF /* Int+Convenience.swift in Sources */,
 			);
