@@ -61,19 +61,15 @@ Here are some basic examples for some capability-agent.
 #### Initialize & Enable
 Before using `NUGU SDK for iOS`, enable to nugu when using NuguClientKit. like this:
 ```swift 
-let client = NuguClient()
-
-client.enable()
+class SomeClass: NuguClientDelegate {
+    let client = NuguClient(delegate: self)
+    ...
+}
 ```
 
 #### Using ASRAgent (Automatic Speech Recognition Agent)
 ```swift
 client.asrAgent.startRecognition(initiator: .user)
-```
-
-#### Using TTSAgent (Text To Speech Agent)
-```swift
-client.ttsAgent.requestTTS("Hello world")
 ```
 
 ### See also
