@@ -496,7 +496,7 @@ private extension AudioPlayerAgent {
     
     func handleRequestPlayCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            self?.sendRequestPlayEvent(dialogRequestId: directive.header.dialogRequestId, payload: directive.payload, typeInfo: .requestPlayCommandIssued)
+            self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, payload: directive.payload, typeInfo: .requestPlayCommandIssued)
             completion(.success(()))
         }
     }
@@ -717,7 +717,7 @@ private extension AudioPlayerAgent {
     }
 
     func sendRequestPlayEvent(
-        dialogRequestId: String,
+        referrerDialogRequestId: String,
         payload: String,
         typeInfo: RequestPlayEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
@@ -726,7 +726,7 @@ private extension AudioPlayerAgent {
             RequestPlayEvent(
                 requestPlayPayload: payload,
                 typeInfo: typeInfo
-            ).makeEventMessage(agent: self, referrerDialogRequestId: dialogRequestId),
+            ).makeEventMessage(agent: self, referrerDialogRequestId: referrerDialogRequestId),
             completion: completion
         )
     }
