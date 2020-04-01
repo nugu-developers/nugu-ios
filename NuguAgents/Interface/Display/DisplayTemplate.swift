@@ -55,7 +55,6 @@ public struct DisplayTemplate {
 }
 
 public extension DisplayTemplate {
-    // TODO: PlaySyncDuration과 같음.
     enum Duration: String {
         /// <#Description#>
         case short = "SHORT"

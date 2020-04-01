@@ -27,9 +27,30 @@ import NuguLoginKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
-
-    let client = NuguClient()
-    let localTTSAgent: LocalTTSAgent
+    
+    private let supportServerInitiatedDirective = false
+    
+    lazy private(set) var client: NuguClient = {
+        let client = NuguClient(delegate: self)
+        
+        // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
+        if NuguAudioSessionManager.shared.supportMixWithOthersOption == false {
+            displayPlayerController = NuguDisplayPlayerController()
+        }
+        
+        // local tts agent
+        localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
+        
+        if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
+            client.asrAgent.epdFile = epdFile
+        }
+        
+        client.locationAgent.delegate = self
+        client.systemAgent.add(systemAgentDelegate: self)
+        
+        return client
+    }()
+    lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
 
     // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
     lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = {
@@ -52,22 +73,6 @@ final class NuguCentralManager {
     }
     
     private init() {
-        // local tts agent
-        localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
-        
-        if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.asrAgent.epdFile = epdFile
-        }
-
-        client.delegate = self
-        client.locationAgent.delegate = self
-        client.systemAgent.add(systemAgentDelegate: self)
-
-        NuguLocationManager.shared.startUpdatingLocation()
-        
-        // Set Last WakeUp Keyword
-        // If you don't want to use saved wakeup-word, don't need to be implemented
-        setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
     }
 }
 
@@ -75,13 +80,24 @@ final class NuguCentralManager {
 
 extension NuguCentralManager {
     func enable() {
-        // TODO: enable/disable 의미 불명확함.
-        client.startReceiveServerInitiatedDirective()
+        log.debug("")
+        if supportServerInitiatedDirective {
+            client.startReceiveServerInitiatedDirective()
+        }
+
+        NuguLocationManager.shared.startUpdatingLocation()
+        
+        // Set Last WakeUp Keyword
+        // If you don't want to use saved wakeup-word, don't need to be implemented
+        setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
     }
     
     func disable() {
-        // TODO: enable/disable 의미 불명확함.
+        log.debug("")
         client.stopReceiveServerInitiatedDirective()
+        client.asrAgent.stopRecognition()
+        client.ttsAgent.stopTTS(cancelAssociation: true)
+        client.audioPlayerAgent.stop()
     }
 }
 
