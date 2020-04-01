@@ -404,7 +404,6 @@ extension NuguCentralManager: NuguClientDelegate {
         // Use some analytics SDK(or API) here.
         // Error: EventSenderError
         log.debug("\(error.debugDescription): \(attachment.header.namespace).\(attachment.header.name)")
-        handleNetworkError(error: error)
     }
 }
 
