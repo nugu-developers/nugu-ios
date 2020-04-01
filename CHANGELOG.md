@@ -3,6 +3,33 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.9.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.9.0)
+Released on 2020-04-01
+
+#### Fixed
+- Fix memory leak issues. (#257)
+
+#### Updated
+- Update `DisplayAgent` to version 1.2 (#187)(#212) (#187)(#242) (#272)
+- Update `ASRAgent` to version 1.1 (#248)
+- Update `TextAgent` to support `Text.TextSource` directive. (#246)
+- Apply device-gateway v2 APIs. (#247) (#259) (#268) (#264) (#271) (#268) (#274)
+- Update `SystemAgent` to version 1.1 (#256)(#261)
+- Update `AudioPlayerAgent` to 1.1 (#252)(#253)
+- Update `AudioPlayerAgent` to 1.2 (#262)(#280)
+- Update blocking policy (#250) (#266)
+- Update `AudioPlayerAgent` to support TTS attachment (#275)
+- Update `TextAgent` to version 1.1 (#270)
+- Adopt `ReferrerDialogRequestIdD` in capability-agents (#273)
+- Apply context policy v1.2.9 (#240) 
+
+#### Added
+- Add test-case for capability-agents (#241) (#254)
+
+#### Removed
+- Remove `address` property from `ServerPolicy` (#267)
+- Remove `SpeakerAgent` (#276)
+
 ## [0.8.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.8.0)
 Released on 2020-02-27
 
