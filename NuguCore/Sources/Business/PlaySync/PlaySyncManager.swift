@@ -147,7 +147,7 @@ public extension PlaySyncManager {
             log.debug(property)
             
             // Cancel timers
-            self.playContextTimers[property] = nil
+            self.playContextTimers[property] = DisposeBag()
         }
     }
 }
