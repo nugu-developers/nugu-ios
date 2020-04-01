@@ -496,11 +496,7 @@ private extension AudioPlayerAgent {
     
     func handleRequestPlayCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let media = self?.currentMedia else {
-                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
-                return
-            }
-            self?.sendRequestPlayEvent(media: media, payload: directive.payload, typeInfo: .requestPlayCommandIssued)
+            self?.sendRequestPlayEvent(payload: directive.payload, typeInfo: .requestPlayCommandIssued)
             completion(.success(()))
         }
     }
@@ -721,7 +717,6 @@ private extension AudioPlayerAgent {
     }
 
     func sendRequestPlayEvent(
-        media: AudioPlayerAgentMedia,
         payload: String,
         typeInfo: RequestPlayEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
@@ -730,7 +725,7 @@ private extension AudioPlayerAgent {
             RequestPlayEvent(
                 requestPlayPayload: payload,
                 typeInfo: typeInfo
-            ).makeEventMessage(agent: self, referrerDialogRequestId: media.dialogRequestId),
+            ).makeEventMessage(agent: self),
             completion: completion
         )
     }
