@@ -41,10 +41,8 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
     /// - Parameter token: The unique identifier for the element.
     @discardableResult func elementDidSelect(templateId: String, token: String, completion: ((StreamDataState) -> Void)?) -> String
     
-    /// Stops the timer for deleting template by `DisplayTemplate.Duration`.
-    ///
-    /// - Parameter templateId: The unique identifier for the template.
-    func stopRenderingTimer(templateId: String)
+    /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
+    func notifyUserInteraction()
 }
 
 // MARK: - Default

@@ -92,10 +92,8 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// - Parameter displayDelegate: The object to remove.
     func remove(displayDelegate: AudioPlayerDisplayDelegate)
     
-    /// Stops the timer for deleting template by timeout.
-    ///
-    /// - Parameter templateId: The unique identifier for the template.
-    func stopRenderingTimer(templateId: String)
+    /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
+    func notifyUserInteraction()
 }
 
 // MARK: - Default

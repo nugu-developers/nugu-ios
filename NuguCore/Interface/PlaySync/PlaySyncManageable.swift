@@ -21,11 +21,38 @@
 import Foundation
 
 public protocol PlaySyncManageable: ContextInfoDelegate {
-    var playServiceIds: [String] { get }
+    /// Register `PlaySyncDelegate` to `PlaySyncManageable`.
+    /// - Parameter delegate: The object to register.
+    func add(delegate: PlaySyncDelegate)
     
-    func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?)
-    func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?)
+    /// Unregister `PlaySyncDelegate` from `PlaySyncManageable`.
+    /// - Parameter delegate: The object to unregister.
+    func remove(delegate: PlaySyncDelegate)
+    
+    func startPlay(
+        property: PlaySyncProperty,
+        duration: DispatchTimeInterval,
+        playServiceId: String?,
+        dialogRequestId: String
+    )
+    func endPlay(property: PlaySyncProperty)
+    func stopPlay(dialogRequestId: String)
+    
+    /// Start new timer to release `PlaySyncProperty`.
+    ///
+    /// - Parameters:
+    ///   - property: The object to release by timer.
+    ///   - duration: The duration for timer.
+    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval)
+    
+    /// Restart exist timer to release `PlaySyncProperty`.
+    ///
+    /// If the timer for `PlaySyncProperty` not exist then `resetTimer` call ignored.
+    /// - Parameter property: The object to release by timer.
+    func resetTimer(property: PlaySyncProperty)
+    
+    /// Stop and remove exist timer to release `PlaySyncProperty`.
+    ///
+    /// - Parameter property: The object to release by timer.
+    func cancelTimer(property: PlaySyncProperty)
 }
