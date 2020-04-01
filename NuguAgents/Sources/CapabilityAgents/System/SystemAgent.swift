@@ -55,6 +55,8 @@ public final class SystemAgent: SystemAgentProtocol {
         
         contextManager.add(provideContextDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        
+        sendSynchronizeStateEvent()
     }
     
     deinit {
@@ -83,21 +85,8 @@ extension SystemAgent: ContextInfoDelegate {
         ]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
+
 }
-
-// MARK: - NetworkStatusDelegate
-
-// TODO: v2에서는 "네트워크가 연결되면"이라는 상태가 없음. 초기에 context를 전송하는 로직 수정해야 함.
-//extension SystemAgent: NetworkStatusDelegate {
-//    public func networkStatusDidChange(_ status: NetworkStatus) {
-//        switch status {
-//        case .connected:
-//            sendSynchronizeStateEvent()
-//        default:
-//            break
-//        }
-//    }
-//}
 
 // MARK: - Private (handle directive)
 
