@@ -27,7 +27,7 @@ import RxSwift
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
     // TODO: AudioPlayer interface version 1.1 -> AudioPlayer.Play(cacheKey)
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.1")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.2")
     
     // AudioPlayerAgentProtocol
     public var offset: Int? {
@@ -128,6 +128,12 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), preFetch: prefetchPlay, directiveHandler: handlePlay, attachmentHandler: handleAttachment),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleStop),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handlePause),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequestPlayCommand", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleRequestPlayCommand),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequestResumeCommand", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleRequestResumeCommand),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequestNextCommand", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleRequestNextCommand),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequestPreviousCommand", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleRequestPreviousCommand),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequestPauseCommand", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleRequestPauseCommand),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequestStopCommand", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleRequestStopCommand),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateMetadata),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleShowLyrics),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideRyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleHideLyrics),
@@ -488,6 +494,68 @@ private extension AudioPlayerAgent {
         }
     }
     
+    func handleRequestPlayCommand() -> HandleDirective {
+        return { [weak self] directive, completion in
+            self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, payload: directive.payload, typeInfo: .requestPlayCommandIssued)
+            completion(.success(()))
+        }
+    }
+    
+    func handleRequestResumeCommand() -> HandleDirective {
+        return { [weak self] _, completion in
+            guard let media = self?.currentMedia else {
+                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
+                return
+            }
+            self?.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
+            completion(.success(()))
+        }
+    }
+    
+    func handleRequestNextCommand() -> HandleDirective {
+        return { [weak self] _, completion in
+            guard let media = self?.currentMedia else {
+                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
+                return
+            }
+            self?.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
+            completion(.success(()))
+        }
+    }
+    
+    func handleRequestPreviousCommand() -> HandleDirective {
+        return { [weak self] _, completion in
+            guard let media = self?.currentMedia else {
+                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
+                return
+            }
+            self?.sendPlayEvent(media: media, typeInfo: .requestPreviousCommandIssued)
+            completion(.success(()))
+        }
+    }
+    
+    func handleRequestPauseCommand() -> HandleDirective {
+        return { [weak self] _, completion in
+            guard let media = self?.currentMedia else {
+                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
+                return
+            }
+            self?.sendPlayEvent(media: media, typeInfo: .requestPauseCommandIssued)
+            completion(.success(()))
+        }
+    }
+    
+    func handleRequestStopCommand() -> HandleDirective {
+        return { [weak self] _, completion in
+            guard let media = self?.currentMedia else {
+                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
+                return
+            }
+            self?.sendPlayEvent(media: media, typeInfo: .requestStopCommandIssued)
+            completion(.success(()))
+        }
+    }
+    
     func handleUpdateMetadata() -> HandleDirective {
         return { [weak self] directive, completion in
             completion(
@@ -647,7 +715,22 @@ private extension AudioPlayerAgent {
             completion: completion
         )
     }
-    
+
+    func sendRequestPlayEvent(
+        referrerDialogRequestId: String,
+        payload: String,
+        typeInfo: RequestPlayEvent.TypeInfo,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
+        upstreamDataSender.sendEvent(
+            RequestPlayEvent(
+                requestPlayPayload: payload,
+                typeInfo: typeInfo
+            ).makeEventMessage(agent: self, referrerDialogRequestId: referrerDialogRequestId),
+            completion: completion
+        )
+    }
+
     func sendSettingsEvent(
         media: AudioPlayerAgentMedia,
         typeInfo: SettingsEvent.TypeInfo,
