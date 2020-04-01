@@ -51,12 +51,6 @@ final class NuguCentralManager {
         }
     }
     
-//    var networkStatus: NetworkStatus = .disconnected(error: nil) {
-//        didSet {
-//            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
-//        }
-//    }
-    
     private init() {
         // local tts agent
         localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
@@ -219,6 +213,33 @@ private extension NuguCentralManager {
     }
 }
 
+// MARK: - Private (NetworkError handling)
+// TODO: - Should consider and decide for best way for handling network errors
+
+private extension NuguCentralManager {
+    func handleNetworkError(error: Error?) {
+        // Handle Nugu's predefined NetworkError
+        if let networkError = error as? NetworkError {
+            switch networkError {
+            case .authError:
+                handleAuthError()
+            case .timeout:
+                localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
+            default:
+                localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
+            }
+        } else { // Handle URLError
+            guard let urlError = error as? URLError else { return }
+            switch urlError.code {
+            case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
+                NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+            default: // Handle other URLErrors with your own way
+                break
+            }
+        }
+    }
+}
+
 // MARK: - Private (Auth)
 
 private extension NuguCentralManager {
@@ -354,11 +375,6 @@ extension NuguCentralManager: NuguClientDelegate {
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
     
-    // TODO: 더이상 nugu client에서 network 상태를 전달하지 않음.
-//    func nuguClientConnectionStatusChanged(status: NetworkStatus) {
-//        networkStatus = status
-//    }
-    
     func nuguClientWillOpenInputSource() {
         inputStatus = true
     }
@@ -381,12 +397,14 @@ extension NuguCentralManager: NuguClientDelegate {
         // Use some analytics SDK(or API) here.
         // Error: URLError or NetworkError or EventSenderError
         log.debug("\(error?.localizedDescription ?? ""): \(event.header.namespace).\(event.header.name)")
+        handleNetworkError(error: error)
     }
     
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: EventSenderError
         log.debug("\(error.debugDescription): \(attachment.header.namespace).\(attachment.header.name)")
+        handleNetworkError(error: error)
     }
 }
 
