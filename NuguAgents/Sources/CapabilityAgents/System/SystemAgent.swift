@@ -72,6 +72,10 @@ public extension SystemAgent {
     func remove(systemAgentDelegate: SystemAgentDelegate) {
         delegates.remove(systemAgentDelegate)
     }
+    
+    func sendSynchronizeStateEvent() {
+        sendSynchronizeStateEvent(directive: nil)
+    }
 }
 
 // MARK: - ContextInfoDelegate
@@ -83,21 +87,8 @@ extension SystemAgent: ContextInfoDelegate {
         ]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
+
 }
-
-// MARK: - NetworkStatusDelegate
-
-// TODO: v2에서는 "네트워크가 연결되면"이라는 상태가 없음. 초기에 context를 전송하는 로직 수정해야 함.
-//extension SystemAgent: NetworkStatusDelegate {
-//    public func networkStatusDidChange(_ status: NetworkStatus) {
-//        switch status {
-//        case .connected:
-//            sendSynchronizeStateEvent()
-//        default:
-//            break
-//        }
-//    }
-//}
 
 // MARK: - Private (handle directive)
 
@@ -112,7 +103,6 @@ private extension SystemAgent {
                     
                     let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
                     self?.systemDispatchQueue.async { [weak self] in
-                        // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
                         log.info("try to handoff policy: \(serverPolicy)")
                         self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
                     }
@@ -167,6 +157,8 @@ private extension SystemAgent {
         }
     }
 }
+
+// MARK: - Private (handle directive)
 
 private extension SystemAgent {
     func sendSynchronizeStateEvent(directive: Downstream.Directive? = nil) {

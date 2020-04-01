@@ -197,10 +197,11 @@ private extension MainViewController {
         // Exception handling when already connected, scheduled update in future
         nuguButton.isEnabled = true
         nuguButton.isHidden = false
-        refreshWakeUpDetector()
         
         // Enable Nugu SDK
         NuguCentralManager.shared.enable()
+        
+        refreshWakeUpDetector()
     }
     
     func refreshWakeUpDetector() {
