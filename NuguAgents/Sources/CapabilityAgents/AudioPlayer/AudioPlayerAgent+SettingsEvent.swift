@@ -48,7 +48,7 @@ extension AudioPlayerAgent.SettingsEvent: Eventable {
         case .favoriteCommandIssued(let isOn):
             eventPayload["favorite"] = isOn
         case .repeatCommandIssued(let mode):
-            eventPayload["repeat"] = mode
+            eventPayload["repeat"] = mode.rawValue
         case .shuffleCommandIssued(let isOn):
             eventPayload["shuffle"] = isOn
         }
