@@ -240,7 +240,6 @@
 		7315302923E11EDF00F843C3 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27D2375703000C9A177 /* NetworkError.swift */; };
 		7315302A23E11EDF00F843C3 /* PlaySyncManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */; };
 		7315302B23E11EDF00F843C3 /* PlaySyncDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */; };
-		7315302C23E11EDF00F843C3 /* PlaySyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2842375703000C9A177 /* PlaySyncState.swift */; };
 		7315302D23E11EDF00F843C3 /* FocusManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28B2375703000C9A177 /* FocusManageable.swift */; };
 		7315302E23E11EDF00F843C3 /* FocusDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2872375703000C9A177 /* FocusDelegate.swift */; };
 		7315302F23E11EDF00F843C3 /* FocusChannelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28A2375703000C9A177 /* FocusChannelDelegate.swift */; };
@@ -254,7 +253,6 @@
 		7315304223E11EDF00F843C3 /* AuthorizationStoreDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */; };
 		7315304323E11EDF00F843C3 /* AuthorizationStoreable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */; };
 		7315304423E11EDF00F843C3 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* Eventable.swift */; };
-		7315304623E1221100F843C3 /* PlaySyncDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7315304523E1221100F843C3 /* PlaySyncDuration.swift */; };
 		7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2642375703000C9A177 /* DisplayAgentProtocol.swift */; };
 		7315305123E1246F00F843C3 /* DisplayAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2652375703000C9A177 /* DisplayAgentDelegate.swift */; };
 		7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2662375703000C9A177 /* DisplayTemplate.swift */; };
@@ -319,6 +317,8 @@
 		7547B703240CD5C200C57A34 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */; };
 		7E1FA2B224244F79006B8BA9 /* BlockingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
+		7E4382542418DAB200053A0D /* PlayStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4382532418DAB200053A0D /* PlayStack.swift */; };
+		7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */; };
 		7E6450F72421CCB600D91129 /* Upstream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F62421CCB600D91129 /* Upstream.swift */; };
 		7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F82421D82300D91129 /* StreamDataDelegate.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
@@ -631,7 +631,6 @@
 		1FFFF26D2375703000C9A177 /* TextAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextAgentDelegate.swift; sourceTree = "<group>"; };
 		1FFFF27D2375703000C9A177 /* NetworkError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncDelegate.swift; sourceTree = "<group>"; };
-		1FFFF2842375703000C9A177 /* PlaySyncState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncState.swift; sourceTree = "<group>"; };
 		1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncManageable.swift; sourceTree = "<group>"; };
 		1FFFF2872375703000C9A177 /* FocusDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusDelegate.swift; sourceTree = "<group>"; };
 		1FFFF2882375703000C9A177 /* FocusState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusState.swift; sourceTree = "<group>"; };
@@ -799,7 +798,6 @@
 		73152F9D23E0405900F843C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73152FD923E0443500F843C3 /* ASREncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASREncoding.swift; sourceTree = "<group>"; };
 		73152FDB23E0451900F843C3 /* NuguAgents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAgents.swift; sourceTree = "<group>"; };
-		7315304523E1221100F843C3 /* PlaySyncDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncDuration.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
 		7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngineDelegate.swift; sourceTree = "<group>"; };
 		7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TycheEndpointDetectorEngine+State.swift"; sourceTree = "<group>"; };
@@ -832,7 +830,9 @@
 		7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockingPolicy.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
+		7E4382532418DAB200053A0D /* PlayStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStack.swift; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
+		7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
 		7E6450F62421CCB600D91129 /* Upstream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upstream.swift; sourceTree = "<group>"; };
 		7E6450F82421D82300D91129 /* StreamDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataDelegate.swift; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
@@ -1424,10 +1424,9 @@
 		1FFFF2822375703000C9A177 /* PlaySync */ = {
 			isa = PBXGroup;
 			children = (
-				7315304523E1221100F843C3 /* PlaySyncDuration.swift */,
 				1FFFF2852375703000C9A177 /* PlaySyncManageable.swift */,
 				1FFFF2832375703000C9A177 /* PlaySyncDelegate.swift */,
-				1FFFF2842375703000C9A177 /* PlaySyncState.swift */,
+				7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */,
 			);
 			path = PlaySync;
 			sourceTree = "<group>";
@@ -1730,6 +1729,7 @@
 			children = (
 				1FFFF36A2375707000C9A177 /* PlaySyncManager.swift */,
 				1FFFF36B2375707000C9A177 /* PlaySyncInfo.swift */,
+				7E4382532418DAB200053A0D /* PlayStack.swift */,
 			);
 			path = PlaySync;
 			sourceTree = "<group>";
@@ -2939,7 +2939,10 @@
 				1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */,
 				1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */,
 				7315301D23E11EDF00F843C3 /* ContextType.swift in Sources */,
-				7315302C23E11EDF00F843C3 /* PlaySyncState.swift in Sources */,
+				7315303723E11EDF00F843C3 /* UpstreamHeader.swift in Sources */,
+				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
+				7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */,
+				7315303A23E11EDF00F843C3 /* CrashReport.swift in Sources */,
 				7315304323E11EDF00F843C3 /* AuthorizationStoreable.swift in Sources */,
 				1FFFF3872375707000C9A177 /* MicInputConst.swift in Sources */,
 				735A4CC1241172F1004E7A41 /* NuguApi.swift in Sources */,
@@ -2956,7 +2959,7 @@
 				1FFFF3CB2375707100C9A177 /* DirectiveSequencer.swift in Sources */,
 				1FFFF3892375707000C9A177 /* SharedBufferError.swift in Sources */,
 				7315304223E11EDF00F843C3 /* AuthorizationStoreDelegate.swift in Sources */,
-				7315304623E1221100F843C3 /* PlaySyncDuration.swift in Sources */,
+				7E4382542418DAB200053A0D /* PlayStack.swift in Sources */,
 				7315302F23E11EDF00F843C3 /* FocusChannelDelegate.swift in Sources */,
 				1FFFF3882375707000C9A177 /* SharedBufferIndex.swift in Sources */,
 				1FFFF3852375707000C9A177 /* OpusPlayerConst.swift in Sources */,

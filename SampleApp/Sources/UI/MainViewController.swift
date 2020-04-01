@@ -43,9 +43,6 @@ final class MainViewController: UIViewController {
     
     private var hasShownGuideWeb = false
     
-    private var displayContextReleaseTimer: DispatchSourceTimer?
-    private let displayContextReleaseTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.MainViewController.displayContextReleaseTimer")
-    
     // MARK: Override
     
     override func viewDidLoad() {
@@ -338,9 +335,8 @@ private extension MainViewController {
             guard let selectedItemToken = selectedItemToken else { return }
             NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
         }
-        displayView.onUserInteraction = { [weak self] in
-            guard let self = self else { return }
-            self.startDisplayContextReleaseTimer(templateId: displayTemplate.templateId, duration: displayTemplate.duration.time)
+        displayView.onUserInteraction = {
+            NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
         }
         displayView.alpha = 0
         view.insertSubview(displayView, belowSubview: nuguButton)
@@ -359,16 +355,16 @@ private extension MainViewController {
     }
     
     func dismissDisplayView() {
-        stopDisplayContextReleaseTimer()
+        guard let view = displayView else { return }
         UIView.animate(
             withDuration: 0.3,
-            animations: { [weak self] in
-                self?.displayView?.alpha = 0
+            animations: {
+                view.alpha = 0
             },
-            completion: { [weak self] _ in
-                self?.displayView?.removeFromSuperview()
-                self?.displayView = nil
+            completion: { _ in
+                view.removeFromSuperview()
         })
+        displayView = nil
     }
 }
 
@@ -385,41 +381,31 @@ private extension MainViewController {
             self.dismissDisplayAudioPlayerView()
             NuguCentralManager.shared.displayPlayerController?.remove()
         }
-
+        audioPlayerView.onUserInteraction = {
+            NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
+        }
+        
+        audioPlayerView.alpha = 0
         view.insertSubview(audioPlayerView, belowSubview: nuguButton)
         displayAudioPlayerView = audioPlayerView
+        UIView.animate(withDuration: 0.3) {
+            audioPlayerView.alpha = 1.0
+        }
         
         return audioPlayerView
     }
     
     func dismissDisplayAudioPlayerView() {
-        displayAudioPlayerView?.removeFromSuperview()
-        displayAudioPlayerView = nil
-    }
-}
-
-// MARK: - Private (DisplayTimer)
-
-private extension MainViewController {
-    func startDisplayContextReleaseTimer(templateId: String, duration: DispatchTimeInterval) {
-        // Inform sdk to stop displayRendering timer
-        NuguCentralManager.shared.client.displayAgent.stopRenderingTimer(templateId: templateId)
-        
-        // Start application side's displayContextReleaseTimer
-        displayContextReleaseTimer?.cancel()
-        displayContextReleaseTimer = DispatchSource.makeTimerSource(queue: displayContextReleaseTimerQueue)
-        displayContextReleaseTimer?.schedule(deadline: .now() + duration)
-        displayContextReleaseTimer?.setEventHandler(handler: {
-            DispatchQueue.main.async { [weak self] in
-                self?.dismissDisplayView()
-            }
+        guard let view = displayAudioPlayerView else { return }
+        UIView.animate(
+            withDuration: 0.3,
+            animations: {
+                view.alpha = 0
+            },
+            completion: { _ in
+                view.removeFromSuperview()
         })
-        displayContextReleaseTimer?.resume()
-    }
-    
-    func stopDisplayContextReleaseTimer() {
-        displayContextReleaseTimer?.cancel()
-        displayContextReleaseTimer = nil
+        displayAudioPlayerView = nil
     }
 }
 
@@ -555,13 +541,8 @@ extension MainViewController: DisplayAgentDelegate {
         updateDisplayView(displayTemplate: template)
     }
     
-    func displayAgentShouldClear(template: DisplayTemplate, reason: DisplayTemplate.ClearReason) {
-        switch reason {
-        case .timer:
-            dismissDisplayView()
-        case .directive:
-            dismissDisplayView()
-        }
+    func displayAgentShouldClear(template: DisplayTemplate) {
+        dismissDisplayView()
     }
 }
 
@@ -580,14 +561,9 @@ extension MainViewController: AudioPlayerDisplayDelegate {
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason) {
+    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) {
         NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayShouldClear()
-        switch reason {
-        case .timer:
-            dismissDisplayAudioPlayerView()
-        case .directive:
-            dismissDisplayAudioPlayerView()
-        }
+        dismissDisplayAudioPlayerView()
     }
     
     func audioPlayerDisplayShouldUpdateMetadata(payload: String) {

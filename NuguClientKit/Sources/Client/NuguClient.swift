@@ -132,6 +132,7 @@ public class NuguClient {
         setupAudioStream()
         setupAuthorizationStore()
         setupAudioSessionRequester()
+        setupDialogStateAggregator()
         setupStreamDataRouter()
         
         systemAgent.sendSynchronizeStateEvent()
@@ -229,6 +230,25 @@ extension NuguClient: FocusDelegate {
     
     public func focusShouldRelease() {
         delegate?.nuguClientDidReleaseAudioSession()
+    }
+}
+
+// MARK: - DialogStateDelegate
+
+extension NuguClient: DialogStateDelegate {
+    private func setupDialogStateAggregator() {
+        dialogStateAggregator.add(delegate: self)
+    }
+    
+    public func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
+        switch state {
+        case .idle:
+            playSyncManager.resetTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+        case .listening:
+            playSyncManager.cancelTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+        default:
+            break
+        }
     }
 }
 

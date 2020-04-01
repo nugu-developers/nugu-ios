@@ -21,9 +21,5 @@
 import Foundation
 
 public protocol PlaySyncDelegate: class {
-    func playSyncIsDisplay() -> Bool
-    
-    func playSyncDuration() -> PlaySyncDuration
-    
-    func playSyncDidChange(state: PlaySyncState, dialogRequestId: String)
+    func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String)
 }
