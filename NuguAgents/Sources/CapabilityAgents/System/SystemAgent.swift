@@ -55,8 +55,6 @@ public final class SystemAgent: SystemAgentProtocol {
         
         contextManager.add(provideContextDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        
-        sendSynchronizeStateEvent()
     }
     
     deinit {
@@ -73,6 +71,10 @@ public extension SystemAgent {
     
     func remove(systemAgentDelegate: SystemAgentDelegate) {
         delegates.remove(systemAgentDelegate)
+    }
+    
+    func sendSynchronizeStateEvent() {
+        sendSynchronizeStateEvent(directive: nil)
     }
 }
 
@@ -155,6 +157,8 @@ private extension SystemAgent {
         }
     }
 }
+
+// MARK: - Private (handle directive)
 
 private extension SystemAgent {
     func sendSynchronizeStateEvent(directive: Downstream.Directive? = nil) {
