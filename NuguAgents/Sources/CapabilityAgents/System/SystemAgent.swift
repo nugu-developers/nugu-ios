@@ -112,7 +112,6 @@ private extension SystemAgent {
                     
                     let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
                     self?.systemDispatchQueue.async { [weak self] in
-                        // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
                         log.info("try to handoff policy: \(serverPolicy)")
                         self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
                     }
