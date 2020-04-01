@@ -222,11 +222,13 @@ private extension NuguCentralManager {
             switch sampleAppError {
             case .loginUnauthorized:
                 self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
-                    self?.logout()
+                    self?.disable()
+                    UserDefaults.Standard.clear()
                 })
             default:
                 self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
-                    self?.logout()
+                    self?.disable()
+                    UserDefaults.Standard.clear()
                 })
             }
         }
