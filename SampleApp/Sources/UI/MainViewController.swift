@@ -65,14 +65,6 @@ final class MainViewController: UIViewController {
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
-        
-        // TODO: network status를 sdk로부터 전달받을 수 없음.
-//        NotificationCenter.default.addObserver(
-//            self,
-//            selector: #selector(networkStatusDidChange(_:)),
-//            name: .nuguClientNetworkStatus,
-//            object: nil
-//        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -415,62 +407,6 @@ private extension MainViewController {
         displayAudioPlayerView = nil
     }
 }
-
-// TODO: network status를 nugu sdk로부터 전달받을 수 없음.
-// MARK: - NuguNetworkStatus
-//
-//extension MainViewController {
-//    @objc func networkStatusDidChange(_ notification: Notification) {
-//        guard let status = notification.userInfo?["status"] as? NetworkStatus else {
-//            return
-//        }
-//
-//        switch status {
-//        case .connected:
-//            // Refresh wakeup-detector
-//            refreshWakeUpDetector()
-//
-//            // Update UI
-//            DispatchQueue.main.async { [weak self] in
-//                self?.nuguButton.isEnabled = true
-//                self?.nuguButton.isHidden = false
-//            }
-//        case .disconnected(let error):
-//            // Stop wakeup-detector
-//            NuguCentralManager.shared.stopWakeUpDetector()
-//
-//            // Update UI
-//            DispatchQueue.main.async { [weak self] in
-//                self?.nuguButton.isEnabled = false
-//                if UserDefaults.Standard.useNuguService == true {
-//                    self?.nuguButton.isHidden = false
-//                } else {
-//                    self?.nuguButton.isHidden = true
-//                }
-//            }
-//
-//            // Handle Nugu's predefined NetworkError
-//            if let networkError = error as? NetworkError {
-//                switch networkError {
-//                case .authError:
-//                    NuguCentralManager.shared.handleAuthError()
-//                case .timeout:
-//                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
-//                default:
-//                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
-//                }
-//            } else { // Handle URLError
-//                guard let urlError = error as? URLError else { return }
-//                switch urlError.code {
-//                case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
-//                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
-//                default: // Handle other URLErrors with your own way
-//                    break
-//                }
-//            }
-//        }
-//    }
-//}
 
 // MARK: - WakeUpDetectorDelegate
 
