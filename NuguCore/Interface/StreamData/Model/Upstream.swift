@@ -57,16 +57,26 @@ public enum Upstream {
     // MARK: Attachment
     
     public struct Attachment {
-        public let content: Data
-        public let seq: Int32
-        public let isEnd: Bool
-        public let type: String
+        public struct Header {
+            public let seq: Int32
+            public let isEnd: Bool
+            public let type: String
+            public let messageId: String
+            
+            public init(seq: Int32, isEnd: Bool, type: String, messageId: String) {
+                self.seq = seq
+                self.isEnd = isEnd
+                self.type = type
+                self.messageId = messageId
+            }
+        }
         
-        public init(content: Data, type: String, seq: Int32, isEnd: Bool) {
+        public let content: Data
+        public let header: Header
+        
+        public init(content: Data, header: Header) {
             self.content = content
-            self.type = type
-            self.seq = seq
-            self.isEnd = isEnd
+            self.header = header
         }
     }
 }

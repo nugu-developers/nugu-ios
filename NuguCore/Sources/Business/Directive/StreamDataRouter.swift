@@ -151,7 +151,7 @@ public extension StreamDataRouter {
         
         eventSender.send(attachment)
             .subscribe(onCompleted: { [weak self] in
-                if attachment.isEnd {
+                if attachment.header.isEnd {
                     eventSender.finish()
                 }
 

@@ -324,7 +324,8 @@ extension ASRAgent: EndPointDetectorDelegate {
                 return
             }
             
-            let attachment = Upstream.Attachment(content: speechData, type: "audio/speex", seq: self.attachmentSeq, isEnd: false)
+            let attachmentHeader = Upstream.Attachment.Header(seq: self.attachmentSeq, isEnd: false, type: "audio/speex", messageId: TimeUUID().hexString)
+            let attachment = Upstream.Attachment(content: speechData, header: attachmentHeader)
             self.upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.dialogRequestId)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
@@ -501,8 +502,9 @@ private extension ASRAgent {
         }
         
         asrState = .busy
-        
-        let attachment = Upstream.Attachment(content: Data(), type: "audio/speex", seq: attachmentSeq, isEnd: true)
+
+        let attachmentHeader = Upstream.Attachment.Header(seq: self.attachmentSeq, isEnd: true, type: "audio/speex", messageId: TimeUUID().hexString)
+        let attachment = Upstream.Attachment(content: Data(), header: attachmentHeader)
         upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.dialogRequestId)
     }
     
