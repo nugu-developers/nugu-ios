@@ -316,11 +316,12 @@
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
 		7547B703240CD5C200C57A34 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */; };
 		7E1FA2B224244F79006B8BA9 /* BlockingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */; };
+		7E2471012435DAC200640F5E /* ASROptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2471002435DAC200640F5E /* ASROptions.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
 		7E4382542418DAB200053A0D /* PlayStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4382532418DAB200053A0D /* PlayStack.swift */; };
-		7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */; };
 		7E6450F72421CCB600D91129 /* Upstream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F62421CCB600D91129 /* Upstream.swift */; };
 		7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F82421D82300D91129 /* StreamDataDelegate.swift */; };
+		7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
@@ -829,12 +830,13 @@
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
 		7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockingPolicy.swift; sourceTree = "<group>"; };
+		7E2471002435DAC200640F5E /* ASROptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASROptions.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E4382532418DAB200053A0D /* PlayStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStack.swift; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
-		7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
 		7E6450F62421CCB600D91129 /* Upstream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upstream.swift; sourceTree = "<group>"; };
 		7E6450F82421D82300D91129 /* StreamDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataDelegate.swift; sourceTree = "<group>"; };
+		7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
 		7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreable.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
@@ -1368,6 +1370,7 @@
 				1FFFF2572375703000C9A177 /* ASRResult.swift */,
 				1FFFF2552375703000C9A177 /* ASRError.swift */,
 				1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */,
+				7E2471002435DAC200640F5E /* ASROptions.swift */,
 			);
 			path = AutomaticSpeechRecognition;
 			sourceTree = "<group>";
@@ -2939,10 +2942,7 @@
 				1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */,
 				1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */,
 				7315301D23E11EDF00F843C3 /* ContextType.swift in Sources */,
-				7315303723E11EDF00F843C3 /* UpstreamHeader.swift in Sources */,
-				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
 				7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */,
-				7315303A23E11EDF00F843C3 /* CrashReport.swift in Sources */,
 				7315304323E11EDF00F843C3 /* AuthorizationStoreable.swift in Sources */,
 				1FFFF3872375707000C9A177 /* MicInputConst.swift in Sources */,
 				735A4CC1241172F1004E7A41 /* NuguApi.swift in Sources */,
@@ -3185,6 +3185,7 @@
 				A135E668241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift in Sources */,
 				73152FDA23E0443500F843C3 /* ASREncoding.swift in Sources */,
 				7315307423E1248300F843C3 /* TTSAgentProtocol.swift in Sources */,
+				7E2471012435DAC200640F5E /* ASROptions.swift in Sources */,
 				7315306023E1248300F843C3 /* ExtensionAgentDelegate.swift in Sources */,
 				7315306823E1248300F843C3 /* AudioPlayerAgentProtocol.swift in Sources */,
 				73152FCF23E0416100F843C3 /* TextAgent+Event.swift in Sources */,
