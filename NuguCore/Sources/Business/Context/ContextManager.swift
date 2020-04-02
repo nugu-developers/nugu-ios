@@ -55,6 +55,7 @@ extension ContextManager {
                 if contextInfo.contextType == .client || contextInfo.name == namespace {
                     filteredPayload = payload
                 } else {
+                    // FIXME: 추후 서버에서 각 capability interface 정보를 저장하게 되면 제거해야 함.
                     filteredPayload = payload.filter { (key, _) -> Bool in
                         key == "version"
                     }
