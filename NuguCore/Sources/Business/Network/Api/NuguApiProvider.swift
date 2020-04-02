@@ -213,11 +213,10 @@ extension NuguApiProvider {
                 log.debug("request event header: \(streamRequest.allHTTPHeaderFields ?? [:])")
                 
                 uploadTask = self.session.uploadTask(withStreamedRequest: streamRequest)
-                uploadTask.resume()
-                
                 let eventResponse = EventResponseProcessor(inputStream: inputStream)
                 self.eventResponseProcessors[uploadTask] = eventResponse
                 
+                uploadTask.resume()
                 single(.success(eventResponse.subject))
             }
             return disposable
@@ -314,8 +313,12 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
         guard let inputStream = eventResponseProcessors[task]?.inputStream else {
-            log.error("unknown URLSessionTask requested input stream")
-            completionHandler(nil)
+            log.error("Can't send an event. Unknown URLSessionTask requested input stream")
+            return
+        }
+        
+        guard inputStream.streamStatus == .notOpen else {
+            log.error("Can't send an event. Input stream was opened before")
             return
         }
         
