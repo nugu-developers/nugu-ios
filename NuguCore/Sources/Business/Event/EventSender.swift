@@ -109,7 +109,7 @@ class EventSender: NSObject {
                 guard let self = self else { return Completable.empty() }
                 return self.sendData(self.makeMultipartData(attachment))
             }
-            .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "attachment_queue_\(attachment.header.dialogRequestId)"))
+            .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "attachment_queue_\(attachment.seq)"))
 
     }
     

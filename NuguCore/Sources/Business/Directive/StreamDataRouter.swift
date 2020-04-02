@@ -142,8 +142,8 @@ public extension StreamDataRouter {
      It won't emit received or finished state on completion.
      because those states will be emitted to event-reqeust's completion.
      */
-    func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
-        guard let eventSender = eventSenders[attachment.header.dialogRequestId] else {
+    func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)? = nil) {
+        guard let eventSender = eventSenders[dialogRequestId] else {
             completion?(.error(EventSenderError.noEventRequested))
             delegate?.streamDataDidSend(attachment: attachment, error: EventSenderError.noEventRequested)
             return
