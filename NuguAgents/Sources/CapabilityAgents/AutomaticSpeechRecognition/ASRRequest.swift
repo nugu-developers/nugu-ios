@@ -31,9 +31,3 @@ struct ASRRequest {
     let referrerDialogRequestId: String?
     let completion: ((StreamDataState) -> Void)?
 }
-
-public enum ASRInitiator {
-    case wakeUpKeyword
-    case user
-    case scenario
-}

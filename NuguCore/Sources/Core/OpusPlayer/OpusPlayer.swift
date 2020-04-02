@@ -101,7 +101,10 @@ public class OpusPlayer: MediaPlayable {
         do {
             try self.engineInit()
         } catch {
+            log.error("engine init failed: \(error)")
             self.delegate?.mediaPlayerDidChange(state: .error(error: error))
+            
+            return
         }
         
         if let objcException = (ObjcExceptionCatcher.objcTry {
