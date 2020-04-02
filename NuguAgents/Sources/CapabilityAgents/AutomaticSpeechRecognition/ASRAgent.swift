@@ -93,37 +93,41 @@ public final class ASRAgent: ASRAgentProtocol {
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
                 expectSpeech = nil
             case .cancel:
-                expectSpeech = nil
                 asrState = .idle
                 upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
-                upstreamDataSender.sendEvent(
-                    Event(typeInfo: .stopRecognize, expectSpeech: expectSpeech)
-                        .makeEventMessage(agent: self, referrerDialogRequestId: asrRequest.dialogRequestId)
+                sendEvent(
+                    typeInfo: .stopRecognize,
+                    expectSpeech: expectSpeech,
+                    referrerDialogRequestId: asrRequest.dialogRequestId
                 )
-            case .error(let error):
                 expectSpeech = nil
+            case .error(let error):
                 asrState = .idle
                 switch error {
                 case NetworkError.timeout:
-                    upstreamDataSender.sendEvent(
-                        Event(typeInfo: .responseTimeout, expectSpeech: expectSpeech)
-                            .makeEventMessage(agent: self, referrerDialogRequestId: asrRequest.dialogRequestId)
+                    sendEvent(
+                        typeInfo: .responseTimeout,
+                        expectSpeech: expectSpeech,
+                        referrerDialogRequestId: asrRequest.dialogRequestId
                     )
                 case ASRError.listeningTimeout:
-                    upstreamDataSender.sendEvent(
-                        Event(typeInfo: .listenTimeout, expectSpeech: expectSpeech)
-                            .makeEventMessage(agent: self, referrerDialogRequestId: asrRequest.dialogRequestId)
+                    sendEvent(
+                        typeInfo: .listenTimeout,
+                        expectSpeech: expectSpeech,
+                        referrerDialogRequestId: asrRequest.dialogRequestId
                     )
                 case ASRError.listenFailed:
-                    upstreamDataSender.sendEvent(
-                        Event(typeInfo: .listenFailed, expectSpeech: expectSpeech)
-                            .makeEventMessage(agent: self, referrerDialogRequestId: asrRequest.dialogRequestId)
+                    sendEvent(
+                        typeInfo: .listenFailed,
+                        expectSpeech: expectSpeech,
+                        referrerDialogRequestId: asrRequest.dialogRequestId
                     )
                 case ASRError.recognizeFailed:
                     break
                 default:
                     break
                 }
+                expectSpeech = nil
             }
             
             asrRequest.completion?(asrResult, asrRequest.dialogRequestId)
@@ -171,7 +175,7 @@ public final class ASRAgent: ASRAgentProtocol {
         self.asrEncoding = asrEncoding
         
         Self.endPointDetector?.delegate = self
-        contextManager.add(provideContextDelegate: self)
+        contextManager.add(delegate: self)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
@@ -424,6 +428,31 @@ private extension ASRAgent {
     }
 }
 
+// MARK: - Private (Event)
+
+private extension ASRAgent {
+    func sendEvent(
+        typeInfo: Event.TypeInfo,
+        expectSpeech: ASRExpectSpeech?,
+        referrerDialogRequestId: String
+    ) {
+        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
+            
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    typeInfo: typeInfo,
+                    expectSpeech: expectSpeech
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    referrerDialogRequestId: referrerDialogRequestId,
+                    contextPayload: contextPayload
+                )
+            )
+        }
+    }
+}
+
 // MARK: - Private(FocusManager)
 
 private extension ASRAgent {
@@ -473,7 +502,7 @@ private extension ASRAgent {
                 typeInfo: .recognize(wakeUpInfo: nil, encoding: asrEncoding),
                 expectSpeech: expectSpeech
             ).makeEventMessage(
-                agent: self,
+                property: self.capabilityAgentProperty,
                 dialogRequestId: asrRequest.dialogRequestId,
                 contextPayload: asrRequest.contextPayload
             )) { [weak self] (state) in

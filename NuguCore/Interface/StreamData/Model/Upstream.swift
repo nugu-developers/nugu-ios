@@ -45,9 +45,9 @@ public enum Upstream {
         
         public let payload: [String: AnyHashable]
         public let header: Header
-        public let contextPayload: ContextPayload
+        public let contextPayload: [ContextInfo]
         
-        public init(payload: [String: AnyHashable], header: Header, contextPayload: ContextPayload) {
+        public init(payload: [String: AnyHashable], header: Header, contextPayload: [ContextInfo]) {
             self.payload = payload
             self.header = header
             self.contextPayload = contextPayload
@@ -117,12 +117,13 @@ extension Upstream.Event {
     }
     
     var contextString: String {
-        let supportedInterfaces = contextPayload.supportedInterfaces.reduce(
+        let contextDictionary = Dictionary(grouping: contextPayload, by: { $0.contextType })
+        let supportedInterfaces = contextDictionary[.capability]?.reduce(
             into: [String: AnyHashable]()
         ) { result, context in
             result[context.name] = context.payload
         }
-        let client = contextPayload.client.reduce(
+        let client = contextDictionary[.client]?.reduce(
             into: [String: AnyHashable]()
         ) { result, context in
             result[context.name] = context.payload

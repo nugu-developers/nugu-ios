@@ -31,6 +31,7 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
     
     // private
     private let directiveSequencer: DirectiveSequenceable
+    private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     
     // Handleable Directive
@@ -44,9 +45,10 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
         directiveSequencer: DirectiveSequenceable
     ) {
         self.upstreamDataSender = upstreamDataSender
+        self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(provideContextDelegate: self)
+        contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
@@ -60,11 +62,10 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 public extension ExtensionAgent {
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
         let dialogRequestId = TimeUUID().hexString
-        upstreamDataSender.sendEvent(
-            Event(
-                playServiceId: playServiceId,
-                typeInfo: .commandIssued(data: data)
-            ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId),
+        sendEvent(
+            typeInfo: .commandIssued(data: data),
+            playServiceId: playServiceId,
+            dialogRequestId: dialogRequestId,
             completion: completion
         )
         return dialogRequestId
@@ -111,13 +112,45 @@ private extension ExtensionAgent {
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    self.upstreamDataSender.sendEvent(
-                        Event(playServiceId: item.playServiceId, typeInfo: isSuccess ? .actionSucceeded : .actionFailed)
-                            .makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
+                    let typeInfo: Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
+                    self.sendEvent(
+                        typeInfo: typeInfo,
+                        playServiceId: item.playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
                     )
             })
             
             completion(.success(()))
+        }
+    }
+}
+
+
+// MARK: - Private (Event)
+
+private extension ExtensionAgent {
+    func sendEvent(
+        typeInfo: Event.TypeInfo,
+        playServiceId: String,
+        dialogRequestId: String = TimeUUID().hexString,
+        referrerDialogRequestId: String? = nil,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
+        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
+            
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    playServiceId: playServiceId,
+                    typeInfo: typeInfo
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    dialogRequestId: dialogRequestId,
+                    referrerDialogRequestId: referrerDialogRequestId,
+                    contextPayload: contextPayload
+                ),
+                completion: completion
+            )
         }
     }
 }

@@ -31,7 +31,11 @@ class MockContextManager: ContextManageable {
         //
     }
     
-    func getContexts(completion: @escaping (ContextPayload) -> Void) {
+    func getContexts(completion: @escaping ([ContextInfo]) -> Void) {
+        //
+    }
+    
+    func getContexts(namespace: String, completion: @escaping ([ContextInfo]) -> Void) {
         //
     }
 }

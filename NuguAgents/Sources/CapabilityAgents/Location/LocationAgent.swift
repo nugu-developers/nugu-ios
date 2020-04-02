@@ -30,7 +30,7 @@ public final class LocationAgent: LocationAgentProtocol {
     public weak var delegate: LocationAgentDelegate?
     
     public init(contextManager: ContextManageable) {
-        contextManager.add(provideContextDelegate: self)
+        contextManager.add(delegate: self)
     }
 }
 

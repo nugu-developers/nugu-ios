@@ -52,7 +52,7 @@ public final class TextAgent: TextAgentProtocol {
         self.directiveSequencer = directiveSequencer
         
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        contextManager.add(provideContextDelegate: self)
+        contextManager.add(delegate: self)
     }
     
     deinit {
@@ -118,18 +118,21 @@ private extension TextAgent {
     ) -> String {
         let dialogRequestId = TimeUUID().hexString
         
-        textDispatchQueue.async { [weak self] in
+        let expectSpeech = delegate?.textAgentDidRequestExpectSpeech()
+        contextManager.getContexts { [weak self] contextPayload in
             guard let self = self else { return }
             
-            let expectSpeech = self.delegate?.textAgentDidRequestExpectSpeech()
-            self.contextManager.getContexts { (contextPayload) in
-                self.upstreamDataSender.sendEvent(
-                    Event(
-                        typeInfo: .textInput(text: text, token: token, expectSpeech: expectSpeech)
-                    ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId, referrerDialogRequestId: directive?.header.dialogRequestId, contextPayload: contextPayload),
-                    completion: completion
-                )
-            }
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    typeInfo: .textInput(text: text, token: token, expectSpeech: expectSpeech)
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    dialogRequestId: dialogRequestId,
+                    referrerDialogRequestId: directive?.header.dialogRequestId,
+                    contextPayload: contextPayload
+                ),
+                completion: completion
+            )
         }
         return dialogRequestId
     }

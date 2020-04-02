@@ -232,7 +232,6 @@
 		7315301B23E11EDF00F843C3 /* ContextInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2362375703000C9A177 /* ContextInfoDelegate.swift */; };
 		7315301C23E11EDF00F843C3 /* ContextInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2352375703000C9A177 /* ContextInfo.swift */; };
 		7315301D23E11EDF00F843C3 /* ContextType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2342375703000C9A177 /* ContextType.swift */; };
-		7315301E23E11EDF00F843C3 /* ContextPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2372375703000C9A177 /* ContextPayload.swift */; };
 		7315301F23E11EDF00F843C3 /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
 		7315302023E11EDF00F843C3 /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
 		7315302123E11EDF00F843C3 /* DelegateDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2392375703000C9A177 /* DelegateDictionary.swift */; };
@@ -318,9 +317,9 @@
 		7E1FA2B224244F79006B8BA9 /* BlockingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
 		7E4382542418DAB200053A0D /* PlayStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4382532418DAB200053A0D /* PlayStack.swift */; };
-		7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */; };
 		7E6450F72421CCB600D91129 /* Upstream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F62421CCB600D91129 /* Upstream.swift */; };
 		7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F82421D82300D91129 /* StreamDataDelegate.swift */; };
+		7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
@@ -596,7 +595,6 @@
 		1FFFF2342375703000C9A177 /* ContextType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextType.swift; sourceTree = "<group>"; };
 		1FFFF2352375703000C9A177 /* ContextInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextInfo.swift; sourceTree = "<group>"; };
 		1FFFF2362375703000C9A177 /* ContextInfoDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextInfoDelegate.swift; sourceTree = "<group>"; };
-		1FFFF2372375703000C9A177 /* ContextPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextPayload.swift; sourceTree = "<group>"; };
 		1FFFF2392375703000C9A177 /* DelegateDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegateDictionary.swift; sourceTree = "<group>"; };
 		1FFFF23A2375703000C9A177 /* DelegateSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegateSet.swift; sourceTree = "<group>"; };
 		1FFFF23C2375703000C9A177 /* CapabilityAgentProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityAgentProperty.swift; sourceTree = "<group>"; };
@@ -832,9 +830,9 @@
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E4382532418DAB200053A0D /* PlayStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStack.swift; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
-		7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
 		7E6450F62421CCB600D91129 /* Upstream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upstream.swift; sourceTree = "<group>"; };
 		7E6450F82421D82300D91129 /* StreamDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataDelegate.swift; sourceTree = "<group>"; };
+		7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
 		7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreable.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
@@ -1306,7 +1304,6 @@
 				1FFFF2362375703000C9A177 /* ContextInfoDelegate.swift */,
 				1FFFF2352375703000C9A177 /* ContextInfo.swift */,
 				1FFFF2342375703000C9A177 /* ContextType.swift */,
-				1FFFF2372375703000C9A177 /* ContextPayload.swift */,
 			);
 			path = Context;
 			sourceTree = "<group>";
@@ -2939,10 +2936,7 @@
 				1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */,
 				1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */,
 				7315301D23E11EDF00F843C3 /* ContextType.swift in Sources */,
-				7315303723E11EDF00F843C3 /* UpstreamHeader.swift in Sources */,
-				1FFFF3C22375707100C9A177 /* MultiPartParser.swift in Sources */,
 				7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */,
-				7315303A23E11EDF00F843C3 /* CrashReport.swift in Sources */,
 				7315304323E11EDF00F843C3 /* AuthorizationStoreable.swift in Sources */,
 				1FFFF3872375707000C9A177 /* MicInputConst.swift in Sources */,
 				735A4CC1241172F1004E7A41 /* NuguApi.swift in Sources */,
@@ -2990,7 +2984,6 @@
 				7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */,
 				735A4CE1241173F4004E7A41 /* EventSender.swift in Sources */,
 				1FFFF37E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift in Sources */,
-				7315301E23E11EDF00F843C3 /* ContextPayload.swift in Sources */,
 				1FFFF3832375707000C9A177 /* OpusPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

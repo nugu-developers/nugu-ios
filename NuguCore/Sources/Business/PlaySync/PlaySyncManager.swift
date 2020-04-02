@@ -35,7 +35,7 @@ public class PlaySyncManager: PlaySyncManageable {
     private var playContextTimers = [PlaySyncProperty: DisposeBag]()
     
     public init(contextManager: ContextManageable) {
-        contextManager.add(provideContextDelegate: self)
+        contextManager.add(delegate: self)
     }
 }
 
