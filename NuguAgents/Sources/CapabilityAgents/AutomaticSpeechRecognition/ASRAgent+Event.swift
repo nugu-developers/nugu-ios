@@ -30,17 +30,11 @@ extension ASRAgent {
         let expectSpeech: ASRExpectSpeech?
         
         public enum TypeInfo {
-            case recognize(wakeUpInfo: WakeUpInfo?, options: ASROptions)
+            case recognize(options: ASROptions)
             case responseTimeout
             case listenTimeout
             case stopRecognize
             case listenFailed
-        }
-        
-        public struct WakeUpInfo {
-            public let start: Int
-            public let end: Int
-            public let detection: Int
         }
     }
 }
@@ -51,7 +45,7 @@ extension ASRAgent.Event: Eventable {
     public var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable?]
         switch typeInfo {
-        case .recognize(let wakeUpInfo, let options):
+        case .recognize(let options):
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
@@ -67,11 +61,19 @@ extension ASRAgent.Event: Eventable {
                     "response": 10000
                 ]
             ]
-            if let wakeUpInfo = wakeUpInfo {
+
+            if options.endPointing == .server,
+                case let .wakeUpKeyword(data, padding) = options.initiator {
+                /**
+                 KeywordDetector use 16k mono (bit depth: 16).
+                 so, You can calculate sample count by (dataCount / 2)
+                 */
+                let totalFrameCount = data.count / 2
+                let paddingFrameCount = padding / 2
                 let boundary: [String: AnyHashable] = [
-                    "start": wakeUpInfo.start,
-                    "end": wakeUpInfo.end,
-                    "detection": wakeUpInfo.detection,
+                    "start": 0,
+                    "end": totalFrameCount - paddingFrameCount,
+                    "detection": totalFrameCount,
                     "metric": "sample"
                 ]
                 payload["wakeup"] = [
@@ -108,5 +110,4 @@ extension ASRAgent.Event: Eventable {
 // MARK: - Equatable
 
 extension ASRAgent.Event.TypeInfo: Equatable {}
-extension ASRAgent.Event.WakeUpInfo: Equatable {}
 extension ASRAgent.Event: Equatable {}

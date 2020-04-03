@@ -460,7 +460,7 @@ private extension ASRAgent {
         
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(wakeUpInfo: nil, options: asrRequest.options),
+                typeInfo: .recognize(options: asrRequest.options),
                 expectSpeech: expectSpeech
             ).makeEventMessage(
                 agent: self,
