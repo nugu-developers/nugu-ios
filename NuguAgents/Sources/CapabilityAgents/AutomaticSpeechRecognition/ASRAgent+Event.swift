@@ -60,7 +60,12 @@ extension ASRAgent.Event: Eventable {
                 "sessionId": expectSpeech?.sessionId,
                 "playServiceId": expectSpeech?.playServiceId,
                 "domainTypes": expectSpeech?.domainTypes,
-                "asrContext": expectSpeech?.asrContext
+                "asrContext": expectSpeech?.asrContext,
+                "timeout": [
+                    "listen": options.timeout * 1000,
+                    "maxSpeech": options.maxDuration * 1000,
+                    "response": 10000
+                ]
             ]
             if let wakeUpInfo = wakeUpInfo {
                 payload["wakeUpBoundary"] = [

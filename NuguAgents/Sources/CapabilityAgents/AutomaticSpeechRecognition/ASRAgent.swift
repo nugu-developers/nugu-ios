@@ -27,7 +27,7 @@ import RxSwift
 
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
-    // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup, timeout)
+    // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup)
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.1")
     
     // Private
