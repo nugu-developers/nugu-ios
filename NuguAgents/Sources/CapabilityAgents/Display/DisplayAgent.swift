@@ -136,12 +136,22 @@ public extension DisplayAgent {
                     return
             }
 
-            self.sendEvent(
-                typeInfo: .elementSelected(token: token),
-                playServiceId: template.playServiceId,
-                dialogRequestId: dialogRequestId,
-                referrerDialogRequestId: template.dialogRequestId
-            )
+            self.contextManager.getContexts { [weak self] contextPayload in
+                guard let self = self else { return }
+                
+                self.upstreamDataSender.sendEvent(
+                    Event(
+                        playServiceId: template.playServiceId,
+                        typeInfo: .elementSelected(token: token)
+                    ).makeEventMessage(
+                        property: self.capabilityAgentProperty,
+                        dialogRequestId: dialogRequestId,
+                        referrerDialogRequestId: template.dialogRequestId,
+                        contextPayload: contextPayload
+                    ),
+                    completion: completion
+                )
+            }
         }
         return dialogRequestId
     }
