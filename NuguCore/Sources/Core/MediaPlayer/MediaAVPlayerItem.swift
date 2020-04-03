@@ -43,6 +43,8 @@ final class MediaAVPlayerItem: AVPlayerItem {
     private static var observerContext: Int = 0
     weak var delegate: MediaAVPlayerItemDelegate?
     
+    var cacheKey: String?
+    
     init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
         super.init(asset: AVAsset(url: url),
                    automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)

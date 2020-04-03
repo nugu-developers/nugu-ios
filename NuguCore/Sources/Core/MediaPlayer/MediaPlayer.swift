@@ -20,14 +20,23 @@
 
 import Foundation
 import AVFoundation
+import MobileCoreServices
 
-public class MediaPlayer: MediaPlayable {
+public class MediaPlayer: NSObject, MediaPlayable {
     public weak var delegate: MediaPlayerDelegate?
     
     private var player: AVQueuePlayer?
     private var playerItem: MediaAVPlayerItem?
     
-    public init() {}
+    private var downloadSession: URLSession?
+    private var downloadDataTask: URLSessionDataTask?
+    private var downloadResponse: URLResponse?
+    private var downloadAudioData: NSData?
+    
+    private var expectedDataLength: Float?
+    private var sessionHasFinishedLoading: Bool?
+    private var pendingRequests = Set<AVAssetResourceLoadingRequest>()
+    private var pendingRequestQueue = DispatchQueue(label: "com.sktelecom.romain.pendingRequest")
 }
 
 // MARK: - MediaPlayable
@@ -144,6 +153,184 @@ extension MediaPlayer: MediaUrlDataSource {
         if offset.seconds > 0 {
             player?.seek(to: offset.cmTime)
         }
+    }
+}
+
+// MARK: AVAssetResourceLoader Delegate Methods
+
+extension MediaPlayer: AVAssetResourceLoaderDelegate {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        _ = pendingRequestQueue.sync {
+            pendingRequests.insert(loadingRequest)
+        }
+        
+        if sessionHasFinishedLoading == true {
+            processPendingRequests()
+        }
+        
+        if downloadSession == nil {
+            sessionHasFinishedLoading = false
+            var urlToConvert = URLComponents(url: loadingRequest.request.url!, resolvingAgainstBaseURL: false)
+            urlToConvert!.scheme = "http"
+            let interceptedURL = urlToConvert!.url!
+            startDataRequest(withURL: interceptedURL)
+        }
+        
+        return true
+    }
+    
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
+        _ = pendingRequestQueue.sync {
+            pendingRequests.remove(loadingRequest)
+        }
+    }
+}
+
+// MARK: Audio Download Methods
+
+private extension MediaPlayer {
+    func startDataRequest(withURL url: URL) {
+        log.debug("startDataRequest - URL : \(url.absoluteString)")
+        let request = URLRequest(url: url)
+        let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        let downloadSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        let urlSessionDatatask = downloadSession.dataTask(with: request)
+        urlSessionDatatask.resume()
+    }
+    
+    func processPendingRequests() {
+        var requestsCompleted = Set<AVAssetResourceLoadingRequest>()
+        for loadingRequest in pendingRequests {
+            fillInContentInformation(contentInformationRequest: loadingRequest.contentInformationRequest)
+            let didRespondCompletely = respondWithDataForRequest(dataRequest: loadingRequest.dataRequest!)
+            if didRespondCompletely {
+                requestsCompleted.insert(loadingRequest)
+                loadingRequest.finishLoading()
+            }
+        }
+        
+        pendingRequestQueue.sync {
+            pendingRequests.subtract(requestsCompleted)
+        }
+    }
+    
+    func fillInContentInformation(contentInformationRequest: AVAssetResourceLoadingContentInformationRequest?) {
+        guard let downloadResponse = downloadResponse,
+            let mimeType = downloadResponse.mimeType else { return }
+        
+        let unmanagedFileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)
+        guard let contentType = unmanagedFileUTI?.takeRetainedValue() else {
+            return
+        }
+        
+        log.debug("origianal mimeType = \(mimeType) // translated mimeType = \(contentType as String)")
+        
+        contentInformationRequest?.contentType = contentType as String
+        contentInformationRequest?.contentLength = downloadResponse.expectedContentLength
+        contentInformationRequest?.isByteRangeAccessSupported = true
+    }
+    
+    func respondWithDataForRequest(dataRequest: AVAssetResourceLoadingDataRequest) -> Bool {
+        var startOffset = dataRequest.requestedOffset
+        if dataRequest.currentOffset != 0 {
+            startOffset = dataRequest.currentOffset
+        }
+        
+        // Don't have any data at all for this request
+        guard let downloadAudioData = downloadAudioData else {
+            return false
+        }
+        
+        if downloadAudioData.length < Int(startOffset) {
+            return false
+        }
+        
+        // This is the total data we have from startOffset to whatever has been downloaded so far
+        let unreadBytes = downloadAudioData.length - Int(startOffset)
+        
+        // Respond with whatever is available if we can't satisfy the request fully yet
+        let numberOfBytesToRespondWith = min(Int(dataRequest.requestedLength), unreadBytes)
+        let range = NSRange(location: Int(startOffset), length: numberOfBytesToRespondWith)
+        
+        dataRequest.respond(with: (downloadAudioData.subdata(with: range)))
+        
+        let endOffset = Int(startOffset) + dataRequest.requestedLength
+        let didRespondFully = downloadAudioData.length >= endOffset
+        return didRespondFully
+    }
+    
+    private func releaseCacheData() {
+        downloadDataTask?.cancel()
+        downloadDataTask = nil
+        downloadSession = nil
+        downloadAudioData = nil
+        downloadResponse = nil
+
+        if pendingRequests.count > 0 {
+            for request in pendingRequests {
+                request.finishLoading()
+            }
+        }
+        
+        pendingRequestQueue.sync {
+            pendingRequests.removeAll()
+        }
+    }
+}
+
+// MARK: URLSessionData Delegate
+extension MediaPlayer: URLSessionDataDelegate {
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        completionHandler(URLSession.ResponseDisposition.allow)
+        downloadAudioData = NSMutableData()
+        downloadResponse = response
+        processPendingRequests()
+        expectedDataLength = Float(response.expectedContentLength)
+    }
+    
+    // 간헐적 Crash 이슈로 Delegate 메소드 optional 처리. 참고 > https://github.com/Alamofire/Alamofire/issues/2138
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        internalUrlSession(session: session, dataTask: dataTask, didReceive: data)
+    }
+    
+    private func internalUrlSession(session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data?) {
+        guard let data = data else {
+            return
+        }
+        
+        guard let downloadAudioData = downloadAudioData as? NSMutableData else {
+            processPendingRequests()
+            return
+        }
+        downloadAudioData.append(data)
+        log.debug("\(Float(downloadAudioData.length) / Float(expectedDataLength!))")
+        processPendingRequests()
+    }
+    
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        
+        sessionHasFinishedLoading = true
+        
+        if error != nil {
+            log.error("\(error!)")
+            releaseCacheData()
+            return
+        }
+        
+        processPendingRequests()
+        
+        guard var audioDataToWrite = downloadAudioData, let itemKeyForCache = playerItem?.cacheKey else {
+            releaseCacheData()
+            return
+        }
+        
+        if NuguCacheManager.saveDataToCacheFile(data: audioDataToWrite, key: itemKeyForCache) == true {
+            log.debug("SaveComplete: \(itemKeyForCache)")
+        } else {
+            log.error("SaveFailed")
+        }
+        releaseCacheData()
     }
 }
 
