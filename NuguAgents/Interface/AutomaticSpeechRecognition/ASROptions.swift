@@ -30,6 +30,7 @@ public struct ASROptions: Equatable {
     public let sampleRate = 16000.0
     public let initiator: Initiator
     public let encoding: Encoding
+    public let endPointing: EndPointing
     
     /// - Parameters:
     ///   - maxDuration: Max duration from speech start to end.
@@ -40,13 +41,15 @@ public struct ASROptions: Equatable {
         timeout: Int = 7,
         pauseLength: Int = 700,
         initiator: Initiator = .user,
-        encoding: Encoding = .partial
+        encoding: Encoding = .partial,
+        endPointing: EndPointing = .client
     ) {
         self.maxDuration = maxDuration
         self.timeout = timeout
         self.pauseLength = pauseLength
         self.initiator = initiator
         self.encoding = encoding
+        self.endPointing = endPointing
     }
 
     public enum Initiator: Equatable {
@@ -58,5 +61,10 @@ public struct ASROptions: Equatable {
     public enum Encoding: String {
         case partial = "PARTIAL"
         case complete = "COMPLETE"
+    }
+    
+    public enum EndPointing: String {
+        case client = "CLIENT"
+        case server = "SERVER"
     }
 }

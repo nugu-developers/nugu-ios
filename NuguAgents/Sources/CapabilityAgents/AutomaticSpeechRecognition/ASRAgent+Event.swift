@@ -55,7 +55,7 @@ extension ASRAgent.Event: Eventable {
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
-                "endpointing": "CLIENT",
+                "endpointing": options.endPointing.rawValue,
                 "encoding": options.encoding.rawValue,
                 "sessionId": expectSpeech?.sessionId,
                 "playServiceId": expectSpeech?.playServiceId,
