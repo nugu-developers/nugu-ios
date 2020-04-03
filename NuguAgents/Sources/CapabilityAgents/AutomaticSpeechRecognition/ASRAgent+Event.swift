@@ -30,7 +30,7 @@ extension ASRAgent {
         let expectSpeech: ASRExpectSpeech?
         
         public enum TypeInfo {
-            case recognize(wakeUpInfo: WakeUpInfo?, encoding: ASREncoding)
+            case recognize(wakeUpInfo: WakeUpInfo?, options: ASROptions)
             case responseTimeout
             case listenTimeout
             case stopRecognize
@@ -51,12 +51,12 @@ extension ASRAgent.Event: Eventable {
     public var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable?]
         switch typeInfo {
-        case .recognize(let wakeUpInfo, let encoding):
+        case .recognize(let wakeUpInfo, let options):
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
                 "endpointing": "CLIENT",
-                "encoding": encoding.rawValue,
+                "encoding": options.encoding.rawValue,
                 "sessionId": expectSpeech?.sessionId,
                 "playServiceId": expectSpeech?.playServiceId,
                 "domainTypes": expectSpeech?.domainTypes,

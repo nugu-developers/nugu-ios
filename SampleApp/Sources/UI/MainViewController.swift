@@ -233,7 +233,7 @@ private extension MainViewController {
 // MARK: - Private (Voice Chrome)
 
 private extension MainViewController {
-    func presentVoiceChrome(initiator: ASRInitiator) {
+    func presentVoiceChrome(initiator: ASROptions.Initiator) {
         voiceChromeDismissWorkItem?.cancel()
         
         NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
@@ -243,7 +243,7 @@ private extension MainViewController {
                 return
             }
             NuguCentralManager.shared.localTTSAgent.stopLocalTTS()
-            NuguCentralManager.shared.client.asrAgent.startRecognition(initiator: initiator) { [weak self] (asrResult, _) in
+            NuguCentralManager.shared.client.asrAgent.startRecognition(options: ASROptions(initiator: initiator)) { [weak self] (asrResult, _) in
                 self?.updateVoiceChrome(asrResult)
             }
             

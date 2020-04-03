@@ -24,11 +24,21 @@ import Foundation
 ///
 /// NUGU ask you to get more information to know about you requested.
 public struct ASRExpectSpeech {
-    public let timeoutInMilliseconds: Int?
+    private let timeoutInMilliseconds: Int?
     public let playServiceId: String?
     public let sessionId: String
     public let domainTypes: [AnyHashable]?
     public let asrContext: [String: AnyHashable]?
+}
+
+extension ASRExpectSpeech {
+    var timeout: Int {
+        guard let timeout = timeoutInMilliseconds else {
+            return 7
+        }
+        
+        return timeout / 1000
+    }
 }
 
 // MARK: - ASRExpectSpeech: Decodable

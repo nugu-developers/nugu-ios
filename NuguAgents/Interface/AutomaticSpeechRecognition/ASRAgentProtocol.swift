@@ -43,7 +43,6 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
     ///   - completion: The completion handler to call when the request is complete.
     /// - Returns: The dialogRequestId for request.
     @discardableResult func startRecognition(
-        initiator: ASRInitiator,
         options: ASROptions,
         completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
     ) -> String
@@ -58,9 +57,8 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
 
 public extension ASRAgentProtocol {
     @discardableResult func startRecognition(
-        initiator: ASRInitiator,
         completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
     ) -> String {
-        return startRecognition(initiator: initiator, options: ASROptions(), completion: completion)
+        return startRecognition(options: ASROptions(), completion: completion)
     }
 }

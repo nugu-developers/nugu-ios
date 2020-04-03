@@ -131,7 +131,6 @@ public final class ASRAgent: ASRAgentProtocol {
     }
     
     // For Recognize Event
-    public let asrEncoding: ASREncoding
     private var asrRequest: ASRRequest?
     private var attachmentSeq: Int32 = 0
     public private(set) var expectSpeech: ASRExpectSpeech? {
@@ -158,8 +157,7 @@ public final class ASRAgent: ASRAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
-        directiveSequencer: DirectiveSequenceable,
-        asrEncoding: ASREncoding = .partial
+        directiveSequencer: DirectiveSequenceable
     ) {
         Self.endPointDetector = EndPointDetector()
         
@@ -168,7 +166,6 @@ public final class ASRAgent: ASRAgentProtocol {
         self.directiveSequencer = directiveSequencer
         self.contextManager = contextManager
         self.audioStream = audioStream
-        self.asrEncoding = asrEncoding
         
         Self.endPointDetector?.delegate = self
         contextManager.add(provideContextDelegate: self)
@@ -194,11 +191,10 @@ public extension ASRAgent {
     }
     
     @discardableResult func startRecognition(
-        initiator: ASRInitiator,
         options: ASROptions,
         completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
     ) -> String {
-        return startRecognition(initiator: initiator, options: options, by: nil, completion: completion)
+        return startRecognition(options: options, by: nil, completion: completion)
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -363,7 +359,7 @@ private extension ASRAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard self.expectSpeech != nil else {
+                    guard let expectSpeech = self.expectSpeech else {
                         throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
                     }
                     switch self.asrState {
@@ -385,7 +381,8 @@ private extension ASRAgent {
                             })
                         self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
                         
-                        self.startRecognition(initiator: .scenario, by: directive)
+                        let options = ASROptions(timeout: expectSpeech.timeout, initiator: .scenario)
+                        self.startRecognition(options: options, by: directive)
                     }
                 }
             )
@@ -461,7 +458,7 @@ private extension ASRAgent {
         
         Self.endPointDetector?.start(
             audioStreamReader: asrRequest.reader,
-            sampleRate: ASRConst.sampleRate,
+            sampleRate: asrRequest.options.sampleRate,
             timeout: timeout,
             maxDuration: asrRequest.options.maxDuration,
             pauseLength: asrRequest.options.pauseLength
@@ -471,7 +468,7 @@ private extension ASRAgent {
         
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(wakeUpInfo: nil, encoding: asrEncoding),
+                typeInfo: .recognize(wakeUpInfo: nil, options: asrRequest.options),
                 expectSpeech: expectSpeech
             ).makeEventMessage(
                 agent: self,
@@ -522,12 +519,11 @@ private extension ASRAgent {
     }
     
     @discardableResult func startRecognition(
-        initiator: ASRInitiator,
         options: ASROptions = ASROptions(),
         by directive: Downstream.Directive?,
         completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)? = nil
     ) -> String {
-        log.debug("startRecognition, initiator: \(initiator)")
+        log.debug("startRecognition, initiator: \(options.initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = audioStream.makeAudioStreamReader()
         let dialogRequestId = TimeUUID().hexString
@@ -547,7 +543,6 @@ private extension ASRAgent {
                     contextPayload: contextPayload,
                     reader: reader,
                     dialogRequestId: dialogRequestId,
-                    initiator: initiator,
                     options: options,
                     referrerDialogRequestId: directive?.header.dialogRequestId,
                     completion: completion

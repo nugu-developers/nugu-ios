@@ -20,21 +20,43 @@
 
 import Foundation
 
-public struct ASROptions {
+public struct ASROptions: Equatable {
     /// Max duration from speech start to end.
     public let maxDuration: Int
     /// Max duration of waiting for speech.
     public let timeout: Int
     /// The engine waits this time then consider speech end.
     public let pauseLength: Int
+    public let sampleRate = 16000.0
+    public let initiator: Initiator
+    public let encoding: Encoding
     
     /// - Parameters:
     ///   - maxDuration: Max duration from speech start to end.
     ///   - timeout: Max duration of waiting for speech.
     ///   - pauseLength: The engine waits this time then consider speech end.
-    public init(maxDuration: Int = 10, timeout: Int = 7, pauseLength: Int = 700) {
+    public init(
+        maxDuration: Int = 10,
+        timeout: Int = 7,
+        pauseLength: Int = 700,
+        initiator: Initiator = .user,
+        encoding: Encoding = .partial
+    ) {
         self.maxDuration = maxDuration
         self.timeout = timeout
         self.pauseLength = pauseLength
+        self.initiator = initiator
+        self.encoding = encoding
+    }
+
+    public enum Initiator {
+        case wakeUpKeyword
+        case user
+        case scenario
+    }
+
+    public enum Encoding: String {
+        case partial = "PARTIAL"
+        case complete = "COMPLETE"
     }
 }
