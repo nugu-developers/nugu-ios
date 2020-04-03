@@ -194,10 +194,11 @@ public extension ASRAgent {
     }
     
     @discardableResult func startRecognition(
-        initiator: ASRInitiator = .user,
-        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)? = nil
+        initiator: ASRInitiator,
+        options: ASROptions,
+        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
     ) -> String {
-        return startRecognition(initiator: initiator, by: nil, completion: completion)
+        return startRecognition(initiator: initiator, options: options, by: nil, completion: completion)
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -384,7 +385,7 @@ private extension ASRAgent {
                             })
                         self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
                         
-                        self.startRecognition(initiator: .user, by: directive, completion: nil)
+                        self.startRecognition(initiator: .scenario, by: directive)
                     }
                 }
             )
@@ -452,7 +453,7 @@ private extension ASRAgent {
         
         var timeout: Int {
             guard let expectTimeout = expectSpeech?.timeoutInMilliseconds else {
-                return ASRConst.timeout
+                return asrRequest.options.timeout
             }
             
             return expectTimeout / 1000
@@ -462,8 +463,8 @@ private extension ASRAgent {
             audioStreamReader: asrRequest.reader,
             sampleRate: ASRConst.sampleRate,
             timeout: timeout,
-            maxDuration: ASRConst.maxDuration,
-            pauseLength: ASRConst.pauseLength
+            maxDuration: asrRequest.options.maxDuration,
+            pauseLength: asrRequest.options.pauseLength
         )
         
         asrState = .listening
@@ -522,8 +523,9 @@ private extension ASRAgent {
     
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
+        options: ASROptions = ASROptions(),
         by directive: Downstream.Directive?,
-        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
+        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)? = nil
     ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
@@ -546,6 +548,7 @@ private extension ASRAgent {
                     reader: reader,
                     dialogRequestId: dialogRequestId,
                     initiator: initiator,
+                    options: options,
                     referrerDialogRequestId: directive?.header.dialogRequestId,
                     completion: completion
                 )
