@@ -49,8 +49,8 @@ public struct ASROptions: Equatable {
         self.encoding = encoding
     }
 
-    public enum Initiator {
-        case wakeUpKeyword
+    public enum Initiator: Equatable {
+        case wakeUpKeyword(data: Data, padding: Int)
         case user
         case scenario
     }
