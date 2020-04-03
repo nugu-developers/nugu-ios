@@ -68,10 +68,14 @@ extension ASRAgent.Event: Eventable {
                 ]
             ]
             if let wakeUpInfo = wakeUpInfo {
-                payload["wakeUpBoundary"] = [
-                    "detection": wakeUpInfo.detection,
+                let boundary: [String: AnyHashable] = [
+                    "start": wakeUpInfo.start,
                     "end": wakeUpInfo.end,
-                    "start": wakeUpInfo.start
+                    "detection": wakeUpInfo.detection,
+                    "metric": "sample"
+                ]
+                payload["wakeup"] = [
+                    "boundary": boundary
                 ]
             }
         case .listenTimeout,
