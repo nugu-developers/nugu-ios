@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-/// `ASRAgent` 는 사용자 음성을 서버로 전송하고 음성 인식 결과 및 연속 발화 directive 를 처리합니다.
+/// ASR (AutomaticSpeechRecognition) is responsible for recording the audio and delivering it to the server and receiving the result of speech recognition.
 public protocol ASRAgentProtocol: CapabilityAgentable {
     var expectSpeech: ASRExpectSpeech? { get }
     
@@ -39,7 +39,7 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
     /// This function can be called in `idle` and `expectingSpeech` state.
     ///
     /// - Parameters:
-    ///   - initiator:
+    ///   - options: The options for recognition.
     ///   - completion: The completion handler to call when the request is complete.
     /// - Returns: The dialogRequestId for request.
     @discardableResult func startRecognition(

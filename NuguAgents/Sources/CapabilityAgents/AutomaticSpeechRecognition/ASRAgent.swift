@@ -448,18 +448,10 @@ private extension ASRAgent {
         
         attachmentSeq = 0
         
-        var timeout: Int {
-            guard let expectTimeout = expectSpeech?.timeoutInMilliseconds else {
-                return asrRequest.options.timeout
-            }
-            
-            return expectTimeout / 1000
-        }
-        
         Self.endPointDetector?.start(
             audioStreamReader: asrRequest.reader,
             sampleRate: asrRequest.options.sampleRate,
-            timeout: timeout,
+            timeout: asrRequest.options.timeout,
             maxDuration: asrRequest.options.maxDuration,
             pauseLength: asrRequest.options.pauseLength
         )
