@@ -39,7 +39,7 @@ public class ServerEndPointDetector: NSObject, EndPointDetectable {
     )
     private var epdWorkItem: DispatchWorkItem?
     private var inputStream: InputStream?
-
+    
     private var listeningTimer: Disposable?
     
     private var state: EndPointDetectorState = .idle {
@@ -56,6 +56,10 @@ public class ServerEndPointDetector: NSObject, EndPointDetectable {
             delegate?.endPointDetectorStateChanged(state)
         }
     }
+    
+    #if DEBUG
+    private var outputData = Data()
+    #endif
     
     required public init(asrOptions: ASROptions) {
         self.asrOptions = asrOptions
@@ -85,10 +89,10 @@ public class ServerEndPointDetector: NSObject, EndPointDetectable {
             while workItem.isCancelled == false {
                 RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
             }
-
+            
             self.inputStream?.close()
             self.state = .idle
-
+            
             workItem = nil
         }
         epdQueue.async(execute: workItem)
@@ -119,6 +123,19 @@ public class ServerEndPointDetector: NSObject, EndPointDetectable {
             self.state = .start
         case .eos:
             self.state = .end
+            
+            #if DEBUG
+            do {
+                let speexFileName = FileManager.default.urls(for: .documentDirectory,
+                                                             in: .userDomainMask)[0].appendingPathComponent("server_epd_output.speex")
+                log.debug("speex data to file :\(speexFileName)")
+                try outputData.write(to: speexFileName)
+                
+                outputData.removeAll()
+            } catch {
+                log.debug(error)
+            }
+            #endif
         case .falseAcceptance:
             // TODO:
             break
@@ -132,7 +149,7 @@ extension ServerEndPointDetector: StreamDelegate {
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         guard let inputStream = aStream as? InputStream,
             inputStream == self.inputStream else { return }
-
+        
         switch eventCode {
         case .hasBytesAvailable:
             let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
@@ -140,10 +157,14 @@ extension ServerEndPointDetector: StreamDelegate {
             
             let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
             guard 0 < inputLength else { return }
-
+            
             do {
                 let data = try speexEncoder.encode(data: Data(bytes: inputBuffer, count: Int(inputLength)))
                 delegate?.endPointDetectorSpeechDataExtracted(speechData: data)
+                
+                #if DEBUG
+                outputData.append(data)
+                #endif
             } catch {
                 log.error(error)
             }
@@ -166,7 +187,7 @@ extension ServerEndPointDetector {
     func startListeningTimer() {
         listeningTimer = Completable.create { [weak self] (event) -> Disposable in
             guard let self = self else { return Disposables.create() }
-
+            
             self.state = .timeout
             
             event(.completed)
