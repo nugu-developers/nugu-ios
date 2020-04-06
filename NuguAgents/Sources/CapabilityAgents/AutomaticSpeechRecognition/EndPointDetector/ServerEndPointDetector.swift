@@ -23,23 +23,42 @@ import Foundation
 import NuguCore
 import JadeMarble
 
+import RxSwift
+
 public class ServerEndPointDetector: NSObject, EndPointDetectable {
     public weak var delegate: EndPointDetectorDelegate?
     
     private var boundStreams: AudioBoundStreams?
+    private let asrOptions: ASROptions
     private let speexEncoder: SpeexEncoder
     
     private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.server_end_point_detector")
+    private lazy var epdScheduler = SerialDispatchQueueScheduler(
+        queue: epdQueue,
+        internalSerialQueueName: "com.sktelecom.romaine.server_end_point_detector"
+    )
     private var epdWorkItem: DispatchWorkItem?
     private var inputStream: InputStream?
+
+    private var listeningTimer: Disposable?
     
-    public var state: EndPointDetectorState = .idle {
+    private var state: EndPointDetectorState = .idle {
         didSet {
+            switch state {
+            case .listening:
+                startListeningTimer()
+            case .unknown, .end, .timeout:
+                listeningTimer?.dispose()
+                stop()
+            default:
+                break
+            }
             delegate?.endPointDetectorStateChanged(state)
         }
     }
     
     required public init(asrOptions: ASROptions) {
+        self.asrOptions = asrOptions
         speexEncoder = SpeexEncoder(sampleRate: Int(asrOptions.sampleRate), inputType: .linearPcm16)
     }
     
@@ -74,11 +93,13 @@ public class ServerEndPointDetector: NSObject, EndPointDetectable {
         }
         epdQueue.async(execute: workItem)
         epdWorkItem = workItem
+        
     }
     
     public func stop() {
         log.debug("")
         
+        listeningTimer?.dispose()
         boundStreams?.stop()
         epdWorkItem?.cancel()
         
@@ -93,12 +114,10 @@ public class ServerEndPointDetector: NSObject, EndPointDetectable {
     func handleNotifyResult(_ state: ASRNotifyResult.State) {
         switch state {
         case .error:
-            stop()
             self.state = .unknown
         case .sos:
             self.state = .start
         case .eos:
-            stop()
             self.state = .end
         case .falseAcceptance:
             // TODO:
@@ -132,13 +151,28 @@ extension ServerEndPointDetector: StreamDelegate {
             if [.idle, .listening, .start].contains(state) == false {
                 stop()
             }
-            
         case .endEncountered:
             log.debug("epd stream endEncountered")
             stop()
-
         default:
             break
         }
+    }
+}
+
+// MARK: - Private
+
+extension ServerEndPointDetector {
+    func startListeningTimer() {
+        listeningTimer = Completable.create { [weak self] (event) -> Disposable in
+            guard let self = self else { return Disposables.create() }
+
+            self.state = .timeout
+            
+            event(.completed)
+            return Disposables.create()
+        }
+        .delaySubscription(.seconds(asrOptions.timeout), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+        .subscribe()
     }
 }

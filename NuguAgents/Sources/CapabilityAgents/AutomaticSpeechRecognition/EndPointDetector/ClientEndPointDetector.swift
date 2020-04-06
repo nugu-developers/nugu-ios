@@ -31,7 +31,7 @@ public class ClientEndPointDetector: EndPointDetectable {
     
     private var boundStreams: AudioBoundStreams?
     
-    public var state: EndPointDetectorState = .idle {
+    private var state: EndPointDetectorState = .idle {
         didSet {
             delegate?.endPointDetectorStateChanged(state)
         }
