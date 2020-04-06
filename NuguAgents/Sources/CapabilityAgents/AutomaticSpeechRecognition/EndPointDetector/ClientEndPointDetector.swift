@@ -1,5 +1,5 @@
 //
-//  EndPointDetector.swift
+//  ClientEndPointDetector.swift
 //  NuguAgents
 //
 //  Created by childc on 2019/11/07.
@@ -23,10 +23,13 @@ import Foundation
 import NuguCore
 import JadeMarble
 
-public class EndPointDetector {
-    private let engine = TycheEndPointDetectorEngine()
-    private var boundStreams: AudioBoundStreams?
+public class ClientEndPointDetector: EndPointDetectable {
     public weak var delegate: EndPointDetectorDelegate?
+    
+    private let asrOptions: ASROptions
+    private var engine: TycheEndPointDetectorEngine!
+    
+    private var boundStreams: AudioBoundStreams?
     
     public var state: EndPointDetectorState = .idle {
         didSet {
@@ -34,31 +37,26 @@ public class EndPointDetector {
         }
     }
     
-    public var epdFile: URL? {
-        didSet {
-            engine.epdFile = epdFile
-        }
+    required public init(asrOptions: ASROptions) {
+        self.asrOptions = asrOptions
     }
     
-    public init() {
+    public convenience init(asrOptions: ASROptions, epdFile: URL) {
+        self.init(asrOptions: asrOptions)
+        
+        engine = TycheEndPointDetectorEngine(epdFile: epdFile)
         engine.delegate = self
     }
     
-    public func start(
-        audioStreamReader: AudioStreamReadable,
-        sampleRate: Double,
-        timeout: Int,
-        maxDuration: Int,
-        pauseLength: Int
-    ) {
+    func start(audioStreamReader: AudioStreamReadable) {
         boundStreams?.stop()
         boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
         engine.start(
             inputStream: boundStreams!.input,
-            sampleRate: sampleRate,
-            timeout: timeout,
-            maxDuration: maxDuration,
-            pauseLength: pauseLength
+            sampleRate: asrOptions.sampleRate,
+            timeout: asrOptions.timeout,
+            maxDuration: asrOptions.maxDuration,
+            pauseLength: asrOptions.pauseLength
         )
     }
     
@@ -66,9 +64,13 @@ public class EndPointDetector {
         boundStreams?.stop()
         engine.stop()
     }
+    
+    func handleNotifyResult(_ state: ASRNotifyResult.State) {
+        // do nothing
+    }
 }
 
-extension EndPointDetector: TycheEndPointDetectorEngineDelegate {
+extension ClientEndPointDetector: TycheEndPointDetectorEngineDelegate {
     public func tycheEndPointDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State) {
         switch state {
         case .idle:

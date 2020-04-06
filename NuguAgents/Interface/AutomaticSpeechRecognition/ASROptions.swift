@@ -42,7 +42,7 @@ public struct ASROptions: Equatable {
         pauseLength: Int = 700,
         initiator: Initiator = .user,
         encoding: Encoding = .partial,
-        endPointing: EndPointing = .client
+        endPointing: EndPointing
     ) {
         self.maxDuration = maxDuration
         self.timeout = timeout
@@ -53,18 +53,59 @@ public struct ASROptions: Equatable {
     }
 
     public enum Initiator: Equatable {
-        case wakeUpKeyword(data: Data, padding: Int)
+        case wakeUpKeyword(keyword: String, data: Data, padding: Int)
         case user
         case scenario
     }
 
-    public enum Encoding: String {
-        case partial = "PARTIAL"
-        case complete = "COMPLETE"
+    public enum Encoding {
+        case partial
+        case complete
     }
     
-    public enum EndPointing: String {
-        case client = "CLIENT"
-        case server = "SERVER"
+    public enum EndPointing: Equatable {
+        case client(epdFile: URL)
+        case server
+    }
+    
+    public func copy(
+        maxDuration: Int? = nil,
+        timeout: Int? = nil,
+        pauseLength: Int? = nil,
+        initiator: Initiator? = nil,
+        encoding: Encoding? = nil,
+        endPointing: EndPointing? = nil
+    ) -> ASROptions {
+        return ASROptions(
+            maxDuration: maxDuration ?? self.maxDuration,
+            timeout: timeout ?? self.timeout,
+            pauseLength: pauseLength ?? self.pauseLength,
+            initiator: initiator ?? self.initiator,
+            encoding: encoding ?? self.encoding,
+            endPointing: endPointing ?? self.endPointing
+        )
+    }
+}
+
+// MARK: - ASROptions.EndPointing + server value
+
+extension ASROptions.Encoding {
+    var value: String {
+        switch self {
+        case .partial: return "PARTIAL"
+        case .complete: return "COMPLETE"
+        }
+    }
+}
+
+
+// MARK: - ASROptions.EndPointing + server value
+
+extension ASROptions.EndPointing {
+    var value: String {
+        switch self {
+        case .client: return "CLIENT"
+        case .server: return "SERVER"
+        }
     }
 }

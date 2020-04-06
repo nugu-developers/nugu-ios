@@ -49,8 +49,8 @@ extension ASRAgent.Event: Eventable {
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
-                "endpointing": options.endPointing.rawValue,
-                "encoding": options.encoding.rawValue,
+                "endpointing": options.endPointing.value,
+                "encoding": options.encoding.value,
                 "sessionId": expectSpeech?.sessionId,
                 "playServiceId": expectSpeech?.playServiceId,
                 "domainTypes": expectSpeech?.domainTypes,
@@ -63,7 +63,8 @@ extension ASRAgent.Event: Eventable {
             ]
 
             if options.endPointing == .server,
-                case let .wakeUpKeyword(data, padding) = options.initiator {
+                case let .wakeUpKeyword(keyword, data, padding) = options.initiator {
+                // TODO: Tyche 라이브러리 업데이트 후 수정 필요.
                 /**
                  KeywordDetector use 16k mono (bit depth: 16).
                  so, You can calculate sample count by (dataCount / 2)
@@ -76,9 +77,11 @@ extension ASRAgent.Event: Eventable {
                     "detection": totalFrameCount,
                     "metric": "sample"
                 ]
-                payload["wakeup"] = [
+                let wakeup: [String: AnyHashable] = [
+                    "word": keyword,
                     "boundary": boundary
                 ]
+                payload["wakeup"] = wakeup
             }
         case .listenTimeout,
              .stopRecognize,

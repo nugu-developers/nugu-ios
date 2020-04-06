@@ -242,8 +242,15 @@ private extension MainViewController {
                 log.error(SampleAppError.recordPermissionError)
                 return
             }
+            guard let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") else {
+                log.error("EPD model file not exist")
+                return
+            }
+            
             NuguCentralManager.shared.localTTSAgent.stopLocalTTS()
-            NuguCentralManager.shared.client.asrAgent.startRecognition(options: ASROptions(initiator: initiator)) { [weak self] (asrResult, _) in
+            
+            let options = ASROptions(initiator: initiator, endPointing: .client(epdFile: epdFile))
+            NuguCentralManager.shared.client.asrAgent.startRecognition(options: options) { [weak self] (asrResult, _) in
                 self?.updateVoiceChrome(asrResult)
             }
             
@@ -409,12 +416,12 @@ private extension MainViewController {
     }
 }
 
-// MARK: - WakeUpDetectorDelegate
+// MARK: - KeywordDetectorDelegate
 
 extension MainViewController: KeywordDetectorDelegate {
-    func keywordDetectorDidDetect(data: Data, padding: Int) {
+    func keywordDetectorDidDetect(keyword: String, data: Data, padding: Int) {
         DispatchQueue.main.async { [weak self] in
-            self?.presentVoiceChrome(initiator: .wakeUpKeyword(data: data, padding: padding))
+            self?.presentVoiceChrome(initiator: .wakeUpKeyword(keyword: keyword, data: data, padding: padding))
         }
     }
     

@@ -1,8 +1,8 @@
 //
-//  KeywordDetectorDelegate.swift
-//  NuguClientKit
+//  EndPointDetectable.swift
+//  NuguAgents
 //
-//  Created by DCs-OfficeMBP on 14/05/2019.
+//  Created by MinChul Lee on 2020/04/03.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,14 @@
 
 import Foundation
 
-public protocol KeywordDetectorDelegate: class {
-    func keywordDetectorDidDetect(keyword: String, data: Data, padding: Int)
-    func keywordDetectorDidError(_ error: Error)
-    func keywordDetectorStateDidChange(_ state: KeywordDetectorState)
+import NuguCore
+
+protocol EndPointDetectable: class {
+    var delegate: EndPointDetectorDelegate? { get set }
+    
+    init(asrOptions: ASROptions)
+    
+    func start(audioStreamReader: AudioStreamReadable)
+    func stop()
+    func handleNotifyResult(_ state: ASRNotifyResult.State)
 }

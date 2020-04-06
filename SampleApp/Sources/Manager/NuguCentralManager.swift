@@ -41,10 +41,6 @@ final class NuguCentralManager {
         // local tts agent
         localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
         
-        if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.asrAgent.epdFile = epdFile
-        }
-        
         client.locationAgent.delegate = self
         client.systemAgent.add(systemAgentDelegate: self)
         
@@ -419,7 +415,7 @@ extension NuguCentralManager: NuguClientDelegate {
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: EventSenderError
-        log.debug("\(error.debugDescription): \(attachment.header.namespace).\(attachment.header.name)")
+        log.debug("\(error?.localizedDescription ?? ""): \(attachment.header.namespace).\(attachment.header.name)")
     }
 }
 

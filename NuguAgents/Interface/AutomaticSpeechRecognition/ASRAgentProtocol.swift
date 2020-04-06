@@ -52,13 +52,3 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
     /// This function can be called in any state, and will end any Event which is currently in progress.
     func stopRecognition()
 }
-
-// MARK: - Default
-
-public extension ASRAgentProtocol {
-    @discardableResult func startRecognition(
-        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
-    ) -> String {
-        return startRecognition(options: ASROptions(), completion: completion)
-    }
-}
