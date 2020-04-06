@@ -126,7 +126,9 @@ public final class ASRAgent: ASRAgentProtocol {
                 }
             }
             
-            asrRequest.completion?(asrResult, asrRequest.dialogRequestId)
+            asrDelegates.notify { (delegate) in
+                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.dialogRequestId)
+            }
         }
     }
     
@@ -195,7 +197,7 @@ public extension ASRAgent {
     
     @discardableResult func startRecognition(
         initiator: ASRInitiator = .user,
-        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)? = nil
+        completion: ((StreamDataState) -> Void)?
     ) -> String {
         return startRecognition(initiator: initiator, by: nil, completion: completion)
     }
@@ -488,6 +490,8 @@ private extension ASRAgent {
                     default:
                         break
                     }
+                    
+                    asrRequest.completion?(state)
                 }
         }
     }
@@ -523,7 +527,7 @@ private extension ASRAgent {
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
         by directive: Downstream.Directive?,
-        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
+        completion: ((StreamDataState) -> Void)?
     ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
@@ -534,7 +538,7 @@ private extension ASRAgent {
 
             guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
                 log.warning("Not permitted in current state \(self.asrState)")
-                completion?(.cancel, dialogRequestId)
+                completion?(.error(ASRError.listenFailed))
                 return
             }
 
