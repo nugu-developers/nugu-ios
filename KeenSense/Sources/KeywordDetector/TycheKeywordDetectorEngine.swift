@@ -155,15 +155,17 @@ extension TycheKeywordDetectorEngine {
 
 // MARK: - ETC
 extension TycheKeywordDetectorEngine {
-    private func extractDetectedData() -> Data {
-        let startTime = Int(Wakeup_GetStartTime(engineHandle))
-        let startMargin = Int(Wakeup_GetStartMargin(engineHandle))
+    private func notifyDetection() {
+        let startMargin = convertTimeToDataIndex(Wakeup_GetStartMargin(engineHandle))
+        let start = convertTimeToDataIndex(Wakeup_GetStartTime(engineHandle))
+        let end = convertTimeToDataIndex(Wakeup_GetEndTime(engineHandle))
+        let detection = convertTimeToDataIndex(Wakeup_GetDetectionTime(engineHandle))
+        let base = start - startMargin
+        log.debug("base: \(base), startMargin: \(startMargin), start: \(start), end: \(end), detection: \(detection)")
         
-        // convert time to frame count
-        let startIndex = ((startTime - startMargin) * KeywordDetectorConst.sampleRate * 2) / 1000
-        log.debug("startTime: \(startTime),(\(startIndex))")
-        
-        let detectedRange = startTime..<detectingData.count
+        // -------|--startMargin--|-----------|-------|
+        //       base           start        end  detection
+        let detectedRange = (detectingData.count - (detection - base))..<detectingData.count
         let detectedData = detectingData.subdata(in: detectedRange)
 
         // reset buffers
@@ -178,8 +180,17 @@ extension TycheKeywordDetectorEngine {
             log.debug(error)
         }
         #endif
-        
-        return detectedData
+
+        delegate?.tycheKeywordDetectorEngineDidDetect(
+            data: detectedData,
+            start: start - base,
+            end: end - base,
+            detection: detection - base
+        )
+    }
+    
+    private func convertTimeToDataIndex(_ time: Int32) -> Int {
+        return (Int(time) * KeywordDetectorConst.sampleRate * 2) / 1000
     }
 }
 
@@ -211,16 +222,7 @@ extension TycheKeywordDetectorEngine: StreamDelegate {
                 log.debug("kwd hasBytesAvailable detected")
                 stop()
 
-                let detectedData = extractDetectedData()
-                let start = Int(Wakeup_GetStartTime(engineHandle))
-                let end = Int(Wakeup_GetEndTime(engineHandle))
-                let detection = Int(Wakeup_GetDetectionTime(engineHandle))
-                delegate?.tycheKeywordDetectorEngineDidDetect(
-                    data: detectedData,
-                    start: (start * KeywordDetectorConst.sampleRate * 2) / 1000,
-                    end: (end * KeywordDetectorConst.sampleRate * 2) / 1000,
-                    detection: (detection * KeywordDetectorConst.sampleRate * 2) / 1000
-                )
+                notifyDetection()
             }
             
         case .endEncountered:
