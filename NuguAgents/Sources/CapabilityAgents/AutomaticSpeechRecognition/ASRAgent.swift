@@ -482,7 +482,7 @@ private extension ASRAgent {
             endPointDetector = ServerEndPointDetector(asrOptions: asrRequest.options)
 
             // send wake up voice data
-            if case let .wakeUpKeyword(_, data, _) = asrRequest.options.initiator {
+            if case let .wakeUpKeyword(_, data, _, _, _) = asrRequest.options.initiator {
                 do {
                     let speexData = try SpeexEncoder(sampleRate: Int(asrRequest.options.sampleRate), inputType: .linearPcm16).encode(data: data)
                     

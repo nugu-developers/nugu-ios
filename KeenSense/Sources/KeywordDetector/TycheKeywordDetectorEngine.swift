@@ -155,21 +155,17 @@ extension TycheKeywordDetectorEngine {
 
 // MARK: - ETC
 extension TycheKeywordDetectorEngine {
-    private func extractDetectedData() -> (data: Data, padding: Int) {
+    private func extractDetectedData() -> Data {
         let startTime = Int(Wakeup_GetStartTime(engineHandle))
-        let endTime = Int(Wakeup_GetEndTime(engineHandle))
-        let paddingTime = Int(Wakeup_GetDelayTime(engineHandle))
+        let startMargin = Int(Wakeup_GetStartMargin(engineHandle))
         
         // convert time to frame count
-        let startIndex = (startTime * KeywordDetectorConst.sampleRate * 2) / 1000
-        let endIndex = (endTime * KeywordDetectorConst.sampleRate * 2) / 1000
-        let paddingSize = (paddingTime * KeywordDetectorConst.sampleRate * 2) / 1000
-        log.debug("startTime: \(startTime),(\(startIndex)), endTime: \(endTime),(\(endIndex)), paddingTime: \(paddingTime)")
+        let startIndex = ((startTime - startMargin) * KeywordDetectorConst.sampleRate * 2) / 1000
+        log.debug("startTime: \(startTime),(\(startIndex))")
         
-        let size = (endIndex - startIndex) + paddingSize
-        let detectedRange = (detectingData.count - size)..<detectingData.count
+        let detectedRange = startTime..<detectingData.count
         let detectedData = detectingData.subdata(in: detectedRange)
-        
+
         // reset buffers
         detectingData.removeAll()
         
@@ -183,7 +179,7 @@ extension TycheKeywordDetectorEngine {
         }
         #endif
         
-        return (detectedData, paddingSize)
+        return detectedData
     }
 }
 
@@ -216,7 +212,15 @@ extension TycheKeywordDetectorEngine: StreamDelegate {
                 stop()
 
                 let detectedData = extractDetectedData()
-                delegate?.tycheKeywordDetectorEngineDidDetect(data: detectedData.data, padding: detectedData.padding)
+                let start = Int(Wakeup_GetStartTime(engineHandle))
+                let end = Int(Wakeup_GetEndTime(engineHandle))
+                let detection = Int(Wakeup_GetDetectionTime(engineHandle))
+                delegate?.tycheKeywordDetectorEngineDidDetect(
+                    data: detectedData,
+                    start: (start * KeywordDetectorConst.sampleRate * 2) / 1000,
+                    end: (end * KeywordDetectorConst.sampleRate * 2) / 1000,
+                    detection: (detection * KeywordDetectorConst.sampleRate * 2) / 1000
+                )
             }
             
         case .endEncountered:

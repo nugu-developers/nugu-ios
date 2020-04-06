@@ -63,18 +63,16 @@ extension ASRAgent.Event: Eventable {
             ]
 
             if options.endPointing == .server,
-                case let .wakeUpKeyword(keyword, data, padding) = options.initiator {
+                case let .wakeUpKeyword(keyword, _, start, end, detection) = options.initiator {
                 // TODO: Tyche 라이브러리 업데이트 후 수정 필요.
                 /**
                  KeywordDetector use 16k mono (bit depth: 16).
                  so, You can calculate sample count by (dataCount / 2)
                  */
-                let totalFrameCount = data.count / 2
-                let paddingFrameCount = padding / 2
                 let boundary: [String: AnyHashable] = [
-                    "start": 0,
-                    "end": totalFrameCount - paddingFrameCount,
-                    "detection": totalFrameCount,
+                    "start": start / 2,
+                    "end": end / 2,
+                    "detection": detection / 2,
                     "metric": "sample"
                 ]
                 let wakeup: [String: AnyHashable] = [

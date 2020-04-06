@@ -67,8 +67,8 @@ public class KeywordDetector {
 // MARK: - TycheKeywordDetectorEngineDelegate
 
 extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
-    public func tycheKeywordDetectorEngineDidDetect(data: Data, padding: Int) {
-        delegate?.keywordDetectorDidDetect(keyword: keyword, data: data, padding: padding)
+    public func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int) {
+        delegate?.keywordDetectorDidDetect(keyword: keyword, data: data, start: start, end: end, detection: detection)
     }
     
     public func tycheKeywordDetectorEngineDidError(_ error: Error) {

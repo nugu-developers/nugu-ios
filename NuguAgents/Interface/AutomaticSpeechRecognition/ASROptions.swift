@@ -53,7 +53,7 @@ public struct ASROptions: Equatable {
     }
 
     public enum Initiator: Equatable {
-        case wakeUpKeyword(keyword: String, data: Data, padding: Int)
+        case wakeUpKeyword(keyword: String, data: Data, start: Int, end: Int, detection: Int)
         case user
         case scenario
     }
