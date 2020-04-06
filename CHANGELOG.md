@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.9.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.9.2)
+Released on 2020-04-06
+
+#### Fixed
+- Fixes a error that recognized text is not displayed in DM state. (#289)
+
 ## [0.9.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.9.1)
 Released on 2020-04-02
 
