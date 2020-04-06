@@ -31,6 +31,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     
     // Private
     private let playSyncManager: PlaySyncManageable
+    private let contextManager: ContextManageable
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     
@@ -95,10 +96,11 @@ public final class DisplayAgent: DisplayAgentProtocol {
     ) {
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
+        self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
         playSyncManager.add(delegate: self)
-        contextManager.add(provideContextDelegate: self)
+        contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
@@ -128,14 +130,28 @@ public extension DisplayAgent {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == templateId }),
-                let template = info.currentItem else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    playServiceId: template.playServiceId,
-                    typeInfo: .elementSelected(token: token)
-                ).makeEventMessage(agent: self, dialogRequestId: dialogRequestId)
-            )
+                let template = info.currentItem else {
+                    // TODO error 정의
+                    completion?(.finished)
+                    return
+            }
+
+            self.contextManager.getContexts { [weak self] contextPayload in
+                guard let self = self else { return }
+                
+                self.upstreamDataSender.sendEvent(
+                    Event(
+                        playServiceId: template.playServiceId,
+                        typeInfo: .elementSelected(token: token)
+                    ).makeEventMessage(
+                        property: self.capabilityAgentProperty,
+                        dialogRequestId: dialogRequestId,
+                        referrerDialogRequestId: template.dialogRequestId,
+                        contextPayload: contextPayload
+                    ),
+                    completion: completion
+                )
+            }
         }
         return dialogRequestId
     }
@@ -213,11 +229,11 @@ private extension DisplayAgent {
                     
                     let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
                     
-                    self.upstreamDataSender.sendEvent(
-                        Event(
-                            playServiceId: payload.playServiceId,
-                            typeInfo: self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
-                        ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
+                    let typeInfo: Event.TypeInfo = self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
+                    self.sendEvent(
+                        typeInfo: typeInfo,
+                        playServiceId: payload.playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
                     )
                     
                     if let item = self.currentItem, item.playServiceId == payload.playServiceId {
@@ -243,11 +259,10 @@ private extension DisplayAgent {
                         item.playServiceId == payload.playServiceId,
                         let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
                         let delegate = info.delegate else {
-                            self.upstreamDataSender.sendEvent(
-                                Event(
-                                    playServiceId: payload.playServiceId,
-                                    typeInfo: .controlFocusFailed
-                                ).makeEventMessage(agent: self)
+                            self.sendEvent(
+                                typeInfo: .controlFocusFailed,
+                                playServiceId: payload.playServiceId,
+                                referrerDialogRequestId: directive.header.dialogRequestId
                             )
                             return
                     }
@@ -255,11 +270,12 @@ private extension DisplayAgent {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
-                        self.upstreamDataSender.sendEvent(
-                            Event(
-                                playServiceId: payload.playServiceId,
-                                typeInfo: focusResult ? .controlFocusSucceeded : .controlFocusFailed
-                            ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
+
+                        let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded : .controlFocusFailed
+                        self.sendEvent(
+                            typeInfo: typeInfo,
+                            playServiceId: payload.playServiceId,
+                            referrerDialogRequestId: directive.header.dialogRequestId
                         )
                     }
             })
@@ -281,22 +297,22 @@ private extension DisplayAgent {
                         item.playServiceId == payload.playServiceId,
                         let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
                         let delegate = info.delegate else {
-                            self.upstreamDataSender.sendEvent(
-                                Event(
-                                    playServiceId: payload.playServiceId,
-                                    typeInfo: .controlScrollFailed
-                                ).makeEventMessage(agent: self)
+                            self.sendEvent(
+                                typeInfo: .controlScrollFailed,
+                                playServiceId: payload.playServiceId,
+                                referrerDialogRequestId: directive.header.dialogRequestId
                             )
                             return
                     }
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
-                        self.upstreamDataSender.sendEvent(
-                            Event(
-                                playServiceId: payload.playServiceId,
-                                typeInfo: scrollResult ? .controlScrollSucceeded : .controlScrollFailed
-                            ).makeEventMessage(agent: self, referrerDialogRequestId: directive.header.dialogRequestId)
+                        
+                        let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded : .controlScrollFailed
+                        self.sendEvent(
+                            typeInfo: typeInfo,
+                            playServiceId: payload.playServiceId,
+                            referrerDialogRequestId: directive.header.dialogRequestId
                         )
                     }
             })
@@ -388,6 +404,35 @@ private extension DisplayAgent {
                 
                 completion(.success(()))
             }
+        }
+    }
+}
+
+// MARK: - Private (Event)
+
+private extension DisplayAgent {
+    func sendEvent(
+        typeInfo: Event.TypeInfo,
+        playServiceId: String,
+        dialogRequestId: String = TimeUUID().hexString,
+        referrerDialogRequestId: String? = nil,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
+        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
+            
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    playServiceId: playServiceId,
+                    typeInfo: typeInfo
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    dialogRequestId: dialogRequestId,
+                    referrerDialogRequestId: referrerDialogRequestId,
+                    contextPayload: contextPayload
+                ),
+                completion: completion
+            )
         }
     }
 }
