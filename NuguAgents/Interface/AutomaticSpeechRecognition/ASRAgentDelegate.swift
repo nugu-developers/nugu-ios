@@ -26,4 +26,8 @@ public protocol ASRAgentDelegate: class {
     /// - Parameter state: The new `ASRState` of the `ASRAgent`
     /// - Parameter expectSpeech: indicates `ASRState` is in progress with multiturn.
     func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?)
+    
+    /// Called when received a result of `startRecognition` request.
+    /// - Parameter result: A recognized result.
+    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String)
 }
