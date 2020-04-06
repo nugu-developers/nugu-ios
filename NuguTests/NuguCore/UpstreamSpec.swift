@@ -38,7 +38,7 @@ class UpstreamSpec: QuickSpec {
                         messageId: "messageId1",
                         referrerDialogRequestId: "referrerDialogRequestId1"
                     ),
-                    contextPayload: ContextPayload(supportedInterfaces: [], client: [])
+                    contextPayload: []
                 )
                 
                 it("is headerString") {

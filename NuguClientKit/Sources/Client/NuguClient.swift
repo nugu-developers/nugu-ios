@@ -76,7 +76,7 @@ public class NuguClient {
     public private(set) lazy var keywordDetector: KeywordDetector = {
         let keywordDetector =  KeywordDetector()
         keywordDetector.audioStream = sharedAudioStream
-        contextManager.add(provideContextDelegate: keywordDetector)
+        contextManager.add(delegate: keywordDetector)
         
         return keywordDetector
     }()

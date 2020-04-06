@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 struct ASRRequest {
-    let contextPayload: ContextPayload
+    let contextPayload: [ContextInfo]
     let reader: AudioStreamReadable
     let dialogRequestId: String
     let initiator: ASRInitiator
