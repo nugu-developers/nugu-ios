@@ -24,7 +24,8 @@ public protocol MediaUrlDataSource {
     /// For url source
     /// - Parameter url: <#url description#>
     /// - Parameter offset: <#offset description#>
-    func setSource(url: String, offset: TimeIntervallic) throws
+    /// - Parameter cacheKey: <#offset description#>
+    func setSource(url: String, offset: TimeIntervallic, cacheKey: String?) throws
 }
 
 // MARK: - MediaUrlDataSource
@@ -33,6 +34,6 @@ public extension MediaUrlDataSource {
     /// <#Description#>
     /// - Parameter url: <#url description#>
     func setSource(url: String) throws {
-        try setSource(url: url, offset: NuguTimeInterval(seconds: 0))
+        try setSource(url: url, offset: NuguTimeInterval(seconds: 0), cacheKey: nil)
     }
 }

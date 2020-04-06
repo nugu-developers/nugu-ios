@@ -269,7 +269,7 @@ extension OpusPlayer: MediaUrlDataSource {
      To get opus data from file or remote repository.
      - You are not supposed to use this method on MainThread for getting data using network
      */
-    public func setSource(url: String, offset: TimeIntervallic) throws {
+    public func setSource(url: String, offset: TimeIntervallic, cacheKey: String?) throws {
         throw MediaPlayableError.unsupportedOperation
 //        guard audioBuffers.count == 0 else { throw MediaPlayableError.unsupportedOperation }
 //        guard let resourceURL = URL(string: url) else { throw MediaPlayableError.unsupportedOperation }

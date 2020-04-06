@@ -817,7 +817,8 @@ private extension AudioPlayerAgent {
             let mediaPlayer = MediaPlayer()
             try mediaPlayer.setSource(
                 url: url,
-                offset: NuguTimeInterval(seconds: payload.audioItem.stream.offset)
+                offset: NuguTimeInterval(seconds: payload.audioItem.stream.offset),
+                cacheKey: payload.cacheKey
             )
 
             currentMedia = AudioPlayerAgentMedia(

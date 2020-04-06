@@ -141,18 +141,75 @@ extension MediaPlayer {
 // MARK: - MediaPlayer + MediaUrlDataSource
 
 extension MediaPlayer: MediaUrlDataSource {
-    public func setSource(url: String, offset: TimeIntervallic) throws {
+    public func setSource(url: String, offset: TimeIntervallic, cacheKey: String?) throws {
         guard let urlItem = URL(string: url) else {
             throw MediaPlayableError.invalidURL
         }
         
         playerItem = MediaAVPlayerItem(url: urlItem)
-        playerItem?.delegate = self
-        player = AVQueuePlayer(playerItem: playerItem)
+        
+        guard let playerItem = playerItem else {
+            throw MediaPlayableError.unknown
+        }
+        
+        playerItem.cacheKey = cacheKey
+        
+        // 음악 재생시엔 캐시 정책에 맞게 플레이해주어야 한다..
+        if let itemKeyForCache = playerItem.cacheKey,
+            MediaCacheManager.isPlayerItemAvailableForCache(playerItem: playerItem) {
+            // 캐쉬가 존재하면 로컬로 재생한다.
+            if MediaCacheManager.doesCacheFileExist(key: itemKeyForCache) == true {
+                self.playerItem = self.getLocalFilePlayerItem(playerItemToConfigure: playerItem)
+            }
+            // 캐쉬가 존재하지 않으면 다운로드를 위한 AVAssetResourceLoader 델리게이트를 연결시켜준다.
+            else {
+                self.playerItem = self.getDownloadAndPlayPlayerItem(playerItemToConfigure: playerItem)
+            }
+        }
+        
+        self.playerItem?.delegate = self
+        player = AVQueuePlayer(playerItem: self.playerItem)
                 
         if offset.seconds > 0 {
             player?.seek(to: offset.cmTime)
         }
+    }
+}
+
+// MARK: - Cache setting
+
+extension MediaPlayer {
+    func getLocalFilePlayerItem(playerItemToConfigure: MediaAVPlayerItem) -> MediaAVPlayerItem? {
+        guard let itemKeyForCache = playerItemToConfigure.cacheKey,
+            let localFileData = NSData(contentsOfFile: MediaCacheManager.getCacheFilePathUrl(key: itemKeyForCache).path),
+            let decryptedData = MediaCacheManager.decryptData(data: localFileData)
+            
+            else {
+                if let keyForRemove = playerItemToConfigure.cacheKey {
+                    _ = MediaCacheManager.removeTempFile(key: keyForRemove)
+                }
+                return getDownloadAndPlayPlayerItem(playerItemToConfigure: playerItemToConfigure)
+        }
+        
+        do {
+            try decryptedData.write(to: MediaCacheManager.getTempFilePathUrl(key: itemKeyForCache))
+            return MediaAVPlayerItem(url: MediaCacheManager.getTempFilePathUrl(key: itemKeyForCache))
+        } catch {
+            _ = MediaCacheManager.removeTempFile(key: itemKeyForCache)
+            return getDownloadAndPlayPlayerItem(playerItemToConfigure: playerItemToConfigure)
+        }
+    }
+    
+    func getDownloadAndPlayPlayerItem(playerItemToConfigure: MediaAVPlayerItem) -> MediaAVPlayerItem? {
+        guard let originalUrl = (playerItemToConfigure.asset as? AVURLAsset)?.url else { return nil }
+        guard var urlComponents = URLComponents(url: originalUrl, resolvingAgainstBaseURL: false) else { return nil }
+        urlComponents.scheme = "streaming"
+      
+        guard let urlModel = urlComponents.url else { return nil }
+        let urlAsset = AVURLAsset(url: urlModel)
+        urlAsset.resourceLoader.setDelegate(self, queue: DispatchQueue.global())
+
+        return MediaAVPlayerItem(asset: urlAsset)
     }
 }
 
@@ -303,6 +360,7 @@ extension MediaPlayer: URLSessionDataDelegate {
             processPendingRequests()
             return
         }
+        
         downloadAudioData.append(data)
         log.debug("\(Float(downloadAudioData.length) / Float(expectedDataLength!))")
         processPendingRequests()
@@ -320,12 +378,16 @@ extension MediaPlayer: URLSessionDataDelegate {
         
         processPendingRequests()
         
-        guard var audioDataToWrite = downloadAudioData, let itemKeyForCache = playerItem?.cacheKey else {
+        guard var audioDataToWrite = downloadAudioData,
+            let itemKeyForCache = playerItem?.cacheKey,
+            let encryptedData = MediaCacheManager.encryptData(data: audioDataToWrite)else {
             releaseCacheData()
             return
         }
         
-        if NuguCacheManager.saveDataToCacheFile(data: audioDataToWrite, key: itemKeyForCache) == true {
+        audioDataToWrite = encryptedData as NSData
+        
+        if MediaCacheManager.saveDataToCacheFile(data: audioDataToWrite, key: itemKeyForCache) == true {
             log.debug("SaveComplete: \(itemKeyForCache)")
         } else {
             log.error("SaveFailed")
