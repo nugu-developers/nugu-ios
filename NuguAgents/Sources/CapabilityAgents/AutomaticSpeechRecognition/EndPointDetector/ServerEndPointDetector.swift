@@ -193,7 +193,7 @@ extension ServerEndPointDetector {
             event(.completed)
             return Disposables.create()
         }
-        .delaySubscription(.seconds(asrOptions.timeout), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+        .delaySubscription(asrOptions.timeout.dispatchTimeInterval, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
         .subscribe()
     }
 }

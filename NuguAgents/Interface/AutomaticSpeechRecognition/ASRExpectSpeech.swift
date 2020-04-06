@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// The information about multiturn.
 ///
 /// NUGU ask you to get more information to know about you requested.
@@ -32,12 +34,9 @@ public struct ASRExpectSpeech {
 }
 
 extension ASRExpectSpeech {
-    var timeout: Int {
-        guard let timeout = timeoutInMilliseconds else {
-            return 7
-        }
-        
-        return timeout / 1000
+    var timeout: TimeIntervallic {
+        let timeout = timeoutInMilliseconds ?? 7000
+        return NuguTimeInterval(milliseconds: timeout)
     }
 }
 

@@ -56,8 +56,8 @@ extension ASRAgent.Event: Eventable {
                 "domainTypes": expectSpeech?.domainTypes,
                 "asrContext": expectSpeech?.asrContext,
                 "timeout": [
-                    "listen": options.timeout * 1000,
-                    "maxSpeech": options.maxDuration * 1000,
+                    "listen": options.timeout.truncatedMilliSeconds,
+                    "maxSpeech": options.maxDuration.truncatedMilliSeconds,
                     "response": 10000
                 ]
             ]
@@ -107,8 +107,3 @@ extension ASRAgent.Event: Eventable {
         }
     }
 }
-
-// MARK: - Equatable
-
-extension ASRAgent.Event.TypeInfo: Equatable {}
-extension ASRAgent.Event: Equatable {}

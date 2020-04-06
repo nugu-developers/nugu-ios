@@ -20,13 +20,15 @@
 
 import Foundation
 
-public struct ASROptions: Equatable {
+import NuguCore
+
+public struct ASROptions {
     /// Max duration from speech start to end.
-    public let maxDuration: Int
+    public let maxDuration: TimeIntervallic
     /// Max duration of waiting for speech.
-    public let timeout: Int
+    public let timeout: TimeIntervallic
     /// The engine waits this time then consider speech end.
-    public let pauseLength: Int
+    public let pauseLength: TimeIntervallic
     public let sampleRate = 16000.0
     public let initiator: Initiator
     public let encoding: Encoding
@@ -37,9 +39,9 @@ public struct ASROptions: Equatable {
     ///   - timeout: Max duration of waiting for speech.
     ///   - pauseLength: The engine waits this time then consider speech end.
     public init(
-        maxDuration: Int = 10,
-        timeout: Int = 7,
-        pauseLength: Int = 700,
+        maxDuration: TimeIntervallic = NuguTimeInterval(seconds: 10),
+        timeout: TimeIntervallic = NuguTimeInterval(seconds: 7),
+        pauseLength: TimeIntervallic = NuguTimeInterval(milliseconds: 700),
         initiator: Initiator = .user,
         encoding: Encoding = .partial,
         endPointing: EndPointing
@@ -69,9 +71,9 @@ public struct ASROptions: Equatable {
     }
     
     public func copy(
-        maxDuration: Int? = nil,
-        timeout: Int? = nil,
-        pauseLength: Int? = nil,
+        maxDuration: TimeIntervallic? = nil,
+        timeout: TimeIntervallic? = nil,
+        pauseLength: TimeIntervallic? = nil,
         initiator: Initiator? = nil,
         encoding: Encoding? = nil,
         endPointing: EndPointing? = nil

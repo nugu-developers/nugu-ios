@@ -54,9 +54,9 @@ public class ClientEndPointDetector: EndPointDetectable {
         engine.start(
             inputStream: boundStreams!.input,
             sampleRate: asrOptions.sampleRate,
-            timeout: asrOptions.timeout,
-            maxDuration: asrOptions.maxDuration,
-            pauseLength: asrOptions.pauseLength
+            timeout: asrOptions.timeout.truncatedSeconds,
+            maxDuration: asrOptions.maxDuration.truncatedSeconds,
+            pauseLength: asrOptions.pauseLength.truncatedMilliSeconds
         )
     }
     
