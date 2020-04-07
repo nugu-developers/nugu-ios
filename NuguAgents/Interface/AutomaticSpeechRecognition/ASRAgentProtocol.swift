@@ -44,7 +44,8 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
     /// - Returns: The dialogRequestId for request.
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
-        completion: ((_ asrResult: ASRResult, _ dialogRequestId: String) -> Void)?
+        options: ASROptions,
+        completion: ((StreamDataState) -> Void)?
     ) -> String
     
     /// This function forces the `ASRAgent` back to the `idle` state.
@@ -56,7 +57,9 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
 // MARK: - Default
 
 public extension ASRAgentProtocol {
-    @discardableResult func startRecognition(initiator: ASRInitiator) -> String {
-        return startRecognition(initiator: initiator, completion: nil)
+    @discardableResult func startRecognition(
+        initiator: ASRInitiator
+    ) -> String {
+        return startRecognition(initiator: initiator, options: ASROptions(), completion: nil)
     }
 }

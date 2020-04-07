@@ -53,7 +53,7 @@ public final class SystemAgent: SystemAgentProtocol {
         self.streamDataRouter = streamDataRouter
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(provideContextDelegate: self)
+        contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
@@ -169,7 +169,7 @@ private extension SystemAgent {
                 Event(
                     typeInfo: .synchronizeState
                 ).makeEventMessage(
-                    agent: self,
+                    property: self.capabilityAgentProperty,
                     referrerDialogRequestId: directive?.header.dialogRequestId,
                     contextPayload: contextPayload
                 )

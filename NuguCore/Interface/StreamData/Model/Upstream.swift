@@ -45,9 +45,9 @@ public enum Upstream {
         
         public let payload: [String: AnyHashable]
         public let header: Header
-        public let contextPayload: ContextPayload
+        public let contextPayload: [ContextInfo]
         
-        public init(payload: [String: AnyHashable], header: Header, contextPayload: ContextPayload) {
+        public init(payload: [String: AnyHashable], header: Header, contextPayload: [ContextInfo]) {
             self.payload = payload
             self.header = header
             self.contextPayload = contextPayload
@@ -58,33 +58,25 @@ public enum Upstream {
     
     public struct Attachment {
         public struct Header {
-            public let namespace: String
-            public let name: String
-            public let version: String
-            public let dialogRequestId: String
+            public let seq: Int32
+            public let isEnd: Bool
+            public let type: String
             public let messageId: String
             
-            public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String) {
-                self.namespace = namespace
-                self.name = name
-                self.version = version
-                self.dialogRequestId = dialogRequestId
+            public init(seq: Int32, isEnd: Bool, type: String, messageId: String) {
+                self.seq = seq
+                self.isEnd = isEnd
+                self.type = type
                 self.messageId = messageId
             }
         }
         
-        public let header: Header
         public let content: Data
-        public let seq: Int32
-        public let isEnd: Bool
-        public let type: String
+        public let header: Header
         
-        public init(header: Header, content: Data, type: String, seq: Int32, isEnd: Bool) {
-            self.header = header
+        public init(content: Data, header: Header) {
             self.content = content
-            self.type = type
-            self.seq = seq
-            self.isEnd = isEnd
+            self.header = header
         }
     }
 }
@@ -117,12 +109,13 @@ extension Upstream.Event {
     }
     
     var contextString: String {
-        let supportedInterfaces = contextPayload.supportedInterfaces.reduce(
+        let contextDictionary = Dictionary(grouping: contextPayload, by: { $0.contextType })
+        let supportedInterfaces = contextDictionary[.capability]?.reduce(
             into: [String: AnyHashable]()
         ) { result, context in
             result[context.name] = context.payload
         }
-        let client = contextPayload.client.reduce(
+        let client = contextDictionary[.client]?.reduce(
             into: [String: AnyHashable]()
         ) { result, context in
             result[context.name] = context.payload
