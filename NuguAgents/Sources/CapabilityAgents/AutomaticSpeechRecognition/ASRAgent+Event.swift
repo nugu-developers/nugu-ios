@@ -61,24 +61,23 @@ extension ASRAgent.Event: Eventable {
                     "response": 10000
                 ]
             ]
-
-            if options.endPointing == .server,
-                case let .wakeUpKeyword(keyword, _, start, end, detection) = options.initiator {
-                // TODO: Tyche 라이브러리 업데이트 후 수정 필요.
-                /**
-                 KeywordDetector use 16k mono (bit depth: 16).
-                 so, You can calculate sample count by (dataCount / 2)
-                 */
-                let boundary: [String: AnyHashable] = [
-                    "start": start / 2,
-                    "end": end / 2,
-                    "detection": detection / 2,
-                    "metric": "sample"
-                ]
-                let wakeup: [String: AnyHashable] = [
-                    "word": keyword,
-                    "boundary": boundary
-                ]
+            
+            if case let .wakeUpKeyword(keyword, _, start, end, detection) = options.initiator {
+                var wakeup: [String: AnyHashable] = ["word": keyword]
+                if options.endPointing == .server {
+                    // TODO: Tyche 라이브러리 업데이트 후 수정 필요.
+                    /**
+                     KeywordDetector use 16k mono (bit depth: 16).
+                     so, You can calculate sample count by (dataCount / 2)
+                     */
+                    let boundary: [String: AnyHashable] = [
+                        "start": start / 2,
+                        "end": end / 2,
+                        "detection": detection / 2,
+                        "metric": "sample"
+                    ]
+                    wakeup["boundary"] = boundary
+                }
                 payload["wakeup"] = wakeup
             }
         case .listenTimeout,
