@@ -182,7 +182,7 @@ private extension SoundAgent {
             
             self.soundDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard let url = self.dataSource?.soundAgentReqeustUrl(beepName: payload.beepName) else {
+                guard let url = self.dataSource?.soundAgentRequestUrl(beepName: payload.beepName) else {
                     self.sendEvent(
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId,

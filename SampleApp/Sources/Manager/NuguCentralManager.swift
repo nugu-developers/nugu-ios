@@ -454,7 +454,7 @@ extension NuguCentralManager: SystemAgentDelegate {
 // MARK: - SoundAgentDataSource
 
 extension NuguCentralManager: SoundAgentDataSource {
-    func soundAgentReqeustUrl(beepName: SoundBeepName) -> URL? {
+    func soundAgentRequestUrl(beepName: SoundBeepName) -> URL? {
         let url: URL?
         switch beepName {
         case .responseFaile:

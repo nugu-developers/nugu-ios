@@ -25,5 +25,5 @@ public protocol SoundAgentDataSource: class {
     /// It called when need sound `URL` to play beep.
     ///
     /// - Parameter beepName: The beep name to play.
-    func soundAgentReqeustUrl(beepName: SoundBeepName) -> URL?
+    func soundAgentRequestUrl(beepName: SoundBeepName) -> URL?
 }

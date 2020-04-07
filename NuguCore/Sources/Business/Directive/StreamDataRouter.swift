@@ -140,7 +140,7 @@ public extension StreamDataRouter {
      Sends an attachment.
      
      It won't emit received or finished state on completion.
-     because those states will be emitted to event-reqeust's completion.
+     because those states will be emitted to event-request's completion.
      */
     func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[dialogRequestId] else {
