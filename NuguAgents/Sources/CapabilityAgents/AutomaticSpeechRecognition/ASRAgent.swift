@@ -331,15 +331,9 @@ extension ASRAgent: EndPointDetectorDelegate {
                 return
             }
             
-            let attachmentHeader = Upstream.Attachment.Header(
-                namespace: self.capabilityAgentProperty.name,
-                name: "Recognize",
-                version: self.capabilityAgentProperty.version,
-                dialogRequestId: asrRequest.dialogRequestId,
-                messageId: TimeUUID().hexString
-            )
-            let attachment = Upstream.Attachment(header: attachmentHeader, content: speechData, type: "audio/speex", seq: self.attachmentSeq, isEnd: false)
-            self.upstreamDataSender.sendStream(attachment)
+            let attachmentHeader = Upstream.Attachment.Header(seq: self.attachmentSeq, isEnd: false, type: "audio/speex", messageId: TimeUUID().hexString)
+            let attachment = Upstream.Attachment(content: speechData, header: attachmentHeader)
+            self.upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.dialogRequestId)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
         }
@@ -542,16 +536,10 @@ private extension ASRAgent {
         }
         
         asrState = .busy
-        
-        let attachmentHeader = Upstream.Attachment.Header(
-            namespace: capabilityAgentProperty.name,
-            name: "Recognize",
-            version: capabilityAgentProperty.version,
-            dialogRequestId: asrRequest.dialogRequestId,
-            messageId: TimeUUID().hexString
-        )
-        let attachment = Upstream.Attachment(header: attachmentHeader, content: Data(), type: "audio/speex", seq: attachmentSeq, isEnd: true)
-        upstreamDataSender.sendStream(attachment)
+
+        let attachmentHeader = Upstream.Attachment.Header(seq: self.attachmentSeq, isEnd: true, type: "audio/speex", messageId: TimeUUID().hexString)
+        let attachment = Upstream.Attachment(content: Data(), header: attachmentHeader)
+        upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.dialogRequestId)
     }
     
     @discardableResult func startRecognition(

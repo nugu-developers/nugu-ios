@@ -51,7 +51,7 @@ class EventSender: NSObject {
             log.debug("network bound stream task start.")
             guard let self = self else { return }
             log.debug("network bound stream task is eligible for running")
-
+            
             self.streams.output.delegate = self
             self.streams.output.schedule(in: .current, forMode: .default)
             self.streams.output.open()
@@ -59,7 +59,7 @@ class EventSender: NSObject {
             while self.streamWorkItem?.isCancelled == false {
                 RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
             }
-
+            
             log.debug("network bound stream task is going to stop")
         }
         streamQueue.async(execute: streamWorkItem!)
@@ -75,7 +75,7 @@ class EventSender: NSObject {
     func send(_ event: Upstream.Event) -> Completable {
         return Completable.create { [weak self] (complete) -> Disposable in
             let disposable = Disposables.create()
-
+            
             // check input stream was opened before.
             guard self?.streams.input.streamStatus == .notOpen else {
                 complete(.error(EventSenderError.requestMultipleEvents))
@@ -108,9 +108,9 @@ class EventSender: NSObject {
             .flatMapCompletable { [weak self] _ in
                 guard let self = self else { return Completable.empty() }
                 return self.sendData(self.makeMultipartData(attachment))
-            }
-            .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "attachment_queue_\(attachment.header.dialogRequestId)"))
-
+        }
+        .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "attachment_queue_\(attachment.header.seq)"))
+        
     }
     
     /**
@@ -127,26 +127,26 @@ class EventSender: NSObject {
                 
                 guard let lastBoundaryData = ("--\(self.boundary)--" + HTTPConst.crlf).data(using: .utf8) else { return Completable.empty() }
                 return self.sendData(lastBoundaryData)
+        }
+        .subscribe { [weak self] _ in
+            guard let self = self else { return }
+            
+            #if DEBUG
+            do {
+                let sentFilename = FileManager.default.urls(for: .documentDirectory,
+                                                            in: .userDomainMask)[0].appendingPathComponent("sent_event.dat")
+                try self.sentData.write(to: sentFilename)
+                log.debug("sent event data to file :\(sentFilename)")
+            } catch {
+                log.debug("write sent event data failed: \(error)")
             }
-            .subscribe { [weak self] _ in
-                guard let self = self else { return }
-                
-                #if DEBUG
-                do {
-                    let sentFilename = FileManager.default.urls(for: .documentDirectory,
-                                                                in: .userDomainMask)[0].appendingPathComponent("sent_event.dat")
-                    try self.sentData.write(to: sentFilename)
-                    log.debug("sent event data to file :\(sentFilename)")
-                } catch {
-                    log.debug("write sent event data failed: \(error)")
-                }
-                #endif
-                
-                self.streamStateSubject.dispose()
-                self.streamWorkItem?.cancel()
-                self.streams.output.close()
-            }
-            .disposed(by: disposeBag)
+            #endif
+            
+            self.streamStateSubject.dispose()
+            self.streamWorkItem?.cancel()
+            self.streams.output.close()
+        }
+        .disposed(by: disposeBag)
     }
     
     /**
@@ -205,7 +205,7 @@ private extension EventSender {
             + " }"
             + HTTPConst.crlf).data(using: .utf8)!
         partData.append(bodyData)
-
+        
         log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
     }
@@ -213,9 +213,10 @@ private extension EventSender {
     func makeMultipartData(_ attachment: Upstream.Attachment) -> Data {
         let headerLines = [
             "--\(boundary)",
-            "Content-Disposition: form-data; name=\"attachment\"; filename=\"\(attachment.seq);\(attachment.isEnd ? "end" : "continued")\"",
-//            "Content-Type: \(attachment.type)", // TODO: server에서 content-type 제대로 구현하면 변경할 것.
+            "Content-Disposition: form-data; name=\"attachment\"; filename=\"\(attachment.header.seq);\(attachment.header.isEnd ? "end" : "continued")\"",
+            //            "Content-Type: \(attachment.header.type)", // TODO: server에서 content-type 제대로 구현하면 변경할 것.
             "Content-Type: application/octet-stream",
+            "Message-Id: \(attachment.header.messageId)",
             HTTPConst.crlf
         ]
         

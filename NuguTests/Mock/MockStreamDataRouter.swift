@@ -23,7 +23,6 @@ import Foundation
 import NuguCore
 
 class MockStreamDataRouter: StreamDataRoutable {
-    
     var delegate: StreamDataDelegate?
     
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?) {
@@ -46,7 +45,7 @@ class MockStreamDataRouter: StreamDataRoutable {
         
     }
     
-    func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)?) {
+    func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)?) {
         
     }
     
