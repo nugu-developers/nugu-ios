@@ -223,11 +223,7 @@ private extension DisplayAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
+                    let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: directive.payload)
                     
                     let typeInfo: Event.TypeInfo = self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
                     self.sendEvent(
@@ -249,11 +245,7 @@ private extension DisplayAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(DisplayControlPayload.self, from: data)
+                    let payload = try JSONDecoder().decode(DisplayControlPayload.self, from: directive.payload)
                     
                     guard let item = self.currentItem,
                         item.playServiceId == payload.playServiceId,
@@ -287,11 +279,7 @@ private extension DisplayAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(DisplayControlPayload.self, from: data)
+                    let payload = try JSONDecoder().decode(DisplayControlPayload.self, from: directive.payload)
                     
                     guard let item = self.currentItem,
                         item.playServiceId == payload.playServiceId,
@@ -325,9 +313,7 @@ private extension DisplayAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    
-                    guard let payloadAsData = directive.payload.data(using: .utf8),
-                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: AnyHashable],
+                    guard  let payloadDictionary = directive.payloadDictionary,
                         let token = payloadDictionary["token"] as? String,
                         let playServiceId = payloadDictionary["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
@@ -358,8 +344,7 @@ private extension DisplayAgent {
     func handleDisplay() -> HandleDirective {
         return { [weak self] directive, completion in
             guard let self = self else { return completion(.success(())) }
-            guard let payloadAsData = directive.payload.data(using: .utf8),
-                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: AnyHashable],
+            guard let payloadDictionary = directive.payloadDictionary,
                 let token = payloadDictionary["token"] as? String,
                 let playServiceId = payloadDictionary["playServiceId"] as? String else {
                     completion(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")))

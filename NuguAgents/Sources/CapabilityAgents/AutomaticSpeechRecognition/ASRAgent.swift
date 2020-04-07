@@ -347,11 +347,7 @@ private extension ASRAgent {
         return { [weak self] directive, completion in
             completion(
                 Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    self?.expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: data)
+                    self?.expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: directive.payload)
                 }
             )
         }
@@ -396,11 +392,7 @@ private extension ASRAgent {
         return { [weak self] directive, completion in
             completion(
                 Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let item = try JSONDecoder().decode(ASRNotifyResult.self, from: data)
+                    let item = try JSONDecoder().decode(ASRNotifyResult.self, from: directive.payload)
                     
                     self?.asrDispatchQueue.async { [weak self] in
                         guard let self = self else { return }

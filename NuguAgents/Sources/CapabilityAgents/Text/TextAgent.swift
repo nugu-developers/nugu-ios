@@ -86,10 +86,7 @@ private extension TextAgent {
                 guard let self = self else { return }
                 
                 let result = Result<Void, Error> {
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    let payload = try JSONDecoder().decode(TextAgentSourceItem.self, from: data)
+                    let payload = try JSONDecoder().decode(TextAgentSourceItem.self, from: directive.payload)
                     
                     self.sendTextInput(
                         text: payload.text,

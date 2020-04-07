@@ -412,10 +412,7 @@ private extension AudioPlayerAgent {
                 guard let self = self else { return }
                 completion(
                     Result<Void, Error>(catching: {
-                        guard let data = directive.payload.data(using: .utf8) else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                        }
-                        let payload = try JSONDecoder().decode(AudioPlayerAgentMedia.Payload.self, from: data)
+                        let payload = try JSONDecoder().decode(AudioPlayerAgentMedia.Payload.self, from: directive.payload)
                         
                         switch self.currentMedia {
                         case .some(let media) where
@@ -490,7 +487,11 @@ private extension AudioPlayerAgent {
     
     func handleRequestPlayCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, payload: directive.payload, typeInfo: .requestPlayCommandIssued)
+            guard let payloadDictionary = directive.payloadDictionary else {
+                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
+                return
+            }
+            self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, payload: payloadDictionary, typeInfo: .requestPlayCommandIssued)
             completion(.success(()))
         }
     }
@@ -555,9 +556,7 @@ private extension AudioPlayerAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
-                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
+                    guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
                     self.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId)
@@ -570,9 +569,7 @@ private extension AudioPlayerAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
-                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
+                    guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
                     
@@ -592,9 +589,7 @@ private extension AudioPlayerAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
-                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
+                    guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
                     }
                     
@@ -614,11 +609,7 @@ private extension AudioPlayerAgent {
             completion(
                 Result { [weak self] in
                     guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8) else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(AudioPlayerDisplayControlPayload.self, from: data)
+                    let payload = try JSONDecoder().decode(AudioPlayerDisplayControlPayload.self, from: directive.payload)
                     let isSuccess = self.audioPlayerDisplayManager.controlLylicsPage(payload: payload)
                     
                     self.sendLyricsEvent(
@@ -722,7 +713,7 @@ private extension AudioPlayerAgent {
 
     func sendRequestPlayEvent(
         referrerDialogRequestId: String,
-        payload: String,
+        payload: [String : AnyHashable],
         typeInfo: RequestPlayEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {

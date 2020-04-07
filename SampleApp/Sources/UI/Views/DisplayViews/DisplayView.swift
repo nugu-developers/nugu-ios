@@ -31,7 +31,7 @@ class DisplayView: UIView {
     
     var onUserInteraction: (() -> Void)?
     
-    var displayPayload: String?
+    var displayPayload: Data?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,16 +51,15 @@ class DisplayView: UIView {
         titleContainerView.layer.borderWidth = 1.0
     }
     
-    func update(updatePayload: String) {
-        guard let displayingPayloadData = displayPayload?.data(using: .utf8),
+    func update(updatePayload: Data) {
+        guard let displayingPayloadData = displayPayload,
             let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: AnyHashable],
-            let updatePayloadData = updatePayload.data(using: .utf8),
-            let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayloadData, options: []) as? [String: AnyHashable] else {
+            let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayload, options: []) as? [String: AnyHashable] else {
                 return
         }
         let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
         guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
-        displayPayload = String(data: mergedPayloadData, encoding: .utf8)
+        displayPayload = mergedPayloadData
     }
     
     @IBAction func closeButtonDidClick(_ button: UIButton) {

@@ -230,8 +230,7 @@ private extension Downstream.Directive {
             let headerData = try? JSONSerialization.data(withJSONObject: headerDictionary, options: []),
             let header = try? JSONDecoder().decode(Downstream.Header.self, from: headerData),
             let payloadDictionary = directiveDictionary["payload"] as? [String: AnyHashable],
-            let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-            let payload = String(data: payloadData, encoding: .utf8) else {
+            let payload = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []) else {
                 return nil
         }
         

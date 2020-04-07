@@ -97,11 +97,7 @@ private extension SystemAgent {
         return { [weak self] directive, completion in
             completion(
                 Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
+                    let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: directive.payload)
                     self?.systemDispatchQueue.async { [weak self] in
                         log.info("try to handoff policy: \(serverPolicy)")
                         self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
@@ -126,11 +122,7 @@ private extension SystemAgent {
         return { [weak self] directive, completion in
             completion(
                 Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
+                    let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: directive.payload)
                     self?.systemDispatchQueue.async { [weak self] in
                         switch exceptionItem.code {
                         case .fail(let code):

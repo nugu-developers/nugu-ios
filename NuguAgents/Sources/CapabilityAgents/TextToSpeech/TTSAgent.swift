@@ -301,11 +301,7 @@ private extension TTSAgent {
                 
                 completion(
                     Result<Void, Error>(catching: {
-                        guard let data = directive.payload.data(using: .utf8) else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                        }
-                        
-                        let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: data)
+                        let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: directive.payload)
                         guard case .attachment = payload.sourceType else {
                             throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
                         }

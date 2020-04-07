@@ -172,13 +172,9 @@ private extension SoundAgent {
                 completion(.success(()))
                 return
             }
-            guard let data = directive.payload.data(using: .utf8) else {
-                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
-                return
-            }
             let payload: SoundMedia.Payload
             do {
-                payload = try JSONDecoder().decode(SoundMedia.Payload.self, from: data)
+                payload = try JSONDecoder().decode(SoundMedia.Payload.self, from: directive.payload)
             } catch {
                 completion(.failure(error))
                 return
