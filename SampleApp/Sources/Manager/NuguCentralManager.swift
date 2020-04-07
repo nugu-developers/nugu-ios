@@ -415,7 +415,7 @@ extension NuguCentralManager: NuguClientDelegate {
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: EventSenderError
-        log.debug("\(error?.localizedDescription ?? ""): \(attachment.header.namespace).\(attachment.header.name)")
+        log.debug("\(error?.localizedDescription ?? ""): \(attachment.header.seq)")
     }
 }
 
