@@ -137,7 +137,11 @@ extension MediaPlayer: MediaUrlDataSource {
             throw MediaPlayableError.invalidURL
         }
         
-        playerItem = MediaAVPlayerItem(url: urlItem)
+        setSource(url: urlItem, offset: offset)
+    }
+    
+    public func setSource(url: URL, offset: TimeIntervallic) {
+        playerItem = MediaAVPlayerItem(url: url)
         playerItem?.delegate = self
         player = AVQueuePlayer(playerItem: playerItem)
                 

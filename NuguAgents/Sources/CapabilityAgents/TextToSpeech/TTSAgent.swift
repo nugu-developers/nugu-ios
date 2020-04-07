@@ -375,7 +375,7 @@ private extension TTSAgent {
         return .success(())
     }
     
-    /// Stop previously playing TTS
+    /// Synchronously stop previously playing TTS
     func stopSilently() {
         guard let media = currentMedia else { return }
         
