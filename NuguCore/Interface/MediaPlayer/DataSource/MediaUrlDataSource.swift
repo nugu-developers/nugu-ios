@@ -22,7 +22,7 @@ import Foundation
 
 public protocol MediaUrlDataSource {
     /// For url source
-    func setSource(url: String, offset: TimeIntervallic) throws
+    func setSource(url: String, offset: TimeIntervallic)
     /// For url source
     func setSource(url: URL, offset: TimeIntervallic)
 }
@@ -31,7 +31,7 @@ public protocol MediaUrlDataSource {
 
 public extension MediaUrlDataSource {
     /// For url source
-    func setSource(url: String) throws {
+    func setSource(url: String) {
         try setSource(url: url, offset: NuguTimeInterval(seconds: 0))
     }
     

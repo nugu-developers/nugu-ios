@@ -132,9 +132,10 @@ extension MediaPlayer {
 // MARK: - MediaPlayer + MediaUrlDataSource
 
 extension MediaPlayer: MediaUrlDataSource {
-    public func setSource(url: String, offset: TimeIntervallic) throws {
+    public func setSource(url: String, offset: TimeIntervallic) {
         guard let urlItem = URL(string: url) else {
-            throw MediaPlayableError.invalidURL
+            delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.invalidURL))
+            return
         }
         
         setSource(url: urlItem, offset: offset)

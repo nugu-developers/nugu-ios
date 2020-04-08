@@ -170,19 +170,10 @@ extension SoundAgent: MediaPlayerDelegate {
 // MARK: - Private (Directive)
 
 private extension SoundAgent {
-    func prefetchBeep() -> HandleDirective {
-        return { [weak self] directive, completion in
-            guard let self = self else {
-                completion(.success(()))
-                return
-            }
-            let payload: SoundMedia.Payload
-            do {
-                payload = try JSONDecoder().decode(SoundMedia.Payload.self, from: directive.payload)
-            } catch {
-                completion(.failure(error))
-                return
-            }
+    func prefetchBeep() -> PrefetchDirective {
+        return { [weak self] directive in
+            guard let self = self else { return }
+            let payload = try JSONDecoder().decode(SoundMedia.Payload.self, from: directive.payload)
             
             self.soundDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -212,16 +203,14 @@ private extension SoundAgent {
                     info: .beepSucceeded
                 )
             }
-            completion(.success(()))
         }
     }
     
     func handleBeep() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion(.success(())) }
-            guard let self = self else { return }
+            defer { completion() }
             
-            self.soundDispatchQueue.async { [weak self] in
+            self?.soundDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
                     log.warning("SoundMedia is not exist or dialogRequesttId is not valid")

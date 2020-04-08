@@ -92,11 +92,10 @@ extension ExtensionAgent: ContextInfoDelegate {
 private extension ExtensionAgent {
     func handleAction() -> HandleDirective {
         return { [weak self] directive, completion in
-            let item: ExtensionAgentItem
-            do {
-                item = try JSONDecoder().decode(ExtensionAgentItem.self, from: directive.payload)
-            } catch {
-                completion(.failure(error))
+            defer { completion() }
+            
+            guard let item = try? JSONDecoder().decode(ExtensionAgentItem.self, from: directive.payload) else {
+                log.error("Invalid payload")
                 return
             }
             
@@ -114,8 +113,6 @@ private extension ExtensionAgent {
                         referrerDialogRequestId: directive.header.dialogRequestId
                     )
             })
-            
-            completion(.success(()))
         }
     }
 }

@@ -82,22 +82,21 @@ extension TextAgent: ContextInfoDelegate {
 private extension TextAgent {
     func handleTextSource() -> HandleDirective {
         return { [weak self] directive, completion in
+            defer { completion() }
+        
+            guard let payload = try? JSONDecoder().decode(TextAgentSourceItem.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
             self?.textDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                
-                let result = Result<Void, Error> {
-                    let payload = try JSONDecoder().decode(TextAgentSourceItem.self, from: directive.payload)
-                    
-                    self.sendTextInput(
-                        text: payload.text,
-                        token: payload.token,
-                        expectSpeech: nil,
-                        directive: directive,
-                        completion: nil
-                    )
-                }
-                
-                completion(result)
+                self?.sendTextInput(
+                    text: payload.text,
+                    token: payload.token,
+                    expectSpeech: nil,
+                    directive: directive,
+                    completion: nil
+                )
             }
         }
     }
