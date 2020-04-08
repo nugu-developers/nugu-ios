@@ -51,6 +51,14 @@ public class SoundAgent: SoundAgentProtocol {
                 return
             }
             
+            // Release focus
+            switch soundState {
+            case .idle, .finished, .stopped:
+                releaseFocusIfNeeded()
+            case .playing:
+                break
+            }
+            
             // Notify delegates only if the agent's status changes.
             if oldValue != soundState {
                 delegate?.soundAgentDidChange(state: soundState, dialogRequestId: media.dialogRequestId)
@@ -124,9 +132,7 @@ extension SoundAgent: FocusChannelDelegate {
 
 extension SoundAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable] = [
-            "version": capabilityAgentProperty.version,
-        ]
+        let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
@@ -151,12 +157,10 @@ extension SoundAgent: MediaPlayerDelegate {
                 self.stop()
             case .stop:
                 self.soundState = .stopped
-                self.releaseFocusIfNeeded()
             case .bufferUnderrun:
                 break
             case .error(_):
                 self.soundState = .stopped
-                self.releaseFocusIfNeeded()
             }
         }
     }
