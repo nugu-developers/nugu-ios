@@ -103,6 +103,19 @@ extension MediaCacheManager {
             return false
         }
     }
+    
+    static func setModifiedDateForCacheFile(key: String) {
+        do {
+            if doesTempFileExist(key: key) {
+                _ = removeTempFile(key: key)
+            }
+            if doesCacheFileExist(key: key) {
+                try FileManager.default.setAttributes([FileAttributeKey.modificationDate: Date()], ofItemAtPath: getCacheFilePathUrl(key: key).path)
+            }
+        } catch {
+            log.error("FAIL TO SET ATTRIBUTE")
+        }
+    }
 }
 
 // MARK: - Path Related Methods (private)
@@ -213,14 +226,6 @@ private extension MediaCacheManager {
 private extension MediaCacheManager {
     static func getTotalCachedData() -> Int {
         return FileManager.default.folderSizeAtPath(path: pathForCacheFolder().path)
-    }
-    
-    static func setModifiedDateForCacheFile(key: String) {
-        do {
-            try FileManager.default.setAttributes([FileAttributeKey.modificationDate: Date()], ofItemAtPath: getCacheFilePathUrl(key: key).path)
-        } catch {
-            log.error("FAIL TO SET ATTRIBUTE")
-        }
     }
     
     static func clearMediaCache() {

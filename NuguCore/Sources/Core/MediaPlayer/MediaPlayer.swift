@@ -52,6 +52,10 @@ extension MediaPlayer {
         
         mediaPlayer.play()
         
+        if let cacheKey = playerItem?.cacheKey {
+            MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
+        }
+
         delegate?.mediaPlayerDidChange(state: .start)
     }
     
