@@ -193,8 +193,6 @@ private extension MediaCacheManager {
             var oldestModifiedDate = Date()
 
             let contentList = try FileManager.default.contentsOfDirectory(atPath: pathForCacheFolder().path).filter {
-                // 생성한 securedata 캐쉬파일만 캐쉬관리로직에 의한 삭제를 시도한다.
-                // 캐쉬폴더 경로와 캐쉬사이즈를 app.단에서 조절할 수 있도록 api를 생성하였는데, 이렇게 하면 모든 캐쉬해야할 파일을 한 폴더에 모을수도 있기 때문.
                 $0.hasSuffix(".securedata")
             }
             let contentFileKeyList = contentList.map {
@@ -210,8 +208,7 @@ private extension MediaCacheManager {
                     }
                 }
             }
-            guard let removableCachedFileKey = oldestCachedFileKey else { return false }
-            
+            guard let removableCachedFileKey = oldestCachedFileKey else { return false }            
             log.debug("oldestDate = \(oldestModifiedDate), oldestKey = \(removableCachedFileKey)")
             return removeCacheFile(key: removableCachedFileKey)
         } catch {

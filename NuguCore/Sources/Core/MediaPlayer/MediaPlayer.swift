@@ -200,7 +200,7 @@ extension MediaPlayer {
     }
 }
 
-// MARK: AVAssetResourceLoader Delegate Methods
+// MARK: - AVAssetResourceLoader Delegate Methods
 
 extension MediaPlayer: AVAssetResourceLoaderDelegate {
     public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
@@ -234,7 +234,6 @@ extension MediaPlayer: AVAssetResourceLoaderDelegate {
 
 private extension MediaPlayer {
     func startDataRequest(withURL url: URL) {
-        log.debug("startDataRequest - URL : \(url.absoluteString)")
         let request = URLRequest(url: url)
         let configuration = URLSessionConfiguration.default
         configuration.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
@@ -253,7 +252,6 @@ private extension MediaPlayer {
                 loadingRequest.finishLoading()
             }
         }
-        
         pendingRequestQueue.sync {
             pendingRequests.subtract(requestsCompleted)
         }
@@ -323,7 +321,8 @@ private extension MediaPlayer {
     }
 }
 
-// MARK: URLSessionData Delegate
+// MARK: - URLSessionData Delegate
+
 extension MediaPlayer: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         completionHandler(URLSession.ResponseDisposition.allow)
@@ -333,11 +332,11 @@ extension MediaPlayer: URLSessionDataDelegate {
         expectedDataLength = Float(response.expectedContentLength)
     }
     
-    // 간헐적 Crash 이슈로 Delegate 메소드 optional 처리. 참고 > https://github.com/Alamofire/Alamofire/issues/2138
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         internalUrlSession(session: session, dataTask: dataTask, didReceive: data)
     }
     
+    // 간헐적 Crash 이슈로 Delegate 메소드 optional 처리. 참고 > https://github.com/Alamofire/Alamofire/issues/2138
     private func internalUrlSession(session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data?) {
         guard let data = data else {
             return
@@ -402,9 +401,7 @@ extension MediaPlayer: MediaAVPlayerItemDelegate {
         delegate?.mediaPlayerDidChange(state: status.mediaPlayerState)
     }
     
-    func mediaAVPlayerItemPlaybackStalled(_ playerItem: MediaAVPlayerItem) {
-        //
-    }
+    func mediaAVPlayerItemPlaybackStalled(_ playerItem: MediaAVPlayerItem) {}
     
     func mediaAVPlayerItemDidPlayToEndTime(_ playerItem: MediaAVPlayerItem) {
         delegate?.mediaPlayerDidChange(state: .finish)
