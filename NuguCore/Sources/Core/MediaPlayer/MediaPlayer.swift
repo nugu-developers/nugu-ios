@@ -154,7 +154,7 @@ extension MediaPlayer: MediaUrlDataSource {
             
             if offset.seconds > 0 {
                 self.player?.seek(to: offset.cmTime)
-            }    
+            }
         }
         
         guard let cacheKey = cacheKey else {
@@ -163,15 +163,9 @@ extension MediaPlayer: MediaUrlDataSource {
             return
         }
         
-        MediaCacheManager.isPlayerItemUrlAvailableForCache(itemURL: itemURL) { [weak self] (isAvailable, endUrl) -> (Void) in
+        MediaCacheManager.checkCacheAvailablity(itemURL: itemURL, cacheKey: cacheKey) { [weak self] (isAvailable, cacheExists, endUrl) -> (Void) in
             if isAvailable {
-                // 캐쉬가 존재하면 로컬로 재생한다.
-                if MediaCacheManager.doesCacheFileExist(key: cacheKey) == true {
-                    self?.playerItem = self?.getLocalFilePlayerItem(cacheKey: cacheKey, itemURL: endUrl)
-                } else {
-                    // 캐쉬가 존재하지 않으면 다운로드를 위한 AVAssetResourceLoader 델리게이트를 연결시켜준다.
-                    self?.playerItem = self?.getDownloadAndPlayPlayerItem(itemURL: endUrl)
-                }
+                self?.playerItem = cacheExists ? self?.getCachedPlayerItem(cacheKey: cacheKey, itemURL: endUrl) : self?.getDownloadAndPlayPlayerItem(itemURL: endUrl)
             } else {
                 self?.playerItem = MediaAVPlayerItem(url: itemURL)
             }
@@ -180,24 +174,14 @@ extension MediaPlayer: MediaUrlDataSource {
     }
 }
 
-// MARK: - Cache setting
+// MARK: - Load MediaAVPlayerItem
 
 extension MediaPlayer {
-    func getLocalFilePlayerItem(cacheKey: String, itemURL: URL) -> MediaAVPlayerItem? {
-        guard let localFileData = NSData(contentsOfFile: MediaCacheManager.getCacheFilePathUrl(key: cacheKey).path),
-            let decryptedData = MediaCacheManager.decryptData(data: localFileData)
-            else {
-                _ = MediaCacheManager.removeTempFile(key: cacheKey)
-                return getDownloadAndPlayPlayerItem(itemURL: itemURL)
-        }
-        
-        do {
-            try decryptedData.write(to: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
-            return MediaAVPlayerItem(url: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
-        } catch {
-            _ = MediaCacheManager.removeTempFile(key: cacheKey)
+    func getCachedPlayerItem(cacheKey: String, itemURL: URL) -> MediaAVPlayerItem? {
+        guard let cachedPlayerItem = MediaCacheManager.getCachedPlayerItem(cacheKey: cacheKey) else {
             return getDownloadAndPlayPlayerItem(itemURL: itemURL)
         }
+        return cachedPlayerItem
     }
     
     func getDownloadAndPlayPlayerItem(itemURL: URL) -> MediaAVPlayerItem? {
@@ -366,32 +350,28 @@ extension MediaPlayer: URLSessionDataDelegate {
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        defer {
+            releaseCacheData()
+        }
         
         sessionHasFinishedLoading = true
         
         if error != nil {
             log.error("\(error!)")
-            releaseCacheData()
             return
         }
         
         processPendingRequests()
         
-        guard var audioDataToWrite = downloadAudioData,
-            let itemKeyForCache = playerItem?.cacheKey,
-            let encryptedData = MediaCacheManager.encryptData(data: audioDataToWrite) else {
-            releaseCacheData()
+        guard let audioDataToWrite = downloadAudioData,
+            let itemKeyForCache = playerItem?.cacheKey else {
             return
         }
         
-        audioDataToWrite = encryptedData as NSData
-        
-        if MediaCacheManager.saveDataToCacheFile(data: audioDataToWrite, key: itemKeyForCache) == true {
-            log.debug("SaveComplete: \(itemKeyForCache)")
-        } else {
-            log.error("SaveFailed")
-        }
-        releaseCacheData()
+        MediaCacheManager.saveMediaData(
+            mediaData: audioDataToWrite,
+            cacheKey: itemKeyForCache
+            ) ? log.debug("SaveComplete: \(itemKeyForCache)") : log.error("SaveFailed")
     }
 }
 

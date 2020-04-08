@@ -22,7 +22,6 @@ import UIKit
 import AVFoundation
 
 class MediaCacheManager {
-    
     private static let aesKey = "_AISMediaAesKey_"
     
     // TODO: - Should change to configurable value
@@ -32,12 +31,14 @@ class MediaCacheManager {
     private static let cacheSizeLimit = 1024 * 1024 * 500
     
     private static let supportedMimeTypeForCaching = ["audio/mp4", "audio/aac"]
-    
-    // MARK: General Class Methods
-    
-    class func isPlayerItemUrlAvailableForCache(itemURL: URL, completion: @escaping ((_ isAvailable: Bool, _ endUrl: URL) -> (Void))) {
+}
+
+// MARK: - Internal Methods
+
+extension MediaCacheManager {
+    class func checkCacheAvailablity(itemURL: URL, cacheKey: String, completion: @escaping ((_ isAvailable: Bool, _ cacheExists: Bool, _ endUrl: URL) -> (Void))) {
         guard isCacheEnabled else {
-            completion(false, itemURL)
+            completion(false, false, itemURL)
             return
         }
         
@@ -46,7 +47,7 @@ class MediaCacheManager {
         URLSession.shared.dataTask(with: request) { (_, response, _) in
             guard let httpURLResponse = response as? HTTPURLResponse,
                 let contentType = httpURLResponse.allHeaderFields["Content-Type"] as? String else {
-                    completion(false, itemURL)
+                    completion(false, false, itemURL)
                     return
             }
 
@@ -54,17 +55,60 @@ class MediaCacheManager {
             
             completion(
                 supportedMimeTypeForCaching.contains(contentType),
+                doesCacheFileExist(key: cacheKey),
                 httpURLResponse.url ?? itemURL // Redirect 가 일어나는 Asset 의 경우 간헐적으로 재생이 실패하는 이슈가 있다. EndURL 을 새로 세팅해준다.
             )
         }.resume()
     }
     
-    class func getTotalCachedData() -> Int {
-        return FileManager.default.folderSizeAtPath(path: pathForCacheFolder().path)
+    class func getCachedPlayerItem(cacheKey: String) -> MediaAVPlayerItem? {
+        guard let localFileData = NSData(contentsOfFile: MediaCacheManager.getCacheFilePathUrl(key: cacheKey).path),
+            let decryptedData = MediaCacheManager.decryptData(data: localFileData)
+            else {
+                _ = MediaCacheManager.removeTempFile(key: cacheKey)
+                return nil
+        }
+        
+        do {
+            try decryptedData.write(to: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
+            return MediaAVPlayerItem(url: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
+        } catch {
+            _ = MediaCacheManager.removeTempFile(key: cacheKey)
+            return nil
+        }
     }
     
-    // MARK: Path Related Methods
-    private class func pathForCacheFolder() -> URL {
+    class func saveMediaData(mediaData: NSData, cacheKey: String) -> Bool {
+        guard let encryptedData = encryptData(data: mediaData) as NSData? else {
+            return false
+        }
+        
+        log.debug("Total Cache folder size Will Reach to : \(getTotalCachedData() + encryptedData.length)")
+        while (getTotalCachedData() + encryptedData.length) > cacheSizeLimit {
+            if encryptedData.length > cacheSizeLimit {
+                break
+            }
+            
+            // 삭제에 실패한 경우 캐쉬데이터를 생성하지 않는다.
+            if removeLeastRecentlyUsedCacheFile() == false {
+                return false
+            }
+        }
+        
+        do {
+            try encryptedData.write(to: pathForCacheFolder().appendingPathComponent("\(cacheKey).securedata"), options: .atomic)
+            log.debug("Total Cache After Save : \(getTotalCachedData())")
+            return true
+        } catch {
+            return false
+        }
+    }
+}
+
+// MARK: - Path Related Methods (private)
+
+private extension MediaCacheManager {
+    class func pathForCacheFolder() -> URL {
         var isDir: ObjCBool = false
         let pathForCacheFolder = URL(fileURLWithPath: cacheFolderPath.path, isDirectory: true)
         
@@ -95,8 +139,11 @@ class MediaCacheManager {
     class func getTempFilePathUrl(key: String) -> URL {
         return pathForCacheFolder().appendingPathComponent("\(key)_temp.mp3")
     }
+}
     
-    // MARK: Existence Check Methods
+// MARK: - Existence Check Methods (private)
+
+private extension MediaCacheManager {
     class func doesCacheFileExist(key: String) -> Bool {
         return FileManager.default.fileExists(atPath: pathForCacheFolder().appendingPathComponent("\(key).securedata").path)
     }
@@ -104,8 +151,11 @@ class MediaCacheManager {
     class func doesTempFileExist(key: String) -> Bool {
         return FileManager.default.fileExists(atPath: pathForCacheFolder().appendingPathComponent("\(key)_temp.mp3").path)
     }
-    
-    // MARK: Remove Cache Methods
+}
+
+// MARK: - Remove Cache Methods (private)
+
+private extension MediaCacheManager {
     class func removeCacheFile(key: String) -> Bool {
         do {
             try FileManager.default.removeItem(at: getCacheFilePathUrl(key: key))
@@ -124,18 +174,7 @@ class MediaCacheManager {
         }
     }
     
-    class func clearMediaCache() {
-        do {
-            for file in try FileManager.default.contentsOfDirectory(atPath: pathForCacheFolder().path) {
-                let filePath = pathForCacheFolder().appendingPathComponent(file).path
-                try FileManager.default.removeItem(atPath: filePath)
-            }
-        } catch {
-            
-        }
-    }
-    
-    private class func removeLeastRecentlyUsedCacheFile() -> Bool {
+    class func removeLeastRecentlyUsedCacheFile() -> Bool {
         do {
             var oldestCachedFileKey: String?
             var oldestModifiedDate = Date()
@@ -167,28 +206,13 @@ class MediaCacheManager {
             return false
         }
     }
-    
-    // MARK: Save Cache Methods
-    class func saveDataToCacheFile(data: NSData, key: String) -> Bool {
-        log.debug("Total Cache folder size Will Reach to : \(getTotalCachedData()+data.length)")
-        while (getTotalCachedData() + data.length) > cacheSizeLimit {
-            if data.length > cacheSizeLimit {
-                break
-            }
-            
-            // 삭제에 실패한 경우 캐쉬데이터를 생성하지 않는다.
-            if removeLeastRecentlyUsedCacheFile() == false {
-                return false
-            }
-        }
-        
-        do {
-            try data.write(to: pathForCacheFolder().appendingPathComponent("\(key).securedata"), options: .atomic)
-            log.debug("Total Cache After Save : \(getTotalCachedData())")
-            return true
-        } catch {
-            return false
-        }
+}
+
+// MARK: - Utilty Methods (private)
+
+private extension MediaCacheManager {
+    class func getTotalCachedData() -> Int {
+        return FileManager.default.folderSizeAtPath(path: pathForCacheFolder().path)
     }
     
     class func setModifiedDateForCacheFile(key: String) {
@@ -199,7 +223,21 @@ class MediaCacheManager {
         }
     }
     
-    // MARK: AESEncrypt & AESDecrypt Methods
+    class func clearMediaCache() {
+        do {
+            for file in try FileManager.default.contentsOfDirectory(atPath: pathForCacheFolder().path) {
+                let filePath = pathForCacheFolder().appendingPathComponent(file).path
+                try FileManager.default.removeItem(atPath: filePath)
+            }
+        } catch {
+            
+        }
+    }
+}
+
+// MARK: - AESEncrypt & AESDecrypt Methods (private)
+
+private extension MediaCacheManager {
     class func encryptData(data: NSData) -> Data? {
         return CryptoUtil.encrypt(data: data as Data, key: aesKey)
     }
@@ -208,4 +246,3 @@ class MediaCacheManager {
         return CryptoUtil.decrypt(data: data as Data, key: aesKey)
     }
 }
-
