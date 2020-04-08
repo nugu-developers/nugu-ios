@@ -413,10 +413,11 @@ private extension AudioPlayerAgent {
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                switch self.currentMedia {
-                case .some(let media) where
-                    media.payload.audioItem.stream.token == payload.audioItem.stream.token
-                        && media.payload.playServiceId == payload.playServiceId:
+                if [.playing, .paused(temporary: true), .paused(temporary: false)].contains(self.audioPlayerState),
+                    let media = self.currentMedia,
+                    media.payload.audioItem.stream.token == payload.audioItem.stream.token,
+                    media.payload.playServiceId == payload.playServiceId {
+                    log.debug("Resuming")
                     // Resume and seek
                     self.currentMedia = AudioPlayerAgentMedia(
                         dialogRequestId: directive.header.dialogRequestId,
@@ -425,7 +426,7 @@ private extension AudioPlayerAgent {
                     )
                     
                     media.player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
-                default:
+                } else {
                     self.stopSilently()
                     self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
                 }
