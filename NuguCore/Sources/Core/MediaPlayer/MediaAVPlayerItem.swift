@@ -40,16 +40,9 @@ final class MediaAVPlayerItem: AVPlayerItem {
         case unknown
     }
     
-    enum MimeType: String {
-        case mp3 = "audio/mpeg"
-        case m3u8 = "application/vnd.apple.mpegurl"
-        case mp3Stream = "public.mpeg-4"
-    }
-    
     private static var observerContext: Int = 0
     weak var delegate: MediaAVPlayerItemDelegate?
     
-//    var mimeType: MimeType?
     var cacheKey: String?
     
     init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
