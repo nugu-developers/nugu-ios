@@ -23,7 +23,7 @@ import AVFoundation
 
 class MediaCacheManager {
     
-    private static let aesKey = "_MediaAesKey_"
+    private static let aesKey = "_AISMediaAesKey_"
     
     // TODO: - Should change to configurable value
     private static let cacheFolderPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("MediaCache", isDirectory: true)

@@ -147,15 +147,14 @@ extension MediaPlayer: MediaUrlDataSource {
         }
         
         playerItem = MediaAVPlayerItem(url: urlItem)
+        playerItem?.cacheKey = cacheKey
         
         guard let playerItem = playerItem else {
             throw MediaPlayableError.unknown
         }
         
-        playerItem.cacheKey = cacheKey
-        
         // 음악 재생시엔 캐시 정책에 맞게 플레이해주어야 한다..
-        if let itemKeyForCache = playerItem.cacheKey,
+        if let itemKeyForCache = cacheKey,
             MediaCacheManager.isPlayerItemAvailableForCache(playerItem: playerItem) {
             // 캐쉬가 존재하면 로컬로 재생한다.
             if MediaCacheManager.doesCacheFileExist(key: itemKeyForCache) == true {
@@ -167,6 +166,7 @@ extension MediaPlayer: MediaUrlDataSource {
             }
         }
         
+        self.playerItem?.cacheKey = cacheKey
         self.playerItem?.delegate = self
         player = AVQueuePlayer(playerItem: self.playerItem)
                 
@@ -251,9 +251,9 @@ private extension MediaPlayer {
         let request = URLRequest(url: url)
         let configuration = URLSessionConfiguration.default
         configuration.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
-        let downloadSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-        let urlSessionDatatask = downloadSession.dataTask(with: request)
-        urlSessionDatatask.resume()
+        downloadSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        downloadDataTask = downloadSession?.dataTask(with: request)
+        downloadDataTask?.resume()
     }
     
     func processPendingRequests() {
@@ -380,7 +380,7 @@ extension MediaPlayer: URLSessionDataDelegate {
         
         guard var audioDataToWrite = downloadAudioData,
             let itemKeyForCache = playerItem?.cacheKey,
-            let encryptedData = MediaCacheManager.encryptData(data: audioDataToWrite)else {
+            let encryptedData = MediaCacheManager.encryptData(data: audioDataToWrite) else {
             releaseCacheData()
             return
         }
