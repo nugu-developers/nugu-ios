@@ -1,5 +1,5 @@
 //
-//  AISOpusDecoder.swift
+//  OpusDecoder.swift
 //  NuguCore
 //
 //  Created by DCs-OfficeMBP on 28/01/2019.

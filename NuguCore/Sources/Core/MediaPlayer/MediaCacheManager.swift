@@ -22,7 +22,7 @@ import UIKit
 import AVFoundation
 
 struct MediaCacheManager {
-    private static let aesKey = "_AISMediaAesKey_"
+    private static let aesKey = "_NuguMediaAesKey"
     
     // TODO: - Should change to configurable value
     private static let isCacheEnabled = true
