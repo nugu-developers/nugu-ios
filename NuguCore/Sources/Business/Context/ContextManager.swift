@@ -50,18 +50,17 @@ extension ContextManager {
     public func getContexts(namespace: String, completion: @escaping ([ContextInfo]) -> Void) {
         getContexts { contextInfos in
             let filteredPayload = contextInfos.compactMap { (contextInfo) -> ContextInfo? in
-                guard let payload = contextInfo.payload as? [String: AnyHashable] else { return nil }
-                let filteredPayload: AnyHashable
                 if contextInfo.contextType == .client || contextInfo.name == namespace {
-                    filteredPayload = payload
+                    return contextInfo
                 } else {
                     // FIXME: 추후 서버에서 각 capability interface 정보를 저장하게 되면 제거해야 함.
-                    filteredPayload = payload.filter { (key, _) -> Bool in
-                        key == "version"
+                    if let payload = contextInfo.payload as? [String: AnyHashable] {
+                        let versionPayload = payload.filter { $0.key == "version" }
+                        return ContextInfo(contextType: contextInfo.contextType, name: contextInfo.name, payload: versionPayload)
+                    } else {
+                        return contextInfo
                     }
                 }
-                
-                return ContextInfo(contextType: contextInfo.contextType, name: contextInfo.name, payload: filteredPayload)
             }
 
             completion(filteredPayload)
