@@ -142,36 +142,40 @@ extension MediaPlayer {
 
 extension MediaPlayer: MediaUrlDataSource {
     public func setSource(url: String, offset: TimeIntervallic, cacheKey: String?) throws {
-        guard let urlItem = URL(string: url) else {
+        guard let itemURL = URL(string: url) else {
             throw MediaPlayableError.invalidURL
         }
         
-        playerItem = MediaAVPlayerItem(url: urlItem)
-        playerItem?.cacheKey = cacheKey
-        
-        guard let playerItem = playerItem else {
-            throw MediaPlayableError.unknown
+        let setPlayer = { [weak self] in
+            guard let self = self else { return }
+            self.playerItem?.cacheKey = cacheKey
+            self.playerItem?.delegate = self
+            self.player = AVQueuePlayer(playerItem: self.playerItem)
+            
+            if offset.seconds > 0 {
+                self.player?.seek(to: offset.cmTime)
+            }    
         }
         
-        // 음악 재생시엔 캐시 정책에 맞게 플레이해주어야 한다..
-        if let itemKeyForCache = cacheKey,
-            MediaCacheManager.isPlayerItemAvailableForCache(playerItem: playerItem) {
-            // 캐쉬가 존재하면 로컬로 재생한다.
-            if MediaCacheManager.doesCacheFileExist(key: itemKeyForCache) == true {
-                self.playerItem = self.getLocalFilePlayerItem(playerItemToConfigure: playerItem)
-            }
-            // 캐쉬가 존재하지 않으면 다운로드를 위한 AVAssetResourceLoader 델리게이트를 연결시켜준다.
-            else {
-                self.playerItem = self.getDownloadAndPlayPlayerItem(playerItemToConfigure: playerItem)
-            }
+        guard let cacheKey = cacheKey else {
+            playerItem = MediaAVPlayerItem(url: itemURL)
+            setPlayer()
+            return
         }
         
-        self.playerItem?.cacheKey = cacheKey
-        self.playerItem?.delegate = self
-        player = AVQueuePlayer(playerItem: self.playerItem)
-                
-        if offset.seconds > 0 {
-            player?.seek(to: offset.cmTime)
+        MediaCacheManager.isPlayerItemUrlAvailableForCache(itemURL: itemURL) { [weak self] (isAvailable, endUrl) -> (Void) in
+            if isAvailable {
+                // 캐쉬가 존재하면 로컬로 재생한다.
+                if MediaCacheManager.doesCacheFileExist(key: cacheKey) == true {
+                    self?.playerItem = self?.getLocalFilePlayerItem(cacheKey: cacheKey, itemURL: endUrl)
+                } else {
+                    // 캐쉬가 존재하지 않으면 다운로드를 위한 AVAssetResourceLoader 델리게이트를 연결시켜준다.
+                    self?.playerItem = self?.getDownloadAndPlayPlayerItem(itemURL: endUrl)
+                }
+            } else {
+                self?.playerItem = MediaAVPlayerItem(url: itemURL)
+            }
+            setPlayer()
         }
     }
 }
@@ -179,30 +183,25 @@ extension MediaPlayer: MediaUrlDataSource {
 // MARK: - Cache setting
 
 extension MediaPlayer {
-    func getLocalFilePlayerItem(playerItemToConfigure: MediaAVPlayerItem) -> MediaAVPlayerItem? {
-        guard let itemKeyForCache = playerItemToConfigure.cacheKey,
-            let localFileData = NSData(contentsOfFile: MediaCacheManager.getCacheFilePathUrl(key: itemKeyForCache).path),
+    func getLocalFilePlayerItem(cacheKey: String, itemURL: URL) -> MediaAVPlayerItem? {
+        guard let localFileData = NSData(contentsOfFile: MediaCacheManager.getCacheFilePathUrl(key: cacheKey).path),
             let decryptedData = MediaCacheManager.decryptData(data: localFileData)
-            
             else {
-                if let keyForRemove = playerItemToConfigure.cacheKey {
-                    _ = MediaCacheManager.removeTempFile(key: keyForRemove)
-                }
-                return getDownloadAndPlayPlayerItem(playerItemToConfigure: playerItemToConfigure)
+                _ = MediaCacheManager.removeTempFile(key: cacheKey)
+                return getDownloadAndPlayPlayerItem(itemURL: itemURL)
         }
         
         do {
-            try decryptedData.write(to: MediaCacheManager.getTempFilePathUrl(key: itemKeyForCache))
-            return MediaAVPlayerItem(url: MediaCacheManager.getTempFilePathUrl(key: itemKeyForCache))
+            try decryptedData.write(to: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
+            return MediaAVPlayerItem(url: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
         } catch {
-            _ = MediaCacheManager.removeTempFile(key: itemKeyForCache)
-            return getDownloadAndPlayPlayerItem(playerItemToConfigure: playerItemToConfigure)
+            _ = MediaCacheManager.removeTempFile(key: cacheKey)
+            return getDownloadAndPlayPlayerItem(itemURL: itemURL)
         }
     }
     
-    func getDownloadAndPlayPlayerItem(playerItemToConfigure: MediaAVPlayerItem) -> MediaAVPlayerItem? {
-        guard let originalUrl = (playerItemToConfigure.asset as? AVURLAsset)?.url else { return nil }
-        guard var urlComponents = URLComponents(url: originalUrl, resolvingAgainstBaseURL: false) else { return nil }
+    func getDownloadAndPlayPlayerItem(itemURL: URL) -> MediaAVPlayerItem? {
+        guard var urlComponents = URLComponents(url: itemURL, resolvingAgainstBaseURL: false) else { return nil }
         urlComponents.scheme = "streaming"
       
         guard let urlModel = urlComponents.url else { return nil }

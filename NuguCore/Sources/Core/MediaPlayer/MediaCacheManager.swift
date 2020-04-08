@@ -26,23 +26,37 @@ class MediaCacheManager {
     private static let aesKey = "_AISMediaAesKey_"
     
     // TODO: - Should change to configurable value
+    private static let isCacheEnabled = true
+    
     private static let cacheFolderPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("MediaCache", isDirectory: true)
     private static let cacheSizeLimit = 1024 * 1024 * 500
     
+    private static let supportedMimeTypeForCaching = ["audio/mp4", "audio/aac"]
+    
     // MARK: General Class Methods
     
-    class func isPlayerItemAvailableForCache(playerItem: MediaAVPlayerItem) -> Bool {
-        guard (playerItem.asset as? AVURLAsset) != nil,
-//            let itemMimeType = playerItem.mimeType,
-            playerItem.cacheKey != nil else { return false }
-//        switch itemMimeType {
-//        case .mp3, // News Beep 음에 대한 캐쉬
-//        .mp3Stream: // melon cache
-//            return true
-//        default:
-//            return false
-//        }
-        return true
+    class func isPlayerItemUrlAvailableForCache(itemURL: URL, completion: @escaping ((_ isAvailable: Bool, _ endUrl: URL) -> (Void))) {
+        guard isCacheEnabled else {
+            completion(false, itemURL)
+            return
+        }
+        
+        var request: URLRequest = URLRequest(url: itemURL)
+        request.httpMethod = "HEAD"
+        URLSession.shared.dataTask(with: request) { (_, response, _) in
+            guard let httpURLResponse = response as? HTTPURLResponse,
+                let contentType = httpURLResponse.allHeaderFields["Content-Type"] as? String else {
+                    completion(false, itemURL)
+                    return
+            }
+
+            log.debug("+++ \(httpURLResponse) +++")
+            
+            completion(
+                supportedMimeTypeForCaching.contains(contentType),
+                httpURLResponse.url ?? itemURL // Redirect 가 일어나는 Asset 의 경우 간헐적으로 재생이 실패하는 이슈가 있다. EndURL 을 새로 세팅해준다.
+            )
+        }.resume()
     }
     
     class func getTotalCachedData() -> Int {
