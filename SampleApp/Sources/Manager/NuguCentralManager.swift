@@ -457,7 +457,7 @@ extension NuguCentralManager: SoundAgentDataSource {
     func soundAgentRequestUrl(beepName: SoundBeepName) -> URL? {
         let url: URL?
         switch beepName {
-        case .responseFaile:
+        case .responseFail:
             url = Bundle.main.url(forResource: "asrFail", withExtension: "wav")
         }
         return url
