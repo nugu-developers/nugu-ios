@@ -22,5 +22,5 @@ import Foundation
 
 /// Types of beep sound.
 public enum SoundBeepName: String, Decodable {
-    case responseFaile = "RESPONSE_FAIL"
+    case responseFail = "RESPONSE_FAIL"
 }

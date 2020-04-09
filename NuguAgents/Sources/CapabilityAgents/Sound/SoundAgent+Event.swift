@@ -40,7 +40,7 @@ extension SoundAgent {
 
 extension SoundAgent.Event: Eventable {
     public var payload: [String: AnyHashable] {
-        return ["playServiceId": playServiceId,]
+        return ["playServiceId": playServiceId]
     }
     
     public var name: String {
