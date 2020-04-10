@@ -65,7 +65,6 @@ extension ASRAgent.Event: Eventable {
             if case let .wakeUpKeyword(keyword, _, start, end, detection) = options.initiator {
                 var wakeup: [String: AnyHashable] = ["word": keyword]
                 if options.endPointing == .server {
-                    // TODO: Tyche 라이브러리 업데이트 후 수정 필요.
                     /**
                      KeywordDetector use 16k mono (bit depth: 16).
                      so, You can calculate sample count by (dataCount / 2)
