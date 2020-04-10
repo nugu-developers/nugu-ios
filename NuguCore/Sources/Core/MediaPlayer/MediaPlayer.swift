@@ -184,19 +184,22 @@ extension MediaPlayer: MediaUrlDataSource {
 // MARK: - Load MediaAVPlayerItem
 
 extension MediaPlayer {
-    func getCachedPlayerItem(cacheKey: String, itemURL: URL) -> MediaAVPlayerItem? {
+    func getCachedPlayerItem(cacheKey: String, itemURL: URL) -> MediaAVPlayerItem {
         guard let cachedPlayerItem = MediaCacheManager.getCachedPlayerItem(cacheKey: cacheKey) else {
             return getDownloadAndPlayPlayerItem(itemURL: itemURL)
         }
         return cachedPlayerItem
     }
     
-    func getDownloadAndPlayPlayerItem(itemURL: URL) -> MediaAVPlayerItem? {
-        guard var urlComponents = URLComponents(url: itemURL, resolvingAgainstBaseURL: false) else { return nil }
+    func getDownloadAndPlayPlayerItem(itemURL: URL) -> MediaAVPlayerItem {
+        guard var urlComponents = URLComponents(url: itemURL, resolvingAgainstBaseURL: false) else {
+            return MediaAVPlayerItem(url: itemURL)
+        }
         originalScheme = urlComponents.scheme
         urlComponents.scheme = schemeForInterception
-      
-        guard let urlModel = urlComponents.url else { return nil }
+        guard let urlModel = urlComponents.url else {
+            return MediaAVPlayerItem(url: itemURL)
+        }
         let urlAsset = AVURLAsset(url: urlModel)
         urlAsset.resourceLoader.setDelegate(self, queue: DispatchQueue.global())
 
@@ -207,14 +210,14 @@ extension MediaPlayer {
 // MARK: - AVAssetResourceLoader Delegate Methods
 
 extension MediaPlayer: AVAssetResourceLoaderDelegate {
-    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {        
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         guard let originalScheme = originalScheme else {
             log.error("originalScheme should not be nil")
             return false
         }
         
-        _ = pendingRequestQueue.sync {
-            pendingRequests.insert(loadingRequest)
+        pendingRequestQueue.sync {
+            _ = pendingRequests.insert(loadingRequest)
         }
         
         if sessionHasFinishedLoading == true {
@@ -243,8 +246,8 @@ extension MediaPlayer: AVAssetResourceLoaderDelegate {
     }
     
     public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
-        _ = pendingRequestQueue.sync {
-            pendingRequests.remove(loadingRequest)
+        pendingRequestQueue.sync {
+            _ = pendingRequests.remove(loadingRequest)
         }
     }
 }
