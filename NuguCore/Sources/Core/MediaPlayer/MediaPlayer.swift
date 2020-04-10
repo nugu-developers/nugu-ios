@@ -33,6 +33,9 @@ public class MediaPlayer: NSObject, MediaPlayable {
     private var downloadResponse: URLResponse?
     private var downloadAudioData: NSData?
     
+    private let schemeForInterception = "streaming"
+    private var originalScheme: String?
+    
     private var expectedDataLength: Float?
     private var sessionHasFinishedLoading: Bool?
     private var pendingRequests = Set<AVAssetResourceLoadingRequest>()
@@ -190,7 +193,8 @@ extension MediaPlayer {
     
     func getDownloadAndPlayPlayerItem(itemURL: URL) -> MediaAVPlayerItem? {
         guard var urlComponents = URLComponents(url: itemURL, resolvingAgainstBaseURL: false) else { return nil }
-        urlComponents.scheme = "streaming"
+        originalScheme = urlComponents.scheme
+        urlComponents.scheme = schemeForInterception
       
         guard let urlModel = urlComponents.url else { return nil }
         let urlAsset = AVURLAsset(url: urlModel)
@@ -203,7 +207,12 @@ extension MediaPlayer {
 // MARK: - AVAssetResourceLoader Delegate Methods
 
 extension MediaPlayer: AVAssetResourceLoaderDelegate {
-    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {        
+        guard let originalScheme = originalScheme else {
+            log.error("originalScheme should not be nil")
+            return false
+        }
+        
         _ = pendingRequestQueue.sync {
             pendingRequests.insert(loadingRequest)
         }
@@ -213,11 +222,21 @@ extension MediaPlayer: AVAssetResourceLoaderDelegate {
         }
         
         if downloadSession == nil {
+            guard let url = loadingRequest.request.url,
+            var urlToConvert = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+                log.error("intercepted url is invalid")
+                return false
+            }
+            
             sessionHasFinishedLoading = false
-            var urlToConvert = URLComponents(url: loadingRequest.request.url!, resolvingAgainstBaseURL: false)
-            urlToConvert!.scheme = "http"
-            let interceptedURL = urlToConvert!.url!
-            startDataRequest(withURL: interceptedURL)
+            urlToConvert.scheme = originalScheme
+            
+            guard let convertedUrl = urlToConvert.url else {
+                log.error("intercepted url is invalid")
+                return false
+            }
+            
+            startDataRequest(withURL: convertedUrl)
         }
         
         return true
@@ -308,6 +327,7 @@ private extension MediaPlayer {
         downloadSession = nil
         downloadAudioData = nil
         downloadResponse = nil
+        originalScheme = nil
 
         if pendingRequests.count > 0 {
             for request in pendingRequests {

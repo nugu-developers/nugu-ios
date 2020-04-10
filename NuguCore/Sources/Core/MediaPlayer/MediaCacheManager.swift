@@ -30,7 +30,7 @@ struct MediaCacheManager {
     private static let cacheFolderPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("MediaCache", isDirectory: true)
     private static let cacheSizeLimit = 1024 * 1024 * 500
     
-    private static let supportedMimeTypeForCaching = ["audio/mp4", "audio/aac"]
+    private static let supportedMimeTypeForCaching = ["audio/mp4", "audio/aac", "audio/m4a"]
 }
 
 // MARK: - Internal Methods
@@ -51,7 +51,7 @@ extension MediaCacheManager {
                     return
             }
 
-            log.debug("+++ \(httpURLResponse) +++")
+            log.debug("+++ \(httpURLResponse.allHeaderFields) +++")
             
             completion(
                 supportedMimeTypeForCaching.contains(contentType),
@@ -114,6 +114,17 @@ extension MediaCacheManager {
             }
         } catch {
             log.error("FAIL TO SET ATTRIBUTE")
+        }
+    }
+    
+    static func clearMediaCache() {
+        do {
+            for file in try FileManager.default.contentsOfDirectory(atPath: pathForCacheFolder().path) {
+                let filePath = pathForCacheFolder().appendingPathComponent(file).path
+                try FileManager.default.removeItem(atPath: filePath)
+            }
+        } catch {
+            log.error("FAIL TO CLEAR MEDIA CACHE")
         }
     }
 }
@@ -218,22 +229,11 @@ private extension MediaCacheManager {
     }
 }
 
-// MARK: - Utilty Methods (private)
+// MARK: - Cache Size Check (private)
 
 private extension MediaCacheManager {
     static func getTotalCachedData() -> Int {
         return FileManager.default.folderSizeAtPath(path: pathForCacheFolder().path)
-    }
-    
-    static func clearMediaCache() {
-        do {
-            for file in try FileManager.default.contentsOfDirectory(atPath: pathForCacheFolder().path) {
-                let filePath = pathForCacheFolder().appendingPathComponent(file).path
-                try FileManager.default.removeItem(atPath: filePath)
-            }
-        } catch {
-            
-        }
     }
 }
 
