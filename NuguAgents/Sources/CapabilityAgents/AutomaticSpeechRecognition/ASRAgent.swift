@@ -550,6 +550,10 @@ private extension ASRAgent {
         by directive: Downstream.Directive?,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
+        if options.endPointing == .server {
+            log.warning("Server side end point detector does not support yet.")
+            completion?(.error(ASRError.listenFailed))
+        }
         log.debug("startRecognition, initiator: \(options.initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = audioStream.makeAudioStreamReader()
