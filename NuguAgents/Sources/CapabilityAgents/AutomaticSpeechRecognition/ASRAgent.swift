@@ -550,14 +550,15 @@ private extension ASRAgent {
         by directive: Downstream.Directive?,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
+        log.debug("startRecognition, initiator: \(options.initiator)")
+        let dialogRequestId = TimeUUID().hexString
         if options.endPointing == .server {
             log.warning("Server side end point detector does not support yet.")
             completion?(.error(ASRError.listenFailed))
+            return dialogRequestId
         }
-        log.debug("startRecognition, initiator: \(options.initiator)")
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = audioStream.makeAudioStreamReader()
-        let dialogRequestId = TimeUUID().hexString
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
