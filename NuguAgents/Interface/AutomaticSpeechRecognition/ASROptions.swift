@@ -67,6 +67,7 @@ public struct ASROptions {
     
     public enum EndPointing: Equatable {
         case client(epdFile: URL)
+        /// Server side end point detector does not support yet.
         case server
     }
     
