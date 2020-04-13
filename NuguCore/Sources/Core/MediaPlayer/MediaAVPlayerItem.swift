@@ -53,6 +53,14 @@ final class MediaAVPlayerItem: AVPlayerItem {
         addNotificationObservers()
     }
     
+    init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil, cacheKey: String) {
+        super.init(asset: asset,
+                   automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        self.cacheKey = cacheKey
+        addPlayerItemObservers()
+        addNotificationObservers()
+    }
+    
     override init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) {
         super.init(asset: asset,
                    automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)

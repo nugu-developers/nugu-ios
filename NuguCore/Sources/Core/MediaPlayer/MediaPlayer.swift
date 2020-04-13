@@ -46,20 +46,42 @@ public class MediaPlayer: NSObject, MediaPlayable {
 
 extension MediaPlayer {
     public func play() {
-        guard
-            let mediaPlayer = player,
-            mediaPlayer.currentItem != nil else {
-                self.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.notPrepareSource))
-                return
+        let playTask = { [weak self] in
+            guard
+                let mediaPlayer = self?.player,
+                mediaPlayer.currentItem != nil else {
+                    self?.delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.notPrepareSource))
+                    return
+            }
+            
+            mediaPlayer.play()
+            
+            self?.delegate?.mediaPlayerDidChange(state: .start)
         }
         
-        mediaPlayer.play()
-        
-        if let cacheKey = playerItem?.cacheKey {
-            MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
+        guard let playerItem = playerItem,
+            let urlAsset = playerItem.asset as? AVURLAsset else {
+            delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.notPrepareSource))
+            return
         }
-
-        delegate?.mediaPlayerDidChange(state: .start)
+        
+        if let cacheKey = playerItem.cacheKey {
+            MediaCacheManager.checkCacheAvailablity(itemURL: urlAsset.url, cacheKey: cacheKey) { [weak self] (isAvailable, cacheExists, endUrl) -> (Void) in
+                if isAvailable {
+                    self?.playerItem = cacheExists ? self?.getCachedPlayerItem(cacheKey: cacheKey, itemURL: endUrl) : self?.getDownloadAndPlayPlayerItem(cacheKey: cacheKey, itemURL: endUrl)
+                } else {
+                    self?.playerItem = MediaAVPlayerItem(asset: urlAsset, cacheKey: cacheKey)
+                }
+                self?.playerItem?.delegate = self
+                self?.player? = AVQueuePlayer(playerItem: self?.playerItem)
+                
+                DispatchQueue.main.async {
+                    playTask()
+                }
+            }
+        } else {
+            playTask()
+        }
     }
     
     public func stop() {
@@ -153,30 +175,13 @@ extension MediaPlayer: MediaUrlDataSource {
             throw MediaPlayableError.invalidURL
         }
         
-        let setPlayer = { [weak self] in
-            guard let self = self else { return }
-            self.playerItem?.cacheKey = cacheKey
-            self.playerItem?.delegate = self
-            self.player = AVQueuePlayer(playerItem: self.playerItem)
-            
-            if offset.seconds > 0 {
-                self.player?.seek(to: offset.cmTime)
-            }
-        }
+        playerItem = MediaAVPlayerItem(url: itemURL)
+        playerItem?.cacheKey = cacheKey
+        playerItem?.delegate = self
+        player = AVQueuePlayer(playerItem: playerItem)
         
-        guard let cacheKey = cacheKey else {
-            playerItem = MediaAVPlayerItem(url: itemURL)
-            setPlayer()
-            return
-        }
-        
-        MediaCacheManager.checkCacheAvailablity(itemURL: itemURL, cacheKey: cacheKey) { [weak self] (isAvailable, cacheExists, endUrl) -> (Void) in
-            if isAvailable {
-                self?.playerItem = cacheExists ? self?.getCachedPlayerItem(cacheKey: cacheKey, itemURL: endUrl) : self?.getDownloadAndPlayPlayerItem(itemURL: endUrl)
-            } else {
-                self?.playerItem = MediaAVPlayerItem(url: itemURL)
-            }
-            setPlayer()
+        if offset.seconds > 0 {
+            player?.seek(to: offset.cmTime)
         }
     }
 }
@@ -186,24 +191,24 @@ extension MediaPlayer: MediaUrlDataSource {
 extension MediaPlayer {
     func getCachedPlayerItem(cacheKey: String, itemURL: URL) -> MediaAVPlayerItem {
         guard let cachedPlayerItem = MediaCacheManager.getCachedPlayerItem(cacheKey: cacheKey) else {
-            return getDownloadAndPlayPlayerItem(itemURL: itemURL)
+            return getDownloadAndPlayPlayerItem(cacheKey: cacheKey, itemURL: itemURL)
         }
         return cachedPlayerItem
     }
     
-    func getDownloadAndPlayPlayerItem(itemURL: URL) -> MediaAVPlayerItem {
+    func getDownloadAndPlayPlayerItem(cacheKey: String, itemURL: URL) -> MediaAVPlayerItem {
         guard var urlComponents = URLComponents(url: itemURL, resolvingAgainstBaseURL: false) else {
-            return MediaAVPlayerItem(url: itemURL)
+            return MediaAVPlayerItem(asset: AVAsset(url: itemURL), cacheKey: cacheKey)
         }
         originalScheme = urlComponents.scheme
         urlComponents.scheme = schemeForInterception
         guard let urlModel = urlComponents.url else {
-            return MediaAVPlayerItem(url: itemURL)
+            return MediaAVPlayerItem(asset: AVAsset(url: itemURL), cacheKey: cacheKey)
         }
         let urlAsset = AVURLAsset(url: urlModel)
         urlAsset.resourceLoader.setDelegate(self, queue: DispatchQueue.global())
-
-        return MediaAVPlayerItem(asset: urlAsset)
+        
+        return MediaAVPlayerItem(asset: urlAsset, cacheKey: cacheKey)
     }
 }
 
@@ -414,6 +419,10 @@ extension MediaPlayer: MediaAVPlayerItemDelegate {
             }
             
             delegate?.mediaPlayerDidChange(state: .error(error: playerItemError))
+        case .readyToPlay:
+            if let cacheKey = playerItem.cacheKey {
+                MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
+            }
         default:
             break
         }

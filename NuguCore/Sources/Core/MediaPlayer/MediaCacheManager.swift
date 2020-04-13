@@ -71,7 +71,7 @@ extension MediaCacheManager {
         
         do {
             try decryptedData.write(to: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
-            return MediaAVPlayerItem(url: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
+            return MediaAVPlayerItem(asset: AVAsset(url: MediaCacheManager.getTempFilePathUrl(key: cacheKey)), cacheKey: cacheKey)
         } catch {
             _ = MediaCacheManager.removeTempFile(key: cacheKey)
             return nil
