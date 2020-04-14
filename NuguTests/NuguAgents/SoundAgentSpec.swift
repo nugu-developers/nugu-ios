@@ -89,7 +89,7 @@ class SoundAgentSpec: QuickSpec {
                     }
                     
                     it("should beep") {
-                        expect(self.state).toEventually(equal([.playing, .finished]), timeout: 3.0)
+                        expect(self.state).toEventually(equal([.playing, .finished]), timeout: 5.0)
                     }
                 }
             }
