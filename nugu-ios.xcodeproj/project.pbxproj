@@ -71,7 +71,6 @@
 		1FFFF04223753FB200C9A177 /* KeenSense.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF04023753FB200C9A177 /* KeenSense.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF1EE2375486F00C9A177 /* opus.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E42375486F00C9A177 /* opus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF1EF2375486F00C9A177 /* opus_multistream.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E52375486F00C9A177 /* opus_multistream.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF1F02375486F00C9A177 /* opus_custom.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E62375486F00C9A177 /* opus_custom.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF1F12375486F00C9A177 /* opus_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E72375486F00C9A177 /* opus_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF1F22375486F00C9A177 /* opus_defines.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E82375486F00C9A177 /* opus_defines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF1F32375486F00C9A177 /* opus_projection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E92375486F00C9A177 /* opus_projection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -283,6 +282,7 @@
 		7315307523E1248300F843C3 /* TTSAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2612375703000C9A177 /* TTSAgentDelegate.swift */; };
 		7315307623E1248300F843C3 /* TTSState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF25F2375703000C9A177 /* TTSState.swift */; };
 		7315307723E1248300F843C3 /* TTSResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2602375703000C9A177 /* TTSResult.swift */; };
+		7318E6BA24456C98007EB113 /* ASRInitiator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7318E6B924456C98007EB113 /* ASRInitiator.swift */; };
 		7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */; };
 		7330CD88237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */; };
 		7330CD89237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */; };
@@ -583,7 +583,6 @@
 		1FFFF04123753FB200C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1FFFF1E42375486F00C9A177 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
 		1FFFF1E52375486F00C9A177 /* opus_multistream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
-		1FFFF1E62375486F00C9A177 /* opus_custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_custom.h; sourceTree = "<group>"; };
 		1FFFF1E72375486F00C9A177 /* opus_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_types.h; sourceTree = "<group>"; };
 		1FFFF1E82375486F00C9A177 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
 		1FFFF1E92375486F00C9A177 /* opus_projection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_projection.h; sourceTree = "<group>"; };
@@ -797,6 +796,7 @@
 		73152F9D23E0405900F843C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73152FD923E0443500F843C3 /* ASREncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASREncoding.swift; sourceTree = "<group>"; };
 		73152FDB23E0451900F843C3 /* NuguAgents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAgents.swift; sourceTree = "<group>"; };
+		7318E6B924456C98007EB113 /* ASRInitiator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRInitiator.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
 		7330CD85237A77F900FCD6E9 /* TycheEndPointDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngineDelegate.swift; sourceTree = "<group>"; };
 		7330CD86237A77F900FCD6E9 /* TycheEndpointDetectorEngine+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TycheEndpointDetectorEngine+State.swift"; sourceTree = "<group>"; };
@@ -1267,7 +1267,6 @@
 			children = (
 				1FFFF1E42375486F00C9A177 /* opus.h */,
 				1FFFF1E52375486F00C9A177 /* opus_multistream.h */,
-				1FFFF1E62375486F00C9A177 /* opus_custom.h */,
 				1FFFF1E72375486F00C9A177 /* opus_types.h */,
 				1FFFF1E82375486F00C9A177 /* opus_defines.h */,
 				1FFFF1E92375486F00C9A177 /* opus_projection.h */,
@@ -1361,6 +1360,7 @@
 		1FFFF2512375703000C9A177 /* AutomaticSpeechRecognition */ = {
 			isa = PBXGroup;
 			children = (
+				7318E6B924456C98007EB113 /* ASRInitiator.swift */,
 				1FFFF2562375703000C9A177 /* ASRAgentProtocol.swift */,
 				1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */,
 				1FFFF2532375703000C9A177 /* ASRState.swift */,
@@ -2395,7 +2395,6 @@
 				1FFFF3D62375729500C9A177 /* NuguCore.h in Headers */,
 				1FFFF1F32375486F00C9A177 /* opus_projection.h in Headers */,
 				1FFFF1F12375486F00C9A177 /* opus_types.h in Headers */,
-				1FFFF1F02375486F00C9A177 /* opus_custom.h in Headers */,
 				1FFFF1EE2375486F00C9A177 /* opus.h in Headers */,
 				1FFFF1F22375486F00C9A177 /* opus_defines.h in Headers */,
 				1FFFF3D5237570C900C9A177 /* ObjcExceptionCatcher.h in Headers */,
@@ -3150,6 +3149,7 @@
 				7315305423E1246F00F843C3 /* TextAgentDelegate.swift in Sources */,
 				73152FBE23E0414700F843C3 /* ASRConst.swift in Sources */,
 				7315305F23E1248300F843C3 /* ExtensionAgentProtocol.swift in Sources */,
+				7318E6BA24456C98007EB113 /* ASRInitiator.swift in Sources */,
 				7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */,
 				7315307623E1248300F843C3 /* TTSState.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
@@ -3356,7 +3356,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/NuguCore/Libraries/Opus",
+					"$(PROJECT_DIR)/NuguCore/Libraries/Opus/Binary/iOS",
 				);
 				MARKETING_VERSION = 0.9.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
@@ -3396,7 +3396,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/NuguCore/Libraries/Opus",
+					"$(PROJECT_DIR)/NuguCore/Libraries/Opus/Binary/iOS",
 				);
 				MARKETING_VERSION = 0.9.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
