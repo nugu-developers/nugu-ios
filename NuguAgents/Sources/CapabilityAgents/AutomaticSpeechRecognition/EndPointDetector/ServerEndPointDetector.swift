@@ -61,7 +61,7 @@ public class ServerEndPointDetector: NSObject, EndPointDetectable {
     private var outputData = Data()
     #endif
     
-    required public init(asrOptions: ASROptions) {
+    public init(asrOptions: ASROptions) {
         self.asrOptions = asrOptions
         speexEncoder = SpeexEncoder(sampleRate: Int(asrOptions.sampleRate), inputType: .linearPcm16)
     }

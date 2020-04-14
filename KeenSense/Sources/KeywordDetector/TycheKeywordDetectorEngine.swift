@@ -156,10 +156,10 @@ extension TycheKeywordDetectorEngine {
 // MARK: - ETC
 extension TycheKeywordDetectorEngine {
     private func notifyDetection() {
-        let startMargin = convertTimeToDataIndex(Wakeup_GetStartMargin(engineHandle))
-        let start = convertTimeToDataIndex(Wakeup_GetStartTime(engineHandle))
-        let end = convertTimeToDataIndex(Wakeup_GetEndTime(engineHandle))
-        let detection = convertTimeToDataIndex(Wakeup_GetDetectionTime(engineHandle))
+        let startMargin = convertTimeToDataOffset(Wakeup_GetStartMargin(engineHandle))
+        let start = convertTimeToDataOffset(Wakeup_GetStartTime(engineHandle))
+        let end = convertTimeToDataOffset(Wakeup_GetEndTime(engineHandle))
+        let detection = convertTimeToDataOffset(Wakeup_GetDetectionTime(engineHandle))
         let base = start - startMargin
         log.debug("base: \(base), startMargin: \(startMargin), start: \(start), end: \(end), detection: \(detection)")
         
@@ -189,7 +189,7 @@ extension TycheKeywordDetectorEngine {
         )
     }
     
-    private func convertTimeToDataIndex(_ time: Int32) -> Int {
+    private func convertTimeToDataOffset(_ time: Int32) -> Int {
         return (Int(time) * KeywordDetectorConst.sampleRate * 2) / 1000
     }
 }

@@ -201,6 +201,7 @@ public extension ASRAgent {
         options: ASROptions,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
+        self.options = options
         return startRecognition(options: options, by: nil, completion: completion)
     }
     
@@ -384,8 +385,9 @@ private extension ASRAgent {
                             })
                         self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
                         
-                        let options = self.options.copy(timeout: expectSpeech.timeout, initiator: .scenario)
-                        self.startRecognition(options: options, by: directive)
+                        self.options.timeout = expectSpeech.timeout
+                        self.options.initiator = .scenario
+                        self.startRecognition(options: self.options, by: directive)
                     }
                 }
             )
@@ -568,8 +570,6 @@ private extension ASRAgent {
                 return
             }
             
-            self.options = options
-
             self.contextManager.getContexts { [weak self] contextPayload in
                 guard let self = self else { return }
 

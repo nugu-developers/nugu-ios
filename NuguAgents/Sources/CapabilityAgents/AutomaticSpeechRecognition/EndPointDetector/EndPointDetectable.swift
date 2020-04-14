@@ -25,8 +25,6 @@ import NuguCore
 protocol EndPointDetectable: class {
     var delegate: EndPointDetectorDelegate? { get set }
     
-    init(asrOptions: ASROptions)
-    
     func start(audioStreamReader: AudioStreamReadable)
     func stop()
     func handleNotifyResult(_ state: ASRNotifyResult.State)

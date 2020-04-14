@@ -26,11 +26,11 @@ public struct ASROptions {
     /// Max duration from speech start to end.
     public let maxDuration: TimeIntervallic
     /// Max duration of waiting for speech.
-    public let timeout: TimeIntervallic
+    public var timeout: TimeIntervallic
     /// The engine waits this time then consider speech end.
     public let pauseLength: TimeIntervallic
     public let sampleRate = 16000.0
-    public let initiator: Initiator
+    public var initiator: Initiator
     public let encoding: Encoding
     public let endPointing: EndPointing
     
@@ -69,24 +69,6 @@ public struct ASROptions {
         case client(epdFile: URL)
         /// Server side end point detector does not support yet.
         case server
-    }
-    
-    public func copy(
-        maxDuration: TimeIntervallic? = nil,
-        timeout: TimeIntervallic? = nil,
-        pauseLength: TimeIntervallic? = nil,
-        initiator: Initiator? = nil,
-        encoding: Encoding? = nil,
-        endPointing: EndPointing? = nil
-    ) -> ASROptions {
-        return ASROptions(
-            maxDuration: maxDuration ?? self.maxDuration,
-            timeout: timeout ?? self.timeout,
-            pauseLength: pauseLength ?? self.pauseLength,
-            initiator: initiator ?? self.initiator,
-            encoding: encoding ?? self.encoding,
-            endPointing: endPointing ?? self.endPointing
-        )
     }
 }
 
