@@ -31,7 +31,7 @@ public class MediaPlayer: NSObject, MediaPlayable {
     private var downloadSession: URLSession?
     private var downloadDataTask: URLSessionDataTask?
     private var downloadResponse: URLResponse?
-    private var downloadAudioData: NSData?
+    private var downloadAudioData: Data?
     
     private let schemeForInterception = "streaming"
     private var originalScheme: String?
@@ -311,21 +311,21 @@ private extension MediaPlayer {
             return false
         }
         
-        if downloadAudioData.length < Int(startOffset) {
+        if downloadAudioData.count < Int(startOffset) {
             return false
         }
         
         // This is the total data we have from startOffset to whatever has been downloaded so far
-        let unreadBytes = downloadAudioData.length - Int(startOffset)
+        let unreadBytes = downloadAudioData.count - Int(startOffset)
         
         // Respond with whatever is available if we can't satisfy the request fully yet
         let numberOfBytesToRespondWith = min(Int(dataRequest.requestedLength), unreadBytes)
-        let range = NSRange(location: Int(startOffset), length: numberOfBytesToRespondWith)
+        let range = Int(startOffset) ..< Int(startOffset) + numberOfBytesToRespondWith
         
-        dataRequest.respond(with: (downloadAudioData.subdata(with: range)))
+        dataRequest.respond(with: downloadAudioData.subdata(in: range))
         
         let endOffset = Int(startOffset) + dataRequest.requestedLength
-        let didRespondFully = downloadAudioData.length >= endOffset
+        let didRespondFully = downloadAudioData.count >= endOffset
         return didRespondFully
     }
     
@@ -354,7 +354,7 @@ private extension MediaPlayer {
 extension MediaPlayer: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         completionHandler(URLSession.ResponseDisposition.allow)
-        downloadAudioData = NSMutableData()
+        downloadAudioData = Data()
         downloadResponse = response
         processPendingRequests()
         expectedDataLength = Float(response.expectedContentLength)
@@ -364,19 +364,26 @@ extension MediaPlayer: URLSessionDataDelegate {
         internalUrlSession(session: session, dataTask: dataTask, didReceive: data)
     }
     
-    // 간헐적 Crash 이슈로 Delegate 메소드 optional 처리. 참고 > https://github.com/Alamofire/Alamofire/issues/2138
+    // Crash issue resolved by optional Data > https://github.com/Alamofire/Alamofire/issues/2138
     private func internalUrlSession(session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data?) {
         guard let data = data else {
             return
         }
         
-        guard let downloadAudioData = downloadAudioData as? NSMutableData else {
+        guard downloadAudioData != nil else {
             processPendingRequests()
             return
         }
         
-        downloadAudioData.append(data)
-        log.debug("\(Float(downloadAudioData.length) / Float(expectedDataLength!))")
+        self.downloadAudioData?.append(data)
+        
+        if let downloadAudioData = downloadAudioData,
+            let expectedDataLength = expectedDataLength {
+            log.debug("\(Float(downloadAudioData.count) / Float(expectedDataLength))")
+        } else {
+            log.debug("expectedDataLength should not be nil!")
+        }
+        
         processPendingRequests()
     }
     

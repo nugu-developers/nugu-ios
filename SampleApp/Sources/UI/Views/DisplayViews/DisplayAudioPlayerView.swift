@@ -245,7 +245,7 @@ private extension DisplayAudioPlayerView {
             self?.elapsedTimeLabel.text = Int(elapsedTime).secondTimeString
             self?.durationTimeLabel.text = Int(duration).secondTimeString
             UIView.animate(withDuration: 1.0, animations: { [weak self] in
-                let progress = elapsedTime == 0 ? 0 : elapsedTime/duration
+                let progress = duration == 0 ? 0 : elapsedTime/duration
                 self?.progressView.setProgress(progress, animated: true)
             })
         }

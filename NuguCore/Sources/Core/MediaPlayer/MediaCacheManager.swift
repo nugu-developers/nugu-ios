@@ -36,7 +36,7 @@ struct MediaCacheManager {
 // MARK: - Internal Methods
 
 extension MediaCacheManager {
-    static func checkCacheAvailablity(itemURL: URL, cacheKey: String, completion: @escaping ((_ isAvailable: Bool, _ cacheExists: Bool, _ endUrl: URL) -> (Void))) {
+    static func checkCacheAvailablity(itemURL: URL, cacheKey: String, completion: @escaping (_ isAvailable: Bool, _ cacheExists: Bool, _ endUrl: URL) -> (Void)) {
         guard isCacheEnabled else {
             completion(false, false, itemURL)
             return
@@ -56,16 +56,16 @@ extension MediaCacheManager {
             completion(
                 supportedMimeTypeForCaching.contains(contentType),
                 doesCacheFileExist(key: cacheKey),
-                httpURLResponse.url ?? itemURL // Redirect 가 일어나는 Asset 의 경우 간헐적으로 재생이 실패하는 이슈가 있다. EndURL 을 새로 세팅해준다.
+                httpURLResponse.url ?? itemURL
             )
         }.resume()
     }
     
     static func getCachedPlayerItem(cacheKey: String) -> MediaAVPlayerItem? {
-        guard let localFileData = NSData(contentsOfFile: MediaCacheManager.getCacheFilePathUrl(key: cacheKey).path),
+        guard let localFileData = try? Data(contentsOf: MediaCacheManager.getCacheFilePathUrl(key: cacheKey)),
             let decryptedData = MediaCacheManager.decryptData(data: localFileData)
             else {
-                _ = MediaCacheManager.removeTempFile(key: cacheKey)
+                MediaCacheManager.removeTempFile(key: cacheKey)
                 return nil
         }
         
@@ -73,12 +73,12 @@ extension MediaCacheManager {
             try decryptedData.write(to: MediaCacheManager.getTempFilePathUrl(key: cacheKey))
             return MediaAVPlayerItem(asset: AVAsset(url: MediaCacheManager.getTempFilePathUrl(key: cacheKey)), cacheKey: cacheKey)
         } catch {
-            _ = MediaCacheManager.removeTempFile(key: cacheKey)
+            MediaCacheManager.removeTempFile(key: cacheKey)
             return nil
         }
     }
     
-    static func saveMediaData(mediaData: NSData, cacheKey: String) -> Bool {
+    static func saveMediaData(mediaData: Data, cacheKey: String) -> Bool {
         guard let encryptedData = encryptData(data: mediaData) as NSData? else {
             return false
         }
@@ -89,7 +89,6 @@ extension MediaCacheManager {
                 break
             }
             
-            // 삭제에 실패한 경우 캐쉬데이터를 생성하지 않는다.
             if removeLeastRecentlyUsedCacheFile() == false {
                 return false
             }
@@ -107,7 +106,7 @@ extension MediaCacheManager {
     static func setModifiedDateForCacheFile(key: String) {
         do {
             if doesTempFileExist(key: key) {
-                _ = removeTempFile(key: key)
+                removeTempFile(key: key)
             }
             if doesCacheFileExist(key: key) {
                 try FileManager.default.setAttributes([FileAttributeKey.modificationDate: Date()], ofItemAtPath: getCacheFilePathUrl(key: key).path)
@@ -180,7 +179,7 @@ private extension MediaCacheManager {
 // MARK: - Remove Cache Methods (private)
 
 private extension MediaCacheManager {
-    static func removeCacheFile(key: String) -> Bool {
+    @discardableResult static func removeCacheFile(key: String) -> Bool {
         do {
             try FileManager.default.removeItem(at: getCacheFilePathUrl(key: key))
             return true
@@ -189,7 +188,7 @@ private extension MediaCacheManager {
         }
     }
     
-    static func removeTempFile(key: String) -> Bool {
+    @discardableResult static func removeTempFile(key: String) -> Bool {
         do {
             try FileManager.default.removeItem(at: getTempFilePathUrl(key: key))
             return true
@@ -198,7 +197,7 @@ private extension MediaCacheManager {
         }
     }
     
-    static func removeLeastRecentlyUsedCacheFile() -> Bool {
+    @discardableResult static func removeLeastRecentlyUsedCacheFile() -> Bool {
         do {
             var oldestCachedFileKey: String?
             var oldestModifiedDate = Date()
@@ -240,11 +239,11 @@ private extension MediaCacheManager {
 // MARK: - AESEncrypt & AESDecrypt Methods (private)
 
 private extension MediaCacheManager {
-    static func encryptData(data: NSData) -> Data? {
-        return CryptoUtil.encrypt(data: data as Data, key: aesKey)
+    static func encryptData(data: Data) -> Data? {
+        return CryptoUtil.encrypt(data: data, key: aesKey)
     }
     
-    static func decryptData(data: NSData) -> Data? {
-        return CryptoUtil.decrypt(data: data as Data, key: aesKey)
+    static func decryptData(data: Data) -> Data? {
+        return CryptoUtil.decrypt(data: data, key: aesKey)
     }
 }

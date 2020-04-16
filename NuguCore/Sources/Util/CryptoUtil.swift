@@ -81,14 +81,14 @@ public class CryptoUtil {
             return nil
         }
         
-        // decrypt의 경우에는 padding을 떼고 준다.
+        // padding should be removed in decryption case.
         return decryptedData.subdata(in: 0 ..< numBytesEncrypted)
     }
 }
 
 extension Data {
     public func toHexString() -> String {
-        return self.lazy.reduce("") {
+        return self.reduce("") {
             var hexString = String($1, radix: 16)
             if hexString.count == 1 {
                 hexString = "0" + hexString
