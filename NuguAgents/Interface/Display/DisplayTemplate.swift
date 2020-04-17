@@ -22,7 +22,7 @@ import Foundation
 
 public struct DisplayTemplate {
     public let type: String
-    public let payload: String
+    public let payload: Data
     public let templateId: String
     public let dialogRequestId: String
     public let token: String
@@ -33,7 +33,7 @@ public struct DisplayTemplate {
     
     public init(
         type: String,
-        payload: String,
+        payload: Data,
         templateId: String,
         dialogRequestId: String,
         token: String,

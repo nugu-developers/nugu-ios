@@ -406,63 +406,49 @@ extension AudioPlayerAgent: PlaySyncDelegate {
 // MARK: - Private (Directive)
 
 private extension AudioPlayerAgent {
-    func prefetchPlay() -> HandleDirective {
-        return { [weak self] directive, completion in
+    func prefetchPlay() -> PrefetchDirective {
+        return { [weak self] directive in
+            let payload = try JSONDecoder().decode(AudioPlayerAgentMedia.Payload.self, from: directive.payload)
+            
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                completion(
-                    Result<Void, Error>(catching: {
-                        guard let data = directive.payload.data(using: .utf8) else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                        }
-                        let payload = try JSONDecoder().decode(AudioPlayerAgentMedia.Payload.self, from: data)
-                        
-                        switch self.currentMedia {
-                        case .some(let media) where
-                            media.payload.audioItem.stream.token == payload.audioItem.stream.token
-                                && media.payload.playServiceId == payload.playServiceId:
-                            // Resume and seek
-                            self.currentMedia = AudioPlayerAgentMedia(
-                                dialogRequestId: directive.header.dialogRequestId,
-                                player: media.player,
-                                payload: payload
-                            )
-                            
-                            media.player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
-                        case .some:
-                            self.stopSilently()
-                            try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
-                        case .none:
-                            // Set mediaplayer
-                            try self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
-                        }
-                        
-                        if let metaData = payload.audioItem.metadata,
-                            ((metaData["disableTemplate"] as? Bool) ?? false) == false {
-                            self.audioPlayerDisplayManager.display(
-                                metaData: metaData,
-                                messageId: directive.header.messageId,
-                                dialogRequestId: directive.header.dialogRequestId,
-                                playStackServiceId: payload.playStackControl?.playServiceId
-                            )
-                        }
-                        
-                        if let media = self.currentMedia {
-                            self.playSyncManager.startPlay(
-                                property: self.playSyncProperty,
-                                duration: .seconds(7),
-                                playServiceId: media.payload.playStackControl?.playServiceId,
-                                dialogRequestId: media.dialogRequestId
-                            )
-                        }
-                    }).flatMapError({ (error) -> Result<Void, Error> in
-                        if let media = self.currentMedia {
-                            self.sendPlayEvent(media: media, typeInfo: .playbackFailed(error: error))
-                        }
-                        self.releaseFocusIfNeeded()
-                        return .failure(error)
-                    })
-                )
+                
+                if [.playing, .paused(temporary: true), .paused(temporary: false)].contains(self.audioPlayerState),
+                    let media = self.currentMedia,
+                    media.payload.audioItem.stream.token == payload.audioItem.stream.token,
+                    media.payload.playServiceId == payload.playServiceId {
+                    log.debug("Resuming")
+                    // Resume and seek
+                    self.currentMedia = AudioPlayerAgentMedia(
+                        dialogRequestId: directive.header.dialogRequestId,
+                        player: media.player,
+                        payload: payload
+                    )
+                    
+                    media.player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
+                } else {
+                    self.stopSilently()
+                    self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
+                }
+                
+                if let metaData = payload.audioItem.metadata,
+                    ((metaData["disableTemplate"] as? Bool) ?? false) == false {
+                    self.audioPlayerDisplayManager.display(
+                        metaData: metaData,
+                        messageId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId,
+                        playStackServiceId: payload.playStackControl?.playServiceId
+                    )
+                }
+                
+                if let media = self.currentMedia {
+                    self.playSyncManager.startPlay(
+                        property: self.playSyncProperty,
+                        duration: .seconds(7),
+                        playServiceId: media.payload.playStackControl?.playServiceId,
+                        dialogRequestId: media.dialogRequestId
+                    )
+                }
             }
         }
     }
@@ -470,163 +456,175 @@ private extension AudioPlayerAgent {
    func handlePlay() -> HandleDirective {
         return { [weak self] _, completion in
             self?.resume()
-            completion(.success(()))
+            completion()
         }
     }
     
    func handleStop() -> HandleDirective {
         return { [weak self] _, completion in
             self?.stop(cancelAssociation: true)
-            completion(.success(()))
+            completion()
         }
     }
     
    func handlePause() -> HandleDirective {
         return { [weak self] _, completion in
             self?.pause()
-            completion(.success(()))
+            completion()
         }
     }
     
     func handleRequestPlayCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, payload: directive.payload, typeInfo: .requestPlayCommandIssued)
-            completion(.success(()))
+            defer { completion() }
+        
+            guard let payloadDictionary = directive.payloadDictionary else {
+                log.error("Invalid payload")
+                return
+            }
+            self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, payload: payloadDictionary, typeInfo: .requestPlayCommandIssued)
         }
     }
     
     func handleRequestResumeCommand() -> HandleDirective {
         return { [weak self] _, completion in
-            guard let media = self?.currentMedia else {
-                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
-                return
+            defer { completion() }
+            
+            self?.audioPlayerDispatchQueue.async { [weak self] in
+                guard let media = self?.currentMedia else {
+                    log.error("AudioPlayerAgentMedia is nil")
+                    return
+                }
+                self?.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
             }
-            self?.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
-            completion(.success(()))
         }
     }
     
     func handleRequestNextCommand() -> HandleDirective {
         return { [weak self] _, completion in
-            guard let media = self?.currentMedia else {
-                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
-                return
+            defer { completion() }
+            
+            self?.audioPlayerDispatchQueue.async { [weak self] in
+                guard let media = self?.currentMedia else {
+                    log.error("AudioPlayerAgentMedia is nil")
+                    return
+                }
+                self?.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
             }
-            self?.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
-            completion(.success(()))
         }
     }
     
     func handleRequestPreviousCommand() -> HandleDirective {
         return { [weak self] _, completion in
-            guard let media = self?.currentMedia else {
-                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
-                return
+            defer { completion() }
+            
+            self?.audioPlayerDispatchQueue.async { [weak self] in
+                guard let media = self?.currentMedia else {
+                    log.error("AudioPlayerAgentMedia is nil")
+                    return
+                }
+                self?.sendPlayEvent(media: media, typeInfo: .requestPreviousCommandIssued)
             }
-            self?.sendPlayEvent(media: media, typeInfo: .requestPreviousCommandIssued)
-            completion(.success(()))
         }
     }
     
     func handleRequestPauseCommand() -> HandleDirective {
         return { [weak self] _, completion in
-            guard let media = self?.currentMedia else {
-                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
-                return
+            defer { completion() }
+            
+            self?.audioPlayerDispatchQueue.async { [weak self] in
+                guard let media = self?.currentMedia else {
+                    log.error("AudioPlayerAgentMedia is nil")
+                    return
+                }
+                self?.sendPlayEvent(media: media, typeInfo: .requestPauseCommandIssued)
             }
-            self?.sendPlayEvent(media: media, typeInfo: .requestPauseCommandIssued)
-            completion(.success(()))
         }
     }
     
     func handleRequestStopCommand() -> HandleDirective {
         return { [weak self] _, completion in
-            guard let media = self?.currentMedia else {
-                completion(.failure(HandleDirectiveError.handleDirectiveError(message: "AudioPlayerAgentMedia is nil")))
-                return
+            defer { completion() }
+            
+            self?.audioPlayerDispatchQueue.async { [weak self] in
+                guard let media = self?.currentMedia else {
+                    log.error("AudioPlayerAgentMedia is nil")
+                    return
+                }
+                self?.sendPlayEvent(media: media, typeInfo: .requestStopCommandIssued)
             }
-            self?.sendPlayEvent(media: media, typeInfo: .requestStopCommandIssued)
-            completion(.success(()))
         }
     }
     
     func handleUpdateMetadata() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
-                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    self.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId)
-            })
+            defer { completion() }
+            
+            guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
+                log.error("Invalid payload")
+                return
+            }
+            self?.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId)
         }
     }
     
     func handleShowLyrics() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
-                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    
-                    let isSuccess = self.audioPlayerDisplayManager.showLylics(playServiceId: playServiceId)
-                    
-                    self.sendLyricsEvent(
-                        playServiceId: playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId,
-                        typeInfo: isSuccess ? .showLyricsSucceeded : .showLyricsFailed
-                    )
-            })
+            defer { completion() }
+        
+            guard let self = self else { return }
+            guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            let isSuccess = self.audioPlayerDisplayManager.showLylics(playServiceId: playServiceId)
+            
+            self.sendLyricsEvent(
+                playServiceId: playServiceId,
+                referrerDialogRequestId: directive.header.dialogRequestId,
+                typeInfo: isSuccess ? .showLyricsSucceeded : .showLyricsFailed
+            )
         }
     }
     
     func handleHideLyrics() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8),
-                        let payloadAsDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable],
-                        let playServiceId = payloadAsDictionary["playServiceId"] as? String else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    
-                    let isSuccess = self.audioPlayerDisplayManager.hideLylics(playServiceId: playServiceId)
-                    
-                    self.sendLyricsEvent(
-                        playServiceId: playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId,
-                        typeInfo: isSuccess ? .hideLyricsSucceeded : .hideLyricsFailed
-                    )
-            })
+            defer { completion() }
+        
+            guard let self = self else { return }
+            guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            let isSuccess = self.audioPlayerDisplayManager.hideLylics(playServiceId: playServiceId)
+            
+            self.sendLyricsEvent(
+                playServiceId: playServiceId,
+                referrerDialogRequestId: directive.header.dialogRequestId,
+                typeInfo: isSuccess ? .hideLyricsSucceeded : .hideLyricsFailed
+            )
         }
     }
     
     func handleControlLyricsPage() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8) else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(AudioPlayerDisplayControlPayload.self, from: data)
-                    let isSuccess = self.audioPlayerDisplayManager.controlLylicsPage(payload: payload)
-                    
-                    self.sendLyricsEvent(
-                        playServiceId: payload.playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId,
-                        typeInfo: isSuccess ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)
-                    )
-            })
+            defer { completion() }
+        
+            guard let self = self else { return }
+            guard let payload = try? JSONDecoder().decode(AudioPlayerDisplayControlPayload.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            let isSuccess = self.audioPlayerDisplayManager.controlLylicsPage(payload: payload)
+            
+            self.sendLyricsEvent(
+                playServiceId: payload.playServiceId,
+                referrerDialogRequestId: directive.header.dialogRequestId,
+                typeInfo: isSuccess ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)
+            )
         }
     }
     
@@ -659,6 +657,7 @@ private extension AudioPlayerAgent {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.currentMedia != nil else { return }
+            
             self.currentMedia?.pauseReason = .nothing
             self.focusManager.requestFocus(channelDelegate: self)
         }
@@ -722,7 +721,7 @@ private extension AudioPlayerAgent {
 
     func sendRequestPlayEvent(
         referrerDialogRequestId: String,
-        payload: String,
+        payload: [String : AnyHashable],
         typeInfo: RequestPlayEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
@@ -843,14 +842,15 @@ private extension AudioPlayerAgent {
 
 private extension AudioPlayerAgent {
     /// set mediaplayer
-    func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) throws {
+    func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) {
         switch payload.sourceType {
         case .url:
             guard let url = payload.audioItem.stream.url else {
-                throw MediaPlayableError.invalidURL
+                log.error("Invalid payload")
+                return
             }
             let mediaPlayer = MediaPlayer()
-            try mediaPlayer.setSource(
+            mediaPlayer.setSource(
                 url: url,
                 offset: NuguTimeInterval(seconds: payload.audioItem.stream.offset)
             )
@@ -869,7 +869,7 @@ private extension AudioPlayerAgent {
                 payload: payload
             )
         case .none:
-            throw MediaPlayableError.unsupportedOperation
+            log.error("Invalid payload")
         }
 
         currentMedia?.player.delegate = self

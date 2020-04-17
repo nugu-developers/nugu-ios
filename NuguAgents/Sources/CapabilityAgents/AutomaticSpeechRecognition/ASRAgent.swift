@@ -343,84 +343,71 @@ extension ASRAgent: EndPointDetectorDelegate {
 // MARK: - Private (Directive)
 
 private extension ASRAgent {
-    func prefetchExpectSpeech() -> HandleDirective {
-        return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    self?.expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: data)
-                }
-            )
+    func prefetchExpectSpeech() -> PrefetchDirective {
+        return { [weak self] directive in
+            let expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: directive.payload)
+
+            self?.asrDispatchQueue.async { [weak self] in
+                self?.expectSpeech = expectSpeech
+            }
         }
-        
     }
 
     func handleExpectSpeech() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard self.expectSpeech != nil else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
-                    }
-                    switch self.asrState {
-                    case .idle, .busy:
-                        break
-                    case .expectingSpeech, .listening, .recognizing:
-                        throw HandleDirectiveError.handleDirectiveError(message: "ExpectSpeech only allowed in IDLE or BUSY state.")
-                    }
-                    
-                    self.asrDispatchQueue.async { [weak self] in
-                        guard let self = self else { return }
-                        
-                        self.asrState = .expectingSpeech
-                        self.expectingSpeechTimeout = Observable<Int>
-                            .timer(ASRConst.focusTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                            .subscribe(onNext: { [weak self] _ in
-                                log.info("expectingSpeechTimeout")
-                                self?.asrResult = .error(ASRError.listenFailed)
-                            })
-                        self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
-                        
-                        self.startRecognition(initiator: .scenario, by: directive)
-                    }
+            defer { completion() }
+        
+            self?.asrDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard self.expectSpeech != nil else {
+                    log.error("currentExpectSpeech is nil")
+                    return
                 }
-            )
+                guard [.idle, .busy].contains(self.asrState) else {
+                    log.error("ExpectSpeech only allowed in IDLE or BUSY state.")
+                    return
+                }
+                
+                self.asrState = .expectingSpeech
+                self.expectingSpeechTimeout = Observable<Int>
+                    .timer(ASRConst.focusTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                    .subscribe(onNext: { [weak self] _ in
+                        log.info("expectingSpeechTimeout")
+                        self?.asrResult = .error(ASRError.listenFailed)
+                    })
+                self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
+                
+                self.startRecognition(initiator: .scenario, by: directive)
+            }
         }
     }
     
     func handleNotifyResult() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let item = try JSONDecoder().decode(ASRNotifyResult.self, from: data)
-                    
-                    self?.asrDispatchQueue.async { [weak self] in
-                        guard let self = self else { return }
-                        
-                        switch item.state {
-                        case .partial:
-                            self.asrResult = .partial(text: item.result ?? "")
-                        case .complete:
-                            self.asrResult = .complete(text: item.result ?? "")
-                        case .none:
-                            self.asrResult = .none
-                        case .error:
-                            self.asrResult = .error(ASRError.recognizeFailed)
-                        case .sos, .eos, .reset, .falseAcceptance:
-                            // TODO 추후 Server EPD 개발시 구현
-                            break
-                        }
-                    }
+            defer { completion() }
+
+            guard let item = try? JSONDecoder().decode(ASRNotifyResult.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            self?.asrDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                switch item.state {
+                case .partial:
+                    self.asrResult = .partial(text: item.result ?? "")
+                case .complete:
+                    self.asrResult = .complete(text: item.result ?? "")
+                case .none:
+                    self.asrResult = .none
+                case .error:
+                    self.asrResult = .error(ASRError.recognizeFailed)
+                case .sos, .eos, .reset, .falseAcceptance:
+                    // TODO 추후 Server EPD 개발시 구현
+                    break
                 }
-            )
+            }
         }
     }
 }

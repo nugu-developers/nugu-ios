@@ -220,153 +220,148 @@ extension DisplayAgent: PlaySyncDelegate {
 private extension DisplayAgent {
     func handleClose() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(DisplayClosePayload.self, from: data)
-                    
-                    let typeInfo: Event.TypeInfo = self.currentItem?.playServiceId == payload.playServiceId ? .closeSucceeded : .closeFailed
+            defer { completion() }
+            
+            guard let payload = try? JSONDecoder().decode(DisplayClosePayload.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard let item = self.currentItem, item.playServiceId == payload.playServiceId else {
                     self.sendEvent(
-                        typeInfo: typeInfo,
+                        typeInfo: .closeFailed,
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
                     )
-                    
-                    if let item = self.currentItem, item.playServiceId == payload.playServiceId {
-                        self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
-                    }
+                    return
                 }
-            )
+                
+                self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+                self.sendEvent(
+                    typeInfo: .closeSucceeded,
+                    playServiceId: payload.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                )
+            }
         }
     }
     
     func handleControlFocus() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(DisplayControlPayload.self, from: data)
-                    
-                    guard let item = self.currentItem,
-                        item.playServiceId == payload.playServiceId,
-                        let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
-                        let delegate = info.delegate else {
-                            self.sendEvent(
-                                typeInfo: .controlFocusFailed,
-                                playServiceId: payload.playServiceId,
-                                referrerDialogRequestId: directive.header.dialogRequestId
-                            )
-                            return
-                    }
-                    
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
-
-                        let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded : .controlFocusFailed
+            defer { completion() }
+        
+            guard let payload = try? JSONDecoder().decode(DisplayControlPayload.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard let item = self.currentItem,
+                    item.playServiceId == payload.playServiceId,
+                    let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId })?.delegate else {
                         self.sendEvent(
-                            typeInfo: typeInfo,
+                            typeInfo: .controlFocusFailed,
                             playServiceId: payload.playServiceId,
                             referrerDialogRequestId: directive.header.dialogRequestId
                         )
-                    }
-            })
+                        return
+                }
+                
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
+                    
+                    let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded : .controlFocusFailed
+                    self.sendEvent(
+                        typeInfo: typeInfo,
+                        playServiceId: payload.playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
+                }
+            }
         }
     }
-        
+    
     func handleControlScroll() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Unknown template")
-                    }
-                    
-                    let payload = try JSONDecoder().decode(DisplayControlPayload.self, from: data)
-                    
-                    guard let item = self.currentItem,
-                        item.playServiceId == payload.playServiceId,
-                        let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId }),
-                        let delegate = info.delegate else {
-                            self.sendEvent(
-                                typeInfo: .controlScrollFailed,
-                                playServiceId: payload.playServiceId,
-                                referrerDialogRequestId: directive.header.dialogRequestId
-                            )
-                            return
-                    }
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
-                        
-                        let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded : .controlScrollFailed
+            guard let payload = try? JSONDecoder().decode(DisplayControlPayload.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard let item = self.currentItem,
+                    item.playServiceId == payload.playServiceId,
+                    let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId })?.delegate else {
                         self.sendEvent(
-                            typeInfo: typeInfo,
+                            typeInfo: .controlScrollFailed,
                             playServiceId: payload.playServiceId,
                             referrerDialogRequestId: directive.header.dialogRequestId
                         )
-                    }
-            })
+                        return
+                }
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
+                    
+                    let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded : .controlScrollFailed
+                    self.sendEvent(
+                        typeInfo: typeInfo,
+                        playServiceId: payload.playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
+                }
+            }
         }
     }
     
     func handleUpdate() -> HandleDirective {
         return { [weak self] directive, completion in
-            log.info("\(directive.header.type)")
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    
-                    guard let payloadAsData = directive.payload.data(using: .utf8),
-                        let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: AnyHashable],
-                        let token = payloadDictionary["token"] as? String,
-                        let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")
-                    }
-                    
-                    let updateDisplayTemplate = DisplayTemplate(
-                        type: directive.header.type,
-                        payload: directive.payload,
-                        templateId: directive.header.messageId,
-                        dialogRequestId: directive.header.dialogRequestId,
-                        token: token,
-                        playServiceId: playServiceId,
-                        playStackServiceId: nil,
-                        duration: nil,
-                        focusable: nil
-                    )
-                    
-                    guard let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == updateDisplayTemplate.templateId }),
-                        let delegate = info.delegate else { return }
-                    DispatchQueue.main.async {
-                        delegate.displayAgentShouldUpdate(template: updateDisplayTemplate)
-                    }
-                }
+            defer { completion() }
+            
+            guard let payloadDictionary = directive.payloadDictionary,
+                let token = payloadDictionary["token"] as? String,
+                let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                    log.error("Invalid token or playServiceId in payload")
+                    return
+            }
+            
+            let updateDisplayTemplate = DisplayTemplate(
+                type: directive.header.type,
+                payload: directive.payload,
+                templateId: directive.header.messageId,
+                dialogRequestId: directive.header.dialogRequestId,
+                token: token,
+                playServiceId: playServiceId,
+                playStackServiceId: nil,
+                duration: nil,
+                focusable: nil
             )
+            
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == updateDisplayTemplate.templateId })?.delegate else { return }
+                
+                DispatchQueue.main.async {
+                    delegate.displayAgentShouldUpdate(template: updateDisplayTemplate)
+                }
+            }
         }
     }
     
     func handleDisplay() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self else { return completion(.success(())) }
-            guard let payloadAsData = directive.payload.data(using: .utf8),
-                let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadAsData, options: []) as? [String: AnyHashable],
+            guard let payloadDictionary = directive.payloadDictionary,
                 let token = payloadDictionary["token"] as? String,
                 let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    completion(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid token or playServiceId in payload")))
+                    log.error("Invalid token or playServiceId in payload")
+                    completion()
                     return
             }
-            
-            log.info("\(directive.header.type)")
             
             let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
             let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: AnyHashable])?["playServiceId"] as? String
@@ -384,8 +379,10 @@ private extension DisplayAgent {
                 focusable: focusable
             )
 
-            self.displayDispatchQueue.async { [weak self] in
-                guard let self = self else { return completion(.success(())) }
+            self?.displayDispatchQueue.async { [weak self] in
+                defer { completion() }
+                
+                guard let self = self else { return }
                 
                 let rendered = self.renderingInfos
                     .compactMap { $0.delegate }
@@ -401,8 +398,6 @@ private extension DisplayAgent {
                         dialogRequestId: item.dialogRequestId
                     )
                 }
-                
-                completion(.success(()))
             }
         }
     }

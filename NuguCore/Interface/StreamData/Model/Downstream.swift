@@ -23,9 +23,9 @@ import Foundation
 public enum Downstream {
     public struct Directive: Decodable {
         public let header: Header
-        public let payload: String
+        public let payload: Data
         
-        public init(header: Header, payload: String) {
+        public init(header: Header, payload: Data) {
             self.header = header
             self.payload = payload
         }
@@ -70,4 +70,13 @@ public enum Downstream {
 
 extension Downstream.Header {
     public var type: String { "\(namespace).\(name)" }
+    
+}
+
+// MARK: - Downstream.Directive
+
+extension Downstream.Directive {
+    public var payloadDictionary: [String: AnyHashable]? {
+        try? JSONSerialization.jsonObject(with: payload, options: []) as? [String: AnyHashable]
+    }
 }

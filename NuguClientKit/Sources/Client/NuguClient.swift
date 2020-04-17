@@ -40,6 +40,7 @@ public class NuguClient {
     public let ttsAgent: TTSAgentProtocol
     public let textAgent: TextAgentProtocol
     public let audioPlayerAgent: AudioPlayerAgentProtocol
+    public let soundAgent: SoundAgentProtocol
 
     // additional agents
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
@@ -124,6 +125,13 @@ public class NuguClient {
             focusManager: focusManager,
             upstreamDataSender: streamDataRouter,
             playSyncManager: playSyncManager,
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer
+        )
+        
+        soundAgent = SoundAgent(
+            focusManager: focusManager,
+            upstreamDataSender: streamDataRouter,
             contextManager: contextManager,
             directiveSequencer: directiveSequencer
         )

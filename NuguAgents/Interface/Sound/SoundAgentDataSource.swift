@@ -1,8 +1,8 @@
 //
-//  MediaUrlDataSource.swift
-//  NuguCore
+//  SoundAgentDataSource.swift
+//  NuguAgents
 //
-//  Created by yonghoonKwon on 2019/11/27.
+//  Created by MinChul Lee on 2020/04/07.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,23 +20,10 @@
 
 import Foundation
 
-public protocol MediaUrlDataSource {
-    /// For url source
-    func setSource(url: String, offset: TimeIntervallic)
-    /// For url source
-    func setSource(url: URL, offset: TimeIntervallic)
-}
-
-// MARK: - MediaUrlDataSource
-
-public extension MediaUrlDataSource {
-    /// For url source
-    func setSource(url: String) {
-        try setSource(url: url, offset: NuguTimeInterval(seconds: 0))
-    }
-    
-    /// For url source
-    func setSource(url: URL) {
-        setSource(url: url, offset: NuguTimeInterval(seconds: 0))
-    }
+/// An delegate that appllication can extend to provide sound data.
+public protocol SoundAgentDataSource: class {
+    /// It called when need sound `URL` to play beep.
+    ///
+    /// - Parameter beepName: The beep name to play.
+    func soundAgentRequestUrl(beepName: SoundBeepName) -> URL?
 }
