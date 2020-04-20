@@ -30,7 +30,7 @@ struct MediaCacheManager {
     private static let cacheFolderPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("MediaCache", isDirectory: true)
     private static let cacheSizeLimit = 1024 * 1024 * 500
     
-    private static let supportedMimeTypeForCaching = ["audio/mp4", "audio/aac", "audio/m4a"]
+    private static let supportedMimeTypeForCaching = ["audio/mp4", "audio/aac", "audio/m4a", "audio/mp4a-latm"]
 }
 
 // MARK: - Internal Methods

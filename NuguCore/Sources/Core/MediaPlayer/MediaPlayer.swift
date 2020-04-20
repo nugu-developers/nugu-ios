@@ -181,6 +181,7 @@ extension MediaPlayer: MediaUrlDataSource {
     
     public func setSource(url: URL, offset: TimeIntervallic, cacheKey: String?) {
         playerItem = MediaAVPlayerItem(url: url)
+        playerItem?.cacheKey = cacheKey
         playerItem?.delegate = self
         player = AVQueuePlayer(playerItem: playerItem)
         
