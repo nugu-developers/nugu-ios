@@ -861,8 +861,12 @@ private extension AudioPlayerAgent {
                 payload: payload
             )
         case .attachment:
-            let mediaPlayer = OpusPlayer()
+            guard let mediaPlayer = try? OpusPlayer(sampleRate: 22050.0, channels: 1) else {
+                log.error("Cannot create opus player.")
+                return
+            }
 
+            mediaPlayer.decoder = OpusDecoder(sampleRate: 24000.0)
             currentMedia = AudioPlayerAgentMedia(
                 dialogRequestId: dialogRequestId,
                 player: mediaPlayer,

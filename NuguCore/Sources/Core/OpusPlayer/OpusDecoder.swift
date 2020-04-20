@@ -25,13 +25,16 @@ import Foundation
  - If target os is iOS11 or higher, OPUS libraries is not needed because AVAudioConverter can decode it.
  - But, we want to support iOS10 also.
  */
-class OpusDecoder {
-    static let shared = OpusDecoder()
-    let decoder = opus_decoder_create(Int32(OpusPlayerConst.defaultDecoderSampleRate), 1, nil)
+public class OpusDecoder {
+    let decoder: OpaquePointer?
     
     #if DEBUG
     private var originalData = Data()
     #endif
+    
+    public init(sampleRate: Double) {
+        decoder = opus_decoder_create(Int32(sampleRate), 1, nil)
+    }
     
     /**
      Decode OPUS data to PCM data.
@@ -41,48 +44,18 @@ class OpusDecoder {
      */
     func decode(data: Data) throws -> [Float] {
         guard let decoder = decoder else {
-            log.error("decoder is not initialized")
+            print("decoder is not initialized")
             throw OpusPlayerError.decodeFailed
         }
         
-        var opusData = data
-        log.debug("opus data size: \(opusData.count)")
-        
-        #if DEBUG
-        originalData.append(opusData)
-        #endif
-        
-        var totalDecodedBuffer = [Float]()
-        while OpusPlayerConst.opusPacketHeaderSize < opusData.count {
-            // parse header
-            // get content size
-            let contentSizeData: Data = opusData.subdata(in: 0..<4)
-            let contentSize = Int(contentSizeData[3]) | (Int(contentSizeData[2]) << 8) | (Int(contentSizeData[1]) << 16) | (Int(contentSizeData[0]) << 24)
-//            log.debug("opus chunk size: \(contentSize)")
-            
-            // garbage from server.
-//            let rangeData = opusData.subdata(in: 4..<8)
-//            let range = Int(rangeData[3]) | (Int(rangeData[2]) << 8) | (Int(rangeData[1]) << 16) | (Int(rangeData[0]) << 24)
-            opusData = opusData.subdata(in: 8..<opusData.count)
-//            log.debug("packetLength: \(contentSize), range: \(range), sizeToDecode: \(opusData.count)")
-            
-            // If Header insist to decode more data than remains
-            let decodeLength = min(contentSize, opusData.count)
-            let payload = opusData.subdata(in: 0..<decodeLength)
-            var decodedBuffer = [Float](repeating: 0, count: decodeLength*3)
-            let result = opus_decode_float(decoder, [CUnsignedChar](payload), CInt(payload.count), &decodedBuffer, CInt(decodedBuffer.count), 0)
-            
-            guard 0 < result else {
-                log.error("decode failed during decode: \(decodeLength) of opus data")
-                log.error("remained opus data: \(String(data: opusData, encoding: .ascii) ?? "")\nsize:\(opusData.count)")
-                throw OpusPlayerError.decodeFailed
-            }
-
-            totalDecodedBuffer.append(contentsOf: decodedBuffer[..<Int(result)])
-            opusData = opusData.subdata(in: payload.count..<opusData.count)
+        var decodedSamples = [Float](repeating: 0, count: data.count*3)
+        let result = opus_decode_float(decoder, [CUnsignedChar](data), CInt(data.count), &decodedSamples, CInt(decodedSamples.count), 0)
+        guard 0 < result else {
+            print("decode failed")
+            throw OpusPlayerError.decodeFailed
         }
-        
-        return totalDecodedBuffer
+
+        return decodedSamples
     }
     
     #if DEBUG

@@ -53,6 +53,7 @@ public class OpusPlayer: MediaPlayable {
     private var consumedData = Data()
     #endif
 
+    public var decoder: OpusDecoder
     public var isPaused = false
     public weak var delegate: MediaPlayerDelegate?
     
@@ -75,10 +76,13 @@ public class OpusPlayer: MediaPlayable {
         }
     }
     
-    public init() {
-        // unless channels argument is more than 2, init() won't return nil.
-        // we use fixed-audio-format because tts server does.
-        self.audioFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: OpusPlayerConst.audioSampleRate, channels: 1, interleaved: false)!
+    public init(sampleRate: Double, channels: Int) throws {
+        guard let audioFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: sampleRate, channels: AVAudioChannelCount(channels), interleaved: false) else {
+                throw OpusPlayerError.unsupportedAudioFormat
+        }
+        
+        self.audioFormat = audioFormat
+        self.decoder = OpusDecoder(sampleRate: sampleRate)
         engine.attach(player)
         
         // To control volume, player node should be connected to mixer node.
@@ -221,7 +225,7 @@ extension OpusPlayer: MediaOpusStreamDataSource {
         audioQueue.async { [weak self] in
             guard let self = self else { return }
 
-            guard let pcmData = try? OpusDecoder.shared.decode(data: data) else {
+            guard let pcmData = try? self.decoder.decode(data: data) else {
                 log.error("opus decode failed")
                 self.delegate?.mediaPlayerDidChange(state: .error(error: OpusPlayerError.decodeFailed))
                 return
@@ -264,7 +268,6 @@ extension OpusPlayer: MediaOpusStreamDataSource {
         }
     }
 }
-
 // MARK: - OpusPlayer + MediaUrlDataSource
 
 extension OpusPlayer: MediaUrlDataSource {
@@ -343,11 +346,11 @@ private extension OpusPlayer {
                         self.delegate?.mediaPlayerDidChange(state: .finish)
                         
                         #if DEBUG
-                        OpusDecoder.shared.dump()
+                        self.decoder.dump()
                         let appendedFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("silver_tray_appended.raw")
                         let consumedFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("silver_tray_consumed.raw")
                         do {
-                            if let allPCMArray = try? OpusDecoder.shared.decode(data: self.appendedData) {
+                            if let allPCMArray = try? self.decoder.decode(data: self.appendedData) {
                                 let allData = Data(bytes: allPCMArray, count: allPCMArray.count*4)
                                 try allData.write(to: appendedFilename)
                                 try self.consumedData.write(to: consumedFilename)
