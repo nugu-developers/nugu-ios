@@ -1,9 +1,9 @@
 //
-//  AudioPlayerAgent+RequestPlayEvent.swift
+//  SoundAgent+Event.swift
 //  NuguAgents
 //
-//  Created by jin kim on 2020/03/23.
-//  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
+//  Created by MinChul Lee on 2020/04/07.
+//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -24,25 +24,31 @@ import NuguCore
 
 // MARK: - CapabilityEventAgentable
 
-extension AudioPlayerAgent {
-    public struct RequestPlayEvent {
-        let requestPlayPayload: [String : AnyHashable]
+extension SoundAgent {
+    public struct Event {
+        let playServiceId: String
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case requestPlayCommandIssued
+            case beepSucceeded
+            case beepFailed
         }
     }
 }
 
 // MARK: - Eventable
 
-extension AudioPlayerAgent.RequestPlayEvent: Eventable {
-    public var payload: [String : AnyHashable] {
-        return ["payload": requestPlayPayload]
+extension SoundAgent.Event: Eventable {
+    public var payload: [String: AnyHashable] {
+        return ["playServiceId": playServiceId]
     }
     
     public var name: String {
-        return "RequestPlayCommandIssued"
+        switch typeInfo {
+        case .beepSucceeded:
+            return "BeepSucceeded"
+        case .beepFailed:
+            return "BeepFailed"
+        }
     }
 }

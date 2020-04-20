@@ -114,7 +114,7 @@ extension AudioPlayerDisplayManager {
         }
     }
     
-    func updateMetadata(payload: String, playServiceId: String) {
+    func updateMetadata(payload: Data, playServiceId: String) {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else { return }
         DispatchQueue.main.async {

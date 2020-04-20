@@ -26,9 +26,9 @@ final class DisplayListView: DisplayView {
 
     @IBOutlet private weak var tableView: UITableView!
     
-    override var displayPayload: String? {
+    override var displayPayload: Data? {
         didSet {
-            guard let payloadData = displayPayload?.data(using: .utf8),
+            guard let payloadData = displayPayload,
                 let displayItem = try? JSONDecoder().decode(DisplayListTemplate.self, from: payloadData) else { return }
             
             titleLabel.text = displayItem.title.text.text

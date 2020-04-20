@@ -34,11 +34,11 @@ class MockFocusManager: FocusManageable {
     }
     
     func requestFocus(channelDelegate: FocusChannelDelegate) {
-        //
+        channelDelegate.focusChannelDidChange(focusState: .foreground)
     }
     
     func releaseFocus(channelDelegate: FocusChannelDelegate) {
-        //
+        channelDelegate.focusChannelDidChange(focusState: .nothing)
     }
     
     func stopForegroundActivity() {

@@ -157,9 +157,8 @@ final class DisplayAudioPlayerView: UIView {
 // MARK: - Update
 
 extension DisplayAudioPlayerView {
-    func updateSettings(payload: String) {
-        guard let payloadAsData = payload.data(using: .utf8),
-            let payload = try? JSONDecoder().decode(AudioPlayerUpdateMetadataPayload.self, from: payloadAsData) else {
+    func updateSettings(payload: Data) {
+        guard let payload = try? JSONDecoder().decode(AudioPlayerUpdateMetadataPayload.self, from: payload) else {
                 log.error("invalid payload")
                 return
         }

@@ -170,13 +170,17 @@ extension MediaPlayer {
 // MARK: - MediaPlayer + MediaUrlDataSource
 
 extension MediaPlayer: MediaUrlDataSource {
-    public func setSource(url: String, offset: TimeIntervallic, cacheKey: String?) throws {
-        guard let itemURL = URL(string: url) else {
-            throw MediaPlayableError.invalidURL
+    public func setSource(url: String, offset: TimeIntervallic, cacheKey: String?) {
+        guard let urlItem = URL(string: url) else {
+            delegate?.mediaPlayerDidChange(state: .error(error: MediaPlayableError.invalidURL))
+            return
         }
         
-        playerItem = MediaAVPlayerItem(url: itemURL)
-        playerItem?.cacheKey = cacheKey
+        setSource(url: urlItem, offset: offset, cacheKey: cacheKey)
+    }
+    
+    public func setSource(url: URL, offset: TimeIntervallic, cacheKey: String?) {
+        playerItem = MediaAVPlayerItem(url: url)
         playerItem?.delegate = self
         player = AVQueuePlayer(playerItem: playerItem)
         

@@ -22,18 +22,22 @@ import Foundation
 
 public protocol MediaUrlDataSource {
     /// For url source
-    /// - Parameter url: <#url description#>
-    /// - Parameter offset: <#offset description#>
-    /// - Parameter cacheKey: <#offset description#>
-    func setSource(url: String, offset: TimeIntervallic, cacheKey: String?) throws
+    func setSource(url: String, offset: TimeIntervallic, cacheKey: String?)
+    
+    /// For url source
+    func setSource(url: URL, offset: TimeIntervallic, cacheKey: String?)
 }
 
 // MARK: - MediaUrlDataSource
 
 public extension MediaUrlDataSource {
-    /// <#Description#>
-    /// - Parameter url: <#url description#>
-    func setSource(url: String) throws {
-        try setSource(url: url, offset: NuguTimeInterval(seconds: 0), cacheKey: nil)
+    /// For url source
+    func setSource(url: String) {
+        setSource(url: url, offset: NuguTimeInterval(seconds: 0), cacheKey: nil)
+    }
+    
+    /// For url source
+    func setSource(url: URL) {
+        setSource(url: url, offset: NuguTimeInterval(seconds: 0), cacheKey: nil)
     }
 }
