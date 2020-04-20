@@ -579,7 +579,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
         dismissDisplayAudioPlayerView()
     }
     
-    func audioPlayerDisplayShouldUpdateMetadata(payload: String) {
+    func audioPlayerDisplayShouldUpdateMetadata(payload: Data) {
         guard let displayAudioPlayerView = displayAudioPlayerView else {
             return
         }

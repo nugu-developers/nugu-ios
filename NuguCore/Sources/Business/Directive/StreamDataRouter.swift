@@ -140,7 +140,7 @@ public extension StreamDataRouter {
      Sends an attachment.
      
      It won't emit received or finished state on completion.
-     because those states will be emitted to event-reqeust's completion.
+     because those states will be emitted to event-request's completion.
      */
     func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[dialogRequestId] else {
@@ -230,8 +230,7 @@ private extension Downstream.Directive {
             let headerData = try? JSONSerialization.data(withJSONObject: headerDictionary, options: []),
             let header = try? JSONDecoder().decode(Downstream.Header.self, from: headerData),
             let payloadDictionary = directiveDictionary["payload"] as? [String: AnyHashable],
-            let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-            let payload = String(data: payloadData, encoding: .utf8) else {
+            let payload = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []) else {
                 return nil
         }
         

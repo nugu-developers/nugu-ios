@@ -294,34 +294,26 @@ extension TTSAgent: PlaySyncDelegate {
 // MARK: - Private (Directive)
 
 private extension TTSAgent {
-    func prefetchPlay() -> HandleDirective {
-        return { [weak self] directive, completion in
+    func prefetchPlay() -> PrefetchDirective {
+        return { [weak self] directive in
+            let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: directive.payload)
+            guard case .attachment = payload.sourceType else {
+                throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
+            }
+            
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                completion(
-                    Result<Void, Error>(catching: {
-                        guard let data = directive.payload.data(using: .utf8) else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                        }
-                        
-                        let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: data)
-                        guard case .attachment = payload.sourceType else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
-                        }
-                        
-                        self.stopSilently()
-                        
-                        let mediaPlayer = OpusPlayer()
-                        mediaPlayer.delegate = self
-                        mediaPlayer.volume = self.volume
-                        
-                        self.currentMedia = TTSMedia(
-                            player: mediaPlayer,
-                            payload: payload,
-                            dialogRequestId: directive.header.dialogRequestId
-                        )
-                    })
+                self.stopSilently()
+                
+                let mediaPlayer = OpusPlayer()
+                mediaPlayer.delegate = self
+                mediaPlayer.volume = self.volume
+                
+                self.currentMedia = TTSMedia(
+                    player: mediaPlayer,
+                    payload: payload,
+                    dialogRequestId: directive.header.dialogRequestId
                 )
             }
         }
@@ -331,12 +323,12 @@ private extension TTSAgent {
         return { [weak self] directive, completion in
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else {
-                    completion(.success(()))
+                    completion()
                     return
                 }
                 guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
                     log.warning("TTSMedia is not exist or dialogRequesttId is not valid")
-                    completion(.success(()))
+                    completion()
                     return
                 }
                 
@@ -348,7 +340,7 @@ private extension TTSAgent {
                     .filter { $0.dialogRequestId == media.dialogRequestId }
                     .take(1)
                     .subscribe(onNext: { (_, _) in
-                        completion(.success(()))
+                        completion()
                     })
                     .disposed(by: self.disposeBag)
                 
@@ -359,23 +351,22 @@ private extension TTSAgent {
     
     func handleStop() -> HandleDirective {
         return { [weak self] _, completion in
-            guard let self = self else { return }
-            completion(self.stop(cancelAssociation: true))
+            self?.stop(cancelAssociation: true)
+            
+            completion()
         }
-
     }
     
-    @discardableResult func stop(cancelAssociation: Bool) -> Result<Void, Error> {
+    func stop(cancelAssociation: Bool) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self, let media = self.currentMedia else { return }
             
             self.currentMedia?.cancelAssociation = cancelAssociation
             media.player.stop()
         }
-        return .success(())
     }
     
-    /// Stop previously playing TTS
+    /// Synchronously stop previously playing TTS
     func stopSilently() {
         guard let media = currentMedia else { return }
         

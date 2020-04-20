@@ -43,6 +43,7 @@ final class NuguCentralManager {
         
         client.locationAgent.delegate = self
         client.systemAgent.add(systemAgentDelegate: self)
+        client.soundAgent.dataSource = self
         
         return client
     }()
@@ -446,6 +447,18 @@ extension NuguCentralManager: SystemAgentDelegate {
     }
 }
 
+// MARK: - SoundAgentDataSource
+
+extension NuguCentralManager: SoundAgentDataSource {
+    func soundAgentRequestUrl(beepName: SoundBeepName) -> URL? {
+        let url: URL?
+        switch beepName {
+        case .responseFail:
+            url = Bundle.main.url(forResource: "asrFail", withExtension: "wav")
+        }
+        return url
+    }
+}
 extension Notification.Name {
     static let nuguClientInputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
     static let nuguClientNetworkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")

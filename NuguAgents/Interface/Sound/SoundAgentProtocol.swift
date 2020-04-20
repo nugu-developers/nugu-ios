@@ -1,8 +1,8 @@
 //
-//  MediaUrlDataSource.swift
-//  NuguCore
+//  SoundAgentProtocol.swift
+//  NuguAgents
 //
-//  Created by yonghoonKwon on 2019/11/27.
+//  Created by MinChul Lee on 2020/04/07.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,23 +20,16 @@
 
 import Foundation
 
-public protocol MediaUrlDataSource {
-    /// For url source
-    func setSource(url: String, offset: TimeIntervallic)
-    /// For url source
-    func setSource(url: URL, offset: TimeIntervallic)
-}
-
-// MARK: - MediaUrlDataSource
-
-public extension MediaUrlDataSource {
-    /// For url source
-    func setSource(url: String) {
-        try setSource(url: url, offset: NuguTimeInterval(seconds: 0))
-    }
+/// Sound-agent is needed to play beep sound.
+public protocol SoundAgentProtocol: CapabilityAgentable {
+    /// The data source for the beep.
+    var dataSource: SoundAgentDataSource? { get set }
     
-    /// For url source
-    func setSource(url: URL) {
-        setSource(url: url, offset: NuguTimeInterval(seconds: 0))
-    }
+    /// Specifies the receiver’s delegate object.
+    var delegate: SoundAgentDelegate? { get set }
+    
+    /// The beep playback volume for the player.
+    ///
+    /// This function retrieves the volume of the current `MediaPlayable` handled by the sound-agent.
+    var volume: Float { get set }
 }

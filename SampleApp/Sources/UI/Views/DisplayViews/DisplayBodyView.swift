@@ -28,10 +28,10 @@ final class DisplayBodyView: DisplayView {
     @IBOutlet private weak var bodyLabel: UILabel!
     @IBOutlet private weak var footerLabel: UILabel!
     
-    override var displayPayload: String? {
+    override var displayPayload: Data? {
         didSet {
-            guard let payloadData = displayPayload?.data(using: .utf8),
-            let displayItem = try? JSONDecoder().decode(DisplayBodyTemplate.self, from: payloadData) else { return }
+            guard let payloadData = displayPayload,
+                let displayItem = try? JSONDecoder().decode(DisplayBodyTemplate.self, from: payloadData) else { return }
             
             titleLabel.text = displayItem.title.text.text
             titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)

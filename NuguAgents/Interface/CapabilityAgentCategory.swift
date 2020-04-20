@@ -20,28 +20,19 @@
 
 import Foundation
 
-/// <#Description#>
 public enum CapabilityAgentCategory: CaseIterable {
-    /// <#Description#>
     case audioPlayer
-    /// <#Description#>
     case automaticSpeechRecognition
-    /// <#Description#>
     case textToSpeech
-    /// <#Description#>
     case display
-    /// <#Description#>
     case system
-    /// <#Description#>
     case text
-    /// <#Description#>
     case `extension`
-    /// <#Description#>
     case location
+    case sound
 }
 
 public extension CapabilityAgentCategory {
-    /// <#Description#>
     var name: String {
         switch self {
         case .audioPlayer: return "AudioPlayer"
@@ -52,6 +43,7 @@ public extension CapabilityAgentCategory {
         case .text: return "Text"
         case .extension: return "Extension"
         case .location: return "Location"
+        case .sound: return "Sound"
         }
     }
 }

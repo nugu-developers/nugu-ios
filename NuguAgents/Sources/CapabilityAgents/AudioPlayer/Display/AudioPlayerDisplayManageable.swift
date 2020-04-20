@@ -26,7 +26,7 @@ import NuguCore
 protocol AudioPlayerDisplayManageable {
     func display(metaData: [String: AnyHashable], messageId: String, dialogRequestId: String, playStackServiceId: String?)
     
-    func updateMetadata(payload: String, playServiceId: String)
+    func updateMetadata(payload: Data, playServiceId: String)
     
     func showLylics(playServiceId: String) -> Bool
     

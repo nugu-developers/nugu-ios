@@ -40,8 +40,8 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateState),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleException),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Revoke", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRevoke),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.success(())) } }),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.success(())) } })
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } }),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } })
     ]
     
     public init(
@@ -95,65 +95,58 @@ extension SystemAgent: ContextInfoDelegate {
 private extension SystemAgent {
     func handleHandOffConnection() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
-                    self?.systemDispatchQueue.async { [weak self] in
-                        log.info("try to handoff policy: \(serverPolicy)")
-                        self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
-                    }
-                }
-            )
+            defer { completion() }
+            
+            guard let serverPolicy = try? JSONDecoder().decode(Policy.ServerPolicy.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            self?.systemDispatchQueue.async { [weak self] in
+                log.info("try to handoff policy: \(serverPolicy)")
+                self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
+            }
         }
     }
     
     func handleUpdateState() -> HandleDirective {
         return { [weak self] directive, completion in
-            self?.systemDispatchQueue.async { [weak self] in
-                self?.sendSynchronizeStateEvent(directive: directive)
-            }
-            
-            completion(.success(()))
-        }
+            defer { completion() }
         
+            self?.sendSynchronizeStateEvent(directive: directive)
+        }
     }
     
     func handleException() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
+            defer { completion() }
+        
+            guard let exceptionItem = try? JSONDecoder().decode(SystemAgentExceptionItem.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            self?.systemDispatchQueue.async { [weak self] in
+                switch exceptionItem.code {
+                case .fail(let code):
+                    self?.delegates.notify { delegate in
+                        delegate.systemAgentDidReceiveExceptionFail(code: code)
                     }
-                    
-                    let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
-                    self?.systemDispatchQueue.async { [weak self] in
-                        switch exceptionItem.code {
-                        case .fail(let code):
-                            self?.delegates.notify { delegate in
-                                delegate.systemAgentDidReceiveExceptionFail(code: code)
-                            }
-                        case .warning(let code):
-                            log.debug("received warning code: \(code)")
-                        }
-                    }
+                case .warning(let code):
+                    log.debug("received warning code: \(code)")
                 }
-            )
+            }
         }
     }
     
     func handleRevoke() -> HandleDirective {
         return { [weak self] _, completion in
+            defer { completion() }
+            
             self?.systemDispatchQueue.async { [weak self] in
                 self?.delegates.notify { delegate in
                     delegate.systemAgentDidReceiveRevokeDevice()
                 }
             }
-            completion(.success(()))
         }
     }
 }
