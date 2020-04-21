@@ -133,7 +133,6 @@
 		1FFFF474237580F500C9A177 /* NuguVoiceChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF45C237580F500C9A177 /* NuguVoiceChrome.swift */; };
 		1FFFF475237580F500C9A177 /* NuguVoiceChrome.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF45D237580F500C9A177 /* NuguVoiceChrome.xib */; };
 		1FFFF476237580F500C9A177 /* NuguButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF45F237580F500C9A177 /* NuguButton.swift */; };
-		1FFFF477237580F500C9A177 /* NuguButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF460237580F500C9A177 /* NuguButton.xib */; };
 		1FFFF478237580F500C9A177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF462237580F500C9A177 /* Assets.xcassets */; };
 		1FFFF4DF237672F100C9A177 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A5237672F100C9A177 /* SettingViewController.swift */; };
 		1FFFF4E0237672F100C9A177 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A6237672F100C9A177 /* IntroViewController.swift */; };
@@ -741,7 +740,6 @@
 		1FFFF45C237580F500C9A177 /* NuguVoiceChrome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguVoiceChrome.swift; sourceTree = "<group>"; };
 		1FFFF45D237580F500C9A177 /* NuguVoiceChrome.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NuguVoiceChrome.xib; sourceTree = "<group>"; };
 		1FFFF45F237580F500C9A177 /* NuguButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguButton.swift; sourceTree = "<group>"; };
-		1FFFF460237580F500C9A177 /* NuguButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NuguButton.xib; sourceTree = "<group>"; };
 		1FFFF462237580F500C9A177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1FFFF48D237671F500C9A177 /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFF4A5237672F100C9A177 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -1947,7 +1945,6 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF45F237580F500C9A177 /* NuguButton.swift */,
-				1FFFF460237580F500C9A177 /* NuguButton.xib */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -2797,7 +2794,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF477237580F500C9A177 /* NuguButton.xib in Resources */,
 				1FFFF478237580F500C9A177 /* Assets.xcassets in Resources */,
 				1FFFF475237580F500C9A177 /* NuguVoiceChrome.xib in Resources */,
 			);
