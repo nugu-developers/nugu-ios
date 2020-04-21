@@ -20,32 +20,56 @@
 
 import UIKit
 
+import Lottie
+
 final public class NuguVoiceChrome: UIView {
     
     // MARK: RecommendedHeight for NuguVoiceChrome
     // NuguVoiceChrome is designed in accordance with recommendedHeight
     // Note that NuguVoiceChrome can be looked awkward in different height
     
-    public static let recommendedHeight: CGFloat = 256.0
+    public static let recommendedHeight: CGFloat = 68.0
     
-    // MARK: Customizable Properties
+    public enum NuguVoiceChromeTheme {
+        case black
+        case white
+        
+        var backgroundColor: UIColor {
+            switch self {
+            case .black:
+                return UIColor(red: 45.0/255.0, green: 51.0/255.0, blue: 57.0/255.0, alpha: 1.0)
+            case .white:
+                return .white
+            }
+        }
+        
+        var textColor: UIColor {
+            switch self {
+            case .black:
+                return .white
+            case .white:
+                return .black
+            }
+        }
+    }
     
-    public var onCloseButtonClick: (() -> Void)?
+    public var color: NuguVoiceChromeTheme = .white {
+        didSet {
+            backgroundView.backgroundColor = color.backgroundColor
+            recognizedTextLabel.textColor = color.textColor
+            animationContainerView.backgroundColor = color.backgroundColor
+        }
+    }
     
     // MARK: Private Properties
     
     @IBOutlet private weak var backgroundView: UIView!
-    
-    @IBOutlet private weak var stackView: UIStackView!
-    
-    @IBOutlet private weak var topContainerView: UIView!
     @IBOutlet private weak var recognizedTextLabel: UILabel!
+    @IBOutlet private weak var animationContainerView: UIView!
     
-    @IBOutlet private weak var animationView: NuguVoiceChromeAnimationView!
+    private var animationView = AnimationView()
     
     private let speechGuideText = "말씀해주세요"
-    private let guideTextColor = UIColor(red: 112.0/255.0, green: 118.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-    private let recognizeTextColor = UIColor(red: 34.0/255.0, green: 34.0/255.0, blue: 34.0/255.0, alpha: 1.0)
     
     // MARK: Override
     
@@ -76,6 +100,11 @@ final public class NuguVoiceChrome: UIView {
         layer.shadowOpacity = 0.15
         layer.shadowOffset = CGSize(width: 0, height: -1)
         layer.shadowRadius = 10
+        
+        animationView.frame = CGRect(x: 12, y: 0, width: 40, height: 40)
+        animationContainerView.addSubview(animationView)
+        
+        color = .white
     }
 }
 
@@ -88,6 +117,32 @@ public extension NuguVoiceChrome {
         case processing
         case speaking
         case speakingError
+        
+        var transitionFileName: String {
+            switch self {
+            case .listeningPassive:
+                return "01_intro"
+            case .listeningActive:
+                return "03_transition"
+            case .processing:
+                return "05_processing"
+            case .speaking, .speakingError:
+                return "06_transition"
+            }
+        }
+        
+        var animationFileName: String {
+             switch self {
+             case .listeningPassive:
+                 return "02_passive"
+             case .listeningActive:
+                 return "04_active"
+             case .processing:
+                 return "05_processing"
+             case .speaking, .speakingError:
+                 return "07_speaking"
+             }
+         }
     }
 }
 
@@ -95,7 +150,7 @@ public extension NuguVoiceChrome {
 
 public extension NuguVoiceChrome {
     func changeState(state: NuguVoiceChrome.State) {
-        animationView.setAnimation(state: state)
+        playAnimationByState(state: state)
         switch state {
         case .listeningPassive:
             showSpeechGuideText()
@@ -106,51 +161,26 @@ public extension NuguVoiceChrome {
     }
     
     func setRecognizedText(text: String?) {
-        recognizedTextLabel.textColor = recognizeTextColor
         recognizedTextLabel.text = text
-    }
-    
-    func minimize() {
-        guard topContainerView.isHidden == false else { return }
-        topContainerView.alpha = 0
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.topContainerView.isHidden = true
-            self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y + self.topContainerView.frame.size.height, width: self.frame.size.width, height: self.frame.size.height - self.topContainerView.frame.size.height)
-            self.stackView.layoutIfNeeded()
-        }
-    }
-    
-    func maximize() {
-        guard topContainerView.isHidden == true else { return }
-        
-        UIView.animate(
-            withDuration: 0.3,
-            animations: { [weak self] in
-                guard let self = self else { return }
-                self.topContainerView.isHidden = false
-                self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y - self.topContainerView.frame.size.height, width: self.frame.size.width, height: self.frame.size.height + self.topContainerView.frame.size.height)
-                self.stackView.layoutIfNeeded()
-            },
-            completion: { [weak self] _ in
-                self?.topContainerView.alpha = 1
-        })
     }
 }
 
 // MARK: - Private
 
 private extension NuguVoiceChrome {
+    func playAnimationByState(state: NuguVoiceChrome.State) {
+        animationView.animation = Animation.named(state.transitionFileName, bundle: Bundle(for: NuguVoiceChrome.self))
+        animationView.loopMode = .playOnce
+        animationView.play { [weak self] (finished) in
+            if finished {
+                self?.animationView.animation = Animation.named(state.animationFileName, bundle: Bundle(for: NuguVoiceChrome.self))
+                self?.animationView.loopMode = .loop
+                self?.animationView.play()
+            }
+        }
+    }
+    
     func showSpeechGuideText() {
         recognizedTextLabel.text = speechGuideText
-        recognizedTextLabel.textColor = guideTextColor
-    }
-}
-
-// MARK: - IBActions
-
-private extension NuguVoiceChrome {
-    @IBAction func closeButtonDidClick(_ button: UIButton) {
-        onCloseButtonClick?()
     }
 }

@@ -254,13 +254,11 @@ private extension MainViewController {
             
             self.nuguVoiceChrome.removeFromSuperview()
             self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
-            self.nuguVoiceChrome.onCloseButtonClick = { [weak self] in
-                self?.dismissVoiceChrome()
-            }
             self.view.addSubview(self.nuguVoiceChrome)
             UIView.animate(withDuration: 0.3) { [weak self] in
                 guard let self = self else { return }
                 self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
+                self.nuguButton.alpha = 0
             }
         }
     }
@@ -272,6 +270,7 @@ private extension MainViewController {
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
             self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: self.nuguVoiceChrome.bounds.height)
+            self.nuguButton.alpha = 1.0
         }, completion: { [weak self] _ in
             self?.nuguVoiceChrome.removeFromSuperview()
         })
@@ -425,7 +424,6 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.async { [weak self] in
                 guard expectSpeech == nil else {
                     self?.nuguVoiceChrome.changeState(state: .speaking)
-                    self?.nuguVoiceChrome.minimize()
                     return
                 }
                 self?.dismissVoiceChrome()
@@ -438,7 +436,6 @@ extension MainViewController: DialogStateDelegate {
         case .recognizing:
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .listeningActive)
-                self?.nuguVoiceChrome.maximize()
             }
         case .thinking:
             DispatchQueue.main.async { [weak self] in
