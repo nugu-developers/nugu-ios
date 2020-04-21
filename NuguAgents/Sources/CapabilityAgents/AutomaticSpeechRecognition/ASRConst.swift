@@ -22,5 +22,4 @@ import Foundation
 
 enum ASRConst {
     static let focusTimeout: DispatchTimeInterval = .milliseconds(1000)
-    static let sampleRate = 16000.0
 }

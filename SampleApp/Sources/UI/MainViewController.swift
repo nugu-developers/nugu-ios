@@ -233,7 +233,7 @@ private extension MainViewController {
 // MARK: - Private (Voice Chrome)
 
 private extension MainViewController {
-    func presentVoiceChrome(initiator: ASRInitiator) {
+    func presentVoiceChrome(initiator: ASROptions.Initiator) {
         voiceChromeDismissWorkItem?.cancel()
         
         NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
@@ -242,8 +242,15 @@ private extension MainViewController {
                 log.error(SampleAppError.recordPermissionError)
                 return
             }
+            guard let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") else {
+                log.error("EPD model file not exist")
+                return
+            }
+            
             NuguCentralManager.shared.localTTSAgent.stopLocalTTS()
-            NuguCentralManager.shared.client.asrAgent.startRecognition(initiator: initiator)
+            
+            let options = ASROptions(initiator: initiator, endPointing: .client(epdFile: epdFile))
+            NuguCentralManager.shared.client.asrAgent.startRecognition(options: options)
             
             self.nuguVoiceChrome.removeFromSuperview()
             self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
@@ -380,12 +387,19 @@ private extension MainViewController {
     }
 }
 
-// MARK: - WakeUpDetectorDelegate
+// MARK: - KeywordDetectorDelegate
 
 extension MainViewController: KeywordDetectorDelegate {
-    func keywordDetectorDidDetect(data: Data, padding: Int) {
+    func keywordDetectorDidDetect(keyword: String, data: Data, start: Int, end: Int, detection: Int) {
         DispatchQueue.main.async { [weak self] in
-            self?.presentVoiceChrome(initiator: .wakeUpKeyword)
+            self?.presentVoiceChrome(initiator: .wakeUpKeyword(
+                keyword: keyword,
+                data: data,
+                start: start,
+                end: end,
+                detection: detection
+                )
+            )
         }
     }
     

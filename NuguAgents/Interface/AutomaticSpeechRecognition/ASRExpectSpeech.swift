@@ -20,15 +20,24 @@
 
 import Foundation
 
+import NuguCore
+
 /// The information about multiturn.
 ///
 /// NUGU ask you to get more information to know about you requested.
 public struct ASRExpectSpeech {
-    public let timeoutInMilliseconds: Int?
+    private let timeoutInMilliseconds: Int?
     public let playServiceId: String?
     public let sessionId: String
     public let domainTypes: [AnyHashable]?
     public let asrContext: [String: AnyHashable]?
+}
+
+extension ASRExpectSpeech {
+    var timeout: TimeIntervallic {
+        let timeout = timeoutInMilliseconds ?? 7000
+        return NuguTimeInterval(milliseconds: timeout)
+    }
 }
 
 // MARK: - ASRExpectSpeech: Decodable

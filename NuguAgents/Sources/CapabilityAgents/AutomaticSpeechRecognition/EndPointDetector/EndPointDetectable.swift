@@ -1,10 +1,9 @@
 //
-//  ASREncoding.swift
+//  EndPointDetectable.swift
 //  NuguAgents
 //
-//  Created by childc on 2020/01/28.
-//  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
-//
+//  Created by MinChul Lee on 2020/04/03.
+//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -21,7 +20,12 @@
 
 import Foundation
 
-public enum ASREncoding: String {
-    case partial = "PARTIAL"
-    case complete = "COMPLETE"
+import NuguCore
+
+protocol EndPointDetectable: class {
+    var delegate: EndPointDetectorDelegate? { get set }
+    
+    func start(audioStreamReader: AudioStreamReadable)
+    func stop()
+    func handleNotifyResult(_ state: ASRNotifyResult.State)
 }
