@@ -22,6 +22,9 @@ import Foundation
 
 public class TycheEndPointDetectorEngine: NSObject {
     private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.jademarble.tyche_end_point_detector")
+    
+    private let epdFile: URL
+    
     private var epdWorkItem: DispatchWorkItem?
     private var engineHandle: EpdHandle?
     
@@ -46,9 +49,11 @@ public class TycheEndPointDetectorEngine: NSObject {
     /// The flush time for reverb removal.
     public var flushTime: Int = 100
     
-    public var epdFile: URL?
-    
     public weak var delegate: TycheEndPointDetectorEngineDelegate?
+    
+    public init(epdFile: URL) {
+        self.epdFile = epdFile
+    }
     
     public func start(
         inputStream: InputStream,
@@ -126,8 +131,6 @@ public class TycheEndPointDetectorEngine: NSObject {
         if engineHandle != nil {
             epdClientChannelRELEASE(engineHandle)
         }
-        
-        guard let epdFile = epdFile else { throw EndPointDetectorError.initFailed }
         
         try epdFile.path.withCString { [weak self] (cstringEpdFile) -> Void in
             guard let self = self else { return }

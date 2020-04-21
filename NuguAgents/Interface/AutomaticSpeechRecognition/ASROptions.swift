@@ -20,21 +20,77 @@
 
 import Foundation
 
+import NuguCore
+
 public struct ASROptions {
     /// Max duration from speech start to end.
-    public let maxDuration: Int
+    public let maxDuration: TimeIntervallic
     /// Max duration of waiting for speech.
-    public let timeout: Int
+    public var timeout: TimeIntervallic
     /// The engine waits this time then consider speech end.
-    public let pauseLength: Int
+    public let pauseLength: TimeIntervallic
+    public let sampleRate = 16000.0
+    public var initiator: Initiator
+    public let encoding: Encoding
+    public let endPointing: EndPointing
     
     /// - Parameters:
     ///   - maxDuration: Max duration from speech start to end.
     ///   - timeout: Max duration of waiting for speech.
     ///   - pauseLength: The engine waits this time then consider speech end.
-    public init(maxDuration: Int = 10, timeout: Int = 7, pauseLength: Int = 700) {
+    public init(
+        maxDuration: TimeIntervallic = NuguTimeInterval(seconds: 10),
+        timeout: TimeIntervallic = NuguTimeInterval(seconds: 7),
+        pauseLength: TimeIntervallic = NuguTimeInterval(milliseconds: 700),
+        initiator: Initiator = .user,
+        encoding: Encoding = .partial,
+        endPointing: EndPointing
+    ) {
         self.maxDuration = maxDuration
         self.timeout = timeout
         self.pauseLength = pauseLength
+        self.initiator = initiator
+        self.encoding = encoding
+        self.endPointing = endPointing
+    }
+
+    public enum Initiator: Equatable {
+        case wakeUpKeyword(keyword: String, data: Data, start: Int, end: Int, detection: Int)
+        case user
+        case scenario
+    }
+
+    public enum Encoding {
+        case partial
+        case complete
+    }
+    
+    public enum EndPointing: Equatable {
+        case client(epdFile: URL)
+        /// Server side end point detector does not support yet.
+        case server
+    }
+}
+
+// MARK: - ASROptions.EndPointing + server value
+
+extension ASROptions.Encoding {
+    var value: String {
+        switch self {
+        case .partial: return "PARTIAL"
+        case .complete: return "COMPLETE"
+        }
+    }
+}
+
+
+// MARK: - ASROptions.EndPointing + server value
+
+extension ASROptions.EndPointing {
+    var value: String {
+        switch self {
+        case .client: return "CLIENT"
+        case .server: return "SERVER"
+        }
     }
 }

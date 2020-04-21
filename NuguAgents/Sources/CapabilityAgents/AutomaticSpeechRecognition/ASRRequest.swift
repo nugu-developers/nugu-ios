@@ -26,14 +26,7 @@ struct ASRRequest {
     let contextPayload: [ContextInfo]
     let reader: AudioStreamReadable
     let dialogRequestId: String
-    let initiator: ASRInitiator
     let options: ASROptions
     let referrerDialogRequestId: String?
     let completion: ((StreamDataState) -> Void)?
-}
-
-public enum ASRInitiator {
-    case wakeUpKeyword
-    case user
-    case scenario
 }

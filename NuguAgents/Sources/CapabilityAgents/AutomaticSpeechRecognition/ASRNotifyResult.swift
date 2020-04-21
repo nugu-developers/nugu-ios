@@ -36,8 +36,6 @@ struct ASRNotifyResult {
         case sos = "SOS"
         /// EOS(End of Speech)
         case eos = "EOS"
-        /// Wakeup 키워드 연속 발화
-        case reset = "RESET"
         /// Wakeup False Acceptance
         case falseAcceptance = "FA"
         /// Error occurred

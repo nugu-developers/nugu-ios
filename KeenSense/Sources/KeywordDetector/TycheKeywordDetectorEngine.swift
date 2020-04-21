@@ -155,21 +155,19 @@ extension TycheKeywordDetectorEngine {
 
 // MARK: - ETC
 extension TycheKeywordDetectorEngine {
-    private func extractDetectedData() -> (data: Data, padding: Int) {
-        let startTime = Int(Wakeup_GetStartTime(engineHandle))
-        let endTime = Int(Wakeup_GetEndTime(engineHandle))
-        let paddingTime = Int(Wakeup_GetDelayTime(engineHandle))
+    private func notifyDetection() {
+        let startMargin = convertTimeToDataOffset(Wakeup_GetStartMargin(engineHandle))
+        let start = convertTimeToDataOffset(Wakeup_GetStartTime(engineHandle))
+        let end = convertTimeToDataOffset(Wakeup_GetEndTime(engineHandle))
+        let detection = convertTimeToDataOffset(Wakeup_GetDetectionTime(engineHandle))
+        let base = start - startMargin
+        log.debug("base: \(base), startMargin: \(startMargin), start: \(start), end: \(end), detection: \(detection)")
         
-        // convert time to frame count
-        let startIndex = (startTime * KeywordDetectorConst.sampleRate * 2) / 1000
-        let endIndex = (endTime * KeywordDetectorConst.sampleRate * 2) / 1000
-        let paddingSize = (paddingTime * KeywordDetectorConst.sampleRate * 2) / 1000
-        log.debug("startTime: \(startTime),(\(startIndex)), endTime: \(endTime),(\(endIndex)), paddingTime: \(paddingTime)")
-        
-        let size = (endIndex - startIndex) + paddingSize
-        let detectedRange = (detectingData.count - size)..<detectingData.count
+        // -------|--startMargin--|-----------|-------|
+        //       base           start        end  detection
+        let detectedRange = (detectingData.count - (detection - base))..<detectingData.count
         let detectedData = detectingData.subdata(in: detectedRange)
-        
+
         // reset buffers
         detectingData.removeAll()
         
@@ -182,8 +180,17 @@ extension TycheKeywordDetectorEngine {
             log.debug(error)
         }
         #endif
-        
-        return (detectedData, paddingSize)
+
+        delegate?.tycheKeywordDetectorEngineDidDetect(
+            data: detectedData,
+            start: start - base,
+            end: end - base,
+            detection: detection - base
+        )
+    }
+    
+    private func convertTimeToDataOffset(_ time: Int32) -> Int {
+        return (Int(time) * KeywordDetectorConst.sampleRate * 2) / 1000
     }
 }
 
@@ -215,8 +222,7 @@ extension TycheKeywordDetectorEngine: StreamDelegate {
                 log.debug("kwd hasBytesAvailable detected")
                 stop()
 
-                let detectedData = extractDetectedData()
-                delegate?.tycheKeywordDetectorEngineDidDetect(data: detectedData.data, padding: detectedData.padding)
+                notifyDetection()
             }
             
         case .endEncountered:

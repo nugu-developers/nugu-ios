@@ -21,7 +21,7 @@
 import Foundation
 
 public protocol KeywordDetectorDelegate: class {
-    func keywordDetectorDidDetect(data: Data, padding: Int)
+    func keywordDetectorDidDetect(keyword: String, data: Data, start: Int, end: Int, detection: Int)
     func keywordDetectorDidError(_ error: Error)
     func keywordDetectorStateDidChange(_ state: KeywordDetectorState)
 }
