@@ -79,6 +79,8 @@ final public class NuguChipsView: UIView {
     
     public var onChipsSelect: ((_ text: String?) -> Void)?
     
+    public var willStartScrolling: (() -> Void)?
+    
     public var chipsText: [NuguChipsType] = [] {
         didSet {
             var origin = CGPoint(x: 0.0, y: 14.0)
@@ -125,8 +127,19 @@ final public class NuguChipsView: UIView {
         // swiftlint:enable force_cast
         view.frame = bounds
         addSubview(view)
+        chipsScrollView.delegate = self
     }
 }
+
+// MARK: - UIScrollViewDelegate
+
+extension NuguChipsView: UIScrollViewDelegate {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        willStartScrolling?()
+    }
+}
+
+// MARK: - Target / Action
 
 @objc extension NuguChipsView {
     func chipsDidSelect(button: UIButton) {

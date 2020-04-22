@@ -23,7 +23,7 @@ import UIKit
 import Lottie
 
 final public class NuguVoiceChrome: UIView {
-    
+
     // MARK: RecommendedHeight for NuguVoiceChrome
     // NuguVoiceChrome is designed in accordance with recommendedHeight
     // Note that NuguVoiceChrome can be looked awkward in different height
@@ -110,6 +110,12 @@ final public class NuguVoiceChrome: UIView {
         animationContainerView.addSubview(animationView)
         
         theme = .white
+        chipsView.willStartScrolling = {
+            UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                self?.guideTextLabel.text = nil
+                self?.layoutIfNeeded()
+            })
+        }
     }
 }
 
