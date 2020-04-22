@@ -24,6 +24,7 @@ import NuguCore
 import NuguAgents
 import NuguClientKit
 import NuguLoginKit
+import NuguUIKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
@@ -208,7 +209,7 @@ private extension NuguCentralManager {
     func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
         DispatchQueue.main.async { [weak self] in
             self?.client.audioPlayerAgent.stop()
-            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
+            NuguToast.shared.showToast(message: sampleAppError.errorDescription)
             self?.popToRootViewController()
             switch sampleAppError {
             case .loginUnauthorized:

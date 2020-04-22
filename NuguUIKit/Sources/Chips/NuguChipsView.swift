@@ -21,6 +21,12 @@
 import UIKit
 
 final public class NuguChipsView: UIView {
+    private struct ChipsConst {
+        static let chipsInset = CGFloat(16.0)
+        static let chipsHeight = CGFloat(40.0)
+        static let spaceBetweenChips = CGFloat(8.0)
+        static let chipsFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
+    }
     
     // MARK: - NuguChipsView.NuguChipsViewTheme
     
@@ -78,21 +84,21 @@ final public class NuguChipsView: UIView {
             var origin = CGPoint(x: 0.0, y: 14.0)
             chipsText.forEach { (chipsType) in
                 let chipsButton = UIButton(type: .custom)
-                chipsButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: chipsInset, bottom: 0, right: chipsInset)
-                chipsButton.layer.cornerRadius = chipsHeight / 2
+                chipsButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: ChipsConst.chipsInset, bottom: 0, right: ChipsConst.chipsInset)
+                chipsButton.layer.cornerRadius = ChipsConst.chipsHeight / 2
                 chipsButton.layer.borderWidth = 0.5
                 chipsButton.layer.borderColor = UIColor(red: 0.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 0.04).cgColor
                 chipsButton.clipsToBounds = true
                 chipsButton.backgroundColor = theme.chipsBackgroundColor
                 chipsButton.setTitleColor(chipsType.textColor(theme: theme), for: .normal)
                 chipsButton.setTitle(chipsType.text, for: .normal)
-                chipsButton.titleLabel?.font = chipsFont
+                chipsButton.titleLabel?.font = ChipsConst.chipsFont
                 chipsButton.addTarget(self, action: #selector(chipsDidSelect(button:)), for: .touchUpInside)
                 chipsButton.sizeToFit()
-                chipsButton.frame = CGRect(origin: origin, size: CGSize(width: chipsButton.frame.size.width, height: chipsHeight))
-                origin = CGPoint(x: origin.x + spaceBetweenChips + chipsButton.frame.size.width, y: origin.y)
+                chipsButton.frame = CGRect(origin: origin, size: CGSize(width: chipsButton.frame.size.width, height: ChipsConst.chipsHeight))
+                origin = CGPoint(x: origin.x + ChipsConst.spaceBetweenChips + chipsButton.frame.size.width, y: origin.y)
                 chipsScrollView.addSubview(chipsButton)
-                chipsScrollView.contentSize = CGSize(width: origin.x, height: chipsHeight)
+                chipsScrollView.contentSize = CGSize(width: origin.x, height: ChipsConst.chipsHeight)
             }
         }
     }
@@ -100,11 +106,6 @@ final public class NuguChipsView: UIView {
     // MARK: Private Properties
     
     @IBOutlet private weak var chipsScrollView: UIScrollView!
-    
-    private let chipsInset = CGFloat(16.0)
-    private let chipsHeight = CGFloat(40.0)
-    private let spaceBetweenChips = CGFloat(8.0)
-    private let chipsFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
     
     // MARK: Override
     

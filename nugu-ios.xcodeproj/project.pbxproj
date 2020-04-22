@@ -156,7 +156,6 @@
 		1FFFF4F2237672F100C9A177 /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4BC237672F100C9A177 /* DisplayView.swift */; };
 		1FFFF4F3237672F100C9A177 /* DisplayListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4BD237672F100C9A177 /* DisplayListView.swift */; };
 		1FFFF4F4237672F100C9A177 /* DisplayAudioPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4BE237672F100C9A177 /* DisplayAudioPlayerView.xib */; };
-		1FFFF4F5237672F100C9A177 /* NuguToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4BF237672F100C9A177 /* NuguToastManager.swift */; };
 		1FFFF4F6237672F100C9A177 /* UIColor+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4C1237672F100C9A177 /* UIColor+Convenience.swift */; };
 		1FFFF4F7237672F100C9A177 /* Int+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4C2237672F100C9A177 /* Int+Convenience.swift */; };
 		1FFFF4F8237672F100C9A177 /* ImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4C4237672F100C9A177 /* ImageDataLoader.swift */; };
@@ -323,8 +322,9 @@
 		75222039244F0DE300192D88 /* 06_transition.json in Resources */ = {isa = PBXBuildFile; fileRef = 75222032244F0DE300192D88 /* 06_transition.json */; };
 		7522203C244F627E00192D88 /* NuguChipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7522203B244F627E00192D88 /* NuguChipsView.swift */; };
 		7522203E244F632800192D88 /* NuguChipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7522203D244F632800192D88 /* NuguChipsView.xib */; };
-		75222049244FE89800192D88 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
-		7522204A244FE8C700192D88 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
+		7522205D244FFD1C00192D88 /* NuguToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7522205C244FFD1C00192D88 /* NuguToast.swift */; };
+		7522205E2450123E00192D88 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
+		7522205F2450125300192D88 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
 		7547B703240CD5C200C57A34 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */; };
 		7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
@@ -778,7 +778,6 @@
 		1FFFF4BC237672F100C9A177 /* DisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
 		1FFFF4BD237672F100C9A177 /* DisplayListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayListView.swift; sourceTree = "<group>"; };
 		1FFFF4BE237672F100C9A177 /* DisplayAudioPlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayAudioPlayerView.xib; sourceTree = "<group>"; };
-		1FFFF4BF237672F100C9A177 /* NuguToastManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguToastManager.swift; sourceTree = "<group>"; };
 		1FFFF4C1237672F100C9A177 /* UIColor+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Convenience.swift"; sourceTree = "<group>"; };
 		1FFFF4C2237672F100C9A177 /* Int+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Convenience.swift"; sourceTree = "<group>"; };
 		1FFFF4C4237672F100C9A177 /* ImageDataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataLoader.swift; sourceTree = "<group>"; };
@@ -859,6 +858,7 @@
 		75222032244F0DE300192D88 /* 06_transition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 06_transition.json; sourceTree = "<group>"; };
 		7522203B244F627E00192D88 /* NuguChipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguChipsView.swift; sourceTree = "<group>"; };
 		7522203D244F632800192D88 /* NuguChipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NuguChipsView.xib; sourceTree = "<group>"; };
+		7522205C244FFD1C00192D88 /* NuguToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguToast.swift; sourceTree = "<group>"; };
 		7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		75ABAB06244EFD8600B4BB2D /* Lottie.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lottie.framework; path = Carthage/Build/iOS/Lottie.framework; sourceTree = "<group>"; };
 		7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEndPointDetector.swift; sourceTree = "<group>"; };
@@ -949,7 +949,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75222049244FE89800192D88 /* Lottie.framework in Frameworks */,
+				7522205E2450123E00192D88 /* Lottie.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -978,7 +978,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7522204A244FE8C700192D88 /* Lottie.framework in Frameworks */,
+				7522205F2450125300192D88 /* Lottie.framework in Frameworks */,
 				1F10090B23792A0000D90FEE /* RxSwift.framework in Frameworks */,
 				73152FA123E0405900F843C3 /* NuguAgents.framework in Frameworks */,
 				1FFFF51A237674DF00C9A177 /* NuguUIKit.framework in Frameworks */,
@@ -1957,6 +1957,7 @@
 		1FFFF45A237580F500C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7522205B244FFCBD00192D88 /* Toast */,
 				7522203A244F622D00192D88 /* Chips */,
 				1FFFF45B237580F500C9A177 /* VoiceChrome */,
 				1FFFF45E237580F500C9A177 /* Button */,
@@ -2033,7 +2034,6 @@
 			children = (
 				1FFFF4AB237672F100C9A177 /* DisplayViews */,
 				1FFFF4AA237672F100C9A177 /* NuguWebView.swift */,
-				1FFFF4BF237672F100C9A177 /* NuguToastManager.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2387,6 +2387,14 @@
 				7522203D244F632800192D88 /* NuguChipsView.xib */,
 			);
 			path = Chips;
+			sourceTree = "<group>";
+		};
+		7522205B244FFCBD00192D88 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				7522205C244FFD1C00192D88 /* NuguToast.swift */,
+			);
+			path = Toast;
 			sourceTree = "<group>";
 		};
 		7E5F4889243C370900118054 /* Sound */ = {
@@ -3139,6 +3147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7522205D244FFD1C00192D88 /* NuguToast.swift in Sources */,
 				1FFFF476237580F500C9A177 /* NuguButton.swift in Sources */,
 				1FFFF474237580F500C9A177 /* NuguVoiceChrome.swift in Sources */,
 				7522203C244F627E00192D88 /* NuguChipsView.swift in Sources */,
@@ -3197,7 +3206,6 @@
 				1FFFF4E0237672F100C9A177 /* IntroViewController.swift in Sources */,
 				A15050952416272500671568 /* AudioPlayerUpdateMetadataPayload.swift in Sources */,
 				1FFFF4F0237672F100C9A177 /* DisplayBodyView.swift in Sources */,
-				1FFFF4F5237672F100C9A177 /* NuguToastManager.swift in Sources */,
 				1FFFF4F9237672F100C9A177 /* SampleAppError.swift in Sources */,
 				A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */,
 				1FFFF4ED237672F100C9A177 /* DisplayCommonTemplate.swift in Sources */,
