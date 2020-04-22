@@ -11,6 +11,8 @@
             <connections>
                 <outlet property="animationContainerView" destination="QAu-zn-aRY" id="nUv-Je-wPP"/>
                 <outlet property="backgroundView" destination="0dC-Hy-Gs2" id="heg-aq-TTK"/>
+                <outlet property="chipsView" destination="fpk-Xj-LTu" id="b63-zw-MEF"/>
+                <outlet property="guideTextLabel" destination="MSu-2s-Sdh" id="b4N-dU-yqd"/>
                 <outlet property="recognizedTextLabel" destination="MRc-be-uIQ" id="byh-FD-OtX"/>
             </connections>
         </placeholder>
@@ -23,8 +25,14 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="68"/>
                     <color key="backgroundColor" red="0.94509803921568625" green="0.94901960784313721" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="말씀해주세요" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRc-be-uIQ">
-                    <rect key="frame" x="60" y="24" width="299" height="20.333333333333329"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="말씀해주세요" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MSu-2s-Sdh">
+                    <rect key="frame" x="59.999999999999993" y="24" width="88.333333333333314" height="20.333333333333329"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRc-be-uIQ">
+                    <rect key="frame" x="60" y="34" width="299" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -37,15 +45,24 @@
                         <constraint firstAttribute="width" constant="60" id="zkf-kq-Pwe"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpk-Xj-LTu" customClass="NuguChipsView" customModule="NuguUIKit" customModuleProvider="target">
+                    <rect key="frame" x="162.33333333333337" y="0.0" width="212.66666666666663" height="68"/>
+                </view>
             </subviews>
             <constraints>
                 <constraint firstItem="QAu-zn-aRY" firstAttribute="top" secondItem="Q6Z-c1-5mq" secondAttribute="top" constant="14" id="6Fw-dW-rmh"/>
+                <constraint firstItem="MSu-2s-Sdh" firstAttribute="leading" secondItem="QAu-zn-aRY" secondAttribute="trailing" id="GCs-Rd-XEp"/>
                 <constraint firstItem="QAu-zn-aRY" firstAttribute="leading" secondItem="Q6Z-c1-5mq" secondAttribute="leading" id="GzY-dv-JnL"/>
                 <constraint firstAttribute="bottom" secondItem="0dC-Hy-Gs2" secondAttribute="bottom" id="KxG-m3-FRL"/>
                 <constraint firstAttribute="trailing" secondItem="0dC-Hy-Gs2" secondAttribute="trailing" id="Nh3-eE-EPA"/>
                 <constraint firstItem="MRc-be-uIQ" firstAttribute="leading" relation="lessThanOrEqual" secondItem="QAu-zn-aRY" secondAttribute="trailing" priority="750" id="TtS-95-sY8"/>
                 <constraint firstItem="0dC-Hy-Gs2" firstAttribute="leading" secondItem="Q6Z-c1-5mq" secondAttribute="leading" id="YJ2-Pv-I5v"/>
+                <constraint firstAttribute="bottom" secondItem="fpk-Xj-LTu" secondAttribute="bottom" id="bid-bq-HXy"/>
+                <constraint firstItem="MSu-2s-Sdh" firstAttribute="trailing" secondItem="fpk-Xj-LTu" secondAttribute="leading" constant="-14" id="brL-5r-wJv"/>
+                <constraint firstItem="fpk-Xj-LTu" firstAttribute="top" secondItem="Q6Z-c1-5mq" secondAttribute="top" id="lPu-9i-UyE"/>
+                <constraint firstAttribute="trailing" secondItem="fpk-Xj-LTu" secondAttribute="trailing" id="n9j-YI-sAa"/>
                 <constraint firstItem="MRc-be-uIQ" firstAttribute="centerY" secondItem="QAu-zn-aRY" secondAttribute="centerY" id="o4l-f6-rtv"/>
+                <constraint firstItem="MSu-2s-Sdh" firstAttribute="centerY" secondItem="QAu-zn-aRY" secondAttribute="centerY" id="oL6-jM-Pq2"/>
                 <constraint firstAttribute="trailing" secondItem="MRc-be-uIQ" secondAttribute="trailing" constant="16" id="pyZ-eW-Qkr"/>
                 <constraint firstItem="0dC-Hy-Gs2" firstAttribute="top" secondItem="Q6Z-c1-5mq" secondAttribute="top" id="wBr-O6-1AF"/>
             </constraints>

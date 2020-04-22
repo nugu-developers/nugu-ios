@@ -30,6 +30,8 @@ final public class NuguVoiceChrome: UIView {
     
     public static let recommendedHeight: CGFloat = 68.0
     
+    // MARK: - NuguVoiceChrome.NuguVoiceChromeTheme
+    
     public enum NuguVoiceChromeTheme {
         case black
         case white
@@ -53,19 +55,23 @@ final public class NuguVoiceChrome: UIView {
         }
     }
     
-    public var color: NuguVoiceChromeTheme = .white {
+    // MARK: - Public Properties (configurable variables)
+    
+    public var theme: NuguVoiceChromeTheme = .white {
         didSet {
-            backgroundView.backgroundColor = color.backgroundColor
-            recognizedTextLabel.textColor = color.textColor
-            animationContainerView.backgroundColor = color.backgroundColor
+            backgroundView.backgroundColor = theme.backgroundColor
+            recognizedTextLabel.textColor = theme.textColor
+            animationContainerView.backgroundColor = theme.backgroundColor
         }
     }
     
     // MARK: Private Properties
     
     @IBOutlet private weak var backgroundView: UIView!
+    @IBOutlet private weak var guideTextLabel: UILabel!
     @IBOutlet private weak var recognizedTextLabel: UILabel!
     @IBOutlet private weak var animationContainerView: UIView!
+    @IBOutlet private weak var chipsView: NuguChipsView!
     
     private var animationView = AnimationView()
     
@@ -75,13 +81,11 @@ final public class NuguVoiceChrome: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        
         loadFromXib()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
         loadFromXib()
     }
     
@@ -104,7 +108,7 @@ final public class NuguVoiceChrome: UIView {
         animationView.frame = CGRect(x: 12, y: 0, width: 40, height: 40)
         animationContainerView.addSubview(animationView)
         
-        color = .white
+        theme = .white
     }
 }
 
@@ -160,8 +164,15 @@ public extension NuguVoiceChrome {
         }
     }
     
+    func setChips(chips: [NuguChipsView.NuguChipsType]) {
+        chipsView.chipsText = chips
+        chipsView.isHidden = false
+    }
+    
     func setRecognizedText(text: String?) {
         recognizedTextLabel.text = text
+        guideTextLabel.text = nil
+        chipsView.isHidden = true
     }
 }
 
@@ -181,6 +192,7 @@ private extension NuguVoiceChrome {
     }
     
     func showSpeechGuideText() {
-        recognizedTextLabel.text = speechGuideText
+        recognizedTextLabel.text = nil
+        guideTextLabel.text = speechGuideText
     }
 }
