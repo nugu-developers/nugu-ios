@@ -28,6 +28,7 @@ final public class NuguChipsView: UIView {
         static let chipsHeight = CGFloat(40.0)
         static let spaceBetweenChips = CGFloat(8.0)
         static let chipsFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
+        static let minChipsCount = 2
         static let maxChipsCount = 10
         static let maxChipsWidth = UIScreen.main.bounds.size.width - CGFloat(180.0)
     }
@@ -87,6 +88,7 @@ final public class NuguChipsView: UIView {
     
     public var chipsText: [NuguChipsType] = [] {
         didSet {
+            guard chipsText.count >= ChipsConst.minChipsCount else { return }
             var origin = CGPoint(x: ChipsConst.scrollViewOriginX, y: ChipsConst.scrollViewOriginY)
             chipsText.enumerated().forEach { (index, chipsType) in
                 guard index < ChipsConst.maxChipsCount else { return }
