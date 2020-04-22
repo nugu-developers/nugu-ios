@@ -62,6 +62,7 @@ final public class NuguVoiceChrome: UIView {
             backgroundView.backgroundColor = theme.backgroundColor
             recognizedTextLabel.textColor = theme.textColor
             animationContainerView.backgroundColor = theme.backgroundColor
+            chipsView.theme = theme == .white ? .white : .black
         }
     }
     
