@@ -45,7 +45,7 @@ public class KeywordDetector {
     }
     
     private var keyword: String {
-        (keywordSource?.keyword ?? Keyword.aria).description
+        keywordSource?.keyword ?? ""
     }
     
     public init() {

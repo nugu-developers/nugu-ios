@@ -82,7 +82,7 @@ extension NuguAudioSessionManager {
             // Defer statement for recovering audioSession and wakeUpDetector
             defer {
                 updateAudioSessionCategoryWithOptions()
-                NuguCentralManager.shared.refreshWakeUpDetector()
+                NuguCentralManager.shared.startWakeUpDetector()
             }
             // Notify audio session deactivation to 3rd party apps
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)

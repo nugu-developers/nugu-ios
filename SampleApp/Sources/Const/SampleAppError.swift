@@ -23,7 +23,6 @@ import NuguLoginKit
 
 enum SampleAppError: Error {
     case nilValue(description: String?)
-    case recordPermissionError
     
     case loginFailed(error: Error)
     case loginUnauthorized(reason: APIErrorReason)
@@ -39,8 +38,6 @@ extension SampleAppError: LocalizedError {
         switch self {
         case .nilValue(let description):
             return description
-        case .recordPermissionError:
-            return "Record permission denied"
         case .loginFailed(let error):
             return "login has failed (reason: \(error))"
         case .loginUnauthorized:

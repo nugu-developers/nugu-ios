@@ -184,7 +184,6 @@ private extension MainViewController {
             // Exception handling when already disconnected, scheduled update in future
             nuguButton.isEnabled = false
             nuguButton.isHidden = true
-            NuguCentralManager.shared.stopWakeUpDetector()
             
             // Disable Nugu SDK
             NuguCentralManager.shared.disable()
@@ -197,12 +196,6 @@ private extension MainViewController {
         
         // Enable Nugu SDK
         NuguCentralManager.shared.enable()
-        
-        refreshWakeUpDetector()
-    }
-    
-    func refreshWakeUpDetector() {
-        NuguCentralManager.shared.refreshWakeUpDetector()
     }
 }
 
@@ -239,7 +232,7 @@ private extension MainViewController {
         NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
             guard let self = self else { return }
             guard isGranted else {
-                log.error(SampleAppError.recordPermissionError)
+                log.error("Record permission denied")
                 return
             }
             guard let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") else {
@@ -466,7 +459,7 @@ extension MainViewController: ASRAgentDelegate {
     func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?) {
         switch state {
         case .idle:
-            refreshWakeUpDetector()
+            NuguCentralManager.shared.startWakeUpDetector()
         case .listening:
             NuguCentralManager.shared.stopWakeUpDetector()
         default:

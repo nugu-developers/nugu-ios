@@ -22,14 +22,12 @@ import Foundation
 
 import KeenSense
 
-public typealias Keyword = KeenSense.Keyword
-
 public struct KeywordSource {
-    public let keyword: Keyword
+    public let keyword: String
     public let netFileUrl: URL
     public let searchFileUrl: URL
     
-    public init(keyword: Keyword, netFileUrl: URL, searchFileUrl: URL) {
+    public init(keyword: String, netFileUrl: URL, searchFileUrl: URL) {
         self.keyword = keyword
         self.netFileUrl = netFileUrl
         self.searchFileUrl = searchFileUrl
