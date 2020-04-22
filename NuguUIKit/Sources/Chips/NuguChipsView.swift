@@ -28,6 +28,8 @@ final public class NuguChipsView: UIView {
         static let chipsHeight = CGFloat(40.0)
         static let spaceBetweenChips = CGFloat(8.0)
         static let chipsFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
+        static let maxChipsCount = 10
+        static let maxChipsWidth = UIScreen.main.bounds.size.width - CGFloat(180.0)
     }
     
     // MARK: - NuguChipsView.NuguChipsViewTheme
@@ -86,8 +88,10 @@ final public class NuguChipsView: UIView {
     public var chipsText: [NuguChipsType] = [] {
         didSet {
             var origin = CGPoint(x: ChipsConst.scrollViewOriginX, y: ChipsConst.scrollViewOriginY)
-            chipsText.forEach { (chipsType) in
+            chipsText.enumerated().forEach { (index, chipsType) in
+                guard index < ChipsConst.maxChipsCount else { return }
                 let chipsButton = UIButton(type: .custom)
+                chipsButton.titleLabel?.lineBreakMode = .byTruncatingTail
                 chipsButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: ChipsConst.chipsInset, bottom: 0, right: ChipsConst.chipsInset)
                 chipsButton.layer.cornerRadius = ChipsConst.chipsHeight / 2
                 chipsButton.layer.borderWidth = 0.5
@@ -99,7 +103,7 @@ final public class NuguChipsView: UIView {
                 chipsButton.titleLabel?.font = ChipsConst.chipsFont
                 chipsButton.addTarget(self, action: #selector(chipsDidSelect(button:)), for: .touchUpInside)
                 chipsButton.sizeToFit()
-                chipsButton.frame = CGRect(origin: origin, size: CGSize(width: chipsButton.frame.size.width, height: ChipsConst.chipsHeight))
+                chipsButton.frame = CGRect(origin: origin, size: CGSize(width: min(chipsButton.frame.size.width, ChipsConst.maxChipsWidth), height: ChipsConst.chipsHeight))
                 origin = CGPoint(x: origin.x + ChipsConst.spaceBetweenChips + chipsButton.frame.size.width, y: origin.y)
                 chipsScrollView.addSubview(chipsButton)
                 chipsScrollView.contentSize = CGSize(width: origin.x, height: ChipsConst.chipsHeight)
