@@ -27,7 +27,7 @@ public class StreamDataRouter: StreamDataRoutable {
     
     private let nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
-    private var eventSenders = [String: EventSender]()
+    private var eventSenders = EventSenders()
     private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
