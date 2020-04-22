@@ -22,6 +22,8 @@ import UIKit
 
 final public class NuguChipsView: UIView {
     private struct ChipsConst {
+        static let scrollViewOriginX = CGFloat(14.0)
+        static let scrollViewOriginY = CGFloat(14.0)
         static let chipsInset = CGFloat(16.0)
         static let chipsHeight = CGFloat(40.0)
         static let spaceBetweenChips = CGFloat(8.0)
@@ -83,7 +85,7 @@ final public class NuguChipsView: UIView {
     
     public var chipsText: [NuguChipsType] = [] {
         didSet {
-            var origin = CGPoint(x: 0.0, y: 14.0)
+            var origin = CGPoint(x: ChipsConst.scrollViewOriginX, y: ChipsConst.scrollViewOriginY)
             chipsText.forEach { (chipsType) in
                 let chipsButton = UIButton(type: .custom)
                 chipsButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: ChipsConst.chipsInset, bottom: 0, right: ChipsConst.chipsInset)

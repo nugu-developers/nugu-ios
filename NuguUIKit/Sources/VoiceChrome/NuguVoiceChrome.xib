@@ -38,27 +38,27 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QAu-zn-aRY" userLabel="animationContainerView">
-                    <rect key="frame" x="0.0" y="14" width="60" height="40"/>
+                    <rect key="frame" x="0.0" y="14" width="52" height="40"/>
                     <color key="backgroundColor" red="0.94509803921568625" green="0.94901960784313721" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="xkR-bs-AWr"/>
-                        <constraint firstAttribute="width" constant="60" id="zkf-kq-Pwe"/>
+                        <constraint firstAttribute="width" constant="52" id="zkf-kq-Pwe"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpk-Xj-LTu" customClass="NuguChipsView" customModule="NuguUIKit" customModuleProvider="target">
-                    <rect key="frame" x="162.33333333333337" y="0.0" width="212.66666666666663" height="68"/>
+                    <rect key="frame" x="148.33333333333337" y="0.0" width="226.66666666666663" height="68"/>
                 </view>
             </subviews>
             <constraints>
                 <constraint firstItem="QAu-zn-aRY" firstAttribute="top" secondItem="Q6Z-c1-5mq" secondAttribute="top" constant="14" id="6Fw-dW-rmh"/>
-                <constraint firstItem="MSu-2s-Sdh" firstAttribute="leading" secondItem="QAu-zn-aRY" secondAttribute="trailing" id="GCs-Rd-XEp"/>
+                <constraint firstItem="MSu-2s-Sdh" firstAttribute="leading" secondItem="QAu-zn-aRY" secondAttribute="trailing" constant="8" id="GCs-Rd-XEp"/>
                 <constraint firstItem="QAu-zn-aRY" firstAttribute="leading" secondItem="Q6Z-c1-5mq" secondAttribute="leading" id="GzY-dv-JnL"/>
                 <constraint firstAttribute="bottom" secondItem="0dC-Hy-Gs2" secondAttribute="bottom" id="KxG-m3-FRL"/>
                 <constraint firstAttribute="trailing" secondItem="0dC-Hy-Gs2" secondAttribute="trailing" id="Nh3-eE-EPA"/>
-                <constraint firstItem="MRc-be-uIQ" firstAttribute="leading" relation="lessThanOrEqual" secondItem="QAu-zn-aRY" secondAttribute="trailing" priority="750" id="TtS-95-sY8"/>
+                <constraint firstItem="MRc-be-uIQ" firstAttribute="leading" relation="lessThanOrEqual" secondItem="QAu-zn-aRY" secondAttribute="trailing" priority="750" constant="8" id="TtS-95-sY8"/>
                 <constraint firstItem="0dC-Hy-Gs2" firstAttribute="leading" secondItem="Q6Z-c1-5mq" secondAttribute="leading" id="YJ2-Pv-I5v"/>
                 <constraint firstAttribute="bottom" secondItem="fpk-Xj-LTu" secondAttribute="bottom" id="bid-bq-HXy"/>
-                <constraint firstItem="MSu-2s-Sdh" firstAttribute="trailing" secondItem="fpk-Xj-LTu" secondAttribute="leading" constant="-14" id="brL-5r-wJv"/>
+                <constraint firstItem="MSu-2s-Sdh" firstAttribute="trailing" secondItem="fpk-Xj-LTu" secondAttribute="leading" id="brL-5r-wJv"/>
                 <constraint firstItem="fpk-Xj-LTu" firstAttribute="top" secondItem="Q6Z-c1-5mq" secondAttribute="top" id="lPu-9i-UyE"/>
                 <constraint firstAttribute="trailing" secondItem="fpk-Xj-LTu" secondAttribute="trailing" id="n9j-YI-sAa"/>
                 <constraint firstItem="MRc-be-uIQ" firstAttribute="centerY" secondItem="QAu-zn-aRY" secondAttribute="centerY" id="o4l-f6-rtv"/>
