@@ -51,6 +51,7 @@ final public class NuguChipsView: UIView {
     
     public var chipsData: [NuguChipsButton.NuguChipsButtonType] = [] {
         didSet {
+            chipsScrollView.subviews.forEach({ $0.removeFromSuperview() })
             guard chipsData.count >= ChipsConst.minChipsCount else { return }
             var origin = CGPoint(x: ChipsConst.scrollViewOriginX, y: ChipsConst.scrollViewOriginY)
             chipsData.enumerated().forEach { (index, chipsType) in
