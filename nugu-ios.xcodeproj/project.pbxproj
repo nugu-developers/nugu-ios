@@ -326,6 +326,7 @@
 		7522205E2450123E00192D88 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
 		7522205F2450125300192D88 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
 		7547B703240CD5C200C57A34 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */; };
+		75AE7FFB245173BC00E20E8C /* NuguChipsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */; };
 		7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
 		7E1FA2B224244F79006B8BA9 /* BlockingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */; };
@@ -861,6 +862,7 @@
 		7522205C244FFD1C00192D88 /* NuguToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguToast.swift; sourceTree = "<group>"; };
 		7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		75ABAB06244EFD8600B4BB2D /* Lottie.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lottie.framework; path = Carthage/Build/iOS/Lottie.framework; sourceTree = "<group>"; };
+		75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguChipsButton.swift; sourceTree = "<group>"; };
 		7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEndPointDetector.swift; sourceTree = "<group>"; };
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
 		7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockingPolicy.swift; sourceTree = "<group>"; };
@@ -2383,6 +2385,7 @@
 		7522203A244F622D00192D88 /* Chips */ = {
 			isa = PBXGroup;
 			children = (
+				75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */,
 				7522203B244F627E00192D88 /* NuguChipsView.swift */,
 				7522203D244F632800192D88 /* NuguChipsView.xib */,
 			);
@@ -2978,6 +2981,7 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/NattyLog.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Lottie.framework",
 			);
 			outputFileListPaths = (
 			);
@@ -3150,6 +3154,7 @@
 				7522205D244FFD1C00192D88 /* NuguToast.swift in Sources */,
 				1FFFF476237580F500C9A177 /* NuguButton.swift in Sources */,
 				1FFFF474237580F500C9A177 /* NuguVoiceChrome.swift in Sources */,
+				75AE7FFB245173BC00E20E8C /* NuguChipsButton.swift in Sources */,
 				7522203C244F627E00192D88 /* NuguChipsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

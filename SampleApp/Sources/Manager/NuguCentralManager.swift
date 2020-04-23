@@ -70,6 +70,9 @@ final class NuguCentralManager {
         }
     }
     
+    // TODO: - Consider managing inside SDK
+    var isTextAgentInProcess = false
+    
     private init() {
     }
 }
