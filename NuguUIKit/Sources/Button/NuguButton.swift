@@ -21,6 +21,9 @@
 import UIKit
 
 final public class NuguButton: UIButton {
+    
+    // MARK: - NuguButton.NuguButtonType
+    
     public enum NuguButtonType {
         case fab(color: NuguButtonColor)
         case button(color: NuguButtonColor)
@@ -31,11 +34,15 @@ final public class NuguButton: UIButton {
         }
     }
     
+    // MARK: - Public Properties (configurable variables)
+    
     public var nuguButtonType: NuguButtonType = .fab(color: .blue) {
         didSet {
             setButtonImages()
         }
     }
+    
+    // MARK: - Override
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,6 +54,8 @@ final public class NuguButton: UIButton {
         setButtonImages()
     }
 }
+
+// MARK: - Private
 
 private extension NuguButton {
     func setButtonImages() {

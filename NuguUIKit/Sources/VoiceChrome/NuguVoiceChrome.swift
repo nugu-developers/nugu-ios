@@ -24,7 +24,7 @@ import Lottie
 
 final public class NuguVoiceChrome: UIView {
 
-    // MARK: RecommendedHeight for NuguVoiceChrome
+    // MARK: - RecommendedHeight for NuguVoiceChrome
     // NuguVoiceChrome is designed in accordance with recommendedHeight
     // Note that NuguVoiceChrome can be looked awkward in different height
     
@@ -66,7 +66,7 @@ final public class NuguVoiceChrome: UIView {
         }
     }
     
-    // MARK: Private Properties
+    // MARK: - Private Properties
     
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var guideTextLabel: UILabel!
@@ -78,7 +78,7 @@ final public class NuguVoiceChrome: UIView {
     
     private let speechGuideText = "말씀해주세요"
     
-    // MARK: Override
+    // MARK: - Override
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -171,8 +171,8 @@ public extension NuguVoiceChrome {
         }
     }
     
-    func setChips(chips: [NuguChipsView.NuguChipsType]) {
-        chipsView.chipsText = chips
+    func setChipsData(chipsData: [NuguChipsView.NuguChipsType]) {
+        chipsView.chipsData = chipsData
         chipsView.isHidden = false
     }
     

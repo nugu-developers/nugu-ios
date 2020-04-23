@@ -21,6 +21,9 @@
 import UIKit
 
 final public class NuguToast {
+    
+    // MARK: - NuguToast.Const
+    
     private struct ToastConst {
         static let viewOpacity = CGFloat(0.8)
         static let cornerRadius = CGFloat(4)
@@ -35,7 +38,11 @@ final public class NuguToast {
         static let backgroundColor = UIColor(red: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0)
     }
     
+    // MARK: - Singleton
+    
     public static let shared = NuguToast()
+    
+    // MARK: - Private Properties
     
     private lazy var toastView = UIView()
     private lazy var toastLabel = UILabel()
@@ -53,6 +60,8 @@ final public class NuguToast {
         }
     }
 }
+
+// MARK: - Public
 
 public extension NuguToast {
     func showToast(message: String?, bottomMargin: CGFloat? = nil) {

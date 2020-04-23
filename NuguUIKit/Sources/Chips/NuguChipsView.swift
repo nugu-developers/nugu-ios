@@ -21,6 +21,9 @@
 import UIKit
 
 final public class NuguChipsView: UIView {
+    
+    // MARK: - NuguChipsView.Const 
+    
     private struct ChipsConst {
         static let scrollViewOriginX = CGFloat(14.0)
         static let scrollViewOriginY = CGFloat(14.0)
@@ -80,17 +83,17 @@ final public class NuguChipsView: UIView {
     
     // MARK: - Public Properties (configurable variables)
     
-    public var theme: NuguChipsViewTheme = .white
-    
     public var onChipsSelect: ((_ text: String?) -> Void)?
     
     public var willStartScrolling: (() -> Void)?
     
-    public var chipsText: [NuguChipsType] = [] {
+    public var theme: NuguChipsViewTheme = .white
+    
+    public var chipsData: [NuguChipsType] = [] {
         didSet {
-            guard chipsText.count >= ChipsConst.minChipsCount else { return }
+            guard chipsData.count >= ChipsConst.minChipsCount else { return }
             var origin = CGPoint(x: ChipsConst.scrollViewOriginX, y: ChipsConst.scrollViewOriginY)
-            chipsText.enumerated().forEach { (index, chipsType) in
+            chipsData.enumerated().forEach { (index, chipsType) in
                 guard index < ChipsConst.maxChipsCount else { return }
                 let chipsButton = UIButton(type: .custom)
                 chipsButton.titleLabel?.lineBreakMode = .byTruncatingTail
