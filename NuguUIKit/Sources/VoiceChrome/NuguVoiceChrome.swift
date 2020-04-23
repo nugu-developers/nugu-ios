@@ -33,36 +33,43 @@ final public class NuguVoiceChrome: UIView {
     // MARK: - NuguVoiceChrome.NuguVoiceChromeTheme
     
     public enum NuguVoiceChromeTheme {
-        case black
-        case white
+        case light
+        case dark
         
         var backgroundColor: UIColor {
             switch self {
-            case .black:
-                return UIColor(red: 45.0/255.0, green: 51.0/255.0, blue: 57.0/255.0, alpha: 1.0)
-            case .white:
+            case .light:
                 return .white
+            case .dark:
+                return UIColor(red: 45.0/255.0, green: 51.0/255.0, blue: 57.0/255.0, alpha: 1.0)
             }
         }
         
         var textColor: UIColor {
             switch self {
-            case .black:
-                return .white
-            case .white:
+            case .light:
                 return .black
+            case .dark:
+                return .white
             }
         }
     }
     
     // MARK: - Public Properties (configurable variables)
     
-    public var theme: NuguVoiceChromeTheme = .white {
+    public var theme: NuguVoiceChromeTheme = .light {
         didSet {
             backgroundView.backgroundColor = theme.backgroundColor
+            guideTextLabel.textColor = theme.textColor
             recognizedTextLabel.textColor = theme.textColor
             animationContainerView.backgroundColor = theme.backgroundColor
-            chipsView.theme = theme == .white ? .white : .black
+            chipsView.theme = (theme == .light) ? .light : .dark
+        }
+    }
+    
+    public var onChipsSelect: ((_ text: String?) -> Void)? {
+        didSet {
+            chipsView.onChipsSelect = onChipsSelect
         }
     }
     
@@ -109,7 +116,7 @@ final public class NuguVoiceChrome: UIView {
         animationView.frame = CGRect(x: 12, y: 0, width: 40, height: 40)
         animationContainerView.addSubview(animationView)
         
-        theme = .white
+        theme = .light
         chipsView.willStartScrolling = {
             UIView.animate(withDuration: 0.3, animations: { [weak self] in
                 self?.guideTextLabel.text = nil
@@ -171,7 +178,7 @@ public extension NuguVoiceChrome {
         }
     }
     
-    func setChipsData(chipsData: [NuguChipsView.NuguChipsType]) {
+    func setChipsData(chipsData: [NuguChipsButton.NuguChipsButtonType]) {
         chipsView.chipsData = chipsData
         chipsView.isHidden = false
     }
