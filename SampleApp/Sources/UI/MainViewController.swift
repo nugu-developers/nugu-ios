@@ -260,6 +260,7 @@ private extension MainViewController {
             self.view.addSubview(self.nuguVoiceChrome)
             
             let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissVoiceChrome))
+            tapGestureRecognizer.delegate = self
             self.view.addGestureRecognizer(tapGestureRecognizer)
             
             UIView.animate(withDuration: 0.3) { [weak self] in
@@ -316,6 +317,15 @@ private extension MainViewController {
                 }
             }
         )
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+
+extension MainViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        let touchLocation = touch.location(in: gestureRecognizer.view)
+        return !nuguVoiceChrome.frame.contains(touchLocation)
     }
 }
 
