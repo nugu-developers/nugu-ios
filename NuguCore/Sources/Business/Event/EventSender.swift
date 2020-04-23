@@ -214,8 +214,7 @@ private extension EventSender {
         let headerLines = [
             "--\(boundary)",
             "Content-Disposition: form-data; name=\"attachment\"; filename=\"\(attachment.header.seq);\(attachment.header.isEnd ? "end" : "continued")\"",
-            //            "Content-Type: \(attachment.header.type)", // TODO: server에서 content-type 제대로 구현하면 변경할 것.
-            "Content-Type: application/octet-stream",
+            "Content-Type: \(attachment.header.type)",
             "Message-Id: \(attachment.header.messageId)",
             HTTPConst.crlf
         ]
