@@ -26,7 +26,6 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    // TODO: AudioPlayer interface version 1.1 -> AudioPlayer.Play(cacheKey)
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.2")
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
