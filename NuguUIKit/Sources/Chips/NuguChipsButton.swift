@@ -33,12 +33,12 @@ final public class NuguChipsButton: UIButton {
             }
         }
         
-        var selectedBackgroundColor: UIColor {
+        var highlightedBackgroundColor: UIColor {
             switch self {
             case .light:
-                return UIColor(red: 239.0/255.0, green: 240.0/255.0, blue: 242.0/255.0, alpha: 0.1)
+                return UIColor(red: 214.0/255.0, green: 215.0/255.0, blue: 217.0/255.0, alpha: 1.0)
             case .dark:
-                return UIColor(red: 55.0/255.0, green: 68.0/255.0, blue: 78.0/255.0, alpha: 0.1)
+                return UIColor(red: 75.0/255.0, green: 87.0/255.0, blue: 96.0/255.0, alpha: 1.0)
             }
         }
     }
@@ -107,7 +107,7 @@ final public class NuguChipsButton: UIButton {
     
     override public var isHighlighted: Bool {
         didSet {
-            backgroundColor = isHighlighted ? theme.selectedBackgroundColor : theme.backgroundColor
+            backgroundColor = isHighlighted ? theme.highlightedBackgroundColor : theme.backgroundColor
         }
     }
 }
