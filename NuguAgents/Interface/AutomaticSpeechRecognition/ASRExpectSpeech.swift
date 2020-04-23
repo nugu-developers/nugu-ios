@@ -26,25 +26,16 @@ import NuguCore
 ///
 /// NUGU ask you to get more information to know about you requested.
 public struct ASRExpectSpeech {
-    private let timeoutInMilliseconds: Int?
     public let playServiceId: String?
     public let sessionId: String
     public let domainTypes: [AnyHashable]?
     public let asrContext: [String: AnyHashable]?
 }
 
-extension ASRExpectSpeech {
-    var timeout: TimeIntervallic {
-        let timeout = timeoutInMilliseconds ?? 7000
-        return NuguTimeInterval(milliseconds: timeout)
-    }
-}
-
 // MARK: - ASRExpectSpeech: Decodable
 
 extension ASRExpectSpeech: Decodable {
     enum CodingKeys: String, CodingKey {
-        case timeoutInMilliseconds
         case playServiceId
         case sessionId
         case domainTypes
@@ -53,7 +44,6 @@ extension ASRExpectSpeech: Decodable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        timeoutInMilliseconds = try? container.decode(Int.self, forKey: .timeoutInMilliseconds)
         playServiceId = try? container.decode(String.self, forKey: .playServiceId)
         sessionId = try container.decode(String.self, forKey: .sessionId)
         domainTypes = try? container.decode([AnyHashable].self, forKey: .domainTypes)
