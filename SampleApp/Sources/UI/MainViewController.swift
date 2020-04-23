@@ -258,6 +258,10 @@ private extension MainViewController {
             self.setExampleChips()
             
             self.view.addSubview(self.nuguVoiceChrome)
+            
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissVoiceChrome))
+            self.view.addGestureRecognizer(tapGestureRecognizer)
+            
             UIView.animate(withDuration: 0.3) { [weak self] in
                 guard let self = self else { return }
                 self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
@@ -266,7 +270,9 @@ private extension MainViewController {
         }
     }
     
-    func dismissVoiceChrome() {
+    @objc func dismissVoiceChrome() {
+        view.gestureRecognizers = nil
+        
         voiceChromeDismissWorkItem?.cancel()
         NuguCentralManager.shared.client.asrAgent.stopRecognition()
         
