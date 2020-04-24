@@ -26,7 +26,6 @@
 		73F284F223815CC9004EBBDF /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284BC23815CC9004EBBDF /* DisplayView.swift */; };
 		73F284F323815CC9004EBBDF /* DisplayListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284BD23815CC9004EBBDF /* DisplayListView.swift */; };
 		73F284F423815CC9004EBBDF /* DisplayAudioPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284BE23815CC9004EBBDF /* DisplayAudioPlayerView.xib */; };
-		73F284F523815CC9004EBBDF /* NuguToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284BF23815CC9004EBBDF /* NuguToastManager.swift */; };
 		73F284F623815CC9004EBBDF /* UIColor+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C123815CC9004EBBDF /* UIColor+Convenience.swift */; };
 		73F284F723815CC9004EBBDF /* Int+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C223815CC9004EBBDF /* Int+Convenience.swift */; };
 		73F284F823815CC9004EBBDF /* ImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C423815CC9004EBBDF /* ImageDataLoader.swift */; };
@@ -37,6 +36,7 @@
 		73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CC23815CC9004EBBDF /* AppDelegate.swift */; };
 		73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CE23815CC9004EBBDF /* UserDefaults+Romaine.swift */; };
 		73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */; };
+		7E092F2B2452E72B009779F1 /* Keyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E092F2A2452E72B009779F1 /* Keyword.swift */; };
 		7E0B697A2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */; };
 		7E0B697B2434A0AC00D8C6AD /* AudioPlayerTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69702434A0AC00D8C6AD /* AudioPlayerTemplate.swift */; };
 		7E0B697C2434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */; };
@@ -97,7 +97,6 @@
 		73F284BC23815CC9004EBBDF /* DisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
 		73F284BD23815CC9004EBBDF /* DisplayListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayListView.swift; sourceTree = "<group>"; };
 		73F284BE23815CC9004EBBDF /* DisplayAudioPlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayAudioPlayerView.xib; sourceTree = "<group>"; };
-		73F284BF23815CC9004EBBDF /* NuguToastManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguToastManager.swift; sourceTree = "<group>"; };
 		73F284C123815CC9004EBBDF /* UIColor+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Convenience.swift"; sourceTree = "<group>"; };
 		73F284C223815CC9004EBBDF /* Int+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Convenience.swift"; sourceTree = "<group>"; };
 		73F284C423815CC9004EBBDF /* ImageDataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataLoader.swift; sourceTree = "<group>"; };
@@ -110,6 +109,7 @@
 		73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Standard.swift"; sourceTree = "<group>"; };
 		73F284D223815CC9004EBBDF /* SampleApp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SampleApp.entitlements; sourceTree = "<group>"; };
 		73F284D823815CC9004EBBDF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7E092F2A2452E72B009779F1 /* Keyword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keyword.swift; sourceTree = "<group>"; };
 		7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerSettingsTemplate.swift; sourceTree = "<group>"; };
 		7E0B69702434A0AC00D8C6AD /* AudioPlayerTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerTemplate.swift; sourceTree = "<group>"; };
 		7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerUpdateMetadataPayload.swift; sourceTree = "<group>"; };
@@ -240,7 +240,6 @@
 				7E56DD242419FF88004A3508 /* DisplayControllable.swift */,
 				73F284AA23815CC9004EBBDF /* NuguWebView.swift */,
 				73F284AB23815CC9004EBBDF /* DisplayViews */,
-				73F284BF23815CC9004EBBDF /* NuguToastManager.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -310,6 +309,7 @@
 		73F284C523815CC9004EBBDF /* Const */ = {
 			isa = PBXGroup;
 			children = (
+				7E092F2A2452E72B009779F1 /* Keyword.swift */,
 				73F284C623815CC9004EBBDF /* SampleAppError.swift */,
 				73F284C723815CC9004EBBDF /* SampleApp.swift */,
 			);
@@ -564,6 +564,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E092F2B2452E72B009779F1 /* Keyword.swift in Sources */,
 				7E6A0B232410853C00C7A19E /* DisplayWeatherListViewCell.swift in Sources */,
 				7E56DD252419FF88004A3508 /* DisplayControllable.swift in Sources */,
 				73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */,
@@ -584,7 +585,6 @@
 				7E0B697C2434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift in Sources */,
 				7E6A0B1C2410853600C7A19E /* DisplayWeatherView.swift in Sources */,
 				73F284F023815CC9004EBBDF /* DisplayBodyView.swift in Sources */,
-				73F284F523815CC9004EBBDF /* NuguToastManager.swift in Sources */,
 				73F284F923815CC9004EBBDF /* SampleAppError.swift in Sources */,
 				7E0B697E2434A0AC00D8C6AD /* DisplayBodyTemplate.swift in Sources */,
 				73F284E323815CC9004EBBDF /* NuguWebView.swift in Sources */,
