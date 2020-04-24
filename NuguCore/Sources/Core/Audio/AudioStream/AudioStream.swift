@@ -59,14 +59,14 @@ extension AudioStream {
         }
         
         private func increaseRef() {
-            delegateQueue.async { [weak self] in
+            delegateQueue.sync { [weak self] in
                 guard let self = self else { return }
                 self.refCnt += 1
             }
         }
         
         private func decreaseRef() {
-            delegateQueue.async { [weak self] in
+            delegateQueue.sync { [weak self] in
                 guard let self = self else { return }
                 self.refCnt -= 1
             }

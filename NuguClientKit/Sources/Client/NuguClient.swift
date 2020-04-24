@@ -82,10 +82,6 @@ public class NuguClient {
         return keywordDetector
     }()
     
-    // private
-    private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
-    private var inputControlWorkItem: DispatchWorkItem?
-    
     public init(delegate: NuguClientDelegate) {
         self.delegate = delegate
         
@@ -169,47 +165,33 @@ extension NuguClient: AudioStreamDelegate {
     }
     
     public func audioStreamWillStart() {
-        inputControlWorkItem?.cancel()
-        inputControlQueue.async { [weak self] in
-            guard let self = self else { return }
+        log.debug("")
+        guard inputProvider.isRunning == false else {
+            log.debug("input provider is already started.")
+            return
+        }
+        
+        delegate?.nuguClientWillOpenInputSource()
+        
+        do {
+            try inputProvider.start(streamWriter: self.sharedAudioStream.makeAudioStreamWriter())
             
-            guard self.inputProvider.isRunning == false else {
-                log.debug("input provider is already started.")
-                return
-            }
-
-            self.delegate?.nuguClientWillOpenInputSource()
-            
-            do {
-                try self.inputProvider.start(streamWriter: self.sharedAudioStream.makeAudioStreamWriter())
-
-                log.debug("input provider is started.")
-            } catch {
-                log.debug("input provider failed to start: \(error)")
-            }
+            log.debug("input provider is started.")
+        } catch {
+            log.debug("input provider failed to start: \(error)")
         }
     }
     
     public func audioStreamDidStop() {
-        inputControlWorkItem?.cancel()
-        inputControlWorkItem = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            
-            guard self.inputControlWorkItem?.isCancelled == false else {
-                log.debug("Stopping input provider is cancelled")
-                return
-            }
-            
-            guard self.inputProvider.isRunning == true else {
-                log.debug("input provider is not running")
-                return
-            }
-            
-            self.inputProvider.stop()
-            self.delegate?.nuguClientDidCloseInputSource()
-            log.debug("input provider is stopped.")
+        log.debug("")
+        guard self.inputProvider.isRunning == true else {
+            log.debug("input provider is not running")
+            return
         }
-        inputControlQueue.async(execute: inputControlWorkItem!)
+        
+        self.inputProvider.stop()
+        self.delegate?.nuguClientDidCloseInputSource()
+        log.debug("input provider is stopped.")
     }
 }
 
