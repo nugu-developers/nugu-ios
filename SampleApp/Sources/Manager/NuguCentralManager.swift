@@ -84,17 +84,26 @@ extension NuguCentralManager {
         log.debug("")
         if supportServerInitiatedDirective {
             client.startReceiveServerInitiatedDirective()
+        } else {
+            client.stopReceiveServerInitiatedDirective()
         }
 
         NuguLocationManager.shared.startUpdatingLocation()
         
         // Set Last WakeUp Keyword
         // If you don't want to use saved wakeup-word, don't need to be implemented
-        setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
+        if UserDefaults.Standard.useWakeUpDetector,
+            let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+            client.keywordDetector.keywordSource = keyword.keywordSource
+            startWakeUpDetector()
+        } else {
+            stopWakeUpDetector()
+        }
     }
     
     func disable() {
         log.debug("")
+        stopWakeUpDetector()
         client.stopReceiveServerInitiatedDirective()
         client.asrAgent.stopRecognition()
         client.ttsAgent.stopTTS(cancelAssociation: true)
@@ -310,70 +319,25 @@ private extension NuguCentralManager {
 // MARK: - Internal (WakeUpDetector)
 
 extension NuguCentralManager {
-    func refreshWakeUpDetector() {
-        DispatchQueue.main.async { [weak self] in
+    func startWakeUpDetector() {
+        DispatchQueue.main.async {
             // Should check application state, because iOS audio input can not be start using in background state
             guard UIApplication.shared.applicationState == .active else { return }
-            
-            guard UserDefaults.Standard.useWakeUpDetector else {
-                self?.stopWakeUpDetector()
-                return
-            }
-            
-            self?.startWakeUpDetector { (result) in
-                if case let .failure(error) = result {
-                    log.debug("Failed to start WakeUp-Detector with reason: \(error)")
+            guard UserDefaults.Standard.useWakeUpDetector else { return }
+
+            NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
+                guard let self = self else { return }
+                guard isGranted else {
+                    log.error("Record permission denied")
+                    return
                 }
-            }
-        }
-    }
-    
-    func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
-            guard let self = self else { return }
-            let result = Result<Void, Error>(catching: {
-                guard isGranted else { throw SampleAppError.recordPermissionError }
                 self.client.keywordDetector.start()
-            })
-            completion?(result)
+            }
         }
     }
     
     func stopWakeUpDetector() {
         client.keywordDetector.stop()
-    }
-    
-    func setWakeUpWord(rawValue wakeUpWord: Int) {
-        switch wakeUpWord {
-        case Keyword.aria.rawValue:
-            guard
-                let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") else {
-                    log.debug("keywordSource is invalid")
-                    return
-            }
-            
-            client.keywordDetector.keywordSource = KeywordSource(
-                keyword: .aria,
-                netFileUrl: netFile,
-                searchFileUrl: searchFile
-            )
-        case Keyword.tinkerbell.rawValue:
-            guard
-                let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") else {
-                    log.debug("keywordSource is invalid")
-                    return
-            }
-            
-            client.keywordDetector.keywordSource = KeywordSource(
-                keyword: .tinkerbell,
-                netFileUrl: netFile,
-                searchFileUrl: searchFile
-            )
-        default:
-            return
-        }
     }
 }
 

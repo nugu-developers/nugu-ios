@@ -19,5 +19,6 @@ Default Agent Implementations for Nugu service
   s.source_files = 'NuguAgents/Sources/**/*', 'NuguAgents/Interface/**/*'
 
   s.dependency 'NuguCore', '~> 0'
+  s.dependency 'JadeMarble', '~> 0'
   s.dependency 'NattyLog', '~> 1'
 end
