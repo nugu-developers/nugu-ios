@@ -3,6 +3,32 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.10.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.10.0)
+Released on 2020-04-24
+
+#### Fixed
+- Fix bug where `client` value in `context` is null. (#291)
+- Fixes a error that recognized text is not displayed in DM state. (#294)
+* Fixes a `EXC_BAD_ACCESS` crash in `PlaySyncManager.swift` (#299)
+* Fixes a `EXC_BAD_ACCESS` crash in `StreamDataRouter.swift` (#299)
+
+#### Updated
+- Update `ASRAgent` to support server side EPD (#288) (#294)
+- Include all of the context when sending `Display.ElementSelected` event.  #(286)
+- Include all of the capability interface's version when sending any event. #(286)
+- Modify `Content-Type` header for upstream attachment. (#287) (#299)
+- Modify `payload` type from `String` to `Data` in `Downstream.Directive` (#292)
+- Modify type of `DirectiveHandleInfo.preFetch` and `DirectiveHandleInfo.directiveHandler` (#292)
+- Modify comparison logic for resuming `AudioPlayerAgent`'s media player. (#292)
+- Develop media caching feature (#269) (#293) 
+- Modify `AudioStreamDelegate` in `NuguClient` to start and stop `AudioProvidable` synchronously. (#300)
+- Remove `timeoutInMilliseconds` in `ASRExpectSpeech` (#303)
+- Update `NuguUIKit` (#296) (#302)
+- Move `Keyword` enum from `KeenSense` to `SampleApp` (#301)
+
+#### Added
+- Add `SoundAgent` (upgrade capability-agent) (#292)
+
 ## [0.9.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.9.2)
 Released on 2020-04-06
 
