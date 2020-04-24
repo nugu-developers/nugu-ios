@@ -1,9 +1,9 @@
 //
-//  NuguToastManager.swift
-//  SampleApp
+//  NuguToast.swift
+//  NuguUIKit
 //
-//  Created by jin kim on 00/09/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by 김진님/AI Assistant개발 Cell on 2020/04/22.
+//  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,33 +20,54 @@
 
 import UIKit
 
-final class NuguToastManager {
+final public class NuguToast {
+    
+    // MARK: - NuguToast.Const
+    
     private struct ToastConst {
+        static let viewOpacity = CGFloat(0.8)
         static let cornerRadius = CGFloat(4)
         static let textVerticalPadding = 24.0
         static let textHorizontalPadding = 14.0
         static let viewMargin = 8.0
-        static let bottomMargin = 8.0
+        static let bottomMargin = 88.0
         static let animationDuration = 0.3
         static let showingDuration = 7.0
         static let textColor = UIColor.white
-        static let textFont = UIFont.systemFont(ofSize: 14.0)
-        static let backgroundColor = UIColor(rgbHexValue: 0x323232)
+        static let textFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
+        static let backgroundColor = UIColor(red: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0)
     }
     
-    static let shared = NuguToastManager()
+    // MARK: - Singleton
+    
+    public static let shared = NuguToast()
+    
+    // MARK: - Private Properties
     
     private lazy var toastView = UIView()
     private lazy var toastLabel = UILabel()
     
     private var hideAnimationWorkItem: DispatchWorkItem?
+    
+    private var bottomSafeAreaHeight: CGFloat {
+        get {
+            guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
+            if #available(iOS 11.0, *) {
+                return rootViewController.view.safeAreaInsets.bottom
+            } else {
+                return rootViewController.bottomLayoutGuide.length
+            }
+        }
+    }
 }
 
-extension NuguToastManager {
-    func showToast(message: String?) {
+// MARK: - Public
+
+public extension NuguToast {
+    func showToast(message: String?, bottomMargin: CGFloat? = nil) {
         guard let window = UIApplication.shared.keyWindow else { return }
         guard let toastMessage = message, toastMessage.count > 0 else { return }
-        
+    
         hideAnimationWorkItem?.cancel()
         hideAnimationWorkItem = nil
         
@@ -67,7 +88,7 @@ extension NuguToastManager {
                                  width: window.bounds.size.width - CGFloat(ToastConst.viewMargin * 2),
                                  height: toastLabel.intrinsicContentSize.height + CGFloat(ToastConst.textVerticalPadding * 2))
         toastView.center = CGPoint(x: window.center.x,
-                                   y: window.bounds.size.height - (toastView.bounds.size.height/2) - CGFloat(ToastConst.bottomMargin) - SampleApp.bottomSafeAreaHeight)
+                                   y: window.bounds.size.height - (toastView.bounds.size.height/2) - (bottomMargin ?? CGFloat(ToastConst.bottomMargin)) - bottomSafeAreaHeight)
         toastLabel.center = CGPoint(x: toastView.frame.size.width/2,
                                     y: toastView.frame.size.height/2)
         toastView.alpha = 0
@@ -88,7 +109,7 @@ extension NuguToastManager {
             withDuration: ToastConst.animationDuration,
             animations: { [weak self] in
                 guard let toastView = self?.toastView else { return }
-                toastView.alpha = 1
+                toastView.alpha = ToastConst.viewOpacity
                 window.addSubview(toastView)
                 window.bringSubviewToFront(toastView)
             },
@@ -117,3 +138,4 @@ extension NuguToastManager {
         }
     }
 }
+

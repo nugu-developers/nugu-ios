@@ -20,6 +20,8 @@
 
 import UIKit
 
+import NuguUIKit
+
 final class IntroViewController: UIViewController {
     
     // MARK: Properties
@@ -82,7 +84,7 @@ private extension IntroViewController {
                     self?.presentLoginWithRefreshTokenErrorPopup()
                 case .loginFailed, .loginUnauthorized:
                     DispatchQueue.main.async {
-                        NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
+                        NuguToast.shared.showToast(message: sampleAppError.errorDescription)
                     }
                 default: break
                 }

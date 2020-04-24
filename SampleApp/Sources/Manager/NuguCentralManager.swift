@@ -24,6 +24,7 @@ import NuguCore
 import NuguAgents
 import NuguClientKit
 import NuguLoginKit
+import NuguUIKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
@@ -68,6 +69,9 @@ final class NuguCentralManager {
             NotificationCenter.default.post(name: .nuguClientInputStatus, object: nil, userInfo: ["status": inputStatus])
         }
     }
+    
+    // TODO: - Consider managing inside SDK
+    var isTextAgentInProcess = false
     
     private init() {
     }
@@ -208,7 +212,7 @@ private extension NuguCentralManager {
     func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
         DispatchQueue.main.async { [weak self] in
             self?.client.audioPlayerAgent.stop()
-            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
+            NuguToast.shared.showToast(message: sampleAppError.errorDescription)
             self?.popToRootViewController()
             switch sampleAppError {
             case .loginUnauthorized:
