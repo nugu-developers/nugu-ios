@@ -27,7 +27,7 @@ public class StreamDataRouter: StreamDataRoutable {
     
     private let nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
-    private var eventSenders = [String: EventSender]()
+    private var eventSenders = EventSenders()
     private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
@@ -168,7 +168,6 @@ public extension StreamDataRouter {
         guard let eventSender = eventSenders[dialogRequestId] else { return }
 
         eventSender.finish()
-        // TODO: ASR.Recognize -> ASR.StopRecognize 시 ASR.Recognize 에 대한 timeout 이 발생 함. referrerDialogRequestId 반영 후에도 발생하는지 확인 필요.
     }
 }
 
