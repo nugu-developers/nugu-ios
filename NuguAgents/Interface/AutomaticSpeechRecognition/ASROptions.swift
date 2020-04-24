@@ -26,7 +26,7 @@ public struct ASROptions {
     /// Max duration from speech start to end.
     public let maxDuration: TimeIntervallic
     /// Max duration of waiting for speech.
-    public var timeout: TimeIntervallic
+    public let timeout: TimeIntervallic
     /// The engine waits this time then consider speech end.
     public let pauseLength: TimeIntervallic
     public let sampleRate = 16000.0
