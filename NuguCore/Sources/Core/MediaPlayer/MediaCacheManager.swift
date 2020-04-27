@@ -25,42 +25,15 @@ struct MediaCacheManager {
     private static let aesKey = "_NuguMediaAesKey"
     
     // TODO: - Should change to configurable value
-    private static let isCacheEnabled = true
+    static let isCacheEnabled = true
     
     private static let cacheFolderPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("MediaCache", isDirectory: true)
     private static let cacheSizeLimit = 1024 * 1024 * 500
-    
-    private static let supportedMimeTypeForCaching = ["audio/mp4", "audio/aac", "audio/m4a", "audio/mp4a-latm"]
 }
 
 // MARK: - Internal Methods
 
 extension MediaCacheManager {
-    static func checkCacheAvailablity(itemURL: URL, cacheKey: String, completion: @escaping (_ isAvailable: Bool, _ cacheExists: Bool, _ endUrl: URL) -> (Void)) {
-        guard isCacheEnabled else {
-            completion(false, false, itemURL)
-            return
-        }
-        
-        var request: URLRequest = URLRequest(url: itemURL)
-        request.httpMethod = "HEAD"
-        URLSession.shared.dataTask(with: request) { (_, response, _) in
-            guard let httpURLResponse = response as? HTTPURLResponse,
-                let contentType = httpURLResponse.allHeaderFields["Content-Type"] as? String else {
-                    completion(false, false, itemURL)
-                    return
-            }
-
-            log.debug("+++ \(httpURLResponse.allHeaderFields) +++")
-            
-            completion(
-                supportedMimeTypeForCaching.contains(contentType),
-                doesCacheFileExist(key: cacheKey),
-                httpURLResponse.url ?? itemURL
-            )
-        }.resume()
-    }
-    
     static func getCachedPlayerItem(cacheKey: String) -> MediaAVPlayerItem? {
         guard let localFileData = try? Data(contentsOf: MediaCacheManager.getCacheFilePathUrl(key: cacheKey)),
             let decryptedData = MediaCacheManager.decryptData(data: localFileData)
