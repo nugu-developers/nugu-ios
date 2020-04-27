@@ -86,12 +86,15 @@ extension AudioPlayerDisplayManager {
                 return
         }
         
+        let grammarGuide = metaData["grammarGuide"] as? [String]
+        
         let item = AudioPlayerDisplayTemplate(
             type: type,
             payload: metaData,
             templateId: messageId,
             dialogRequestId: dialogRequestId,
-            playStackServiceId: playStackServiceId
+            playStackServiceId: playStackServiceId,
+            grammarGuide: grammarGuide
         )
         
         displayDispatchQueue.async { [weak self] in

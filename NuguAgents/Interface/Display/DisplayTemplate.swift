@@ -30,6 +30,7 @@ public struct DisplayTemplate {
     public let playStackServiceId: String?
     public let duration: Duration
     public let focusable: Bool?
+    public let grammarGuide: [String]?
     
     public init(
         type: String,
@@ -40,7 +41,8 @@ public struct DisplayTemplate {
         playServiceId: String,
         playStackServiceId: String?,
         duration: Duration?,
-        focusable: Bool?
+        focusable: Bool?,
+        grammarGuide: [String]?
     ) {
         self.type = type
         self.payload = payload
@@ -51,6 +53,7 @@ public struct DisplayTemplate {
         self.playStackServiceId = playStackServiceId
         self.duration = duration ?? .short
         self.focusable = focusable
+        self.grammarGuide = grammarGuide
     }
 }
 

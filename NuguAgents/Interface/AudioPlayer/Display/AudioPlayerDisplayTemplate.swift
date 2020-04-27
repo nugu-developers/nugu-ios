@@ -26,12 +26,14 @@ public struct AudioPlayerDisplayTemplate {
     public let templateId: String
     public let dialogRequestId: String
     public let playStackServiceId: String?
+    public let grammarGuide: [String]?
     
-    public init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, playStackServiceId: String?) {
+    public init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, playStackServiceId: String?, grammarGuide: [String]?) {
         self.type = type
         self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
         self.playStackServiceId = playStackServiceId
+        self.grammarGuide = grammarGuide
     }
 }

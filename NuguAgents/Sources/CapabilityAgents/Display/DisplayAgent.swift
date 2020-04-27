@@ -330,6 +330,8 @@ private extension DisplayAgent {
                     return
             }
             
+            let grammarGuide = payloadDictionary["grammarGuide"] as? [String]
+            
             let updateDisplayTemplate = DisplayTemplate(
                 type: directive.header.type,
                 payload: directive.payload,
@@ -339,7 +341,8 @@ private extension DisplayAgent {
                 playServiceId: playServiceId,
                 playStackServiceId: nil,
                 duration: nil,
-                focusable: nil
+                focusable: nil,
+                grammarGuide: grammarGuide
             )
             
             self?.displayDispatchQueue.async { [weak self] in
@@ -366,6 +369,7 @@ private extension DisplayAgent {
             let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
             let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: AnyHashable])?["playServiceId"] as? String
             let focusable = payloadDictionary["focusable"] as? Bool
+            let grammarGuide = payloadDictionary["grammarGuide"] as? [String]
             
             let item = DisplayTemplate(
                 type: directive.header.type,
@@ -376,7 +380,8 @@ private extension DisplayAgent {
                 playServiceId: playServiceId,
                 playStackServiceId: playStackServiceId,
                 duration: DisplayTemplate.Duration(rawValue: duration),
-                focusable: focusable
+                focusable: focusable,
+                grammarGuide: grammarGuide
             )
 
             self?.displayDispatchQueue.async { [weak self] in
