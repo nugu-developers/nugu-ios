@@ -25,76 +25,38 @@ public class CryptoUtil {
     private static let algoritm = CCAlgorithm(kCCAlgorithmAES)
     private static let options = CCOptions(kCCOptionECBMode|kCCOptionPKCS7Padding)
     
-    public static func encrypt(data: Data, key: String) -> Data? {
+    private static func crypt(operation: Int, data: Data, key: String) -> Data? {
         guard let keyData = key.data(using: String.Encoding.utf8) else {
             return nil
         }
-
-        var numBytesEncrypted: size_t = 0
-        let paddingSize = kCCBlockSizeAES128 - (data.count % kCCBlockSizeAES128)
-        let encryptedData = Data(count: data.count + paddingSize)
-        let cryptStatus = encryptedData.withUnsafeBytes { (ptrEncryptedData: UnsafePointer<UInt8>) -> CCStatus in
-            keyData.withUnsafeBytes { (ptrKeyData: UnsafePointer<UInt8>) -> CCStatus in
-                data.withUnsafeBytes { (ptrTargetData: UnsafePointer<UInt8>) -> CCStatus in
-                    return CCCrypt(CCOperation(kCCEncrypt),
-                                              algoritm,
-                                              options,
-                                              ptrKeyData, keyData.count,
-                                              nil,
-                                              ptrTargetData, data.count,
-                                              UnsafeMutableRawPointer(mutating: ptrEncryptedData), encryptedData.count,
-                                              &numBytesEncrypted)
-                }
+        
+        return keyData.withUnsafeBytes { keyUnsafeRawBufferPointer in
+            return data.withUnsafeBytes { dataUnsafeRawBufferPointer in
+                // Give the data out some breathing room for PKCS7's padding.
+                let dataOutSize: Int = data.count + kCCBlockSizeAES128 * 2
+                let dataOut = UnsafeMutableRawPointer.allocate(byteCount: dataOutSize,
+                                                               alignment: 1)
+                defer { dataOut.deallocate() }
+                var dataOutMoved: Int = 0
+                let status = CCCrypt(CCOperation(operation),
+                                     algoritm,
+                                     options,
+                                     keyUnsafeRawBufferPointer.baseAddress, keyData.count,
+                                     nil,
+                                     dataUnsafeRawBufferPointer.baseAddress, data.count,
+                                     dataOut, dataOutSize, &dataOutMoved
+                )
+                guard status == kCCSuccess else { return nil }
+                return Data(bytes: dataOut, count: dataOutMoved)
             }
         }
-        
-        guard cryptStatus == kCCSuccess else {
-            return nil
-        }
-        
-        return encryptedData
+    }
+    
+    public static func encrypt(data: Data, key: String) -> Data? {
+        return crypt(operation: kCCEncrypt, data: data, key: key)
     }
     
     public static func decrypt(data: Data, key: String) -> Data? {
-        guard let keyData = key.data(using: .utf8) else {
-            return nil
-        }
-        
-        var numBytesEncrypted: size_t = 0
-        let decryptedData = Data(count: data.count)
-        let cryptStatus = decryptedData.withUnsafeBytes { (ptrDecryptedData: UnsafePointer<UInt8>) -> CCStatus in
-            keyData.withUnsafeBytes { (ptrKeyData: UnsafePointer<UInt8>) -> CCStatus in
-                data.withUnsafeBytes { (ptrTargetData: UnsafePointer<UInt8>) -> CCStatus in
-                    return CCCrypt(CCOperation(kCCDecrypt),
-                                  algoritm,
-                                  options,
-                                  ptrKeyData, keyData.count,
-                                  nil,
-                                  ptrTargetData, data.count,
-                                  UnsafeMutableRawPointer(mutating: ptrDecryptedData), decryptedData.count,
-                                  &numBytesEncrypted)
-                }
-            }
-        }
-        
-        guard cryptStatus == kCCSuccess else {
-            return nil
-        }
-        
-        // padding should be removed in decryption case.
-        return decryptedData.subdata(in: 0 ..< numBytesEncrypted)
+        return crypt(operation: kCCDecrypt, data: data, key: key)
     }
 }
-
-extension Data {
-    public func toHexString() -> String {
-        return self.reduce("") {
-            var hexString = String($1, radix: 16)
-            if hexString.count == 1 {
-                hexString = "0" + hexString
-            }
-            return $0 + hexString
-        }
-    }
-}
-
