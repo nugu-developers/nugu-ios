@@ -23,33 +23,33 @@ import Foundation
 import NuguCore
 
 class MockStreamDataRouter: StreamDataRoutable {
-    func add(preprocessor: DownstreamDataPreprocessable) {
-        //
+    var delegate: StreamDataDelegate?
+    
+    func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?) {
+        
     }
     
-    func add(delegate: DownstreamDataDelegate) {
-        //
+    func stopReceiveServerInitiatedDirective() {
+
     }
     
-    func remove(delegate: DownstreamDataDelegate) {
-        //
+    func handOffResourceServer(to serverPolicy: Policy.ServerPolicy) {
+
     }
     
-    func receiveMessageDidReceive(header: [String : String], body: Data) {
-        //
+    func sendEvent(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)?) {
+        
     }
     
-    func send(upstreamEventMessage: UpstreamEventMessage, completion: ((Result<Data, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
-        //
+    func sendStream(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)?) {
+        
     }
     
-    func send(upstreamAttachment: UpstreamAttachment, completion: ((Result<Data, Error>) -> Void)?, resultHandler: ((Result<Downstream.Directive, Error>) -> Void)?) {
-        //
+    func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)?) {
+        
     }
     
-    func send(crashReports: [CrashReport]) {
-        //
+    func cancelEvent(dialogRequestId: String) {
+        
     }
-    
-    
 }

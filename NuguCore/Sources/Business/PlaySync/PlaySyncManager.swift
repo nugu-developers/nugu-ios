@@ -29,176 +29,191 @@ public class PlaySyncManager: PlaySyncManageable {
         internalSerialQueueName: "com.sktelecom.romaine.play_sync"
     )
     
-    private let disposeBag = DisposeBag()
-    private var displayOnlyDisposables = [String: Disposable]()
-    private var playSyncInfos = [PlaySyncInfo]()
-    public var playServiceIds: [String] {
-        return playSyncInfos.filter { $0.playSyncState != .released }
-            .compactMap { $0.playServiceId }
-            .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
-    }
+    private let delegates = DelegateSet<PlaySyncDelegate>()
+    
+    private var playStack = PlayStack()
+    private var playContextTimers = [PlaySyncProperty: DisposeBag]()
     
     public init(contextManager: ContextManageable) {
-        log.debug("initiated")
-        contextManager.add(provideContextDelegate: self)
-    }
-    
-    deinit {
-        log.debug("deinitiated")
+        contextManager.add(delegate: self)
     }
 }
 
 // MARK: - PlaySyncManageable
 
 public extension PlaySyncManager {
-    func prepareSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+    func add(delegate: PlaySyncDelegate) {
+        delegates.add(delegate)
+    }
+    
+    func remove(delegate: PlaySyncDelegate) {
+        delegates.remove(delegate)
+    }
+    
+    func startPlay(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, dialogRequestId: String) {
+        guard let playServiceId = playServiceId else { return }
+        
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard self.playSyncInfos.object(forDelegate: delegate, dialogRequestId: dialogRequestId)?.playSyncState != .prepared else {
-                log.info("\(delegate): Already prepared")
-                return
-            }
+
+            log.debug("\(property) \(playServiceId)")
             
-            self.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .prepared)
+            // Push to play stack
+            self.pushToPlayStack(property: property, duration: duration, playServiceId: playServiceId, dialogRequestId: dialogRequestId)
             
-            if let disposable = self.displayOnlyDisposables.removeValue(forKey: dialogRequestId) {
-                log.debug("Cancel release timer about display only layer(\(dialogRequestId)).")
-                disposable.dispose()
+            let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: dialogRequestId)
+            // Cancel timers
+            log.debug("Cancel layer timer \(playGroup)")
+            playGroup.forEach(self.removeTimer)
+            
+            // Start display only timer
+            if property.contextType == .display && playGroup.count == 1 {
+                log.debug("Add display only timer \(property) \(duration)")
+                self.addTimer(property: property, duration: duration)
             }
         }
     }
     
-    func startSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+    func endPlay(property: PlaySyncProperty) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard self.playSyncInfos.object(forDelegate: delegate, dialogRequestId: dialogRequestId)?.playSyncState != .synced else {
-                log.info("\(delegate): Already synced")
-                return
+            guard let play = self.playStack[property] else { return }
+            
+            log.debug("\(property) \(play.playServiceId)")
+            
+            // Set timers
+            let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: play.dialogRequestId)
+            log.debug("Start layer timer \(playGroup)")
+            playGroup.forEach {
+                guard let duration = self.playStack[$0]?.duration else { return }
+                self.addTimer(property: $0, duration: duration)
             }
             
-            let hasAnotherLayer = self.playSyncInfos.contains { $0.dialogRequestId == dialogRequestId }
-            
-            self.set(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .synced)
-            
-            // If the play sync layers contains only display layer, release it by itself after the duration.
-            if delegate.playSyncIsDisplay() && !hasAnotherLayer {
-                log.debug("Display only layer(\(dialogRequestId)) will release after \(delegate.playSyncDuration().time)")
-                let disposable = Completable.create { [weak self] event -> Disposable in
-                    guard let self = self else { return Disposables.create() }
-                    
-                    self.update(delegate: delegate, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .releasing)
-                    
-                    event(.completed)
-                    return Disposables.create()
-                }
-                .delaySubscription(delegate.playSyncDuration().time, scheduler: self.playSyncScheduler)
-                .subscribe()
-                self.displayOnlyDisposables[dialogRequestId] = disposable
-                disposable.disposed(by: self.disposeBag)
+            // Multi-layer exceptions
+            if self.playStack.multiLayerSynced {
+                // Pop from play stack
+                self.popFromPlayStack(property: property)
             }
         }
     }
     
-    func cancelSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+    func stopPlay(dialogRequestId: String) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.playSyncInfos.remove(delegate: delegate, dialogRequestId: dialogRequestId)
+
+            log.debug(dialogRequestId)
+            
+            // Pop from play stack
+            self.playStack.playGroup(dialogRequestId: dialogRequestId).forEach(self.popFromPlayStack)
         }
     }
     
-    func releaseSync(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?) {
+    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let info = self.playSyncInfos.object(forDelegate: delegate, dialogRequestId: dialogRequestId) else {
-                log.warning("\(delegate): Layer not registered")
-                return
-            }
-            guard info.playSyncState != .released else {
-                log.info("\(delegate): Already released")
-                return
-            }
+            guard self.playStack[property] != nil else { return }
             
-            let targetLayer = self.playSyncInfos.filter { $0.dialogRequestId == dialogRequestId }
-            let hasPreparedTatgetLayer = targetLayer.contains { $0.playSyncState == .prepared }
-            let isSingleLayer = self.playSyncInfos.filter { $0.playSyncState == .synced }.count == 1
+            log.debug("\(property) \(duration)")
             
-            Observable.from(targetLayer)
-                .filter { $0.playSyncState != .released }
-                // prepared 상태인 layer 가 있는 경우 요청한 layer 만 release 한다.
-                .filter { !hasPreparedTatgetLayer || $0.delegate === delegate }
-                .flatMap({ [weak self] (info) -> Observable<PlaySyncInfo> in
-                    guard let self = self else { return Observable.empty() }
-                    let latency: DispatchTimeInterval
-                    if info.playSyncState != .releasing && (info.isDisplay || isSingleLayer) {
-                        latency = info.duration.time
-                    } else {
-                        latency = .milliseconds(0)
-                    }
-                    return Observable.just(info)
-                        .do(onNext: { log.debug("\($0) will release after \(latency)") })
-                        .delay(latency, scheduler: self.playSyncScheduler)
-                })
-                .do(onNext: {  [weak self] (info) in
-                    guard let self = self else { return }
-                    guard let target = info.delegate else { return }
-                    if !info.isDisplay || info.playSyncState == .releasing {
-                        self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .released)
-                    } else {
-                        self.update(delegate: target, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .releasing)
-                    }
-                })
-                .subscribe().disposed(by: self.disposeBag)
+            // Cancel timers
+            self.removeTimer(property: property)
+
+            // Start timers
+            self.addTimer(property: property, duration: duration)
         }
     }
     
-    func releaseSyncImmediately(dialogRequestId: String, playServiceId: String?) {
+    func resetTimer(property: PlaySyncProperty) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.playSyncInfos
-                .filter { $0.dialogRequestId == dialogRequestId && $0.playSyncState != .released }
-                .compactMap { $0.delegate }
-                .forEach { self.update(delegate: $0, dialogRequestId: dialogRequestId, playServiceId: playServiceId, playSyncState: .released) }
+            guard self.playContextTimers[property] != nil else { return }
+            guard let play = self.playStack[property] else { return }
+            
+            log.debug("\(property) \(play.duration)")
+            
+            // Cancel timers
+            self.removeTimer(property: property)
+
+            // Start timers
+            self.addTimer(property: property, duration: play.duration)
+        }
+    }
+    
+    func cancelTimer(property: PlaySyncProperty) {
+        playSyncDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard self.playContextTimers[property] != nil else { return }
+            
+            log.debug(property)
+            
+            // Cancel timers
+            self.playContextTimers[property] = DisposeBag()
         }
     }
 }
 
 // MARK: - ContextInfoDelegate
 extension PlaySyncManager: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
-        completionHandler(ContextInfo(contextType: .client, name: "playStack", payload: playServiceIds))
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+        log.debug("\(playStack.playServiceIds)")
+        playSyncDispatchQueue.sync {
+            completion(ContextInfo(contextType: .client, name: "playStack", payload: playStack.playServiceIds))
+        }
     }
 }
 
 // MARK: - Private
 
 private extension PlaySyncManager {
-    func set(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
-        playSyncInfos.removeAll { $0.delegate === delegate }
-        let playSyncInfo = PlaySyncInfo(
-            delegate: delegate,
-            dialogRequestId: dialogRequestId,
-            playServiceId: playServiceId,
-            playSyncState: playSyncState
-        )
-        playSyncInfos.insert(playSyncInfo, at: 0)
+    func pushToPlayStack(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String, dialogRequestId: String) {
+        // Cancel timers
+        removeTimer(property: property)
         
-        delegate.playSyncDidChange(state: playSyncState, dialogRequestId: dialogRequestId)
-        log.debug("set playSyncInfos: \(playSyncInfos)")
+        // Context layer policy v.1.2.9-8. NUGU service layer policy
+        // TODO: Call layer.
+        playStack
+            .previousPlayGroup(layerType: property.layerType, dialogRequestId: dialogRequestId)
+            .filter { $0.layerType != .media || ($0.layerType == property.layerType) }
+            .filter { $0.contextType == .display && property.contextType == .display }
+            .forEach { popFromPlayStack(property: $0) }
+        
+        playStack[property] = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, duration: duration)
     }
     
-    func update(delegate: PlaySyncDelegate, dialogRequestId: String, playServiceId: String?, playSyncState: PlaySyncState) {
-        let playSyncInfo = PlaySyncInfo(
-            delegate: delegate,
-            dialogRequestId: dialogRequestId,
-            playServiceId: playServiceId,
-            playSyncState: playSyncState
-        )
-        guard playSyncInfos.replace(info: playSyncInfo) != nil else {
-            log.warning("\(delegate): Failed update to \(playSyncState).")
-            return
-        }
+    func popFromPlayStack(property: PlaySyncProperty) {
+        guard let play = playStack[property] else { return }
         
-        delegate.playSyncDidChange(state: playSyncState, dialogRequestId: dialogRequestId)
-        log.debug("updated playSyncInfos: \(playSyncInfos)")
+        // Cancel timers
+        removeTimer(property: property)
+        
+        playStack[property] = nil
+        
+        delegates.notify { (delegate) in
+            delegate.playSyncDidRelease(property: property, dialogRequestId: play.dialogRequestId)
+        }
+    }
+    
+    func addTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
+        guard duration != .never else { return }
+        
+        let disposeBag = DisposeBag()
+        Completable.create { [weak self] (event) -> Disposable in
+            guard let self = self else { return Disposables.create() }
+
+            log.debug("Timer fired. \(property) duration \(duration)")
+            self.popFromPlayStack(property: property)
+            
+            event(.completed)
+            return Disposables.create()
+        }
+        .delaySubscription(duration, scheduler: playSyncScheduler)
+        .subscribe()
+        .disposed(by: disposeBag)
+        
+        playContextTimers[property] = disposeBag
+    }
+    
+    func removeTimer(property: PlaySyncProperty) {
+        playContextTimers[property] = nil
     }
 }

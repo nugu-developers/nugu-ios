@@ -22,8 +22,4 @@ import Foundation
 
 enum ASRConst {
     static let focusTimeout: DispatchTimeInterval = .milliseconds(1000)
-    static let maxDuration = 10 // Max duration from speech start to end.
-    static let timeout = 7 // Max duration of waiting for speech.
-    static let sampleRate = 16000.0
-    static let pauseLength = 700 // The engine waits this time then consider speech end.
 }

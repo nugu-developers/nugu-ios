@@ -22,8 +22,6 @@ import Foundation
 
 import NuguCore
 
-public typealias NetworkStatus = NuguCore.NetworkStatus
-
 public protocol NuguClientDelegate: class {
     // audio session related
     func nuguClientWillRequireAudioSession() -> Bool
@@ -32,17 +30,26 @@ public protocol NuguClientDelegate: class {
     func nuguClientDidCloseInputSource()
 
     // nugu server related
-    func nuguClientConnectionStatusChanged(status: NetworkStatus)
-    func nuguClientDidReceiveMessage(header: [String: String], body: Data)
+    func nuguClientDidReceive(direcive: Downstream.Directive)
+    func nuguClientDidReceive(attachment: Downstream.Attachment)
+    func nuguClientDidSend(event: Upstream.Event, error: Error?)
+    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?)
     
     // authorization related
     func nuguClientRequestAccessToken() -> String?
 }
 
+// MARK: - Optional
+
 public extension NuguClientDelegate {
+    // audio session related
     func nuguClientDidReleaseAudioSession() {}
-    func nuguClientConnectionStatusChanged(status: NetworkStatus) {}
-    func nuguClientDidReceiveMessage(header: [String: String], body: Data) {}
     func nuguClientWillOpenInputSource() {}
     func nuguClientDidCloseInputSource() {}
+    
+    // nugu server related
+    func nuguClientDidReceive(direcive: Downstream.Directive) {}
+    func nuguClientDidReceive(attachment: Downstream.Attachment) {}
+    func nuguClientDidSend(event: Upstream.Event, error: Error?) {}
+    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {}
 }

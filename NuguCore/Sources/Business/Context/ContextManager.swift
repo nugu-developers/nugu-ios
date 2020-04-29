@@ -33,27 +33,41 @@ public class ContextManager: ContextManageable {
     
     private let disposeBag = DisposeBag()
 
-    public init() {
-        log.info("")
-    }
-
-    deinit {
-        log.info("")
-    }
+    public init() {}
 }
 
 // MARK: - ContextManageable
 
 extension ContextManager {
-    public func add(provideContextDelegate delegate: ContextInfoDelegate) {
+    public func add(delegate: ContextInfoDelegate) {
         provideContextDelegates.add(delegate)
     }
 
-    public func remove(provideContextDelegate delegate: ContextInfoDelegate) {
+    public func remove(delegate: ContextInfoDelegate) {
         provideContextDelegates.remove(delegate)
     }
+    
+    public func getContexts(namespace: String, completion: @escaping ([ContextInfo]) -> Void) {
+        getContexts { contextInfos in
+            let filteredPayload = contextInfos.compactMap { (contextInfo) -> ContextInfo? in
+                if contextInfo.contextType == .client || contextInfo.name == namespace {
+                    return contextInfo
+                } else {
+                    // FIXME: 추후 서버에서 각 capability interface 정보를 저장하게 되면 제거해야 함.
+                    if let payload = contextInfo.payload as? [String: AnyHashable] {
+                        let versionPayload = payload.filter { $0.key == "version" }
+                        return ContextInfo(contextType: contextInfo.contextType, name: contextInfo.name, payload: versionPayload)
+                    } else {
+                        return contextInfo
+                    }
+                }
+            }
 
-    public func getContexts(completionHandler: @escaping (ContextPayload) -> Void) {
+            completion(filteredPayload)
+        }
+    }
+    
+    public func getContexts(completion: @escaping ([ContextInfo]) -> Void) {
         var requests = [Single<ContextInfo?>]()
         provideContextDelegates.notify { delegate in
             requests.append(getContext(delegate: delegate))
@@ -64,17 +78,10 @@ extension ContextManager {
             .map({ (contextInfos) -> [ContextInfo] in
                 return contextInfos.compactMap({ $0 })
             })
-            .do(
+            .subscribe(
                 onSuccess: { (contextInfos) in
-                    let contextDictionary = Dictionary(grouping: contextInfos, by: { $0.contextType })
-                    let payload = ContextPayload(
-                        supportedInterfaces: contextDictionary[.capability] ?? [],
-                        client: contextDictionary[.client] ?? []
-                    )
-                    
-                    completionHandler(payload)
+                    completion(contextInfos)
             })
-            .subscribe()
             .disposed(by: disposeBag)
     }
 }

@@ -22,30 +22,16 @@ import Foundation
 
 public struct AudioPlayerDisplayTemplate {
     public let type: String
-    public let payload: AudioPlayerDisplayTemplate.AudioPlayer
+    public let payload: [String: AnyHashable]
     public let templateId: String
     public let dialogRequestId: String
     public let playStackServiceId: String?
     
-    public init(type: String, payload: AudioPlayerDisplayTemplate.AudioPlayer, templateId: String, dialogRequestId: String, playStackServiceId: String?) {
+    public init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, playStackServiceId: String?) {
         self.type = type
         self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
         self.playStackServiceId = playStackServiceId
-    }
-}
-
-public extension AudioPlayerDisplayTemplate {
-    /// An enum class used to specify the reason to clear the template.
-    enum ClearReason {
-        /// Clear request due to timeout.
-        ///
-        /// Application can decide whether or not to clear the template.
-        case timer
-        /// Clear request due to directive.
-        ///
-        /// Application must clear the template.
-        case directive
     }
 }

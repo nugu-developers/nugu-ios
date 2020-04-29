@@ -27,11 +27,11 @@ class DisplayView: UIView {
     
     var onCloseButtonClick: (() -> Void)?
     
-    var onItemSelect: ((String?) -> Void)?
+    var onItemSelect: ((_ token: String?) -> Void)?
     
     var onUserInteraction: (() -> Void)?
     
-    var displayPayload: String?
+    var displayPayload: Data?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,6 +49,17 @@ class DisplayView: UIView {
         titleContainerView.layer.cornerRadius = titleContainerView.bounds.size.height / 2.0
         titleContainerView.layer.borderColor = UIColor(rgbHexValue: 0xc9cacc).cgColor
         titleContainerView.layer.borderWidth = 1.0
+    }
+    
+    func update(updatePayload: Data) {
+        guard let displayingPayloadData = displayPayload,
+            let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: AnyHashable],
+            let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayload, options: []) as? [String: AnyHashable] else {
+                return
+        }
+        let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
+        guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
+        displayPayload = mergedPayloadData
     }
     
     @IBAction func closeButtonDidClick(_ button: UIButton) {

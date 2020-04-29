@@ -66,15 +66,6 @@ public class OpusPlayer: MediaPlayable {
         return NuguTimeInterval(seconds: Double(chunkSize * audioBuffers.count) / audioFormat.sampleRate)
     }
     
-    public var isMuted: Bool {
-        get {
-            return volume == 0.0
-        }
-        set {
-            volume = newValue ? 0.0 : 1.0
-        }
-    }
-    
     public var volume: Float {
         get {
             return player.volume
@@ -85,7 +76,6 @@ public class OpusPlayer: MediaPlayable {
     }
     
     public init() {
-        log.debug("Opus Player initialize")
         // unless channels argument is more than 2, init() won't return nil.
         // we use fixed-audio-format because tts server does.
         self.audioFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: OpusPlayerConst.audioSampleRate, channels: 1, interleaved: false)!
@@ -272,26 +262,6 @@ extension OpusPlayer: MediaOpusStreamDataSource {
     }
 }
 
-// MARK: - OpusPlayer + MediaUrlDataSource
-
-extension OpusPlayer: MediaUrlDataSource {
-    /**
-     To get opus data from file or remote repository.
-     - You are not supposed to use this method on MainThread for getting data using network
-     */
-    public func setSource(url: String, offset: TimeIntervallic) throws {
-        throw MediaPlayableError.unsupportedOperation
-//        guard audioBuffers.count == 0 else { throw MediaPlayableError.unsupportedOperation }
-//        guard let resourceURL = URL(string: url) else { throw MediaPlayableError.unsupportedOperation }
-//
-//        if let resourceData = try? Data(contentsOf: resourceURL) {
-//            try appendData(resourceData)
-//        }
-//
-//        try lastDataAppended()
-    }
-}
-
 // MARK: - OpusPlayer + Private
 
 private extension OpusPlayer {
@@ -334,8 +304,10 @@ private extension OpusPlayer {
         audioQueue.async { [weak self] in
             guard let self = self else { return }
             
-            self.player.scheduleBuffer(audioBuffer) {
-                self.audioQueue.async {
+            self.player.scheduleBuffer(audioBuffer) { [weak self] in
+                self?.audioQueue.async { [weak self] in
+                    guard let self = self else { return }
+                    
                     #if DEBUG
                     if let channelData = audioBuffer.floatChannelData?.pointee {
                         let scheduledData = Data(bytes: channelData, count: Int(audioBuffer.frameLength)*4)

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguCore'
-  s.version = '0.8.0'
+  s.version = '0.10.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu'
   s.description = <<-DESC
@@ -23,7 +23,6 @@ Nugu framework for AI Service
   s.libraries = 'c++'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/NuguCore/NuguCore/Libraries/**' }
 
-  s.dependency 'JadeMarble', '~> 0'
   s.dependency 'NattyLog', '~> 1.0'
   s.dependency 'RxSwift', '~> 5'
 

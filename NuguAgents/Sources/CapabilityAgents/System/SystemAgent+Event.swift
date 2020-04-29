@@ -37,7 +37,7 @@ extension SystemAgent {
 // MARK: - Eventable
 
 extension SystemAgent.Event: Eventable {
-    public var payload: [String: Any] {
+    public var payload: [String: AnyHashable] {
         switch typeInfo {
         default:
             return [:]

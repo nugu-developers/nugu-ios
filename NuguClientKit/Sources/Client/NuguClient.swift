@@ -24,12 +24,11 @@ import NuguCore
 import NuguAgents
 
 public class NuguClient {
-    public weak var delegate: NuguClientDelegate?
+    private weak var delegate: NuguClientDelegate?
     
     // core
     public let contextManager: ContextManageable
     public let focusManager: FocusManageable
-    public let networkManager: NetworkManageable
     public let streamDataRouter: StreamDataRoutable
     public let directiveSequencer: DirectiveSequenceable
     public let playSyncManager: PlaySyncManageable
@@ -41,6 +40,7 @@ public class NuguClient {
     public let ttsAgent: TTSAgentProtocol
     public let textAgent: TextAgentProtocol
     public let audioPlayerAgent: AudioPlayerAgentProtocol
+    public let soundAgent: SoundAgentProtocol
 
     // additional agents
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
@@ -77,26 +77,22 @@ public class NuguClient {
     public private(set) lazy var keywordDetector: KeywordDetector = {
         let keywordDetector =  KeywordDetector()
         keywordDetector.audioStream = sharedAudioStream
-        contextManager.add(provideContextDelegate: keywordDetector)
+        contextManager.add(delegate: keywordDetector)
         
         return keywordDetector
     }()
     
-    // private
-    private let inputControlQueue = DispatchQueue(label: "com.sktelecom.romaine.input_control_queue")
-    private var inputControlWorkItem: DispatchWorkItem?
-    
-    public init() {
+    public init(delegate: NuguClientDelegate) {
+        self.delegate = delegate
+        
         // core
         contextManager = ContextManager()
         focusManager = FocusManager()
-        networkManager = NetworkManager()
-        streamDataRouter = StreamDataRouter(networkManager: networkManager)
-        directiveSequencer = DirectiveSequencer(streamDataRouter: streamDataRouter)
+        directiveSequencer = DirectiveSequencer()
+        streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
         systemAgent = SystemAgent(contextManager: contextManager,
-                                  networkManager: networkManager,
-                                  upstreamDataSender: streamDataRouter,
+                                  streamDataRouter: streamDataRouter,
                                   directiveSequencer: directiveSequencer)
         
         // dialog
@@ -114,12 +110,11 @@ public class NuguClient {
 
         textAgent = TextAgent(contextManager: contextManager,
                               upstreamDataSender: streamDataRouter,
-                              focusManager: focusManager)
+                              directiveSequencer: directiveSequencer)
         
         dialogStateAggregator = DialogStateAggregator()
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
-        textAgent.add(delegate: dialogStateAggregator)
         
         // audio player
         audioPlayerAgent = AudioPlayerAgent(
@@ -129,35 +124,34 @@ public class NuguClient {
             contextManager: contextManager,
             directiveSequencer: directiveSequencer
         )
+        
+        soundAgent = SoundAgent(
+            focusManager: focusManager,
+            upstreamDataSender: streamDataRouter,
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer
+        )
 
         // setup additional roles
         setupAudioStream()
         setupAuthorizationStore()
         setupAudioSessionRequester()
-        setupNetworkInfoFoward()
+        setupDialogStateAggregator()
+        setupStreamDataRouter()
+        
+        systemAgent.sendSynchronizeStateEvent()
     }
 }
     
 // MARK: - Helper functions
 
 public extension NuguClient {
-    func connect() {
-        networkManager.connect()
+    func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
+        streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
     }
     
-    func disconnect() {
-        networkManager.disconnect()
-    }
-    
-    func enable() {
-        connect()
-    }
-    
-    func disable() {
-        focusManager.stopForegroundActivity()
-        inputProvider.stop()
-        
-        disconnect()
+    func stopReceiveServerInitiatedDirective() {
+        streamDataRouter.stopReceiveServerInitiatedDirective()
     }
 }
 
@@ -171,47 +165,33 @@ extension NuguClient: AudioStreamDelegate {
     }
     
     public func audioStreamWillStart() {
-        inputControlWorkItem?.cancel()
-        inputControlQueue.async { [weak self] in
-            guard let self = self else { return }
+        log.debug("")
+        guard inputProvider.isRunning == false else {
+            log.debug("input provider is already started.")
+            return
+        }
+        
+        delegate?.nuguClientWillOpenInputSource()
+        
+        do {
+            try inputProvider.start(streamWriter: self.sharedAudioStream.makeAudioStreamWriter())
             
-            guard self.inputProvider.isRunning == false else {
-                log.debug("input provider is already started.")
-                return
-            }
-
-            self.delegate?.nuguClientWillOpenInputSource()
-            
-            do {
-                try self.inputProvider.start(streamWriter: self.sharedAudioStream.makeAudioStreamWriter())
-
-                log.debug("input provider is started.")
-            } catch {
-                log.debug("input provider failed to start: \(error)")
-            }
+            log.debug("input provider is started.")
+        } catch {
+            log.debug("input provider failed to start: \(error)")
         }
     }
     
     public func audioStreamDidStop() {
-        inputControlWorkItem?.cancel()
-        inputControlWorkItem = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            
-            guard self.inputControlWorkItem?.isCancelled == false else {
-                log.debug("Stopping input provider is cancelled")
-                return
-            }
-            
-            guard self.inputProvider.isRunning == true else {
-                log.debug("input provider is not running")
-                return
-            }
-            
-            self.inputProvider.stop()
-            self.delegate?.nuguClientDidCloseInputSource()
-            log.debug("input provider is stopped.")
+        log.debug("")
+        guard self.inputProvider.isRunning == true else {
+            log.debug("input provider is not running")
+            return
         }
-        inputControlQueue.async(execute: inputControlWorkItem!)
+        
+        self.inputProvider.stop()
+        self.delegate?.nuguClientDidCloseInputSource()
+        log.debug("input provider is stopped.")
     }
 }
 
@@ -230,7 +210,7 @@ extension NuguClient: AuthorizationStoreDelegate {
 // MARK: - FocusManagerDelegate
 
 extension NuguClient: FocusDelegate {
-    public func setupAudioSessionRequester() {
+    private func setupAudioSessionRequester() {
         focusManager.delegate = self
     }
     
@@ -243,19 +223,45 @@ extension NuguClient: FocusDelegate {
     }
 }
 
-// MARK: - Delegates releated Network
+// MARK: - DialogStateDelegate
 
-extension NuguClient: NetworkStatusDelegate, ReceiveMessageDelegate {
-    private func setupNetworkInfoFoward() {
-        networkManager.add(receiveMessageDelegate: self)
-        networkManager.add(statusDelegate: self)
+extension NuguClient: DialogStateDelegate {
+    private func setupDialogStateAggregator() {
+        dialogStateAggregator.add(delegate: self)
     }
     
-    public func networkStatusDidChange(_ status: NetworkStatus) {
-        delegate?.nuguClientConnectionStatusChanged(status: status)
+    public func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
+        switch state {
+        case .idle:
+            playSyncManager.resetTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+        case .listening:
+            playSyncManager.cancelTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+        default:
+            break
+        }
+    }
+}
+
+// MARK: - StreamDataDelegate
+
+extension NuguClient: StreamDataDelegate {
+    private func setupStreamDataRouter() {
+        streamDataRouter.delegate = self
     }
     
-    public func receiveMessageDidReceive(header: [String: String], body: Data) {
-        delegate?.nuguClientDidReceiveMessage(header: header, body: body)
+    public func streamDataDidReceive(direcive: Downstream.Directive) {
+        delegate?.nuguClientDidReceive(direcive: direcive)
+    }
+    
+    public func streamDataDidReceive(attachment: Downstream.Attachment) {
+        delegate?.nuguClientDidReceive(attachment: attachment)
+    }
+    
+    public func streamDataDidSend(event: Upstream.Event, error: Error?) {
+        delegate?.nuguClientDidSend(event: event, error: error)
+    }
+    
+    public func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {
+        delegate?.nuguClientDidSend(attachment: attachment, error: error)
     }
 }

@@ -23,19 +23,27 @@ import Foundation
 /// Manage capability agent's context.
 /// Context is a container used to communicate the state of the capability agents to server.
 public protocol ContextManageable: class {
-    /// Add ContextInfoDelegate to ContextManager
+    /// Add `ContextInfoDelegate` to `ContextManager`
     ///
-    /// When the context manager receives a getContexts request it queries the registered ContextInfoDelegate for updated context.
-    /// - Parameter provideContextDelegate: The object that acts as the provider of the ContextManager
-    func add(provideContextDelegate: ContextInfoDelegate)
+    /// When the context manager receives a getContexts request it queries the registered `ContextInfoDelegate` for updated context.
+    /// - Parameter delegate: The object that acts as the provider of the ContextManager
+    func add(delegate: ContextInfoDelegate)
     
-    /// Remove ContextInfoDelegate from ContextManager
-    /// - Parameter provideContextDelegate: The object to remove
-    func remove(provideContextDelegate: ContextInfoDelegate)
+    /// Remove `ContextInfoDelegate` from `ContextManager`
+    /// - Parameter delegate: The object to remove
+    func remove(delegate: ContextInfoDelegate)
     
-    /// Request the ContextManager for context.
+    /// Request the `ContextManager` for context.
     ///
-    /// Request will be sent to the ContextInfoDelegate via the contextInfoRequestContext requests.
-    /// - Parameter completionHandler: A completion handler block to execute when all of the requests are finished.
-    func getContexts(completionHandler: @escaping (ContextPayload) -> Void)
+    /// Request will be sent to the `ContextInfoDelegate` via the `contextInfoRequestContext` requests.
+    /// - Parameter completion: A completion handler block to execute when all of the requests are finished.
+    func getContexts(completion: @escaping ([ContextInfo]) -> Void)
+    
+    /// Request the `ContextManager` for context.
+    ///
+    /// Request will be sent to the `ContextInfoDelegate` via the `contextInfoRequestContext` requests.
+    /// `[ContextInfo]` includes only version information.(Except `namespace`'s `ContextInfo`).
+    /// - Parameter namespace: May be `CapabilityAgentCategory.name`.
+    /// - Parameter completion: A completion handler block to execute when all of the requests are finished.
+    func getContexts(namespace: String, completion: @escaping ([ContextInfo]) -> Void)
 }

@@ -28,8 +28,7 @@ public final class SystemAgent: SystemAgentProtocol {
     
     // Private
     private let contextManager: ContextManageable
-    private let networkManager: NetworkManageable
-    private let upstreamDataSender: UpstreamDataSendable
+    private let streamDataRouter: StreamDataRoutable
     private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
     
@@ -37,32 +36,28 @@ public final class SystemAgent: SystemAgentProtocol {
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandoffConnection", medium: .none, isBlocking: false, directiveHandler: handleHandOffConnection),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", medium: .none, isBlocking: false, directiveHandler: handleUpdateState),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", medium: .none, isBlocking: false, directiveHandler: handleException),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", medium: .none, isBlocking: false, directiveHandler: { { $1(.success(())) } })
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandoffConnection", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleHandOffConnection),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateState),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleException),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Revoke", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRevoke),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } }),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } })
     ]
     
     public init(
         contextManager: ContextManageable,
-        networkManager: NetworkManageable,
-        upstreamDataSender: UpstreamDataSendable,
+        streamDataRouter: StreamDataRoutable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("initiated")
-        
         self.contextManager = contextManager
-        self.networkManager = networkManager
-        self.upstreamDataSender = upstreamDataSender
+        self.streamDataRouter = streamDataRouter
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(provideContextDelegate: self)
-        networkManager.add(statusDelegate: self)
+        contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
-        log.info("deinit")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
@@ -77,28 +72,81 @@ public extension SystemAgent {
     func remove(systemAgentDelegate: SystemAgentDelegate) {
         delegates.remove(systemAgentDelegate)
     }
+    
+    func sendSynchronizeStateEvent() {
+        sendSynchronizeStateEvent(directive: nil)
+    }
 }
 
 // MARK: - ContextInfoDelegate
 
 extension SystemAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = [
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+        let payload: [String: AnyHashable] = [
             "version": capabilityAgentProperty.version
         ]
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
+
 }
 
-// MARK: - NetworkStatusDelegate
+// MARK: - Private (handle directive)
 
-extension SystemAgent: NetworkStatusDelegate {
-    public func networkStatusDidChange(_ status: NetworkStatus) {
-        switch status {
-        case .connected:
-            sendSynchronizeStateEvent()
-        default:
-            break
+private extension SystemAgent {
+    func handleHandOffConnection() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion() }
+            
+            guard let serverPolicy = try? JSONDecoder().decode(Policy.ServerPolicy.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            self?.systemDispatchQueue.async { [weak self] in
+                log.info("try to handoff policy: \(serverPolicy)")
+                self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
+            }
+        }
+    }
+    
+    func handleUpdateState() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion() }
+        
+            self?.sendSynchronizeStateEvent(directive: directive)
+        }
+    }
+    
+    func handleException() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion() }
+        
+            guard let exceptionItem = try? JSONDecoder().decode(SystemAgentExceptionItem.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            self?.systemDispatchQueue.async { [weak self] in
+                switch exceptionItem.code {
+                case .fail(let code):
+                    self?.delegates.notify { delegate in
+                        delegate.systemAgentDidReceiveExceptionFail(code: code)
+                    }
+                case .warning(let code):
+                    log.debug("received warning code: \(code)")
+                }
+            }
+        }
+    }
+    
+    func handleRevoke() -> HandleDirective {
+        return { [weak self] _, completion in
+            defer { completion() }
+            
+            self?.systemDispatchQueue.async { [weak self] in
+                self?.delegates.notify { delegate in
+                    delegate.systemAgentDidReceiveRevokeDevice()
+                }
+            }
         }
     }
 }
@@ -106,71 +154,16 @@ extension SystemAgent: NetworkStatusDelegate {
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
-    func handleHandOffConnection() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
-                Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let serverPolicy = try JSONDecoder().decode(Policy.ServerPolicy.self, from: data)
-                    self?.systemDispatchQueue.async { [weak self] in
-                        // TODO: hand off는 이제 server-initiated directive를 받는 것에 한해서만 유용하다. 일단 삭제하고 network manager가 전이중방식으로 바뀌면 구현할 것.
-                        log.info("try to handoff policy: \(serverPolicy)")
-                        self?.networkManager.connect()
-                    }
-                }
-            )
-        }
-    }
-    
-    func handleUpdateState() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            self?.systemDispatchQueue.async { [weak self] in
-                self?.sendSynchronizeStateEvent()
-            }
-            
-            completionHandler(.success(()))
-        }
-        
-    }
-    
-    func handleException() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            completionHandler(
-                Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let exceptionItem = try JSONDecoder().decode(SystemAgentExceptionItem.self, from: data)
-                    self?.systemDispatchQueue.async { [weak self] in
-                        switch exceptionItem.code {
-                        case .fail(let code):
-                            self?.delegates.notify { delegate in
-                                delegate.systemAgentDidReceiveExceptionFail(code: code)
-                            }
-                        case .warning(let code):
-                            log.debug("received warning code: \(code)")
-                        }
-                    }
-                }
-            )
-        }
-    }
-}
-
-private extension SystemAgent {
-    func sendSynchronizeStateEvent() {
+    func sendSynchronizeStateEvent(directive: Downstream.Directive? = nil) {
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
-            self.upstreamDataSender.send(
-                upstreamEventMessage: Event(
+            self.streamDataRouter.sendEvent(
+                Event(
                     typeInfo: .synchronizeState
                 ).makeEventMessage(
-                    agent: self,
+                    property: self.capabilityAgentProperty,
+                    referrerDialogRequestId: directive?.header.dialogRequestId,
                     contextPayload: contextPayload
                 )
             )

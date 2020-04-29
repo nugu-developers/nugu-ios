@@ -23,15 +23,19 @@ import Foundation
 import NuguCore
 
 class MockContextManager: ContextManageable {
-    func add(provideContextDelegate: ContextInfoDelegate) {
+    func add(delegate: ContextInfoDelegate) {
         //
     }
     
-    func remove(provideContextDelegate: ContextInfoDelegate) {
+    func remove(delegate: ContextInfoDelegate) {
         //
     }
     
-    func getContexts(completionHandler: @escaping (ContextPayload) -> Void) {
+    func getContexts(completion: @escaping ([ContextInfo]) -> Void) {
+        //
+    }
+    
+    func getContexts(namespace: String, completion: @escaping ([ContextInfo]) -> Void) {
         //
     }
 }

@@ -27,21 +27,14 @@ import NuguCore
 extension ASRAgent {
     public struct Event {
         let typeInfo: TypeInfo
-        let encoding: ASREncoding
         let expectSpeech: ASRExpectSpeech?
         
         public enum TypeInfo {
-            case recognize(wakeUpInfo: WakeUpInfo?)
+            case recognize(options: ASROptions)
             case responseTimeout
             case listenTimeout
             case stopRecognize
             case listenFailed
-        }
-        
-        public struct WakeUpInfo {
-            public let start: Int
-            public let end: Int
-            public let detection: Int
         }
     }
 }
@@ -49,26 +42,42 @@ extension ASRAgent {
 // MARK: - Eventable
 
 extension ASRAgent.Event: Eventable {
-    public var payload: [String: Any] {
-        var payload: [String: Any?]
+    public var payload: [String: AnyHashable] {
+        var payload: [String: AnyHashable?]
         switch typeInfo {
-        case .recognize(let wakeUpInfo):
+        case .recognize(let options):
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
-                "endpointing": "CLIENT",
-                "encoding": encoding.rawValue,
+                "endpointing": options.endPointing.value,
+                "encoding": options.encoding.value,
                 "sessionId": expectSpeech?.sessionId,
                 "playServiceId": expectSpeech?.playServiceId,
-                "property": expectSpeech?.property,
-                "domainTypes": expectSpeech?.domainTypes
-            ]
-            if let wakeUpInfo = wakeUpInfo {
-                payload["wakeUpBoundary"] = [
-                    "detection": wakeUpInfo.detection,
-                    "end": wakeUpInfo.end,
-                    "start": wakeUpInfo.start
+                "domainTypes": expectSpeech?.domainTypes,
+                "asrContext": expectSpeech?.asrContext,
+                "timeout": [
+                    "listen": options.timeout.truncatedMilliSeconds,
+                    "maxSpeech": options.maxDuration.truncatedMilliSeconds,
+                    "response": 10000
                 ]
+            ]
+            
+            if case let .wakeUpKeyword(keyword, _, start, end, detection) = options.initiator {
+                var wakeup: [String: AnyHashable] = ["word": keyword]
+                if options.endPointing == .server {
+                    /**
+                     KeywordDetector use 16k mono (bit depth: 16).
+                     so, You can calculate sample count by (dataCount / 2)
+                     */
+                    let boundary: [String: AnyHashable] = [
+                        "start": start / 2,
+                        "end": end / 2,
+                        "detection": detection / 2,
+                        "metric": "sample"
+                    ]
+                    wakeup["boundary"] = boundary
+                }
+                payload["wakeup"] = wakeup
             }
         case .listenTimeout,
              .stopRecognize,
@@ -96,9 +105,3 @@ extension ASRAgent.Event: Eventable {
         }
     }
 }
-
-// MARK: - Equatable
-
-extension ASRAgent.Event.TypeInfo: Equatable {}
-extension ASRAgent.Event.WakeUpInfo: Equatable {}
-extension ASRAgent.Event: Equatable {}

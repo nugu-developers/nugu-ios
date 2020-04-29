@@ -25,17 +25,17 @@ final class DisplayWeatherListView: DisplayView {
     @IBOutlet private weak var locationButton: UIButton!
     @IBOutlet private weak var tableView: UITableView!
     
-    override var displayPayload: String? {
+    override var displayPayload: Data? {
         didSet {
-            guard let payloadData = displayPayload?.data(using: .utf8),
-            let displayItem = try? JSONDecoder().decode(DisplayWeatherListTemplate.self, from: payloadData) else { return }
+            guard let payloadData = displayPayload,
+                let displayItem = try? JSONDecoder().decode(DisplayWeatherListTemplate.self, from: payloadData) else { return }
             
             titleLabel.text = displayItem.title.text.text
             titleLabel.textColor = UIColor.textColor(rgbHexString: displayItem.title.text.color)
             
             backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
             
-            if let logoUrl = displayItem.title.logo.sources.first?.url {
+            if let logoUrl = displayItem.title.logo?.sources.first?.url {
                 logoImageView.loadImage(from: logoUrl)
                 logoImageView.isHidden = false
             } else {

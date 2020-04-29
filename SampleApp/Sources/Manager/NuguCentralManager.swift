@@ -24,14 +24,37 @@ import NuguCore
 import NuguAgents
 import NuguClientKit
 import NuguLoginKit
+import NuguUIKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
+    
+    private let supportServerInitiatedDirective = false
+    
+    lazy private(set) var client: NuguClient = {
+        let client = NuguClient(delegate: self)
+        
+        // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
+        if NuguAudioSessionManager.shared.supportMixWithOthersOption == false {
+            displayPlayerController = NuguDisplayPlayerController()
+        }
+        
+        // local tts agent
+        localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
+        
+        client.locationAgent.delegate = self
+        client.systemAgent.add(systemAgentDelegate: self)
+        client.soundAgent.dataSource = self
+        
+        return client
+    }()
+    lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
 
-    let client = NuguClient()
-    let localTTSAgent: LocalTTSAgent
-
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = NuguDisplayPlayerController(audioPlayerAgent: client.audioPlayerAgent)
+    // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
+    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = {
+        return NuguAudioSessionManager.shared.supportMixWithOthersOption ? nil : NuguDisplayPlayerController()
+    }()
+    
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
             return try NuguOAuthClient(serviceName: Bundle.main.bundleIdentifier ?? "NuguSample")
@@ -47,29 +70,10 @@ final class NuguCentralManager {
         }
     }
     
-    var networkStatus: NetworkStatus = .disconnected(error: nil) {
-        didSet {
-            NotificationCenter.default.post(name: .nuguClientNetworkStatus, object: nil, userInfo: ["status": networkStatus])
-        }
-    }
+    // TODO: - Consider managing inside SDK
+    var isTextAgentInProcess = false
     
     private init() {
-        // local tts agent
-        localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
-        
-        if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.asrAgent.epdFile = epdFile
-        }
-
-        client.delegate = self
-        client.locationAgent.delegate = self
-        client.systemAgent.add(systemAgentDelegate: self)
-
-        NuguLocationManager.shared.startUpdatingLocation()
-        
-        // Set Last WakeUp Keyword
-        // If you don't want to use saved wakeup-word, don't need to be implemented
-        setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
     }
 }
 
@@ -77,11 +81,33 @@ final class NuguCentralManager {
 
 extension NuguCentralManager {
     func enable() {
-        client.enable()
+        log.debug("")
+        if supportServerInitiatedDirective {
+            client.startReceiveServerInitiatedDirective()
+        } else {
+            client.stopReceiveServerInitiatedDirective()
+        }
+
+        NuguLocationManager.shared.startUpdatingLocation()
+        
+        // Set Last WakeUp Keyword
+        // If you don't want to use saved wakeup-word, don't need to be implemented
+        if UserDefaults.Standard.useWakeUpDetector,
+            let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+            client.keywordDetector.keywordSource = keyword.keywordSource
+            startWakeUpDetector()
+        } else {
+            stopWakeUpDetector()
+        }
     }
     
     func disable() {
-        client.disable()
+        log.debug("")
+        stopWakeUpDetector()
+        client.stopReceiveServerInitiatedDirective()
+        client.asrAgent.stopRecognition()
+        client.ttsAgent.stopTTS(cancelAssociation: true)
+        client.audioPlayerAgent.stop()
     }
 }
 
@@ -175,15 +201,68 @@ extension NuguCentralManager {
     }
     
     func logout() {
-        guard
-            let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-            let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else {
-                return
-        }
-        
+        popToRootViewController()
         disable()
         UserDefaults.Standard.clear()
-        rootNavigationViewController.popToRootViewController(animated: true)
+    }
+}
+
+// MARK: - Private (Logout)
+
+private extension NuguCentralManager {
+    func popToRootViewController() {
+        DispatchQueue.main.async {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
+            rootNavigationViewController.popToRootViewController(animated: true)
+        }
+    }
+    
+    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
+        DispatchQueue.main.async { [weak self] in
+            self?.client.audioPlayerAgent.stop()
+            NuguToast.shared.showToast(message: sampleAppError.errorDescription)
+            self?.popToRootViewController()
+            switch sampleAppError {
+            case .loginUnauthorized:
+                self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
+                    self?.disable()
+                    UserDefaults.Standard.clear()
+                })
+            default:
+                self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
+                    self?.disable()
+                    UserDefaults.Standard.clear()
+                })
+            }
+        }
+    }
+}
+
+// MARK: - Private (NetworkError handling)
+// TODO: - Should consider and decide for best way for handling network errors
+
+private extension NuguCentralManager {
+    func handleNetworkError(error: Error?) {
+        // Handle Nugu's predefined NetworkError
+        if let networkError = error as? NetworkError {
+            switch networkError {
+            case .authError:
+                handleAuthError()
+            case .timeout:
+                localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
+            default:
+                localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
+            }
+        } else { // Handle URLError
+            guard let urlError = error as? URLError else { return }
+            switch urlError.code {
+            case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
+                NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+            default: // Handle other URLErrors with your own way
+                break
+            }
+        }
     }
 }
 
@@ -235,112 +314,30 @@ private extension NuguCentralManager {
             completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
-    
-    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
-        DispatchQueue.main.async { [weak self] in
-            switch sampleAppError {
-            case .loginUnauthorized:
-                self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated)
-            default:
-                self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError)
-            }
-            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
-            self?.logout()
-        }
-    }
-}
-
-// MARK: - Internal (ASR)
-
-extension NuguCentralManager {
-    func startRecognize(initiator: ASRInitiator, completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
-            guard let self = self else { return }
-            let result = Result<Void, Error>(catching: {
-                guard isGranted else { throw SampleAppError.recordPermissionError }
-                self.client.asrAgent.startRecognition(initiator: initiator)
-            })
-            completion?(result)
-        }
-    }
-    
-    func stopRecognize() {
-        client.asrAgent.stopRecognition()
-    }
-    
-    func cancelRecognize() {
-        client.asrAgent.stopRecognition()
-        client.ttsAgent.stopTTS()
-    }
 }
 
 // MARK: - Internal (WakeUpDetector)
 
 extension NuguCentralManager {
-    func refreshWakeUpDetector() {
-        DispatchQueue.main.async { [weak self] in
+    func startWakeUpDetector() {
+        DispatchQueue.main.async {
             // Should check application state, because iOS audio input can not be start using in background state
             guard UIApplication.shared.applicationState == .active else { return }
-            
-            guard UserDefaults.Standard.useWakeUpDetector else {
-                self?.stopWakeUpDetector()
-                return
-            }
-            
-            self?.startWakeUpDetector { (result) in
-                if case let .failure(error) = result {
-                    log.debug("Failed to start WakeUp-Detector with reason: \(error)")
+            guard UserDefaults.Standard.useWakeUpDetector else { return }
+
+            NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
+                guard let self = self else { return }
+                guard isGranted else {
+                    log.error("Record permission denied")
+                    return
                 }
-            }
-        }
-    }
-    
-    func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
-            guard let self = self else { return }
-            let result = Result<Void, Error>(catching: {
-                guard isGranted else { throw SampleAppError.recordPermissionError }
                 self.client.keywordDetector.start()
-            })
-            completion?(result)
+            }
         }
     }
     
     func stopWakeUpDetector() {
         client.keywordDetector.stop()
-    }
-    
-    func setWakeUpWord(rawValue wakeUpWord: Int) {
-        switch wakeUpWord {
-        case Keyword.aria.rawValue:
-            guard
-                let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") else {
-                    log.debug("keywordSource is invalid")
-                    return
-            }
-            
-            client.keywordDetector.keywordSource = KeywordSource(
-                keyword: .aria,
-                netFileUrl: netFile,
-                searchFileUrl: searchFile
-            )
-        case Keyword.tinkerbell.rawValue:
-            guard
-                let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") else {
-                    log.debug("keywordSource is invalid")
-                    return
-            }
-            
-            client.keywordDetector.keywordSource = KeywordSource(
-                keyword: .tinkerbell,
-                netFileUrl: netFile,
-                searchFileUrl: searchFile
-            )
-        default:
-            return
-        }
     }
 }
 
@@ -359,16 +356,35 @@ extension NuguCentralManager: NuguClientDelegate {
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
     
-    func nuguClientConnectionStatusChanged(status: NetworkStatus) {
-        networkStatus = status
-    }
-    
     func nuguClientWillOpenInputSource() {
         inputStatus = true
     }
     
     func nuguClientDidCloseInputSource() {
         inputStatus = false
+    }
+    
+    func nuguClientDidReceive(direcive: Downstream.Directive) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(direcive.header.namespace).\(direcive.header.name)")
+    }
+    
+    func nuguClientDidReceive(attachment: Downstream.Attachment) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(attachment.header.namespace).\(attachment.header.name)")
+    }
+    
+    func nuguClientDidSend(event: Upstream.Event, error: Error?) {
+        // Use some analytics SDK(or API) here.
+        // Error: URLError or NetworkError or EventSenderError
+        log.debug("\(error?.localizedDescription ?? ""): \(event.header.namespace).\(event.header.name)")
+        handleNetworkError(error: error)
+    }
+    
+    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
+        // Use some analytics SDK(or API) here.
+        // Error: EventSenderError
+        log.debug("\(error?.localizedDescription ?? ""): \(attachment.header.seq)")
     }
 }
 
@@ -393,8 +409,24 @@ extension NuguCentralManager: SystemAgentDelegate {
             handleAuthError()
         }
     }
+    
+    func systemAgentDidReceiveRevokeDevice() {
+        logoutAfterErrorHandling(sampleAppError: .deviceRevoked)
+    }
 }
 
+// MARK: - SoundAgentDataSource
+
+extension NuguCentralManager: SoundAgentDataSource {
+    func soundAgentRequestUrl(beepName: SoundBeepName) -> URL? {
+        let url: URL?
+        switch beepName {
+        case .responseFail:
+            url = Bundle.main.url(forResource: "asrFail", withExtension: "wav")
+        }
+        return url
+    }
+}
 extension Notification.Name {
     static let nuguClientInputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
     static let nuguClientNetworkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")

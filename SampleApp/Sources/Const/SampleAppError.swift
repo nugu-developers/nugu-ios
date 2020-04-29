@@ -23,11 +23,12 @@ import NuguLoginKit
 
 enum SampleAppError: Error {
     case nilValue(description: String?)
-    case recordPermissionError
     
     case loginFailed(error: Error)
     case loginUnauthorized(reason: APIErrorReason)
     case loginWithRefreshTokenFailed
+    
+    case deviceRevoked
 }
 
 // MARK: - LocalizedError
@@ -37,8 +38,6 @@ extension SampleAppError: LocalizedError {
         switch self {
         case .nilValue(let description):
             return description
-        case .recordPermissionError:
-            return "Record permission denied"
         case .loginFailed(let error):
             return "login has failed (reason: \(error))"
         case .loginUnauthorized:
@@ -47,6 +46,8 @@ extension SampleAppError: LocalizedError {
             return "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "NuguSample")의 누구 서비스가 종료되었습니다."
         case .loginWithRefreshTokenFailed:
             return "Login with refresh token has failed"
+        case .deviceRevoked:
+            return "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요."
         }
     }
 }

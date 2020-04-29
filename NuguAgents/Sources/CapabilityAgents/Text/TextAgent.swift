@@ -26,172 +26,110 @@ import RxSwift
 
 public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.1")
+    
+    public weak var delegate: TextAgentDelegate?
     
     // Private
     private let contextManager: ContextManageable
-    private let focusManager: FocusManageable
     private let upstreamDataSender: UpstreamDataSendable
+    private let directiveSequencer: DirectiveSequenceable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
-    private let delegates = DelegateSet<TextAgentDelegate>()
-    
-    private var textAgentState: TextAgentState = .idle {
-        didSet {
-            log.info("from: \(oldValue) to: \(textAgentState)")
-            
-            // release textRequest
-            if textAgentState == .idle {
-                textRequest = nil
-                releaseFocusIfNeeded()
-            }
-            
-            // Notify delegates only if the agent's status changes.
-            if oldValue != textAgentState {
-                delegates.notify { delegate in
-                    delegate.textAgentDidChange(state: textAgentState)
-                }
-            }
-        }
-    }
-    
-    // For Recognize Event
-    private var textRequest: TextRequest?
+    // Handleable Directives
+    private lazy var handleableDirectiveInfos = [
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextSource", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleTextSource)
+    ]
     
     public init(
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
-        focusManager: FocusManageable
+        directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("")
-        
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
-        self.focusManager = focusManager
+        self.directiveSequencer = directiveSequencer
         
-        contextManager.add(provideContextDelegate: self)
-        focusManager.add(channelDelegate: self)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        contextManager.add(delegate: self)
     }
     
     deinit {
-        log.info("")
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
 
 // MARK: - TextAgentProtocol
 
 extension TextAgent {
-    public func add(delegate: TextAgentDelegate) {
-        delegates.add(delegate)
-    }
-    
-    public func remove(delegate: TextAgentDelegate) {
-        delegates.remove(delegate)
-    }
-    
-    public func requestTextInput(text: String, expectSpeech: ASRExpectSpeech?) {
-        textDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            guard self.textAgentState != .busy else {
-                log.warning("Not permitted in current state \(self.textAgentState)")
-                return
-            }
-            
-            self.contextManager.getContexts { (contextPayload) in
-                self.textRequest = TextRequest(
-                    contextPayload: contextPayload,
-                    text: text,
-                    dialogRequestId: TimeUUID().hexString,
-                    expectSpeech: expectSpeech
-                )
-                
-                self.focusManager.requestFocus(channelDelegate: self)
-            }
-        }
+    @discardableResult public func requestTextInput(text: String, completion: ((StreamDataState) -> Void)?) -> String {
+        return sendTextInput(text: text, token: nil, completion: completion)
     }
 }
 
 // MARK: - ContextInfoDelegate
 
 extension TextAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
-        let payload: [String: Any] = ["version": capabilityAgentProperty.version]        
-        completionHandler(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+        let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]        
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 
-// MARK: - FocusChannelDelegate
-
-extension TextAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return .recognition
-    }
-    
-    public func focusChannelDidChange(focusState: FocusState) {
-        log.info("\(focusState) \(textAgentState)")
-        
-        textDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            switch (focusState, self.textAgentState) {
-            case (.foreground, .idle):
-                self.sendRecognize()
-            // Busy 무시
-            case (.foreground, _):
-                break
-            // Background 허용 안함.
-            case (_, let textAgentState) where textAgentState != .idle:
-                self.textAgentState = .idle
-            default:
-                break
-            }
-        }
-    }
-}
-
-// MARK: - Private(FocusManager)
+// MARK: - Private(Directive)
 
 private extension TextAgent {
-    func releaseFocusIfNeeded() {
-        guard textAgentState == .idle else {
-            log.info("Not permitted in current state, \(textAgentState)")
-            return
-        }
+    func handleTextSource() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion() }
         
-        focusManager.releaseFocus(channelDelegate: self)
+            guard let payload = try? JSONDecoder().decode(TextAgentSourceItem.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            self?.textDispatchQueue.async { [weak self] in
+                self?.sendTextInput(
+                    text: payload.text,
+                    token: payload.token,
+                    expectSpeech: nil,
+                    directive: directive,
+                    completion: nil
+                )
+            }
+        }
     }
 }
 
 // MARK: - Private(Event)
 
 private extension TextAgent {
-    func sendRecognize() {
-        guard let textRequest = textRequest else {
-            log.warning("TextRequest not exist")
-            return
+    @discardableResult func sendTextInput(
+        text: String,
+        token: String?,
+        expectSpeech: ASRExpectSpeech? = nil,
+        directive: Downstream.Directive? = nil,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String {
+        let dialogRequestId = TimeUUID().hexString
+        
+        let expectSpeech = delegate?.textAgentDidRequestExpectSpeech()
+        contextManager.getContexts { [weak self] contextPayload in
+            guard let self = self else { return }
+            
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    typeInfo: .textInput(text: text, token: token, expectSpeech: expectSpeech)
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    dialogRequestId: dialogRequestId,
+                    referrerDialogRequestId: directive?.header.dialogRequestId,
+                    contextPayload: contextPayload
+                ),
+                completion: completion
+            )
         }
-        
-        textAgentState = .busy
-        
-        self.upstreamDataSender.send(
-            upstreamEventMessage: Event(
-                typeInfo: .textInput(
-                    text: textRequest.text,
-                    expectSpeech: textRequest.expectSpeech
-                )
-            ).makeEventMessage(agent: self),
-            resultHandler: { [weak self] result in
-                guard let self = self else { return }
-                guard textRequest.dialogRequestId == self.textRequest?.dialogRequestId else { return }
-                
-                let result = result.map { _ in () }
-                self.delegates.notify({ (delegate) in
-                    delegate.textAgentDidReceive(result: result, dialogRequestId: textRequest.dialogRequestId)
-                })
-                self.textAgentState = .idle
-            }
-        )
+        return dialogRequestId
     }
 }

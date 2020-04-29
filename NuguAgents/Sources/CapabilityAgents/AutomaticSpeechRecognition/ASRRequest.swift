@@ -23,14 +23,10 @@ import Foundation
 import NuguCore
 
 struct ASRRequest {
-    let contextPayload: ContextPayload
+    let contextPayload: [ContextInfo]
     let reader: AudioStreamReadable
     let dialogRequestId: String
-    let initiator: ASRInitiator
-}
-
-public enum ASRInitiator {
-    case wakeUpKeyword
-    case user
-    case scenario
+    let options: ASROptions
+    let referrerDialogRequestId: String?
+    let completion: ((StreamDataState) -> Void)?
 }

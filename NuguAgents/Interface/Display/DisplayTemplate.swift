@@ -22,7 +22,7 @@ import Foundation
 
 public struct DisplayTemplate {
     public let type: String
-    public let payload: String
+    public let payload: Data
     public let templateId: String
     public let dialogRequestId: String
     public let token: String
@@ -33,7 +33,7 @@ public struct DisplayTemplate {
     
     public init(
         type: String,
-        payload: String,
+        payload: Data,
         templateId: String,
         dialogRequestId: String,
         token: String,
@@ -55,7 +55,6 @@ public struct DisplayTemplate {
 }
 
 public extension DisplayTemplate {
-    // TODO: PlaySyncDuration과 같음.
     enum Duration: String {
         /// <#Description#>
         case short = "SHORT"
@@ -76,19 +75,5 @@ public extension DisplayTemplate.Duration {
         case .long: return .seconds(30)
         case .longest: return .seconds(60 * 10)
         }
-    }
-}
-
-public extension DisplayTemplate {
-    /// An enum class used to specify the reason to clear the template.
-    enum ClearReason {
-        /// Clear request due to `DisplayTemplate.Duration`.
-        ///
-        /// Application can decide whether or not to clear the template.
-        case timer
-        /// Clear request due to directive.
-        ///
-        /// Application must clear the template.
-        case directive
     }
 }

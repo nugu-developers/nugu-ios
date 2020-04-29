@@ -20,35 +20,34 @@
 
 import Foundation
 
+import NuguCore
+
 /// The information about multiturn.
 ///
 /// NUGU ask you to get more information to know about you requested.
 public struct ASRExpectSpeech {
-    public let timeoutInMilliseconds: Int?
     public let playServiceId: String?
     public let sessionId: String
-    public let property: String?
-    public let domainTypes: [String?]?
+    public let domainTypes: [AnyHashable]?
+    public let asrContext: [String: AnyHashable]?
 }
 
 // MARK: - ASRExpectSpeech: Decodable
 
 extension ASRExpectSpeech: Decodable {
     enum CodingKeys: String, CodingKey {
-        case timeoutInMilliseconds
         case playServiceId
         case sessionId
-        case property
         case domainTypes
+        case asrContext
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        timeoutInMilliseconds = try? container.decode(Int.self, forKey: .timeoutInMilliseconds)
         playServiceId = try? container.decode(String.self, forKey: .playServiceId)
         sessionId = try container.decode(String.self, forKey: .sessionId)
-        property = try? container.decode(String.self, forKey: .property)
-        domainTypes = try? container.decode([String?].self, forKey: .domainTypes)
+        domainTypes = try? container.decode([AnyHashable].self, forKey: .domainTypes)
+        asrContext = try? container.decode([String: AnyHashable].self, forKey: .asrContext)
     }
 }
 

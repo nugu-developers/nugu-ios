@@ -22,30 +22,25 @@ import Foundation
 import NuguCore
 
 extension Eventable {
-    func makeEventMessage(agent: CapabilityAgentable, dialogRequestId: String? = nil, contextPayload: ContextPayload? = nil) -> UpstreamEventMessage {
-        let header = UpstreamHeader(
-            namespace: agent.capabilityAgentProperty.name,
+    func makeEventMessage(
+        property: CapabilityAgentProperty,
+        dialogRequestId: String? = nil,
+        referrerDialogRequestId: String? = nil,
+        contextPayload: [ContextInfo]
+    ) -> Upstream.Event {
+        let header = Upstream.Event.Header(
+            namespace: property.name,
             name: name,
-            version: agent.capabilityAgentProperty.version,
+            version: property.version,
             dialogRequestId: dialogRequestId ?? TimeUUID().hexString,
-            messageId: TimeUUID().hexString
+            messageId: TimeUUID().hexString,
+            referrerDialogRequestId: referrerDialogRequestId
         )
-
-        // TODO: async로 변경 예정임.
-        var contextPayload = contextPayload
-        if contextPayload == nil {
-            agent.contextInfoRequestContext { (contextInfo) in
-                contextPayload = ContextPayload(
-                    supportedInterfaces: [contextInfo].compactMap({ $0 }),
-                    client: []
-                )
-            }
-        }
         
-        return UpstreamEventMessage(
+        return Upstream.Event(
             payload: payload,
             header: header,
-            contextPayload: contextPayload!
+            contextPayload: contextPayload
         )
     }
 }

@@ -43,6 +43,8 @@ final class MediaAVPlayerItem: AVPlayerItem {
     private static var observerContext: Int = 0
     weak var delegate: MediaAVPlayerItemDelegate?
     
+    var cacheKey: String?
+    
     init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
         super.init(asset: AVAsset(url: url),
                    automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
@@ -51,12 +53,17 @@ final class MediaAVPlayerItem: AVPlayerItem {
         addNotificationObservers()
     }
     
+    init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil, cacheKey: String) {
+        super.init(asset: asset,
+                   automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        self.cacheKey = cacheKey
+        addPlayerItemObservers()
+        addNotificationObservers()
+    }
+    
     override init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) {
         super.init(asset: asset,
                    automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        
-        log.debug("")
-        
         addPlayerItemObservers()
         addNotificationObservers()
     }
@@ -64,8 +71,6 @@ final class MediaAVPlayerItem: AVPlayerItem {
     deinit {
         removePlayerItemObservers()
         removeNotificationObservers()
-        
-        log.debug("")
     }
     
     // AVPlayer has a bug when using the new block based KVO API

@@ -31,5 +31,16 @@ public protocol AudioPlayerDisplayDelegate: class {
     ///
     /// - Parameter template: The template to remove from the screen.
     /// - Parameter reason: Reason to clear the template.
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate, reason: AudioPlayerDisplayTemplate.ClearReason)
+    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate)
+    
+    /// Tells the delegate that the specified template should be updated from the screen.
+    ///
+    /// - Parameter template: The template to update the screen.
+    func audioPlayerDisplayShouldUpdateMetadata(payload: Data)
+    
+    func audioPlayerDisplayShouldShowLyrics() -> Bool
+    
+    func audioPlayerDisplayShouldHideLyrics() -> Bool
+    
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool
 }

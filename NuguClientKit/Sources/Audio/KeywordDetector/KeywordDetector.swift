@@ -21,7 +21,6 @@
 import Foundation
 
 import NuguCore
-import NuguAgents
 import KeenSense
 
 public class KeywordDetector {
@@ -45,6 +44,10 @@ public class KeywordDetector {
         }
     }
     
+    private var keyword: String {
+        keywordSource?.keyword ?? ""
+    }
+    
     public init() {
         engine.delegate = self
     }
@@ -64,8 +67,8 @@ public class KeywordDetector {
 // MARK: - TycheKeywordDetectorEngineDelegate
 
 extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
-    public func tycheKeywordDetectorEngineDidDetect(data: Data, padding: Int) {
-        delegate?.keywordDetectorDidDetect(data: data, padding: padding)
+    public func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int) {
+        delegate?.keywordDetectorDidDetect(keyword: keyword, data: data, start: start, end: end, detection: detection)
     }
     
     public func tycheKeywordDetectorEngineDidError(_ error: Error) {
@@ -85,11 +88,7 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
 // MARK: - ContextInfoDelegate
 
 extension KeywordDetector: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
-        guard let keyword = keywordSource?.keyword else {
-            completionHandler(nil)
-            return
-        }
-        completionHandler(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword.description))
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+        completion(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword))
     }
 }

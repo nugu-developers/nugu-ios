@@ -31,11 +31,12 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
     
     // private
     private let directiveSequencer: DirectiveSequenceable
+    private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Action", medium: .none, isBlocking: false, directiveHandler: handleAction)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Action", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleAction)
     ]
     
     public init(
@@ -43,17 +44,15 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable
     ) {
-        log.info("initiated")
-        
         self.upstreamDataSender = upstreamDataSender
+        self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(provideContextDelegate: self)
+        contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
-        log.info("")
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
@@ -61,30 +60,28 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 // MARK: - ExtensionAgentProtocol
 
 public extension ExtensionAgent {
-    func requestCommand(playServiceId: String, data: [String: Any], completion: ((Result<Void, Error>) -> Void)?) {
-        upstreamDataSender.send(
-            upstreamEventMessage: Event(
-                playServiceId: playServiceId,
-                typeInfo: .commandIssued(data: data)
-            ).makeEventMessage(agent: self),
-            resultHandler: { result in
-                let result = result.map { _ in () }
-                completion?(result)
-            }
+    @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
+        let dialogRequestId = TimeUUID().hexString
+        sendEvent(
+            typeInfo: .commandIssued(data: data),
+            playServiceId: playServiceId,
+            dialogRequestId: dialogRequestId,
+            completion: completion
         )
+        return dialogRequestId
     }
 }
 
 // MARK: - ContextInfoDelegate
 
 extension ExtensionAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completionHandler: (ContextInfo?) -> Void) {
-        let payload: [String: Any?] = [
+    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+        let payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
             "data": delegate?.extensionAgentRequestContext()
         ]
         
-        completionHandler(
+        completion(
             ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
         )
     }
@@ -94,35 +91,58 @@ extension ExtensionAgent: ContextInfoDelegate {
 
 private extension ExtensionAgent {
     func handleAction() -> HandleDirective {
-        return { [weak self] directive, completionHandler in
-            guard let data = directive.payload.data(using: .utf8) else {
-                completionHandler(.failure(HandleDirectiveError.handleDirectiveError(message: "Invalid payload")))
-                return
-            }
+        return { [weak self] directive, completion in
+            defer { completion() }
             
-            let item: ExtensionAgentItem
-            do {
-                item = try JSONDecoder().decode(ExtensionAgentItem.self, from: data)
-            } catch {
-                completionHandler(.failure(error))
+            guard let item = try? JSONDecoder().decode(ExtensionAgentItem.self, from: directive.payload) else {
+                log.error("Invalid payload")
                 return
             }
             
             self?.delegate?.extensionAgentDidReceiveAction(
                 data: item.data,
                 playServiceId: item.playServiceId,
+                dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    self.upstreamDataSender.send(
-                        upstreamEventMessage: Event(
-                            playServiceId: item.playServiceId,
-                            typeInfo: isSuccess ? .actionSucceeded : .actionFailed
-                        ).makeEventMessage(agent: self)
+                    let typeInfo: Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
+                    self.sendEvent(
+                        typeInfo: typeInfo,
+                        playServiceId: item.playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
                     )
             })
+        }
+    }
+}
+
+
+// MARK: - Private (Event)
+
+private extension ExtensionAgent {
+    func sendEvent(
+        typeInfo: Event.TypeInfo,
+        playServiceId: String,
+        dialogRequestId: String = TimeUUID().hexString,
+        referrerDialogRequestId: String? = nil,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
+        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
             
-            completionHandler(.success(()))
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    playServiceId: playServiceId,
+                    typeInfo: typeInfo
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    dialogRequestId: dialogRequestId,
+                    referrerDialogRequestId: referrerDialogRequestId,
+                    contextPayload: contextPayload
+                ),
+                completion: completion
+            )
         }
     }
 }
