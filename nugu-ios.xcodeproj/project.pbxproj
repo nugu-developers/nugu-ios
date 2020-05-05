@@ -842,7 +842,7 @@
 		735A4CCB24117384004E7A41 /* UpstreamDataSendable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpstreamDataSendable.swift; sourceTree = "<group>"; };
 		735A4CCE24117384004E7A41 /* Downstream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downstream.swift; sourceTree = "<group>"; };
 		735A4CD224117384004E7A41 /* StreamDataRoutable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamDataRoutable.swift; sourceTree = "<group>"; };
-		735A4CDC241173C5004E7A41 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
+		735A4CDC241173C5004E7A41 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultiPartProcessable.swift; path = ../../../../Interface/Network/Api/MultiPartProcessable.swift; sourceTree = "<group>"; };
 		735A4CDF241173F4004E7A41 /* EventSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSender.swift; sourceTree = "<group>"; };
 		735A4CE0241173F4004E7A41 /* EventSenderError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSenderError.swift; sourceTree = "<group>"; };
 		7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClientDelegate.swift; sourceTree = "<group>"; };
@@ -1475,7 +1475,6 @@
 		1FFFF26E2375703000C9A177 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				7E98BAD3239F997C00B9582D /* Api */,
 				1FFFF27D2375703000C9A177 /* NetworkError.swift */,
 			);
 			path = Network;
@@ -1544,26 +1543,23 @@
 		1FFFF30B2375707000C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF30C2375707000C9A177 /* Core */,
+				1FFFF30D2375707000C9A177 /* MediaPlayer */,
+				1FFFF3122375707000C9A177 /* OpusPlayer */,
+				1FFFF3172375707000C9A177 /* Audio */,
 				1F9C5B6923E42F660086CC04 /* PropertyWrappers */,
 				1FFFF3202375707000C9A177 /* Extension */,
 				1FFFF3252375707000C9A177 /* Util */,
-				1FFFF3282375707000C9A177 /* Business */,
+				735A4CDE241173F4004E7A41 /* Event */,
+				1FFFF3292375707000C9A177 /* Context */,
+				1FFFF35D2375707000C9A177 /* Network */,
+				1FFFF3692375707000C9A177 /* PlaySync */,
+				1FFFF36C2375707000C9A177 /* Focus */,
+				1FFFF3742375707000C9A177 /* Directive */,
 				1FFFF3782375707000C9A177 /* Common */,
 				7E98BAD1239A2FBD00B9582D /* Authorization */,
 				1FD4A98323A22576002EB56D /* NuguCore.swift */,
 			);
 			path = Sources;
-			sourceTree = "<group>";
-		};
-		1FFFF30C2375707000C9A177 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF30D2375707000C9A177 /* MediaPlayer */,
-				1FFFF3122375707000C9A177 /* OpusPlayer */,
-				1FFFF3172375707000C9A177 /* Audio */,
-			);
-			path = Core;
 			sourceTree = "<group>";
 		};
 		1FFFF30D2375707000C9A177 /* MediaPlayer */ = {
@@ -1636,19 +1632,6 @@
 				75082BC7243ACA280027D76D /* CryptoUtil.swift */,
 			);
 			path = Util;
-			sourceTree = "<group>";
-		};
-		1FFFF3282375707000C9A177 /* Business */ = {
-			isa = PBXGroup;
-			children = (
-				735A4CDE241173F4004E7A41 /* Event */,
-				1FFFF3292375707000C9A177 /* Context */,
-				1FFFF35D2375707000C9A177 /* Network */,
-				1FFFF3692375707000C9A177 /* PlaySync */,
-				1FFFF36C2375707000C9A177 /* Focus */,
-				1FFFF3742375707000C9A177 /* Directive */,
-			);
-			path = Business;
 			sourceTree = "<group>";
 		};
 		1FFFF3292375707000C9A177 /* Context */ = {
@@ -2328,6 +2311,7 @@
 		735A4CC2241172FA004E7A41 /* Api */ = {
 			isa = PBXGroup;
 			children = (
+				735A4CDC241173C5004E7A41 /* MultiPartProcessable.swift */,
 				735A4CBA241172F0004E7A41 /* EventResponseProcessor.swift */,
 				735A4CBD241172F1004E7A41 /* NuguApi.swift */,
 				735A4CBC241172F0004E7A41 /* NuguApiProvider.swift */,
@@ -2436,14 +2420,6 @@
 				1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */,
 			);
 			path = Authorization;
-			sourceTree = "<group>";
-		};
-		7E98BAD3239F997C00B9582D /* Api */ = {
-			isa = PBXGroup;
-			children = (
-				735A4CDC241173C5004E7A41 /* MultiPartProcessable.swift */,
-			);
-			path = Api;
 			sourceTree = "<group>";
 		};
 		A1505090241626F100671568 /* Display */ = {
