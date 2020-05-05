@@ -1,6 +1,6 @@
 //
 //  Eventable.swift
-//  NuguCore
+//  NuguAgents
 //
 //  Created by yonghoonKwon on 10/06/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

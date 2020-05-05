@@ -248,7 +248,6 @@
 		7315304123E11EDF00F843C3 /* AudioStreamProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2972375703000C9A177 /* AudioStreamProtocol.swift */; };
 		7315304223E11EDF00F843C3 /* AuthorizationStoreDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */; };
 		7315304323E11EDF00F843C3 /* AuthorizationStoreable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */; };
-		7315304423E11EDF00F843C3 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* Eventable.swift */; };
 		7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2642375703000C9A177 /* DisplayAgentProtocol.swift */; };
 		7315305123E1246F00F843C3 /* DisplayAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2652375703000C9A177 /* DisplayAgentDelegate.swift */; };
 		7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2662375703000C9A177 /* DisplayTemplate.swift */; };
@@ -333,6 +332,7 @@
 		7E1FA2B224244F79006B8BA9 /* BlockingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */; };
 		7E2471012435DAC200640F5E /* ASROptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2471002435DAC200640F5E /* ASROptions.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
+		7E35D79024622B4E003289A2 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* Eventable.swift */; };
 		7E3C5707244FC62300FF36DF /* EventSenders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3C5706244FC62300FF36DF /* EventSenders.swift */; };
 		7E3C570F2450049C00FF36DF /* Keyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3C570E2450049C00FF36DF /* Keyword.swift */; };
 		7E4382542418DAB200053A0D /* PlayStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4382532418DAB200053A0D /* PlayStack.swift */; };
@@ -1401,6 +1401,8 @@
 			children = (
 				1FFFF24A2375703000C9A177 /* AudioPlayerDisplayTemplate.swift */,
 				1FFFF2482375703000C9A177 /* AudioPlayerDisplayDelegate.swift */,
+				A135E667241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift */,
+				A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -1456,6 +1458,7 @@
 				1FFFF2642375703000C9A177 /* DisplayAgentProtocol.swift */,
 				1FFFF2652375703000C9A177 /* DisplayAgentDelegate.swift */,
 				1FFFF2662375703000C9A177 /* DisplayTemplate.swift */,
+				A1519AAB23F3EC8700FF4159 /* DisplayControlPayload.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -1686,8 +1689,6 @@
 				1FFFF33D2375707000C9A177 /* AudioPlayerDisplayManageable.swift */,
 				1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */,
 				1FFFF33C2375707000C9A177 /* AudioPlayerDisplayRenderingInfo.swift */,
-				A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */,
-				A135E667241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -1740,7 +1741,6 @@
 				1FFFF3582375707000C9A177 /* DisplayAgent+Event.swift */,
 				1FFFF3562375707000C9A177 /* DisplayRenderingInfo.swift */,
 				7EF12B2223C822520000E158 /* DisplayClosePayload.swift */,
-				A1519AAB23F3EC8700FF4159 /* DisplayControlPayload.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -2262,6 +2262,7 @@
 			isa = PBXGroup;
 			children = (
 				1F9C5B6823E42D740086CC04 /* CapabilityAgents */,
+				1FFFF2A32375703000C9A177 /* Event */,
 				73152FE123E047F200F843C3 /* Extension */,
 				73152FDD23E045AB00F843C3 /* Util */,
 				73152FDB23E0451900F843C3 /* NuguAgents.swift */,
@@ -2320,7 +2321,6 @@
 				1FFFF2902375703000C9A177 /* Directive */,
 				1FFFF2962375703000C9A177 /* Audio */,
 				1FFFF29D2375703000C9A177 /* Authorization */,
-				1FFFF2A32375703000C9A177 /* Event */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -3092,7 +3092,6 @@
 				7315302F23E11EDF00F843C3 /* FocusChannelDelegate.swift in Sources */,
 				1FFFF3882375707000C9A177 /* SharedBufferIndex.swift in Sources */,
 				1FFFF3852375707000C9A177 /* OpusPlayerConst.swift in Sources */,
-				7315304423E11EDF00F843C3 /* Eventable.swift in Sources */,
 				7315302923E11EDF00F843C3 /* NetworkError.swift in Sources */,
 				7315302023E11EDF00F843C3 /* TimeIntervallic.swift in Sources */,
 				735A4CC0241172F1004E7A41 /* NuguApiProvider.swift in Sources */,
@@ -3351,6 +3350,7 @@
 				7E5F4898243C40EB00118054 /* SoundMedia.swift in Sources */,
 				7315306F23E1248300F843C3 /* ASRError.swift in Sources */,
 				73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */,
+				7E35D79024622B4E003289A2 /* Eventable.swift in Sources */,
 				7315307523E1248300F843C3 /* TTSAgentDelegate.swift in Sources */,
 				73152FCC23E0415B00F843C3 /* DisplayRenderingInfo.swift in Sources */,
 				7315306723E1248300F843C3 /* AudioPlayerDisplayDelegate.swift in Sources */,

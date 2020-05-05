@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-public class SoundAgent: SoundAgentProtocol {
+public final class SoundAgent: SoundAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .sound, version: "1.0")
     
