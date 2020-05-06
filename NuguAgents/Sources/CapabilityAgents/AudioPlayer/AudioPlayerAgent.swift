@@ -642,7 +642,9 @@ private extension AudioPlayerAgent {
                 }
                 
                 do {
-                    try dataSource.appendData(attachment.content)
+                    try SktOpusParser.parse(from: attachment.content).forEach { (chunk) in
+                        try dataSource.appendData(chunk)
+                    }
                     
                     if attachment.isEnd {
                         try dataSource.lastDataAppended()
@@ -654,7 +656,6 @@ private extension AudioPlayerAgent {
         }
     }
     
-
     func resume() {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -866,7 +867,7 @@ private extension AudioPlayerAgent {
                 return
             }
 
-            mediaPlayer.decoder = OpusDecoder(sampleRate: 24000.0)
+            mediaPlayer.decoder = OpusDecoder(sampleRate: 24000.0, channels: 1)
             currentMedia = AudioPlayerAgentMedia(
                 dialogRequestId: dialogRequestId,
                 player: mediaPlayer,

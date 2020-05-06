@@ -82,7 +82,7 @@ public class OpusPlayer: MediaPlayable {
         }
         
         self.audioFormat = audioFormat
-        self.decoder = OpusDecoder(sampleRate: sampleRate)
+        self.decoder = OpusDecoder(sampleRate: sampleRate, channels: channels)
         engine.attach(player)
         
         // To control volume, player node should be connected to mixer node.
@@ -346,18 +346,27 @@ private extension OpusPlayer {
                         self.delegate?.mediaPlayerDidChange(state: .finish)
                         
                         #if DEBUG
-                        self.decoder.dump()
-                        let appendedFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("silver_tray_appended.raw")
+                        let appendedFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("silver_tray_appended.opus")
                         let consumedFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("silver_tray_consumed.raw")
                         do {
-                            if let allPCMArray = try? self.decoder.decode(data: self.appendedData) {
-                                let allData = Data(bytes: allPCMArray, count: allPCMArray.count*4)
-                                try allData.write(to: appendedFilename)
-                                try self.consumedData.write(to: consumedFilename)
-                                
-                                log.debug("appended data to file :\(appendedFilename)")
-                                log.debug("consumed data to file :\(consumedFilename)")
+                            // decode all appended data and write to file
+                            var totalPCMArray = [Float]()
+                            let totalPayloadCount = self.appendedData.count/160
+                            for chunkIndex in 0..<totalPayloadCount {
+                                let chunk = self.appendedData[chunkIndex*160..<(chunkIndex+1)*160]
+                                if let decodedChunk = try? self.decoder.decode(data: chunk) {
+                                    totalPCMArray.append(contentsOf: decodedChunk)
+                                }
                             }
+                            
+                            let allData = Data(bytes: totalPCMArray, count: totalPCMArray.count*4)
+                            try allData.write(to: appendedFilename)
+                            
+                            // write consumedData to file
+                            try self.consumedData.write(to: consumedFilename)
+                            
+                            log.debug("appended data to file :\(appendedFilename)")
+                            log.debug("consumed data to file :\(consumedFilename)")
                         } catch {
                             log.debug(error)
                         }

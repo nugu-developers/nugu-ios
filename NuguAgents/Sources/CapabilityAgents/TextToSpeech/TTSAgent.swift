@@ -317,7 +317,7 @@ private extension TTSAgent {
                             return
                         }
 
-                        mediaPlayer.decoder = OpusDecoder(sampleRate: 24000.0)
+                        mediaPlayer.decoder = OpusDecoder(sampleRate: 24000.0, channels: 1)
                         mediaPlayer.delegate = self
                         mediaPlayer.volume = self.volume
                         
@@ -396,10 +396,17 @@ private extension TTSAgent {
     }
     
     func handleAttachment() -> HandleAttachment {
+        #if DEBUG
+        var totalAttachmentData = Data()
+        #endif
+        
         return { [weak self] attachment in
             log.info("\(attachment.header.messageId)")
+            #if DEBUG
+            totalAttachmentData.append(attachment.content)
+            #endif
+            
             self?.ttsDispatchQueue.async { [weak self] in
-                guard 0 < attachment.content.count else { return }
                 guard let self = self else { return }
                 guard let dataSource = self.currentMedia?.player as? MediaOpusStreamDataSource,
                     self.currentMedia?.dialogRequestId == attachment.header.dialogRequestId else {
@@ -408,30 +415,19 @@ private extension TTSAgent {
                 }
                 
                 do {
-                    var data = attachment.content
-                    while 8 < data.count {
-                        // parse header
-                        // get content size
-                        let contentSizeData: Data = data.subdata(in: 0..<4)
-                        let contentSize = Int(contentSizeData[3]) | (Int(contentSizeData[2]) << 8) | (Int(contentSizeData[1]) << 16) | (Int(contentSizeData[0]) << 24)
-                        log.debug("opus chunk size: \(contentSize)")
-                                
-                        // garbage from server.
-                        let rangeData = data.subdata(in: 4..<8)
-                        let range = Int(rangeData[3]) | (Int(rangeData[2]) << 8) | (Int(rangeData[1]) << 16) | (Int(rangeData[0]) << 24)
-                        log.debug("packetLength: \(contentSize), range: \(range), sizeToDecode: \(data.count)")
-                        data = data.subdata(in: 8..<data.count)
-
-                        // extract payload.
-                        let payloadSize = min(contentSize, data.count)
-                        let payload = data.subdata(in: 0..<payloadSize)
-                        try dataSource.appendData(payload)
-
-                        data = data.subdata(in: payloadSize..<data.count)
+                    try SktOpusParser.parse(from: attachment.content).forEach { (chunk) in
+                        try dataSource.appendData(chunk)
                     }
                     
                     if attachment.isEnd {
                         try dataSource.lastDataAppended()
+                        
+                        #if DEBUG
+                        let attachmentFileName = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                            .appendingPathComponent("attachment.data")
+                        try totalAttachmentData.write(to: attachmentFileName)
+                        log.debug("attachment to file :\(attachmentFileName)")
+                        #endif
                     }
                 } catch {
                     log.error(error)

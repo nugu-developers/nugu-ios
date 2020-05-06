@@ -1,8 +1,8 @@
 //
-//  AISOpusDecoder.swift
+//  OpusDecoder.swift
 //  NuguCore
 //
-//  Created by DCs-OfficeMBP on 28/01/2019.
+//  Created by childc on 28/01/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,12 +28,8 @@ import Foundation
 public class OpusDecoder {
     let decoder: OpaquePointer?
     
-    #if DEBUG
-    private var originalData = Data()
-    #endif
-    
-    public init(sampleRate: Double) {
-        decoder = opus_decoder_create(Int32(sampleRate), 1, nil)
+    public init(sampleRate: Double, channels: Int) {
+        decoder = opus_decoder_create(Int32(sampleRate), Int32(channels), nil)
     }
     
     /**
@@ -51,25 +47,10 @@ public class OpusDecoder {
         var decodedSamples = [Float](repeating: 0, count: data.count*3)
         let result = opus_decode_float(decoder, [CUnsignedChar](data), CInt(data.count), &decodedSamples, CInt(decodedSamples.count), 0)
         guard 0 < result else {
-            print("decode failed")
+            print("decode failed, data size:\(data.count), opus error code: \(result)")
             throw OpusPlayerError.decodeFailed
         }
 
         return decodedSamples
     }
-    
-    #if DEBUG
-    public func dump() {
-        let originalFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("silver_tray_opus.opus")
-        
-        do {
-            try originalData.write(to: originalFilename)
-            originalData.removeAll()
-
-            log.debug("original opus data file: \(originalFilename)")
-        } catch {
-            log.error(error)
-        }
-    }
-    #endif
 }
