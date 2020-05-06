@@ -32,6 +32,58 @@ final public class NuguButton: UIButton {
             case blue
             case white
         }
+        
+        var animationViewBackgroundColor: UIColor? {
+            if case .button(let color) = self {
+                switch color {
+                case .blue:
+                    return UIColor(red: 0.0/255.0, green: 107.0/255.0, blue: 173.0/255.0, alpha: 0.2)
+                case .white:
+                    return UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.2)
+                }
+            } else {
+                return nil
+            }
+        }
+        
+        var animationViewBorderColor: CGColor? {
+            if case .button(let color) = self {
+                switch color {
+                case .blue:
+                    return UIColor(red: 0.0/255.0, green: 80.0/255.0, blue: 136.0/255.0, alpha: 0.2).cgColor
+                case .white:
+                    return UIColor(red: 173.0/255.0, green: 173.0/255.0, blue: 173.0/255.0, alpha: 0.2).cgColor
+                }
+            } else {
+                return nil
+            }
+        }
+            
+        var animationViewHighlightedDotColor: UIColor? {
+            if case .button(let color) = self {
+                switch color {
+                case .blue:
+                    return UIColor(red: 22.0/255.0, green: 255.0/255.0, blue: 160.0/255.0, alpha: 1)
+                case .white:
+                    return UIColor(red: 0.0/255.0, green: 230.0/255.0, blue: 136.0/255.0, alpha: 1)
+                }
+            } else {
+                return nil
+            }
+        }
+        
+        var animationViewDotColor: UIColor? {
+            if case .button(let color) = self {
+                switch color {
+                case .blue:
+                    return .white
+                case .white:
+                    return UIColor(red: 0.0/255.0, green: 157.0/255.0, blue: 255.0/255.0, alpha: 1)
+                }
+            } else {
+                return nil
+            }
+        }
     }
     
     // MARK: - Public Properties (configurable variables)
@@ -42,16 +94,30 @@ final public class NuguButton: UIButton {
         }
     }
     
+    public var isActivated: Bool = true {
+        didSet {
+            updateActivationState()
+        }
+    }
+    
+    private var deactivateAnimationView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 44.0, height: 44.0)))
+    
+    private var highlightedDotIndex = 0
+    
+    private var animationTimer: DispatchSourceTimer?
+    
     // MARK: - Override
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setButtonImages()
+        updateActivationState()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setButtonImages()
+        updateActivationState()
     }
 }
 
@@ -69,5 +135,55 @@ private extension NuguButton {
             setImage(UIImage(named: "btn_\(color.rawValue)_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .highlighted)
             setImage(UIImage(named: "btn_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .disabled)
         }
+    }
+    
+    func updateActivationState() {
+        switch nuguButtonType {
+        case .fab:
+            alpha = isActivated ? 1.0 : 0.0
+        case .button:
+            isActivated ? stopDeactivateAnimation() : startDeactivateAnimation()
+        }
+    }
+    
+    func startDeactivateAnimation() {
+        deactivateAnimationView.center = CGPoint(x: frame.size.width/2, y: frame.size.height/2)
+        deactivateAnimationView.layer.cornerRadius = 22.0
+        deactivateAnimationView.clipsToBounds = true
+        deactivateAnimationView.backgroundColor = nuguButtonType.animationViewBackgroundColor
+        deactivateAnimationView.layer.borderColor = nuguButtonType.animationViewBorderColor
+        deactivateAnimationView.layer.borderWidth = 1.0
+        
+        for index in 0...2 {
+            let dotView = UIView(frame: CGRect(x: 8.0 + 12.0 * Double(index), y: 20.0, width: 4.0, height: 4.0))
+            dotView.layer.cornerRadius = 2.0
+            dotView.clipsToBounds = true
+            dotView.tag = index
+            deactivateAnimationView.addSubview(dotView)
+        }
+        
+        animationTimer = DispatchSource.makeTimerSource(queue: .main)
+        animationTimer?.schedule(deadline: .now(), repeating: 1.0)
+        animationTimer?.setEventHandler(handler: { [weak self] in
+            guard let self = self else { return }
+            for dotView in self.deactivateAnimationView.subviews {
+                dotView.backgroundColor = self.highlightedDotIndex == dotView.tag ? self.nuguButtonType.animationViewHighlightedDotColor : self.nuguButtonType.animationViewDotColor
+            }
+            self.highlightedDotIndex = self.highlightedDotIndex == 2 ? 0 : self.highlightedDotIndex + 1
+        })
+        animationTimer?.resume()
+        
+        addSubview(deactivateAnimationView)
+        setImage(nil, for: .normal)
+        isUserInteractionEnabled = false
+    }
+    
+    func stopDeactivateAnimation() {
+        imageView?.isHidden = false
+        highlightedDotIndex = 0
+        animationTimer?.cancel()
+        deactivateAnimationView.removeFromSuperview()
+        setButtonImages()
+        isUserInteractionEnabled = true
     }
 }
