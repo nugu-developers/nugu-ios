@@ -25,17 +25,15 @@ public class CryptoUtil {
     private static let algoritm = CCAlgorithm(kCCAlgorithmAES)
     private static let options = CCOptions(kCCOptionECBMode|kCCOptionPKCS7Padding)
     
-    private static func crypt(operation: Int, data: Data, key: String) -> Data? {
+    private static func crypt(operation: Int, data: Data, paddingSize: Int, key: String) -> Data? {
         guard let keyData = key.data(using: String.Encoding.utf8) else {
             return nil
         }
         
         return keyData.withUnsafeBytes { keyUnsafeRawBufferPointer in
             return data.withUnsafeBytes { dataUnsafeRawBufferPointer in
-                // Give the data out some breathing room for PKCS7's padding.
-                let dataOutSize: Int = data.count + kCCBlockSizeAES128 * 2
-                let dataOut = UnsafeMutableRawPointer.allocate(byteCount: dataOutSize,
-                                                               alignment: 1)
+                let dataOutSize: Int = data.count + paddingSize
+                let dataOut = UnsafeMutableRawPointer.allocate(byteCount: dataOutSize, alignment: 1)
                 defer { dataOut.deallocate() }
                 var dataOutMoved: Int = 0
                 let status = CCCrypt(CCOperation(operation),
@@ -53,10 +51,11 @@ public class CryptoUtil {
     }
     
     public static func encrypt(data: Data, key: String) -> Data? {
-        return crypt(operation: kCCEncrypt, data: data, key: key)
+        let paddingSize = kCCBlockSizeAES128 - (data.count % kCCBlockSizeAES128)
+        return crypt(operation: kCCEncrypt, data: data, paddingSize: paddingSize, key: key)
     }
     
     public static func decrypt(data: Data, key: String) -> Data? {
-        return crypt(operation: kCCDecrypt, data: data, key: key)
+        return crypt(operation: kCCDecrypt, data: data, paddingSize: 0, key: key)
     }
 }
