@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguAgents'
-  s.version = '0.9.2'
+  s.version = '0.10.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Agents'
   s.description = <<-DESC
@@ -25,6 +25,7 @@ Default Agent Implementations for Nugu service
   s.macos.exclude_files = 'NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/**/*'
   
   s.dependency 'NuguCore', '~> 0'
+  s.dependency 'JadeMarble', '~> 0'
   s.dependency 'NattyLog', '~> 1'
 
   s.ios.dependency 'JadeMarble', '~> 0'

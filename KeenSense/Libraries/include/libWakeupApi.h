@@ -23,8 +23,9 @@
 #include "libexports.h"
 
 /** Wakeup Engine Interface */
-#define WAKEUP_MODE_ONLINE      0
-#define WAKEUP_MODE_VERIFIER    1
+#define WAKEUP_MODE_ONLINE              0
+#define WAKEUP_MODE_VERIFIER            1
+#define WAKEUP_MODE_ONLINE_CONNECTED    2
 
 typedef void* WakeupHandle;
 
@@ -127,15 +128,21 @@ LIBPUBFUN int LIBCALL Wakeup_GetStartTime(WakeupHandle p);
 
 LIBPUBFUN int LIBCALL Wakeup_GetEndTime(WakeupHandle p);
 
+LIBPUBFUN int LIBCALL Wakeup_GetDetectionTime(WakeupHandle p);
+
 LIBPUBFUN int LIBCALL Wakeup_GetDelayTime(WakeupHandle p);
 
 LIBPUBFUN int LIBCALL Wakeup_GetSmoothingTime(WakeupHandle p);
+
+LIBPUBFUN int LIBCALL Wakeup_GetStartMargin(WakeupHandle p);
 
 LIBPUBFUN void LIBCALL Wakeup_SetPresetMargin(WakeupHandle p, float margin, int sec);
 
 LIBPUBFUN float LIBCALL Wakeup_GetScore(WakeupHandle p);
 
 LIBPUBFUN float LIBCALL Wakeup_GetPower(WakeupHandle p);
+
+LIBPUBFUN void LIBCALL  Wakeup_SetDebugOutput(int useDebugOutput);
 
 #ifdef __cplusplus
 }

@@ -27,7 +27,7 @@ public class StreamDataRouter: StreamDataRoutable {
     
     private let nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
-    private var eventSenders = [String: EventSender]()
+    private var eventSenders = EventSenders()
     private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
@@ -140,7 +140,7 @@ public extension StreamDataRouter {
      Sends an attachment.
      
      It won't emit received or finished state on completion.
-     because those states will be emitted to event-reqeust's completion.
+     because those states will be emitted to event-request's completion.
      */
     func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[dialogRequestId] else {
@@ -168,7 +168,6 @@ public extension StreamDataRouter {
         guard let eventSender = eventSenders[dialogRequestId] else { return }
 
         eventSender.finish()
-        // TODO: ASR.Recognize -> ASR.StopRecognize 시 ASR.Recognize 에 대한 timeout 이 발생 함. referrerDialogRequestId 반영 후에도 발생하는지 확인 필요.
     }
 }
 
@@ -230,8 +229,7 @@ private extension Downstream.Directive {
             let headerData = try? JSONSerialization.data(withJSONObject: headerDictionary, options: []),
             let header = try? JSONDecoder().decode(Downstream.Header.self, from: headerData),
             let payloadDictionary = directiveDictionary["payload"] as? [String: AnyHashable],
-            let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-            let payload = String(data: payloadData, encoding: .utf8) else {
+            let payload = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []) else {
                 return nil
         }
         

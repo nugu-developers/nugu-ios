@@ -157,9 +157,8 @@ final class DisplayAudioPlayerView: UIView {
 // MARK: - Update
 
 extension DisplayAudioPlayerView {
-    func updateSettings(payload: String) {
-        guard let payloadAsData = payload.data(using: .utf8),
-            let payload = try? JSONDecoder().decode(AudioPlayerUpdateMetadataPayload.self, from: payloadAsData) else {
+    func updateSettings(payload: Data) {
+        guard let payload = try? JSONDecoder().decode(AudioPlayerUpdateMetadataPayload.self, from: payload) else {
                 log.error("invalid payload")
                 return
         }
@@ -245,7 +244,8 @@ private extension DisplayAudioPlayerView {
             self?.elapsedTimeLabel.text = Int(elapsedTime).secondTimeString
             self?.durationTimeLabel.text = Int(duration).secondTimeString
             UIView.animate(withDuration: 1.0, animations: { [weak self] in
-                self?.progressView.setProgress(elapsedTime/duration, animated: true)
+                let progress = duration == 0 ? 0 : elapsedTime/duration
+                self?.progressView.setProgress(progress, animated: true)
             })
         }
     }

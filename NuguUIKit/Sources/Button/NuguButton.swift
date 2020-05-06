@@ -21,189 +21,53 @@
 import UIKit
 
 final public class NuguButton: UIButton {
-
-    // MARK: RecommendedSize for NuguButton
-    // NuguButton is designed in accordance with recommendedSize
-    // Note that NuguButton can be looked awkward in different size
     
-    public static let recommendedSize: CGFloat = 60.0
+    // MARK: - NuguButton.NuguButtonType
     
-    // MARK: Customizable Properties
-    
-    @IBInspectable
-    public var startColor: UIColor = UIColor(red: 0.0, green: 157.0/255.0, blue: 1.0, alpha: 1.0)
-    
-    @IBInspectable
-    public var endColor: UIColor = UIColor(red: 0.0, green: 157.0/255.0, blue: 1.0, alpha: 1.0)
-    
-    @IBInspectable
-    public var imageTintColor: UIColor = .white {
-        didSet {
-            applyImageViewTintColor()
+    public enum NuguButtonType {
+        case fab(color: NuguButtonColor)
+        case button(color: NuguButtonColor)
+        
+        public enum NuguButtonColor: String {
+            case blue
+            case white
         }
     }
     
-    // MARK: AnimationKey
+    // MARK: - Public Properties (configurable variables)
     
-    private enum AnimationKey: String {
-        case gradation
-        case flip
-    }
-    
-    // MARK: Private Properties
-    
-    private let disabledColor: UIColor = UIColor(red: 120.0/255.0, green: 131.0/255.0, blue: 143.0/255.0, alpha: 1.0)
-    
-    @IBOutlet private weak var backgroundView: UIView!
-    @IBOutlet private weak var containerView: UIView!
-    @IBOutlet private weak var imagesStackView: UIStackView!
-    @IBOutlet private weak var micImageView: UIImageView!
-    @IBOutlet private weak var nuguLogoImageView: UIImageView!
-    
-    @IBInspectable
-    private var showNuguLogo: Bool = true {
+    public var nuguButtonType: NuguButtonType = .fab(color: .blue) {
         didSet {
-            nuguLogoImageView.isHidden = !showNuguLogo
+            setButtonImages()
         }
     }
     
-    private var gradientLayer = CAGradientLayer()
-    private var highlightedLayer = CALayer()
+    // MARK: - Override
     
-    // MARK: Override
-    
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        loadFromXib()
+        setButtonImages()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        
-        loadFromXib()
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        refreshViews()
-    }
-    
-    public override var isHighlighted: Bool {
-        didSet {
-            highlightedLayer.isHidden = !isHighlighted
-        }
-    }
-    
-    public override var isEnabled: Bool {
-        didSet {
-            refreshViews()
-        }
-    }
-
-}
-
-// MARK: - Public (Animation)
-
-public extension NuguButton {
-    func startListeningAnimation() {
-        animateFlip()
-        animateGradation()
-    }
-    
-    func stopListeningAnimation() {
-        micImageView.layer.removeAllAnimations()
-        gradientLayer.removeAllAnimations()
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setButtonImages()
     }
 }
 
-// MARK: - Private (View)
+// MARK: - Private
 
 private extension NuguButton {
-    func loadFromXib() {
-        // swiftlint:disable force_cast
-        let view = Bundle(for: NuguButton.self).loadNibNamed("NuguButton", owner: self)?.first as! UIView
-        // swiftlint:enable force_cast
-        view.frame = bounds
-        addSubview(view)
-        
-        // CHECK-ME:
-        // let ratio = bounds.size.width / view.bounds.size.width
-        // imagesStackView.spacing *= ratio
-        
-        highlightedLayer.isHidden = true
-        gradientLayer.isHidden = false
-        nuguLogoImageView.isHidden = !showNuguLogo
-        
-        gradientLayer.shadowColor = UIColor.black.cgColor
-        gradientLayer.shadowOpacity = 0.2
-        gradientLayer.shadowOffset = CGSize(width: 0, height: 4)
-        gradientLayer.shadowRadius = 8
-        
-        highlightedLayer.backgroundColor = UIColor.black.cgColor
-        highlightedLayer.opacity = 0.16
-        
-        backgroundView.layer.addSublayer(gradientLayer)
-        backgroundView.layer.addSublayer(highlightedLayer)
-    }
-    
-    func applyImageViewTintColor() {
-        micImageView.image = UIImage(named: "nugu_btn_mic", in: Bundle(for: NuguButton.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-        micImageView.tintColor = imageTintColor
-        
-        nuguLogoImageView.image = UIImage(named: "nugu_btn_nugu", in: Bundle(for: NuguButton.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-        nuguLogoImageView.tintColor = imageTintColor
-    }
-    
-    func refreshViews() {
-        containerView.layer.cornerRadius = containerView.frame.height / 2.0
-        
-        // Add gradientlayer
-        gradientLayer.frame = containerView.bounds
-        gradientLayer.cornerRadius = containerView.layer.cornerRadius
-        
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        gradientLayer.colors = isEnabled ? [startColor.cgColor, endColor.cgColor] : [disabledColor.cgColor, disabledColor.cgColor]
-        gradientLayer.locations =  [0, 1.0]
-        
-        // Add highlightedLayer
-        highlightedLayer.frame = containerView.bounds
-        highlightedLayer.cornerRadius = containerView.layer.cornerRadius
-    }
-    
-    func animateFlip() {
-        switch micImageView.layer.animationKeys() {
-        case .some(let keys) where keys.contains(AnimationKey.flip.rawValue):
-            // Already has animation
-            return
-        default:
-            let animation = CAKeyframeAnimation(keyPath: "transform.rotation.y")
-            animation.duration = 5.0
-            animation.values = [0, 1.0 * Double.pi]
-            animation.keyTimes = [0, 0.2]
-            animation.repeatCount = .infinity
-            animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
-            
-            micImageView.layer.add(animation, forKey: AnimationKey.flip.rawValue)
-        }
-    }
-    
-    func animateGradation() {
-        switch gradientLayer.animationKeys() {
-        case .some(let keys) where keys.contains(AnimationKey.gradation.rawValue):
-            // Already has animation
-            return
-        default:
-            let animation = CABasicAnimation(keyPath: "colors")
-            animation.fromValue = [startColor.cgColor, endColor.cgColor]
-            animation.toValue = [endColor.cgColor, startColor.cgColor]
-            animation.duration = 1.0
-            animation.autoreverses = true
-            animation.repeatCount = .infinity
-                
-            gradientLayer.add(animation, forKey: AnimationKey.gradation.rawValue)
+    func setButtonImages() {
+        switch nuguButtonType {
+        case .fab(let color):
+            setImage(UIImage(named: "fab_\(color.rawValue)", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .normal)
+            setImage(UIImage(named: "fab_\(color.rawValue)_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .highlighted)
+            setImage(UIImage(named: "fab_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .disabled)
+        case .button(let color):
+            setImage(UIImage(named: "btn_\(color.rawValue)", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .normal)
+            setImage(UIImage(named: "btn_\(color.rawValue)_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .highlighted)
+            setImage(UIImage(named: "btn_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .disabled)
         }
     }
 }

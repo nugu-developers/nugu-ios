@@ -27,8 +27,19 @@ import RxSwift
 
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
-    // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup, timeout)
+    // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.1")
+    
+    // Public
+    public private(set) var expectSpeech: ASRExpectSpeech? {
+        didSet {
+            guard oldValue != expectSpeech else { return }
+            
+            asrDelegates.notify { delegate in
+                delegate.asrAgentDidChange(state: asrState, expectSpeech: expectSpeech)
+            }
+        }
+    }
     
     // Private
     private let focusManager: FocusManageable
@@ -36,7 +47,9 @@ public final class ASRAgent: ASRAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     private let audioStream: AudioStreamable
-    fileprivate static var endPointDetector: EndPointDetector?
+    
+    private var options: ASROptions = ASROptions(endPointing: .server)
+    private var endPointDetector: EndPointDetectable?
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
@@ -59,9 +72,10 @@ public final class ASRAgent: ASRAgentProtocol {
             }
 
             // Stop EPD
-            if [.listening, .recognizing].contains(asrState) == false &&
-                [.start, .listening].contains(Self.endPointDetector?.state) {
-                Self.endPointDetector?.stop()
+            if [.listening, .recognizing].contains(asrState) == false {
+                endPointDetector?.stop()
+                endPointDetector?.delegate = nil
+                endPointDetector = nil
             }
             
             // Notify delegates only if the agent's status changes.
@@ -137,18 +151,8 @@ public final class ASRAgent: ASRAgentProtocol {
     }
     
     // For Recognize Event
-    public let asrEncoding: ASREncoding
     private var asrRequest: ASRRequest?
     private var attachmentSeq: Int32 = 0
-    public private(set) var expectSpeech: ASRExpectSpeech? {
-        didSet {
-            guard oldValue != expectSpeech else { return }
-            
-            asrDelegates.notify { delegate in
-                delegate.asrAgentDidChange(state: asrState, expectSpeech: expectSpeech)
-            }
-        }
-    }
     
     private lazy var disposeBag = DisposeBag()
     private var expectingSpeechTimeout: Disposable?
@@ -164,26 +168,20 @@ public final class ASRAgent: ASRAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
-        directiveSequencer: DirectiveSequenceable,
-        asrEncoding: ASREncoding = .partial
+        directiveSequencer: DirectiveSequenceable
     ) {
-        Self.endPointDetector = EndPointDetector()
-        
         self.focusManager = focusManager
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
         self.contextManager = contextManager
         self.audioStream = audioStream
-        self.asrEncoding = asrEncoding
         
-        Self.endPointDetector?.delegate = self
         contextManager.add(delegate: self)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
-        Self.endPointDetector = nil
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 }
@@ -200,11 +198,11 @@ public extension ASRAgent {
     }
     
     @discardableResult func startRecognition(
-        initiator: ASRInitiator,
         options: ASROptions,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
-        return startRecognition(initiator: initiator, options: options, by: nil, completion: completion)
+        self.options = options
+        return startRecognition(options: options, by: nil, completion: completion)
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -308,8 +306,10 @@ extension ASRAgent: EndPointDetectorDelegate {
                 break
             case .start:
                 self.asrState = .recognizing
-            case .end, .reachToMaxLength, .finish, .unknown:
+            case .end, .reachToMaxLength, .finish:
                 self.executeStopSpeech()
+            case .unknown:
+                self.asrResult = .error(ASRError.recognizeFailed)
             case .timeout:
                 self.asrResult = .error(ASRError.listeningTimeout)
             }
@@ -343,84 +343,73 @@ extension ASRAgent: EndPointDetectorDelegate {
 // MARK: - Private (Directive)
 
 private extension ASRAgent {
-    func prefetchExpectSpeech() -> HandleDirective {
-        return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    self?.expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: data)
-                }
-            )
+    func prefetchExpectSpeech() -> PrefetchDirective {
+        return { [weak self] directive in
+            let expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: directive.payload)
+
+            self?.asrDispatchQueue.async { [weak self] in
+                self?.expectSpeech = expectSpeech
+            }
         }
-        
     }
 
     func handleExpectSpeech() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let self = self else { return }
-                    guard self.expectSpeech != nil else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "currentExpectSpeech is nil")
-                    }
-                    switch self.asrState {
-                    case .idle, .busy:
-                        break
-                    case .expectingSpeech, .listening, .recognizing:
-                        throw HandleDirectiveError.handleDirectiveError(message: "ExpectSpeech only allowed in IDLE or BUSY state.")
-                    }
-                    
-                    self.asrDispatchQueue.async { [weak self] in
-                        guard let self = self else { return }
-                        
-                        self.asrState = .expectingSpeech
-                        self.expectingSpeechTimeout = Observable<Int>
-                            .timer(ASRConst.focusTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                            .subscribe(onNext: { [weak self] _ in
-                                log.info("expectingSpeechTimeout")
-                                self?.asrResult = .error(ASRError.listenFailed)
-                            })
-                        self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
-                        
-                        self.startRecognition(initiator: .scenario, by: directive)
-                    }
+            defer { completion() }
+        
+            self?.asrDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard self.expectSpeech != nil else {
+                    log.error("currentExpectSpeech is nil")
+                    return
                 }
-            )
+                guard [.idle, .busy].contains(self.asrState) else {
+                    log.error("ExpectSpeech only allowed in IDLE or BUSY state.")
+                    return
+                }
+                
+                self.asrState = .expectingSpeech
+                self.expectingSpeechTimeout = Observable<Int>
+                    .timer(ASRConst.focusTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                    .subscribe(onNext: { [weak self] _ in
+                        log.info("expectingSpeechTimeout")
+                        self?.asrResult = .error(ASRError.listenFailed)
+                    })
+                self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
+
+                self.options.initiator = .scenario
+                self.startRecognition(options: self.options, by: directive)
+            }
         }
     }
     
     func handleNotifyResult() -> HandleDirective {
         return { [weak self] directive, completion in
-            completion(
-                Result { [weak self] in
-                    guard let data = directive.payload.data(using: .utf8) else {
-                        throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                    }
-                    
-                    let item = try JSONDecoder().decode(ASRNotifyResult.self, from: data)
-                    
-                    self?.asrDispatchQueue.async { [weak self] in
-                        guard let self = self else { return }
-                        
-                        switch item.state {
-                        case .partial:
-                            self.asrResult = .partial(text: item.result ?? "")
-                        case .complete:
-                            self.asrResult = .complete(text: item.result ?? "")
-                        case .none:
-                            self.asrResult = .none
-                        case .error:
-                            self.asrResult = .error(ASRError.recognizeFailed)
-                        case .sos, .eos, .reset, .falseAcceptance:
-                            // TODO 추후 Server EPD 개발시 구현
-                            break
-                        }
-                    }
+            defer { completion() }
+
+            guard let item = try? JSONDecoder().decode(ASRNotifyResult.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            self?.asrDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.endPointDetector?.handleNotifyResult(item.state)
+                switch item.state {
+                case .partial:
+                    self.asrResult = .partial(text: item.result ?? "")
+                case .complete:
+                    self.asrResult = .complete(text: item.result ?? "")
+                case .none:
+                    self.asrResult = .none
+                case .error:
+                    self.asrResult = .error(ASRError.recognizeFailed)
+                default:
+                    // TODO 추후 Server EPD 개발시 구현
+                    break
                 }
-            )
+            }
         }
     }
 }
@@ -474,29 +463,10 @@ private extension ASRAgent {
             return
         }
         
-        attachmentSeq = 0
-        
-        var timeout: Int {
-            guard let expectTimeout = expectSpeech?.timeoutInMilliseconds else {
-                return asrRequest.options.timeout
-            }
-            
-            return expectTimeout / 1000
-        }
-        
-        Self.endPointDetector?.start(
-            audioStreamReader: asrRequest.reader,
-            sampleRate: ASRConst.sampleRate,
-            timeout: timeout,
-            maxDuration: asrRequest.options.maxDuration,
-            pauseLength: asrRequest.options.pauseLength
-        )
-        
         asrState = .listening
-        
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(wakeUpInfo: nil, encoding: asrEncoding),
+                typeInfo: .recognize(options: asrRequest.options),
                 expectSpeech: expectSpeech
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,
@@ -518,6 +488,27 @@ private extension ASRAgent {
                     asrRequest.completion?(state)
                 }
         }
+        
+        attachmentSeq = 0
+        switch asrRequest.options.endPointing {
+        case .client(let epdFile):
+            endPointDetector = ClientEndPointDetector(asrOptions: asrRequest.options, epdFile: epdFile)
+        case .server:
+            endPointDetector = ServerEndPointDetector(asrOptions: asrRequest.options)
+
+            // send wake up voice data
+            if case let .wakeUpKeyword(_, data, _, _, _) = asrRequest.options.initiator {
+                do {
+                    let speexData = try SpeexEncoder(sampleRate: Int(asrRequest.options.sampleRate), inputType: .linearPcm16).encode(data: data)
+                    
+                    endPointDetectorSpeechDataExtracted(speechData: speexData)
+                } catch {
+                    log.error(error)
+                }
+            }
+        }
+        endPointDetector?.delegate = self
+        endPointDetector?.start(audioStreamReader: asrRequest.reader)
     }
     
     /// asrDispatchQueue
@@ -543,15 +534,19 @@ private extension ASRAgent {
     }
     
     @discardableResult func startRecognition(
-        initiator: ASRInitiator,
-        options: ASROptions = ASROptions(),
+        options: ASROptions,
         by directive: Downstream.Directive?,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
-        log.debug("startRecognition, initiator: \(initiator)")
+        log.debug("startRecognition, initiator: \(options.initiator)")
+        let dialogRequestId = TimeUUID().hexString
+        if options.endPointing == .server {
+            log.warning("Server side end point detector does not support yet.")
+            completion?(.error(ASRError.listenFailed))
+            return dialogRequestId
+        }
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = audioStream.makeAudioStreamReader()
-        let dialogRequestId = TimeUUID().hexString
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
@@ -560,7 +555,7 @@ private extension ASRAgent {
                 completion?(.error(ASRError.listenFailed))
                 return
             }
-
+            
             self.contextManager.getContexts { [weak self] contextPayload in
                 guard let self = self else { return }
 
@@ -568,7 +563,6 @@ private extension ASRAgent {
                     contextPayload: contextPayload,
                     reader: reader,
                     dialogRequestId: dialogRequestId,
-                    initiator: initiator,
                     options: options,
                     referrerDialogRequestId: directive?.header.dialogRequestId,
                     completion: completion
@@ -579,20 +573,5 @@ private extension ASRAgent {
         }
         
         return dialogRequestId
-    }
-}
-
-// MARK: - ASRAgentProtocol
-
-extension ASRAgentProtocol {
-    /// File that you have for end point detection
-    public var epdFile: URL? {
-        get {
-            return ASRAgent.endPointDetector?.epdFile
-        }
-        
-        set {
-            ASRAgent.endPointDetector?.epdFile = newValue
-        }
     }
 }

@@ -268,6 +268,7 @@ extension OpusPlayer: MediaOpusStreamDataSource {
         }
     }
 }
+
 // MARK: - OpusPlayer + MediaUrlDataSource
 
 extension OpusPlayer: MediaUrlDataSource {

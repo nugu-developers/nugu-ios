@@ -24,6 +24,7 @@ import NuguCore
 import NuguAgents
 import NuguClientKit
 import NuguLoginKit
+import NuguUIKit
 
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
@@ -41,12 +42,9 @@ final class NuguCentralManager {
         // local tts agent
         localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
         
-        if let epdFile = Bundle(for: type(of: self)).url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.asrAgent.epdFile = epdFile
-        }
-        
         client.locationAgent.delegate = self
         client.systemAgent.add(systemAgentDelegate: self)
+        client.soundAgent.dataSource = self
         
         return client
     }()
@@ -72,6 +70,9 @@ final class NuguCentralManager {
         }
     }
     
+    // TODO: - Consider managing inside SDK
+    var isTextAgentInProcess = false
+    
     private init() {
     }
 }
@@ -83,17 +84,26 @@ extension NuguCentralManager {
         log.debug("")
         if supportServerInitiatedDirective {
             client.startReceiveServerInitiatedDirective()
+        } else {
+            client.stopReceiveServerInitiatedDirective()
         }
 
         NuguLocationManager.shared.startUpdatingLocation()
         
         // Set Last WakeUp Keyword
         // If you don't want to use saved wakeup-word, don't need to be implemented
-        setWakeUpWord(rawValue: UserDefaults.Standard.wakeUpWord)
+        if UserDefaults.Standard.useWakeUpDetector,
+            let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+            client.keywordDetector.keywordSource = keyword.keywordSource
+            startWakeUpDetector()
+        } else {
+            stopWakeUpDetector()
+        }
     }
     
     func disable() {
         log.debug("")
+        stopWakeUpDetector()
         client.stopReceiveServerInitiatedDirective()
         client.asrAgent.stopRecognition()
         client.ttsAgent.stopTTS(cancelAssociation: true)
@@ -211,7 +221,7 @@ private extension NuguCentralManager {
     func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
         DispatchQueue.main.async { [weak self] in
             self?.client.audioPlayerAgent.stop()
-            NuguToastManager.shared.showToast(message: sampleAppError.errorDescription)
+            NuguToast.shared.showToast(message: sampleAppError.errorDescription)
             self?.popToRootViewController()
             switch sampleAppError {
             case .loginUnauthorized:
@@ -309,70 +319,25 @@ private extension NuguCentralManager {
 // MARK: - Internal (WakeUpDetector)
 
 extension NuguCentralManager {
-    func refreshWakeUpDetector() {
-        DispatchQueue.main.async { [weak self] in
+    func startWakeUpDetector() {
+        DispatchQueue.main.async {
             // Should check application state, because iOS audio input can not be start using in background state
             guard UIApplication.shared.applicationState == .active else { return }
-            
-            guard UserDefaults.Standard.useWakeUpDetector else {
-                self?.stopWakeUpDetector()
-                return
-            }
-            
-            self?.startWakeUpDetector { (result) in
-                if case let .failure(error) = result {
-                    log.debug("Failed to start WakeUp-Detector with reason: \(error)")
+            guard UserDefaults.Standard.useWakeUpDetector else { return }
+
+            NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
+                guard let self = self else { return }
+                guard isGranted else {
+                    log.error("Record permission denied")
+                    return
                 }
-            }
-        }
-    }
-    
-    func startWakeUpDetector(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
-            guard let self = self else { return }
-            let result = Result<Void, Error>(catching: {
-                guard isGranted else { throw SampleAppError.recordPermissionError }
                 self.client.keywordDetector.start()
-            })
-            completion?(result)
+            }
         }
     }
     
     func stopWakeUpDetector() {
         client.keywordDetector.stop()
-    }
-    
-    func setWakeUpWord(rawValue wakeUpWord: Int) {
-        switch wakeUpWord {
-        case Keyword.aria.rawValue:
-            guard
-                let netFile = Bundle.main.url(forResource: "skt_trigger_am_aria", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_aria", withExtension: "raw") else {
-                    log.debug("keywordSource is invalid")
-                    return
-            }
-            
-            client.keywordDetector.keywordSource = KeywordSource(
-                keyword: .aria,
-                netFileUrl: netFile,
-                searchFileUrl: searchFile
-            )
-        case Keyword.tinkerbell.rawValue:
-            guard
-                let netFile = Bundle.main.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw"),
-                let searchFile = Bundle.main.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw") else {
-                    log.debug("keywordSource is invalid")
-                    return
-            }
-            
-            client.keywordDetector.keywordSource = KeywordSource(
-                keyword: .tinkerbell,
-                netFileUrl: netFile,
-                searchFileUrl: searchFile
-            )
-        default:
-            return
-        }
     }
 }
 
@@ -419,7 +384,7 @@ extension NuguCentralManager: NuguClientDelegate {
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: EventSenderError
-        log.debug("\(error.debugDescription): \(attachment.header.seq)")
+        log.debug("\(error?.localizedDescription ?? ""): \(attachment.header.seq)")
     }
 }
 
@@ -450,6 +415,18 @@ extension NuguCentralManager: SystemAgentDelegate {
     }
 }
 
+// MARK: - SoundAgentDataSource
+
+extension NuguCentralManager: SoundAgentDataSource {
+    func soundAgentRequestUrl(beepName: SoundBeepName) -> URL? {
+        let url: URL?
+        switch beepName {
+        case .responseFail:
+            url = Bundle.main.url(forResource: "asrFail", withExtension: "wav")
+        }
+        return url
+    }
+}
 extension Notification.Name {
     static let nuguClientInputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
     static let nuguClientNetworkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")

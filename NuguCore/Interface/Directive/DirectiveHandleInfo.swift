@@ -21,7 +21,8 @@
 import Foundation
 
 public typealias DirectiveHandleInfos = [String: DirectiveHandleInfo]
-public typealias HandleDirective = (_ directive: Downstream.Directive, _ completion: @escaping (Result<Void, Error>) -> Void) -> Void
+public typealias PrefetchDirective = (_ directive: Downstream.Directive) throws -> Void
+public typealias HandleDirective = (_ directive: Downstream.Directive, _ completion: @escaping () -> Void) -> Void
 public typealias HandleAttachment = (_ attachment: Downstream.Attachment) -> Void
 
 public struct DirectiveHandleInfo: Hashable {
@@ -29,7 +30,7 @@ public struct DirectiveHandleInfo: Hashable {
     public let name: String
     public let blockingPolicy: BlockingPolicy
     public let directiveHandler: HandleDirective
-    public let preFetch: HandleDirective
+    public let preFetch: PrefetchDirective?
     public let attachmentHandler: HandleAttachment?
     
     public var type: String {
@@ -40,7 +41,7 @@ public struct DirectiveHandleInfo: Hashable {
         namespace: String,
         name: String,
         blockingPolicy: BlockingPolicy,
-        preFetch: (() -> HandleDirective) = { { $1(.success(())) } },
+        preFetch: (() -> PrefetchDirective)? = nil,
         directiveHandler: () -> HandleDirective,
         attachmentHandler: (() -> HandleAttachment)? = nil
     ) {
@@ -48,7 +49,7 @@ public struct DirectiveHandleInfo: Hashable {
         self.name = name
         self.blockingPolicy = blockingPolicy
         self.directiveHandler = directiveHandler()
-        self.preFetch = preFetch()
+        self.preFetch = preFetch?()
         self.attachmentHandler = attachmentHandler?()
     }
     

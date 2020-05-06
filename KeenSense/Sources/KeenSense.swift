@@ -64,22 +64,6 @@ public var logEnabled: Bool {
     }
 }
 
-// MARK: - Keyword
-
-public enum Keyword: Int, CustomStringConvertible, CaseIterable {
-    case aria = 0 // ɑriɑ
-    case tinkerbell = 3 // tɪŋkəbel
-    
-    public var description: String {
-        switch self {
-        case .aria:
-            return "아리아"
-        case .tinkerbell:
-            return "팅커벨"
-        }
-    }
-}
-
 // MARK: - Stream Type
 
 public enum StreamType: Int {

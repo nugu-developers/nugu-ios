@@ -73,27 +73,19 @@ public extension DirectiveSequencer {
 // MARK: - Private
 
 private extension DirectiveSequencer {
-    // Non-blocking 처리
     func prefetchDirective(_ directive: Downstream.Directive) {
-        guard let preFetch = directiveHandleInfos[directive.header.type]?.preFetch else {
+        guard let handler = directiveHandleInfos[directive.header.type] else {
             log.warning("No handler registered \(directive.header.messageId)")
             return
         }
         
         // Directives should be prefetch sequentially.
-        let semaphore = DispatchSemaphore(value: 0)
-        preFetch(directive) { [weak self] result in
-            switch result {
-            case .success:
-                self?.directiveSequencerDispatchQueue.async { [weak self] in
-                    self?.handleDirective(directive)
-                }
-            case .failure(let error):
-                log.error(error)
-            }
-            semaphore.signal()
+        do {
+            try handler.preFetch?(directive)
+            handleDirective(directive)
+        } catch {
+            log.error(error)
         }
-        semaphore.wait()
     }
     
     func handleDirective(_ directive: Downstream.Directive) {
@@ -113,10 +105,6 @@ private extension DirectiveSequencer {
         
         handlingDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
         handler.directiveHandler(directive) { [weak self ] in
-            if case .failure(let error) = $0 {
-                log.error(error)
-            }
-            
             self?.directiveSequencerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
