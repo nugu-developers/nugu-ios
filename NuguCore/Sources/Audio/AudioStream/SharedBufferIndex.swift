@@ -20,10 +20,10 @@
 
 import Foundation
 
-public struct SharedBufferIndex {
+struct SharedBufferIndex {
     private var internalValue: Int = 0
     private let bufferSize: Int
-    public var value: Int {
+    var value: Int {
         get {
             return internalValue
         }
@@ -33,15 +33,15 @@ public struct SharedBufferIndex {
         }
     }
     
-    public init(bufferSize: Int) {
+    init(bufferSize: Int) {
         self.bufferSize = bufferSize
     }
     
-    private func adjustIndex(_ index: Int) -> Int {
+    func adjustIndex(_ index: Int) -> Int {
         return index % bufferSize
     }
     
-    public static func < (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
+    static func < (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
         switch (lhs.value, rhs.value) {
         case (0, 0):
             return false
@@ -53,7 +53,7 @@ public struct SharedBufferIndex {
         }
     }
     
-    public static func > (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
+    static func > (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
         switch (lhs.value, rhs.value) {
         case (0, 0):
             return false
@@ -65,51 +65,51 @@ public struct SharedBufferIndex {
         }
     }
     
-    public static func == (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
+    static func == (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
         return lhs.value == rhs.value
     }
     
-    public static func != (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
+    static func != (lhs: SharedBufferIndex, rhs: SharedBufferIndex) -> Bool {
         return lhs.value != rhs.value
     }
     
-    public static func += (lhs: inout SharedBufferIndex, rhs: SharedBufferIndex) {
+    static func += (lhs: inout SharedBufferIndex, rhs: SharedBufferIndex) {
         lhs.value += rhs.value
     }
     
-    public static func -= (lhs: inout SharedBufferIndex, rhs: SharedBufferIndex) {
+    static func -= (lhs: inout SharedBufferIndex, rhs: SharedBufferIndex) {
         lhs.value -= rhs.value
     }
     
-    public static func == (lhs: SharedBufferIndex, rhs: Int) -> Bool {
+    static func == (lhs: SharedBufferIndex, rhs: Int) -> Bool {
         return lhs.value == rhs
     }
     
-    public static func != (lhs: SharedBufferIndex, rhs: Int) -> Bool {
+    static func != (lhs: SharedBufferIndex, rhs: Int) -> Bool {
         return lhs.value != rhs
     }
     
-    public static func += (lhs: inout SharedBufferIndex, rhs: Int) {
+    static func += (lhs: inout SharedBufferIndex, rhs: Int) {
         lhs.value += rhs
     }
     
-    public static func -= (lhs: inout SharedBufferIndex, rhs: Int) {
+    static func -= (lhs: inout SharedBufferIndex, rhs: Int) {
         lhs.value -= rhs
     }
     
-    public static func == (lhs: Int, rhs: SharedBufferIndex) -> Bool {
+    static func == (lhs: Int, rhs: SharedBufferIndex) -> Bool {
         return lhs == rhs.value
     }
     
-    public static func != (lhs: Int, rhs: SharedBufferIndex) -> Bool {
+    static func != (lhs: Int, rhs: SharedBufferIndex) -> Bool {
         return lhs != rhs.value
     }
     
-    public static func += (lhs: inout Int, rhs: SharedBufferIndex) {
+    static func += (lhs: inout Int, rhs: SharedBufferIndex) {
         lhs += rhs.value
     }
     
-    public static func -= (lhs: inout Int, rhs: SharedBufferIndex) {
+    static func -= (lhs: inout Int, rhs: SharedBufferIndex) {
         lhs -= rhs.value
     }
 }

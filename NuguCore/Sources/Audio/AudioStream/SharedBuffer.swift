@@ -26,7 +26,7 @@ import RxSwift
  SharedBuffer is based on RingBuffer.
  It can have only one writer and multiple reader.
  */
-public class SharedBuffer<Element> {
+class SharedBuffer<Element> {
     private var array: [Element?]
     @Atomic private var lastIndex: SharedBufferIndex
 
@@ -36,7 +36,7 @@ public class SharedBuffer<Element> {
     private var readers: NSHashTable<Reader> = NSHashTable.weakObjects()
     private let disposeBag = DisposeBag()
     
-    public init(capacity: Int) {
+    init(capacity: Int) {
         array = [Element?](repeating: nil, count: capacity)
         lastIndex = SharedBufferIndex(bufferSize: array.count)
     }
@@ -75,26 +75,26 @@ public class SharedBuffer<Element> {
         }
     }
     
-    public func makeBufferWriter() -> Writer {
+    func makeBufferWriter() -> Writer {
         writer = Writer(buffer: self)
         return writer!
     }
     
-    public func makeBufferReader() -> Reader {
+    func makeBufferReader() -> Reader {
         return Reader(buffer: self)
     }
 }
 
 // MARK: - Writer/Reader
 extension SharedBuffer {
-    public class Writer {
+    class Writer {
         private weak var buffer: SharedBuffer?
         
         init(buffer: SharedBuffer) {
             self.buffer = buffer
         }
         
-        public func write(_ element: Element) throws {
+        func write(_ element: Element) throws {
             guard buffer?.writer === self else {
                 throw SharedBufferError.writePermissionDenied
             }
@@ -102,7 +102,7 @@ extension SharedBuffer {
             buffer?.write(element)
         }
         
-        public func finish() {
+        func finish() {
             log.debug("readers cnt: \(buffer?.readers.allObjects.count ?? 0)")
             buffer?.readers.allObjects.forEach { (reader) in
                 reader.readDisposable?.dispose()
@@ -114,7 +114,7 @@ extension SharedBuffer {
         }
     }
     
-    public class Reader {
+    class Reader {
         private let buffer: SharedBuffer
         private let readQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.reader")
         @Atomic private var readIndex: SharedBufferIndex
@@ -127,7 +127,7 @@ extension SharedBuffer {
             buffer.readers.add(self)
         }
         
-        public func read(complete: @escaping (Result<Element, Error>) -> Void) {
+        func read(complete: @escaping (Result<Element, Error>) -> Void) {
             var isCompleted = false
             self.readDisposable = self.buffer.read(index: self.readIndex)
                 .take(1)

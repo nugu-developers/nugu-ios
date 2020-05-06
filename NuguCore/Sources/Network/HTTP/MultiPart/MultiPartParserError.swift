@@ -20,7 +20,7 @@
 
 import Foundation
 
-public enum MultiPartParserError: Error {
+enum MultiPartParserError: Error {
     case noData
     case noBoundary
     case endOfData

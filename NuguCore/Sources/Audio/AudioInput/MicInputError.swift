@@ -1,8 +1,8 @@
 //
-//  DirectiveTypeInfoError.swift
+//  MicInputError.swift
 //  NuguCore
 //
-//  Created by yonghoonKwon on 23/05/2019.
+//  Created by MinChul Lee on 2020/05/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,22 +19,25 @@
 //
 
 import Foundation
+import AVFoundation
 
-/// <#Description#>
-public enum DirectiveTypeInfoError: Error {
-    case alreadySet
-    case notFound
+public enum MicInputError: Error {
+    case permissionDenied
+    case audioFormatError
+    case resamplerError(source: AVAudioFormat, dest: AVAudioFormat)
 }
 
 // MARK: - LocalizedError
 
-extension DirectiveTypeInfoError: LocalizedError {
+extension MicInputError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .alreadySet:
-            return "Configuration was already set"
-        case .notFound:
-            return "Configuration not found."
+        case .permissionDenied:
+            return "permission denied"
+        case .audioFormatError:
+            return "audio format error"
+        case .resamplerError(let source, let dest):
+            return "cannot resample. source(\(source)) or destnation (\(dest)) sample may be wrong"
         }
     }
 }

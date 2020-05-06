@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct OpusPlayerConst {
+struct OpusPlayerConst {
     public static let defaultDecoderSampleRate: Double = 24000 // because of OPUS decoder limitation.
     public static let audioSampleRate: Double = 22050
     public static let opusPacketHeaderSize = 8

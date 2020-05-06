@@ -1,8 +1,8 @@
 //
-//  NuguCoreConfiguration.swift
-//  NuguCore
+//  TTSError.swift
+//  NuguAgents
 //
-//  Created by MinChul Lee on 16/04/2019.
+//  Created by MinChul Lee on 2020/05/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,9 @@
 //  limitations under the License.
 //
 
+
 import Foundation
 
-/// <#Description#>
-public class NuguConfiguration {
-    /// <#Description#>
-    public static var deviceGatewayResponseTimeout: DispatchTimeInterval = .milliseconds(10000)
-
-    private init() {}
+public enum TTSError: Error {
+    case notSupportedSourceType
 }

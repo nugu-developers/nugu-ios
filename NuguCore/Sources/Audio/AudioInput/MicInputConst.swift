@@ -22,7 +22,7 @@ import Foundation
 import AVFoundation
 
 /// <#Description#>
-public enum MicInputConst {
+enum MicInputConst {
     /// <#Description#>
     public static let defaultChannelCount: AVAudioChannelCount = 1
     /// <#Description#>
@@ -34,34 +34,3 @@ public enum MicInputConst {
     /// <#Description#>
     public static let defaultInterLeavingSetting = false
 }
-
-/// <#Description#>
-public enum MicInputError: Error {
-    /// <#Description#>
-    case permissionDenied
-    /// <#Description#>
-    case audioFormatError
-    /// <#Description#>
-    /// - Parameter source: <#source description#>
-    /// - Parameter dest: <#dest description#>
-    case resamplerError(source: AVAudioFormat, dest: AVAudioFormat)
-}
-
-// MARK: - LocalizedError
-
-extension MicInputError: LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case .permissionDenied:
-            return "permission denied"
-        case .audioFormatError:
-            return "audio format error"
-        case .resamplerError(let source, let dest):
-            return "cannot resample. source(\(source)) or destnation (\(dest)) sample may be wrong"
-        }
-    }
-}
-
-// MARK: - Equatable
-
-extension MicInputError: Equatable {}

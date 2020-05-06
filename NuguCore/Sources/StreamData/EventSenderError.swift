@@ -20,14 +20,14 @@
 
 import Foundation
 
-enum EventSenderError: Error, CustomStringConvertible {
+public enum EventSenderError: Error, CustomStringConvertible {
     case requestMultipleEvents
     case noEventRequested
     case streamBlocked
     case streamError(_ streamError: Error)
     case cannotBindMemory
     
-    var description: String {
+    public var description: String {
         switch self {
         case .requestMultipleEvents:
             return "Request multiple events"
