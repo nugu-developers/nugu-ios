@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import SilverTray
 
 import RxSwift
 
@@ -639,9 +640,7 @@ private extension AudioPlayerAgent {
                 }
                 
                 do {
-                    try SktOpusParser.parse(from: attachment.content).forEach { (chunk) in
-                        try dataSource.appendData(chunk)
-                    }
+                    try dataSource.appendData(attachment.content)
                     
                     if attachment.isEnd {
                         try dataSource.lastDataAppended()
@@ -862,17 +861,17 @@ private extension AudioPlayerAgent {
                 payload: payload
             )
         case .attachment:
-            guard let mediaPlayer = try? OpusPlayer(sampleRate: 22050.0, channels: 1) else {
-                log.error("Cannot create opus player.")
-                return
+            do {
+                let mediaPlayer = try OpusPlayer()
+                currentMedia = AudioPlayerAgentMedia(
+                    dialogRequestId: dialogRequestId,
+                    player: mediaPlayer,
+                    payload: payload
+                )
+            } catch {
+                // TODO: 실패시 예외처리 필요한지 확인
+                log.error("Opus player initiation error: \(error)")
             }
-
-            mediaPlayer.decoder = OpusDecoder(sampleRate: 24000.0, channels: 1)
-            currentMedia = AudioPlayerAgentMedia(
-                dialogRequestId: dialogRequestId,
-                player: mediaPlayer,
-                payload: payload
-            )
         case .none:
             log.error("Invalid payload")
         }

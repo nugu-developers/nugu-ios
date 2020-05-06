@@ -304,48 +304,22 @@ private extension TTSAgent {
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-<<<<<<< HEAD
-                completion(
-                    Result<Void, Error>(catching: {
-                        guard let data = directive.payload.data(using: .utf8) else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Invalid payload")
-                        }
-                        
-                        let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: data)
-                        guard case .attachment = payload.sourceType else {
-                            throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
-                        }
-                        
-                        self.stopSilently()
-                        
-                        guard let mediaPlayer = try? OpusPlayer(sampleRate: 22050.0, channels: 1) else {
-                            log.error("Cannot create opus player")
-                            return
-                        }
-
-                        mediaPlayer.decoder = OpusDecoder(sampleRate: 24000.0, channels: 1)
-                        mediaPlayer.delegate = self
-                        mediaPlayer.volume = self.volume
-                        
-                        self.currentMedia = TTSMedia(
-                            player: mediaPlayer,
-                            payload: payload,
-                            dialogRequestId: directive.header.dialogRequestId
-                        )
-                    })
-=======
                 self.stopSilently()
                 
-                let mediaPlayer = OpusPlayer()
-                mediaPlayer.delegate = self
-                mediaPlayer.volume = self.volume
-                
-                self.currentMedia = TTSMedia(
-                    player: mediaPlayer,
-                    payload: payload,
-                    dialogRequestId: directive.header.dialogRequestId
->>>>>>> develop/0.11.0
-                )
+                do {
+                    let mediaPlayer = try OpusPlayer()
+                    mediaPlayer.delegate = self
+                    mediaPlayer.volume = self.volume
+                    
+                    self.currentMedia = TTSMedia(
+                        player: mediaPlayer,
+                        payload: payload,
+                        dialogRequestId: directive.header.dialogRequestId
+                    )
+                } catch {
+                    // TODO: 실패시 예외처리 필요한지 확인
+                    log.error("Opus player initiation error: \(error)")
+                }
             }
         }
     }
@@ -432,9 +406,7 @@ private extension TTSAgent {
                 }
                 
                 do {
-                    try SktOpusParser.parse(from: attachment.content).forEach { (chunk) in
-                        try dataSource.appendData(chunk)
-                    }
+                    try dataSource.appendData(attachment.content)
                     
                     if attachment.isEnd {
                         try dataSource.lastDataAppended()

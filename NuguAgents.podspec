@@ -25,7 +25,7 @@ Default Agent Implementations for Nugu service
   s.macos.exclude_files = 'NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/**/*'
   
   s.dependency 'NuguCore', '~> 0'
-  s.dependency 'JadeMarble', '~> 0'
+  s.dependency 'SilverTray', '~> 1'
   s.dependency 'NattyLog', '~> 1'
 
   s.ios.dependency 'JadeMarble', '~> 0'

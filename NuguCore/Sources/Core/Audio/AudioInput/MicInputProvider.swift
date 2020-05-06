@@ -21,6 +21,8 @@
 import Foundation
 import AVFoundation
 
+import NuguCore.ObjcExceptionCatcher
+
 public class MicInputProvider: AudioProvidable {
     public var isRunning: Bool {
         return audioEngine.isRunning

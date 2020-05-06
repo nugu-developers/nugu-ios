@@ -30,13 +30,6 @@
     #endif
 #endif
 
-#import "ObjcExceptionCatcher.h"
-#import "opus.h"
-#import "opus_defines.h"
-#import "opus_multistream.h"
-#import "opus_projection.h"
-#import "opus_types.h"
-
 //! Project version number for NuguCore.
 FOUNDATION_EXPORT double NuguCoreVersionNumber;
 
