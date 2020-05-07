@@ -651,7 +651,6 @@ private extension AudioPlayerAgent {
         }
     }
     
-
     func resume() {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -720,7 +719,7 @@ private extension AudioPlayerAgent {
 
     func sendRequestPlayEvent(
         referrerDialogRequestId: String,
-        payload: [String : AnyHashable],
+        payload: [String: AnyHashable],
         typeInfo: RequestPlayEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {

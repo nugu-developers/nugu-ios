@@ -83,7 +83,6 @@ extension ASROptions.Encoding {
     }
 }
 
-
 // MARK: - ASROptions.EndPointing + server value
 
 extension ASROptions.EndPointing {

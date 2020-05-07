@@ -26,7 +26,7 @@ import NuguCore
 
 extension AudioPlayerAgent {
     public struct RequestPlayEvent {
-        let requestPlayPayload: [String : AnyHashable]
+        let requestPlayPayload: [String: AnyHashable]
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
@@ -38,7 +38,7 @@ extension AudioPlayerAgent {
 // MARK: - Eventable
 
 extension AudioPlayerAgent.RequestPlayEvent: Eventable {
-    public var payload: [String : AnyHashable] {
+    public var payload: [String: AnyHashable] {
         return ["payload": requestPlayPayload]
     }
     

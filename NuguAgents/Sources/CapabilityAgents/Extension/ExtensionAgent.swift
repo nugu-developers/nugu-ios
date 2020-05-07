@@ -117,7 +117,6 @@ private extension ExtensionAgent {
     }
 }
 
-
 // MARK: - Private (Event)
 
 private extension ExtensionAgent {

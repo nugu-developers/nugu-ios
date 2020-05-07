@@ -75,4 +75,3 @@ extension AudioPlayerAgent.LyricsEvent: Eventable {
         }
     }
 }
-
