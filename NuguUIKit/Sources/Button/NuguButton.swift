@@ -163,7 +163,7 @@ private extension NuguButton {
         }
         
         animationTimer = DispatchSource.makeTimerSource(queue: .main)
-        animationTimer?.schedule(deadline: .now(), repeating: 1.0)
+        animationTimer?.schedule(deadline: .now(), repeating: 0.66)
         animationTimer?.setEventHandler(handler: { [weak self] in
             guard let self = self else { return }
             for dotView in self.deactivateAnimationView.subviews {
