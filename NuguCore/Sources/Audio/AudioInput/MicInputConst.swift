@@ -1,8 +1,8 @@
 //
-//  FocusError.swift
+//  MicInputConst.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 18/05/2019.
+//  Created by DCs-OfficeMBP on 07/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,17 +19,18 @@
 //
 
 import Foundation
+import AVFoundation
 
-enum FocusError: Error {
-    case channelNotFound
-}
-
-// MARK: - LocalizedError
-
-extension FocusError: LocalizedError {
-    var errorDescription: String? {
-        switch self {
-        case .channelNotFound: return "Focus channel not found."
-        }
-    }
+/// <#Description#>
+enum MicInputConst {
+    /// <#Description#>
+    public static let defaultChannelCount: AVAudioChannelCount = 1
+    /// <#Description#>
+    public static let defaultSampleRate: Double = 16000.0
+    /// <#Description#>
+    public static let defaultBus = 0
+    /// <#Description#>
+    public static let defaultFormat: AVAudioCommonFormat = .pcmFormatInt16
+    /// <#Description#>
+    public static let defaultInterLeavingSetting = false
 }

@@ -1,8 +1,8 @@
 //
-//  Eventable.swift
-//  NuguCore
+//  TTSError.swift
+//  NuguAgents
 //
-//  Created by yonghoonKwon on 10/06/2019.
+//  Created by MinChul Lee on 2020/05/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,9 @@
 //  limitations under the License.
 //
 
+
 import Foundation
 
-/// <#Description#>
-public protocol Eventable {
-    /// <#Description#>
-    var payload: [String: AnyHashable] { get }
-    /// <#Description#>
-    var name: String { get }
+public enum TTSError: Error {
+    case notSupportedSourceType
 }

@@ -20,16 +20,14 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension SoundAgent {
-    public struct Event {
+    struct Event {
         let playServiceId: String
         let typeInfo: TypeInfo
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case beepSucceeded
             case beepFailed
         }
@@ -39,11 +37,11 @@ extension SoundAgent {
 // MARK: - Eventable
 
 extension SoundAgent.Event: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         return ["playServiceId": playServiceId]
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .beepSucceeded:
             return "BeepSucceeded"

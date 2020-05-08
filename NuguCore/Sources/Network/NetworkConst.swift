@@ -1,8 +1,8 @@
 //
-//  NuguCoreConfiguration.swift
+//  NetworkConst.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 16/04/2019.
+//  Created by jin kim on 29/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,18 @@
 
 import Foundation
 
-/// <#Description#>
-public class NuguConfiguration {
-    /// <#Description#>
-    public static var deviceGatewayResponseTimeout: DispatchTimeInterval = .milliseconds(10000)
+enum NetworkConst {
+    static var userAgent: String {
+        return [openSdkVersion(), clientVersion()].joined(separator: " ")
+    }
+}
 
-    private init() {}
+private extension NetworkConst {
+    static func openSdkVersion() -> String {
+        return "OpenSDK/" + (Bundle(for: AuthorizationStore.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
+    }
+    
+    static func clientVersion() -> String {
+        return "Client/" + (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
+    }
 }

@@ -21,13 +21,13 @@
 import Foundation
 
 /// <#Description#>
-public enum ServerSideEventReceiverState: Equatable {
+enum ServerSideEventReceiverState: Equatable {
     case connected
     /// Connection closed.
     /// - Parameter error: If Connection closed because of the error.
     case disconnected(error: Error? = nil)
     
-    public static func == (lhs: ServerSideEventReceiverState, rhs: ServerSideEventReceiverState) -> Bool {
+    static func == (lhs: ServerSideEventReceiverState, rhs: ServerSideEventReceiverState) -> Bool {
         switch (lhs, rhs) {
         case (.connected, .connected):
             return true

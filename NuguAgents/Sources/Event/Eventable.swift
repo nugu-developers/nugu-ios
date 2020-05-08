@@ -1,8 +1,8 @@
 //
-//  DirectiveTypeInfoError.swift
-//  NuguCore
+//  Eventable.swift
+//  NuguAgents
 //
-//  Created by yonghoonKwon on 23/05/2019.
+//  Created by yonghoonKwon on 10/06/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,20 +21,9 @@
 import Foundation
 
 /// <#Description#>
-public enum DirectiveTypeInfoError: Error {
-    case alreadySet
-    case notFound
-}
-
-// MARK: - LocalizedError
-
-extension DirectiveTypeInfoError: LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case .alreadySet:
-            return "Configuration was already set"
-        case .notFound:
-            return "Configuration not found."
-        }
-    }
+public protocol Eventable {
+    /// <#Description#>
+    var payload: [String: AnyHashable] { get }
+    /// <#Description#>
+    var name: String { get }
 }

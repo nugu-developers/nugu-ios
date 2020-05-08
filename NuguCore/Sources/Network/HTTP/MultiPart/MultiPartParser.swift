@@ -20,14 +20,14 @@
 
 import Foundation
 
-public class MultiPartParser {
+class MultiPartParser {
     let boundary: String
     
-    public init(boundary: String) {
+    init(boundary: String) {
         self.boundary = "--"+boundary
     }
     
-    public func parse(data: Data) throws -> Part {
+    func parse(data: Data) throws -> Part {
         guard boundary.count < data.count else {
             throw MultiPartParserError.noData
         }
@@ -47,7 +47,7 @@ public class MultiPartParser {
         return part
     }
     
-    public func separateParts(data: Data) -> ([Data], Int) {
+    func separateParts(data: Data) -> ([Data], Int) {
         var remainedData = data
         var parts = [Data]()
         
@@ -102,7 +102,7 @@ public class MultiPartParser {
 }
 
 extension MultiPartParser {
-    public struct Part {
+    struct Part {
         public let header: [String: String]
         public let body: Data
     }

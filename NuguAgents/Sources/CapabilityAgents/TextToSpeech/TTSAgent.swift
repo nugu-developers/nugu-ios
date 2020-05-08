@@ -298,7 +298,7 @@ private extension TTSAgent {
         return { [weak self] directive in
             let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: directive.payload)
             guard case .attachment = payload.sourceType else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
+                throw TTSError.notSupportedSourceType
             }
             
             self?.ttsDispatchQueue.async { [weak self] in
