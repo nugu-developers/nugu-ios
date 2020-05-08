@@ -104,7 +104,7 @@ extension AudioPlayerAgentMedia.Payload: Decodable {
         case playServiceId
     }
     
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
@@ -126,7 +126,7 @@ extension AudioPlayerAgentMedia.Payload.PlayStackControl: Decodable {
         case playServiceId
     }
     
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         playServiceId = try container.decode(String.self, forKey: .playServiceId)

@@ -41,7 +41,7 @@ public class AudioStream {
 }
 
 extension AudioStream {
-    public class AudioBuffer: SharedBuffer<AVAudioPCMBuffer> {
+    class AudioBuffer: SharedBuffer<AVAudioPCMBuffer> {
         public weak var streamDelegate: AudioStreamDelegate?
         private let delegateQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_stream_delegate")
         private var refCnt = 0 {
@@ -72,11 +72,11 @@ extension AudioStream {
             }
         }
         
-        public override func makeBufferReader() -> SharedBuffer<AVAudioPCMBuffer>.Reader {
+        override func makeBufferReader() -> SharedBuffer<AVAudioPCMBuffer>.Reader {
             return AudioBufferReader(buffer: self)
         }
         
-        public class AudioBufferReader: SharedBuffer<AVAudioPCMBuffer>.Reader {
+        class AudioBufferReader: SharedBuffer<AVAudioPCMBuffer>.Reader {
             private weak var audioBuffer: AudioBuffer?
             
             init(buffer: AudioBuffer) {

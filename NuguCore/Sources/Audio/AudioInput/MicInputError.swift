@@ -1,8 +1,8 @@
 //
-//  MicInputConst.swift
+//  MicInputError.swift
 //  NuguCore
 //
-//  Created by DCs-OfficeMBP on 07/05/2019.
+//  Created by MinChul Lee on 2020/05/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,29 +21,9 @@
 import Foundation
 import AVFoundation
 
-/// <#Description#>
-public enum MicInputConst {
-    /// <#Description#>
-    public static let defaultChannelCount: AVAudioChannelCount = 1
-    /// <#Description#>
-    public static let defaultSampleRate: Double = 16000.0
-    /// <#Description#>
-    public static let defaultBus = 0
-    /// <#Description#>
-    public static let defaultFormat: AVAudioCommonFormat = .pcmFormatInt16
-    /// <#Description#>
-    public static let defaultInterLeavingSetting = false
-}
-
-/// <#Description#>
 public enum MicInputError: Error {
-    /// <#Description#>
     case permissionDenied
-    /// <#Description#>
     case audioFormatError
-    /// <#Description#>
-    /// - Parameter source: <#source description#>
-    /// - Parameter dest: <#dest description#>
     case resamplerError(source: AVAudioFormat, dest: AVAudioFormat)
 }
 
@@ -61,7 +41,3 @@ extension MicInputError: LocalizedError {
         }
     }
 }
-
-// MARK: - Equatable
-
-extension MicInputError: Equatable {}

@@ -1,8 +1,8 @@
 //
-//  NetworkConst.swift
+//  MultiPartParserError.swift
 //  NuguCore
 //
-//  Created by jin kim on 29/04/2019.
+//  Created by DCs-OfficeMBP on 23/07/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,18 +20,8 @@
 
 import Foundation
 
-enum NetworkConst {
-    static var userAgent: String {
-        return [openSdkVersion(), clientVersion()].joined(separator: " ")
-    }
-}
-
-private extension NetworkConst {
-    static func openSdkVersion() -> String {
-        return "OpenSDK/" + (Bundle(for: NuguConfiguration.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
-    }
-    
-    static func clientVersion() -> String {
-        return "Client/" + (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
-    }
+enum MultiPartParserError: Error {
+    case noData
+    case noBoundary
+    case endOfData
 }
