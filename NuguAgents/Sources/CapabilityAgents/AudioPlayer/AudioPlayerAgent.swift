@@ -26,7 +26,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.3")
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
@@ -357,7 +357,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 }
             case .stop:
                 self.audioPlayerState = .stopped
-                self.sendPlayEvent(media: media, typeInfo: .playbackStopped)
+                self.sendPlayEvent(media: media, typeInfo: .playbackStopped(reason: "STOP"))
                 self.releaseFocusIfNeeded()
             case .bufferUnderrun, .bufferRefilled:
                 break
@@ -682,7 +682,7 @@ private extension AudioPlayerAgent {
             media.player.delegate = nil
             media.player.stop()
             self.audioPlayerState = .stopped
-            self.sendPlayEvent(media: media, typeInfo: .playbackStopped)
+            self.sendPlayEvent(media: media, typeInfo: .playbackStopped(reason: "PLAY_ANOTHER"))
         case .idle, .stopped, .finished:
             return
         }
