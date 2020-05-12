@@ -21,6 +21,7 @@
 import UIKit
 
 import NuguAgents
+import NuguUIKit
 
 final class DisplayListView: DisplayView {
 
@@ -43,6 +44,10 @@ final class DisplayListView: DisplayView {
             
             templateListItems = displayItem.listItems
             tableView.reloadData()
+            
+            idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
+                return .normal(text: grammarGuide)
+            }) ?? []
         }
     }
     

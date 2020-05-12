@@ -25,6 +25,7 @@ struct DisplayWeatherListTemplate: Decodable {
     let title: DisplayCommonTemplate.Common.Title
     let background: DisplayCommonTemplate.Common.Background?
     let content: Content
+    let grammarGuide: [String]?
     
     struct Content: Decodable {
         let listItems: [Item]?

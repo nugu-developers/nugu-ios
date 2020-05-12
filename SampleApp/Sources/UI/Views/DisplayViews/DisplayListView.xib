@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayListView" customModule="SampleApp" customModuleProvider="target">
             <connections>
+                <outlet property="idleBar" destination="0tm-f9-y2h" id="hXx-N8-2fF"/>
                 <outlet property="logoImageView" destination="OTv-Bd-84n" id="Uou-1M-hBE"/>
                 <outlet property="tableView" destination="2jZ-Om-SRm" id="SpB-ga-aKB"/>
                 <outlet property="titleContainerView" destination="IZp-XD-PHr" id="XL9-bp-Juj"/>
@@ -67,23 +68,33 @@
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2jZ-Om-SRm">
-                    <rect key="frame" x="0.0" y="128" width="375" height="650"/>
+                    <rect key="frame" x="0.0" y="128" width="375" height="582"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="YVy-fJ-Rss"/>
                         <outlet property="delegate" destination="-1" id="1GS-aO-6qv"/>
                     </connections>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0tm-f9-y2h" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="710" width="375" height="68"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="68" id="Ecx-Lu-i9i"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="IZp-XD-PHr" firstAttribute="centerX" secondItem="jSl-VU-U98" secondAttribute="centerX" id="0An-av-qlf"/>
+                <constraint firstItem="jSl-VU-U98" firstAttribute="bottom" secondItem="0tm-f9-y2h" secondAttribute="bottom" id="0bK-k7-Udx"/>
                 <constraint firstItem="TxO-ea-1Er" firstAttribute="top" secondItem="jSl-VU-U98" secondAttribute="top" constant="8" id="52W-7a-UPX"/>
                 <constraint firstItem="2jZ-Om-SRm" firstAttribute="top" secondItem="IZp-XD-PHr" secondAttribute="bottom" constant="20" id="PSW-uv-Z3t"/>
                 <constraint firstItem="2jZ-Om-SRm" firstAttribute="trailing" secondItem="jSl-VU-U98" secondAttribute="trailing" id="SJv-fi-NfM"/>
+                <constraint firstItem="0tm-f9-y2h" firstAttribute="leading" secondItem="jSl-VU-U98" secondAttribute="leading" id="UzC-qo-CW1"/>
+                <constraint firstItem="0tm-f9-y2h" firstAttribute="trailing" secondItem="jSl-VU-U98" secondAttribute="trailing" id="XKO-Zx-EYo"/>
                 <constraint firstItem="jSl-VU-U98" firstAttribute="trailing" secondItem="TxO-ea-1Er" secondAttribute="trailing" constant="20" id="dvX-mf-Qfu"/>
+                <constraint firstItem="0tm-f9-y2h" firstAttribute="top" secondItem="2jZ-Om-SRm" secondAttribute="bottom" id="eSz-te-ePa"/>
                 <constraint firstItem="IZp-XD-PHr" firstAttribute="top" secondItem="jSl-VU-U98" secondAttribute="top" constant="36" id="ksg-Id-06j"/>
-                <constraint firstItem="jSl-VU-U98" firstAttribute="bottom" secondItem="2jZ-Om-SRm" secondAttribute="bottom" id="lDb-u9-aBF"/>
                 <constraint firstItem="2jZ-Om-SRm" firstAttribute="leading" secondItem="jSl-VU-U98" secondAttribute="leading" id="u4G-uJ-xak"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="jSl-VU-U98"/>

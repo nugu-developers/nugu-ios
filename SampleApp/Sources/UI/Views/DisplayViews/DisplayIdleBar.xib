@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
+            <connections>
+                <outlet property="chipsView" destination="qX2-g6-UF7" id="1gc-9q-zmT"/>
+                <outlet property="nuguButton" destination="c0I-ic-nvP" id="3bX-tC-Soc"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="qQc-0G-la3">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="68"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0I-ic-nvP" customClass="NuguButton" customModule="NuguUIKit">
+                    <rect key="frame" x="12" y="6" width="56" height="56"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="56" id="GEJ-c7-jBW"/>
+                        <constraint firstAttribute="height" constant="56" id="hQz-Yo-XOv"/>
+                    </constraints>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qX2-g6-UF7" customClass="NuguChipsView" customModule="NuguUIKit">
+                    <rect key="frame" x="76" y="0.0" width="299" height="68"/>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="qX2-g6-UF7" firstAttribute="top" secondItem="qQc-0G-la3" secondAttribute="top" id="EcT-vS-no3"/>
+                <constraint firstAttribute="trailing" secondItem="qX2-g6-UF7" secondAttribute="trailing" id="P5K-Y4-LxT"/>
+                <constraint firstItem="c0I-ic-nvP" firstAttribute="leading" secondItem="qQc-0G-la3" secondAttribute="leading" constant="12" id="Vgn-tG-2kC"/>
+                <constraint firstItem="qX2-g6-UF7" firstAttribute="leading" secondItem="c0I-ic-nvP" secondAttribute="trailing" constant="8" id="uPj-qO-ADq"/>
+                <constraint firstItem="c0I-ic-nvP" firstAttribute="centerY" secondItem="qQc-0G-la3" secondAttribute="centerY" id="v3R-jd-X8X"/>
+                <constraint firstAttribute="bottom" secondItem="qX2-g6-UF7" secondAttribute="bottom" id="zRi-re-v5v"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="132" y="127.83251231527095"/>
+        </view>
+    </objects>
+</document>

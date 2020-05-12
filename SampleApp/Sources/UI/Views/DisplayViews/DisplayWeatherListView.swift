@@ -20,6 +20,8 @@
 
 import UIKit
 
+import NuguUIKit
+
 final class DisplayWeatherListView: DisplayView {
     
     @IBOutlet private weak var locationButton: UIButton!
@@ -47,7 +49,11 @@ final class DisplayWeatherListView: DisplayView {
             locationButton.setTitleColor(UIColor.textColor(rgbHexString: displayItem.title.subtext?.color), for: .normal)
 
             weatherListItems = displayItem.content.listItems
-            tableView.reloadData()            
+            tableView.reloadData()
+            
+            idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
+                return .normal(text: grammarGuide)
+            }) ?? []
         }
     }
 

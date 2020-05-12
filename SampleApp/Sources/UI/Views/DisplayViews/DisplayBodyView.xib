@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,6 +15,7 @@
                 <outlet property="contentImageViewContainerView" destination="GjG-oy-nN7" id="DFG-ai-gNB"/>
                 <outlet property="footerLabel" destination="smR-hw-TJe" id="NiO-uU-fvM"/>
                 <outlet property="headerLabel" destination="ddb-oW-QOU" id="1oV-pt-Ccx"/>
+                <outlet property="idleBar" destination="iCJ-2L-vRH" id="jQa-TR-hIH"/>
                 <outlet property="logoImageView" destination="ZEo-NP-kSN" id="Yw8-MD-3bh"/>
                 <outlet property="titleContainerView" destination="WO4-SU-uye" id="Uyt-19-NfP"/>
                 <outlet property="titleLabel" destination="RYf-6a-KuN" id="rSd-tx-Ubf"/>
@@ -112,13 +113,23 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iCJ-2L-vRH" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="710" width="375" height="68"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="68" id="COo-do-SWq"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="iCJ-2L-vRH" firstAttribute="trailing" secondItem="ghX-Fh-36U" secondAttribute="trailing" id="Ar1-gR-mkB"/>
                 <constraint firstItem="WO4-SU-uye" firstAttribute="top" secondItem="ghX-Fh-36U" secondAttribute="top" constant="36" id="G0R-FG-7Sg"/>
+                <constraint firstItem="iCJ-2L-vRH" firstAttribute="leading" secondItem="ghX-Fh-36U" secondAttribute="leading" id="JAN-ey-bVU"/>
                 <constraint firstItem="NGL-0h-mVY" firstAttribute="top" secondItem="ghX-Fh-36U" secondAttribute="top" constant="8" id="LP7-lw-po9"/>
                 <constraint firstItem="ghX-Fh-36U" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="X43-EG-n0s" secondAttribute="bottom" constant="2" id="MMc-Zm-EGV"/>
                 <constraint firstItem="X43-EG-n0s" firstAttribute="leading" secondItem="ghX-Fh-36U" secondAttribute="leading" constant="32" id="MxS-FJ-g09"/>
+                <constraint firstItem="iCJ-2L-vRH" firstAttribute="bottom" secondItem="ghX-Fh-36U" secondAttribute="bottom" id="QyJ-su-097"/>
                 <constraint firstItem="ghX-Fh-36U" firstAttribute="trailing" secondItem="X43-EG-n0s" secondAttribute="trailing" constant="32" id="Vf6-hM-tvd"/>
                 <constraint firstItem="ghX-Fh-36U" firstAttribute="trailing" secondItem="NGL-0h-mVY" secondAttribute="trailing" constant="20" id="aez-FO-zXL"/>
                 <constraint firstItem="WO4-SU-uye" firstAttribute="centerX" secondItem="ghX-Fh-36U" secondAttribute="centerX" id="nfe-h2-1P9"/>

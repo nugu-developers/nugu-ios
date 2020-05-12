@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayBodyListView" customModule="SampleApp" customModuleProvider="target">
             <connections>
+                <outlet property="idleBar" destination="60b-05-y7W" id="eYn-oW-kSB"/>
                 <outlet property="logoImageView" destination="SVS-nX-l41" id="XW2-XC-Yxf"/>
                 <outlet property="tableView" destination="Rcm-Cg-QAM" id="TOd-sA-MnN"/>
                 <outlet property="titleContainerView" destination="07p-J4-9IV" id="IGP-4q-jNy"/>
@@ -67,23 +68,33 @@
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Rcm-Cg-QAM">
-                    <rect key="frame" x="0.0" y="128" width="414" height="734"/>
+                    <rect key="frame" x="0.0" y="128" width="414" height="652"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="60b-05-y7W" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="780" width="414" height="68"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="68" id="xhy-Gg-jbV"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="4Hy-Mg-kgD" firstAttribute="top" secondItem="kWB-pf-TA6" secondAttribute="top" constant="8" id="2hX-YZ-zxD"/>
                 <constraint firstItem="Rcm-Cg-QAM" firstAttribute="leading" secondItem="kWB-pf-TA6" secondAttribute="leading" id="BIJ-JO-7VY"/>
+                <constraint firstItem="60b-05-y7W" firstAttribute="leading" secondItem="kWB-pf-TA6" secondAttribute="leading" id="KJE-F6-k8A"/>
+                <constraint firstItem="60b-05-y7W" firstAttribute="top" secondItem="Rcm-Cg-QAM" secondAttribute="bottom" id="QXd-dw-xZj"/>
                 <constraint firstItem="07p-J4-9IV" firstAttribute="centerX" secondItem="kWB-pf-TA6" secondAttribute="centerX" id="TVR-gS-UXR"/>
+                <constraint firstItem="kWB-pf-TA6" firstAttribute="bottom" secondItem="60b-05-y7W" secondAttribute="bottom" constant="14" id="a3o-Tr-5zb"/>
                 <constraint firstItem="Rcm-Cg-QAM" firstAttribute="top" secondItem="07p-J4-9IV" secondAttribute="bottom" constant="20" id="bfM-yH-CDv"/>
                 <constraint firstItem="Rcm-Cg-QAM" firstAttribute="trailing" secondItem="kWB-pf-TA6" secondAttribute="trailing" id="i0A-WM-unY"/>
-                <constraint firstItem="kWB-pf-TA6" firstAttribute="bottom" secondItem="Rcm-Cg-QAM" secondAttribute="bottom" id="jl9-Pg-7Xk"/>
+                <constraint firstItem="60b-05-y7W" firstAttribute="trailing" secondItem="kWB-pf-TA6" secondAttribute="trailing" id="kO3-ey-NT0"/>
                 <constraint firstItem="kWB-pf-TA6" firstAttribute="trailing" secondItem="4Hy-Mg-kgD" secondAttribute="trailing" constant="20" id="nq3-Oo-331"/>
                 <constraint firstItem="07p-J4-9IV" firstAttribute="top" secondItem="kWB-pf-TA6" secondAttribute="top" constant="36" id="t9S-5i-vd9"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="kWB-pf-TA6"/>
-            <point key="canvasLocation" x="-50.399999999999999" y="2.9556650246305418"/>
+            <point key="canvasLocation" x="-50.724637681159422" y="2.6785714285714284"/>
         </view>
     </objects>
     <resources>

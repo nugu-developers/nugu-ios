@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayWeatherListView" customModule="SampleApp" customModuleProvider="target">
             <connections>
+                <outlet property="idleBar" destination="mwH-Iv-oRY" id="jN4-t3-tL8"/>
                 <outlet property="locationButton" destination="Ymg-0i-bwz" id="i1L-WH-Z0X"/>
                 <outlet property="logoImageView" destination="TAu-Kh-WPH" id="j5F-5L-o8r"/>
                 <outlet property="tableView" destination="AcJ-e2-N1G" id="jzl-Ak-qgQ"/>
@@ -76,23 +77,33 @@
                     </state>
                 </button>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="64" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AcJ-e2-N1G">
-                    <rect key="frame" x="0.0" y="168" width="414" height="728"/>
+                    <rect key="frame" x="0.0" y="168" width="414" height="626"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="MfJ-pJ-pct"/>
                         <outlet property="delegate" destination="-1" id="EIO-8V-1Z5"/>
                     </connections>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mwH-Iv-oRY" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="794" width="414" height="68"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="68" id="m6f-P9-AJ6"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="AcJ-e2-N1G" secondAttribute="bottom" id="4Rd-is-kan"/>
                 <constraint firstItem="Ymg-0i-bwz" firstAttribute="centerX" secondItem="OFP-8B-Bzj" secondAttribute="centerX" id="4pq-b0-6y5"/>
                 <constraint firstItem="Ymg-0i-bwz" firstAttribute="top" secondItem="ojz-de-2jI" secondAttribute="bottom" constant="24" id="HIW-Ty-itx"/>
+                <constraint firstItem="mwH-Iv-oRY" firstAttribute="leading" secondItem="OFP-8B-Bzj" secondAttribute="leading" id="IlO-7N-qcG"/>
                 <constraint firstItem="AcJ-e2-N1G" firstAttribute="leading" secondItem="eOF-uL-8Kq" secondAttribute="leading" id="Kqm-87-Qhr"/>
+                <constraint firstItem="OFP-8B-Bzj" firstAttribute="trailing" secondItem="mwH-Iv-oRY" secondAttribute="trailing" id="Msb-kl-6SA"/>
                 <constraint firstItem="ojz-de-2jI" firstAttribute="centerX" secondItem="OFP-8B-Bzj" secondAttribute="centerX" id="Ubk-HF-sIe"/>
+                <constraint firstItem="OFP-8B-Bzj" firstAttribute="bottom" secondItem="mwH-Iv-oRY" secondAttribute="bottom" id="UwZ-2M-4bD"/>
                 <constraint firstItem="ojz-de-2jI" firstAttribute="top" secondItem="OFP-8B-Bzj" secondAttribute="top" constant="36" id="YTb-6I-EQX"/>
                 <constraint firstItem="OFP-8B-Bzj" firstAttribute="trailing" secondItem="zb8-fd-EcG" secondAttribute="trailing" constant="20" id="gO8-pt-6Rd"/>
+                <constraint firstItem="mwH-Iv-oRY" firstAttribute="top" secondItem="AcJ-e2-N1G" secondAttribute="bottom" id="gr3-4i-34O"/>
                 <constraint firstAttribute="trailing" secondItem="AcJ-e2-N1G" secondAttribute="trailing" id="ihp-ak-dRD"/>
                 <constraint firstItem="zb8-fd-EcG" firstAttribute="top" secondItem="OFP-8B-Bzj" secondAttribute="top" constant="8" id="izh-LI-DWY"/>
                 <constraint firstItem="AcJ-e2-N1G" firstAttribute="top" secondItem="Ymg-0i-bwz" secondAttribute="bottom" constant="16" id="rng-5E-h1A"/>

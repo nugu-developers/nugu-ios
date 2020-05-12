@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,6 +13,7 @@
                 <outlet property="additionalWeatherInfoLabel" destination="tZ4-dE-JPR" id="Ziz-8Y-W2s"/>
                 <outlet property="currentTemperatureLabel" destination="WJk-Ad-c9c" id="oiF-CJ-wbl"/>
                 <outlet property="furtherWeatherStackView" destination="tuV-vB-gw2" id="869-o5-5KM"/>
+                <outlet property="idleBar" destination="9Ga-yq-Vgm" id="dTm-is-Z6t"/>
                 <outlet property="locationButton" destination="ZGR-s5-OkC" id="yC1-6a-TS8"/>
                 <outlet property="logoImageView" destination="Asj-Qd-6Dh" id="0nf-Yr-LvX"/>
                 <outlet property="maxTemperatureLabel" destination="mhI-ng-geK" id="yiU-J7-jpE"/>
@@ -349,6 +350,13 @@
                         <constraint firstAttribute="height" constant="120" id="2GP-56-GNz"/>
                     </constraints>
                 </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ga-yq-Vgm" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="794" width="414" height="68"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="68" id="cUw-Q1-nCm"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -357,8 +365,10 @@
                 <constraint firstItem="xyw-vr-C6o" firstAttribute="centerX" secondItem="oHO-sY-dtl" secondAttribute="centerX" id="4p2-be-ezj"/>
                 <constraint firstItem="tZ4-dE-JPR" firstAttribute="top" secondItem="7bi-6c-Ihn" secondAttribute="bottom" constant="8" id="EYl-HA-nlQ"/>
                 <constraint firstItem="8Ce-7r-r73" firstAttribute="top" secondItem="oHO-sY-dtl" secondAttribute="top" constant="8" id="FLn-mY-TLk"/>
+                <constraint firstItem="oHO-sY-dtl" firstAttribute="trailing" secondItem="9Ga-yq-Vgm" secondAttribute="trailing" id="Hg6-8q-4gC"/>
                 <constraint firstItem="xyw-vr-C6o" firstAttribute="top" secondItem="ZGR-s5-OkC" secondAttribute="bottom" constant="16" id="K3I-u5-mNt"/>
                 <constraint firstItem="tuV-vB-gw2" firstAttribute="top" secondItem="tZ4-dE-JPR" secondAttribute="bottom" constant="32" id="RN8-1r-ej9"/>
+                <constraint firstItem="9Ga-yq-Vgm" firstAttribute="leading" secondItem="oHO-sY-dtl" secondAttribute="leading" id="RtW-dm-GnP"/>
                 <constraint firstItem="oHO-sY-dtl" firstAttribute="trailing" secondItem="tuV-vB-gw2" secondAttribute="trailing" constant="50" id="cd3-A0-7PW"/>
                 <constraint firstItem="7bi-6c-Ihn" firstAttribute="top" secondItem="xyw-vr-C6o" secondAttribute="bottom" constant="8" id="fMc-4w-Rfo"/>
                 <constraint firstItem="tuV-vB-gw2" firstAttribute="leading" secondItem="oHO-sY-dtl" secondAttribute="leading" constant="50" id="gNF-qJ-8DQ"/>
@@ -366,6 +376,7 @@
                 <constraint firstItem="ZGR-s5-OkC" firstAttribute="centerX" secondItem="oHO-sY-dtl" secondAttribute="centerX" id="iNy-52-WX8"/>
                 <constraint firstItem="ZGR-s5-OkC" firstAttribute="top" secondItem="bLg-Jg-EjO" secondAttribute="bottom" constant="24" id="j0c-ql-IuU"/>
                 <constraint firstItem="oHO-sY-dtl" firstAttribute="trailing" secondItem="8Ce-7r-r73" secondAttribute="trailing" constant="20" id="jx3-tq-4l6"/>
+                <constraint firstItem="oHO-sY-dtl" firstAttribute="bottom" secondItem="9Ga-yq-Vgm" secondAttribute="bottom" id="nfR-1H-AQY"/>
                 <constraint firstItem="oHO-sY-dtl" firstAttribute="trailing" secondItem="tZ4-dE-JPR" secondAttribute="trailing" constant="56" id="p1e-gw-txE"/>
                 <constraint firstItem="bLg-Jg-EjO" firstAttribute="centerX" secondItem="oHO-sY-dtl" secondAttribute="centerX" id="yxy-9d-yCD"/>
             </constraints>

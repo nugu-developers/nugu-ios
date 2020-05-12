@@ -360,8 +360,39 @@ private extension MainViewController {
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
         }
+        displayView.onChipsSelect = { (selectedChipsText) in
+            guard let selectedChipsText = selectedChipsText,
+                let window = UIApplication.shared.keyWindow else { return }
+            
+            let indicator = UIActivityIndicatorView(style: .whiteLarge)
+            indicator.color = .black
+            indicator.startAnimating()
+            indicator.center = window.center
+            indicator.startAnimating()
+            window.addSubview(indicator)
+                
+            NuguCentralManager.shared.isTextAgentInProcess = true
+            NuguCentralManager.shared.client.asrAgent.stopRecognition()
+            NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
+                switch state {
+                case .finished:
+                    NuguCentralManager.shared.isTextAgentInProcess = false
+                case .error:
+                    NuguCentralManager.shared.isTextAgentInProcess = false
+                    self?.dismissVoiceChrome()
+                default: break
+                }
+                DispatchQueue.main.async {
+                    indicator.removeFromSuperview()
+                }
+            }
+        }
+        displayView.onNuguButtonClick = { [weak self] in
+            self?.presentVoiceChrome(initiator: .user)
+        }
+        
         displayView.alpha = 0
-        view.insertSubview(displayView, belowSubview: nuguButton)
+        view.addSubview(displayView)
         UIView.animate(withDuration: 0.3) {
             displayView.alpha = 1.0
         }
@@ -408,7 +439,7 @@ private extension MainViewController {
         }
         
         audioPlayerView.alpha = 0
-        view.insertSubview(audioPlayerView, belowSubview: nuguButton)
+        view.addSubview(audioPlayerView)
         displayAudioPlayerView = audioPlayerView
         UIView.animate(withDuration: 0.3) {
             audioPlayerView.alpha = 1.0

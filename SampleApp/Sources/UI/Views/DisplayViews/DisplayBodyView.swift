@@ -20,6 +20,8 @@
 
 import UIKit
 
+import NuguUIKit
+
 final class DisplayBodyView: DisplayView {
     
     @IBOutlet private weak var contentImageViewContainerView: UIView!
@@ -62,6 +64,10 @@ final class DisplayBodyView: DisplayView {
             
             footerLabel.text = displayItem.content.footer?.text
             footerLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.footer?.color)
+            
+            idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
+                return .normal(text: grammarGuide)
+            }) ?? []
         }
     }
     

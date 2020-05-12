@@ -30,6 +30,7 @@ struct DisplayBodyListTemplate: Decodable {
     let anchorItemToken: String?
     let listItems: [Item]
     let caption: DisplayCommonTemplate.Common.Text?
+    let grammarGuide: [String]?
 
     struct Item: Decodable {
         let token: String

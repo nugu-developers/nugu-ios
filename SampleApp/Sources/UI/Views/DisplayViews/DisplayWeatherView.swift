@@ -20,6 +20,8 @@
 
 import UIKit
 
+import NuguUIKit
+
 final class DisplayWeatherView: DisplayView {
     
     @IBOutlet private weak var locationButton: UIButton!
@@ -140,6 +142,10 @@ final class DisplayWeatherView: DisplayView {
                 }
                 furtherWeatherStackView.arrangedSubviews[index].isHidden = false
             })
+            
+            idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
+                return .normal(text: grammarGuide)
+            }) ?? []
         }
     }
     

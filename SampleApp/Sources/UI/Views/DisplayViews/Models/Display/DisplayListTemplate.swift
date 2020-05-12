@@ -29,6 +29,7 @@ struct DisplayListTemplate: Decodable {
     let focusable: Bool?
     let anchorItemToken: String?
     let listItems: [Item]
+    let grammarGuide: [String]?
     
     struct Item: Decodable {
         let token: String

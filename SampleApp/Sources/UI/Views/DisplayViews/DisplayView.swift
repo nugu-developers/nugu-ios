@@ -20,16 +20,32 @@
 
 import UIKit
 
+import NuguUIKit
+
 class DisplayView: UIView {
     @IBOutlet weak var titleContainerView: UIView!
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    
+    @IBOutlet weak var idleBar: DisplayIdleBar!
     
     var onCloseButtonClick: (() -> Void)?
     
     var onItemSelect: ((_ token: String?) -> Void)?
     
     var onUserInteraction: (() -> Void)?
+    
+    var onNuguButtonClick: (() -> Void)? {
+        didSet {
+            idleBar.onNuguButtonClick = onNuguButtonClick
+        }
+    }
+    
+    var onChipsSelect: ((_ text: String?) -> Void)? {
+        didSet {
+            idleBar.onChipsSelect = onChipsSelect
+        }
+    }
     
     var displayPayload: Data?
     
