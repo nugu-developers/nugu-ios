@@ -1,8 +1,8 @@
 //
-//  PhoneCallAgent+Event.swift
+//  MessageAgent+Event.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/04/29.
+//  Created by yonghoonKwon on 2020/05/06.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,44 +22,42 @@ import Foundation
 
 import NuguCore
 
-extension PhoneCallAgent {
+extension MessageAgent {
     public struct Event {
         let playServiceId: String
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case candidatesListed(intent: String, callType: String, candidates: [PhoneCallPerson]?)
-            case callArrived(callerName: String)
-            case callEnded
-            case callEstablished
-            case makeCallFailed(errorCode: String, callType: String)
+            case candidatesListed(candidates: [MessageContact]?)
+            case sendMessageSucceeded(recipient: [MessageContact])
+            case sendMessageFailed(recipient: [MessageContact], errorCode: String)
+            case getMessageSucceeded(candidates: [MessageContact]?)
+            case getMessageFailed(errorCode: String)
         }
     }
 }
 
 // MARK: - Eventable
 
-extension PhoneCallAgent.Event: Eventable {
+extension MessageAgent.Event: Eventable {
     public var payload: [String : AnyHashable] {
         var payload: [String: AnyHashable] = [
             "playServiceId": playServiceId
         ]
         
+        // TODO: - Encoding
+        
         switch typeInfo {
-        case .candidatesListed(let intent, let callType, let candidates):
-            payload["intent"] = intent
-            payload["callType"] = callType
-            // TODO: - Encoding
-//            payload["candidates"] = candidates
-        case .callArrived(let callerName):
-            payload["callerName"] = callerName
-        case .callEnded:
+        case .candidatesListed(let candidates):
             break
-        case .callEstablished:
+        case .sendMessageSucceeded(let recipient):
             break
-        case .makeCallFailed(let errorCode, let callType):
+        case .sendMessageFailed(let recipient, let errorCode):
+            break
+        case .getMessageSucceeded(let candidates):
+            break
+        case .getMessageFailed(let errorCode):
             payload["errorCode"] = errorCode
-            payload["callType"] = callType
         }
         
         return payload
@@ -69,14 +67,14 @@ extension PhoneCallAgent.Event: Eventable {
         switch typeInfo {
         case .candidatesListed:
             return "CandidatesListed"
-        case .callArrived:
-            return "CallArrived"
-        case .callEnded:
-            return "CallEnded"
-        case .callEstablished:
-            return "CallEstablished"
-        case .makeCallFailed:
-            return "MakeCallFailed"
+        case .sendMessageSucceeded:
+            return "SendMessageSucceeded"
+        case .sendMessageFailed:
+            return "SendMessageFailed"
+        case .getMessageSucceeded:
+            return "GetMessageSucceeded"
+        case .getMessageFailed:
+            return "GetMessageFailed"
         }
     }
 }
