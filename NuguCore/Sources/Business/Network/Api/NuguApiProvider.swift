@@ -19,7 +19,6 @@
 //
 
 import Foundation
-import CFNetwork
 
 import RxSwift
 
