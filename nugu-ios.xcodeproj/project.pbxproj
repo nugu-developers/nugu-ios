@@ -69,20 +69,9 @@
 		1FFFF02823753F8A00C9A177 /* NuguUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF02623753F8A00C9A177 /* NuguUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF03523753FA200C9A177 /* JadeMarble.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF03323753FA200C9A177 /* JadeMarble.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF04223753FB200C9A177 /* KeenSense.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF04023753FB200C9A177 /* KeenSense.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF1EE2375486F00C9A177 /* opus.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E42375486F00C9A177 /* opus.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF1EF2375486F00C9A177 /* opus_multistream.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E52375486F00C9A177 /* opus_multistream.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF1F02375486F00C9A177 /* opus_custom.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E62375486F00C9A177 /* opus_custom.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF1F12375486F00C9A177 /* opus_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E72375486F00C9A177 /* opus_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF1F22375486F00C9A177 /* opus_defines.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E82375486F00C9A177 /* opus_defines.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF1F32375486F00C9A177 /* opus_projection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF1E92375486F00C9A177 /* opus_projection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF22923756D1700C9A177 /* libopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF1EA2375486F00C9A177 /* libopus.a */; };
 		1FFFF37E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */; };
 		1FFFF3802375707000C9A177 /* MediaAVPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3102375707000C9A177 /* MediaAVPlayerItem.swift */; };
 		1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3112375707000C9A177 /* MediaPlayer.swift */; };
-		1FFFF3822375707000C9A177 /* OpusPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3132375707000C9A177 /* OpusPlayerError.swift */; };
-		1FFFF3832375707000C9A177 /* OpusPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3142375707000C9A177 /* OpusPlayer.swift */; };
-		1FFFF3842375707000C9A177 /* OpusDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3152375707000C9A177 /* OpusDecoder.swift */; };
-		1FFFF3852375707000C9A177 /* OpusPlayerConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3162375707000C9A177 /* OpusPlayerConst.swift */; };
 		1FFFF3862375707000C9A177 /* MicInputProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3192375707000C9A177 /* MicInputProvider.swift */; };
 		1FFFF3872375707000C9A177 /* MicInputConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31A2375707000C9A177 /* MicInputConst.swift */; };
 		1FFFF3882375707000C9A177 /* SharedBufferIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31C2375707000C9A177 /* SharedBufferIndex.swift */; };
@@ -304,6 +293,9 @@
 		735A4CDD241173C5004E7A41 /* MultiPartProcessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CDC241173C5004E7A41 /* MultiPartProcessable.swift */; };
 		735A4CE1241173F4004E7A41 /* EventSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CDF241173F4004E7A41 /* EventSender.swift */; };
 		735A4CE2241173F4004E7A41 /* EventSenderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CE0241173F4004E7A41 /* EventSenderError.swift */; };
+		736508652462F7FA00EF4549 /* SktOpusParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736508632462F7FA00EF4549 /* SktOpusParser.swift */; };
+		736508662462F7FA00EF4549 /* OpusPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736508642462F7FA00EF4549 /* OpusPlayer.swift */; };
+		736508682463149D00EF4549 /* SilverTray.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 736508672463149D00EF4549 /* SilverTray.framework */; };
 		736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */; };
 		7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */; };
 		738D520A23D59B2F00FDECAF /* AudioBoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */; };
@@ -608,13 +600,6 @@
 		1FFFF03E23753FB200C9A177 /* KeenSense.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KeenSense.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFF04023753FB200C9A177 /* KeenSense.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeenSense.h; sourceTree = "<group>"; };
 		1FFFF04123753FB200C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1FFFF1E42375486F00C9A177 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
-		1FFFF1E52375486F00C9A177 /* opus_multistream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
-		1FFFF1E62375486F00C9A177 /* opus_custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_custom.h; sourceTree = "<group>"; };
-		1FFFF1E72375486F00C9A177 /* opus_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_types.h; sourceTree = "<group>"; };
-		1FFFF1E82375486F00C9A177 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
-		1FFFF1E92375486F00C9A177 /* opus_projection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_projection.h; sourceTree = "<group>"; };
-		1FFFF1EA2375486F00C9A177 /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopus.a; sourceTree = "<group>"; };
 		1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayableError.swift; sourceTree = "<group>"; };
 		1FFFF22E2375703000C9A177 /* MediaPlayerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerDelegate.swift; sourceTree = "<group>"; };
 		1FFFF22F2375703000C9A177 /* MediaPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerState.swift; sourceTree = "<group>"; };
@@ -675,10 +660,6 @@
 		1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaAVPlayerItemDelegate.swift; sourceTree = "<group>"; };
 		1FFFF3102375707000C9A177 /* MediaAVPlayerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaAVPlayerItem.swift; sourceTree = "<group>"; };
 		1FFFF3112375707000C9A177 /* MediaPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayer.swift; sourceTree = "<group>"; };
-		1FFFF3132375707000C9A177 /* OpusPlayerError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpusPlayerError.swift; sourceTree = "<group>"; };
-		1FFFF3142375707000C9A177 /* OpusPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpusPlayer.swift; sourceTree = "<group>"; };
-		1FFFF3152375707000C9A177 /* OpusDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpusDecoder.swift; sourceTree = "<group>"; };
-		1FFFF3162375707000C9A177 /* OpusPlayerConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpusPlayerConst.swift; sourceTree = "<group>"; };
 		1FFFF3192375707000C9A177 /* MicInputProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MicInputProvider.swift; sourceTree = "<group>"; };
 		1FFFF31A2375707000C9A177 /* MicInputConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MicInputConst.swift; sourceTree = "<group>"; };
 		1FFFF31C2375707000C9A177 /* SharedBufferIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedBufferIndex.swift; sourceTree = "<group>"; };
@@ -845,6 +826,9 @@
 		735A4CDC241173C5004E7A41 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
 		735A4CDF241173F4004E7A41 /* EventSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSender.swift; sourceTree = "<group>"; };
 		735A4CE0241173F4004E7A41 /* EventSenderError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSenderError.swift; sourceTree = "<group>"; };
+		736508632462F7FA00EF4549 /* SktOpusParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SktOpusParser.swift; sourceTree = "<group>"; };
+		736508642462F7FA00EF4549 /* OpusPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpusPlayer.swift; sourceTree = "<group>"; };
+		736508672463149D00EF4549 /* SilverTray.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SilverTray.framework; path = Carthage/Build/iOS/SilverTray.framework; sourceTree = "<group>"; };
 		7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClientDelegate.swift; sourceTree = "<group>"; };
 		738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBoundStreams.swift; sourceTree = "<group>"; };
 		739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiver.swift; sourceTree = "<group>"; };
@@ -928,7 +912,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFFF22923756D1700C9A177 /* libopus.a in Frameworks */,
 				1F10091323792A1F00D90FEE /* NattyLog.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1021,6 +1004,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				73152FD223E042B900F843C3 /* RxSwift.framework in Frameworks */,
+				736508682463149D00EF4549 /* SilverTray.framework in Frameworks */,
 				73152FE923E05D1100F843C3 /* NuguCore.framework in Frameworks */,
 				73152FD523E042D000F843C3 /* JadeMarble.framework in Frameworks */,
 			);
@@ -1241,7 +1225,6 @@
 				7315301223E11E9D00F843C3 /* Interface */,
 				1FFFF30B2375707000C9A177 /* Sources */,
 				1FFFF3D1237570C900C9A177 /* Sources-ObjC */,
-				1FFFF1E12375486F00C9A177 /* Libraries */,
 				1FFFEFFF23753F1800C9A177 /* NuguCore.h */,
 				1FFFF00023753F1800C9A177 /* Info.plist */,
 			);
@@ -1301,39 +1284,10 @@
 			path = KeenSense;
 			sourceTree = "<group>";
 		};
-		1FFFF1E12375486F00C9A177 /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF1E22375486F00C9A177 /* Opus */,
-			);
-			path = Libraries;
-			sourceTree = "<group>";
-		};
-		1FFFF1E22375486F00C9A177 /* Opus */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF1E32375486F00C9A177 /* include */,
-				1FFFF1EA2375486F00C9A177 /* libopus.a */,
-			);
-			path = Opus;
-			sourceTree = "<group>";
-		};
-		1FFFF1E32375486F00C9A177 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF1E42375486F00C9A177 /* opus.h */,
-				1FFFF1E52375486F00C9A177 /* opus_multistream.h */,
-				1FFFF1E62375486F00C9A177 /* opus_custom.h */,
-				1FFFF1E72375486F00C9A177 /* opus_types.h */,
-				1FFFF1E82375486F00C9A177 /* opus_defines.h */,
-				1FFFF1E92375486F00C9A177 /* opus_projection.h */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
 		1FFFF22323756C0500C9A177 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				736508672463149D00EF4549 /* SilverTray.framework */,
 				75ABAB06244EFD8600B4BB2D /* Lottie.framework */,
 				1F721C65241767E100023EF8 /* Nimble.framework */,
 				1F721C64241767E100023EF8 /* Quick.framework */,
@@ -1557,7 +1511,6 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF30D2375707000C9A177 /* MediaPlayer */,
-				1FFFF3122375707000C9A177 /* OpusPlayer */,
 				1FFFF3172375707000C9A177 /* Audio */,
 			);
 			path = Core;
@@ -1572,17 +1525,6 @@
 				75082BC3243AC5B20027D76D /* MediaCacheManager.swift */,
 			);
 			path = MediaPlayer;
-			sourceTree = "<group>";
-		};
-		1FFFF3122375707000C9A177 /* OpusPlayer */ = {
-			isa = PBXGroup;
-			children = (
-				1FFFF3142375707000C9A177 /* OpusPlayer.swift */,
-				1FFFF3152375707000C9A177 /* OpusDecoder.swift */,
-				1FFFF3162375707000C9A177 /* OpusPlayerConst.swift */,
-				1FFFF3132375707000C9A177 /* OpusPlayerError.swift */,
-			);
-			path = OpusPlayer;
 			sourceTree = "<group>";
 		};
 		1FFFF3172375707000C9A177 /* Audio */ = {
@@ -1726,6 +1668,7 @@
 		1FFFF34F2375707000C9A177 /* TextToSpeech */ = {
 			isa = PBXGroup;
 			children = (
+				736508622462F7FA00EF4549 /* Opus */,
 				1FFFF3502375707000C9A177 /* TTSAgent.swift */,
 				1FFFF3522375707000C9A177 /* TTSAgent+Event.swift */,
 				1FFFF3532375707000C9A177 /* TTSMedia.swift */,
@@ -2376,6 +2319,15 @@
 			path = Event;
 			sourceTree = "<group>";
 		};
+		736508622462F7FA00EF4549 /* Opus */ = {
+			isa = PBXGroup;
+			children = (
+				736508632462F7FA00EF4549 /* SktOpusParser.swift */,
+				736508642462F7FA00EF4549 /* OpusPlayer.swift */,
+			);
+			path = Opus;
+			sourceTree = "<group>";
+		};
 		7522202B244F0DE300192D88 /* animations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2511,13 +2463,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FFFF3D62375729500C9A177 /* NuguCore.h in Headers */,
-				1FFFF1F32375486F00C9A177 /* opus_projection.h in Headers */,
-				1FFFF1F12375486F00C9A177 /* opus_types.h in Headers */,
-				1FFFF1F02375486F00C9A177 /* opus_custom.h in Headers */,
-				1FFFF1EE2375486F00C9A177 /* opus.h in Headers */,
-				1FFFF1F22375486F00C9A177 /* opus_defines.h in Headers */,
 				1FFFF3D5237570C900C9A177 /* ObjcExceptionCatcher.h in Headers */,
-				1FFFF1EF2375486F00C9A177 /* opus_multistream.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2990,6 +2936,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/NattyLog.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Lottie.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SilverTray.framework",
 			);
 			outputFileListPaths = (
 			);
@@ -3012,6 +2959,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Quick.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Lottie.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SilverTray.framework",
 			);
 			outputFileListPaths = (
 			);
@@ -3054,8 +3002,6 @@
 				1FFFF3C12375707100C9A177 /* Policy.swift in Sources */,
 				7315301423E11EDF00F843C3 /* MediaOpusStreamDataSource.swift in Sources */,
 				7315303123E11EDF00F843C3 /* FocusState.swift in Sources */,
-				1FFFF3822375707000C9A177 /* OpusPlayerError.swift in Sources */,
-				1FFFF3842375707000C9A177 /* OpusDecoder.swift in Sources */,
 				7334F47723FD172700EA5E58 /* DirectiveHandleInfo.swift in Sources */,
 				7315302A23E11EDF00F843C3 /* PlaySyncManageable.swift in Sources */,
 				1FFFF3C82375707100C9A177 /* FocusConst.swift in Sources */,
@@ -3091,7 +3037,6 @@
 				7E4382542418DAB200053A0D /* PlayStack.swift in Sources */,
 				7315302F23E11EDF00F843C3 /* FocusChannelDelegate.swift in Sources */,
 				1FFFF3882375707000C9A177 /* SharedBufferIndex.swift in Sources */,
-				1FFFF3852375707000C9A177 /* OpusPlayerConst.swift in Sources */,
 				7315304423E11EDF00F843C3 /* Eventable.swift in Sources */,
 				7315302923E11EDF00F843C3 /* NetworkError.swift in Sources */,
 				7315302023E11EDF00F843C3 /* TimeIntervallic.swift in Sources */,
@@ -3119,7 +3064,6 @@
 				7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */,
 				735A4CE1241173F4004E7A41 /* EventSender.swift in Sources */,
 				1FFFF37E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift in Sources */,
-				1FFFF3832375707000C9A177 /* OpusPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3293,6 +3237,7 @@
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
 				7315307723E1248300F843C3 /* TTSResult.swift in Sources */,
 				7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */,
+				736508662462F7FA00EF4549 /* OpusPlayer.swift in Sources */,
 				7E5F4892243C388100118054 /* SoundBeepName.swift in Sources */,
 				7315307323E1248300F843C3 /* SystemAgentExceptionCode.swift in Sources */,
 				A135E669241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift in Sources */,
@@ -3353,6 +3298,7 @@
 				73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */,
 				7315307523E1248300F843C3 /* TTSAgentDelegate.swift in Sources */,
 				73152FCC23E0415B00F843C3 /* DisplayRenderingInfo.swift in Sources */,
+				736508652462F7FA00EF4549 /* SktOpusParser.swift in Sources */,
 				7315306723E1248300F843C3 /* AudioPlayerDisplayDelegate.swift in Sources */,
 				7315306E23E1248300F843C3 /* ASRResult.swift in Sources */,
 				7E5F488C243C372100118054 /* SoundAgentProtocol.swift in Sources */,
@@ -3498,11 +3444,9 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/NuguCore/Libraries/Opus",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 0.10.0;
+				MODULEMAP_FILE = "$(SRCROOT)/NuguCore/NuguCore.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3538,11 +3482,9 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/NuguCore/Libraries/Opus",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 0.10.0;
+				MODULEMAP_FILE = "$(SRCROOT)/NuguCore/NuguCore.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
