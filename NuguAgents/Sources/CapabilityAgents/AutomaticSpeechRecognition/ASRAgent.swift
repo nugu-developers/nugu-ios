@@ -282,13 +282,13 @@ extension ASRAgent: ContextInfoDelegate {
 // MARK: - EndPointDetectorDelegate
 
 extension ASRAgent: EndPointDetectorDelegate {
-    public func endPointDetectorDidError() {
+    func endPointDetectorDidError() {
         asrDispatchQueue.async { [weak self] in
             self?.asrResult = .error(ASRError.listenFailed)
         }
     }
     
-    public func endPointDetectorStateChanged(_ state: EndPointDetectorState) {
+    func endPointDetectorStateChanged(_ state: EndPointDetectorState) {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             switch self.asrState {
@@ -316,7 +316,7 @@ extension ASRAgent: EndPointDetectorDelegate {
         }
     }
     
-    public func endPointDetectorSpeechDataExtracted(speechData: Data) {
+    func endPointDetectorSpeechDataExtracted(speechData: Data) {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let asrRequest = self.asrRequest  else {

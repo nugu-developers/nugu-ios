@@ -20,15 +20,13 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension SystemAgent {    
-    public struct Event {
+    struct Event {
         let typeInfo: TypeInfo
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case synchronizeState
         }
     }
@@ -37,22 +35,17 @@ extension SystemAgent {
 // MARK: - Eventable
 
 extension SystemAgent.Event: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         switch typeInfo {
         default:
             return [:]
         }
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .synchronizeState:
             return "SynchronizeState"
         }
     }
 }
-
-// MARK: - Equatable
-
-extension SystemAgent.Event.TypeInfo: Equatable {}
-extension SystemAgent.Event: Equatable {}

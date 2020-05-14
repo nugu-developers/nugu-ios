@@ -20,16 +20,14 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension AudioPlayerAgent {
-    public struct LyricsEvent {
+    struct LyricsEvent {
         let playServiceId: String
         let typeInfo: TypeInfo
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case showLyricsSucceeded
             case showLyricsFailed
             case hideLyricsSucceeded
@@ -43,7 +41,7 @@ extension AudioPlayerAgent {
 // MARK: - Eventable
 
 extension AudioPlayerAgent.LyricsEvent: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         var eventPayload: [String: AnyHashable] = [
             "playServiceId": playServiceId
         ]
@@ -58,7 +56,7 @@ extension AudioPlayerAgent.LyricsEvent: Eventable {
         return eventPayload
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .showLyricsSucceeded:
             return "ShowLyricsSucceeded"
@@ -75,4 +73,3 @@ extension AudioPlayerAgent.LyricsEvent: Eventable {
         }
     }
 }
-

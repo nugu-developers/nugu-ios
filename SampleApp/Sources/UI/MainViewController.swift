@@ -256,10 +256,11 @@ private extension MainViewController {
             tapGestureRecognizer.delegate = self
             self.view.addGestureRecognizer(tapGestureRecognizer)
             
+            self.nuguButton.isActivated = false
+            
             UIView.animate(withDuration: 0.3) { [weak self] in
                 guard let self = self else { return }
                 self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
-                self.nuguButton.alpha = 0
             }
         }
     }
@@ -270,10 +271,11 @@ private extension MainViewController {
         voiceChromeDismissWorkItem?.cancel()
         NuguCentralManager.shared.client.asrAgent.stopRecognition()
         
+        nuguButton.isActivated = true
+        
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
             self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: self.nuguVoiceChrome.bounds.height)
-            self.nuguButton.alpha = 1.0
         }, completion: { [weak self] _ in
             self?.nuguVoiceChrome.removeFromSuperview()
         })

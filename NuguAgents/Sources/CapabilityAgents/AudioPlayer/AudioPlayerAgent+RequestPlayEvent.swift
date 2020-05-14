@@ -20,17 +20,15 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension AudioPlayerAgent {
-    public struct RequestPlayEvent {
-        let requestPlayPayload: [String : AnyHashable]
+    struct RequestPlayEvent {
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case requestPlayCommandIssued
+            case requestPlayCommandIssued(payload: [String: AnyHashable])
+            case requestCommandFailed(state: AudioPlayerState, directiveType: String)
         }
     }
 }
@@ -38,11 +36,26 @@ extension AudioPlayerAgent {
 // MARK: - Eventable
 
 extension AudioPlayerAgent.RequestPlayEvent: Eventable {
-    public var payload: [String : AnyHashable] {
-        return ["payload": requestPlayPayload]
+    var payload: [String: AnyHashable] {
+        switch typeInfo {
+        case .requestPlayCommandIssued(let payload):
+            return payload
+        case .requestCommandFailed(let state, let directiveType):
+            return [
+                "error": [
+                    "type": "INVALID_COMMAND",
+                    "message": "\(state.playerActivity) 상태에서는 \(directiveType) 를 처리할 수 없음"
+                ]
+            ]
+        }
     }
     
-    public var name: String {
-        return "RequestPlayCommandIssued"
+    var name: String {
+        switch typeInfo {
+        case .requestPlayCommandIssued:
+            return "RequestPlayCommandIssued"
+        case .requestCommandFailed:
+            return "RequestCommandFailed"
+        }
     }
 }

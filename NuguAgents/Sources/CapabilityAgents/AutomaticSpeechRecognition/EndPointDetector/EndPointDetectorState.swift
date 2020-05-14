@@ -20,22 +20,13 @@
 
 import Foundation
 
-/// <#Description#>
-public enum EndPointDetectorState {
-    /// <#Description#>
+enum EndPointDetectorState {
     case idle
-    /// <#Description#>
     case listening
-    /// <#Description#>
     case start
-    /// <#Description#>
     case end
-    /// <#Description#>
     case timeout
-    /// <#Description#>
     case reachToMaxLength
-    /// <#Description#>
     case finish
-    /// <#Description#>
     case unknown
 }

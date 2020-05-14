@@ -20,9 +20,7 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension ASRAgent {
     public struct Event {
