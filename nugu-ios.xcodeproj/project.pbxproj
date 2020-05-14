@@ -299,13 +299,6 @@
 		75082BC4243AC5B20027D76D /* MediaCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC3243AC5B20027D76D /* MediaCacheManager.swift */; };
 		75082BC6243AC85E0027D76D /* FileManager+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC5243AC85E0027D76D /* FileManager+Convenience.swift */; };
 		75082BC8243ACA280027D76D /* CryptoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC7243ACA280027D76D /* CryptoUtil.swift */; };
-		75222033244F0DE300192D88 /* 03_transition.json in Resources */ = {isa = PBXBuildFile; fileRef = 7522202C244F0DE300192D88 /* 03_transition.json */; };
-		75222034244F0DE300192D88 /* 04_active.json in Resources */ = {isa = PBXBuildFile; fileRef = 7522202D244F0DE300192D88 /* 04_active.json */; };
-		75222035244F0DE300192D88 /* 02_passive.json in Resources */ = {isa = PBXBuildFile; fileRef = 7522202E244F0DE300192D88 /* 02_passive.json */; };
-		75222036244F0DE300192D88 /* 01_intro.json in Resources */ = {isa = PBXBuildFile; fileRef = 7522202F244F0DE300192D88 /* 01_intro.json */; };
-		75222037244F0DE300192D88 /* 05_processing.json in Resources */ = {isa = PBXBuildFile; fileRef = 75222030244F0DE300192D88 /* 05_processing.json */; };
-		75222038244F0DE300192D88 /* 07_speaking.json in Resources */ = {isa = PBXBuildFile; fileRef = 75222031244F0DE300192D88 /* 07_speaking.json */; };
-		75222039244F0DE300192D88 /* 06_transition.json in Resources */ = {isa = PBXBuildFile; fileRef = 75222032244F0DE300192D88 /* 06_transition.json */; };
 		7522203C244F627E00192D88 /* NuguChipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7522203B244F627E00192D88 /* NuguChipsView.swift */; };
 		7522203E244F632800192D88 /* NuguChipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7522203D244F632800192D88 /* NuguChipsView.xib */; };
 		7522205D244FFD1C00192D88 /* NuguToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7522205C244FFD1C00192D88 /* NuguToast.swift */; };
@@ -314,6 +307,13 @@
 		7547B703240CD5C200C57A34 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */; };
 		75AE7FFB245173BC00E20E8C /* NuguChipsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */; };
 		75AE8023245190CC00E20E8C /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
+		75BF16A224623F75002A4B8D /* 03_transition.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF169B24623F74002A4B8D /* 03_transition.json */; };
+		75BF16A324623F75002A4B8D /* 02_passive.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF169C24623F74002A4B8D /* 02_passive.json */; };
+		75BF16A424623F75002A4B8D /* 06_transition.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF169D24623F75002A4B8D /* 06_transition.json */; };
+		75BF16A524623F75002A4B8D /* 01_intro.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF169E24623F75002A4B8D /* 01_intro.json */; };
+		75BF16A624623F75002A4B8D /* 04_active.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF169F24623F75002A4B8D /* 04_active.json */; };
+		75BF16A724623F75002A4B8D /* 05_processing.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF16A024623F75002A4B8D /* 05_processing.json */; };
+		75BF16A824623F75002A4B8D /* 07_speaking.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF16A124623F75002A4B8D /* 07_speaking.json */; };
 		7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
 		7E1FA2B224244F79006B8BA9 /* BlockingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */; };
@@ -831,19 +831,19 @@
 		75082BC3243AC5B20027D76D /* MediaCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaCacheManager.swift; sourceTree = "<group>"; };
 		75082BC5243AC85E0027D76D /* FileManager+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Convenience.swift"; sourceTree = "<group>"; };
 		75082BC7243ACA280027D76D /* CryptoUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtil.swift; sourceTree = "<group>"; };
-		7522202C244F0DE300192D88 /* 03_transition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 03_transition.json; sourceTree = "<group>"; };
-		7522202D244F0DE300192D88 /* 04_active.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 04_active.json; sourceTree = "<group>"; };
-		7522202E244F0DE300192D88 /* 02_passive.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 02_passive.json; sourceTree = "<group>"; };
-		7522202F244F0DE300192D88 /* 01_intro.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 01_intro.json; sourceTree = "<group>"; };
-		75222030244F0DE300192D88 /* 05_processing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 05_processing.json; sourceTree = "<group>"; };
-		75222031244F0DE300192D88 /* 07_speaking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 07_speaking.json; sourceTree = "<group>"; };
-		75222032244F0DE300192D88 /* 06_transition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 06_transition.json; sourceTree = "<group>"; };
 		7522203B244F627E00192D88 /* NuguChipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguChipsView.swift; sourceTree = "<group>"; };
 		7522203D244F632800192D88 /* NuguChipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NuguChipsView.xib; sourceTree = "<group>"; };
 		7522205C244FFD1C00192D88 /* NuguToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguToast.swift; sourceTree = "<group>"; };
 		7547B702240CD5C200C57A34 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		75ABAB06244EFD8600B4BB2D /* Lottie.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lottie.framework; path = Carthage/Build/iOS/Lottie.framework; sourceTree = "<group>"; };
 		75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguChipsButton.swift; sourceTree = "<group>"; };
+		75BF169B24623F74002A4B8D /* 03_transition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 03_transition.json; sourceTree = "<group>"; };
+		75BF169C24623F74002A4B8D /* 02_passive.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 02_passive.json; sourceTree = "<group>"; };
+		75BF169D24623F75002A4B8D /* 06_transition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 06_transition.json; sourceTree = "<group>"; };
+		75BF169E24623F75002A4B8D /* 01_intro.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 01_intro.json; sourceTree = "<group>"; };
+		75BF169F24623F75002A4B8D /* 04_active.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 04_active.json; sourceTree = "<group>"; };
+		75BF16A024623F75002A4B8D /* 05_processing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 05_processing.json; sourceTree = "<group>"; };
+		75BF16A124623F75002A4B8D /* 07_speaking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 07_speaking.json; sourceTree = "<group>"; };
 		7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEndPointDetector.swift; sourceTree = "<group>"; };
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
 		7E1FA2B124244F79006B8BA9 /* BlockingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockingPolicy.swift; sourceTree = "<group>"; };
@@ -2298,13 +2298,13 @@
 		7522202B244F0DE300192D88 /* animations */ = {
 			isa = PBXGroup;
 			children = (
-				7522202C244F0DE300192D88 /* 03_transition.json */,
-				7522202D244F0DE300192D88 /* 04_active.json */,
-				7522202E244F0DE300192D88 /* 02_passive.json */,
-				7522202F244F0DE300192D88 /* 01_intro.json */,
-				75222030244F0DE300192D88 /* 05_processing.json */,
-				75222031244F0DE300192D88 /* 07_speaking.json */,
-				75222032244F0DE300192D88 /* 06_transition.json */,
+				75BF169E24623F75002A4B8D /* 01_intro.json */,
+				75BF169C24623F74002A4B8D /* 02_passive.json */,
+				75BF169B24623F74002A4B8D /* 03_transition.json */,
+				75BF169F24623F75002A4B8D /* 04_active.json */,
+				75BF16A024623F75002A4B8D /* 05_processing.json */,
+				75BF169D24623F75002A4B8D /* 06_transition.json */,
+				75BF16A124623F75002A4B8D /* 07_speaking.json */,
 			);
 			path = animations;
 			sourceTree = "<group>";
@@ -2784,16 +2784,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75222038244F0DE300192D88 /* 07_speaking.json in Resources */,
 				7522203E244F632800192D88 /* NuguChipsView.xib in Resources */,
 				1FFFF478237580F500C9A177 /* Assets.xcassets in Resources */,
-				75222036244F0DE300192D88 /* 01_intro.json in Resources */,
-				75222034244F0DE300192D88 /* 04_active.json in Resources */,
-				75222039244F0DE300192D88 /* 06_transition.json in Resources */,
+				75BF16A724623F75002A4B8D /* 05_processing.json in Resources */,
 				1FFFF475237580F500C9A177 /* NuguVoiceChrome.xib in Resources */,
-				75222035244F0DE300192D88 /* 02_passive.json in Resources */,
-				75222033244F0DE300192D88 /* 03_transition.json in Resources */,
-				75222037244F0DE300192D88 /* 05_processing.json in Resources */,
+				75BF16A524623F75002A4B8D /* 01_intro.json in Resources */,
+				75BF16A324623F75002A4B8D /* 02_passive.json in Resources */,
+				75BF16A624623F75002A4B8D /* 04_active.json in Resources */,
+				75BF16A424623F75002A4B8D /* 06_transition.json in Resources */,
+				75BF16A824623F75002A4B8D /* 07_speaking.json in Resources */,
+				75BF16A224623F75002A4B8D /* 03_transition.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
