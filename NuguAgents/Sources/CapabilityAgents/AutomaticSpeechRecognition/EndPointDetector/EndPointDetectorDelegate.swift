@@ -20,14 +20,8 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol EndPointDetectorDelegate: class {
-    /// <#Description#>
-    /// - Parameter state: <#state description#>
+protocol EndPointDetectorDelegate: class {
     func endPointDetectorStateChanged(_ state: EndPointDetectorState)
-    /// <#Description#>
     func endPointDetectorDidError()
-    /// <#Description#>
-    /// - Parameter speechData: <#speechData description#>
     func endPointDetectorSpeechDataExtracted(speechData: Data)
 }

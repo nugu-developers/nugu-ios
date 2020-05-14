@@ -1,8 +1,8 @@
 //
-//  EndPointDetectorState.swift
+//  TTSError.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 16/08/2019.
+//  Created by MinChul Lee on 2020/05/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,15 +18,9 @@
 //  limitations under the License.
 //
 
+
 import Foundation
 
-enum EndPointDetectorState {
-    case idle
-    case listening
-    case start
-    case end
-    case timeout
-    case reachToMaxLength
-    case finish
-    case unknown
+public enum TTSError: Error {
+    case notSupportedSourceType
 }

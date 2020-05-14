@@ -20,15 +20,13 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension TextAgent {
-    public struct Event {
+    struct Event {
         let typeInfo: TypeInfo
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case textInput(text: String, token: String?, expectSpeech: ASRExpectSpeech?)
         }
     }
@@ -37,7 +35,7 @@ extension TextAgent {
 // MARK: - Eventable
 
 extension TextAgent.Event: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable?]
         switch typeInfo {
         case .textInput(let text, let token, let expectSpeech):
@@ -54,15 +52,10 @@ extension TextAgent.Event: Eventable {
         return payload.compactMapValues { $0 }
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .textInput:
             return "TextInput"
         }
     }
 }
-
-// MARK: - Equatable
-
-extension TextAgent.Event.TypeInfo: Equatable {}
-extension TextAgent.Event: Equatable {}

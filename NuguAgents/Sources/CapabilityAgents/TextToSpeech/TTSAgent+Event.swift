@@ -20,17 +20,15 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension TTSAgent {
-    public struct Event {
+    struct Event {
         let token: String?
         let playServiceId: String?
         let typeInfo: TypeInfo
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case speechStarted
             case speechFinished
             case speechStopped
@@ -42,7 +40,7 @@ extension TTSAgent {
 // MARK: - Eventable
 
 extension TTSAgent.Event: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         var eventPayload: [String: AnyHashable?] = [
             "playServiceId": playServiceId,
             "token": token
@@ -58,7 +56,7 @@ extension TTSAgent.Event: Eventable {
         return eventPayload.compactMapValues { $0 }
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .speechStarted:
             return "SpeechStarted"
@@ -71,8 +69,3 @@ extension TTSAgent.Event: Eventable {
         }
     }
 }
-
-// MARK: - Equatable
-
-extension TTSAgent.Event.TypeInfo: Equatable {}
-extension TTSAgent.Event: Equatable {}

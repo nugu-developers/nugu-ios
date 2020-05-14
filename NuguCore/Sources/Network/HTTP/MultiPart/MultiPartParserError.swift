@@ -1,8 +1,8 @@
 //
-//  EndPointDetectorState.swift
-//  NuguAgents
+//  MultiPartParserError.swift
+//  NuguCore
 //
-//  Created by yonghoonKwon on 16/08/2019.
+//  Created by DCs-OfficeMBP on 23/07/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,8 @@
 
 import Foundation
 
-enum EndPointDetectorState {
-    case idle
-    case listening
-    case start
-    case end
-    case timeout
-    case reachToMaxLength
-    case finish
-    case unknown
+enum MultiPartParserError: Error {
+    case noData
+    case noBoundary
+    case endOfData
 }

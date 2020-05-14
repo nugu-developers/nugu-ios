@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 import JadeMarble
 
-public class ClientEndPointDetector: EndPointDetectable {
+class ClientEndPointDetector: EndPointDetectable {
     public weak var delegate: EndPointDetectorDelegate?
     
     private let asrOptions: ASROptions

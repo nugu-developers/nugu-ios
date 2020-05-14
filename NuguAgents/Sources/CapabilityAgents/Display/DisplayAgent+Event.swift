@@ -20,16 +20,14 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension DisplayAgent {
-    public struct Event {
+    struct Event {
         let playServiceId: String
         let typeInfo: TypeInfo
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case elementSelected(token: String)
             case closeSucceeded
             case closeFailed
@@ -44,7 +42,7 @@ extension DisplayAgent {
 // MARK: - Eventable
 
 extension DisplayAgent.Event: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable] = [
             "playServiceId": playServiceId
         ]
@@ -57,7 +55,7 @@ extension DisplayAgent.Event: Eventable {
         return payload
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .elementSelected:
             return "ElementSelected"
@@ -76,8 +74,3 @@ extension DisplayAgent.Event: Eventable {
         }
     }
 }
-
-// MARK: - Equatable
-
-extension DisplayAgent.Event.TypeInfo: Equatable {}
-extension DisplayAgent.Event: Equatable {}
