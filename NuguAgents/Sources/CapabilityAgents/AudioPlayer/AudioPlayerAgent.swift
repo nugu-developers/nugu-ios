@@ -27,7 +27,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.3")
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
@@ -358,7 +358,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 }
             case .stop:
                 self.audioPlayerState = .stopped
-                self.sendPlayEvent(media: media, typeInfo: .playbackStopped)
+                self.sendPlayEvent(media: media, typeInfo: .playbackStopped(reason: "STOP"))
                 self.releaseFocusIfNeeded()
             case .bufferUnderrun, .bufferRefilled:
                 break
@@ -482,76 +482,81 @@ private extension AudioPlayerAgent {
                 log.error("Invalid payload")
                 return
             }
-            self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, payload: payloadDictionary, typeInfo: .requestPlayCommandIssued)
+            self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, typeInfo: .requestPlayCommandIssued(payload: payloadDictionary))
         }
     }
     
     func handleRequestResumeCommand() -> HandleDirective {
-        return { [weak self] _, completion in
+        return { [weak self] directive, completion in
             defer { completion() }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let media = self?.currentMedia else {
-                    log.error("AudioPlayerAgentMedia is nil")
+                guard let self = self else { return }
+                guard let media = self.currentMedia else {
+                    self.sendRequestCommandFailedEvent(directive: directive)
                     return
                 }
-                self?.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
+                self.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
             }
         }
     }
     
     func handleRequestNextCommand() -> HandleDirective {
-        return { [weak self] _, completion in
+        return { [weak self] directive, completion in
             defer { completion() }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let media = self?.currentMedia else {
-                    log.error("AudioPlayerAgentMedia is nil")
+                guard let self = self else { return }
+                guard let media = self.currentMedia else {
+                    self.sendRequestCommandFailedEvent(directive: directive)
                     return
                 }
-                self?.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
+                self.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
             }
         }
     }
     
     func handleRequestPreviousCommand() -> HandleDirective {
-        return { [weak self] _, completion in
+        return { [weak self] directive, completion in
             defer { completion() }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let media = self?.currentMedia else {
-                    log.error("AudioPlayerAgentMedia is nil")
+                guard let self = self else { return }
+                guard let media = self.currentMedia else {
+                    self.sendRequestCommandFailedEvent(directive: directive)
                     return
                 }
-                self?.sendPlayEvent(media: media, typeInfo: .requestPreviousCommandIssued)
+                self.sendPlayEvent(media: media, typeInfo: .requestPreviousCommandIssued)
             }
         }
     }
     
     func handleRequestPauseCommand() -> HandleDirective {
-        return { [weak self] _, completion in
+        return { [weak self] directive, completion in
             defer { completion() }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let media = self?.currentMedia else {
-                    log.error("AudioPlayerAgentMedia is nil")
+                guard let self = self else { return }
+                guard let media = self.currentMedia else {
+                    self.sendRequestCommandFailedEvent(directive: directive)
                     return
                 }
-                self?.sendPlayEvent(media: media, typeInfo: .requestPauseCommandIssued)
+                self.sendPlayEvent(media: media, typeInfo: .requestPauseCommandIssued)
             }
         }
     }
     
     func handleRequestStopCommand() -> HandleDirective {
-        return { [weak self] _, completion in
+        return { [weak self] directive, completion in
             defer { completion() }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let media = self?.currentMedia else {
-                    log.error("AudioPlayerAgentMedia is nil")
+                guard let self = self else { return }
+                guard let media = self.currentMedia else {
+                    self.sendRequestCommandFailedEvent(directive: directive)
                     return
                 }
-                self?.sendPlayEvent(media: media, typeInfo: .requestStopCommandIssued)
+                self.sendPlayEvent(media: media, typeInfo: .requestStopCommandIssued)
             }
         }
     }
@@ -682,7 +687,7 @@ private extension AudioPlayerAgent {
             media.player.delegate = nil
             media.player.stop()
             self.audioPlayerState = .stopped
-            self.sendPlayEvent(media: media, typeInfo: .playbackStopped)
+            self.sendPlayEvent(media: media, typeInfo: .playbackStopped(reason: "PLAY_ANOTHER"))
         case .idle, .stopped, .finished:
             return
         }
@@ -717,10 +722,25 @@ private extension AudioPlayerAgent {
             )
         }
     }
+    
+    func sendRequestCommandFailedEvent(directive: Downstream.Directive) {
+        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
+            
+            self.upstreamDataSender.sendEvent(
+                RequestPlayEvent(
+                    typeInfo: .requestCommandFailed(state: self.audioPlayerState, directiveType: directive.header.type)
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    referrerDialogRequestId: directive.header.dialogRequestId,
+                    contextPayload: contextPayload
+                )
+            )
+        }
+    }
 
     func sendRequestPlayEvent(
         referrerDialogRequestId: String,
-        payload: [String : AnyHashable],
         typeInfo: RequestPlayEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
@@ -729,7 +749,6 @@ private extension AudioPlayerAgent {
             
             self.upstreamDataSender.sendEvent(
                 RequestPlayEvent(
-                    requestPlayPayload: payload,
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
