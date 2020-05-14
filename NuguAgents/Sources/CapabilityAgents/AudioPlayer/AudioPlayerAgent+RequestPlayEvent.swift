@@ -24,11 +24,11 @@ import Foundation
 
 extension AudioPlayerAgent {
     struct RequestPlayEvent {
-        let requestPlayPayload: [String: AnyHashable]
         let typeInfo: TypeInfo
         
-        enum TypeInfo {
-            case requestPlayCommandIssued
+        public enum TypeInfo {
+            case requestPlayCommandIssued(payload: [String: AnyHashable])
+            case requestCommandFailed(state: AudioPlayerState, directiveType: String)
         }
     }
 }
@@ -37,10 +37,25 @@ extension AudioPlayerAgent {
 
 extension AudioPlayerAgent.RequestPlayEvent: Eventable {
     var payload: [String: AnyHashable] {
-        return ["payload": requestPlayPayload]
+        switch typeInfo {
+        case .requestPlayCommandIssued(let payload):
+            return payload
+        case .requestCommandFailed(let state, let directiveType):
+            return [
+                "error": [
+                    "type": "INVALID_COMMAND",
+                    "message": "\(state.playerActivity) 상태에서는 \(directiveType) 를 처리할 수 없음"
+                ]
+            ]
+        }
     }
     
     var name: String {
-        return "RequestPlayCommandIssued"
+        switch typeInfo {
+        case .requestPlayCommandIssued:
+            return "RequestPlayCommandIssued"
+        case .requestCommandFailed:
+            return "RequestCommandFailed"
+        }
     }
 }

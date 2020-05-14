@@ -50,13 +50,11 @@ final public class NuguToast {
     private var hideAnimationWorkItem: DispatchWorkItem?
     
     private var bottomSafeAreaHeight: CGFloat {
-        get {
-            guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
-            if #available(iOS 11.0, *) {
-                return rootViewController.view.safeAreaInsets.bottom
-            } else {
-                return rootViewController.bottomLayoutGuide.length
-            }
+        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
+        if #available(iOS 11.0, *) {
+            return rootViewController.view.safeAreaInsets.bottom
+        } else {
+            return rootViewController.bottomLayoutGuide.length
         }
     }
 }

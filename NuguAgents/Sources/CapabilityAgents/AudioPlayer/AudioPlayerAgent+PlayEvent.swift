@@ -34,7 +34,7 @@ extension AudioPlayerAgent {
         enum TypeInfo {
             case playbackStarted
             case playbackFinished
-            case playbackStopped
+            case playbackStopped(reason: String)
             case playbackFailed(error: Error)
             case progressReportDelayElapsed
             case progressReportIntervalElapsed
@@ -86,6 +86,8 @@ extension AudioPlayerAgent.PlayEvent: Eventable {
                 "type": type,
                 "message": error.localizedDescription
             ]
+        case .playbackStopped(let reason):
+            eventPayload["reason"] = reason
         default:
             break
         }

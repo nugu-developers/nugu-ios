@@ -36,7 +36,7 @@ struct MediaCacheManager {
 // MARK: - Internal Methods
 
 extension MediaCacheManager {
-    static func checkCacheAvailablity(itemURL: URL, cacheKey: String, completion: @escaping (_ isAvailable: Bool, _ cacheExists: Bool, _ endUrl: URL) -> (Void)) {
+    static func checkCacheAvailablity(itemURL: URL, cacheKey: String, completion: @escaping (_ isAvailable: Bool, _ cacheExists: Bool, _ endUrl: URL) -> Void) {
         guard isCacheEnabled else {
             completion(false, false, itemURL)
             return
