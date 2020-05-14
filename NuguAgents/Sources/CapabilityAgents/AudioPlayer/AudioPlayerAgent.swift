@@ -381,7 +381,8 @@ extension AudioPlayerAgent: ContextInfoDelegate {
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
             "offsetInMilliseconds": (offset ?? 0) * 1000,
-            "token": currentMedia?.payload.audioItem.stream.token
+            "token": currentMedia?.payload.audioItem.stream.token,
+            "lyricsVisible": currentMedia?.isLyricsVisible ?? false
         ]
         if let duration = duration {
             payload["durationInMilliseconds"] = duration * 1000
@@ -584,6 +585,9 @@ private extension AudioPlayerAgent {
             }
             
             let isSuccess = self.audioPlayerDisplayManager.showLylics(playServiceId: playServiceId)
+            if isSuccess == true {
+                self.currentMedia?.isLyricsVisible = true
+            }
             
             self.sendLyricsEvent(
                 playServiceId: playServiceId,
@@ -604,6 +608,9 @@ private extension AudioPlayerAgent {
             }
             
             let isSuccess = self.audioPlayerDisplayManager.hideLylics(playServiceId: playServiceId)
+            if isSuccess == true {
+                self.currentMedia?.isLyricsVisible = false
+            }
             
             self.sendLyricsEvent(
                 playServiceId: playServiceId,
