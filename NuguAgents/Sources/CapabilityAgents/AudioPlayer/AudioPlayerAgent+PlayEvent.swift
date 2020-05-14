@@ -22,16 +22,16 @@ import Foundation
 
 import NuguCore
 
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension AudioPlayerAgent {
-    public struct PlayEvent {
+    struct PlayEvent {
         let token: String
         let offsetInMilliseconds: Int
         let playServiceId: String
         let typeInfo: TypeInfo
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case playbackStarted
             case playbackFinished
             case playbackStopped(reason: String)
@@ -58,7 +58,7 @@ extension AudioPlayerAgent {
 // MARK: - Eventable
 
 extension AudioPlayerAgent.PlayEvent: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         var eventPayload: [String: AnyHashable] = [
             "token": token,
             "offsetInMilliseconds": offsetInMilliseconds,
@@ -95,7 +95,7 @@ extension AudioPlayerAgent.PlayEvent: Eventable {
         return eventPayload
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .playbackStarted:
             return "PlaybackStarted"
@@ -136,18 +136,3 @@ extension AudioPlayerAgent.PlayEvent: Eventable {
         }
     }
 }
-
-// MARK: - Equatable
-
-extension AudioPlayerAgent.PlayEvent.TypeInfo: Equatable {
-    public static func == (lhs: AudioPlayerAgent.PlayEvent.TypeInfo, rhs: AudioPlayerAgent.PlayEvent.TypeInfo) -> Bool {
-        switch (lhs, rhs) {
-        case (.playbackFailed(let lhsParam), .playbackFailed(let rhsParam)):
-            return lhsParam.localizedDescription == rhsParam.localizedDescription
-        case (let lhs, let rhs):
-            return lhs == rhs
-        }
-    }
-}
-
-extension AudioPlayerAgent.PlayEvent: Equatable {}

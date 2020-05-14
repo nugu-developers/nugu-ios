@@ -20,16 +20,14 @@
 
 import Foundation
 
-import NuguCore
-
-// MARK: - CapabilityEventAgentable
+// MARK: - Event
 
 extension AudioPlayerAgent {
-    public struct RequestPlayEvent {
+    struct RequestPlayEvent {
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case requestPlayCommandIssued(payload: [String : AnyHashable])
+            case requestPlayCommandIssued(payload: [String: AnyHashable])
             case requestCommandFailed(state: AudioPlayerState, directiveType: String)
         }
     }
@@ -38,7 +36,7 @@ extension AudioPlayerAgent {
 // MARK: - Eventable
 
 extension AudioPlayerAgent.RequestPlayEvent: Eventable {
-    public var payload: [String : AnyHashable] {
+    var payload: [String: AnyHashable] {
         switch typeInfo {
         case .requestPlayCommandIssued(let payload):
             return payload
@@ -52,7 +50,7 @@ extension AudioPlayerAgent.RequestPlayEvent: Eventable {
         }
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .requestPlayCommandIssued:
             return "RequestPlayCommandIssued"

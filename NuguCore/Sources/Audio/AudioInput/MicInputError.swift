@@ -1,8 +1,8 @@
 //
-//  SystemAgent+Event.swift
-//  NuguAgents
+//  MicInputError.swift
+//  NuguCore
 //
-//  Created by yonghoonKwon on 10/06/2019.
+//  Created by MinChul Lee on 2020/05/06.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,33 +19,25 @@
 //
 
 import Foundation
+import AVFoundation
 
-// MARK: - Event
-
-extension SystemAgent {    
-    struct Event {
-        let typeInfo: TypeInfo
-        
-        enum TypeInfo {
-            case synchronizeState
-        }
-    }
+public enum MicInputError: Error {
+    case permissionDenied
+    case audioFormatError
+    case resamplerError(source: AVAudioFormat, dest: AVAudioFormat)
 }
 
-// MARK: - Eventable
+// MARK: - LocalizedError
 
-extension SystemAgent.Event: Eventable {
-    var payload: [String: AnyHashable] {
-        switch typeInfo {
-        default:
-            return [:]
-        }
-    }
-    
-    var name: String {
-        switch typeInfo {
-        case .synchronizeState:
-            return "SynchronizeState"
+extension MicInputError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .permissionDenied:
+            return "permission denied"
+        case .audioFormatError:
+            return "audio format error"
+        case .resamplerError(let source, let dest):
+            return "cannot resample. source(\(source)) or destnation (\(dest)) sample may be wrong"
         }
     }
 }

@@ -1,8 +1,8 @@
 //
-//  EndPointDetectorState.swift
-//  NuguAgents
+//  NetworkConst.swift
+//  NuguCore
 //
-//  Created by yonghoonKwon on 16/08/2019.
+//  Created by jin kim on 29/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,18 @@
 
 import Foundation
 
-enum EndPointDetectorState {
-    case idle
-    case listening
-    case start
-    case end
-    case timeout
-    case reachToMaxLength
-    case finish
-    case unknown
+enum NetworkConst {
+    static var userAgent: String {
+        return [openSdkVersion(), clientVersion()].joined(separator: " ")
+    }
+}
+
+private extension NetworkConst {
+    static func openSdkVersion() -> String {
+        return "OpenSDK/" + (Bundle(for: AuthorizationStore.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
+    }
+    
+    static func clientVersion() -> String {
+        return "Client/" + (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
+    }
 }

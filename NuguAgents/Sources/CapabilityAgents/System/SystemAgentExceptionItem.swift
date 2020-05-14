@@ -33,7 +33,7 @@ extension SystemAgentExceptionItem: Decodable {
         case description
     }
 
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         if let failCode = try? container.decode(SystemAgentExceptionCode.Fail.self, forKey: .code) {
