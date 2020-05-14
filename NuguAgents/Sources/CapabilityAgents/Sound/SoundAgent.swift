@@ -69,7 +69,7 @@ public final class SoundAgent: SoundAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Beep", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchBeep, directiveHandler: handleBeep),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Beep", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchBeep, directiveHandler: handleBeep)
     ]
     
     public init(
@@ -93,7 +93,6 @@ public final class SoundAgent: SoundAgentProtocol {
         currentMedia?.player.stop()
     }
 }
-
 
 // MARK: - FocusChannelDelegate
 
@@ -159,13 +158,12 @@ extension SoundAgent: MediaPlayerDelegate {
                 self.soundState = .stopped
             case .bufferUnderrun:
                 break
-            case .error(_):
+            case .error:
                 self.soundState = .stopped
             }
         }
     }
 }
-
 
 // MARK: - Private (Directive)
 
