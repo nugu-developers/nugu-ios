@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import SilverTray
 
 import RxSwift
 
@@ -860,13 +861,17 @@ private extension AudioPlayerAgent {
                 payload: payload
             )
         case .attachment:
-            let mediaPlayer = OpusPlayer()
-
-            currentMedia = AudioPlayerAgentMedia(
-                dialogRequestId: dialogRequestId,
-                player: mediaPlayer,
-                payload: payload
-            )
+            do {
+                let mediaPlayer = try OpusPlayer()
+                currentMedia = AudioPlayerAgentMedia(
+                    dialogRequestId: dialogRequestId,
+                    player: mediaPlayer,
+                    payload: payload
+                )
+            } catch {
+                // TODO: 실패시 예외처리 필요한지 확인
+                log.error("Opus player initiation error: \(error)")
+            }
         case .none:
             log.error("Invalid payload")
         }

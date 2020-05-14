@@ -298,7 +298,7 @@ private extension TTSAgent {
         return { [weak self] directive in
             let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: directive.payload)
             guard case .attachment = payload.sourceType else {
-                throw HandleDirectiveError.handleDirectiveError(message: "Not supported sourceType")
+                throw TTSError.notSupportedSourceType
             }
             
             self?.ttsDispatchQueue.async { [weak self] in
@@ -306,15 +306,20 @@ private extension TTSAgent {
                 
                 self.stopSilently()
                 
-                let mediaPlayer = OpusPlayer()
-                mediaPlayer.delegate = self
-                mediaPlayer.volume = self.volume
-                
-                self.currentMedia = TTSMedia(
-                    player: mediaPlayer,
-                    payload: payload,
-                    dialogRequestId: directive.header.dialogRequestId
-                )
+                do {
+                    let mediaPlayer = try OpusPlayer()
+                    mediaPlayer.delegate = self
+                    mediaPlayer.volume = self.volume
+                    
+                    self.currentMedia = TTSMedia(
+                        player: mediaPlayer,
+                        payload: payload,
+                        dialogRequestId: directive.header.dialogRequestId
+                    )
+                } catch {
+                    // TODO: 실패시 예외처리 필요한지 확인
+                    log.error("Opus player initiation error: \(error)")
+                }
             }
         }
     }
@@ -382,8 +387,16 @@ private extension TTSAgent {
     }
     
     func handleAttachment() -> HandleAttachment {
+        #if DEBUG
+        var totalAttachmentData = Data()
+        #endif
+        
         return { [weak self] attachment in
             log.info("\(attachment.header.messageId)")
+            #if DEBUG
+            totalAttachmentData.append(attachment.content)
+            #endif
+            
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let dataSource = self.currentMedia?.player as? MediaOpusStreamDataSource,
@@ -397,6 +410,13 @@ private extension TTSAgent {
                     
                     if attachment.isEnd {
                         try dataSource.lastDataAppended()
+                        
+                        #if DEBUG
+                        let attachmentFileName = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                            .appendingPathComponent("attachment.data")
+                        try totalAttachmentData.write(to: attachmentFileName)
+                        log.debug("attachment to file :\(attachmentFileName)")
+                        #endif
                     }
                 } catch {
                     log.error(error)

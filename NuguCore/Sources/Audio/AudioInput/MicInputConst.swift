@@ -1,8 +1,8 @@
 //
-//  EndPointDetectorState.swift
-//  NuguAgents
+//  MicInputConst.swift
+//  NuguCore
 //
-//  Created by yonghoonKwon on 16/08/2019.
+//  Created by DCs-OfficeMBP on 07/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,14 +19,18 @@
 //
 
 import Foundation
+import AVFoundation
 
-enum EndPointDetectorState {
-    case idle
-    case listening
-    case start
-    case end
-    case timeout
-    case reachToMaxLength
-    case finish
-    case unknown
+/// <#Description#>
+enum MicInputConst {
+    /// <#Description#>
+    public static let defaultChannelCount: AVAudioChannelCount = 1
+    /// <#Description#>
+    public static let defaultSampleRate: Double = 16000.0
+    /// <#Description#>
+    public static let defaultBus = 0
+    /// <#Description#>
+    public static let defaultFormat: AVAudioCommonFormat = .pcmFormatInt16
+    /// <#Description#>
+    public static let defaultInterLeavingSetting = false
 }

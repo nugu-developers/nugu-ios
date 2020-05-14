@@ -287,6 +287,8 @@ private extension DisplayAgent {
     
     func handleControlScroll() -> HandleDirective {
         return { [weak self] directive, completion in
+            defer { completion() }
+            
             guard let payload = try? JSONDecoder().decode(DisplayControlPayload.self, from: directive.payload) else {
                 log.error("Invalid payload")
                 return

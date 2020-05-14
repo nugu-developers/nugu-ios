@@ -31,7 +31,7 @@ extension DisplayClosePayload: Decodable {
         case playServiceId
     }
     
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
