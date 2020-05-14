@@ -66,7 +66,7 @@ extension MediaPlayer {
         }
         
         if let cacheKey = playerItem.cacheKey {
-            MediaCacheManager.checkCacheAvailablity(itemURL: urlAsset.url, cacheKey: cacheKey) { [weak self] (isAvailable, cacheExists, endUrl) -> (Void) in
+            MediaCacheManager.checkCacheAvailablity(itemURL: urlAsset.url, cacheKey: cacheKey) { [weak self] (isAvailable, cacheExists, endUrl) in
                 if isAvailable {
                     self?.playerItem = cacheExists ? self?.getCachedPlayerItem(cacheKey: cacheKey, itemURL: endUrl) : self?.getDownloadAndPlayPlayerItem(cacheKey: cacheKey, itemURL: endUrl)
                 } else {
