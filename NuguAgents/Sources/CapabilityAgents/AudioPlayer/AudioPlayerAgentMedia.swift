@@ -29,8 +29,6 @@ struct AudioPlayerAgentMedia {
     var pauseReason: PauseReason = .nothing
     var cancelAssociation: Bool = false
     
-    var isLyricsVisible: Bool = false
-    
     init(dialogRequestId: String, player: MediaPlayable, payload: Payload) {
         self.dialogRequestId = dialogRequestId
         self.player = player
