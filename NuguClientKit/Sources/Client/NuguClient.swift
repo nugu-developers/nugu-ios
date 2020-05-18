@@ -58,6 +58,12 @@ public class NuguClient {
     
     public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
     
+    public lazy var phoneCallAgent: PhoneCallAgentProtocol = PhoneCallAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
     /**
      Audio input source
      
