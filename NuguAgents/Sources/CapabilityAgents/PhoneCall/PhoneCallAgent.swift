@@ -25,16 +25,13 @@ import NuguCore
 public class PhoneCallAgent: PhoneCallAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.0")
     
+    // PhoneCallAgentProtocol
+    public weak var delegate: PhoneCallAgentDelegate?
+    
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
-    
-    // temp
-    private var state: String = ""
-    private var intent: String = ""
-    private var callType: String = ""
-    private var candidates: [String] = []
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
@@ -63,13 +60,21 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 
 extension PhoneCallAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable?] = [
+        let displayItem = delegate?.phoneCallAgentRequestDisplayItem()
+        
+        var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "state": state,
-            "intent": intent,
-            "callType": callType,
-            "candidates": candidates
+            "state": delegate?.phoneCallAgentRequestState().rawValue ?? PhoneCallState.idle.rawValue,
+            "intent": displayItem?.intent?.rawValue,
+            "callType": displayItem?.callType?.rawValue
         ]
+        
+        if let candidates = displayItem?.candidates,
+            let candidatesData = try? JSONEncoder().encode(candidates),
+            let candidatesDictionary = try? JSONSerialization.jsonObject(with: candidatesData, options: []) as? [String: AnyHashable] {
+            
+            payload["candidates"] = candidatesDictionary
+        }
         
         completion(
             ContextInfo(
@@ -87,30 +92,135 @@ private extension PhoneCallAgent {
     func handleSendCandidates() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion() }
+            
+            guard let self = self else { return }
+            
+            guard let payloadDictionary = directive.payloadDictionary else {
+                log.error("Invalid payload")
+                return
+            }
+            
+            guard let playServiceId = payloadDictionary["playServiceId"] as? String,
+                let intent = payloadDictionary["intent"] as? String,
+                let phoneCallIntent = PhoneCallIntent(rawValue: intent) else {
+                    log.error("Invalid intent or playServiceId in payload")
+                    return
+            }
+            
+            guard let callType = payloadDictionary["callType"] as? String,
+                let phoneCallType = PhoneCallType(rawValue: callType) else {
+                    log.error("Invalid phoneCallType in payload")
+                    return
+            }
+            
+            var recipient: PhoneCallRecipient?
+            if let recipientDictionary = payloadDictionary["recipient"] as? [String: AnyHashable],
+                let recipientData = try? JSONSerialization.data(withJSONObject: recipientDictionary, options: []) {
+                recipient = try? JSONDecoder().decode(PhoneCallRecipient.self, from: recipientData)
+            }
+            
+            var candidates: [PhoneCallPerson]?
+            if let candidatesDictionary = payloadDictionary["candidates"] as? [String: AnyHashable],
+                let candidatesData = try? JSONSerialization.data(withJSONObject: candidatesDictionary, options: []) {
+                candidates = try? JSONDecoder().decode([PhoneCallPerson].self, from: candidatesData)
+            }
+            
+            let resultCandidates = self.delegate?.phoneCallAgentDidReceiveSendCandidates(
+                intent: phoneCallIntent,
+                callType: phoneCallType,
+                recipient: recipient,
+                candidates: candidates
+            )
+            
+            self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
+                guard let self = self else { return }
+                
+                self.upstreamDataSender.sendEvent(
+                    Event(
+                        playServiceId: playServiceId,
+                        typeInfo: .candidatesListed(intent: phoneCallIntent, callType: phoneCallType, recipient: recipient, candidates: resultCandidates)
+                    ).makeEventMessage(
+                        property: self.capabilityAgentProperty,
+                        dialogRequestId: TimeUUID().hexString,
+                        contextPayload: contextPayload
+                    )
+                )
+            }
+            
         }
     }
     
     func handleMakeCall() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion() }
+            
+            guard let self = self else { return }
+            
+            guard let payloadDictionary = directive.payloadDictionary else {
+                log.error("Invalid payload")
+                return
+            }
+        
+            guard let playServiceId = payloadDictionary["playServiceId"] as? String,
+                let callType = payloadDictionary["callType"] as? String,
+                let phoneCallType = PhoneCallType(rawValue: callType) else {
+                    log.error("Invalid callType or playServiceId in payload")
+                    return
+            }
+            
+            guard let recipientDictionary = payloadDictionary["recipient"] as? [String: AnyHashable],
+                let recipientData = try? JSONSerialization.data(withJSONObject: recipientDictionary, options: []),
+                let recipientPerson = try? JSONDecoder().decode(PhoneCallPerson.self, from: recipientData) else {
+                    log.error("Invalid recipient in payload")
+                    return
+            }
+            
+            if let errorCode = self.delegate?.phoneCallAgentDidReceiveMakeCall(callType: phoneCallType, recipient: recipientPerson) {
+                // Failed to makeCall
+                self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
+                    guard let self = self else { return }
+                    
+                    self.upstreamDataSender.sendEvent(
+                        Event(
+                            playServiceId: playServiceId,
+                            typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType)
+                        ).makeEventMessage(
+                            property: self.capabilityAgentProperty,
+                            dialogRequestId: TimeUUID().hexString,
+                            contextPayload: contextPayload
+                        )
+                    )
+                }
+            }
         }
     }
     
     func handleEndCall() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion() }
+            
+            self?.delegate?.phoneCallAgentDidReceiveEndCall()
+            
+            // CHECK-ME: Send end-call event?
         }
     }
     
     func handleAcceptCall() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion() }
+            
+            self?.delegate?.phoneCallAgentDidReceiveAcceptCall()
+            
+            // CHECK-ME: Send call-established event?
         }
     }
     
+    // CHECK-ME: Is it necessary?
     func handleBlockIncomingCall() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion() }
+            
+            self?.delegate?.phoneCallAgentDidReceiveBlockIncomingCall()
         }
     }
 }

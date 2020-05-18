@@ -1,8 +1,8 @@
 //
-//  PhoneCallAgentProtocol.swift
+//  PhoneCallRecipient.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/04/29.
+//  Created by yonghoonKwon on 2020/05/18.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@
 
 import Foundation
 
-protocol PhoneCallAgentProtocol: CapabilityAgentable {
-    
-    var delegate: PhoneCallAgentDelegate? { get set }
+public struct PhoneCallRecipient: Codable {
+    public let name: String?
+    public let label: String?
 }

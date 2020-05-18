@@ -1,8 +1,8 @@
 //
-//  PhoneCallAgentProtocol.swift
+//  PhoneCallDisplayItem.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/04/29.
+//  Created by yonghoonKwon on 2020/05/12.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,14 @@
 
 import Foundation
 
-protocol PhoneCallAgentProtocol: CapabilityAgentable {
+public struct PhoneCallDisplayItem {
+    public let intent: PhoneCallIntent?
+    public let callType: PhoneCallType?
+    public let candidates: [PhoneCallPerson]?
     
-    var delegate: PhoneCallAgentDelegate? { get set }
+    public init(intent: PhoneCallIntent?, callType: PhoneCallType?, candidates: [PhoneCallPerson]?) {
+        self.intent = intent
+        self.callType = callType
+        self.candidates = candidates
+    }
 }

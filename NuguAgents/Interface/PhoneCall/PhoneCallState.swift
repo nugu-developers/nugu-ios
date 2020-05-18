@@ -1,8 +1,8 @@
 //
-//  PhoneCallAgentProtocol.swift
+//  PhoneCallState.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/04/29.
+//  Created by yonghoonKwon on 2020/05/12.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,9 @@
 
 import Foundation
 
-protocol PhoneCallAgentProtocol: CapabilityAgentable {
-    
-    var delegate: PhoneCallAgentDelegate? { get set }
+public enum PhoneCallState: String, Encodable {
+    case idle = "IDLE"
+    case outgoing = "OUTGOING"
+    case incoming = "INCOMING"
+    case established = "ESTABLISHED"
 }
