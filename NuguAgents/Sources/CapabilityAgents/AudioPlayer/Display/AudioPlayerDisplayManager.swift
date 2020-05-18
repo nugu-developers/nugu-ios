@@ -43,7 +43,6 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
     
     private var disposeBag = DisposeBag()
     
-    
     private var audioPlayerState: AudioPlayerState = .idle {
         didSet {
             guard currentItem != nil else { return }

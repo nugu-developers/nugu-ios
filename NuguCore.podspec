@@ -13,15 +13,15 @@ Nugu framework for AI Service
   s.documentation_url = 'https://developers.nugu.co.kr'
 
   s.ios.deployment_target = '10.0'
+  s.tvos.deployment_target = '13.0'
+  s.watchos.deployment_target = '6.0'
+  s.macos.deployment_target = '10.15.0'
 
   s.swift_version = '5.1'
 
-  s.source_files = 'NuguCore/Interface/**/*', 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/*.{h,m}', 'NuguCore/Libraries/**/*.h'
-  s.public_header_files = 'NuguCore/Libraries/**/*.h', 'NuguCore/Sources-ObjC/*.h'
-  s.vendored_libraries = 'NuguCore/Libraries/**/*.a'
-  s.preserve_paths = 'NuguCore/Libraries/**'
-  s.libraries = 'c++'
-  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/NuguCore/NuguCore/Libraries/**' }
+  s.source_files = 'NuguCore/Interface/**/*', 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/*.{h,m}', 'NuguCore/NuguCore.h'
+  s.private_header_files = 'NuguCore/Sources-ObjC/*.h', 'NuguCore/NuguCore.h'
+  s.module_map = 'NuguCore/NuguCore.modulemap'
 
   s.dependency 'NattyLog', '~> 1.0'
   s.dependency 'RxSwift', '~> 5'
