@@ -1161,7 +1161,6 @@
 		1F9C5B6823E42D740086CC04 /* CapabilityAgents */ = {
 			isa = PBXGroup;
 			children = (
-				1FD061A5246A7476004F9125 /* Message */,
 				1FBA3B6C2459667D001E5828 /* PhoneCall */,
 				7E5F4889243C370900118054 /* Sound */,
 				1FFFF32C2375707000C9A177 /* Extension */,
@@ -1238,24 +1237,6 @@
 				1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */,
 			);
 			path = PhoneCall;
-			sourceTree = "<group>";
-		};
-		1FD061A5246A7476004F9125 /* Message */ = {
-			isa = PBXGroup;
-			children = (
-				1FD061A6246A7495004F9125 /* MessageAgent.swift */,
-				1FD061A8246A74A5004F9125 /* MessageAgent+Event.swift */,
-				1FD061AD246A766B004F9125 /* MessageContact.swift */,
-			);
-			path = Message;
-			sourceTree = "<group>";
-		};
-		1FD061AA246A74FA004F9125 /* Message */ = {
-			isa = PBXGroup;
-			children = (
-				1FD061AB246A750A004F9125 /* MessageAgentProtocol.swift */,
-			);
-			path = Message;
 			sourceTree = "<group>";
 		};
 		1FD1CFD523A388570000FB8C /* Helper */ = {
@@ -2366,7 +2347,6 @@
 		73152FF223E11D6E00F843C3 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
-				1FD061AA246A74FA004F9125 /* Message */,
 				1FBA3B6B2459666D001E5828 /* PhoneCall */,
 				7E5F488A243C371300118054 /* Sound */,
 				1FFFF23D2375703000C9A177 /* Extension */,
@@ -3351,8 +3331,6 @@
 				7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */,
 				7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */,
 				7315306523E1248300F843C3 /* AudioPlayerDisplayTemplate.swift in Sources */,
-				1FD061AC246A750A004F9125 /* MessageAgentProtocol.swift in Sources */,
-				1FD061A7246A7495004F9125 /* MessageAgent.swift in Sources */,
 				1F11CA60245963FD00C63E88 /* DisplayAgentDelegate.swift in Sources */,
 				7315306723E1248300F843C3 /* AudioPlayerDisplayDelegate.swift in Sources */,
 				1FBA3B7224596B75001E5828 /* PhoneCallPerson.swift in Sources */,
@@ -3400,7 +3378,6 @@
 				73152FD123E0416600F843C3 /* LocationAgent.swift in Sources */,
 				73152FA723E0412700F843C3 /* ExtensionAgent.swift in Sources */,
 				73152FBF23E0414700F843C3 /* ASRRequest.swift in Sources */,
-				1FD061AE246A766B004F9125 /* MessageContact.swift in Sources */,
 				73152FAA23E0412D00F843C3 /* ExtensionAgentItem.swift in Sources */,
 				A135E668241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift in Sources */,
 				1FD061B62472142D004F9125 /* PhoneCallType.swift in Sources */,
@@ -3439,7 +3416,6 @@
 				73152FC923E0415B00F843C3 /* DisplayAgent.swift in Sources */,
 				1FD061B224720497004F9125 /* PhoneCallState.swift in Sources */,
 				73152FB923E0414700F843C3 /* EndPointDetectorState.swift in Sources */,
-				1FD061A9246A74A5004F9125 /* MessageAgent+Event.swift in Sources */,
 				7E5F4898243C40EB00118054 /* SoundMedia.swift in Sources */,
 				7315306F23E1248300F843C3 /* ASRError.swift in Sources */,
 				73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */,
