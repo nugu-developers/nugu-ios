@@ -22,6 +22,15 @@ import Foundation
 
 public struct PhoneCallPerson: Codable {
 
+    // MARK: PersonType
+    
+    public enum PersonType: String, Codable {
+        case contact = "CONTACT"
+        case exchange = "EXCHANGE"
+        case t114 = "T114"
+        case none = "NONE"
+    }
+    
     // MARK: BusinessHours
     
     public struct BusinessHours: Codable {
@@ -37,10 +46,21 @@ public struct PhoneCallPerson: Codable {
     // MARK: History
     
     public struct History: Codable {
-        public let time: String?
-        public let type: String?
         
-        public init(time: String?, type: String?) {
+        public enum CallType: String, Codable {
+            case out = "OUT"
+            case outCanceled = "OUT_CANCELED"
+            case incoming = "IN"
+            case rejected = "REJECTED"
+            case missed = "MISSED"
+            case voiceMessage = "VOICE_MESSAGE"
+            case blocked = "BLOCKED"
+        }
+        
+        public let time: String?
+        public let type: CallType?
+        
+        public init(time: String?, type: CallType?) {
             self.time = time
             self.type = type
         }
@@ -49,17 +69,25 @@ public struct PhoneCallPerson: Codable {
     // MARK: Contact
     
     public struct Contact: Codable {
-        public let label: String?
+        
+        public enum Label: String, Codable {
+            case mobile = "MOBILE"
+            case company = "COMPANY"
+            case home = "HOME"
+            case userDefined = "USER_DEFINED"
+        }
+        
+        public let label: Label?
         public let number: String?
         
-        public init(label: String?, number: String?) {
+        public init(label: Label?, number: String?) {
             self.label = label
             self.number = number
         }
     }
     
     public let name: String
-    public let type: PhoneCallType
+    public let type: PersonType
     public let profileImgUrl: String?
     public let category: String?
     public let address: String?
@@ -72,7 +100,7 @@ public struct PhoneCallPerson: Codable {
     
     public init(
         name: String,
-        type: PhoneCallType,
+        type: PersonType,
         profileImgUrl: String?,
         category: String?,
         address: String?,
