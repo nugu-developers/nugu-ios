@@ -283,7 +283,7 @@ private extension MainViewController {
     
     func setExampleChips() {
         nuguVoiceChrome.setChipsData(
-            chipsData: [.action(text: "첫번째"), .action(text: "두번째"), .normal(text: "클래식 매니저 틀어줘"), .normal(text: "된장찌개 레시피 알려줘"), .normal(text: "멜론 탑100"), .normal(text: "템플릿 열어줘")],
+            chipsData: [.normal(text: "템플릿에서 도움말1"), .action(text: "우주가 영어로 머야"), .action(text: "추천종목 알려줘"), .normal(text: "10000 곱하기 40은"), .normal(text: "10분 타이머"), .normal(text: "멜론 탑100"), .normal(text: "템플릿 열어줘")],
             onChipsSelect: { selectedChipsText in
                 guard let selectedChipsText = selectedChipsText,
                     let window = UIApplication.shared.keyWindow else { return }
@@ -331,18 +331,50 @@ private extension MainViewController {
         displayView?.removeFromSuperview()
         
         switch displayTemplate.type {
-        case "Display.FullText1", "Display.FullText2", "Display.FullText3",
-             "Display.ImageText1", "Display.ImageText2", "Display.ImageText3", "Display.ImageText4":
-            displayView = DisplayBodyView(frame: view.frame)
-        case "Display.TextList1", "Display.TextList2",
-             "Display.ImageList1", "Display.ImageList2", "Display.ImageList3":
-            displayView = DisplayListView(frame: view.frame)
-        case "Display.TextList3", "Display.TextList4":
-            displayView = DisplayBodyListView(frame: view.frame)
-        case "Display.Weather1", "Display.Weather2":
-            displayView = DisplayWeatherView(frame: view.frame)
-        case "Display.Weather3", "Display.Weather4":
-            displayView = DisplayWeatherListView(frame: view.frame)
+        case "Display.FullText1":
+            displayView = FullText1View(frame: view.frame)
+        case "Display.FullText2":
+            displayView = FullText2View(frame: view.frame)
+        case "Display.FullText3":
+            displayView = FullText3View(frame: view.frame)
+        case "Display.ImageText1":
+            displayView = ImageText1View(frame: view.frame)
+        case "Display.ImageText2":
+            displayView = ImageText2View(frame: view.frame)
+        case "Display.ImageText3":
+            displayView = ImageText3View(frame: view.frame)
+        case "Display.ImageText4":
+            displayView = ImageText4View(frame: view.frame)
+        case "Display.FullImage":
+            displayView = FullImageView(frame: view.frame)
+        case "Display.Score1":
+            displayView = Score1View(frame: view.frame)
+        case "Display.Score2":
+            displayView = Score2View(frame: view.frame)
+        case "Display.TextList1":
+            displayView = TextList1View(frame: view.frame)
+        case "Display.TextList2":
+            displayView = TextList2View(frame: view.frame)
+        case "Display.TextList3":
+            displayView = TextList3View(frame: view.frame)
+        case "Display.TextList4":
+            displayView = TextList4View(frame: view.frame)
+//        case "Display.ImageList1":
+//            displayView = ImageList1View(frame: view.frame)
+        case "Display.ImageList2":
+            displayView = ImageList2View(frame: view.frame)
+        case "Display.ImageList3":
+            displayView = ImageList3View(frame: view.frame)
+        case "Display.Weather1":
+            displayView = Weather1View(frame: view.frame)
+//        case "Display.Weather2":
+//            displayView = Weather2View(frame: view.frame)
+//        case "Display.Weather3":
+//            displayView = Weather3View(frame: view.frame)
+        case "Display.Weather4":
+            displayView = Weather4View(frame: view.frame)
+//        case "Display.Weather5":
+//            displayView = Weather5View(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break

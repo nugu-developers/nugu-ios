@@ -48,13 +48,20 @@ struct DisplayCommonTemplate: Decodable {
         }
         
         struct Text: Decodable {
-            let text: String
+            let text: String?
             let color: String?
         }
         
         struct Button: Decodable {
-            let text: String
+            let type: Type?
+            let image: Image?
+            let text: String?
             let token: String
+            
+            enum `Type`: String, Decodable {
+                case text
+                case image
+            }
         }
         
         enum ImageAlign {
@@ -90,6 +97,29 @@ struct DisplayCommonTemplate: Decodable {
                 case on
                 case off
             }
+        }
+        
+        struct ToggleStyle: Decodable {
+            let text: ToggleStyle.Text?
+            let image: ToggleStyle.Image?
+            
+            struct Text: Decodable {
+                let on: DisplayCommonTemplate.Common.Text?
+                let off: DisplayCommonTemplate.Common.Text?
+            }
+            
+            struct Image: Decodable {
+                let on: DisplayCommonTemplate.Common.Image?
+                let off: DisplayCommonTemplate.Common.Image?
+            }
+        }
+        
+        struct Match: Decodable {
+            let header: Text
+            let body: Text?
+            let footer: Text?
+            let image: Image
+            let score: Text
         }
     }
 }
