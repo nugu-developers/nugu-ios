@@ -59,7 +59,7 @@ public struct PhoneCallPerson: Codable {
     }
     
     public let name: String
-    public let type: String
+    public let type: PhoneCallType
     public let profileImgUrl: String?
     public let category: String?
     public let address: String?
@@ -72,7 +72,7 @@ public struct PhoneCallPerson: Codable {
     
     public init(
         name: String,
-        type: String,
+        type: PhoneCallType,
         profileImgUrl: String?,
         category: String?,
         address: String?,
