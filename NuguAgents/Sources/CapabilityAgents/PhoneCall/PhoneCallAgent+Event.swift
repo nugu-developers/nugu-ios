@@ -57,7 +57,7 @@ extension PhoneCallAgent.Event: Eventable {
             
             if let candidates = candidates,
                 let candidatesData = try? JSONEncoder().encode(candidates) {
-                payload["candidates"] = try? JSONSerialization.jsonObject(with: candidatesData, options: []) as? [String: AnyHashable]
+                payload["candidates"] = try? JSONSerialization.jsonObject(with: candidatesData, options: []) as? [[String: AnyHashable]]
             }
         case .callArrived(let callerName):
             payload["callerName"] = callerName
