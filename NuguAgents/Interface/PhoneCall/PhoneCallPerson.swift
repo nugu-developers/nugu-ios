@@ -21,67 +21,76 @@
 import Foundation
 
 public struct PhoneCallPerson: Codable {
-    public struct Contact: Codable {
-        public struct BusinessHours: Codable {
-            public let open: String?
-            public let close: String?
-            
-            init(open: String?, close: String?) {
-                self.open = open
-                self.close = close
-            }
+
+    // MARK: BusinessHours
+    
+    public struct BusinessHours: Codable {
+        public let open: String?
+        public let close: String?
+        
+        public init(open: String?, close: String?) {
+            self.open = open
+            self.close = close
         }
+    }
+    
+    // MARK: History
+    
+    public struct History: Codable {
+        public let time: String?
+        public let type: String?
         
-        public struct History: Codable {
-            public let time: String
-            public let type: String
-            
-            init(time: String, type: String) {
-                self.time = time
-                self.type = type
-            }
-        }
-        
-        public let type: String
-        public let label: String?
-        public let profileImgUrl: String?
-        public let category: String?
-        public let address: String?
-        public let number: String?
-        public let businessHours: BusinessHours?
-        public let history: History?
-        public let numInCallHistory: String
-        
-        init(
-            type: String,
-            label: String?,
-            profileImgUrl: String?,
-            category: String?,
-            address: String?,
-            number: String?,
-            businessHours: BusinessHours?,
-            history: History?,
-            numInCallHistory: String
-        ) {
+        public init(time: String?, type: String?) {
+            self.time = time
             self.type = type
+        }
+    }
+    
+    // MARK: Contact
+    
+    public struct Contact: Codable {
+        public let label: String?
+        public let number: String?
+        
+        public init(label: String?, number: String?) {
             self.label = label
-            self.profileImgUrl = profileImgUrl
-            self.category = category
-            self.address = address
             self.number = number
-            self.businessHours = businessHours
-            self.history = history
-            self.numInCallHistory = numInCallHistory
         }
     }
     
     public let name: String
-    public let token: String
+    public let type: String
+    public let profileImgUrl: String?
+    public let category: String?
+    public let address: String?
+    public let businessHours: BusinessHours?
+    public let history: History?
+    public let numInCallHistory: String?
+    public let token: String?
     public let score: String?
     public let contacts: [Contact]?
     
-    init(name: String, token: String, score: String?, contacts: [Contact]?) {
+    public init(
+        name: String,
+        type: String,
+        profileImgUrl: String?,
+        category: String?,
+        address: String?,
+        businessHours: BusinessHours?,
+        history: History?,
+        numInCallHistory: String?,
+        token: String?,
+        score: String?,
+        contacts: [Contact]?
+    ) {
         self.name = name
+        self.type = type
+        self.profileImgUrl = profileImgUrl
+        self.category = category
+        self.address = address
+        self.businessHours = businessHours
+        self.history = history
+        self.numInCallHistory = numInCallHistory
         self.token = token
         self.score = score
         self.contacts = contacts
