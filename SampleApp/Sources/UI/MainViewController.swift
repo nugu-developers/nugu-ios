@@ -359,22 +359,18 @@ private extension MainViewController {
             displayView = TextList3View(frame: view.frame)
         case "Display.TextList4":
             displayView = TextList4View(frame: view.frame)
-//        case "Display.ImageList1":
-//            displayView = ImageList1View(frame: view.frame)
         case "Display.ImageList2":
             displayView = ImageList2View(frame: view.frame)
         case "Display.ImageList3":
             displayView = ImageList3View(frame: view.frame)
         case "Display.Weather1":
             displayView = Weather1View(frame: view.frame)
-//        case "Display.Weather2":
-//            displayView = Weather2View(frame: view.frame)
-//        case "Display.Weather3":
-//            displayView = Weather3View(frame: view.frame)
+        case "Display.Weather2":
+            displayView = Weather2View(frame: view.frame)
+        case "Display.Weather3":
+            displayView = Weather3View(frame: view.frame)
         case "Display.Weather4":
-            displayView = Weather4View(frame: view.frame)
-//        case "Display.Weather5":
-//            displayView = Weather5View(frame: view.frame)
+            displayView = Weather4View(frame: view.frame)\
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break

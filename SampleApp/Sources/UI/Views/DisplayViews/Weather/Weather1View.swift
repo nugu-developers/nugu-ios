@@ -59,6 +59,15 @@ final class Weather1View: DisplayView {
             subTitleLabel.setDisplayText(displayText: displayItem.title.subtext)
             subTitleContainerView.isHidden = (displayItem.title.subtext == nil)
             
+            // Set content button
+            if let buttonItem = displayItem.title.button {
+                contentButtonContainerView.isHidden = false
+                contentButton.setTitle(buttonItem.text, for: .normal)
+                contentButtonToken = buttonItem.token
+            } else {
+                contentButtonContainerView.isHidden = true
+            }
+            
             // Set weather info and image
             weatherLabel.text = displayItem.content.header?.text ?? "-"
             weatherLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.header?.color)
@@ -85,18 +94,7 @@ final class Weather1View: DisplayView {
             maxTemperatureLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.temperature?.max?.color)
             
             // Set additional weather infos with html typed string
-            if let bodyTextData = displayItem.content.body.text?.data(using: .utf8),
-                let attributedBodyText = try? NSAttributedString(
-                    data: bodyTextData,
-                    options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
-                    documentAttributes: nil
-                ) {
-                additionalWeatherInfoLabel.attributedText = attributedBodyText
-                additionalWeatherInfoLabel.textAlignment = .center
-            } else {
-                additionalWeatherInfoLabel.text = displayItem.content.body.text
-                additionalWeatherInfoLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.body.color)
-            }
+            additionalWeatherInfoLabel.setAttributedDisplayText(displayText: displayItem.content.body)
             
             // Set detail ui by min/max temperature existence
             if (minTemperatureLabel.text == nil) || (maxTemperatureLabel.text == nil) {

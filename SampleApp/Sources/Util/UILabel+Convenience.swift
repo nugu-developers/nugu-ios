@@ -35,6 +35,7 @@ extension UILabel {
                 documentAttributes: nil
             ) {
             attributedText = displayAttributedText
+            textAlignment = .center
         } else {
             setDisplayText(displayText: displayText)
         }

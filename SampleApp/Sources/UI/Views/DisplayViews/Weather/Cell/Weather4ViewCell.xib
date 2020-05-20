@@ -20,6 +20,9 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TsK-ZU-jYH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="68"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="68" id="4hy-G3-nCW"/>
+                        </constraints>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z10-1N-zlv">
                         <rect key="frame" x="24" y="36" width="0.0" height="0.0"/>
@@ -90,7 +93,7 @@
                     <constraint firstItem="p79-GB-RJb" firstAttribute="leading" secondItem="uPi-M4-0ca" secondAttribute="trailing" constant="9" id="zNt-Dy-5wn"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="oQL-r3-hb0"/>
             <connections>
                 <outlet property="maxTemperatureLabel" destination="Ike-AU-G4H" id="psT-LZ-5dr"/>
