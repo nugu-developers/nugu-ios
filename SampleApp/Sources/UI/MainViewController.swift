@@ -37,7 +37,7 @@ final class MainViewController: UIViewController {
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
     private var displayView: DisplayView?
-    private var displayAudioPlayerView: DisplayAudioPlayerView?
+    private var displayAudioPlayerView: AudioPlayer1View?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
     
@@ -370,7 +370,7 @@ private extension MainViewController {
         case "Display.Weather3":
             displayView = Weather3View(frame: view.frame)
         case "Display.Weather4":
-            displayView = Weather4View(frame: view.frame)\
+            displayView = Weather4View(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break
@@ -456,8 +456,18 @@ private extension MainViewController {
 private extension MainViewController {
     func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> UIView? {
         displayAudioPlayerView?.removeFromSuperview()
+        
+        switch audioPlayerDisplayTemplate.type {
+        case "AudioPlayer.Template1":
+            displayAudioPlayerView = AudioPlayer1View(frame: view.frame)
+        case "AudioPlayer.Template2":
+            displayAudioPlayerView = AudioPlayer1View(frame: view.frame)
+        default:
+            // Draw your own AudioPlayerView with AudioPlayerDisplayTemplate.payload and set as self.displayAudioPlayerView
+            break
+        }
 
-        let audioPlayerView = DisplayAudioPlayerView(frame: view.frame)
+        guard let audioPlayerView = displayAudioPlayerView else { return nil }
         audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         audioPlayerView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
@@ -470,7 +480,6 @@ private extension MainViewController {
         
         audioPlayerView.alpha = 0
         view.addSubview(audioPlayerView)
-        displayAudioPlayerView = audioPlayerView
         UIView.animate(withDuration: 0.3) {
             audioPlayerView.alpha = 1.0
         }

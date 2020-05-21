@@ -52,4 +52,15 @@ final class DisplayTitleView: UIView {
         }
         titleLabel.setDisplayText(displayText: titleData.text)
     }
+    
+    func setData(titleData: AudioPlayer1Template.Template.Title) {
+        // Set title
+        if let logoUrl = titleData.iconUrl {
+            logoImageView.loadImage(from: logoUrl)
+            logoImageView.isHidden = false
+        } else {
+            logoImageView.isHidden = true
+        }
+        titleLabel.text = titleData.text
+    }
 }

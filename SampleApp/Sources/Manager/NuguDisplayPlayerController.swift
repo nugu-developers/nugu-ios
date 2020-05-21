@@ -105,7 +105,7 @@ private extension NuguDisplayPlayerController {
         }
         
         guard let payloadAsData = try? JSONSerialization.data(withJSONObject: playerItem.payload, options: []),
-            let payload = try? JSONDecoder().decode(AudioPlayerTemplate.self, from: payloadAsData) else {
+            let payload = try? JSONDecoder().decode(AudioPlayer1Template.self, from: payloadAsData) else {
                 log.debug("invalid payload")
                 remove()
                 return

@@ -180,6 +180,6 @@
         </view>
     </objects>
     <resources>
-        <image name="btn_close" width="28" height="28"/>
+        <image name="btn_close" width="24" height="24"/>
     </resources>
 </document>
