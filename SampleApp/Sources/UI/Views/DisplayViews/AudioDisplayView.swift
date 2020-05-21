@@ -60,6 +60,10 @@ class AudioDisplayView: UIView {
         return audioPlayerBarViewContainerView.isHidden == false
     }
     
+    var isLyricsVisible: Bool {
+        return false
+    }
+    
     var onCloseButtonClick: (() -> Void)?
     var onUserInteraction: (() -> Void)?
     
@@ -107,6 +111,16 @@ class AudioDisplayView: UIView {
             shuffleButton.isHidden = false
             shuffleButton.isSelected = shuffle
         }
+    }
+    
+    // MARK: - Show / Hide lyrics
+    
+    func shouldShowLyrics() -> Bool {
+        return false
+    }
+    
+    func shouldHideLyrics() -> Bool {
+        return false
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

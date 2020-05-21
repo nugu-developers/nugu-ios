@@ -664,10 +664,17 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    //TODO: - Should be implemented
-    func audioPlayerDisplayShouldShowLyrics() -> Bool { return false }
+    func audioPlayerDisplayShouldShowLyrics() -> Bool {
+        return displayAudioPlayerView?.shouldShowLyrics() ?? false
+    }
     
-    func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
+    func audioPlayerDisplayShouldHideLyrics() -> Bool {
+        return displayAudioPlayerView?.shouldHideLyrics() ?? false
+    }
+    
+    func audioPlayerIsLyricsVisible() -> Bool {
+        return displayAudioPlayerView?.isLyricsVisible ?? false
+    }
     
     func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool { return false }
     

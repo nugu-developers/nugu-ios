@@ -43,6 +43,10 @@ final class AudioPlayer1View: AudioDisplayView {
     
     private var fullLyricsView: FullLyricsView?
     
+    override var isLyricsVisible: Bool {
+        return !lyricsView.isHidden
+    }
+    
     override var displayPayload: [String: AnyHashable]? {
         didSet {
             guard let displayPayload = displayPayload,
@@ -142,12 +146,20 @@ final class AudioPlayer1View: AudioDisplayView {
         
         preListenContainerView.layer.cornerRadius = 2.0
     }
-}
-
-// MARK: - IBActions
-
-private extension AudioPlayer1View {
-    @objc func lyricsViewDidTap(_ gestureRecognizer: UITapGestureRecognizer) {
+    
+    // MARK: - Show / Hide lyrics
+    
+    override func shouldShowLyrics() -> Bool {
+        showLyrics()
+        return true
+    }
+    
+    override func shouldHideLyrics() -> Bool {
+        fullLyricsView?.removeFromSuperview()
+        return true
+    }
+    
+    private func showLyrics() {
         fullLyricsView = FullLyricsView(frame: contentStackView.frame)
         fullLyricsView?.headerLabel.text = lyricsData?.title
         lyricsData?.lyricsInfoList.forEach { lyricsInfo in
@@ -164,6 +176,14 @@ private extension AudioPlayer1View {
         if let fullLyricsView = fullLyricsView {
             fullAudioPlayerContainerView.addSubview(fullLyricsView)
         }
+    }
+}
+
+// MARK: - IBActions
+
+private extension AudioPlayer1View {
+    @objc func lyricsViewDidTap(_ gestureRecognizer: UITapGestureRecognizer) {
+        showLyrics()
     }
 }
 
