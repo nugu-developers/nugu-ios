@@ -121,7 +121,7 @@ extension AudioPlayerDisplayManager {
         }
     }
     
-    func showLylics(playServiceId: String) -> Bool {
+    func showLyrics(playServiceId: String) -> Bool {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else {
                 return false
@@ -136,7 +136,7 @@ extension AudioPlayerDisplayManager {
         return result
     }
     
-    func hideLylics(playServiceId: String) -> Bool {
+    func hideLyrics(playServiceId: String) -> Bool {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else {
                 return false
@@ -151,7 +151,15 @@ extension AudioPlayerDisplayManager {
         return result
     }
     
-    func controlLylicsPage(payload: AudioPlayerDisplayControlPayload) -> Bool {
+    func isLyricsVisible(playServiceId: String) -> Bool {
+        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
+            let delegate = info.delegate else {
+                return false
+        }
+        return delegate.audioPlayerIsLyricsVisible()
+    }
+    
+    func controlLyricsPage(payload: AudioPlayerDisplayControlPayload) -> Bool {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == payload.playServiceId }),
             let delegate = info.delegate else {
                 return false

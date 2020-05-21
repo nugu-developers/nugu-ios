@@ -601,6 +601,10 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     
     func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
     
+    func audioPlayerIsLyricsVisible() -> Bool {
+        return displayAudioPlayerView?.isLyricsVisible ?? false
+    }
+    
     func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool { return false }
     
     func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {

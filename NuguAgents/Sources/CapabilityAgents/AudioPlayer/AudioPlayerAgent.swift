@@ -386,6 +386,11 @@ extension AudioPlayerAgent: ContextInfoDelegate {
         if let duration = duration {
             payload["durationInMilliseconds"] = duration * 1000
         }
+        
+        if let playServiceId = currentMedia?.payload.playServiceId {
+            payload["lyricsVisible"] = audioPlayerDisplayManager.isLyricsVisible(playServiceId: playServiceId)
+        }
+        
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
@@ -583,7 +588,7 @@ private extension AudioPlayerAgent {
                 return
             }
             
-            let isSuccess = self.audioPlayerDisplayManager.showLylics(playServiceId: playServiceId)
+            let isSuccess = self.audioPlayerDisplayManager.showLyrics(playServiceId: playServiceId)
             
             self.sendLyricsEvent(
                 playServiceId: playServiceId,
@@ -603,7 +608,7 @@ private extension AudioPlayerAgent {
                 return
             }
             
-            let isSuccess = self.audioPlayerDisplayManager.hideLylics(playServiceId: playServiceId)
+            let isSuccess = self.audioPlayerDisplayManager.hideLyrics(playServiceId: playServiceId)
             
             self.sendLyricsEvent(
                 playServiceId: playServiceId,
@@ -623,7 +628,7 @@ private extension AudioPlayerAgent {
                 return
             }
             
-            let isSuccess = self.audioPlayerDisplayManager.controlLylicsPage(payload: payload)
+            let isSuccess = self.audioPlayerDisplayManager.controlLyricsPage(payload: payload)
             
             self.sendLyricsEvent(
                 playServiceId: payload.playServiceId,

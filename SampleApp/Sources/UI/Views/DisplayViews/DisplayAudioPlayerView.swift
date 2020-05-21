@@ -56,6 +56,8 @@ final class DisplayAudioPlayerView: UIView {
     private var audioProgressTimer: DispatchSourceTimer?
     private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.DisplayAudioPlayerView.audioProgress")
     
+    var isLyricsVisible: Bool = false
+    
     var onCloseButtonClick: (() -> Void)?
     
     var onUserInteraction: (() -> Void)?
