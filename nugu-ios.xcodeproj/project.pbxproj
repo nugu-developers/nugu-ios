@@ -362,6 +362,8 @@
 		75962AF92475EDD10003B189 /* AudioPlayer2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75962AF82475EDD10003B189 /* AudioPlayer2View.xib */; };
 		75962AFB24762ECB0003B189 /* FullLyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75962AFA24762ECB0003B189 /* FullLyricsView.swift */; };
 		75962AFD24762EE00003B189 /* FullLyricsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75962AFC24762EDF0003B189 /* FullLyricsView.xib */; };
+		75962B0924763E010003B189 /* AudioPlayerBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75962B0824763E010003B189 /* AudioPlayerBarView.swift */; };
+		75962B0B24763E120003B189 /* AudioPlayerBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75962B0A24763E120003B189 /* AudioPlayerBarView.xib */; };
 		75AE7FFB245173BC00E20E8C /* NuguChipsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */; };
 		75AE8023245190CC00E20E8C /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
 		75BF16A224623F75002A4B8D /* 03_transition.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF169B24623F74002A4B8D /* 03_transition.json */; };
@@ -964,6 +966,8 @@
 		75962AF82475EDD10003B189 /* AudioPlayer2View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioPlayer2View.xib; sourceTree = "<group>"; };
 		75962AFA24762ECB0003B189 /* FullLyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullLyricsView.swift; sourceTree = "<group>"; };
 		75962AFC24762EDF0003B189 /* FullLyricsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullLyricsView.xib; sourceTree = "<group>"; };
+		75962B0824763E010003B189 /* AudioPlayerBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerBarView.swift; sourceTree = "<group>"; };
+		75962B0A24763E120003B189 /* AudioPlayerBarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioPlayerBarView.xib; sourceTree = "<group>"; };
 		75ABAB06244EFD8600B4BB2D /* Lottie.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lottie.framework; path = Carthage/Build/iOS/Lottie.framework; sourceTree = "<group>"; };
 		75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguChipsButton.swift; sourceTree = "<group>"; };
 		75BF169B24623F74002A4B8D /* 03_transition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 03_transition.json; sourceTree = "<group>"; };
@@ -2501,6 +2505,8 @@
 				75962AF82475EDD10003B189 /* AudioPlayer2View.xib */,
 				75962AFA24762ECB0003B189 /* FullLyricsView.swift */,
 				75962AFC24762EDF0003B189 /* FullLyricsView.xib */,
+				75962B0824763E010003B189 /* AudioPlayerBarView.swift */,
+				75962B0A24763E120003B189 /* AudioPlayerBarView.xib */,
 			);
 			path = AudioPlayer;
 			sourceTree = "<group>";
@@ -3160,6 +3166,7 @@
 				A17B06622394D22800D739E9 /* device_GW_error_004.wav in Resources */,
 				752CE55F246E84EC00E68733 /* DisplayTitleView.xib in Resources */,
 				75F79926247256B900655BF6 /* TextList2View.xib in Resources */,
+				75962B0B24763E120003B189 /* AudioPlayerBarView.xib in Resources */,
 				A18B7A6623A77144007801E6 /* Weather4ViewCell.xib in Resources */,
 				75F799342472570C00655BF6 /* ImageList2View.xib in Resources */,
 				75032BFC246B9AD00077B824 /* FullText3View.xib in Resources */,
@@ -3468,6 +3475,7 @@
 				75032BEB246B90A50077B824 /* Score1Template.swift in Sources */,
 				75F7992B247256B900655BF6 /* TextList3View.swift in Sources */,
 				75032BBF246B88FC0077B824 /* FullText1Template.swift in Sources */,
+				75962B0924763E010003B189 /* AudioPlayerBarView.swift in Sources */,
 				75032BF0246B90A50077B824 /* Score2Template.swift in Sources */,
 				1FFFF4DF237672F100C9A177 /* SettingViewController.swift in Sources */,
 				75032BE1246B90A50077B824 /* Weather1Template.swift in Sources */,

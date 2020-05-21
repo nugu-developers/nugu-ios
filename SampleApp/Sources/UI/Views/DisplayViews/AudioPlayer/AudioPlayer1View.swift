@@ -27,9 +27,9 @@ final class AudioPlayer1View: UIView {
     
     // MARK: Properties
     
-    @IBOutlet private weak var titleView: DisplayTitleView!
+    @IBOutlet private weak var fullAudioPlayerContainerView: UIView!
     
-    @IBOutlet private weak var backgroundImageView: UIImageView!
+    @IBOutlet private weak var titleView: DisplayTitleView!
     
     @IBOutlet private weak var contentStackView: UIStackView!
     
@@ -63,6 +63,9 @@ final class AudioPlayer1View: UIView {
     
     @IBOutlet private weak var idleBar: DisplayIdleBar!
     
+    @IBOutlet private weak var audioPlayerBarViewContainerView: UIView!
+    @IBOutlet private weak var audioPlayerBarView: AudioPlayerBarView!
+    
     private var audioProgressTimer: DispatchSourceTimer?
     private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.DisplayAudioPlayerView.audioProgress")
     
@@ -72,6 +75,10 @@ final class AudioPlayer1View: UIView {
     private var lyricsIndex = 0
     
     private var fullLyricsView: FullLyricsView?
+    
+    var isBarMode: Bool {
+        return audioPlayerBarViewContainerView.isHidden == false
+    }
     
     var onCloseButtonClick: (() -> Void)?
     
@@ -125,12 +132,25 @@ final class AudioPlayer1View: UIView {
             }) ?? []
             
             startProgressTimer()
+            audioPlayerBarView.displayPayload = displayPayload
+            audioPlayerBarView.onCloseButtonClick = { [weak self] in
+                self?.onCloseButtonClick?()
+            }
+            audioPlayerBarView.onViewDidTap = { [weak self] in
+                UIView.animate(withDuration: 0.3) { [weak self] in
+                    guard let self = self else { return }
+                    self.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: UIScreen.main.bounds.size)
+                    self.fullAudioPlayerContainerView.isHidden = false
+                    self.audioPlayerBarViewContainerView.isHidden = true
+                }
+            }
         }
     }
     
     var audioPlayerState: AudioPlayerState? {
         didSet {
             playPauseButton.isSelected = (audioPlayerState == .playing)
+            audioPlayerBarView.playPauseButton.isSelected = (audioPlayerState == .playing)
         }
     }
     
@@ -221,7 +241,12 @@ private extension AudioPlayer1View {
     }
     
     @IBAction func barTypeButtonDidClick(_ button: UIButton) {
-        
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self = self else { return }
+            self.audioPlayerBarViewContainerView.isHidden = false
+            self.fullAudioPlayerContainerView.isHidden = true
+            self.frame = CGRect(origin: CGPoint(x: 0, y: self.frame.size.height - 58.0 - SampleApp.bottomSafeAreaHeight), size: self.audioPlayerBarViewContainerView.frame.size)
+        }
     }
     
     @IBAction func previousButtonDidClick(_ button: UIButton) {
@@ -278,7 +303,7 @@ private extension AudioPlayer1View {
             self?.fullLyricsView?.removeFromSuperview()
         }
         if let fullLyricsView = fullLyricsView {
-            addSubview(fullLyricsView)
+            fullAudioPlayerContainerView.addSubview(fullLyricsView)
         }
     }
 }
