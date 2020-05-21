@@ -477,6 +477,36 @@ private extension MainViewController {
         audioPlayerView.onUserInteraction = {
             NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
         }
+        audioPlayerView.onChipsSelect = { (selectedChipsText) in
+            guard let selectedChipsText = selectedChipsText,
+                let window = UIApplication.shared.keyWindow else { return }
+            
+            let indicator = UIActivityIndicatorView(style: .whiteLarge)
+            indicator.color = .black
+            indicator.startAnimating()
+            indicator.center = window.center
+            indicator.startAnimating()
+            window.addSubview(indicator)
+                
+            NuguCentralManager.shared.isTextAgentInProcess = true
+            NuguCentralManager.shared.client.asrAgent.stopRecognition()
+            NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
+                switch state {
+                case .finished:
+                    NuguCentralManager.shared.isTextAgentInProcess = false
+                case .error:
+                    NuguCentralManager.shared.isTextAgentInProcess = false
+                    self?.dismissVoiceChrome()
+                default: break
+                }
+                DispatchQueue.main.async {
+                    indicator.removeFromSuperview()
+                }
+            }
+        }
+        audioPlayerView.onNuguButtonClick = { [weak self] in
+            self?.presentVoiceChrome(initiator: .user)
+        }
         
         audioPlayerView.alpha = 0
         view.addSubview(audioPlayerView)

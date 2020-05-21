@@ -65,7 +65,17 @@ class AudioDisplayView: UIView {
     }
     
     var onCloseButtonClick: (() -> Void)?
-    var onUserInteraction: (() -> Void)?
+    var onUserInteraction: (() -> Void)?    
+    var onNuguButtonClick: (() -> Void)? {
+        didSet {
+            idleBar.onNuguButtonClick = onNuguButtonClick
+        }
+    }
+    var onChipsSelect: ((_ text: String?) -> Void)? {
+        didSet {
+            idleBar.onChipsSelect = onChipsSelect
+        }
+    }
     
     var displayPayload: [String: AnyHashable]?
     var audioPlayerState: AudioPlayerState? {
