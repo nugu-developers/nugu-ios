@@ -27,13 +27,13 @@ final class ImageList1View: DisplayView {
     
     @IBOutlet private weak var imageList1TableView: UITableView!
     
-    private var imageList1Items: [ImageList2Template.Item]?
+    private var imageList1Items: [ImageList1Template.Item]?
     private var badgeNumber: Bool?
     
     override var displayPayload: Data? {
         didSet {
             guard let payloadData = displayPayload,
-                let displayItem = try? JSONDecoder().decode(ImageList2Template.self, from: payloadData) else { return }
+                let displayItem = try? JSONDecoder().decode(ImageList1Template.self, from: payloadData) else { return }
             
             // Set backgroundColor
             backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
@@ -86,26 +86,25 @@ final class ImageList1View: DisplayView {
 
 extension ImageList1View: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return imageList1Items?.count ?? 0
+        guard let imageList1Items = imageList1Items else { return 0 }
+        let isOdd = imageList1Items.count % 2 == 1 ? 1 : 0
+        return imageList1Items.count / 2 + isOdd
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // swiftlint:disable force_cast
-        let imageList1TableViewCell = tableView.dequeueReusableCell(withIdentifier: "ImageList1ViewCell") as! ImageList2ViewCell
+        let imageList1TableViewCell = tableView.dequeueReusableCell(withIdentifier: "ImageList1ViewCell") as! ImageList1ViewCell
         // swiftlint:enable force_cast
-        if let badgeNumber = badgeNumber,
-            badgeNumber == true {
-            imageList1TableViewCell.configure(badgeNumber: String(indexPath.row + 1), item: imageList1Items?[indexPath.row])
-        } else {
-            imageList1TableViewCell.configure(badgeNumber: nil, item: imageList1Items?[indexPath.row])
+        guard let imageList1Items = imageList1Items else {
+            return UITableViewCell()
+        }
+        let badgeNumberString = badgeNumber == true ? String(indexPath.row*2+1) : nil
+        let rightItem = indexPath.row*2+1 >= imageList1Items.count ? nil : imageList1Items[indexPath.row*2+1]
+        imageList1TableViewCell.configure(badgeNumber: badgeNumberString, leftItem: imageList1Items[indexPath.row*2], rightItem: rightItem)
+        imageList1TableViewCell.onItemSelect = { [weak self] selectedItemToken in
+            self?.onItemSelect?(selectedItemToken)
         }
         return imageList1TableViewCell
-    }
-}
-
-extension ImageList1View: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(imageList1Items?[indexPath.row].token)
     }
 }
 

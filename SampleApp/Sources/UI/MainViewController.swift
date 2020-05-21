@@ -359,6 +359,8 @@ private extension MainViewController {
             displayView = TextList3View(frame: view.frame)
         case "Display.TextList4":
             displayView = TextList4View(frame: view.frame)
+        case "Display.ImageList1":
+            displayView = ImageList1View(frame: view.frame)
         case "Display.ImageList2":
             displayView = ImageList2View(frame: view.frame)
         case "Display.ImageList3":
