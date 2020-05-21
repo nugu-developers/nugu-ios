@@ -83,6 +83,7 @@ final class TextList1View: DisplayView {
         addSubview(view)
         
         textList1TableView.register(UINib(nibName: "TextList1ViewCell", bundle: nil), forCellReuseIdentifier: "TextList1ViewCell")
+        textList1TableView.contentInset.bottom = 60
     }
 }
 

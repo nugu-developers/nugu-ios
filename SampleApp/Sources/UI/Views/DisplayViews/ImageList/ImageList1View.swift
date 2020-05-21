@@ -70,6 +70,8 @@ final class ImageList1View: DisplayView {
             }) ?? []
             
             badgeNumber = displayItem.badgeNumber
+            
+            imageList1TableView.contentInset.bottom = 60
         }
     }
     

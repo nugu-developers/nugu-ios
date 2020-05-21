@@ -24,6 +24,8 @@ import NuguUIKit
 
 final class ImageText2View: DisplayView {
     
+    @IBOutlet private weak var contentScrollView: UIScrollView!
+    
     @IBOutlet private weak var contentImageViewContainerView: UIView!
     @IBOutlet private weak var contentImageView: UIImageView!
     
@@ -81,6 +83,8 @@ final class ImageText2View: DisplayView {
             idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
                 return .normal(text: grammarGuide)
             }) ?? []
+            
+            contentScrollView.contentInset.bottom = 60
         }
     }
     

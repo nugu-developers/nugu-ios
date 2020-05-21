@@ -67,6 +67,8 @@ final class Weather4View: DisplayView {
             idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
                 return .normal(text: grammarGuide)
             }) ?? []
+            
+            weather4TableView.contentInset.bottom = 60
         }
     }
     

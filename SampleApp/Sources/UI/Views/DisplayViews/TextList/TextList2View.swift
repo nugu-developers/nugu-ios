@@ -72,6 +72,8 @@ final class TextList2View: DisplayView {
             
             badgeNumber = displayItem.badgeNumber
             toggleStyle = displayItem.toggleStyle
+            
+            textList2TableView.contentInset.bottom = 60
         }
     }
     

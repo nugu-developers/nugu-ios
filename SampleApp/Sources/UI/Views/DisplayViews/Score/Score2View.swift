@@ -66,6 +66,8 @@ final class Score2View: DisplayView {
             idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
                 return .normal(text: grammarGuide)
             }) ?? []
+            
+            score2TableView.contentInset.bottom = 60
         }
     }
     

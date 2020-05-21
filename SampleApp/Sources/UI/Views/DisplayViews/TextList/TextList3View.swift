@@ -89,6 +89,8 @@ final class TextList3View: DisplayView {
             }) ?? []
             
             badgeNumber = displayItem.badgeNumber
+            
+            textList3TableView.contentInset.bottom = 60
         }
     }
     

@@ -67,6 +67,8 @@ final class TextList4View: DisplayView {
             idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
                 return .normal(text: grammarGuide)
             }) ?? []
+            
+            textList4TableView.contentInset.bottom = 60
         }
     }
     

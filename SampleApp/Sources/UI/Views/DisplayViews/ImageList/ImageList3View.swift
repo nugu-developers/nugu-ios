@@ -67,6 +67,8 @@ final class ImageList3View: DisplayView {
             idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
                 return .normal(text: grammarGuide)
             }) ?? []
+            
+            imageList3TableView.contentInset.bottom = 60
         }
     }
     

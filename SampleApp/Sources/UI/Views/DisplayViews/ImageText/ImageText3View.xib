@@ -15,6 +15,7 @@
                 <outlet property="contentButtonContainerView" destination="kfr-cV-oTn" id="4cH-DK-qhb"/>
                 <outlet property="contentImageView" destination="c8v-Wh-8ko" id="e1m-Hd-nJs"/>
                 <outlet property="contentImageViewContainerView" destination="IW5-xk-QqR" id="hwe-WQ-Rr3"/>
+                <outlet property="contentScrollView" destination="QPj-Sk-hxm" id="jR2-Wr-8Jj"/>
                 <outlet property="footerLabel" destination="0I6-Ue-GoA" id="zkv-9C-nyU"/>
                 <outlet property="headerLabel" destination="irl-tb-jgf" id="Wtg-wm-d6x"/>
                 <outlet property="idleBar" destination="xux-0B-gOX" id="BF2-QV-5ew"/>
