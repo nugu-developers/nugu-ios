@@ -281,6 +281,7 @@
 		739078FD241A3E0C007D753F /* ServerSideEventReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */; };
 		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
+		7500491024766B1500B73DD8 /* AudioDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500490F24766B1500B73DD8 /* AudioDisplayView.swift */; };
 		75032BB2246A32B60077B824 /* DisplayIdleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75032BB1246A32B60077B824 /* DisplayIdleBar.swift */; };
 		75032BB4246A32CD0077B824 /* DisplayIdleBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75032BB3246A32CD0077B824 /* DisplayIdleBar.xib */; };
 		75032BBF246B88FC0077B824 /* FullText1Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75032BBE246B88FC0077B824 /* FullText1Template.swift */; };
@@ -887,6 +888,7 @@
 		739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiver.swift; sourceTree = "<group>"; };
 		739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiverState.swift; sourceTree = "<group>"; };
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
+		7500490F24766B1500B73DD8 /* AudioDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayView.swift; sourceTree = "<group>"; };
 		75032BB1246A32B60077B824 /* DisplayIdleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayIdleBar.swift; sourceTree = "<group>"; };
 		75032BB3246A32CD0077B824 /* DisplayIdleBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayIdleBar.xib; sourceTree = "<group>"; };
 		75032BBE246B88FC0077B824 /* FullText1Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullText1Template.swift; sourceTree = "<group>"; };
@@ -2097,6 +2099,7 @@
 			children = (
 				A1B741B923E1641500D862F7 /* DisplayControllable.swift */,
 				1FFFF4BC237672F100C9A177 /* DisplayView.swift */,
+				7500490F24766B1500B73DD8 /* AudioDisplayView.swift */,
 				752CE559246E845E00E68733 /* CommonViews */,
 				75032BB5246B74310077B824 /* FullText */,
 				75032BB7246B74570077B824 /* ImageText */,
@@ -3528,6 +3531,7 @@
 				1FFFF4F6237672F100C9A177 /* UIColor+Convenience.swift in Sources */,
 				75032BDC246B90A50077B824 /* ImageList1Template.swift in Sources */,
 				1FFFF4F7237672F100C9A177 /* Int+Convenience.swift in Sources */,
+				7500491024766B1500B73DD8 /* AudioDisplayView.swift in Sources */,
 				75032C0B246B9B3E0077B824 /* ImageText4View.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

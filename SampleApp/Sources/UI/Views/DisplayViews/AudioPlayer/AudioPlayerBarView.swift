@@ -32,21 +32,6 @@ final class AudioPlayerBarView: UIView {
     private var audioProgressTimer: DispatchSourceTimer?
     private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayerBarView.audioProgress")
     
-    var displayPayload: [String: AnyHashable]? {
-        didSet {
-            guard let displayPayload = displayPayload,
-                let payloadData = try? JSONSerialization.data(withJSONObject: displayPayload, options: []),
-                let displayItem = try? JSONDecoder().decode(AudioPlayer1Template.self, from: payloadData) else { return }
-            
-            let template = displayItem.template
-
-            imageVIew.loadImage(from: template.content.imageUrl)
-            headerLabel.text = template.content.title
-            bodyLabel.text = template.content.subtitle1
-            startProgressTimer()
-        }
-    }
-    
     var onCloseButtonClick: (() -> Void)?
     var onViewDidTap: (() -> Void)?
     
@@ -67,6 +52,13 @@ final class AudioPlayerBarView: UIView {
         addSubview(view)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewDidTap(gestureRecognizer:)))
         addGestureRecognizer(tapRecognizer)
+    }
+    
+    func setData(imageUrl: String?, headerText: String?, bodyText: String?) {
+        imageVIew.loadImage(from: imageUrl)
+        headerLabel.text = headerText
+        bodyLabel.text = bodyText
+        startProgressTimer()
     }
     
     @objc func viewDidTap(gestureRecognizer: UITapGestureRecognizer) {

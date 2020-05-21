@@ -37,7 +37,7 @@ final class MainViewController: UIViewController {
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
     private var displayView: DisplayView?
-    private var displayAudioPlayerView: AudioPlayer1View?
+    private var displayAudioPlayerView: AudioDisplayView?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
     
@@ -461,7 +461,7 @@ private extension MainViewController {
         case "AudioPlayer.Template1":
             displayAudioPlayerView = AudioPlayer1View(frame: view.frame)
         case "AudioPlayer.Template2":
-            displayAudioPlayerView = AudioPlayer1View(frame: view.frame)
+            displayAudioPlayerView = AudioPlayer2View(frame: view.frame)
         default:
             // Draw your own AudioPlayerView with AudioPlayerDisplayTemplate.payload and set as self.displayAudioPlayerView
             break

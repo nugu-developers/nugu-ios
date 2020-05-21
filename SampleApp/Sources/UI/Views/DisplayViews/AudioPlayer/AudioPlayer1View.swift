@@ -23,68 +23,27 @@ import UIKit
 import NuguAgents
 import NuguUIKit
 
-final class AudioPlayer1View: UIView {
+final class AudioPlayer1View: AudioDisplayView {
     
     // MARK: Properties
     
-    @IBOutlet private weak var fullAudioPlayerContainerView: UIView!
-    
-    @IBOutlet private weak var titleView: DisplayTitleView!
-    
     @IBOutlet private weak var contentStackView: UIStackView!
-    
-    @IBOutlet private weak var albumImageContainerView: UIView!
-    @IBOutlet private weak var albumImageView: UIImageView!
-    @IBOutlet private weak var albumImageViewShadowView: UIView!
-    @IBOutlet private weak var adultContentLabel: UILabel!
-    @IBOutlet private weak var preListenContainerView: UIView!
-    
-    @IBOutlet private weak var favoriteButtonContainerView: UIView!
-    @IBOutlet private weak var favoriteButton: UIButton!
-    
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var subtitle1Label: UILabel!
-    @IBOutlet private weak var subtitle2Label: UILabel!
     
     @IBOutlet private weak var lyricsView: UIView!
     @IBOutlet private weak var currentLyricsLabel: UILabel!
     @IBOutlet private weak var nextLyricsLabel: UILabel!
     
-    @IBOutlet private weak var repeatButton: UIButton!
-    @IBOutlet private weak var prevButton: UIButton!
-    @IBOutlet private weak var playPauseButton: UIButton!
-    @IBOutlet private weak var nextButton: UIButton!
-    @IBOutlet private weak var shuffleButton: UIButton!
-    
-    @IBOutlet private weak var progressView: UIProgressView!
-    
-    @IBOutlet private weak var elapsedTimeLabel: UILabel!
-    @IBOutlet private weak var durationTimeLabel: UILabel!
-    
-    @IBOutlet private weak var idleBar: DisplayIdleBar!
-    
-    @IBOutlet private weak var audioPlayerBarViewContainerView: UIView!
-    @IBOutlet private weak var audioPlayerBarView: AudioPlayerBarView!
-    
     private var audioProgressTimer: DispatchSourceTimer?
-    private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.DisplayAudioPlayerView.audioProgress")
+    private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayer1View.audioProgress")
     
     private var lyricsTimer: DispatchSourceTimer?
-    private let lyricsTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.DisplayAudioPlayerView.lyrics")
+    private let lyricsTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayer1View.lyrics")
     private var lyricsData: AudioPlayerLyricsTemplate?
     private var lyricsIndex = 0
     
     private var fullLyricsView: FullLyricsView?
     
-    var isBarMode: Bool {
-        return audioPlayerBarViewContainerView.isHidden == false
-    }
-    
-    var onCloseButtonClick: (() -> Void)?
-    
-    var onUserInteraction: (() -> Void)?
-    
-    var displayPayload: [String: AnyHashable]? {
+    override var displayPayload: [String: AnyHashable]? {
         didSet {
             guard let displayPayload = displayPayload,
                 let payloadData = try? JSONSerialization.data(withJSONObject: displayPayload, options: []),
@@ -92,7 +51,7 @@ final class AudioPlayer1View: UIView {
             
             let template = displayItem.template
             
-            titleView.setData(titleData: template.title)
+            titleView.setData(logoUrl: template.title.iconUrl, titleText: template.title.text)  
             
             albumImageView.loadImage(from: template.content.imageUrl)
             titleLabel.text = template.content.title
@@ -132,7 +91,11 @@ final class AudioPlayer1View: UIView {
             }) ?? []
             
             startProgressTimer()
-            audioPlayerBarView.displayPayload = displayPayload
+            audioPlayerBarView.setData(
+                imageUrl: template.content.imageUrl,
+                headerText: template.content.title,
+                bodyText: template.content.subtitle1
+            )
             audioPlayerBarView.onCloseButtonClick = { [weak self] in
                 self?.onCloseButtonClick?()
             }
@@ -143,27 +106,6 @@ final class AudioPlayer1View: UIView {
                     self.fullAudioPlayerContainerView.isHidden = false
                     self.audioPlayerBarViewContainerView.isHidden = true
                 }
-            }
-        }
-    }
-    
-    var audioPlayerState: AudioPlayerState? {
-        didSet {
-            playPauseButton.isSelected = (audioPlayerState == .playing)
-            audioPlayerBarView.playPauseButton.isSelected = (audioPlayerState == .playing)
-        }
-    }
-    
-    private var repeatMode: AudioPlayerDisplayRepeat? {
-        didSet {
-            guard let repeatMode = repeatMode else { return }
-            switch repeatMode {
-            case .all:
-                repeatButton.setImage(UIImage(named: "btn_repeat_on"), for: .normal)
-            case .one:
-                repeatButton.setImage(UIImage(named: "btn_repeat_1_on"), for: .normal)
-            case .none:
-                repeatButton.setImage(UIImage(named: "btn_repeat_off"), for: .normal)
             }
         }
     }
@@ -200,94 +142,11 @@ final class AudioPlayer1View: UIView {
         
         preListenContainerView.layer.cornerRadius = 2.0
     }
-    
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        onUserInteraction?()
-        return super.hitTest(point, with: event)
-    }
-}
-
-// MARK: - Update
-
-extension AudioPlayer1View {
-    func updateSettings(payload: Data) {
-        guard let payload = try? JSONDecoder().decode(AudioPlayerUpdateMetadataPayload.self, from: payload) else {
-                log.error("invalid payload")
-                return
-        }
-        
-        if let favorite = payload.metadata?.template?.content?.settings?.favorite {
-            favoriteButtonContainerView.isHidden = false
-            favoriteButton.isSelected = favorite
-        }
-        
-        if let `repeat` = payload.metadata?.template?.content?.settings?.repeat {
-            repeatButton.isHidden = false
-            repeatMode = `repeat`
-        }
-        
-        if let shuffle = payload.metadata?.template?.content?.settings?.shuffle {
-            shuffleButton.isHidden = false
-            shuffleButton.isSelected = shuffle
-        }
-    }
 }
 
 // MARK: - IBActions
 
 private extension AudioPlayer1View {
-    @IBAction func closeButtonDidClick(_ button: UIButton) {
-        onCloseButtonClick?()
-    }
-    
-    @IBAction func barTypeButtonDidClick(_ button: UIButton) {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.audioPlayerBarViewContainerView.isHidden = false
-            self.fullAudioPlayerContainerView.isHidden = true
-            self.frame = CGRect(origin: CGPoint(x: 0, y: self.frame.size.height - 58.0 - SampleApp.bottomSafeAreaHeight), size: self.audioPlayerBarViewContainerView.frame.size)
-        }
-    }
-    
-    @IBAction func previousButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.audioPlayerAgent.prev()
-    }
-    
-    @IBAction func playPauseDidClick(_ button: UIButton) {
-        if button.isSelected {
-            NuguCentralManager.shared.client.audioPlayerAgent.pause()
-        } else {
-            NuguCentralManager.shared.client.audioPlayerAgent.play()
-        }
-    }
-    
-    @IBAction func nextButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.audioPlayerAgent.next()
-    }
-    
-    @IBAction func favoriteButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.audioPlayerAgent.favorite(isOn: favoriteButton.isSelected)
-        favoriteButton.isSelected = !favoriteButton.isSelected
-    }
-    
-    @IBAction func repeatButtonDidClick(_ button: UIButton) {
-        guard let repeatMode = repeatMode else { return }
-        NuguCentralManager.shared.client.audioPlayerAgent.repeat(mode: repeatMode)
-        switch repeatMode {
-        case .all:
-            self.repeatMode = AudioPlayerDisplayRepeat.one
-        case .one:
-            self.repeatMode = AudioPlayerDisplayRepeat.none
-        case .none:
-            self.repeatMode = AudioPlayerDisplayRepeat.all
-        }
-    }
-    
-    @IBAction func shuffleButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.audioPlayerAgent.shuffle(isOn: shuffleButton.isSelected)
-        shuffleButton.isSelected = !shuffleButton.isSelected
-    }
-    
     @objc func lyricsViewDidTap(_ gestureRecognizer: UITapGestureRecognizer) {
         fullLyricsView = FullLyricsView(frame: contentStackView.frame)
         fullLyricsView?.headerLabel.text = lyricsData?.title
