@@ -79,10 +79,6 @@ class DisplayView: UIView {
         displayPayload = mergedPayloadData
     }
     
-    @IBAction func closeButtonDidClick(_ button: UIButton) {
-        onCloseButtonClick?()
-    }
-    
     @IBAction func contentButtonDidClick(_ button: UIButton) {
         onItemSelect?(contentButtonToken)
     }

@@ -24,6 +24,8 @@ final class DisplayTitleView: UIView {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     
+    var onCloseButtonClick: (() -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadFromXib()
@@ -62,5 +64,9 @@ final class DisplayTitleView: UIView {
             logoImageView.isHidden = true
         }
         titleLabel.text = titleText
+    }
+    
+    @IBAction func closeButtonDidClick(_ button: UIButton) {
+        onCloseButtonClick?()
     }
 }

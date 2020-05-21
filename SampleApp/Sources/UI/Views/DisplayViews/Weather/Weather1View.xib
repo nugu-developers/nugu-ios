@@ -46,19 +46,6 @@
                         <constraint firstAttribute="height" constant="76" id="eZ1-bD-tNs"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CZh-oZ-PC9" userLabel="CloseButton">
-                    <rect key="frame" x="331" y="64" width="24" height="24"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="24" id="Cny-f1-Crp"/>
-                        <constraint firstAttribute="height" constant="24" id="ayY-Yp-QeH"/>
-                    </constraints>
-                    <state key="normal" image="btn_close">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                    <connections>
-                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="bjj-3z-RdZ"/>
-                    </connections>
-                </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="QZ2-Tn-LIX" userLabel="SubTitleStackView">
                     <rect key="frame" x="0.0" y="142" width="375" height="28"/>
                     <subviews>
@@ -329,8 +316,6 @@
                 <constraint firstItem="cAZ-X3-My1" firstAttribute="top" relation="greaterThanOrEqual" secondItem="J2Z-mJ-Onp" secondAttribute="bottom" id="Jg9-Fh-0LJ"/>
                 <constraint firstItem="cAZ-X3-My1" firstAttribute="leading" secondItem="fvR-BO-PCu" secondAttribute="leading" id="KHH-rO-VSA"/>
                 <constraint firstItem="i3W-HO-Lke" firstAttribute="trailing" secondItem="fvR-BO-PCu" secondAttribute="trailing" id="KIn-Wf-Pbu"/>
-                <constraint firstItem="CZh-oZ-PC9" firstAttribute="top" secondItem="fvR-BO-PCu" secondAttribute="top" constant="20" id="P1s-eU-2ol"/>
-                <constraint firstItem="fvR-BO-PCu" firstAttribute="trailing" secondItem="CZh-oZ-PC9" secondAttribute="trailing" constant="20" id="RwV-Y2-0KJ"/>
                 <constraint firstItem="cAZ-X3-My1" firstAttribute="bottom" secondItem="fvR-BO-PCu" secondAttribute="bottom" id="UnN-kA-8Pn"/>
                 <constraint firstAttribute="trailing" secondItem="QZ2-Tn-LIX" secondAttribute="trailing" id="WCq-h5-CBf"/>
                 <constraint firstItem="fvR-BO-PCu" firstAttribute="trailing" secondItem="J2Z-mJ-Onp" secondAttribute="trailing" constant="20" id="bNL-6g-elL"/>
@@ -342,7 +327,4 @@
             <point key="canvasLocation" x="128.98550724637681" y="135.9375"/>
         </view>
     </objects>
-    <resources>
-        <image name="btn_close" width="24" height="24"/>
-    </resources>
 </document>

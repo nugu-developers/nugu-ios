@@ -48,6 +48,9 @@ final class Score1View: DisplayView {
                         
             // Set title
             titleView.setData(titleData: displayItem.title)
+            titleView.onCloseButtonClick = { [weak self] in
+                self?.onCloseButtonClick?()
+            }
             
             // Set sub title
             if let subIconUrl = displayItem.title.subicon?.sources.first?.url {

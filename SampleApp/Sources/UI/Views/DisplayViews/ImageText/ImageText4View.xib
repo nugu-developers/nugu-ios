@@ -35,19 +35,6 @@
                         <constraint firstAttribute="height" constant="76" id="nE2-AQ-RAh"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UGm-Ce-Ukd" userLabel="CloseButton">
-                    <rect key="frame" x="370" y="64" width="24" height="24"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="24" id="5lO-rc-awD"/>
-                        <constraint firstAttribute="height" constant="24" id="gEy-Qg-a78"/>
-                    </constraints>
-                    <state key="normal" image="btn_close">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                    <connections>
-                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="BTr-ne-7Cr"/>
-                    </connections>
-                </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vTV-er-6xn" userLabel="SubTitleStackView">
                     <rect key="frame" x="0.0" y="142" width="414" height="28"/>
                     <subviews>
@@ -157,13 +144,11 @@
                 <constraint firstItem="VHY-AE-Ley" firstAttribute="bottom" secondItem="WBr-5r-759" secondAttribute="bottom" id="4Kw-qa-FL4"/>
                 <constraint firstItem="WBr-5r-759" firstAttribute="trailing" secondItem="EKa-PM-Byk" secondAttribute="trailing" constant="20" id="DPn-ZV-PWB"/>
                 <constraint firstItem="VHY-AE-Ley" firstAttribute="leading" secondItem="WBr-5r-759" secondAttribute="leading" id="EOV-jc-7gl"/>
-                <constraint firstItem="UGm-Ce-Ukd" firstAttribute="top" secondItem="WBr-5r-759" secondAttribute="top" constant="20" id="KvG-B3-uAr"/>
                 <constraint firstItem="vTV-er-6xn" firstAttribute="top" secondItem="JtI-kM-eSG" secondAttribute="bottom" id="PE8-YM-fnU"/>
                 <constraint firstItem="EKa-PM-Byk" firstAttribute="leading" secondItem="WBr-5r-759" secondAttribute="leading" constant="20" id="aDp-hT-jaL"/>
                 <constraint firstAttribute="trailing" secondItem="vTV-er-6xn" secondAttribute="trailing" id="cdW-Ou-xjp"/>
                 <constraint firstItem="JtI-kM-eSG" firstAttribute="leading" secondItem="WBr-5r-759" secondAttribute="leading" id="cyR-8c-WYq"/>
                 <constraint firstItem="EKa-PM-Byk" firstAttribute="top" secondItem="vTV-er-6xn" secondAttribute="bottom" constant="36" id="dgq-FC-UmC"/>
-                <constraint firstItem="WBr-5r-759" firstAttribute="trailing" secondItem="UGm-Ce-Ukd" secondAttribute="trailing" constant="20" id="eBN-Zq-qAh"/>
                 <constraint firstItem="VHY-AE-Ley" firstAttribute="top" relation="greaterThanOrEqual" secondItem="EKa-PM-Byk" secondAttribute="bottom" id="hvZ-Uf-1ik"/>
                 <constraint firstItem="JtI-kM-eSG" firstAttribute="trailing" secondItem="WBr-5r-759" secondAttribute="trailing" id="noJ-NS-ofC"/>
                 <constraint firstItem="VHY-AE-Ley" firstAttribute="trailing" secondItem="WBr-5r-759" secondAttribute="trailing" id="peL-Xo-A3s"/>
@@ -174,7 +159,4 @@
             <point key="canvasLocation" x="128.98550724637681" y="135.9375"/>
         </view>
     </objects>
-    <resources>
-        <image name="btn_close" width="28" height="28"/>
-    </resources>
 </document>

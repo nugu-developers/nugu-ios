@@ -14,16 +14,6 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QYv-ir-GLi" userLabel="CloseButton">
-                    <rect key="frame" x="366" y="52" width="28" height="28"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="28" id="7rQ-Hb-oyB"/>
-                        <constraint firstAttribute="width" constant="28" id="oP0-lP-fYQ"/>
-                    </constraints>
-                    <state key="normal" image="btn_close">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nXz-zr-Z5Z">
                     <rect key="frame" x="153.5" y="80" width="107" height="28"/>
                     <subviews>
@@ -71,11 +61,9 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="L4t-hY-4pk" firstAttribute="trailing" secondItem="8jA-vB-Kqw" secondAttribute="trailing" id="1Mm-yC-8Mk"/>
-                <constraint firstItem="8jA-vB-Kqw" firstAttribute="trailing" secondItem="QYv-ir-GLi" secondAttribute="trailing" constant="20" id="JO0-4h-RWm"/>
                 <constraint firstItem="nXz-zr-Z5Z" firstAttribute="top" secondItem="8jA-vB-Kqw" secondAttribute="top" constant="36" id="PIs-dM-xDZ"/>
                 <constraint firstItem="L4t-hY-4pk" firstAttribute="top" secondItem="nXz-zr-Z5Z" secondAttribute="bottom" constant="20" id="bVC-yq-qiY"/>
                 <constraint firstItem="bkF-6T-WaP" firstAttribute="trailing" secondItem="8jA-vB-Kqw" secondAttribute="trailing" id="cRq-x3-Plp"/>
-                <constraint firstItem="QYv-ir-GLi" firstAttribute="top" secondItem="8jA-vB-Kqw" secondAttribute="top" constant="8" id="fHW-yl-dg7"/>
                 <constraint firstItem="bkF-6T-WaP" firstAttribute="leading" secondItem="8jA-vB-Kqw" secondAttribute="leading" id="fks-Vr-Gzp"/>
                 <constraint firstItem="8jA-vB-Kqw" firstAttribute="bottom" secondItem="bkF-6T-WaP" secondAttribute="bottom" id="gsS-az-ubA"/>
                 <constraint firstItem="nXz-zr-Z5Z" firstAttribute="centerX" secondItem="8jA-vB-Kqw" secondAttribute="centerX" id="kSp-gQ-13t"/>
@@ -86,7 +74,4 @@
             <point key="canvasLocation" x="-50.399999999999999" y="2.9556650246305418"/>
         </view>
     </objects>
-    <resources>
-        <image name="btn_close" width="28" height="28"/>
-    </resources>
 </document>

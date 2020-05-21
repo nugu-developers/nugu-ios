@@ -32,19 +32,6 @@
                         <constraint firstAttribute="height" constant="76" id="vi0-w2-cgb"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lTb-V2-nWo" userLabel="CloseButton">
-                    <rect key="frame" x="370" y="64" width="24" height="24"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="24" id="eic-sO-8uO"/>
-                        <constraint firstAttribute="height" constant="24" id="hpB-Gp-KKU"/>
-                    </constraints>
-                    <state key="normal" image="btn_close">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                    <connections>
-                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="TdL-0r-90e"/>
-                    </connections>
-                </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="MMf-bN-G6f" userLabel="SubTitleStackView">
                     <rect key="frame" x="0.0" y="142" width="414" height="28"/>
                     <subviews>
@@ -137,7 +124,6 @@
                 <constraint firstItem="MMf-bN-G6f" firstAttribute="top" secondItem="jBF-ww-6cc" secondAttribute="bottom" id="D8n-cF-qFM"/>
                 <constraint firstItem="jBF-ww-6cc" firstAttribute="leading" secondItem="HmD-Tc-IgF" secondAttribute="leading" id="G9f-sC-Oyl"/>
                 <constraint firstItem="jBF-ww-6cc" firstAttribute="trailing" secondItem="HmD-Tc-IgF" secondAttribute="trailing" id="Tdr-Hl-hc6"/>
-                <constraint firstItem="HmD-Tc-IgF" firstAttribute="trailing" secondItem="lTb-V2-nWo" secondAttribute="trailing" constant="20" id="Xsy-QZ-d2M"/>
                 <constraint firstItem="voT-i4-Tv0" firstAttribute="bottom" secondItem="HmD-Tc-IgF" secondAttribute="bottom" id="agE-3Z-vDW"/>
                 <constraint firstItem="voT-i4-Tv0" firstAttribute="trailing" secondItem="HmD-Tc-IgF" secondAttribute="trailing" id="bGq-FZ-i3k"/>
                 <constraint firstItem="MMf-bN-G6f" firstAttribute="leading" secondItem="gEG-Pf-h2r" secondAttribute="leading" id="fhJ-Vp-xC9"/>
@@ -147,14 +133,10 @@
                 <constraint firstAttribute="trailing" secondItem="MMf-bN-G6f" secondAttribute="trailing" id="kJM-HF-2Am"/>
                 <constraint firstItem="HmD-Tc-IgF" firstAttribute="trailing" secondItem="BIE-F0-QVS" secondAttribute="trailing" constant="20" id="kbQ-b1-02r"/>
                 <constraint firstItem="jBF-ww-6cc" firstAttribute="top" secondItem="HmD-Tc-IgF" secondAttribute="top" constant="22" id="kz3-QA-rAy"/>
-                <constraint firstItem="lTb-V2-nWo" firstAttribute="top" secondItem="HmD-Tc-IgF" secondAttribute="top" constant="20" id="vCO-c9-NXW"/>
                 <constraint firstItem="BIE-F0-QVS" firstAttribute="top" secondItem="MMf-bN-G6f" secondAttribute="bottom" constant="36" id="xLi-62-SA6"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="HmD-Tc-IgF"/>
             <point key="canvasLocation" x="128.98550724637681" y="135.9375"/>
         </view>
     </objects>
-    <resources>
-        <image name="btn_close" width="28" height="28"/>
-    </resources>
 </document>

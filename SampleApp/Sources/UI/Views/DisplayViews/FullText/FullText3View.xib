@@ -33,19 +33,6 @@
                         <constraint firstAttribute="height" constant="76" id="Jf1-b2-rbI"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V06-vT-jSJ" userLabel="CloseButton">
-                    <rect key="frame" x="370" y="64" width="24" height="24"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="24" id="gjk-Oa-Qiy"/>
-                        <constraint firstAttribute="height" constant="24" id="hfL-e6-GVS"/>
-                    </constraints>
-                    <state key="normal" image="btn_close">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                    <connections>
-                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="vbM-nF-uXy"/>
-                    </connections>
-                </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="9oE-x5-f8f" userLabel="SubTitleStackView">
                     <rect key="frame" x="0.0" y="142" width="414" height="28"/>
                     <subviews>
@@ -135,8 +122,6 @@
             </subviews>
             <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="V06-vT-jSJ" firstAttribute="top" secondItem="QEn-xm-81k" secondAttribute="top" constant="20" id="4Yy-qF-y59"/>
-                <constraint firstItem="QEn-xm-81k" firstAttribute="trailing" secondItem="V06-vT-jSJ" secondAttribute="trailing" constant="20" id="AjW-sC-c6R"/>
                 <constraint firstItem="QEn-xm-81k" firstAttribute="trailing" secondItem="7pd-lp-bJO" secondAttribute="trailing" constant="20" id="DnD-nh-49I"/>
                 <constraint firstItem="9oE-x5-f8f" firstAttribute="leading" secondItem="yCV-FQ-I2d" secondAttribute="leading" id="F9q-0Q-9S0"/>
                 <constraint firstItem="lvX-co-ZfD" firstAttribute="bottom" secondItem="QEn-xm-81k" secondAttribute="bottom" id="FhH-dr-GsW"/>
@@ -155,7 +140,4 @@
             <point key="canvasLocation" x="128.98550724637681" y="135.9375"/>
         </view>
     </objects>
-    <resources>
-        <image name="btn_close" width="28" height="28"/>
-    </resources>
 </document>

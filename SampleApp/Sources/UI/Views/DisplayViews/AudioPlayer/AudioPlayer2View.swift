@@ -68,6 +68,9 @@ final class AudioPlayer2View: AudioDisplayView {
             let template = displayItem.template
             
             titleView.setData(logoUrl: template.title.iconUrl, titleText: template.title.text)
+            titleView.onCloseButtonClick = { [weak self] in
+                self?.onCloseButtonClick?()
+            }
             
             albumImageView.loadImage(from: template.content.imageUrl)
             titleLabel.text = template.content.title

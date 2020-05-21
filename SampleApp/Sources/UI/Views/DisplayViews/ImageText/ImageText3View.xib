@@ -35,19 +35,6 @@
                         <constraint firstAttribute="height" constant="76" id="jkM-YV-1Sv"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bdv-B7-0oS" userLabel="CloseButton">
-                    <rect key="frame" x="370" y="64" width="24" height="24"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="24" id="ERG-Bd-t7M"/>
-                        <constraint firstAttribute="height" constant="24" id="JlJ-Ij-mkr"/>
-                    </constraints>
-                    <state key="normal" image="btn_close">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                    <connections>
-                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="VKA-K4-YFq"/>
-                    </connections>
-                </button>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QPj-Sk-hxm">
                     <rect key="frame" x="20" y="142" width="374" height="652"/>
                     <subviews>
@@ -165,8 +152,6 @@
                 <constraint firstItem="xux-0B-gOX" firstAttribute="top" secondItem="QPj-Sk-hxm" secondAttribute="bottom" id="7aS-K1-QPj"/>
                 <constraint firstItem="wdp-Ch-VGY" firstAttribute="leading" secondItem="P5G-FY-I6T" secondAttribute="leading" id="83f-at-Bn8"/>
                 <constraint firstItem="QPj-Sk-hxm" firstAttribute="leading" secondItem="P5G-FY-I6T" secondAttribute="leading" constant="20" id="Lgd-l4-syQ"/>
-                <constraint firstItem="P5G-FY-I6T" firstAttribute="trailing" secondItem="bdv-B7-0oS" secondAttribute="trailing" constant="20" id="TSs-xV-Q2Y"/>
-                <constraint firstItem="bdv-B7-0oS" firstAttribute="top" secondItem="P5G-FY-I6T" secondAttribute="top" constant="20" id="TZP-El-nxA"/>
                 <constraint firstItem="xux-0B-gOX" firstAttribute="trailing" secondItem="P5G-FY-I6T" secondAttribute="trailing" id="dAf-gK-W4x"/>
                 <constraint firstItem="wdp-Ch-VGY" firstAttribute="trailing" secondItem="P5G-FY-I6T" secondAttribute="trailing" id="eAZ-DM-Sn8"/>
                 <constraint firstItem="wdp-Ch-VGY" firstAttribute="top" secondItem="P5G-FY-I6T" secondAttribute="top" constant="22" id="l1D-Ze-YmC"/>
@@ -179,7 +164,4 @@
             <point key="canvasLocation" x="128.98550724637681" y="135.9375"/>
         </view>
     </objects>
-    <resources>
-        <image name="btn_close" width="24" height="24"/>
-    </resources>
 </document>

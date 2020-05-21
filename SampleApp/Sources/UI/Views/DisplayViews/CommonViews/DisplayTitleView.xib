@@ -51,14 +51,30 @@
                         <constraint firstAttribute="bottom" secondItem="xPq-qL-Lhy" secondAttribute="bottom" id="g3Z-X7-8GD"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EiA-AV-psA">
+                    <rect key="frame" x="327" y="18" width="28" height="28"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="28" id="aom-Wy-KZZ"/>
+                        <constraint firstAttribute="width" constant="28" id="csr-9v-8dj"/>
+                    </constraints>
+                    <state key="normal" image="btn_close"/>
+                    <connections>
+                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="XOi-gU-cgj"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="EiA-AV-psA" secondAttribute="trailing" constant="20" id="LDP-fH-8be"/>
                 <constraint firstItem="RCu-8e-0xr" firstAttribute="centerX" secondItem="QJf-e0-h4a" secondAttribute="centerX" id="PDJ-ez-5td"/>
                 <constraint firstItem="RCu-8e-0xr" firstAttribute="top" secondItem="QJf-e0-h4a" secondAttribute="top" constant="20" id="VcS-oB-dnF"/>
+                <constraint firstItem="EiA-AV-psA" firstAttribute="centerY" secondItem="RCu-8e-0xr" secondAttribute="centerY" id="cfo-0K-vRH"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="Yh7-Re-l4k"/>
             <point key="canvasLocation" x="131.15942028985509" y="116.18303571428571"/>
         </view>
     </objects>
+    <resources>
+        <image name="btn_close" width="24" height="24"/>
+    </resources>
 </document>

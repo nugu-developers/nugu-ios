@@ -52,19 +52,6 @@
                                         <constraint firstAttribute="height" constant="76" id="kx0-XE-aJx"/>
                                     </constraints>
                                 </view>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ggz-AK-2QH" userLabel="CloseButton">
-                                    <rect key="frame" x="366" y="16" width="28" height="28"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="28" id="3Hz-0g-Olt"/>
-                                        <constraint firstAttribute="width" constant="28" id="Ekd-MA-V7U"/>
-                                    </constraints>
-                                    <state key="normal" image="btn_close">
-                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="wpe-4d-4sS"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKv-Zq-kfE" userLabel="BarTypeButton">
                                     <rect key="frame" x="20" y="16" width="28" height="28"/>
                                     <constraints>
@@ -320,7 +307,6 @@
                                 <constraint firstItem="BDu-BH-ASv" firstAttribute="leading" secondItem="EP1-Pl-EFV" secondAttribute="leading" constant="20" id="GRl-20-h30"/>
                                 <constraint firstAttribute="trailing" secondItem="Yef-gv-BW9" secondAttribute="trailing" constant="20" id="IKJ-gO-4Te"/>
                                 <constraint firstItem="Yef-gv-BW9" firstAttribute="top" secondItem="veS-tW-n4N" secondAttribute="bottom" constant="20" id="JCE-MH-RzJ"/>
-                                <constraint firstItem="BDu-BH-ASv" firstAttribute="top" secondItem="ggz-AK-2QH" secondAttribute="bottom" constant="32" id="LS8-od-mID"/>
                                 <constraint firstItem="pG4-6i-DuM" firstAttribute="leading" secondItem="EP1-Pl-EFV" secondAttribute="leading" id="OKW-qS-TnH"/>
                                 <constraint firstItem="veS-tW-n4N" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BDu-BH-ASv" secondAttribute="bottom" constant="20" id="OgG-ep-ID8"/>
                                 <constraint firstItem="Yef-gv-BW9" firstAttribute="leading" secondItem="EP1-Pl-EFV" secondAttribute="leading" constant="20" id="P7x-PC-I41"/>
@@ -330,7 +316,6 @@
                                 <constraint firstAttribute="trailing" secondItem="pH6-Ca-81Z" secondAttribute="trailing" id="WU7-yA-QmZ"/>
                                 <constraint firstItem="veS-tW-n4N" firstAttribute="leading" secondItem="EP1-Pl-EFV" secondAttribute="leading" constant="20" id="XPk-30-C9Y"/>
                                 <constraint firstItem="WKv-Zq-kfE" firstAttribute="leading" secondItem="EP1-Pl-EFV" secondAttribute="leading" constant="20" id="YeR-ay-EWv"/>
-                                <constraint firstAttribute="trailing" secondItem="ggz-AK-2QH" secondAttribute="trailing" constant="20" id="cAX-Pa-eNh"/>
                                 <constraint firstItem="ipZ-cW-S1O" firstAttribute="top" secondItem="veS-tW-n4N" secondAttribute="bottom" constant="5" id="cWZ-bO-VeM"/>
                                 <constraint firstAttribute="trailing" secondItem="pG4-6i-DuM" secondAttribute="trailing" id="fKS-cW-GFC"/>
                                 <constraint firstItem="BDu-BH-ASv" firstAttribute="top" secondItem="pH6-Ca-81Z" secondAttribute="bottom" id="fdQ-IT-qyS"/>
@@ -375,7 +360,6 @@
     </objects>
     <resources>
         <image name="btnLyricsOff" width="24" height="24"/>
-        <image name="btn_close" width="24" height="24"/>
         <image name="btn_like_off" width="32" height="32"/>
         <image name="btn_like_on" width="32" height="32"/>
         <image name="btn_pause" width="48" height="48"/>

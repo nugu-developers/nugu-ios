@@ -30,19 +30,6 @@
                         <constraint firstAttribute="height" constant="76" id="g7S-QJ-weK"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Szr-Hn-cZs" userLabel="CloseButton">
-                    <rect key="frame" x="370" y="64" width="24" height="24"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="24" id="Wjq-RQ-aEC"/>
-                        <constraint firstAttribute="height" constant="24" id="ZXU-ji-eqS"/>
-                    </constraints>
-                    <state key="normal" image="btn_close">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                    <connections>
-                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="zup-x3-jwV"/>
-                    </connections>
-                </button>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wmY-px-kl4">
                     <rect key="frame" x="20" y="142" width="374" height="652"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -62,11 +49,9 @@
             <constraints>
                 <constraint firstItem="1X4-U6-MFm" firstAttribute="leading" secondItem="Xvt-g1-wCG" secondAttribute="leading" id="5F3-TA-zJ3"/>
                 <constraint firstItem="hBZ-ty-TBe" firstAttribute="leading" secondItem="Xvt-g1-wCG" secondAttribute="leading" id="E87-Ny-uIp"/>
-                <constraint firstItem="Szr-Hn-cZs" firstAttribute="top" secondItem="Xvt-g1-wCG" secondAttribute="top" constant="20" id="IjX-CQ-wVJ"/>
                 <constraint firstItem="hBZ-ty-TBe" firstAttribute="bottom" secondItem="Xvt-g1-wCG" secondAttribute="bottom" id="TjD-XI-BI4"/>
                 <constraint firstItem="Xvt-g1-wCG" firstAttribute="trailing" secondItem="wmY-px-kl4" secondAttribute="trailing" constant="20" id="WUK-Kk-dr4"/>
                 <constraint firstItem="hBZ-ty-TBe" firstAttribute="trailing" secondItem="Xvt-g1-wCG" secondAttribute="trailing" id="bJd-u2-wk6"/>
-                <constraint firstItem="Xvt-g1-wCG" firstAttribute="trailing" secondItem="Szr-Hn-cZs" secondAttribute="trailing" constant="20" id="fy2-Xi-U1U"/>
                 <constraint firstItem="wmY-px-kl4" firstAttribute="leading" secondItem="Xvt-g1-wCG" secondAttribute="leading" constant="20" id="jgb-WG-VpO"/>
                 <constraint firstItem="hBZ-ty-TBe" firstAttribute="top" secondItem="wmY-px-kl4" secondAttribute="bottom" id="o5b-H8-E36"/>
                 <constraint firstItem="1X4-U6-MFm" firstAttribute="top" secondItem="Xvt-g1-wCG" secondAttribute="top" constant="22" id="oya-yT-XUS"/>
@@ -140,7 +125,4 @@
             <point key="canvasLocation" x="130" y="543"/>
         </view>
     </objects>
-    <resources>
-        <image name="btn_close" width="28" height="28"/>
-    </resources>
 </document>

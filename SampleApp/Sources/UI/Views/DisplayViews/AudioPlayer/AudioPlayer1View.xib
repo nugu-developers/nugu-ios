@@ -56,19 +56,6 @@
                                         <constraint firstAttribute="height" constant="76" id="BEo-eS-qbI"/>
                                     </constraints>
                                 </view>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXZ-P6-JxC" userLabel="CloseButton">
-                                    <rect key="frame" x="366" y="16" width="28" height="28"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="28" id="m1Q-KA-fDD"/>
-                                        <constraint firstAttribute="width" constant="28" id="trS-mw-Od8"/>
-                                    </constraints>
-                                    <state key="normal" image="btn_close">
-                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="closeButtonDidClick:" destination="-1" eventType="touchUpInside" id="uv7-lt-BnJ"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2vu-vb-vL1" userLabel="BarTypeButton">
                                     <rect key="frame" x="20" y="16" width="28" height="28"/>
                                     <constraints>
@@ -323,11 +310,9 @@
                                 <constraint firstAttribute="trailing" secondItem="ekx-W3-HQh" secondAttribute="trailing" id="Dsm-gG-m7J"/>
                                 <constraint firstItem="ekx-W3-HQh" firstAttribute="top" secondItem="9GX-BR-Xao" secondAttribute="top" id="FVu-C9-ruX"/>
                                 <constraint firstItem="fxn-fB-pBl" firstAttribute="top" secondItem="KQI-Sg-TwW" secondAttribute="bottom" constant="5" id="Fiu-ei-3To"/>
-                                <constraint firstItem="1zs-rr-41A" firstAttribute="top" secondItem="vXZ-P6-JxC" secondAttribute="bottom" constant="32" id="HJW-cj-Q8B"/>
                                 <constraint firstItem="2vu-vb-vL1" firstAttribute="leading" secondItem="9GX-BR-Xao" secondAttribute="leading" constant="20" id="Hwl-dK-gId"/>
                                 <constraint firstItem="1zs-rr-41A" firstAttribute="top" secondItem="2vu-vb-vL1" secondAttribute="bottom" constant="32" id="Kx2-DJ-lQw"/>
                                 <constraint firstItem="FcB-0U-tGu" firstAttribute="top" secondItem="Yqv-x3-OPO" secondAttribute="bottom" constant="20" id="Lft-af-Tgc"/>
-                                <constraint firstAttribute="trailing" secondItem="vXZ-P6-JxC" secondAttribute="trailing" constant="20" id="Ruk-GN-arm"/>
                                 <constraint firstItem="FcB-0U-tGu" firstAttribute="leading" secondItem="9GX-BR-Xao" secondAttribute="leading" id="TO5-KT-Dbr"/>
                                 <constraint firstItem="Yqv-x3-OPO" firstAttribute="leading" secondItem="9GX-BR-Xao" secondAttribute="leading" constant="20" id="ZHv-jx-VAJ"/>
                                 <constraint firstAttribute="bottom" secondItem="FcB-0U-tGu" secondAttribute="bottom" id="ame-h0-ZVI"/>
@@ -379,7 +364,6 @@
     </objects>
     <resources>
         <image name="btnLyricsOff" width="24" height="24"/>
-        <image name="btn_close" width="24" height="24"/>
         <image name="btn_like_off" width="32" height="32"/>
         <image name="btn_like_on" width="32" height="32"/>
         <image name="btn_pause" width="48" height="48"/>
