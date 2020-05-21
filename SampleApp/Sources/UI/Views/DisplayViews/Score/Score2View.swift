@@ -98,6 +98,10 @@ extension Score2View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         onItemSelect?(scoreItems?[indexPath.row].token)
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        idleBar.lineViewIsHidden(hidden: Int(scrollView.contentOffset.y + scrollView.frame.size.height) >= Int(scrollView.contentSize.height))
+    }
 }
 
 extension Score2View: DisplayControllable {

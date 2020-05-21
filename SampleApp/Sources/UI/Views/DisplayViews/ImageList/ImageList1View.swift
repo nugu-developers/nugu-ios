@@ -108,6 +108,12 @@ extension ImageList1View: UITableViewDataSource {
     }
 }
 
+extension ImageList1View: UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        idleBar.lineViewIsHidden(hidden: Int(scrollView.contentOffset.y + scrollView.frame.size.height) >= Int(scrollView.contentSize.height))
+    }
+}
+
 extension ImageList1View: DisplayControllable {
     func visibleTokenList() -> [String]? {
         return imageList1TableView.visibleCells.map { [weak self] (cell) -> String? in

@@ -10,6 +10,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
             <connections>
                 <outlet property="chipsView" destination="qX2-g6-UF7" id="1gc-9q-zmT"/>
+                <outlet property="lineView" destination="NIj-zL-8Yj" id="a7N-5R-r8v"/>
                 <outlet property="nuguButton" destination="c0I-ic-nvP" id="3bX-tC-Soc"/>
             </connections>
         </placeholder>
@@ -28,11 +29,21 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qX2-g6-UF7" customClass="NuguChipsView" customModule="NuguUIKit">
                     <rect key="frame" x="76" y="0.0" width="338" height="68"/>
                 </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NIj-zL-8Yj" userLabel="LineView">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="Nkg-Os-wu7"/>
+                    </constraints>
+                </view>
             </subviews>
             <constraints>
+                <constraint firstItem="NIj-zL-8Yj" firstAttribute="leading" secondItem="qQc-0G-la3" secondAttribute="leading" id="B5R-Yd-KTG"/>
                 <constraint firstItem="qX2-g6-UF7" firstAttribute="top" secondItem="qQc-0G-la3" secondAttribute="top" id="EcT-vS-no3"/>
                 <constraint firstAttribute="trailing" secondItem="qX2-g6-UF7" secondAttribute="trailing" id="P5K-Y4-LxT"/>
+                <constraint firstItem="NIj-zL-8Yj" firstAttribute="top" secondItem="qQc-0G-la3" secondAttribute="top" id="Rqu-ax-RAF"/>
                 <constraint firstItem="c0I-ic-nvP" firstAttribute="leading" secondItem="qQc-0G-la3" secondAttribute="leading" constant="12" id="Vgn-tG-2kC"/>
+                <constraint firstAttribute="trailing" secondItem="NIj-zL-8Yj" secondAttribute="trailing" id="t7F-4H-XEH"/>
                 <constraint firstItem="qX2-g6-UF7" firstAttribute="leading" secondItem="c0I-ic-nvP" secondAttribute="trailing" constant="8" id="uPj-qO-ADq"/>
                 <constraint firstItem="c0I-ic-nvP" firstAttribute="centerY" secondItem="qQc-0G-la3" secondAttribute="centerY" id="v3R-jd-X8X"/>
                 <constraint firstAttribute="bottom" secondItem="qX2-g6-UF7" secondAttribute="bottom" id="zRi-re-v5v"/>

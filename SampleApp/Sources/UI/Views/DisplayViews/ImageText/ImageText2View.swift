@@ -95,3 +95,9 @@ final class ImageText2View: DisplayView {
         contentImageView.layer.cornerRadius = 8.0
     }
 }
+
+extension ImageText2View: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        idleBar.lineViewIsHidden(hidden: Int(scrollView.contentOffset.y + scrollView.frame.size.height) >= Int(scrollView.contentSize.height))
+    }
+}

@@ -23,6 +23,7 @@ import UIKit
 import NuguUIKit
 
 final class DisplayIdleBar: UIView {
+    @IBOutlet private weak var lineView: UIView!
     @IBOutlet private weak var nuguButton: NuguButton!
     @IBOutlet private weak var chipsView: NuguChipsView!
     
@@ -58,6 +59,10 @@ final class DisplayIdleBar: UIView {
         addSubview(view)
         backgroundColor = .clear
         nuguButton.addTarget(self, action: #selector(nuguButtonDidClick(button:)), for: .touchUpInside)
+    }
+    
+    func lineViewIsHidden(hidden: Bool) {
+        lineView.isHidden = hidden
     }
     
     @objc func nuguButtonDidClick(button: NuguButton) {

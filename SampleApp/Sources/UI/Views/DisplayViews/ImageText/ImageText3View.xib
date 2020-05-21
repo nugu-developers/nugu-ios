@@ -137,6 +137,9 @@
                         <constraint firstAttribute="bottom" secondItem="tXL-IR-Wh6" secondAttribute="bottom" id="5TF-P0-KP0"/>
                         <constraint firstItem="tXL-IR-Wh6" firstAttribute="leading" secondItem="QPj-Sk-hxm" secondAttribute="leading" id="NdC-E1-9WU"/>
                     </constraints>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="urm-2B-C48"/>
+                    </connections>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xux-0B-gOX" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="794" width="414" height="68"/>

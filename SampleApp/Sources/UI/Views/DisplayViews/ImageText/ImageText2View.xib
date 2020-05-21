@@ -138,6 +138,9 @@
                         <constraint firstAttribute="bottom" secondItem="ffN-el-poA" secondAttribute="bottom" id="Y4w-De-6bh"/>
                         <constraint firstAttribute="trailing" secondItem="ffN-el-poA" secondAttribute="trailing" id="yTJ-JF-Llf"/>
                     </constraints>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="Rkf-gh-ziO"/>
+                    </connections>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="18y-8n-P1r" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="794" width="414" height="68"/>

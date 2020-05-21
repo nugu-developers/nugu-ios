@@ -107,6 +107,10 @@ extension ImageList2View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         onItemSelect?(imageList2Items?[indexPath.row].token)
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        idleBar.lineViewIsHidden(hidden: Int(scrollView.contentOffset.y + scrollView.frame.size.height) >= Int(scrollView.contentSize.height))
+    }
 }
 
 extension ImageList2View: DisplayControllable {

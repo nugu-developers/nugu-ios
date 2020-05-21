@@ -102,6 +102,10 @@ extension TextList4View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         onItemSelect?(textList4Items?[indexPath.row].token)
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        idleBar.lineViewIsHidden(hidden: Int(scrollView.contentOffset.y + scrollView.frame.size.height) >= Int(scrollView.contentSize.height))
+    }
 }
 
 extension TextList4View: DisplayControllable {

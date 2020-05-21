@@ -95,6 +95,12 @@ extension Weather4View: UITableViewDataSource {
     }
 }
 
+extension Weather4View: UITableViewDelegate {    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        idleBar.lineViewIsHidden(hidden: Int(scrollView.contentOffset.y + scrollView.frame.size.height) >= Int(scrollView.contentSize.height))
+    }
+}
+
 extension Weather4View: DisplayControllable {
     func visibleTokenList() -> [String]? {
         return nil
