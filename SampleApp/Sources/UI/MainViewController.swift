@@ -283,7 +283,7 @@ private extension MainViewController {
     
     func setExampleChips() {
         nuguVoiceChrome.setChipsData(
-            chipsData: [.normal(text: "템플릿에서 도움말1"), .action(text: "우주가 영어로 머야"), .action(text: "추천종목 알려줘"), .normal(text: "10000 곱하기 40은"), .normal(text: "10분 타이머"), .normal(text: "멜론 탑100"), .normal(text: "템플릿 열어줘")],
+            chipsData: [.normal(text: "템플릿에서 도움말1"), .action(text: "오늘 날씨 알려줘"), .action(text: "습도 알려줘"), .normal(text: "주말 날씨 알려줘"), .normal(text: "주간 날씨 알려줘"), .normal(text: "멜론 틀어줘"), .normal(text: "NUGU 토픽 알려줘")],
             onChipsSelect: { selectedChipsText in
                 guard let selectedChipsText = selectedChipsText,
                     let window = UIApplication.shared.keyWindow else { return }
