@@ -49,6 +49,7 @@ final class AudioPlayerBarView: UIView {
         // swiftlint:disable force_cast
         let view = Bundle.main.loadNibNamed("AudioPlayerBarView", owner: self)?.first as! UIView
         // swiftlint:enable force_cast
+        view.frame = CGRect(origin: view.frame.origin, size: CGSize(width: UIScreen.main.bounds.size.width, height: view.frame.size.height))
         addSubview(view)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewDidTap(gestureRecognizer:)))
         addGestureRecognizer(tapRecognizer)
