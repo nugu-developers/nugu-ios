@@ -23,13 +23,11 @@ import Foundation
 import NuguCore
 
 struct TTSMedia {
-    let player: MediaPlayable
     let payload: Payload
     let dialogRequestId: String
     var cancelAssociation: Bool = false
     
-    init(player: MediaPlayable, payload: Payload, dialogRequestId: String) {
-        self.player = player
+    init(payload: Payload, dialogRequestId: String) {
         self.payload = payload
         self.dialogRequestId = dialogRequestId
     }
