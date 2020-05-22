@@ -381,7 +381,7 @@ extension AudioPlayerAgent: ContextInfoDelegate {
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
             "offsetInMilliseconds": (offset ?? 0) * 1000,
-            "token": currentMedia?.payload.audioItem.stream.token,
+            "token": currentMedia?.payload.audioItem.stream.token
         ]
         if let duration = duration {
             payload["durationInMilliseconds"] = duration * 1000
