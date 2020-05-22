@@ -283,7 +283,7 @@ private extension MainViewController {
     
     func setExampleChips() {
         nuguVoiceChrome.setChipsData(
-            chipsData: [.normal(text: "템플릿에서 도움말1"), .action(text: "오늘 날씨 알려줘"), .action(text: "습도 알려줘"), .normal(text: "주말 날씨 알려줘"), .normal(text: "주간 날씨 알려줘"), .normal(text: "멜론 틀어줘"), .normal(text: "NUGU 토픽 알려줘")],
+            chipsData: [.normal(text: "템플릿에서 도움말1"), .action(text: "오늘 날씨 알려줘"), .action(text: "습도 알려줘"), .normal(text: "주말 날씨 알려줘"), .normal(text: "주간 날씨 알려줘"), .normal(text: "오존 농도 알려줘"), .normal(text: "멜론 틀어줘"), .normal(text: "NUGU 토픽 알려줘")],
             onChipsSelect: { [weak self] selectedChipsText in
                 self?.chipsDidSelect(selectedChipsText: selectedChipsText)
             }
@@ -381,6 +381,8 @@ private extension MainViewController {
             displayView = Weather3View(frame: view.frame)
         case "Display.Weather4":
             displayView = Weather4View(frame: view.frame)
+        case "Display.Weather5":
+            displayView = Weather5View(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break

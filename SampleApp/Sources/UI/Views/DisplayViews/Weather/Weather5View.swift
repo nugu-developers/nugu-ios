@@ -24,12 +24,15 @@ import NuguUIKit
 
 final class Weather5View: DisplayView {
     
-    @IBOutlet private var headerLabels: [UILabel]!
-    @IBOutlet private var contentImageViews: [UIImageView]!
-    @IBOutlet private var bodyLabels: [UILabel]!
-    @IBOutlet private var minTemperatureLabels: [UILabel]!
-    @IBOutlet private var maxTemperatureLabels: [UILabel]!
-    @IBOutlet private var footerLabels: [UILabel]!
+    @IBOutlet private weak var headerLabel: UILabel!
+
+    @IBOutlet private weak var graphView: UIView!
+    
+    @IBOutlet private weak var minLabel: UILabel!
+    @IBOutlet private weak var maxLabel: UILabel!
+    
+    @IBOutlet private weak var bodyLabel: UILabel!
+    @IBOutlet private weak var footerLabel: UILabel!
     
     override var displayPayload: Data? {
         didSet {
@@ -55,6 +58,64 @@ final class Weather5View: DisplayView {
             subTitleLabel.setDisplayText(displayText: displayItem.title.subtext)
             subTitleContainerView.isHidden = (displayItem.title.subtext == nil)
             
+            headerLabel.text = displayItem.content.header?.text ?? "-"
+            headerLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.header?.color)
+            
+            bodyLabel.text = displayItem.content.body?.text ?? "-"
+            bodyLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.body?.color)
+            
+            footerLabel.text = displayItem.content.footer?.text ?? "-"
+            footerLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.footer?.color)
+            
+            minLabel.text = displayItem.content.min?.text ?? "-"
+            minLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.min?.color)
+            
+            maxLabel.text = displayItem.content.max?.text ?? "-"
+            maxLabel.textColor = UIColor.textColor(rgbHexString: displayItem.content.max?.color)
+            
+            // Draw weather graph
+            var progress = CGFloat(0)
+            if let itemProgress = displayItem.content.progress,
+                let progressInDouble = Double(itemProgress) {
+                progress = CGFloat(progressInDouble)
+            }
+            let center = CGPoint (x: (UIScreen.main.bounds.width-40) / 2, y: graphView.frame.size.height - 20)
+            let circleRadius = CGFloat(center.x - 28)
+            let circlePath = UIBezierPath(arcCenter: center, radius: circleRadius, startAngle: .pi, endAngle: .pi*2, clockwise: true)
+            
+            let backgroundLayer = CAShapeLayer()
+            backgroundLayer.path = circlePath.cgPath
+            backgroundLayer.strokeColor = UIColor.gray.cgColor
+            backgroundLayer.fillColor = UIColor.clear.cgColor
+            backgroundLayer.lineDashPattern = [0, 16]
+            backgroundLayer.lineWidth = 8
+            backgroundLayer.strokeStart = 0
+            backgroundLayer.strokeEnd  = 1
+            graphView.layer.addSublayer(backgroundLayer)
+            
+            let graphLayer = CAShapeLayer()
+            graphLayer.path = circlePath.cgPath
+            graphLayer.strokeColor = UIColor(rgbHexString: displayItem.content.progressColor?.replacingOccurrences(of: "#", with: ""))?.cgColor
+            graphLayer.fillColor = UIColor.clear.cgColor
+            graphLayer.lineWidth = 8
+            graphLayer.strokeStart = 0
+            graphLayer.strokeEnd  = progress
+            graphView.layer.addSublayer(graphLayer)
+            
+            let imagePositionPath = UIBezierPath(arcCenter: center, radius: circleRadius, startAngle: .pi, endAngle: .pi + (.pi*progress), clockwise: true)
+            let clearLayer = CAShapeLayer()
+            clearLayer.path = imagePositionPath.cgPath
+            clearLayer.strokeStart = 0
+            clearLayer.strokeEnd  = 1
+
+            let iconImageView = UIImageView(frame: .zero)
+            iconImageView.loadImage(from: displayItem.content.icon?.sources.first?.url)
+            if let centerPoint = clearLayer.path?.currentPoint {
+                iconImageView.center = centerPoint
+                iconImageView.bounds = CGRect(origin: .zero, size: CGSize(width: 40, height: 40))
+                graphView.addSubview(iconImageView)
+            }
+
             // Set content button
             if let buttonItem = displayItem.title.button {
                 contentButtonContainerView.isHidden = false
@@ -63,7 +124,7 @@ final class Weather5View: DisplayView {
             } else {
                 contentButtonContainerView.isHidden = true
             }
-                    
+            
             // Set chips data (grammarGuide)
             idleBar.chipsData = displayItem.grammarGuide?.compactMap({ (grammarGuide) -> NuguChipsButton.NuguChipsButtonType in
                 return .normal(text: grammarGuide)

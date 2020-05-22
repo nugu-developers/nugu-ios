@@ -34,7 +34,7 @@ struct Weather5Template: Decodable {
         let header: DisplayCommonTemplate.Common.Text?
         let body: DisplayCommonTemplate.Common.Text?
         let footer: DisplayCommonTemplate.Common.Text?
-        let progress: Int?
+        let progress: String?
         let progressColor: String?
         let min: DisplayCommonTemplate.Common.Text?
         let max: DisplayCommonTemplate.Common.Text?
