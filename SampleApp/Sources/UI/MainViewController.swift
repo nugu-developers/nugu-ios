@@ -457,6 +457,11 @@ private extension MainViewController {
 
 private extension MainViewController {
     func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> UIView? {
+        var wasPlayerBarMode = false
+        if let isBarMode = displayAudioPlayerView?.isBarMode,
+            isBarMode == true {
+            wasPlayerBarMode = true
+        }
         displayAudioPlayerView?.removeFromSuperview()
         
         switch audioPlayerDisplayTemplate.type {
@@ -469,6 +474,10 @@ private extension MainViewController {
             break
         }
 
+        if wasPlayerBarMode == true {
+            displayAudioPlayerView?.setBarMode()
+        }
+        
         guard let audioPlayerView = displayAudioPlayerView else { return nil }
         audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         audioPlayerView.onCloseButtonClick = { [weak self] in

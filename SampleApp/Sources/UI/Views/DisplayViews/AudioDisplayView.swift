@@ -133,6 +133,12 @@ class AudioDisplayView: UIView {
         return false
     }
     
+    func setBarMode() {
+        audioPlayerBarViewContainerView.isHidden = false
+        fullAudioPlayerContainerView.isHidden = true
+        frame = CGRect(origin: CGPoint(x: 0, y: frame.size.height - 58.0 - SampleApp.bottomSafeAreaHeight), size: audioPlayerBarViewContainerView.frame.size)
+    }
+    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         onUserInteraction?()
         return super.hitTest(point, with: event)
@@ -147,9 +153,7 @@ extension AudioDisplayView {
     @IBAction func barTypeButtonDidClick(_ button: UIButton) {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            self.audioPlayerBarViewContainerView.isHidden = false
-            self.fullAudioPlayerContainerView.isHidden = true
-            self.frame = CGRect(origin: CGPoint(x: 0, y: self.frame.size.height - 58.0 - SampleApp.bottomSafeAreaHeight), size: self.audioPlayerBarViewContainerView.frame.size)
+            self.setBarMode()
         }
     }
     

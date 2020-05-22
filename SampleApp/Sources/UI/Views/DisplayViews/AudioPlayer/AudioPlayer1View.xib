@@ -62,7 +62,7 @@
                                         <constraint firstAttribute="width" constant="28" id="1LE-wE-Jpq"/>
                                         <constraint firstAttribute="height" constant="28" id="ucu-vi-ld9"/>
                                     </constraints>
-                                    <state key="normal" image="btnLyricsOff">
+                                    <state key="normal" image="btn_down">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
                                     <connections>
@@ -363,7 +363,7 @@
         </view>
     </objects>
     <resources>
-        <image name="btnLyricsOff" width="24" height="24"/>
+        <image name="btn_down" width="24" height="24"/>
         <image name="btn_like_off" width="32" height="32"/>
         <image name="btn_like_on" width="32" height="32"/>
         <image name="btn_pause" width="48" height="48"/>
