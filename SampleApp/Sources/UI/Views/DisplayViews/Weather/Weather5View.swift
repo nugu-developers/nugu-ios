@@ -79,7 +79,7 @@ final class Weather5View: DisplayView {
                 let progressInDouble = Double(itemProgress) {
                 progress = CGFloat(progressInDouble)
             }
-            let center = CGPoint (x: (UIScreen.main.bounds.width-40) / 2, y: graphView.frame.size.height - 20)
+            let center = CGPoint(x: (UIScreen.main.bounds.width-40) / 2, y: graphView.frame.size.height - 20)
             let circleRadius = CGFloat(center.x - 28)
             let circlePath = UIBezierPath(arcCenter: center, radius: circleRadius, startAngle: .pi, endAngle: .pi*2, clockwise: true)
             

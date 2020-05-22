@@ -38,4 +38,3 @@ struct ImageList1Template: Decodable {
         let footer: DisplayCommonTemplate.Common.Text?
     }
 }
-

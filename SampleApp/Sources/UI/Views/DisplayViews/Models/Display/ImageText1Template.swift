@@ -34,4 +34,3 @@ struct ImageText1Template: Decodable {
         let footer: DisplayCommonTemplate.Common.Text?
     }
 }
-
