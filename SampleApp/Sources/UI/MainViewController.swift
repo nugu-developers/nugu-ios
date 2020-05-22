@@ -284,34 +284,42 @@ private extension MainViewController {
     func setExampleChips() {
         nuguVoiceChrome.setChipsData(
             chipsData: [.normal(text: "템플릿에서 도움말1"), .action(text: "오늘 날씨 알려줘"), .action(text: "습도 알려줘"), .normal(text: "주말 날씨 알려줘"), .normal(text: "주간 날씨 알려줘"), .normal(text: "멜론 틀어줘"), .normal(text: "NUGU 토픽 알려줘")],
-            onChipsSelect: { selectedChipsText in
-                guard let selectedChipsText = selectedChipsText,
-                    let window = UIApplication.shared.keyWindow else { return }
-                
-                let indicator = UIActivityIndicatorView(style: .whiteLarge)
-                indicator.color = .black
-                indicator.startAnimating()
-                indicator.center = window.center
-                indicator.startAnimating()
-                window.addSubview(indicator)
-                
-                NuguCentralManager.shared.isTextAgentInProcess = true
-                NuguCentralManager.shared.client.asrAgent.stopRecognition()
-                NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
-                    switch state {
-                    case .finished:
-                        NuguCentralManager.shared.isTextAgentInProcess = false
-                    case .error:
-                        NuguCentralManager.shared.isTextAgentInProcess = false
-                        self?.dismissVoiceChrome()
-                    default: break
-                    }
-                    DispatchQueue.main.async {
-                        indicator.removeFromSuperview()
-                    }
-                }
+            onChipsSelect: { [weak self] selectedChipsText in
+                self?.chipsDidSelect(selectedChipsText: selectedChipsText)
             }
         )
+    }
+}
+
+// MARK: - Private (Chips Selection)
+
+private extension MainViewController {
+    func chipsDidSelect(selectedChipsText: String?) {
+        guard let selectedChipsText = selectedChipsText,
+            let window = UIApplication.shared.keyWindow else { return }
+        
+        let indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator.color = .black
+        indicator.startAnimating()
+        indicator.center = window.center
+        indicator.startAnimating()
+        window.addSubview(indicator)
+        
+        NuguCentralManager.shared.isTextAgentInProcess = true
+        NuguCentralManager.shared.client.asrAgent.stopRecognition()
+        NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
+            switch state {
+            case .finished:
+                NuguCentralManager.shared.isTextAgentInProcess = false
+            case .error:
+                NuguCentralManager.shared.isTextAgentInProcess = false
+                self?.dismissVoiceChrome()
+            default: break
+            }
+            DispatchQueue.main.async {
+                indicator.removeFromSuperview()
+            }
+        }
     }
 }
 
@@ -392,32 +400,8 @@ private extension MainViewController {
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
         }
-        displayView.onChipsSelect = { (selectedChipsText) in
-            guard let selectedChipsText = selectedChipsText,
-                let window = UIApplication.shared.keyWindow else { return }
-            
-            let indicator = UIActivityIndicatorView(style: .whiteLarge)
-            indicator.color = .black
-            indicator.startAnimating()
-            indicator.center = window.center
-            indicator.startAnimating()
-            window.addSubview(indicator)
-                
-            NuguCentralManager.shared.isTextAgentInProcess = true
-            NuguCentralManager.shared.client.asrAgent.stopRecognition()
-            NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
-                switch state {
-                case .finished:
-                    NuguCentralManager.shared.isTextAgentInProcess = false
-                case .error:
-                    NuguCentralManager.shared.isTextAgentInProcess = false
-                    self?.dismissVoiceChrome()
-                default: break
-                }
-                DispatchQueue.main.async {
-                    indicator.removeFromSuperview()
-                }
-            }
+        displayView.onChipsSelect = { [weak self] (selectedChipsText) in
+            self?.chipsDidSelect(selectedChipsText: selectedChipsText)
         }
         displayView.onNuguButtonClick = { [weak self] in
             self?.presentVoiceChrome(initiator: .user)
@@ -488,32 +472,8 @@ private extension MainViewController {
         audioPlayerView.onUserInteraction = {
             NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
         }
-        audioPlayerView.onChipsSelect = { (selectedChipsText) in
-            guard let selectedChipsText = selectedChipsText,
-                let window = UIApplication.shared.keyWindow else { return }
-            
-            let indicator = UIActivityIndicatorView(style: .whiteLarge)
-            indicator.color = .black
-            indicator.startAnimating()
-            indicator.center = window.center
-            indicator.startAnimating()
-            window.addSubview(indicator)
-                
-            NuguCentralManager.shared.isTextAgentInProcess = true
-            NuguCentralManager.shared.client.asrAgent.stopRecognition()
-            NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
-                switch state {
-                case .finished:
-                    NuguCentralManager.shared.isTextAgentInProcess = false
-                case .error:
-                    NuguCentralManager.shared.isTextAgentInProcess = false
-                    self?.dismissVoiceChrome()
-                default: break
-                }
-                DispatchQueue.main.async {
-                    indicator.removeFromSuperview()
-                }
-            }
+        audioPlayerView.onChipsSelect = { [weak self] selectedChipsText in
+            self?.chipsDidSelect(selectedChipsText: selectedChipsText)
         }
         audioPlayerView.onNuguButtonClick = { [weak self] in
             self?.presentVoiceChrome(initiator: .user)
