@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.11.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.11.0)
+Released on 2020-05-26
+#### Fixed
+- Fixes a bug where `DisplayAgent.handleControlScroll` doesn't call completion handler. (#310)
+- Fixes a bug where `AudioPlayerAgent` doesn't release `MediaPlayer`. (#322)
+
+#### Updated
+- Update `AudioPlayerAgent` 1.3 (upgrade capability-agent) (#317)
+- Update voice chrome view. (#316)
+- Update display and audio template views. (#304)(#321)
+- Make `NuguOAuthClient.deviceUniqueId` mutable (#313)
+- Update `SystemAgent` 1.2 (upgrade capability-agent) (#320)
+
+#### Removed
+- Move `OpusPlayer` to https://github.com/nugu-developers/silvertray-iOS (#314)
+
 ## [0.10.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.10.0)
 Released on 2020-04-24
 
