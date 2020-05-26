@@ -410,7 +410,7 @@ extension NuguCentralManager: SystemAgentDelegate {
         }
     }
     
-    func systemAgentDidReceiveRevokeDevice() {
+    func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason) {
         logoutAfterErrorHandling(sampleAppError: .deviceRevoked)
     }
 }

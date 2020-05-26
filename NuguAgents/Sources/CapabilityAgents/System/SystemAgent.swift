@@ -24,7 +24,7 @@ import NuguCore
 
 public final class SystemAgent: SystemAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.2")
     
     // Private
     private let contextManager: ContextManageable
@@ -139,12 +139,17 @@ private extension SystemAgent {
     }
     
     func handleRevoke() -> HandleDirective {
-        return { [weak self] _, completion in
+        return { [weak self] directive, completion in
             defer { completion() }
+            
+            guard let revokeItem = try? JSONDecoder().decode(SystemAgentRevokeItem.self, from: directive.payload) else {
+                log.error("Invalid payload")
+                return
+            }
             
             self?.systemDispatchQueue.async { [weak self] in
                 self?.delegates.notify { delegate in
-                    delegate.systemAgentDidReceiveRevokeDevice()
+                    delegate.systemAgentDidReceiveRevokeDevice(reason: revokeItem.reason)
                 }
             }
         }

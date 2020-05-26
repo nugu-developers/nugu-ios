@@ -1,8 +1,8 @@
 //
-//  SystemAgentDelegate.swift
+//  SystemAgentRevokeReason.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2019/09/17.
+//  Created by MinChul Lee on 2020/05/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,7 @@
 
 import Foundation
 
-/// The `SystemAgentDelegate` protocol defines methods that action when `SystemAgent` receives a directive.
-public protocol SystemAgentDelegate: class {
-    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail)
-    func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason)
+public enum SystemAgentRevokeReason: String, Decodable {
+    case revokeDevice = "REVOKED_DEVICE"
+    case withdrawnUser = "WITHDRAWN_USER"
 }
