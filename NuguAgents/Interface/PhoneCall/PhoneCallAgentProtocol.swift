@@ -20,7 +20,7 @@
 
 import Foundation
 
-protocol PhoneCallAgentProtocol: CapabilityAgentable {
+public protocol PhoneCallAgentProtocol: CapabilityAgentable {
     
     var delegate: PhoneCallAgentDelegate? { get set }
 }

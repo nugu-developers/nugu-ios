@@ -23,4 +23,9 @@ import Foundation
 public struct PhoneCallRecipient: Codable {
     public let name: String?
     public let label: String?
+    
+    public init(name: String?, label: String?) {
+        self.name = name
+        self.label = label
+    }
 }

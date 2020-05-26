@@ -21,30 +21,106 @@
 import Foundation
 
 public struct PhoneCallPerson: Codable {
+
+    // MARK: PersonType
+    
+    public enum PersonType: String, Codable {
+        case contact = "CONTACT"
+        case exchange = "EXCHANGE"
+        case t114 = "T114"
+        case none = "NONE"
+    }
+    
+    // MARK: BusinessHours
+    
+    public struct BusinessHours: Codable {
+        public let open: String?
+        public let close: String?
+        
+        public init(open: String?, close: String?) {
+            self.open = open
+            self.close = close
+        }
+    }
+    
+    // MARK: History
+    
+    public struct History: Codable {
+        
+        public enum CallType: String, Codable {
+            case out = "OUT"
+            case outCanceled = "OUT_CANCELED"
+            case incoming = "IN"
+            case rejected = "REJECTED"
+            case missed = "MISSED"
+            case voiceMessage = "VOICE_MESSAGE"
+            case blocked = "BLOCKED"
+        }
+        
+        public let time: String?
+        public let type: CallType?
+        
+        public init(time: String?, type: CallType?) {
+            self.time = time
+            self.type = type
+        }
+    }
+    
+    // MARK: Contact
+    
     public struct Contact: Codable {
-        public struct BusinessHours: Codable {
-            public let open: String?
-            public let close: String?
+        
+        public enum Label: String, Codable {
+            case mobile = "MOBILE"
+            case company = "COMPANY"
+            case home = "HOME"
+            case userDefined = "USER_DEFINED"
         }
         
-        public struct History: Codable {
-            public let time: String
-            public let type: String
-        }
-        
-        public let type: String
-        public let label: String?
-        public let profileImgUrl: String?
-        public let category: String?
-        public let address: String?
+        public let label: Label?
         public let number: String?
-        public let businessHours: BusinessHours?
-        public let history: History?
-        public let numInCallHistory: String
+        
+        public init(label: Label?, number: String?) {
+            self.label = label
+            self.number = number
+        }
     }
     
     public let name: String
-    public let token: String
+    public let type: PersonType
+    public let profileImgUrl: String?
+    public let category: String?
+    public let address: String?
+    public let businessHours: BusinessHours?
+    public let history: History?
+    public let numInCallHistory: String?
+    public let token: String?
     public let score: String?
     public let contacts: [Contact]?
+    
+    public init(
+        name: String,
+        type: PersonType,
+        profileImgUrl: String?,
+        category: String?,
+        address: String?,
+        businessHours: BusinessHours?,
+        history: History?,
+        numInCallHistory: String?,
+        token: String?,
+        score: String?,
+        contacts: [Contact]?
+    ) {
+        self.name = name
+        self.type = type
+        self.profileImgUrl = profileImgUrl
+        self.category = category
+        self.address = address
+        self.businessHours = businessHours
+        self.history = history
+        self.numInCallHistory = numInCallHistory
+        self.token = token
+        self.score = score
+        self.contacts = contacts
+    }
 }
