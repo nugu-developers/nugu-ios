@@ -37,7 +37,7 @@ final class MainViewController: UIViewController {
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
     private var displayView: DisplayView?
-    private var displayAudioPlayerView: DisplayAudioPlayerView?
+    private var displayAudioPlayerView: AudioDisplayView?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
     
@@ -283,35 +283,52 @@ private extension MainViewController {
     
     func setExampleChips() {
         nuguVoiceChrome.setChipsData(
-            chipsData: [.action(text: "첫번째"), .action(text: "두번째"), .normal(text: "클래식 매니저 틀어줘"), .normal(text: "된장찌개 레시피 알려줘"), .normal(text: "멜론 탑100"), .normal(text: "템플릿 열어줘")],
-            onChipsSelect: { selectedChipsText in
-                guard let selectedChipsText = selectedChipsText,
-                    let window = UIApplication.shared.keyWindow else { return }
-                
-                let indicator = UIActivityIndicatorView(style: .whiteLarge)
-                indicator.color = .black
-                indicator.startAnimating()
-                indicator.center = window.center
-                indicator.startAnimating()
-                window.addSubview(indicator)
-                
-                NuguCentralManager.shared.isTextAgentInProcess = true
-                NuguCentralManager.shared.client.asrAgent.stopRecognition()
-                NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
-                    switch state {
-                    case .finished:
-                        NuguCentralManager.shared.isTextAgentInProcess = false
-                    case .error:
-                        NuguCentralManager.shared.isTextAgentInProcess = false
-                        self?.dismissVoiceChrome()
-                    default: break
-                    }
-                    DispatchQueue.main.async {
-                        indicator.removeFromSuperview()
-                    }
-                }
+            chipsData: [
+                .normal(text: "템플릿에서 도움말1"),
+                .action(text: "오늘 날씨 알려줘"),
+                .action(text: "습도 알려줘"),
+                .normal(text: "주말 날씨 알려줘"),
+                .normal(text: "주간 날씨 알려줘"),
+                .normal(text: "오존 농도 알려줘"),
+                .normal(text: "멜론 틀어줘"),
+                .normal(text: "NUGU 토픽 알려줘")
+            ],
+            onChipsSelect: { [weak self] selectedChipsText in
+                self?.chipsDidSelect(selectedChipsText: selectedChipsText)
             }
         )
+    }
+}
+
+// MARK: - Private (Chips Selection)
+
+private extension MainViewController {
+    func chipsDidSelect(selectedChipsText: String?) {
+        guard let selectedChipsText = selectedChipsText,
+            let window = UIApplication.shared.keyWindow else { return }
+        
+        let indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator.color = .black
+        indicator.startAnimating()
+        indicator.center = window.center
+        indicator.startAnimating()
+        window.addSubview(indicator)
+        
+        NuguCentralManager.shared.isTextAgentInProcess = true
+        NuguCentralManager.shared.client.asrAgent.stopRecognition()
+        NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
+            switch state {
+            case .finished:
+                NuguCentralManager.shared.isTextAgentInProcess = false
+            case .error:
+                NuguCentralManager.shared.isTextAgentInProcess = false
+                self?.dismissVoiceChrome()
+            default: break
+            }
+            DispatchQueue.main.async {
+                indicator.removeFromSuperview()
+            }
+        }
     }
 }
 
@@ -328,21 +345,54 @@ extension MainViewController: UIGestureRecognizerDelegate {
 
 private extension MainViewController {
     func addDisplayView(displayTemplate: DisplayTemplate) -> UIView? {
+        
         displayView?.removeFromSuperview()
         
         switch displayTemplate.type {
-        case "Display.FullText1", "Display.FullText2", "Display.FullText3",
-             "Display.ImageText1", "Display.ImageText2", "Display.ImageText3", "Display.ImageText4":
-            displayView = DisplayBodyView(frame: view.frame)
-        case "Display.TextList1", "Display.TextList2",
-             "Display.ImageList1", "Display.ImageList2", "Display.ImageList3":
-            displayView = DisplayListView(frame: view.frame)
-        case "Display.TextList3", "Display.TextList4":
-            displayView = DisplayBodyListView(frame: view.frame)
-        case "Display.Weather1", "Display.Weather2":
-            displayView = DisplayWeatherView(frame: view.frame)
-        case "Display.Weather3", "Display.Weather4":
-            displayView = DisplayWeatherListView(frame: view.frame)
+        case "Display.FullText1":
+            displayView = FullText1View(frame: view.frame)
+        case "Display.FullText2":
+            displayView = FullText2View(frame: view.frame)
+        case "Display.FullText3":
+            displayView = FullText3View(frame: view.frame)
+        case "Display.ImageText1":
+            displayView = ImageText1View(frame: view.frame)
+        case "Display.ImageText2":
+            displayView = ImageText2View(frame: view.frame)
+        case "Display.ImageText3":
+            displayView = ImageText3View(frame: view.frame)
+        case "Display.ImageText4":
+            displayView = ImageText4View(frame: view.frame)
+        case "Display.FullImage":
+            displayView = FullImageView(frame: view.frame)
+        case "Display.Score1":
+            displayView = Score1View(frame: view.frame)
+        case "Display.Score2":
+            displayView = Score2View(frame: view.frame)
+        case "Display.TextList1":
+            displayView = TextList1View(frame: view.frame)
+        case "Display.TextList2":
+            displayView = TextList2View(frame: view.frame)
+        case "Display.TextList3":
+            displayView = TextList3View(frame: view.frame)
+        case "Display.TextList4":
+            displayView = TextList4View(frame: view.frame)
+        case "Display.ImageList1":
+            displayView = ImageList1View(frame: view.frame)
+        case "Display.ImageList2":
+            displayView = ImageList2View(frame: view.frame)
+        case "Display.ImageList3":
+            displayView = ImageList3View(frame: view.frame)
+        case "Display.Weather1":
+            displayView = Weather1View(frame: view.frame)
+        case "Display.Weather2":
+            displayView = Weather2View(frame: view.frame)
+        case "Display.Weather3":
+            displayView = Weather3View(frame: view.frame)
+        case "Display.Weather4":
+            displayView = Weather4View(frame: view.frame)
+        case "Display.Weather5":
+            displayView = Weather5View(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
             break
@@ -362,8 +412,15 @@ private extension MainViewController {
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
         }
+        displayView.onChipsSelect = { [weak self] (selectedChipsText) in
+            self?.chipsDidSelect(selectedChipsText: selectedChipsText)
+        }
+        displayView.onNuguButtonClick = { [weak self] in
+            self?.presentVoiceChrome(initiator: .user)
+        }
+        
         displayView.alpha = 0
-        view.insertSubview(displayView, belowSubview: nuguButton)
+        view.addSubview(displayView)
         UIView.animate(withDuration: 0.3) {
             displayView.alpha = 1.0
         }
@@ -396,9 +453,28 @@ private extension MainViewController {
 
 private extension MainViewController {
     func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> UIView? {
+        var wasPlayerBarMode = false
+        if let isBarMode = displayAudioPlayerView?.isBarMode,
+            isBarMode == true {
+            wasPlayerBarMode = true
+        }
         displayAudioPlayerView?.removeFromSuperview()
+        
+        switch audioPlayerDisplayTemplate.type {
+        case "AudioPlayer.Template1":
+            displayAudioPlayerView = AudioPlayer1View(frame: view.frame)
+        case "AudioPlayer.Template2":
+            displayAudioPlayerView = AudioPlayer2View(frame: view.frame)
+        default:
+            // Draw your own AudioPlayerView with AudioPlayerDisplayTemplate.payload and set as self.displayAudioPlayerView
+            break
+        }
 
-        let audioPlayerView = DisplayAudioPlayerView(frame: view.frame)
+        if wasPlayerBarMode == true {
+            displayAudioPlayerView?.setBarMode()
+        }
+        
+        guard let audioPlayerView = displayAudioPlayerView else { return nil }
         audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         audioPlayerView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
@@ -408,10 +484,15 @@ private extension MainViewController {
         audioPlayerView.onUserInteraction = {
             NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
         }
+        audioPlayerView.onChipsSelect = { [weak self] selectedChipsText in
+            self?.chipsDidSelect(selectedChipsText: selectedChipsText)
+        }
+        audioPlayerView.onNuguButtonClick = { [weak self] in
+            self?.presentVoiceChrome(initiator: .user)
+        }
         
         audioPlayerView.alpha = 0
-        view.insertSubview(audioPlayerView, belowSubview: nuguButton)
-        displayAudioPlayerView = audioPlayerView
+        view.addSubview(audioPlayerView)
         UIView.animate(withDuration: 0.3) {
             audioPlayerView.alpha = 1.0
         }
@@ -596,10 +677,13 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    //TODO: - Should be implemented
-    func audioPlayerDisplayShouldShowLyrics() -> Bool { return false }
+    func audioPlayerDisplayShouldShowLyrics() -> Bool {
+        return displayAudioPlayerView?.shouldShowLyrics() ?? false
+    }
     
-    func audioPlayerDisplayShouldHideLyrics() -> Bool { return false }
+    func audioPlayerDisplayShouldHideLyrics() -> Bool {
+        return displayAudioPlayerView?.shouldHideLyrics() ?? false
+    }
     
     func audioPlayerIsLyricsVisible() -> Bool {
         return displayAudioPlayerView?.isLyricsVisible ?? false

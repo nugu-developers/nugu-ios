@@ -388,6 +388,8 @@ extension AudioPlayerAgent: ContextInfoDelegate {
         
         if let playServiceId = currentMedia?.payload.playServiceId {
             payload["lyricsVisible"] = audioPlayerDisplayManager.isLyricsVisible(playServiceId: playServiceId)
+        } else {
+            payload["lyricsVisible"] = false
         }
         
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))

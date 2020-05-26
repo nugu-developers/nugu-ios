@@ -20,10 +20,19 @@
 
 import UIKit
 
+import NuguUIKit
+
 class DisplayView: UIView {
-    @IBOutlet weak var titleContainerView: UIView!
-    @IBOutlet weak var logoImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var titleView: DisplayTitleView!
+    
+    @IBOutlet weak var subTitleContainerView: UIView!
+    @IBOutlet weak var subTitleLabel: UILabel!
+    @IBOutlet weak var subIconImageView: UIImageView!
+    
+    @IBOutlet weak var contentButtonContainerView: UIView!
+    @IBOutlet weak var contentButton: ContentButton!
+    
+    @IBOutlet weak var idleBar: DisplayIdleBar!
     
     var onCloseButtonClick: (() -> Void)?
     
@@ -31,7 +40,21 @@ class DisplayView: UIView {
     
     var onUserInteraction: (() -> Void)?
     
+    var onNuguButtonClick: (() -> Void)? {
+        didSet {
+            idleBar.onNuguButtonClick = onNuguButtonClick
+        }
+    }
+    
+    var onChipsSelect: ((_ text: String?) -> Void)? {
+        didSet {
+            idleBar.onChipsSelect = onChipsSelect
+        }
+    }
+    
     var displayPayload: Data?
+    
+    var contentButtonToken: String?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -45,12 +68,6 @@ class DisplayView: UIView {
     
     func loadFromXib() {}
     
-    func addBorderToTitleContainerView() {
-        titleContainerView.layer.cornerRadius = titleContainerView.bounds.size.height / 2.0
-        titleContainerView.layer.borderColor = UIColor(rgbHexValue: 0xc9cacc).cgColor
-        titleContainerView.layer.borderWidth = 1.0
-    }
-    
     func update(updatePayload: Data) {
         guard let displayingPayloadData = displayPayload,
             let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: AnyHashable],
@@ -62,8 +79,8 @@ class DisplayView: UIView {
         displayPayload = mergedPayloadData
     }
     
-    @IBAction func closeButtonDidClick(_ button: UIButton) {
-        onCloseButtonClick?()
+    @IBAction func contentButtonDidClick(_ button: UIButton) {
+        onItemSelect?(contentButtonToken)
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
