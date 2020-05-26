@@ -13,19 +13,7 @@
 		73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A723815CC9004EBBDF /* MainViewController.swift */; };
 		73F284E223815CC9004EBBDF /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A823815CC9004EBBDF /* WebViewController.swift */; };
 		73F284E323815CC9004EBBDF /* NuguWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284AA23815CC9004EBBDF /* NuguWebView.swift */; };
-		73F284E423815CC9004EBBDF /* DisplayBodyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284AC23815CC9004EBBDF /* DisplayBodyView.xib */; };
-		73F284E523815CC9004EBBDF /* DisplayBodyListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284AE23815CC9004EBBDF /* DisplayBodyListViewCell.swift */; };
-		73F284E623815CC9004EBBDF /* DisplayListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284AF23815CC9004EBBDF /* DisplayListViewCell.xib */; };
-		73F284E723815CC9004EBBDF /* DisplayBodyListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284B023815CC9004EBBDF /* DisplayBodyListViewCell.xib */; };
-		73F284E823815CC9004EBBDF /* DisplayListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B123815CC9004EBBDF /* DisplayListViewCell.swift */; };
-		73F284E923815CC9004EBBDF /* DisplayBodyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B223815CC9004EBBDF /* DisplayBodyListView.swift */; };
-		73F284EA23815CC9004EBBDF /* DisplayBodyListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284B323815CC9004EBBDF /* DisplayBodyListView.xib */; };
-		73F284EF23815CC9004EBBDF /* DisplayAudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284B923815CC9004EBBDF /* DisplayAudioPlayerView.swift */; };
-		73F284F023815CC9004EBBDF /* DisplayBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284BA23815CC9004EBBDF /* DisplayBodyView.swift */; };
-		73F284F123815CC9004EBBDF /* DisplayListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284BB23815CC9004EBBDF /* DisplayListView.xib */; };
 		73F284F223815CC9004EBBDF /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284BC23815CC9004EBBDF /* DisplayView.swift */; };
-		73F284F323815CC9004EBBDF /* DisplayListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284BD23815CC9004EBBDF /* DisplayListView.swift */; };
-		73F284F423815CC9004EBBDF /* DisplayAudioPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F284BE23815CC9004EBBDF /* DisplayAudioPlayerView.xib */; };
 		73F284F623815CC9004EBBDF /* UIColor+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C123815CC9004EBBDF /* UIColor+Convenience.swift */; };
 		73F284F723815CC9004EBBDF /* Int+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C223815CC9004EBBDF /* Int+Convenience.swift */; };
 		73F284F823815CC9004EBBDF /* ImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C423815CC9004EBBDF /* ImageDataLoader.swift */; };
@@ -38,15 +26,9 @@
 		73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */; };
 		7E092F2B2452E72B009779F1 /* Keyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E092F2A2452E72B009779F1 /* Keyword.swift */; };
 		7E0B697A2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */; };
-		7E0B697B2434A0AC00D8C6AD /* AudioPlayerTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69702434A0AC00D8C6AD /* AudioPlayerTemplate.swift */; };
 		7E0B697C2434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */; };
 		7E0B697D2434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69722434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift */; };
-		7E0B697E2434A0AC00D8C6AD /* DisplayBodyTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69742434A0AC00D8C6AD /* DisplayBodyTemplate.swift */; };
-		7E0B697F2434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69752434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift */; };
-		7E0B69802434A0AC00D8C6AD /* DisplayWeatherTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69762434A0AC00D8C6AD /* DisplayWeatherTemplate.swift */; };
-		7E0B69812434A0AC00D8C6AD /* DisplayBodyListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69772434A0AC00D8C6AD /* DisplayBodyListTemplate.swift */; };
 		7E0B69822434A0AC00D8C6AD /* DisplayCommonTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69782434A0AC00D8C6AD /* DisplayCommonTemplate.swift */; };
-		7E0B69832434A0AC00D8C6AD /* DisplayListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69792434A0AC00D8C6AD /* DisplayListTemplate.swift */; };
 		7E56DD252419FF88004A3508 /* DisplayControllable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E56DD242419FF88004A3508 /* DisplayControllable.swift */; };
 		7E56DD272419FF9C004A3508 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */; };
 		7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */; };
@@ -55,12 +37,6 @@
 		7E6A0B14241084C000C7A19E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B0F241084C000C7A19E /* Assets.xcassets */; };
 		7E6A0B15241084C000C7A19E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B10241084C000C7A19E /* LaunchScreen.storyboard */; };
 		7E6A0B16241084C000C7A19E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B12241084C000C7A19E /* Main.storyboard */; };
-		7E6A0B1C2410853600C7A19E /* DisplayWeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B172410853500C7A19E /* DisplayWeatherView.swift */; };
-		7E6A0B1E2410853600C7A19E /* DisplayWeatherListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B192410853500C7A19E /* DisplayWeatherListView.xib */; };
-		7E6A0B1F2410853600C7A19E /* DisplayWeatherView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B1A2410853500C7A19E /* DisplayWeatherView.xib */; };
-		7E6A0B202410853600C7A19E /* DisplayWeatherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B1B2410853600C7A19E /* DisplayWeatherListView.swift */; };
-		7E6A0B232410853C00C7A19E /* DisplayWeatherListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B212410853C00C7A19E /* DisplayWeatherListViewCell.swift */; };
-		7E6A0B242410853C00C7A19E /* DisplayWeatherListViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B222410853C00C7A19E /* DisplayWeatherListViewCell.xib */; };
 		7E6A0B362410888000C7A19E /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2B2410888000C7A19E /* asrStart.wav */; };
 		7E6A0B372410888000C7A19E /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2C2410888000C7A19E /* asrSuccess.wav */; };
 		7E6A0B382410888000C7A19E /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2D2410888000C7A19E /* asrFail.wav */; };
@@ -73,6 +49,107 @@
 		7E6A0B3F2410888000C7A19E /* device_GW_error_006.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B352410888000C7A19E /* device_GW_error_006.wav */; };
 		7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */; };
 		7EBD76292391130100CA9C9C /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD76272391130100CA9C9C /* NuguLocationManager.swift */; };
+		7EE2DCB2247CF45F0005DE17 /* AudioDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB1247CF45F0005DE17 /* AudioDisplayView.swift */; };
+		7EE2DD0B247CF4750005DE17 /* AudioPlayer1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB4247CF4750005DE17 /* AudioPlayer1View.xib */; };
+		7EE2DD0C247CF4750005DE17 /* AudioPlayer1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB5247CF4750005DE17 /* AudioPlayer1View.swift */; };
+		7EE2DD0D247CF4750005DE17 /* AudioPlayer2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB6247CF4750005DE17 /* AudioPlayer2View.xib */; };
+		7EE2DD0E247CF4750005DE17 /* FullLyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB7247CF4750005DE17 /* FullLyricsView.swift */; };
+		7EE2DD0F247CF4750005DE17 /* AudioPlayerBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB8247CF4750005DE17 /* AudioPlayerBarView.xib */; };
+		7EE2DD10247CF4750005DE17 /* AudioPlayerBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB9247CF4750005DE17 /* AudioPlayerBarView.swift */; };
+		7EE2DD11247CF4750005DE17 /* FullLyricsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCBA247CF4750005DE17 /* FullLyricsView.xib */; };
+		7EE2DD12247CF4750005DE17 /* AudioPlayer2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCBB247CF4750005DE17 /* AudioPlayer2View.swift */; };
+		7EE2DD13247CF4750005DE17 /* FullImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCBD247CF4750005DE17 /* FullImageView.swift */; };
+		7EE2DD14247CF4750005DE17 /* FullImageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCBE247CF4750005DE17 /* FullImageView.xib */; };
+		7EE2DD15247CF4750005DE17 /* ImageText4View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC0247CF4750005DE17 /* ImageText4View.xib */; };
+		7EE2DD16247CF4750005DE17 /* ImageText3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC1247CF4750005DE17 /* ImageText3View.swift */; };
+		7EE2DD17247CF4750005DE17 /* ImageText4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC2247CF4750005DE17 /* ImageText4View.swift */; };
+		7EE2DD18247CF4750005DE17 /* ImageText2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC3247CF4750005DE17 /* ImageText2View.swift */; };
+		7EE2DD19247CF4750005DE17 /* ImageText2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC4247CF4750005DE17 /* ImageText2View.xib */; };
+		7EE2DD1A247CF4750005DE17 /* ImageText1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC5247CF4750005DE17 /* ImageText1View.swift */; };
+		7EE2DD1B247CF4750005DE17 /* ImageText3View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC6247CF4750005DE17 /* ImageText3View.xib */; };
+		7EE2DD1C247CF4750005DE17 /* ImageText1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC7247CF4750005DE17 /* ImageText1View.xib */; };
+		7EE2DD1D247CF4750005DE17 /* FullText3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCC9247CF4750005DE17 /* FullText3View.swift */; };
+		7EE2DD1E247CF4750005DE17 /* FullText2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCCA247CF4750005DE17 /* FullText2View.swift */; };
+		7EE2DD1F247CF4750005DE17 /* FullText3View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCCB247CF4750005DE17 /* FullText3View.xib */; };
+		7EE2DD20247CF4750005DE17 /* FullText1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCCC247CF4750005DE17 /* FullText1View.swift */; };
+		7EE2DD21247CF4750005DE17 /* FullText2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCCD247CF4750005DE17 /* FullText2View.xib */; };
+		7EE2DD22247CF4750005DE17 /* FullText1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCCE247CF4750005DE17 /* FullText1View.xib */; };
+		7EE2DD23247CF4750005DE17 /* Score1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCD0247CF4750005DE17 /* Score1View.xib */; };
+		7EE2DD24247CF4750005DE17 /* Score2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCD1247CF4750005DE17 /* Score2View.xib */; };
+		7EE2DD25247CF4750005DE17 /* Score1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCD2247CF4750005DE17 /* Score1View.swift */; };
+		7EE2DD26247CF4750005DE17 /* Score2ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCD4247CF4750005DE17 /* Score2ViewCell.xib */; };
+		7EE2DD27247CF4750005DE17 /* Score2ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCD5247CF4750005DE17 /* Score2ViewCell.swift */; };
+		7EE2DD28247CF4750005DE17 /* Score2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCD6247CF4750005DE17 /* Score2View.swift */; };
+		7EE2DD29247CF4750005DE17 /* Weather4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCD8247CF4750005DE17 /* Weather4View.swift */; };
+		7EE2DD2A247CF4750005DE17 /* Weather1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCD9247CF4750005DE17 /* Weather1View.xib */; };
+		7EE2DD2B247CF4750005DE17 /* Weather2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCDA247CF4750005DE17 /* Weather2View.swift */; };
+		7EE2DD2C247CF4750005DE17 /* Weather2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCDB247CF4750005DE17 /* Weather2View.xib */; };
+		7EE2DD2D247CF4750005DE17 /* Weather5View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCDC247CF4750005DE17 /* Weather5View.swift */; };
+		7EE2DD2E247CF4750005DE17 /* Weather3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCDD247CF4750005DE17 /* Weather3View.swift */; };
+		7EE2DD2F247CF4750005DE17 /* Weather3View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCDE247CF4750005DE17 /* Weather3View.xib */; };
+		7EE2DD30247CF4750005DE17 /* Weather4ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE0247CF4750005DE17 /* Weather4ViewCell.swift */; };
+		7EE2DD31247CF4750005DE17 /* Weather4ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE1247CF4750005DE17 /* Weather4ViewCell.xib */; };
+		7EE2DD32247CF4750005DE17 /* Weather5View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE2247CF4750005DE17 /* Weather5View.xib */; };
+		7EE2DD33247CF4750005DE17 /* Weather4View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE3247CF4750005DE17 /* Weather4View.xib */; };
+		7EE2DD34247CF4750005DE17 /* Weather1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE4247CF4750005DE17 /* Weather1View.swift */; };
+		7EE2DD35247CF4750005DE17 /* TextList4View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE6247CF4750005DE17 /* TextList4View.xib */; };
+		7EE2DD36247CF4750005DE17 /* TextList1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE7247CF4750005DE17 /* TextList1View.swift */; };
+		7EE2DD37247CF4750005DE17 /* TextList2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE8247CF4750005DE17 /* TextList2View.swift */; };
+		7EE2DD38247CF4750005DE17 /* TextList3View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCE9247CF4750005DE17 /* TextList3View.xib */; };
+		7EE2DD39247CF4750005DE17 /* TextList4ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCEB247CF4750005DE17 /* TextList4ViewCell.xib */; };
+		7EE2DD3A247CF4750005DE17 /* TextList1ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCEC247CF4750005DE17 /* TextList1ViewCell.xib */; };
+		7EE2DD3B247CF4750005DE17 /* TextList2ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCED247CF4750005DE17 /* TextList2ViewCell.xib */; };
+		7EE2DD3C247CF4750005DE17 /* TextList3ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCEE247CF4750005DE17 /* TextList3ViewCell.swift */; };
+		7EE2DD3D247CF4750005DE17 /* TextList4ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCEF247CF4750005DE17 /* TextList4ViewCell.swift */; };
+		7EE2DD3E247CF4750005DE17 /* TextList1ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF0247CF4750005DE17 /* TextList1ViewCell.swift */; };
+		7EE2DD3F247CF4750005DE17 /* TextList2ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF1247CF4750005DE17 /* TextList2ViewCell.swift */; };
+		7EE2DD40247CF4750005DE17 /* TextList3ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF2247CF4750005DE17 /* TextList3ViewCell.xib */; };
+		7EE2DD41247CF4750005DE17 /* TextList4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF3247CF4750005DE17 /* TextList4View.swift */; };
+		7EE2DD42247CF4750005DE17 /* TextList2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF4247CF4750005DE17 /* TextList2View.xib */; };
+		7EE2DD43247CF4750005DE17 /* TextList3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF5247CF4750005DE17 /* TextList3View.swift */; };
+		7EE2DD44247CF4750005DE17 /* TextList1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF6247CF4750005DE17 /* TextList1View.xib */; };
+		7EE2DD45247CF4750005DE17 /* DisplayTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF8247CF4750005DE17 /* DisplayTitleView.swift */; };
+		7EE2DD46247CF4750005DE17 /* DisplayIdleBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCF9247CF4750005DE17 /* DisplayIdleBar.xib */; };
+		7EE2DD47247CF4750005DE17 /* ContentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCFA247CF4750005DE17 /* ContentButton.swift */; };
+		7EE2DD48247CF4750005DE17 /* DisplayIdleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCFB247CF4750005DE17 /* DisplayIdleBar.swift */; };
+		7EE2DD49247CF4750005DE17 /* DisplayTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCFC247CF4750005DE17 /* DisplayTitleView.xib */; };
+		7EE2DD4A247CF4750005DE17 /* ImageList1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCFE247CF4750005DE17 /* ImageList1View.swift */; };
+		7EE2DD4B247CF4750005DE17 /* ImageList1ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DD00247CF4750005DE17 /* ImageList1ViewCell.xib */; };
+		7EE2DD4C247CF4750005DE17 /* ImageList2ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD01247CF4750005DE17 /* ImageList2ViewCell.swift */; };
+		7EE2DD4D247CF4750005DE17 /* ImageList2ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DD02247CF4750005DE17 /* ImageList2ViewCell.xib */; };
+		7EE2DD4E247CF4750005DE17 /* ImageList1ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD03247CF4750005DE17 /* ImageList1ViewCell.swift */; };
+		7EE2DD4F247CF4750005DE17 /* ImageList3ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD04247CF4750005DE17 /* ImageList3ViewCell.swift */; };
+		7EE2DD50247CF4750005DE17 /* ImageList3ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DD05247CF4750005DE17 /* ImageList3ViewCell.xib */; };
+		7EE2DD51247CF4750005DE17 /* ImageList1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DD06247CF4750005DE17 /* ImageList1View.xib */; };
+		7EE2DD52247CF4750005DE17 /* ImageList2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD07247CF4750005DE17 /* ImageList2View.swift */; };
+		7EE2DD53247CF4750005DE17 /* ImageList3View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DD08247CF4750005DE17 /* ImageList3View.xib */; };
+		7EE2DD54247CF4750005DE17 /* ImageList3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD09247CF4750005DE17 /* ImageList3View.swift */; };
+		7EE2DD55247CF4750005DE17 /* ImageList2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DD0A247CF4750005DE17 /* ImageList2View.xib */; };
+		7EE2DD58247CF4870005DE17 /* AudioPlayer1Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD56247CF4870005DE17 /* AudioPlayer1Template.swift */; };
+		7EE2DD59247CF4870005DE17 /* AudioPlayer2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD57247CF4870005DE17 /* AudioPlayer2Template.swift */; };
+		7EE2DD70247CF4900005DE17 /* Score2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD5A247CF48E0005DE17 /* Score2Template.swift */; };
+		7EE2DD71247CF4900005DE17 /* TextList2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD5B247CF48E0005DE17 /* TextList2Template.swift */; };
+		7EE2DD72247CF4900005DE17 /* FullText2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD5C247CF48E0005DE17 /* FullText2Template.swift */; };
+		7EE2DD73247CF4900005DE17 /* ImageText1Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD5D247CF48E0005DE17 /* ImageText1Template.swift */; };
+		7EE2DD74247CF4900005DE17 /* TextList1Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD5E247CF48E0005DE17 /* TextList1Template.swift */; };
+		7EE2DD75247CF4900005DE17 /* TextList4Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD5F247CF48F0005DE17 /* TextList4Template.swift */; };
+		7EE2DD76247CF4900005DE17 /* Weather2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD60247CF48F0005DE17 /* Weather2Template.swift */; };
+		7EE2DD77247CF4900005DE17 /* Weather4Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD61247CF48F0005DE17 /* Weather4Template.swift */; };
+		7EE2DD78247CF4900005DE17 /* ImageText3Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD62247CF48F0005DE17 /* ImageText3Template.swift */; };
+		7EE2DD79247CF4900005DE17 /* ImageList2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD63247CF48F0005DE17 /* ImageList2Template.swift */; };
+		7EE2DD7A247CF4900005DE17 /* FullText1Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD64247CF48F0005DE17 /* FullText1Template.swift */; };
+		7EE2DD7B247CF4900005DE17 /* Score1Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD65247CF48F0005DE17 /* Score1Template.swift */; };
+		7EE2DD7C247CF4900005DE17 /* ImageList1Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD66247CF48F0005DE17 /* ImageList1Template.swift */; };
+		7EE2DD7D247CF4900005DE17 /* Weather3Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD67247CF48F0005DE17 /* Weather3Template.swift */; };
+		7EE2DD7E247CF4900005DE17 /* FullImageTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD68247CF48F0005DE17 /* FullImageTemplate.swift */; };
+		7EE2DD7F247CF4900005DE17 /* Weather1Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD69247CF48F0005DE17 /* Weather1Template.swift */; };
+		7EE2DD80247CF4900005DE17 /* TextList3Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD6A247CF48F0005DE17 /* TextList3Template.swift */; };
+		7EE2DD81247CF4900005DE17 /* FullText3Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD6B247CF48F0005DE17 /* FullText3Template.swift */; };
+		7EE2DD82247CF4900005DE17 /* ImageText4Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD6C247CF4900005DE17 /* ImageText4Template.swift */; };
+		7EE2DD83247CF4900005DE17 /* ImageList3Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD6D247CF4900005DE17 /* ImageList3Template.swift */; };
+		7EE2DD84247CF4900005DE17 /* Weather5Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD6E247CF4900005DE17 /* Weather5Template.swift */; };
+		7EE2DD85247CF4900005DE17 /* ImageText2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD6F247CF4900005DE17 /* ImageText2Template.swift */; };
+		7EE2DD87247CF4C80005DE17 /* UILabel+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DD86247CF4C70005DE17 /* UILabel+Convenience.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,19 +161,7 @@
 		73F284A723815CC9004EBBDF /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		73F284A823815CC9004EBBDF /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		73F284AA23815CC9004EBBDF /* NuguWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguWebView.swift; sourceTree = "<group>"; };
-		73F284AC23815CC9004EBBDF /* DisplayBodyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayBodyView.xib; sourceTree = "<group>"; };
-		73F284AE23815CC9004EBBDF /* DisplayBodyListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyListViewCell.swift; sourceTree = "<group>"; };
-		73F284AF23815CC9004EBBDF /* DisplayListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayListViewCell.xib; sourceTree = "<group>"; };
-		73F284B023815CC9004EBBDF /* DisplayBodyListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayBodyListViewCell.xib; sourceTree = "<group>"; };
-		73F284B123815CC9004EBBDF /* DisplayListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayListViewCell.swift; sourceTree = "<group>"; };
-		73F284B223815CC9004EBBDF /* DisplayBodyListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyListView.swift; sourceTree = "<group>"; };
-		73F284B323815CC9004EBBDF /* DisplayBodyListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayBodyListView.xib; sourceTree = "<group>"; };
-		73F284B923815CC9004EBBDF /* DisplayAudioPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayAudioPlayerView.swift; sourceTree = "<group>"; };
-		73F284BA23815CC9004EBBDF /* DisplayBodyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyView.swift; sourceTree = "<group>"; };
-		73F284BB23815CC9004EBBDF /* DisplayListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayListView.xib; sourceTree = "<group>"; };
 		73F284BC23815CC9004EBBDF /* DisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
-		73F284BD23815CC9004EBBDF /* DisplayListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayListView.swift; sourceTree = "<group>"; };
-		73F284BE23815CC9004EBBDF /* DisplayAudioPlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayAudioPlayerView.xib; sourceTree = "<group>"; };
 		73F284C123815CC9004EBBDF /* UIColor+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Convenience.swift"; sourceTree = "<group>"; };
 		73F284C223815CC9004EBBDF /* Int+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Convenience.swift"; sourceTree = "<group>"; };
 		73F284C423815CC9004EBBDF /* ImageDataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataLoader.swift; sourceTree = "<group>"; };
@@ -111,15 +176,9 @@
 		73F284D823815CC9004EBBDF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7E092F2A2452E72B009779F1 /* Keyword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keyword.swift; sourceTree = "<group>"; };
 		7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerSettingsTemplate.swift; sourceTree = "<group>"; };
-		7E0B69702434A0AC00D8C6AD /* AudioPlayerTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerTemplate.swift; sourceTree = "<group>"; };
 		7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerUpdateMetadataPayload.swift; sourceTree = "<group>"; };
 		7E0B69722434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerLyricsTemplate.swift; sourceTree = "<group>"; };
-		7E0B69742434A0AC00D8C6AD /* DisplayBodyTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyTemplate.swift; sourceTree = "<group>"; };
-		7E0B69752434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListTemplate.swift; sourceTree = "<group>"; };
-		7E0B69762434A0AC00D8C6AD /* DisplayWeatherTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherTemplate.swift; sourceTree = "<group>"; };
-		7E0B69772434A0AC00D8C6AD /* DisplayBodyListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayBodyListTemplate.swift; sourceTree = "<group>"; };
 		7E0B69782434A0AC00D8C6AD /* DisplayCommonTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayCommonTemplate.swift; sourceTree = "<group>"; };
-		7E0B69792434A0AC00D8C6AD /* DisplayListTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayListTemplate.swift; sourceTree = "<group>"; };
 		7E56DD242419FF88004A3508 /* DisplayControllable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DisplayControllable.swift; path = DisplayViews/DisplayControllable.swift; sourceTree = "<group>"; };
 		7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
@@ -128,12 +187,6 @@
 		7E6A0B0F241084C000C7A19E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7E6A0B11241084C000C7A19E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7E6A0B13241084C000C7A19E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		7E6A0B172410853500C7A19E /* DisplayWeatherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherView.swift; sourceTree = "<group>"; };
-		7E6A0B192410853500C7A19E /* DisplayWeatherListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayWeatherListView.xib; sourceTree = "<group>"; };
-		7E6A0B1A2410853500C7A19E /* DisplayWeatherView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayWeatherView.xib; sourceTree = "<group>"; };
-		7E6A0B1B2410853600C7A19E /* DisplayWeatherListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListView.swift; sourceTree = "<group>"; };
-		7E6A0B212410853C00C7A19E /* DisplayWeatherListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayWeatherListViewCell.swift; sourceTree = "<group>"; };
-		7E6A0B222410853C00C7A19E /* DisplayWeatherListViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayWeatherListViewCell.xib; sourceTree = "<group>"; };
 		7E6A0B2B2410888000C7A19E /* asrStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrStart.wav; sourceTree = "<group>"; };
 		7E6A0B2C2410888000C7A19E /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
 		7E6A0B2D2410888000C7A19E /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
@@ -146,6 +199,107 @@
 		7E6A0B352410888000C7A19E /* device_GW_error_006.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_006.wav; sourceTree = "<group>"; };
 		7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguAudioSessionManager.swift; sourceTree = "<group>"; };
 		7EBD76272391130100CA9C9C /* NuguLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
+		7EE2DCB1247CF45F0005DE17 /* AudioDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioDisplayView.swift; sourceTree = "<group>"; };
+		7EE2DCB4247CF4750005DE17 /* AudioPlayer1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayer1View.xib; sourceTree = "<group>"; };
+		7EE2DCB5247CF4750005DE17 /* AudioPlayer1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer1View.swift; sourceTree = "<group>"; };
+		7EE2DCB6247CF4750005DE17 /* AudioPlayer2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayer2View.xib; sourceTree = "<group>"; };
+		7EE2DCB7247CF4750005DE17 /* FullLyricsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullLyricsView.swift; sourceTree = "<group>"; };
+		7EE2DCB8247CF4750005DE17 /* AudioPlayerBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayerBarView.xib; sourceTree = "<group>"; };
+		7EE2DCB9247CF4750005DE17 /* AudioPlayerBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerBarView.swift; sourceTree = "<group>"; };
+		7EE2DCBA247CF4750005DE17 /* FullLyricsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullLyricsView.xib; sourceTree = "<group>"; };
+		7EE2DCBB247CF4750005DE17 /* AudioPlayer2View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer2View.swift; sourceTree = "<group>"; };
+		7EE2DCBD247CF4750005DE17 /* FullImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullImageView.swift; sourceTree = "<group>"; };
+		7EE2DCBE247CF4750005DE17 /* FullImageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullImageView.xib; sourceTree = "<group>"; };
+		7EE2DCC0247CF4750005DE17 /* ImageText4View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageText4View.xib; sourceTree = "<group>"; };
+		7EE2DCC1247CF4750005DE17 /* ImageText3View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageText3View.swift; sourceTree = "<group>"; };
+		7EE2DCC2247CF4750005DE17 /* ImageText4View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageText4View.swift; sourceTree = "<group>"; };
+		7EE2DCC3247CF4750005DE17 /* ImageText2View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageText2View.swift; sourceTree = "<group>"; };
+		7EE2DCC4247CF4750005DE17 /* ImageText2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageText2View.xib; sourceTree = "<group>"; };
+		7EE2DCC5247CF4750005DE17 /* ImageText1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageText1View.swift; sourceTree = "<group>"; };
+		7EE2DCC6247CF4750005DE17 /* ImageText3View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageText3View.xib; sourceTree = "<group>"; };
+		7EE2DCC7247CF4750005DE17 /* ImageText1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageText1View.xib; sourceTree = "<group>"; };
+		7EE2DCC9247CF4750005DE17 /* FullText3View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullText3View.swift; sourceTree = "<group>"; };
+		7EE2DCCA247CF4750005DE17 /* FullText2View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullText2View.swift; sourceTree = "<group>"; };
+		7EE2DCCB247CF4750005DE17 /* FullText3View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullText3View.xib; sourceTree = "<group>"; };
+		7EE2DCCC247CF4750005DE17 /* FullText1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullText1View.swift; sourceTree = "<group>"; };
+		7EE2DCCD247CF4750005DE17 /* FullText2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullText2View.xib; sourceTree = "<group>"; };
+		7EE2DCCE247CF4750005DE17 /* FullText1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullText1View.xib; sourceTree = "<group>"; };
+		7EE2DCD0247CF4750005DE17 /* Score1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Score1View.xib; sourceTree = "<group>"; };
+		7EE2DCD1247CF4750005DE17 /* Score2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Score2View.xib; sourceTree = "<group>"; };
+		7EE2DCD2247CF4750005DE17 /* Score1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Score1View.swift; sourceTree = "<group>"; };
+		7EE2DCD4247CF4750005DE17 /* Score2ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Score2ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DCD5247CF4750005DE17 /* Score2ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Score2ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DCD6247CF4750005DE17 /* Score2View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Score2View.swift; sourceTree = "<group>"; };
+		7EE2DCD8247CF4750005DE17 /* Weather4View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather4View.swift; sourceTree = "<group>"; };
+		7EE2DCD9247CF4750005DE17 /* Weather1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Weather1View.xib; sourceTree = "<group>"; };
+		7EE2DCDA247CF4750005DE17 /* Weather2View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather2View.swift; sourceTree = "<group>"; };
+		7EE2DCDB247CF4750005DE17 /* Weather2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Weather2View.xib; sourceTree = "<group>"; };
+		7EE2DCDC247CF4750005DE17 /* Weather5View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather5View.swift; sourceTree = "<group>"; };
+		7EE2DCDD247CF4750005DE17 /* Weather3View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather3View.swift; sourceTree = "<group>"; };
+		7EE2DCDE247CF4750005DE17 /* Weather3View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Weather3View.xib; sourceTree = "<group>"; };
+		7EE2DCE0247CF4750005DE17 /* Weather4ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather4ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DCE1247CF4750005DE17 /* Weather4ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Weather4ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DCE2247CF4750005DE17 /* Weather5View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Weather5View.xib; sourceTree = "<group>"; };
+		7EE2DCE3247CF4750005DE17 /* Weather4View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Weather4View.xib; sourceTree = "<group>"; };
+		7EE2DCE4247CF4750005DE17 /* Weather1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather1View.swift; sourceTree = "<group>"; };
+		7EE2DCE6247CF4750005DE17 /* TextList4View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList4View.xib; sourceTree = "<group>"; };
+		7EE2DCE7247CF4750005DE17 /* TextList1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList1View.swift; sourceTree = "<group>"; };
+		7EE2DCE8247CF4750005DE17 /* TextList2View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList2View.swift; sourceTree = "<group>"; };
+		7EE2DCE9247CF4750005DE17 /* TextList3View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList3View.xib; sourceTree = "<group>"; };
+		7EE2DCEB247CF4750005DE17 /* TextList4ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList4ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DCEC247CF4750005DE17 /* TextList1ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList1ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DCED247CF4750005DE17 /* TextList2ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList2ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DCEE247CF4750005DE17 /* TextList3ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList3ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DCEF247CF4750005DE17 /* TextList4ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList4ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DCF0247CF4750005DE17 /* TextList1ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList1ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DCF1247CF4750005DE17 /* TextList2ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList2ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DCF2247CF4750005DE17 /* TextList3ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList3ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DCF3247CF4750005DE17 /* TextList4View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList4View.swift; sourceTree = "<group>"; };
+		7EE2DCF4247CF4750005DE17 /* TextList2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList2View.xib; sourceTree = "<group>"; };
+		7EE2DCF5247CF4750005DE17 /* TextList3View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList3View.swift; sourceTree = "<group>"; };
+		7EE2DCF6247CF4750005DE17 /* TextList1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList1View.xib; sourceTree = "<group>"; };
+		7EE2DCF8247CF4750005DE17 /* DisplayTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayTitleView.swift; sourceTree = "<group>"; };
+		7EE2DCF9247CF4750005DE17 /* DisplayIdleBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayIdleBar.xib; sourceTree = "<group>"; };
+		7EE2DCFA247CF4750005DE17 /* ContentButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentButton.swift; sourceTree = "<group>"; };
+		7EE2DCFB247CF4750005DE17 /* DisplayIdleBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayIdleBar.swift; sourceTree = "<group>"; };
+		7EE2DCFC247CF4750005DE17 /* DisplayTitleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisplayTitleView.xib; sourceTree = "<group>"; };
+		7EE2DCFE247CF4750005DE17 /* ImageList1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList1View.swift; sourceTree = "<group>"; };
+		7EE2DD00247CF4750005DE17 /* ImageList1ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageList1ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DD01247CF4750005DE17 /* ImageList2ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList2ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DD02247CF4750005DE17 /* ImageList2ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageList2ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DD03247CF4750005DE17 /* ImageList1ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList1ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DD04247CF4750005DE17 /* ImageList3ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList3ViewCell.swift; sourceTree = "<group>"; };
+		7EE2DD05247CF4750005DE17 /* ImageList3ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageList3ViewCell.xib; sourceTree = "<group>"; };
+		7EE2DD06247CF4750005DE17 /* ImageList1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageList1View.xib; sourceTree = "<group>"; };
+		7EE2DD07247CF4750005DE17 /* ImageList2View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList2View.swift; sourceTree = "<group>"; };
+		7EE2DD08247CF4750005DE17 /* ImageList3View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageList3View.xib; sourceTree = "<group>"; };
+		7EE2DD09247CF4750005DE17 /* ImageList3View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList3View.swift; sourceTree = "<group>"; };
+		7EE2DD0A247CF4750005DE17 /* ImageList2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageList2View.xib; sourceTree = "<group>"; };
+		7EE2DD56247CF4870005DE17 /* AudioPlayer1Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer1Template.swift; sourceTree = "<group>"; };
+		7EE2DD57247CF4870005DE17 /* AudioPlayer2Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer2Template.swift; sourceTree = "<group>"; };
+		7EE2DD5A247CF48E0005DE17 /* Score2Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Score2Template.swift; sourceTree = "<group>"; };
+		7EE2DD5B247CF48E0005DE17 /* TextList2Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList2Template.swift; sourceTree = "<group>"; };
+		7EE2DD5C247CF48E0005DE17 /* FullText2Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullText2Template.swift; sourceTree = "<group>"; };
+		7EE2DD5D247CF48E0005DE17 /* ImageText1Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageText1Template.swift; sourceTree = "<group>"; };
+		7EE2DD5E247CF48E0005DE17 /* TextList1Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList1Template.swift; sourceTree = "<group>"; };
+		7EE2DD5F247CF48F0005DE17 /* TextList4Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList4Template.swift; sourceTree = "<group>"; };
+		7EE2DD60247CF48F0005DE17 /* Weather2Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather2Template.swift; sourceTree = "<group>"; };
+		7EE2DD61247CF48F0005DE17 /* Weather4Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather4Template.swift; sourceTree = "<group>"; };
+		7EE2DD62247CF48F0005DE17 /* ImageText3Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageText3Template.swift; sourceTree = "<group>"; };
+		7EE2DD63247CF48F0005DE17 /* ImageList2Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList2Template.swift; sourceTree = "<group>"; };
+		7EE2DD64247CF48F0005DE17 /* FullText1Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullText1Template.swift; sourceTree = "<group>"; };
+		7EE2DD65247CF48F0005DE17 /* Score1Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Score1Template.swift; sourceTree = "<group>"; };
+		7EE2DD66247CF48F0005DE17 /* ImageList1Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList1Template.swift; sourceTree = "<group>"; };
+		7EE2DD67247CF48F0005DE17 /* Weather3Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather3Template.swift; sourceTree = "<group>"; };
+		7EE2DD68247CF48F0005DE17 /* FullImageTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullImageTemplate.swift; sourceTree = "<group>"; };
+		7EE2DD69247CF48F0005DE17 /* Weather1Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather1Template.swift; sourceTree = "<group>"; };
+		7EE2DD6A247CF48F0005DE17 /* TextList3Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList3Template.swift; sourceTree = "<group>"; };
+		7EE2DD6B247CF48F0005DE17 /* FullText3Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullText3Template.swift; sourceTree = "<group>"; };
+		7EE2DD6C247CF4900005DE17 /* ImageText4Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageText4Template.swift; sourceTree = "<group>"; };
+		7EE2DD6D247CF4900005DE17 /* ImageList3Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageList3Template.swift; sourceTree = "<group>"; };
+		7EE2DD6E247CF4900005DE17 /* Weather5Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather5Template.swift; sourceTree = "<group>"; };
+		7EE2DD6F247CF4900005DE17 /* ImageText2Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageText2Template.swift; sourceTree = "<group>"; };
+		7EE2DD86247CF4C70005DE17 /* UILabel+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UILabel+Convenience.swift"; sourceTree = "<group>"; };
 		970814E73D7C771F9B37F9A1 /* Pods-SampleApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleApp.debug.xcconfig"; path = "Target Support Files/Pods-SampleApp/Pods-SampleApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -247,36 +401,20 @@
 		73F284AB23815CC9004EBBDF /* DisplayViews */ = {
 			isa = PBXGroup;
 			children = (
-				7E6A0B1B2410853600C7A19E /* DisplayWeatherListView.swift */,
-				7E6A0B192410853500C7A19E /* DisplayWeatherListView.xib */,
-				7E6A0B172410853500C7A19E /* DisplayWeatherView.swift */,
-				7E6A0B1A2410853500C7A19E /* DisplayWeatherView.xib */,
-				73F284AC23815CC9004EBBDF /* DisplayBodyView.xib */,
-				73F284AD23815CC9004EBBDF /* DisplayViewCell */,
-				73F284B223815CC9004EBBDF /* DisplayBodyListView.swift */,
-				73F284B323815CC9004EBBDF /* DisplayBodyListView.xib */,
+				7EE2DCB3247CF4750005DE17 /* AudioPlayer */,
+				7EE2DCF7247CF4750005DE17 /* CommonViews */,
+				7EE2DCBC247CF4750005DE17 /* FullImage */,
+				7EE2DCC8247CF4750005DE17 /* FullText */,
+				7EE2DCFD247CF4750005DE17 /* ImageList */,
+				7EE2DCBF247CF4750005DE17 /* ImageText */,
+				7EE2DCCF247CF4750005DE17 /* Score */,
+				7EE2DCE5247CF4750005DE17 /* TextList */,
+				7EE2DCD7247CF4750005DE17 /* Weather */,
+				7EE2DCB1247CF45F0005DE17 /* AudioDisplayView.swift */,
 				73F284B423815CC9004EBBDF /* Models */,
-				73F284B923815CC9004EBBDF /* DisplayAudioPlayerView.swift */,
-				73F284BA23815CC9004EBBDF /* DisplayBodyView.swift */,
-				73F284BB23815CC9004EBBDF /* DisplayListView.xib */,
 				73F284BC23815CC9004EBBDF /* DisplayView.swift */,
-				73F284BD23815CC9004EBBDF /* DisplayListView.swift */,
-				73F284BE23815CC9004EBBDF /* DisplayAudioPlayerView.xib */,
 			);
 			path = DisplayViews;
-			sourceTree = "<group>";
-		};
-		73F284AD23815CC9004EBBDF /* DisplayViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				7E6A0B212410853C00C7A19E /* DisplayWeatherListViewCell.swift */,
-				7E6A0B222410853C00C7A19E /* DisplayWeatherListViewCell.xib */,
-				73F284AE23815CC9004EBBDF /* DisplayBodyListViewCell.swift */,
-				73F284AF23815CC9004EBBDF /* DisplayListViewCell.xib */,
-				73F284B023815CC9004EBBDF /* DisplayBodyListViewCell.xib */,
-				73F284B123815CC9004EBBDF /* DisplayListViewCell.swift */,
-			);
-			path = DisplayViewCell;
 			sourceTree = "<group>";
 		};
 		73F284B423815CC9004EBBDF /* Models */ = {
@@ -291,6 +429,7 @@
 		73F284C023815CC9004EBBDF /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				7EE2DD86247CF4C70005DE17 /* UILabel+Convenience.swift */,
 				7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */,
 				73F284C123815CC9004EBBDF /* UIColor+Convenience.swift */,
 				73F284C223815CC9004EBBDF /* Int+Convenience.swift */,
@@ -349,8 +488,9 @@
 		7E0B696E2434A0AC00D8C6AD /* AudioPlayerDisplay */ = {
 			isa = PBXGroup;
 			children = (
+				7EE2DD56247CF4870005DE17 /* AudioPlayer1Template.swift */,
+				7EE2DD57247CF4870005DE17 /* AudioPlayer2Template.swift */,
 				7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */,
-				7E0B69702434A0AC00D8C6AD /* AudioPlayerTemplate.swift */,
 				7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */,
 				7E0B69722434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift */,
 			);
@@ -360,12 +500,29 @@
 		7E0B69732434A0AC00D8C6AD /* Display */ = {
 			isa = PBXGroup;
 			children = (
-				7E0B69742434A0AC00D8C6AD /* DisplayBodyTemplate.swift */,
-				7E0B69752434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift */,
-				7E0B69762434A0AC00D8C6AD /* DisplayWeatherTemplate.swift */,
-				7E0B69772434A0AC00D8C6AD /* DisplayBodyListTemplate.swift */,
+				7EE2DD68247CF48F0005DE17 /* FullImageTemplate.swift */,
+				7EE2DD64247CF48F0005DE17 /* FullText1Template.swift */,
+				7EE2DD5C247CF48E0005DE17 /* FullText2Template.swift */,
+				7EE2DD6B247CF48F0005DE17 /* FullText3Template.swift */,
+				7EE2DD66247CF48F0005DE17 /* ImageList1Template.swift */,
+				7EE2DD63247CF48F0005DE17 /* ImageList2Template.swift */,
+				7EE2DD6D247CF4900005DE17 /* ImageList3Template.swift */,
+				7EE2DD5D247CF48E0005DE17 /* ImageText1Template.swift */,
+				7EE2DD6F247CF4900005DE17 /* ImageText2Template.swift */,
+				7EE2DD62247CF48F0005DE17 /* ImageText3Template.swift */,
+				7EE2DD6C247CF4900005DE17 /* ImageText4Template.swift */,
+				7EE2DD65247CF48F0005DE17 /* Score1Template.swift */,
+				7EE2DD5A247CF48E0005DE17 /* Score2Template.swift */,
+				7EE2DD5E247CF48E0005DE17 /* TextList1Template.swift */,
+				7EE2DD5B247CF48E0005DE17 /* TextList2Template.swift */,
+				7EE2DD6A247CF48F0005DE17 /* TextList3Template.swift */,
+				7EE2DD5F247CF48F0005DE17 /* TextList4Template.swift */,
+				7EE2DD69247CF48F0005DE17 /* Weather1Template.swift */,
+				7EE2DD60247CF48F0005DE17 /* Weather2Template.swift */,
+				7EE2DD67247CF48F0005DE17 /* Weather3Template.swift */,
+				7EE2DD61247CF48F0005DE17 /* Weather4Template.swift */,
+				7EE2DD6E247CF4900005DE17 /* Weather5Template.swift */,
 				7E0B69782434A0AC00D8C6AD /* DisplayCommonTemplate.swift */,
-				7E0B69792434A0AC00D8C6AD /* DisplayListTemplate.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -430,6 +587,176 @@
 			path = LocalTts;
 			sourceTree = "<group>";
 		};
+		7EE2DCB3247CF4750005DE17 /* AudioPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCB4247CF4750005DE17 /* AudioPlayer1View.xib */,
+				7EE2DCB5247CF4750005DE17 /* AudioPlayer1View.swift */,
+				7EE2DCB6247CF4750005DE17 /* AudioPlayer2View.xib */,
+				7EE2DCB7247CF4750005DE17 /* FullLyricsView.swift */,
+				7EE2DCB8247CF4750005DE17 /* AudioPlayerBarView.xib */,
+				7EE2DCB9247CF4750005DE17 /* AudioPlayerBarView.swift */,
+				7EE2DCBA247CF4750005DE17 /* FullLyricsView.xib */,
+				7EE2DCBB247CF4750005DE17 /* AudioPlayer2View.swift */,
+			);
+			path = AudioPlayer;
+			sourceTree = "<group>";
+		};
+		7EE2DCBC247CF4750005DE17 /* FullImage */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCBD247CF4750005DE17 /* FullImageView.swift */,
+				7EE2DCBE247CF4750005DE17 /* FullImageView.xib */,
+			);
+			path = FullImage;
+			sourceTree = "<group>";
+		};
+		7EE2DCBF247CF4750005DE17 /* ImageText */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCC0247CF4750005DE17 /* ImageText4View.xib */,
+				7EE2DCC1247CF4750005DE17 /* ImageText3View.swift */,
+				7EE2DCC2247CF4750005DE17 /* ImageText4View.swift */,
+				7EE2DCC3247CF4750005DE17 /* ImageText2View.swift */,
+				7EE2DCC4247CF4750005DE17 /* ImageText2View.xib */,
+				7EE2DCC5247CF4750005DE17 /* ImageText1View.swift */,
+				7EE2DCC6247CF4750005DE17 /* ImageText3View.xib */,
+				7EE2DCC7247CF4750005DE17 /* ImageText1View.xib */,
+			);
+			path = ImageText;
+			sourceTree = "<group>";
+		};
+		7EE2DCC8247CF4750005DE17 /* FullText */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCC9247CF4750005DE17 /* FullText3View.swift */,
+				7EE2DCCA247CF4750005DE17 /* FullText2View.swift */,
+				7EE2DCCB247CF4750005DE17 /* FullText3View.xib */,
+				7EE2DCCC247CF4750005DE17 /* FullText1View.swift */,
+				7EE2DCCD247CF4750005DE17 /* FullText2View.xib */,
+				7EE2DCCE247CF4750005DE17 /* FullText1View.xib */,
+			);
+			path = FullText;
+			sourceTree = "<group>";
+		};
+		7EE2DCCF247CF4750005DE17 /* Score */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCD0247CF4750005DE17 /* Score1View.xib */,
+				7EE2DCD1247CF4750005DE17 /* Score2View.xib */,
+				7EE2DCD2247CF4750005DE17 /* Score1View.swift */,
+				7EE2DCD3247CF4750005DE17 /* Cell */,
+				7EE2DCD6247CF4750005DE17 /* Score2View.swift */,
+			);
+			path = Score;
+			sourceTree = "<group>";
+		};
+		7EE2DCD3247CF4750005DE17 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCD4247CF4750005DE17 /* Score2ViewCell.xib */,
+				7EE2DCD5247CF4750005DE17 /* Score2ViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		7EE2DCD7247CF4750005DE17 /* Weather */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCD8247CF4750005DE17 /* Weather4View.swift */,
+				7EE2DCD9247CF4750005DE17 /* Weather1View.xib */,
+				7EE2DCDA247CF4750005DE17 /* Weather2View.swift */,
+				7EE2DCDB247CF4750005DE17 /* Weather2View.xib */,
+				7EE2DCDC247CF4750005DE17 /* Weather5View.swift */,
+				7EE2DCDD247CF4750005DE17 /* Weather3View.swift */,
+				7EE2DCDE247CF4750005DE17 /* Weather3View.xib */,
+				7EE2DCDF247CF4750005DE17 /* Cell */,
+				7EE2DCE2247CF4750005DE17 /* Weather5View.xib */,
+				7EE2DCE3247CF4750005DE17 /* Weather4View.xib */,
+				7EE2DCE4247CF4750005DE17 /* Weather1View.swift */,
+			);
+			path = Weather;
+			sourceTree = "<group>";
+		};
+		7EE2DCDF247CF4750005DE17 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCE0247CF4750005DE17 /* Weather4ViewCell.swift */,
+				7EE2DCE1247CF4750005DE17 /* Weather4ViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		7EE2DCE5247CF4750005DE17 /* TextList */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCE6247CF4750005DE17 /* TextList4View.xib */,
+				7EE2DCE7247CF4750005DE17 /* TextList1View.swift */,
+				7EE2DCE8247CF4750005DE17 /* TextList2View.swift */,
+				7EE2DCE9247CF4750005DE17 /* TextList3View.xib */,
+				7EE2DCEA247CF4750005DE17 /* Cell */,
+				7EE2DCF3247CF4750005DE17 /* TextList4View.swift */,
+				7EE2DCF4247CF4750005DE17 /* TextList2View.xib */,
+				7EE2DCF5247CF4750005DE17 /* TextList3View.swift */,
+				7EE2DCF6247CF4750005DE17 /* TextList1View.xib */,
+			);
+			path = TextList;
+			sourceTree = "<group>";
+		};
+		7EE2DCEA247CF4750005DE17 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCEB247CF4750005DE17 /* TextList4ViewCell.xib */,
+				7EE2DCEC247CF4750005DE17 /* TextList1ViewCell.xib */,
+				7EE2DCED247CF4750005DE17 /* TextList2ViewCell.xib */,
+				7EE2DCEE247CF4750005DE17 /* TextList3ViewCell.swift */,
+				7EE2DCEF247CF4750005DE17 /* TextList4ViewCell.swift */,
+				7EE2DCF0247CF4750005DE17 /* TextList1ViewCell.swift */,
+				7EE2DCF1247CF4750005DE17 /* TextList2ViewCell.swift */,
+				7EE2DCF2247CF4750005DE17 /* TextList3ViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		7EE2DCF7247CF4750005DE17 /* CommonViews */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCF8247CF4750005DE17 /* DisplayTitleView.swift */,
+				7EE2DCF9247CF4750005DE17 /* DisplayIdleBar.xib */,
+				7EE2DCFA247CF4750005DE17 /* ContentButton.swift */,
+				7EE2DCFB247CF4750005DE17 /* DisplayIdleBar.swift */,
+				7EE2DCFC247CF4750005DE17 /* DisplayTitleView.xib */,
+			);
+			path = CommonViews;
+			sourceTree = "<group>";
+		};
+		7EE2DCFD247CF4750005DE17 /* ImageList */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCFE247CF4750005DE17 /* ImageList1View.swift */,
+				7EE2DCFF247CF4750005DE17 /* Cell */,
+				7EE2DD06247CF4750005DE17 /* ImageList1View.xib */,
+				7EE2DD07247CF4750005DE17 /* ImageList2View.swift */,
+				7EE2DD08247CF4750005DE17 /* ImageList3View.xib */,
+				7EE2DD09247CF4750005DE17 /* ImageList3View.swift */,
+				7EE2DD0A247CF4750005DE17 /* ImageList2View.xib */,
+			);
+			path = ImageList;
+			sourceTree = "<group>";
+		};
+		7EE2DCFF247CF4750005DE17 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DD00247CF4750005DE17 /* ImageList1ViewCell.xib */,
+				7EE2DD01247CF4750005DE17 /* ImageList2ViewCell.swift */,
+				7EE2DD02247CF4750005DE17 /* ImageList2ViewCell.xib */,
+				7EE2DD03247CF4750005DE17 /* ImageList1ViewCell.swift */,
+				7EE2DD04247CF4750005DE17 /* ImageList3ViewCell.swift */,
+				7EE2DD05247CF4750005DE17 /* ImageList3ViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -490,28 +817,56 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73F284E423815CC9004EBBDF /* DisplayBodyView.xib in Resources */,
 				7E6A0B16241084C000C7A19E /* Main.storyboard in Resources */,
-				73F284E623815CC9004EBBDF /* DisplayListViewCell.xib in Resources */,
-				7E6A0B1E2410853600C7A19E /* DisplayWeatherListView.xib in Resources */,
+				7EE2DD3B247CF4750005DE17 /* TextList2ViewCell.xib in Resources */,
 				7E6A0B14241084C000C7A19E /* Assets.xcassets in Resources */,
 				7E6A0B3C2410888000C7A19E /* poc_end_error.wav in Resources */,
+				7EE2DD23247CF4750005DE17 /* Score1View.xib in Resources */,
+				7EE2DD31247CF4750005DE17 /* Weather4ViewCell.xib in Resources */,
+				7EE2DD35247CF4750005DE17 /* TextList4View.xib in Resources */,
+				7EE2DD0D247CF4750005DE17 /* AudioPlayer2View.xib in Resources */,
 				7E6A0B3F2410888000C7A19E /* device_GW_error_006.wav in Resources */,
+				7EE2DD32247CF4750005DE17 /* Weather5View.xib in Resources */,
+				7EE2DD1F247CF4750005DE17 /* FullText3View.xib in Resources */,
+				7EE2DD14247CF4750005DE17 /* FullImageView.xib in Resources */,
+				7EE2DD4B247CF4750005DE17 /* ImageList1ViewCell.xib in Resources */,
+				7EE2DD49247CF4750005DE17 /* DisplayTitleView.xib in Resources */,
+				7EE2DD21247CF4750005DE17 /* FullText2View.xib in Resources */,
+				7EE2DD55247CF4750005DE17 /* ImageList2View.xib in Resources */,
+				7EE2DD40247CF4750005DE17 /* TextList3ViewCell.xib in Resources */,
 				7E6A0B382410888000C7A19E /* asrFail.wav in Resources */,
-				73F284E723815CC9004EBBDF /* DisplayBodyListViewCell.xib in Resources */,
-				7E6A0B1F2410853600C7A19E /* DisplayWeatherView.xib in Resources */,
-				7E6A0B242410853C00C7A19E /* DisplayWeatherListViewCell.xib in Resources */,
-				73F284EA23815CC9004EBBDF /* DisplayBodyListView.xib in Resources */,
+				7EE2DD0F247CF4750005DE17 /* AudioPlayerBarView.xib in Resources */,
+				7EE2DD19247CF4750005DE17 /* ImageText2View.xib in Resources */,
+				7EE2DD4D247CF4750005DE17 /* ImageList2ViewCell.xib in Resources */,
 				7E6A0B3E2410888000C7A19E /* device_GW_error_004.wav in Resources */,
-				73F284F123815CC9004EBBDF /* DisplayListView.xib in Resources */,
+				7EE2DD22247CF4750005DE17 /* FullText1View.xib in Resources */,
+				7EE2DD44247CF4750005DE17 /* TextList1View.xib in Resources */,
+				7EE2DD38247CF4750005DE17 /* TextList3View.xib in Resources */,
 				7E6A0B392410888000C7A19E /* device_GW_error_003.wav in Resources */,
+				7EE2DD11247CF4750005DE17 /* FullLyricsView.xib in Resources */,
 				7E6A0B3D2410888000C7A19E /* device_GW_error_005.wav in Resources */,
+				7EE2DD24247CF4750005DE17 /* Score2View.xib in Resources */,
+				7EE2DD0B247CF4750005DE17 /* AudioPlayer1View.xib in Resources */,
 				7E6A0B15241084C000C7A19E /* LaunchScreen.storyboard in Resources */,
+				7EE2DD33247CF4750005DE17 /* Weather4View.xib in Resources */,
+				7EE2DD26247CF4750005DE17 /* Score2ViewCell.xib in Resources */,
 				7E6A0B362410888000C7A19E /* asrStart.wav in Resources */,
-				73F284F423815CC9004EBBDF /* DisplayAudioPlayerView.xib in Resources */,
+				7EE2DD2A247CF4750005DE17 /* Weather1View.xib in Resources */,
+				7EE2DD15247CF4750005DE17 /* ImageText4View.xib in Resources */,
 				7E6A0B372410888000C7A19E /* asrSuccess.wav in Resources */,
 				7E6A0B3A2410888000C7A19E /* device_GW_error_002.wav in Resources */,
+				7EE2DD39247CF4750005DE17 /* TextList4ViewCell.xib in Resources */,
+				7EE2DD1C247CF4750005DE17 /* ImageText1View.xib in Resources */,
+				7EE2DD42247CF4750005DE17 /* TextList2View.xib in Resources */,
+				7EE2DD53247CF4750005DE17 /* ImageList3View.xib in Resources */,
+				7EE2DD46247CF4750005DE17 /* DisplayIdleBar.xib in Resources */,
+				7EE2DD1B247CF4750005DE17 /* ImageText3View.xib in Resources */,
+				7EE2DD50247CF4750005DE17 /* ImageList3ViewCell.xib in Resources */,
+				7EE2DD2C247CF4750005DE17 /* Weather2View.xib in Resources */,
+				7EE2DD2F247CF4750005DE17 /* Weather3View.xib in Resources */,
 				7E6A0B3B2410888000C7A19E /* device_GW_error_001.wav in Resources */,
+				7EE2DD51247CF4750005DE17 /* ImageList1View.xib in Resources */,
+				7EE2DD3A247CF4750005DE17 /* TextList1ViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,49 +919,98 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EE2DD47247CF4750005DE17 /* ContentButton.swift in Sources */,
+				7EE2DD29247CF4750005DE17 /* Weather4View.swift in Sources */,
+				7EE2DD1A247CF4750005DE17 /* ImageText1View.swift in Sources */,
+				7EE2DD43247CF4750005DE17 /* TextList3View.swift in Sources */,
+				7EE2DD2E247CF4750005DE17 /* Weather3View.swift in Sources */,
+				7EE2DD77247CF4900005DE17 /* Weather4Template.swift in Sources */,
+				7EE2DD3F247CF4750005DE17 /* TextList2ViewCell.swift in Sources */,
+				7EE2DD48247CF4750005DE17 /* DisplayIdleBar.swift in Sources */,
+				7EE2DD7F247CF4900005DE17 /* Weather1Template.swift in Sources */,
+				7EE2DD1E247CF4750005DE17 /* FullText2View.swift in Sources */,
+				7EE2DD76247CF4900005DE17 /* Weather2Template.swift in Sources */,
+				7EE2DD7E247CF4900005DE17 /* FullImageTemplate.swift in Sources */,
+				7EE2DD4F247CF4750005DE17 /* ImageList3ViewCell.swift in Sources */,
+				7EE2DCB2247CF45F0005DE17 /* AudioDisplayView.swift in Sources */,
 				7E092F2B2452E72B009779F1 /* Keyword.swift in Sources */,
-				7E6A0B232410853C00C7A19E /* DisplayWeatherListViewCell.swift in Sources */,
+				7EE2DD3D247CF4750005DE17 /* TextList4ViewCell.swift in Sources */,
+				7EE2DD37247CF4750005DE17 /* TextList2View.swift in Sources */,
 				7E56DD252419FF88004A3508 /* DisplayControllable.swift in Sources */,
+				7EE2DD41247CF4750005DE17 /* TextList4View.swift in Sources */,
 				73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */,
-				73F284E523815CC9004EBBDF /* DisplayBodyListViewCell.swift in Sources */,
+				7EE2DD17247CF4750005DE17 /* ImageText4View.swift in Sources */,
 				73F284FD23815CC9004EBBDF /* NuguDisplayPlayerController.swift in Sources */,
+				7EE2DD20247CF4750005DE17 /* FullText1View.swift in Sources */,
 				7EBD76292391130100CA9C9C /* NuguLocationManager.swift in Sources */,
+				7EE2DD59247CF4870005DE17 /* AudioPlayer2Template.swift in Sources */,
+				7EE2DD28247CF4750005DE17 /* Score2View.swift in Sources */,
+				7EE2DD3E247CF4750005DE17 /* TextList1ViewCell.swift in Sources */,
 				7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */,
+				7EE2DD7B247CF4900005DE17 /* Score1Template.swift in Sources */,
 				7E56DD272419FF9C004A3508 /* Dictionary+Convenience.swift in Sources */,
 				73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */,
+				7EE2DD16247CF4750005DE17 /* ImageText3View.swift in Sources */,
+				7EE2DD84247CF4900005DE17 /* Weather5Template.swift in Sources */,
+				7EE2DD1D247CF4750005DE17 /* FullText3View.swift in Sources */,
+				7EE2DD73247CF4900005DE17 /* ImageText1Template.swift in Sources */,
 				73F284F223815CC9004EBBDF /* DisplayView.swift in Sources */,
-				73F284EF23815CC9004EBBDF /* DisplayAudioPlayerView.swift in Sources */,
+				7EE2DD79247CF4900005DE17 /* ImageList2Template.swift in Sources */,
+				7EE2DD27247CF4750005DE17 /* Score2ViewCell.swift in Sources */,
+				7EE2DD80247CF4900005DE17 /* TextList3Template.swift in Sources */,
+				7EE2DD0C247CF4750005DE17 /* AudioPlayer1View.swift in Sources */,
+				7EE2DD83247CF4900005DE17 /* ImageList3Template.swift in Sources */,
 				73F284DF23815CC9004EBBDF /* SettingViewController.swift in Sources */,
+				7EE2DD58247CF4870005DE17 /* AudioPlayer1Template.swift in Sources */,
+				7EE2DD81247CF4900005DE17 /* FullText3Template.swift in Sources */,
+				7EE2DD10247CF4750005DE17 /* AudioPlayerBarView.swift in Sources */,
+				7EE2DD52247CF4750005DE17 /* ImageList2View.swift in Sources */,
 				73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */,
 				7E6A0B0D2410849C00C7A19E /* UserDefaultsWrapper.swift in Sources */,
 				7E0B69822434A0AC00D8C6AD /* DisplayCommonTemplate.swift in Sources */,
+				7EE2DD54247CF4750005DE17 /* ImageList3View.swift in Sources */,
 				73F284E023815CC9004EBBDF /* IntroViewController.swift in Sources */,
-				7E0B697F2434A0AC00D8C6AD /* DisplayWeatherListTemplate.swift in Sources */,
+				7EE2DD12247CF4750005DE17 /* AudioPlayer2View.swift in Sources */,
+				7EE2DD71247CF4900005DE17 /* TextList2Template.swift in Sources */,
 				7E0B697C2434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift in Sources */,
-				7E6A0B1C2410853600C7A19E /* DisplayWeatherView.swift in Sources */,
-				73F284F023815CC9004EBBDF /* DisplayBodyView.swift in Sources */,
 				73F284F923815CC9004EBBDF /* SampleAppError.swift in Sources */,
-				7E0B697E2434A0AC00D8C6AD /* DisplayBodyTemplate.swift in Sources */,
+				7EE2DD2D247CF4750005DE17 /* Weather5View.swift in Sources */,
 				73F284E323815CC9004EBBDF /* NuguWebView.swift in Sources */,
-				7E6A0B202410853600C7A19E /* DisplayWeatherListView.swift in Sources */,
+				7EE2DD75247CF4900005DE17 /* TextList4Template.swift in Sources */,
+				7EE2DD34247CF4750005DE17 /* Weather1View.swift in Sources */,
+				7EE2DD0E247CF4750005DE17 /* FullLyricsView.swift in Sources */,
+				7EE2DD4A247CF4750005DE17 /* ImageList1View.swift in Sources */,
+				7EE2DD45247CF4750005DE17 /* DisplayTitleView.swift in Sources */,
+				7EE2DD3C247CF4750005DE17 /* TextList3ViewCell.swift in Sources */,
+				7EE2DD18247CF4750005DE17 /* ImageText2View.swift in Sources */,
+				7EE2DD74247CF4900005DE17 /* TextList1Template.swift in Sources */,
 				73F284FC23815CC9004EBBDF /* NuguCentralManager.swift in Sources */,
-				73F284E823815CC9004EBBDF /* DisplayListViewCell.swift in Sources */,
 				73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */,
 				73F284E223815CC9004EBBDF /* WebViewController.swift in Sources */,
-				7E0B69812434A0AC00D8C6AD /* DisplayBodyListTemplate.swift in Sources */,
-				73F284F323815CC9004EBBDF /* DisplayListView.swift in Sources */,
+				7EE2DD25247CF4750005DE17 /* Score1View.swift in Sources */,
+				7EE2DD85247CF4900005DE17 /* ImageText2Template.swift in Sources */,
+				7EE2DD70247CF4900005DE17 /* Score2Template.swift in Sources */,
 				7E0B697D2434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift in Sources */,
-				73F284E923815CC9004EBBDF /* DisplayBodyListView.swift in Sources */,
-				7E0B69832434A0AC00D8C6AD /* DisplayListTemplate.swift in Sources */,
+				7EE2DD78247CF4900005DE17 /* ImageText3Template.swift in Sources */,
+				7EE2DD7A247CF4900005DE17 /* FullText1Template.swift in Sources */,
+				7EE2DD72247CF4900005DE17 /* FullText2Template.swift in Sources */,
 				7E0B697A2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift in Sources */,
+				7EE2DD30247CF4750005DE17 /* Weather4ViewCell.swift in Sources */,
 				73F284FA23815CC9004EBBDF /* SampleApp.swift in Sources */,
+				7EE2DD87247CF4C80005DE17 /* UILabel+Convenience.swift in Sources */,
+				7EE2DD36247CF4750005DE17 /* TextList1View.swift in Sources */,
+				7EE2DD7D247CF4900005DE17 /* Weather3Template.swift in Sources */,
+				7EE2DD82247CF4900005DE17 /* ImageText4Template.swift in Sources */,
 				73F284F823815CC9004EBBDF /* ImageDataLoader.swift in Sources */,
-				7E0B697B2434A0AC00D8C6AD /* AudioPlayerTemplate.swift in Sources */,
 				7E6A0B0C2410849C00C7A19E /* ASRBeepPlayer.swift in Sources */,
 				7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */,
-				7E0B69802434A0AC00D8C6AD /* DisplayWeatherTemplate.swift in Sources */,
+				7EE2DD2B247CF4750005DE17 /* Weather2View.swift in Sources */,
 				73F284F623815CC9004EBBDF /* UIColor+Convenience.swift in Sources */,
+				7EE2DD13247CF4750005DE17 /* FullImageView.swift in Sources */,
 				73F284F723815CC9004EBBDF /* Int+Convenience.swift in Sources */,
+				7EE2DD4E247CF4750005DE17 /* ImageList1ViewCell.swift in Sources */,
+				7EE2DD4C247CF4750005DE17 /* ImageList2ViewCell.swift in Sources */,
+				7EE2DD7C247CF4900005DE17 /* ImageList1Template.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
