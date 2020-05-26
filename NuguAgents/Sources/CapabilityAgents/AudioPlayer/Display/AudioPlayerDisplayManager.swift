@@ -156,7 +156,14 @@ extension AudioPlayerDisplayManager {
             let delegate = info.delegate else {
                 return false
         }
-        return delegate.audioPlayerIsLyricsVisible()
+        var result = false
+        if Thread.current.isMainThread {
+            return delegate.audioPlayerIsLyricsVisible()
+        }
+        DispatchQueue.main.sync {
+            result = delegate.audioPlayerIsLyricsVisible()
+        }
+        return result
     }
     
     func controlLyricsPage(payload: AudioPlayerDisplayControlPayload) -> Bool {

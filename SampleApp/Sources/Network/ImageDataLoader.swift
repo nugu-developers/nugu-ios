@@ -83,3 +83,29 @@ extension UIImageView {
         }
     }
 }
+
+// MARK: - UIButton + ImageDataLoader
+
+extension UIButton {
+    @discardableResult
+    func loadImage(from urlString: String?) -> URLSessionDataTask? {
+        guard
+            let imageUrlString = urlString,
+            let url = URL(string: imageUrlString)
+            else {
+                log.debug("Failed load image, url is nil or invalid \(urlString ?? "")")
+                self.setImage(nil, for: .normal)
+                return nil
+        }
+        
+        return ImageDataLoader.shared.load(imageUrl: url) { (result) in
+            switch result {
+            case .success(let imageData):
+                self.setImage(UIImage(data: imageData), for: .normal)
+            case .failure(let error):
+                self.setImage(nil, for: .normal)
+                log.debug("Failed load image: \(error)")
+            }
+        }
+    }
+}
