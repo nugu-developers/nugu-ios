@@ -40,6 +40,7 @@ final class MainViewController: UIViewController {
     private var displayAudioPlayerView: AudioDisplayView?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
+    private var chipsAgentItem: ChipsAgentItem?
     
     private var hasShownGuideWeb = false
     
@@ -165,6 +166,7 @@ private extension MainViewController {
         NuguCentralManager.shared.client.displayAgent.add(delegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
+        NuguCentralManager.shared.client.chipsAgent.delegate = self
     }
     
     /// Show nugu usage guide webpage after successful login process
@@ -248,7 +250,10 @@ private extension MainViewController {
             self.nuguVoiceChrome.removeFromSuperview()
             self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
             
-            self.setExampleChips()
+            self.setChipsButton(
+                actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
+                normalList: ["템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
+            )
             
             self.view.addSubview(self.nuguVoiceChrome)
             
@@ -281,18 +286,14 @@ private extension MainViewController {
         })
     }
     
-    func setExampleChips() {
+    func setChipsButton(actionList: [String], normalList: [String]) {
+        var chipsButtonList = [NuguChipsButton.NuguChipsButtonType]()
+        let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
+        chipsButtonList.append(contentsOf: actionButtonList)
+        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
+        chipsButtonList.append(contentsOf: normalButtonList)
         nuguVoiceChrome.setChipsData(
-            chipsData: [
-                .normal(text: "템플릿에서 도움말1"),
-                .action(text: "오늘 날씨 알려줘"),
-                .action(text: "습도 알려줘"),
-                .normal(text: "주말 날씨 알려줘"),
-                .normal(text: "주간 날씨 알려줘"),
-                .normal(text: "오존 농도 알려줘"),
-                .normal(text: "멜론 틀어줘"),
-                .normal(text: "NUGU 토픽 알려줘")
-            ],
+            chipsData: chipsButtonList,
             onChipsSelect: { [weak self] selectedChipsText in
                 self?.chipsDidSelect(selectedChipsText: selectedChipsText)
             }
@@ -559,6 +560,10 @@ extension MainViewController: DialogStateDelegate {
             }
         case .listening:
             DispatchQueue.main.async { [weak self] in
+                if let chipsAgentItem = self?.chipsAgentItem, expectSpeech != nil {
+                    let actionList = chipsAgentItem.chips.map { $0.textSource }
+                    self?.setChipsButton(actionList: actionList, normalList: [])
+                }
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
                 ASRBeepPlayer.shared.beep(type: .start)
             }
@@ -725,5 +730,13 @@ extension MainViewController: AudioPlayerAgentDelegate {
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }
             displayAudioPlayerView.audioPlayerState = state
         }
+    }
+}
+
+// MARK: - ChipsAgentDelegate
+
+extension MainViewController: ChipsAgentDelegate {
+    func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String) {
+        chipsAgentItem = item
     }
 }

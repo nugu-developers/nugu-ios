@@ -43,6 +43,11 @@ public class NuguClient {
     public let soundAgent: SoundAgentProtocol
 
     // additional agents
+    public lazy var chipsAgent: ChipsAgentProtocol = ChipsAgent(
+        contextManager: contextManager,
+        directiveSequencer: directiveSequencer
+    )
+    
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
         upstreamDataSender: streamDataRouter,
         playSyncManager: playSyncManager,

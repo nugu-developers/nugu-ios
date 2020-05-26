@@ -428,6 +428,10 @@
 		7EBB2EAF24440C7600FBBBEA /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DB237672F100C9A177 /* asrFail.wav */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */; };
+		7EE2DCA4247CCC240005DE17 /* ChipsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCA3247CCC240005DE17 /* ChipsAgentProtocol.swift */; };
+		7EE2DCA6247CCCA20005DE17 /* ChipsAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCA5247CCCA20005DE17 /* ChipsAgentDelegate.swift */; };
+		7EE2DCA8247CCD6C0005DE17 /* ChipsAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCA7247CCD6C0005DE17 /* ChipsAgentItem.swift */; };
+		7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
 		7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28D2375703000C9A177 /* DialogState.swift */; };
 		A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */; };
@@ -1037,6 +1041,10 @@
 		7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundAgentSpec.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
 		7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtilSpec.swift; sourceTree = "<group>"; };
+		7EE2DCA3247CCC240005DE17 /* ChipsAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsAgentProtocol.swift; sourceTree = "<group>"; };
+		7EE2DCA5247CCCA20005DE17 /* ChipsAgentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsAgentDelegate.swift; sourceTree = "<group>"; };
+		7EE2DCA7247CCD6C0005DE17 /* ChipsAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsAgentItem.swift; sourceTree = "<group>"; };
+		7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsAgent.swift; sourceTree = "<group>"; };
 		7EF12B2223C822520000E158 /* DisplayClosePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayClosePayload.swift; sourceTree = "<group>"; };
 		A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+SettingsEvent.swift"; sourceTree = "<group>"; };
 		A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayControlPayload.swift; sourceTree = "<group>"; };
@@ -1271,6 +1279,7 @@
 		1F9C5B6823E42D740086CC04 /* CapabilityAgents */ = {
 			isa = PBXGroup;
 			children = (
+				7EE2DCA1247CCC0B0005DE17 /* Chips */,
 				7E5F4889243C370900118054 /* Sound */,
 				1FFFF32C2375707000C9A177 /* Extension */,
 				1FFFF3372375707000C9A177 /* AudioPlayer */,
@@ -2334,6 +2343,7 @@
 		73152FF223E11D6E00F843C3 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				7EE2DCA2247CCC140005DE17 /* Chips */,
 				7E5F488A243C371300118054 /* Sound */,
 				1FFFF23D2375703000C9A177 /* Extension */,
 				1FFFF2452375703000C9A177 /* AudioPlayer */,
@@ -2668,6 +2678,24 @@
 				1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */,
 			);
 			path = Authorization;
+			sourceTree = "<group>";
+		};
+		7EE2DCA1247CCC0B0005DE17 /* Chips */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */,
+			);
+			path = Chips;
+			sourceTree = "<group>";
+		};
+		7EE2DCA2247CCC140005DE17 /* Chips */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCA3247CCC240005DE17 /* ChipsAgentProtocol.swift */,
+				7EE2DCA5247CCCA20005DE17 /* ChipsAgentDelegate.swift */,
+				7EE2DCA7247CCD6C0005DE17 /* ChipsAgentItem.swift */,
+			);
+			path = Chips;
 			sourceTree = "<group>";
 		};
 		A1505090241626F100671568 /* Display */ = {
@@ -3590,12 +3618,14 @@
 				73152FDC23E0451900F843C3 /* NuguAgents.swift in Sources */,
 				7315305D23E1246F00F843C3 /* CapabilityAgentCategory.swift in Sources */,
 				73152FB523E0413F00F843C3 /* AudioPlayerAgent+PlayEvent.swift in Sources */,
+				7EE2DCA4247CCC240005DE17 /* ChipsAgentProtocol.swift in Sources */,
 				73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */,
 				73152FB623E0413F00F843C3 /* AudioPlayerAgentMedia.swift in Sources */,
 				7315305423E1246F00F843C3 /* TextAgentDelegate.swift in Sources */,
 				73152FBE23E0414700F843C3 /* ASRConst.swift in Sources */,
 				7315305F23E1248300F843C3 /* ExtensionAgentProtocol.swift in Sources */,
 				7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */,
+				7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */,
 				7315307623E1248300F843C3 /* TTSState.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
@@ -3613,6 +3643,8 @@
 				7315306C23E1248300F843C3 /* ASRAgentDelegate.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
+				7EE2DCA6247CCCA20005DE17 /* ChipsAgentDelegate.swift in Sources */,
+				7EE2DCA8247CCD6C0005DE17 /* ChipsAgentItem.swift in Sources */,
 				7E5F4890243C383300118054 /* SoundAgentDelegate.swift in Sources */,
 				7315307123E1248300F843C3 /* SystemAgentProtocol.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,
