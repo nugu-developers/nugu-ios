@@ -9,5 +9,5 @@ before_install:
    - carthage update --cache-builds --platform iOS
 
 script:
-  - xcodebuild -project nugu-ios.xcodeproj -scheme SampleApp -sdk iphonesimulator
+  - xcodebuild -project nugu-ios.xcodeproj -scheme SampleApp -sdk iphonesimulator -quiet
   - xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -destination 'platform=iOS Simulator,name=iPhone 11,OS=13.0'
