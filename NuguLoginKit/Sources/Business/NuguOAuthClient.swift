@@ -22,9 +22,11 @@ import UIKit
 
 public class NuguOAuthClient {
     /// The `deviceUniqueId` is unique identifier each device.
-    public let deviceUniqueId: String
+    private(set) public var deviceUniqueId: String
     
     private var observer: NSObjectProtocol?
+    
+    private var serviceName: String?
     
     /// The initializer for `NuguOAuthClient`.
     /// Create a `deviceUniqueId` once for each `serviceName` and device, store `deviceUniqueId` in keychain.
@@ -41,6 +43,7 @@ public class NuguOAuthClient {
         }
         
         self.init(deviceUniqueId: deviceUniqueId)
+        self.serviceName = serviceName
     }
     
     /// The initializer for `NuguOAuthClient`.
@@ -50,6 +53,24 @@ public class NuguOAuthClient {
     /// - Parameter deviceUniqueId: The `deviceUniqueId` is unique identifier each device.
     public init(deviceUniqueId: String) {
         self.deviceUniqueId = deviceUniqueId
+    }
+    
+    /// Use to change the `deviceUniqueId`.
+    ///
+    /// - Parameter deviceUniqueId: The `deviceUniqueId` is unique identifier each device.
+    public func update(deviceUniqueId: String) {
+        self.deviceUniqueId = deviceUniqueId
+        
+        guard let serviceName = self.serviceName else {
+            return
+        }
+        
+        let keychainHelper = KeychainHelper(service: serviceName)
+        do {
+            try keychainHelper.setValue(deviceUniqueId, forKey: "deviceUniqueId")
+        } catch {
+            NSLog("Failed to store updated deviceUniqueId")
+        }
     }
     
     deinit {
