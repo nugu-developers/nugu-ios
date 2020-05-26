@@ -13,9 +13,9 @@ Nugu framework for AI Service
   s.documentation_url = 'https://developers.nugu.co.kr'
 
   s.ios.deployment_target = '10.0'
-  s.tvos.deployment_target = '13.0'
-  s.watchos.deployment_target = '6.0'
-  s.macos.deployment_target = '10.15.0'
+  # s.tvos.deployment_target = '13.0'
+  # s.watchos.deployment_target = '6.0'
+  # s.macos.deployment_target = '10.15.0'
 
   s.swift_version = '5.1'
 
