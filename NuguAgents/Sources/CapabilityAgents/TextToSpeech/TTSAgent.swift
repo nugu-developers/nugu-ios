@@ -31,16 +31,16 @@ public final class TTSAgent: TTSAgentProtocol {
     
     // TTSAgentProtocol
     public var offset: Int? {
-        return currentMedia?.player.offset.truncatedSeconds
+        return currentPlayer?.offset.truncatedSeconds
     }
     
     public var duration: Int? {
-        return currentMedia?.player.duration.truncatedSeconds
+        return currentPlayer?.duration.truncatedSeconds
     }
     
     public var volume: Float = 1.0 {
         didSet {
-            currentMedia?.player.volume = volume
+            currentPlayer?.volume = volume
         }
     }
     
@@ -77,7 +77,7 @@ public final class TTSAgent: TTSAgentProtocol {
                 } else {
                     playSyncManager.endPlay(property: playSyncProperty)
                 }
-                currentMedia = nil
+                currentPlayer = nil
             default:
                 break
             }
@@ -95,7 +95,8 @@ public final class TTSAgent: TTSAgentProtocol {
     
     // Current play Info
     private var currentMedia: TTSMedia?
-    
+    private var currentPlayer: MediaPlayable?
+
     private let disposeBag = DisposeBag()
     
     // Handleable Directives
@@ -125,7 +126,7 @@ public final class TTSAgent: TTSAgentProtocol {
     
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        currentMedia?.player.stop()
+        currentPlayer?.stop()
     }
 }
 
@@ -191,7 +192,7 @@ extension TTSAgent: FocusChannelDelegate {
             
             switch (focusState, self.ttsState) {
             case (.foreground, let ttsState) where [.idle, .stopped, .finished].contains(ttsState):
-                self.currentMedia?.player.play()
+                self.currentPlayer?.play()
             // Foreground. playing 무시
             case (.foreground, _):
                 break
@@ -248,7 +249,7 @@ extension TTSAgent: MediaPlayerDelegate {
                         guard let self = self else { return }
                         
                         switch state {
-                        case .finished where self.currentMedia == nil:
+                        case .finished where self.currentPlayer == nil:
                             self.releaseFocusIfNeeded()
                         case .error:
                             self.releaseFocusIfNeeded()
@@ -310,9 +311,9 @@ private extension TTSAgent {
                     let mediaPlayer = try OpusPlayer()
                     mediaPlayer.delegate = self
                     mediaPlayer.volume = self.volume
-                    
+
+                    self.currentPlayer = mediaPlayer
                     self.currentMedia = TTSMedia(
-                        player: mediaPlayer,
                         payload: payload,
                         dialogRequestId: directive.header.dialogRequestId
                     )
@@ -356,29 +357,36 @@ private extension TTSAgent {
     
     func handleStop() -> HandleDirective {
         return { [weak self] _, completion in
-            self?.stop(cancelAssociation: true)
+            defer { completion() }
             
-            completion()
+            guard let self = self, let media = self.currentMedia else { return }
+            guard self.currentPlayer != nil else {
+                // "그만" 발화시 재생 대기중이던 AudioPlayer 를 종료 시켜주기 위한 처리
+                self.playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
+                return
+            }
+            
+            self.stop(cancelAssociation: true)
         }
     }
     
     func stop(cancelAssociation: Bool) {
         ttsDispatchQueue.async { [weak self] in
-            guard let self = self, let media = self.currentMedia else { return }
+            guard let self = self, let player = self.currentPlayer else { return }
             
             self.currentMedia?.cancelAssociation = cancelAssociation
-            media.player.stop()
+            player.stop()
         }
     }
     
     /// Synchronously stop previously playing TTS
     func stopSilently() {
-        guard let media = currentMedia else { return }
-        
+        guard let media = currentMedia, let player = currentPlayer else { return }
+
         currentMedia?.cancelAssociation = true
         // `TTSResult` -> `TTSState` -> Event
-        media.player.delegate = nil
-        media.player.stop()
+        player.delegate = nil
+        player.stop()
         ttsResultSubject.onNext(
             (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
         )
@@ -399,7 +407,7 @@ private extension TTSAgent {
             
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard let dataSource = self.currentMedia?.player as? MediaOpusStreamDataSource,
+                guard let dataSource = self.currentPlayer as? MediaOpusStreamDataSource,
                     self.currentMedia?.dialogRequestId == attachment.header.dialogRequestId else {
                     log.warning("MediaOpusStreamDataSource not exist or dialogRequesetId not valid")
                     return

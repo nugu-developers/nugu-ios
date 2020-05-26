@@ -24,14 +24,12 @@ import NuguCore
 
 struct AudioPlayerAgentMedia {
     let dialogRequestId: String
-    let player: MediaPlayable
     let payload: Payload
     var pauseReason: PauseReason = .nothing
     var cancelAssociation: Bool = false
     
-    init(dialogRequestId: String, player: MediaPlayable, payload: Payload) {
+    init(dialogRequestId: String, payload: Payload) {
         self.dialogRequestId = dialogRequestId
-        self.player = player
         self.payload = payload
     }
     
