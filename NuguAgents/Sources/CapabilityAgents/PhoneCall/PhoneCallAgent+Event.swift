@@ -28,11 +28,11 @@ extension PhoneCallAgent {
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case candidatesListed(intent: String, callType: String, candidates: [PhoneCallPerson]?)
-            case callArrived(callerName: String)
-            case callEnded
-            case callEstablished
-            case makeCallFailed(errorCode: String, callType: String)
+            case candidatesListed(intent: PhoneCallIntent, callType: PhoneCallType, recipient: PhoneCallRecipient?, candidates: [PhoneCallPerson]?)
+            case callArrived(callerName: String) // CHECK-ME: Is it necessary?
+            case callEnded // CHECK-ME: Is it necessary?
+            case callEstablished // CHECK-ME: Is it necessary?
+            case makeCallFailed(errorCode: PhoneCallErrorCode, callType: PhoneCallType)
         }
     }
 }
@@ -44,11 +44,19 @@ extension PhoneCallAgent.Event: Eventable {
         ]
         
         switch typeInfo {
-        case .candidatesListed(let intent, let callType, let candidates):
-            payload["intent"] = intent
-            payload["callType"] = callType
-            // TODO: - Encoding
-//            payload["candidates"] = candidates
+        case .candidatesListed(let intent, let callType, let recipient, let candidates):
+            payload["intent"] = intent.rawValue
+            payload["callType"] = callType.rawValue
+            
+            if let recipient = recipient,
+                let recipientData = try? JSONEncoder().encode(recipient) {
+                payload["recipient"] = try? JSONSerialization.jsonObject(with: recipientData, options: []) as? [String: AnyHashable]
+            }
+            
+            if let candidates = candidates,
+                let candidatesData = try? JSONEncoder().encode(candidates) {
+                payload["candidates"] = try? JSONSerialization.jsonObject(with: candidatesData, options: []) as? [String: AnyHashable]
+            }
         case .callArrived(let callerName):
             payload["callerName"] = callerName
         case .callEnded:
@@ -56,8 +64,8 @@ extension PhoneCallAgent.Event: Eventable {
         case .callEstablished:
             break
         case .makeCallFailed(let errorCode, let callType):
-            payload["errorCode"] = errorCode
-            payload["callType"] = callType
+            payload["errorCode"] = errorCode.rawValue
+            payload["callType"] = callType.rawValue
         }
         
         return payload
