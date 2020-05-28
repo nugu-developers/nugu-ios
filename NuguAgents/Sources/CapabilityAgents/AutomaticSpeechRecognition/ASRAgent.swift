@@ -125,12 +125,14 @@ public final class ASRAgent: ASRAgentProtocol {
                         referrerDialogRequestId: asrRequest.dialogRequestId
                     )
                 case ASRError.listeningTimeout:
+                    upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
                     sendEvent(
                         typeInfo: .listenTimeout,
                         expectSpeech: expectSpeech,
                         referrerDialogRequestId: asrRequest.dialogRequestId
                     )
                 case ASRError.listenFailed:
+                    upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
                     sendEvent(
                         typeInfo: .listenFailed,
                         expectSpeech: expectSpeech,
