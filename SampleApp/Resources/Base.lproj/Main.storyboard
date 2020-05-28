@@ -198,7 +198,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="64" estimatedRowHeight="64" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="4mt-z8-MSl">
                                 <rect key="frame" x="0.0" y="99" width="375" height="713"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingTableViewCell" textLabel="8rE-G9-Qs6" detailTextLabel="ASl-iC-Voj" rowHeight="64" style="IBUITableViewCellStyleValue1" id="upZ-qj-1B3" customClass="SettingTableViewCell" customModule="SampleApp" customModuleProvider="target">
                                         <rect key="frame" x="15" y="55.333332061767578" width="345" height="64"/>
@@ -255,7 +255,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="4Jm-a3-ikb" firstAttribute="top" secondItem="2tv-Ra-cDL" secondAttribute="top" constant="19" id="KBp-Q6-cxC"/>
                             <constraint firstItem="4mt-z8-MSl" firstAttribute="top" secondItem="4Jm-a3-ikb" secondAttribute="bottom" constant="8" id="Oz7-5l-04r"/>
