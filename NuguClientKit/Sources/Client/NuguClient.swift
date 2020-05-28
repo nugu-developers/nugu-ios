@@ -138,8 +138,6 @@ public class NuguClient {
         setupAudioSessionRequester()
         setupDialogStateAggregator()
         setupStreamDataRouter()
-        
-        systemAgent.sendSynchronizeStateEvent()
     }
 }
     
