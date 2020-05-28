@@ -124,6 +124,11 @@ extension SettingViewController: UITableViewDelegate {
                 wakeUpWordActionSheet.addAction(action)
             }
             present(wakeUpWordActionSheet, animated: true)
+        case (3, 1):
+            guard let privacyUrl = SampleApp.privacyUrl else {
+                return
+            }
+            UIApplication.shared.open(privacyUrl, options: [:], completionHandler: nil)
         case (4, 0):
             dismiss(animated: true, completion: {
                 NuguCentralManager.shared.logout()
