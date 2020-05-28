@@ -117,10 +117,8 @@ extension SettingViewController: UITableViewDelegate {
                 let action = UIAlertAction(
                     title: keyword.description,
                     style: .default) { [weak self] _ in
-                        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
-                            NuguCentralManager.shared.client.keywordDetector.keywordSource = keyword.keywordSource
-                            UserDefaults.Standard.wakeUpWord = keyword.rawValue
-                        }
+                        NuguCentralManager.shared.client.keywordDetector.keywordSource = keyword.keywordSource
+                        UserDefaults.Standard.wakeUpWord = keyword.rawValue
                         self?.tableView.reloadData()
                 }
                 wakeUpWordActionSheet.addAction(action)
