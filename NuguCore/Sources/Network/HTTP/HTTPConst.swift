@@ -48,6 +48,7 @@ enum HTTPConst {
     static let carriageReturn = "\r".data(using: .utf8)![0]
     static let lineFeed = "\n".data(using: .utf8)![0]
     static let crlf = "\r\n"
+    static let crlfData = "\r\n".data(using: .utf8)!
     static let colon = ":".data(using: .utf8)![0]
     
     static let contentTypeKey = "Content-Type"
