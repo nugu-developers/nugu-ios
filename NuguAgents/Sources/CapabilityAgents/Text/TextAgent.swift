@@ -34,6 +34,7 @@ public final class TextAgent: TextAgentProtocol {
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     private let directiveSequencer: DirectiveSequenceable
+    private let dialogManager: DialogManageable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
@@ -45,11 +46,13 @@ public final class TextAgent: TextAgentProtocol {
     public init(
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
-        directiveSequencer: DirectiveSequenceable
+        directiveSequencer: DirectiveSequenceable,
+        dialogManager: DialogManageable
     ) {
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
+        self.dialogManager = dialogManager
         
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         contextManager.add(delegate: self)
@@ -93,7 +96,6 @@ private extension TextAgent {
                 self?.sendTextInput(
                     text: payload.text,
                     token: payload.token,
-                    expectSpeech: nil,
                     directive: directive,
                     completion: nil
                 )
@@ -108,19 +110,17 @@ private extension TextAgent {
     @discardableResult func sendTextInput(
         text: String,
         token: String?,
-        expectSpeech: ASRExpectSpeech? = nil,
         directive: Downstream.Directive? = nil,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         let dialogRequestId = TimeUUID().hexString
         
-        let expectSpeech = delegate?.textAgentDidRequestExpectSpeech()
         contextManager.getContexts { [weak self] contextPayload in
             guard let self = self else { return }
             
             self.upstreamDataSender.sendEvent(
                 Event(
-                    typeInfo: .textInput(text: text, token: token, expectSpeech: expectSpeech)
+                    typeInfo: .textInput(text: text, token: token, dialogAttributes: self.dialogManager.attributes)
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     dialogRequestId: dialogRequestId,

@@ -424,6 +424,17 @@
 		7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F82421D82300D91129 /* StreamDataDelegate.swift */; };
 		7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
+		7EA53EF9247F3B0E008731CD /* SessionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EF8247F3B0E008731CD /* SessionAgentProtocol.swift */; };
+		7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFA247F3B5A008731CD /* SessionAgent.swift */; };
+		7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */; };
+		7EA53F00247F3CED008731CD /* SessionManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFF247F3CED008731CD /* SessionManageable.swift */; };
+		7EA53F03247F3D2C008731CD /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F02247F3D2C008731CD /* Session.swift */; };
+		7EA53F05247F3E13008731CD /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F04247F3E13008731CD /* SessionManager.swift */; };
+		7EA53F09247F3EF4008731CD /* DialogManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F08247F3EF4008731CD /* DialogManageable.swift */; };
+		7EA53F0B247F3F53008731CD /* DialogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0A247F3F53008731CD /* DialogManager.swift */; };
+		7EA53F0D247F5685008731CD /* SessionManagerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */; };
+		7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0E247F583F008731CD /* MockSessionManager.swift */; };
+		7EA53F11247F5904008731CD /* MockDialogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F10247F5904008731CD /* MockDialogManager.swift */; };
 		7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */; };
 		7EBB2EAF24440C7600FBBBEA /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DB237672F100C9A177 /* asrFail.wav */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
@@ -1034,6 +1045,17 @@
 		7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
 		7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreable.swift; sourceTree = "<group>"; };
+		7EA53EF8247F3B0E008731CD /* SessionAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgentProtocol.swift; sourceTree = "<group>"; };
+		7EA53EFA247F3B5A008731CD /* SessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgent.swift; sourceTree = "<group>"; };
+		7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgentItem.swift; sourceTree = "<group>"; };
+		7EA53EFF247F3CED008731CD /* SessionManageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManageable.swift; sourceTree = "<group>"; };
+		7EA53F02247F3D2C008731CD /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		7EA53F04247F3E13008731CD /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		7EA53F08247F3EF4008731CD /* DialogManageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogManageable.swift; sourceTree = "<group>"; };
+		7EA53F0A247F3F53008731CD /* DialogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogManager.swift; sourceTree = "<group>"; };
+		7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpec.swift; sourceTree = "<group>"; };
+		7EA53F0E247F583F008731CD /* MockSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSessionManager.swift; sourceTree = "<group>"; };
+		7EA53F10247F5904008731CD /* MockDialogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDialogManager.swift; sourceTree = "<group>"; };
 		7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundAgentSpec.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
 		7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtilSpec.swift; sourceTree = "<group>"; };
@@ -1271,6 +1293,7 @@
 		1F9C5B6823E42D740086CC04 /* CapabilityAgents */ = {
 			isa = PBXGroup;
 			children = (
+				7EA53EF7247F3AFF008731CD /* Session */,
 				7E5F4889243C370900118054 /* Sound */,
 				1FFFF32C2375707000C9A177 /* Extension */,
 				1FFFF3372375707000C9A177 /* AudioPlayer */,
@@ -1310,6 +1333,8 @@
 				1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */,
 				1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */,
 				1F5DD4AF240CF89500719FBC /* MockAudioStream.swift */,
+				7EA53F0E247F583F008731CD /* MockSessionManager.swift */,
+				7EA53F10247F5904008731CD /* MockDialogManager.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -1320,6 +1345,7 @@
 				1F1009992387994B00D90FEE /* TimeIntervallicTests.swift */,
 				1F31FD7B2424CBD8009593EB /* UpstreamSpec.swift */,
 				7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */,
+				7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */,
 			);
 			path = NuguCore;
 			sourceTree = "<group>";
@@ -1525,7 +1551,6 @@
 				1FFFF2522375703000C9A177 /* ASRAgentDelegate.swift */,
 				1FFFF2532375703000C9A177 /* ASRState.swift */,
 				1FFFF2572375703000C9A177 /* ASRResult.swift */,
-				1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */,
 				7E2471002435DAC200640F5E /* ASROptions.swift */,
 			);
 			path = AutomaticSpeechRecognition;
@@ -1634,6 +1659,8 @@
 		1FFFF30B2375707000C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7EA53F07247F3EE8008731CD /* Dialog */,
+				7EA53F01247F3D21008731CD /* Session */,
 				1FFFF30D2375707000C9A177 /* MediaPlayer */,
 				1FFFF3172375707000C9A177 /* Audio */,
 				1F9C5B6923E42F660086CC04 /* PropertyWrappers */,
@@ -1777,6 +1804,7 @@
 				1FFFF3442375707000C9A177 /* ASRRequest.swift */,
 				1FFFF3472375707000C9A177 /* ASRNotifyResult.swift */,
 				1FFFF2552375703000C9A177 /* ASRError.swift */,
+				1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */,
 			);
 			path = AutomaticSpeechRecognition;
 			sourceTree = "<group>";
@@ -2334,6 +2362,7 @@
 		73152FF223E11D6E00F843C3 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				7EA53EF6247F3AF7008731CD /* Session */,
 				7E5F488A243C371300118054 /* Sound */,
 				1FFFF23D2375703000C9A177 /* Extension */,
 				1FFFF2452375703000C9A177 /* AudioPlayer */,
@@ -2353,6 +2382,8 @@
 		7315301223E11E9D00F843C3 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				7EA53F06247F3EDF008731CD /* Dialog */,
+				7EA53EFE247F3CE2008731CD /* Session */,
 				735A4CC824117384004E7A41 /* StreamData */,
 				1FFFF22B2375703000C9A177 /* MediaPlayer */,
 				1FFFF2322375703000C9A177 /* Context */,
@@ -2668,6 +2699,56 @@
 				1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */,
 			);
 			path = Authorization;
+			sourceTree = "<group>";
+		};
+		7EA53EF6247F3AF7008731CD /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				7EA53EF8247F3B0E008731CD /* SessionAgentProtocol.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		7EA53EF7247F3AFF008731CD /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				7EA53EFA247F3B5A008731CD /* SessionAgent.swift */,
+				7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		7EA53EFE247F3CE2008731CD /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				7EA53EFF247F3CED008731CD /* SessionManageable.swift */,
+				7EA53F02247F3D2C008731CD /* Session.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		7EA53F01247F3D21008731CD /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				7EA53F04247F3E13008731CD /* SessionManager.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		7EA53F06247F3EDF008731CD /* Dialog */ = {
+			isa = PBXGroup;
+			children = (
+				7EA53F08247F3EF4008731CD /* DialogManageable.swift */,
+			);
+			path = Dialog;
+			sourceTree = "<group>";
+		};
+		7EA53F07247F3EE8008731CD /* Dialog */ = {
+			isa = PBXGroup;
+			children = (
+				7EA53F0A247F3F53008731CD /* DialogManager.swift */,
+			);
+			path = Dialog;
 			sourceTree = "<group>";
 		};
 		A1505090241626F100671568 /* Display */ = {
@@ -3299,6 +3380,8 @@
 				1FFFF3922375707100C9A177 /* ContextManager.swift in Sources */,
 				75082BC6243AC85E0027D76D /* FileManager+Convenience.swift in Sources */,
 				739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */,
+				7EA53F05247F3E13008731CD /* SessionManager.swift in Sources */,
+				7EA53F09247F3EF4008731CD /* DialogManageable.swift in Sources */,
 				7315301923E11EDF00F843C3 /* MediaPlayableError.swift in Sources */,
 				7315301B23E11EDF00F843C3 /* ContextInfoDelegate.swift in Sources */,
 				7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */,
@@ -3348,6 +3431,7 @@
 				73454FBD2382C1E50073AF48 /* Publish.swift in Sources */,
 				1FFFF3CB2375707100C9A177 /* DirectiveSequencer.swift in Sources */,
 				1FFFF3892375707000C9A177 /* SharedBufferError.swift in Sources */,
+				7EA53F00247F3CED008731CD /* SessionManageable.swift in Sources */,
 				7315304223E11EDF00F843C3 /* AuthorizationStoreDelegate.swift in Sources */,
 				7E4382542418DAB200053A0D /* PlayStack.swift in Sources */,
 				7315302F23E11EDF00F843C3 /* FocusChannelDelegate.swift in Sources */,
@@ -3361,12 +3445,14 @@
 				1FFFF3C42375707100C9A177 /* PlaySyncInfo.swift in Sources */,
 				7315303023E11EDF00F843C3 /* FocusChannelPriority.swift in Sources */,
 				7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */,
+				7EA53F0B247F3F53008731CD /* DialogManager.swift in Sources */,
 				735A4CBE241172F1004E7A41 /* EventResponseProcessor.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
 				7315301F23E11EDF00F843C3 /* NuguTimeInterval.swift in Sources */,
 				1FFFF3802375707000C9A177 /* MediaAVPlayerItem.swift in Sources */,
 				735A4CC724117339004E7A41 /* MultiPartParser.swift in Sources */,
 				1FFFF3C32375707100C9A177 /* PlaySyncManager.swift in Sources */,
+				7EA53F03247F3D2C008731CD /* Session.swift in Sources */,
 				7315302B23E11EDF00F843C3 /* PlaySyncDelegate.swift in Sources */,
 				1FFFF3BC2375707100C9A177 /* HTTPConst.swift in Sources */,
 				7315302D23E11EDF00F843C3 /* FocusManageable.swift in Sources */,
@@ -3560,8 +3646,10 @@
 				1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentSpec.swift in Sources */,
 				1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */,
 				7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */,
+				7EA53F11247F5904008731CD /* MockDialogManager.swift in Sources */,
 				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,
 				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
+				7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
 				1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */,
 				1F31FD7C2424CBD8009593EB /* UpstreamSpec.swift in Sources */,
@@ -3572,6 +3660,7 @@
 				1F5DD4AE240CF7D100719FBC /* ASRAgentSpec.swift in Sources */,
 				1F9C5B8823FA82D90086CC04 /* ExtensionAgentSpec.swift in Sources */,
 				1F5DD4B5240CFEEB00719FBC /* DisplayAgentSpec.swift in Sources */,
+				7EA53F0D247F5685008731CD /* SessionManagerSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3597,12 +3686,14 @@
 				7315305F23E1248300F843C3 /* ExtensionAgentProtocol.swift in Sources */,
 				7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */,
 				7315307623E1248300F843C3 /* TTSState.swift in Sources */,
+				7EA53EF9247F3B0E008731CD /* SessionAgentProtocol.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
 				7315307723E1248300F843C3 /* TTSResult.swift in Sources */,
 				7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */,
 				736508662462F7FA00EF4549 /* OpusPlayer.swift in Sources */,
+				7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */,
 				7E5F4892243C388100118054 /* SoundBeepName.swift in Sources */,
 				7315307323E1248300F843C3 /* SystemAgentExceptionCode.swift in Sources */,
 				A135E669241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift in Sources */,
@@ -3610,6 +3701,7 @@
 				7315305723E1246F00F843C3 /* LocationAgentDelegate.swift in Sources */,
 				73152FC723E0415400F843C3 /* TTSAgent+Event.swift in Sources */,
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
+				7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */,
 				7315306C23E1248300F843C3 /* ASRAgentDelegate.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
