@@ -123,10 +123,14 @@ class EventSender: NSObject {
             .asSingle()
             .flatMapCompletable { [weak self] _ in
                 guard let self = self else { return Completable.empty() }
-                log.debug("write last boundary: --\(self.boundary)--")
-                
-                guard let lastBoundaryData = ("--\(self.boundary)--" + HTTPConst.crlf).data(using: .utf8) else { return Completable.empty() }
-                return self.sendData(lastBoundaryData)
+
+                var partData = Data()
+                partData.append(HTTPConst.crlfData)
+                partData.append("--\(self.boundary)--".data(using: .utf8)!)
+                partData.append(HTTPConst.crlfData)
+
+                log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
+                return self.sendData(partData)
         }
         .subscribe { [weak self] _ in
             guard let self = self else { return }
@@ -192,19 +196,27 @@ class EventSender: NSObject {
 
 private extension EventSender {
     func makeMultipartData(_ event: Upstream.Event) -> Data {
-        let headerLines = ["--\(boundary)",
-            "Content-Disposition: form-data; name=\"event\"",
-            "Content-Type: application/json",
-            HTTPConst.crlf]
-        var partData = headerLines.joined(separator: (HTTPConst.crlf)).data(using: .utf8)!
-        
         let bodyData = ("{ \"context\": \(event.contextString)"
             + ",\"event\": {"
             + "\"header\": \(event.headerString)"
             + ",\"payload\": \(event.payloadString) }"
-            + " }"
-            + HTTPConst.crlf).data(using: .utf8)!
+            + " }").data(using: .utf8)!
+        
+        let headerLines = [
+            "Content-Disposition: form-data; name=\"event\"",
+            "Content-Type: application/json"
+        ]
+        
+        var partData = Data()
+        partData.append("--\(boundary)".data(using: .utf8)!)
+        partData.append(HTTPConst.crlfData)
+        partData.append(headerLines.joined(separator: (HTTPConst.crlf)).data(using: .utf8)!)
+        partData.append(HTTPConst.crlfData)
+        partData.append(HTTPConst.crlfData)
         partData.append(bodyData)
+        partData.append(HTTPConst.crlfData)
+        partData.append("--\(boundary)".data(using: .utf8)!)
+        partData.append(HTTPConst.crlfData)
         
         log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
@@ -212,18 +224,21 @@ private extension EventSender {
     
     func makeMultipartData(_ attachment: Upstream.Attachment) -> Data {
         let headerLines = [
-            "--\(boundary)",
             "Content-Disposition: form-data; name=\"attachment\"; filename=\"\(attachment.header.seq);\(attachment.header.isEnd ? "end" : "continued")\"",
             "Content-Type: \(attachment.header.type)",
-            "Message-Id: \(attachment.header.messageId)",
-            HTTPConst.crlf
+            "Message-Id: \(attachment.header.messageId)"
         ]
         
-        var partData = headerLines.joined(separator: (HTTPConst.crlf)).data(using: .utf8)!
-        log.debug("Data(\(attachment.content)):\n\(String(data: partData, encoding: .utf8) ?? "")")
+        var partData = Data()
+        partData.append(headerLines.joined(separator: (HTTPConst.crlf)).data(using: .utf8)!)
+        partData.append(HTTPConst.crlfData)
+        partData.append(HTTPConst.crlfData)
         partData.append(attachment.content)
-        partData.append(HTTPConst.crlf.data(using: .utf8)!)
+        partData.append(HTTPConst.crlfData)
+        partData.append("--\(boundary)".data(using: .utf8)!)
+        partData.append(HTTPConst.crlfData)
         
+        log.debug("Data(\(attachment.content)):\n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
     }
 }
