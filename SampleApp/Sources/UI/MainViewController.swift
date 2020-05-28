@@ -315,15 +315,18 @@ private extension MainViewController {
         indicator.startAnimating()
         window.addSubview(indicator)
         
-        NuguCentralManager.shared.isTextAgentInProcess = true
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
         NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
             switch state {
+            case .sent:
+                NuguCentralManager.shared.isTextAgentInProcess = true
+                NuguCentralManager.shared.client.asrAgent.stopRecognition()
             case .finished:
                 NuguCentralManager.shared.isTextAgentInProcess = false
             case .error:
                 NuguCentralManager.shared.isTextAgentInProcess = false
-                self?.dismissVoiceChrome()
+                DispatchQueue.main.async { [weak self] in
+                    self?.dismissVoiceChrome()
+                }
             default: break
             }
             DispatchQueue.main.async {
