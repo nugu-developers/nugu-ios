@@ -24,94 +24,120 @@ import KeenSense
 
 final class SettingViewController: UIViewController {
     
-    // MARK: Properties
+    // MARK: - Properties
     
-    @IBOutlet private weak var nuguServiceSwitch: UISwitch!
-    @IBOutlet private weak var wakeupWordSwitch: UISwitch!
-    @IBOutlet private weak var wakeupWordButton: UIButton!
-    @IBOutlet private weak var speechStartBeepSwitch: UISwitch!
-    @IBOutlet private weak var speechSuccessBeepSwitch: UISwitch!
-    @IBOutlet private weak var speechFailBeepSwitch: UISwitch!
+    @IBOutlet private weak var tableView: UITableView!
     
-    // MARK: Override
+    private let settingMenu = [
+        ["TID"],
+        ["서비스 관리"],
+        ["NUGU 사용하기", "이름을 불러 대화 시작하기", "부르는 이름", "호출 효과음", "응답 효과음", "응답 실패 효과음"],
+        ["이용약관", "개인정보 처리방침"],
+        ["연결 해제"]
+    ]
+    
+    // MARK: - Override
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        nuguServiceSwitch.isOn = UserDefaults.Standard.useNuguService
-        wakeupWordSwitch.isOn = UserDefaults.Standard.useWakeUpDetector
-        
-        let wakeupWordValue = UserDefaults.Standard.wakeUpWord
-        wakeupWordButton.setTitle(Keyword(rawValue: wakeupWordValue)?.description, for: .normal)
-        speechStartBeepSwitch.isOn = UserDefaults.Standard.useAsrStartSound
-        speechSuccessBeepSwitch.isOn = UserDefaults.Standard.useAsrSuccessSound
-        speechFailBeepSwitch.isOn = UserDefaults.Standard.useAsrFailSound
-        
-        setEnableabilityByNuguServiceUsage()
+        tableView.reloadData()
     }
 }
 
-private extension SettingViewController {
-    func setEnableabilityByNuguServiceUsage() {
-        wakeupWordSwitch.isEnabled = nuguServiceSwitch.isOn
-        wakeupWordButton.isEnabled = nuguServiceSwitch.isOn
-        speechStartBeepSwitch.isEnabled = nuguServiceSwitch.isOn
-        speechSuccessBeepSwitch.isEnabled = nuguServiceSwitch.isOn
-        speechFailBeepSwitch.isEnabled = nuguServiceSwitch.isOn
+// MARK: - UITableViewDataSource
+
+extension SettingViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return settingMenu.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return settingMenu[section].count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SettingTableViewCell") as? SettingTableViewCell else {
+            return UITableViewCell()
+        }
+        let menuTitle = settingMenu[indexPath.section][indexPath.row]
+        let switchEnableability = (UserDefaults.Standard.useNuguService == true)
+        if indexPath.section == 2 {
+            switch indexPath.row {
+            case 0:
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useNuguService, isSwitchEnabled: true)
+                cell.onSwitchValueChanged = { [weak self] isOn in
+                    UserDefaults.Standard.useNuguService = isOn
+                    self?.tableView.reloadData()
+                }
+            case 1:
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useWakeUpDetector, isSwitchEnabled: switchEnableability)
+                cell.onSwitchValueChanged = { isOn in
+                    UserDefaults.Standard.useWakeUpDetector = isOn
+                }
+            case 2:
+                cell.configure(text: menuTitle, detailText: Keyword(rawValue: UserDefaults.Standard.wakeUpWord)?.description)
+            case 3:
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrStartSound, isSwitchEnabled: switchEnableability)
+                cell.onSwitchValueChanged = { isOn in
+                    UserDefaults.Standard.useAsrStartSound = isOn
+                }
+            case 4:
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrSuccessSound, isSwitchEnabled: switchEnableability)
+                cell.onSwitchValueChanged = { isOn in
+                    UserDefaults.Standard.useAsrSuccessSound = isOn
+                }
+            case 5:
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrFailSound, isSwitchEnabled: switchEnableability)
+                cell.onSwitchValueChanged = { isOn in
+                    UserDefaults.Standard.useAsrFailSound = isOn
+                }
+            default:
+                break
+            }
+        } else {
+            cell.configure(text: menuTitle)
+        }
+        return cell
+    }
+}
+
+// MARK: - UITableViewDelegate
+
+extension SettingViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let index = (indexPath.section, indexPath.row)
+        switch index {
+        case (2, 2):
+            let wakeUpWordActionSheet = UIAlertController(
+                title: nil,
+                message: nil,
+                preferredStyle: .actionSheet
+            )
+            Keyword.allCases.forEach { [weak self] (keyword) in
+                let action = UIAlertAction(
+                    title: keyword.description,
+                    style: .default) { [weak self] _ in
+                        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+                            NuguCentralManager.shared.client.keywordDetector.keywordSource = keyword.keywordSource
+                            UserDefaults.Standard.wakeUpWord = keyword.rawValue
+                        }
+                        self?.tableView.reloadData()
+                }
+                wakeUpWordActionSheet.addAction(action)
+            }
+            present(wakeUpWordActionSheet, animated: true)
+        case (4, 0):
+            dismiss(animated: true, completion: {
+                NuguCentralManager.shared.logout()
+            })
+        default:
+            break
+        }
     }
 }
 
 private extension SettingViewController {
     @IBAction func closeButtonDidClick(_ button: UIButton) {
         dismiss(animated: true)
-    }
-    
-    @IBAction func nuguServiceUsageValueChanged(_ switch: UISwitch) {
-        UserDefaults.Standard.useNuguService = nuguServiceSwitch.isOn
-        setEnableabilityByNuguServiceUsage()
-    }
-    
-    @IBAction func wakeUpWordUsageValueChanged(_ switch: UISwitch) {
-        UserDefaults.Standard.useWakeUpDetector = wakeupWordSwitch.isOn
-    }
-    
-    @IBAction func wakeUpWordButtonDidClick(_ button: UIButton) {
-        let wakeUpWordActionSheet = UIAlertController(
-            title: nil,
-            message: nil,
-            preferredStyle: .actionSheet
-        )
-        
-        Keyword.allCases.forEach { [weak self] (keyword) in
-            let action = UIAlertAction(
-                title: keyword.description,
-                style: .default) { [weak self] _ in
-                    self?.wakeupWordButton.setTitle(keyword.description, for: .normal)
-                    
-                    UserDefaults.Standard.wakeUpWord = keyword.rawValue
-            }
-            
-            wakeUpWordActionSheet.addAction(action)
-        }
-        
-        present(wakeUpWordActionSheet, animated: true)
-    }
-    
-    @IBAction func asrStartBeepUsageValueChanged(_ switch: UISwitch) {
-        UserDefaults.Standard.useAsrStartSound = speechStartBeepSwitch.isOn
-    }
-    
-    @IBAction func asrSuccessBeepUsageValueChanged(_ switch: UISwitch) {
-        UserDefaults.Standard.useAsrSuccessSound = speechSuccessBeepSwitch.isOn
-    }
-    
-    @IBAction func asrFailBeepUsageValueChanged(_ switch: UISwitch) {
-        UserDefaults.Standard.useAsrFailSound = speechFailBeepSwitch.isOn
-    }
-    
-    @IBAction func logoutButtonDidClick(_ button: UIButton) {
-        dismiss(animated: true, completion: {
-            NuguCentralManager.shared.logout()
-        })
     }
 }
