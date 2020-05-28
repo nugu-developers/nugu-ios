@@ -40,7 +40,7 @@ final class MainViewController: UIViewController {
     private var displayAudioPlayerView: AudioDisplayView?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
-    private var chipsAgentItem: ChipsAgentItem?
+    private var chipsAgentItem: (item: ChipsAgentItem, dialogRequestId: String)?
     
     private var hasShownGuideWeb = false
     
@@ -560,10 +560,6 @@ extension MainViewController: DialogStateDelegate {
             }
         case .listening:
             DispatchQueue.main.async { [weak self] in
-                if let chipsAgentItem = self?.chipsAgentItem, expectSpeech != nil {
-                    let actionList = chipsAgentItem.chips.map { $0.textSource }
-                    self?.setChipsButton(actionList: actionList, normalList: [])
-                }
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
                 ASRBeepPlayer.shared.beep(type: .start)
             }
@@ -588,6 +584,12 @@ extension MainViewController: ASRAgentDelegate {
             NuguCentralManager.shared.startWakeUpDetector()
         case .listening:
             NuguCentralManager.shared.stopWakeUpDetector()
+            DispatchQueue.main.async { [weak self] in
+                if let (item, id) = self?.chipsAgentItem, id == dialogRequestId {
+                    let actionList = item.chips.map { $0.textSource }
+                    self?.setChipsButton(actionList: actionList, normalList: [])
+                }
+            }
         default:
             break
         }
@@ -732,6 +734,6 @@ extension MainViewController: AudioPlayerAgentDelegate {
 
 extension MainViewController: ChipsAgentDelegate {
     func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String) {
-        chipsAgentItem = item
+        chipsAgentItem = (item: item, dialogRequestId: dialogRequestId)
     }
 }
