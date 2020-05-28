@@ -28,18 +28,7 @@ import RxSwift
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.1")
-    
-    // Public
-    public private(set) var expectSpeech: ASRExpectSpeech? {
-        didSet {
-            guard oldValue != expectSpeech else { return }
-            
-            asrDelegates.notify { delegate in
-                delegate.asrAgentDidChange(state: asrState, expectSpeech: expectSpeech)
-            }
-        }
-    }
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.2")
     
     // Private
     private let focusManager: FocusManageable
@@ -47,6 +36,8 @@ public final class ASRAgent: ASRAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     private let audioStream: AudioStreamable
+    private let dialogManager: DialogManageable
+    private let sessionManager: SessionManageable
     
     private var options: ASROptions = ASROptions(endPointing: .server)
     private var endPointDetector: EndPointDetectable?
@@ -59,6 +50,11 @@ public final class ASRAgent: ASRAgentProtocol {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
             
+            guard let asrRequest = asrRequest else {
+                log.error("ASRRequest is nil")
+                return
+            }
+            
             // `expectingSpeechTimeout` -> `ASRRequest` -> `FocusState` -> EndPointDetector` -> `ASRAgentDelegate`
             // dispose expectingSpeechTimeout
             if asrState != .expectingSpeech {
@@ -67,10 +63,23 @@ public final class ASRAgent: ASRAgentProtocol {
             
             // release asrRequest
             if asrState == .idle {
-                asrRequest = nil
+                self.asrRequest = nil
                 releaseFocusIfNeeded()
             }
-
+            
+            // Session
+            if let dialogRequestId = asrRequest.referrerDialogRequestId {
+                switch asrState {
+                case .listening:
+                    sessionManager.sync(dialogRequestId: dialogRequestId)
+                case .idle:
+                    sessionManager.release(dialogRequestId: dialogRequestId)
+                    dialogManager.removeAttributes()
+                default:
+                    break
+                }
+            }
+            
             // Stop EPD
             if [.listening, .recognizing].contains(asrState) == false {
                 endPointDetector?.stop()
@@ -81,7 +90,7 @@ public final class ASRAgent: ASRAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != asrState {
                 asrDelegates.notify { delegate in
-                    delegate.asrAgentDidChange(state: asrState, expectSpeech: expectSpeech)
+                    delegate.asrAgentDidChange(state: asrState, dialogRequestId: asrRequest.dialogRequestId)
                 }
             }
         }
@@ -100,42 +109,37 @@ public final class ASRAgent: ASRAgentProtocol {
             switch asrResult {
             case .none:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
-                expectSpeech = nil
+                break
             case .partial:
                 break
             case .complete:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
-                expectSpeech = nil
+                break
             case .cancel:
                 asrState = .idle
                 upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
                 sendEvent(
                     typeInfo: .stopRecognize,
-                    expectSpeech: expectSpeech,
                     referrerDialogRequestId: asrRequest.dialogRequestId
                 )
-                expectSpeech = nil
             case .error(let error):
                 asrState = .idle
                 switch error {
                 case NetworkError.timeout:
                     sendEvent(
                         typeInfo: .responseTimeout,
-                        expectSpeech: expectSpeech,
                         referrerDialogRequestId: asrRequest.dialogRequestId
                     )
                 case ASRError.listeningTimeout:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
                     sendEvent(
                         typeInfo: .listenTimeout,
-                        expectSpeech: expectSpeech,
                         referrerDialogRequestId: asrRequest.dialogRequestId
                     )
                 case ASRError.listenFailed:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
                     sendEvent(
                         typeInfo: .listenFailed,
-                        expectSpeech: expectSpeech,
                         referrerDialogRequestId: asrRequest.dialogRequestId
                     )
                 case ASRError.recognizeFailed:
@@ -143,7 +147,6 @@ public final class ASRAgent: ASRAgentProtocol {
                 default:
                     break
                 }
-                expectSpeech = nil
             }
             
             asrDelegates.notify { (delegate) in
@@ -170,13 +173,17 @@ public final class ASRAgent: ASRAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
-        directiveSequencer: DirectiveSequenceable
+        directiveSequencer: DirectiveSequenceable,
+        dialogManager: DialogManageable,
+        sessionManager: SessionManageable
     ) {
         self.focusManager = focusManager
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
         self.contextManager = contextManager
         self.audioStream = audioStream
+        self.dialogManager = dialogManager
+        self.sessionManager = sessionManager
         
         contextManager.add(delegate: self)
         focusManager.add(channelDelegate: self)
@@ -229,7 +236,7 @@ public extension ASRAgent {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             // TODO: cancelAssociation = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
-            self.expectSpeech = nil
+            self.dialogManager.removeAttributes()
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
                 return
@@ -350,7 +357,12 @@ private extension ASRAgent {
             let expectSpeech = try JSONDecoder().decode(ASRExpectSpeech.self, from: directive.payload)
 
             self?.asrDispatchQueue.async { [weak self] in
-                self?.expectSpeech = expectSpeech
+                let attributes: [String: AnyHashable?] = [
+                    "asrContext": expectSpeech.asrContext,
+                    "domainTypes": expectSpeech.domainTypes,
+                    "playServiceId": expectSpeech.playServiceId
+                ]
+                self?.dialogManager.setAttributes(attributes.compactMapValues { $0 })
             }
         }
     }
@@ -361,8 +373,8 @@ private extension ASRAgent {
         
             self?.asrDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard self.expectSpeech != nil else {
-                    log.error("currentExpectSpeech is nil")
+                guard self.dialogManager.attributes != nil else {
+                    log.error("Dialog attributes is nil")
                     return
                 }
                 guard [.idle, .busy].contains(self.asrState) else {
@@ -421,7 +433,6 @@ private extension ASRAgent {
 private extension ASRAgent {
     func sendEvent(
         typeInfo: Event.TypeInfo,
-        expectSpeech: ASRExpectSpeech?,
         referrerDialogRequestId: String
     ) {
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
@@ -430,7 +441,7 @@ private extension ASRAgent {
             self.upstreamDataSender.sendEvent(
                 Event(
                     typeInfo: typeInfo,
-                    expectSpeech: expectSpeech
+                    dialogAttributes: self.dialogManager.attributes
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     referrerDialogRequestId: referrerDialogRequestId,
@@ -469,7 +480,7 @@ private extension ASRAgent {
         upstreamDataSender.sendStream(
             Event(
                 typeInfo: .recognize(options: asrRequest.options),
-                expectSpeech: expectSpeech
+                dialogAttributes: dialogManager.attributes
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,
                 dialogRequestId: asrRequest.dialogRequestId,

@@ -27,7 +27,7 @@ extension TextAgent {
         let typeInfo: TypeInfo
         
         enum TypeInfo {
-            case textInput(text: String, token: String?, expectSpeech: ASRExpectSpeech?)
+            case textInput(text: String, token: String?, dialogAttributes: [String: AnyHashable]?)
         }
     }
 }
@@ -38,14 +38,13 @@ extension TextAgent.Event: Eventable {
     var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable?]
         switch typeInfo {
-        case .textInput(let text, let token, let expectSpeech):
+        case .textInput(let text, let token, let dialogAttributes):
             payload = [
                 "text": text,
                 "token": token,
-                "sessionId": expectSpeech?.sessionId,
-                "playServiceId": expectSpeech?.playServiceId,
-                "domainTypes": expectSpeech?.domainTypes,
-                "asrContext": expectSpeech?.asrContext
+                "playServiceId": dialogAttributes?["playServiceId"],
+                "domainTypes": dialogAttributes?["domainTypes"],
+                "asrContext": dialogAttributes?["asrContext"]
             ]
         }
         

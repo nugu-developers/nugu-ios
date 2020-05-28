@@ -31,6 +31,7 @@ public enum CapabilityAgentCategory: CaseIterable {
     case location
     case sound
     case chips
+    case session
 }
 
 public extension CapabilityAgentCategory {
@@ -46,6 +47,7 @@ public extension CapabilityAgentCategory {
         case .location: return "Location"
         case .sound: return "Sound"
         case .chips: return "Chips"
+        case .session: return "Session"
         }
     }
 }

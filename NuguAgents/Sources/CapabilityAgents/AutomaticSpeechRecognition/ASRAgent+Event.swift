@@ -25,7 +25,7 @@ import Foundation
 extension ASRAgent {
     public struct Event {
         let typeInfo: TypeInfo
-        let expectSpeech: ASRExpectSpeech?
+        let dialogAttributes: [String: AnyHashable]?
         
         public enum TypeInfo {
             case recognize(options: ASROptions)
@@ -49,10 +49,9 @@ extension ASRAgent.Event: Eventable {
                 "language": "KOR",
                 "endpointing": options.endPointing.value,
                 "encoding": options.encoding.value,
-                "sessionId": expectSpeech?.sessionId,
-                "playServiceId": expectSpeech?.playServiceId,
-                "domainTypes": expectSpeech?.domainTypes,
-                "asrContext": expectSpeech?.asrContext,
+                "playServiceId": dialogAttributes?["playServiceId"],
+                "domainTypes": dialogAttributes?["domainTypes"],
+                "asrContext": dialogAttributes?["asrContext"],
                 "timeout": [
                     "listen": options.timeout.truncatedMilliSeconds,
                     "maxSpeech": options.maxDuration.truncatedMilliSeconds,
@@ -80,7 +79,7 @@ extension ASRAgent.Event: Eventable {
         case .listenTimeout,
              .stopRecognize,
              .listenFailed:
-            payload = ["playServiceId": expectSpeech?.playServiceId]
+            payload = ["playServiceId": dialogAttributes?["playServiceId"]]
         default:
             payload = [:]
         }

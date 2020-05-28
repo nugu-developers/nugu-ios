@@ -110,6 +110,7 @@ public extension StreamDataRouter {
         eventSenders[event.header.dialogRequestId] = eventSender
         
         // write event data to the stream
+        log.debug("Event: \(event.header.dialogRequestId), \(event.header.namespace).\(event.header.name)")
         eventSender.send(event)
             .subscribe(onCompleted: {
                 completion?(.sent)
@@ -148,7 +149,8 @@ public extension StreamDataRouter {
             delegate?.streamDataDidSend(attachment: attachment, error: EventSenderError.noEventRequested)
             return
         }
-        
+
+        log.debug("Attachment: \(attachment.header.seq), \(attachment.header.type)")
         eventSender.send(attachment)
             .subscribe(onCompleted: { [weak self] in
                 if attachment.header.isEnd {
@@ -191,11 +193,13 @@ extension StreamDataRouter {
             directiveArray
                 .compactMap(Downstream.Directive.init)
                 .forEach { directive in
+                    log.debug("Directive: \(directive.header.dialogRequestId), \(directive.header.type)")
                     directiveSequencer.processDirective(directive)
                     completion?(.received(part: directive))
                     delegate?.streamDataDidReceive(direcive: directive)
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
+            log.debug("Attachment: \(attachment.header.dialogRequestId), \(attachment.header.type)")
             directiveSequencer.processAttachment(attachment)
             delegate?.streamDataDidReceive(attachment: attachment)
         } else {

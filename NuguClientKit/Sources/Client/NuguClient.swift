@@ -32,6 +32,8 @@ public class NuguClient {
     public let streamDataRouter: StreamDataRoutable
     public let directiveSequencer: DirectiveSequenceable
     public let playSyncManager: PlaySyncManageable
+    public let dialogManager: DialogManageable
+    public let sessionManager: SessionManageable
     public let systemAgent: SystemAgentProtocol
     
     // default agents
@@ -41,6 +43,7 @@ public class NuguClient {
     public let textAgent: TextAgentProtocol
     public let audioPlayerAgent: AudioPlayerAgentProtocol
     public let soundAgent: SoundAgentProtocol
+    public let sessionAgent: SessionAgentProtocol
 
     // additional agents
     public lazy var chipsAgent: ChipsAgentProtocol = ChipsAgent(
@@ -52,7 +55,8 @@ public class NuguClient {
         upstreamDataSender: streamDataRouter,
         playSyncManager: playSyncManager,
         contextManager: contextManager,
-        directiveSequencer: directiveSequencer
+        directiveSequencer: directiveSequencer,
+        sessionManager: sessionManager
     )
     
     public lazy var extensionAgent: ExtensionAgentProtocol = ExtensionAgent(
@@ -96,28 +100,39 @@ public class NuguClient {
         directiveSequencer = DirectiveSequencer()
         streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
+        dialogManager = DialogManager()
+        sessionManager = SessionManager()
         systemAgent = SystemAgent(contextManager: contextManager,
                                   streamDataRouter: streamDataRouter,
                                   directiveSequencer: directiveSequencer)
         
         // dialog
-        asrAgent = ASRAgent(focusManager: focusManager,
-                            upstreamDataSender: streamDataRouter,
-                            contextManager: contextManager,
-                            audioStream: sharedAudioStream,
-                            directiveSequencer: directiveSequencer)
+        asrAgent = ASRAgent(
+            focusManager: focusManager,
+            upstreamDataSender: streamDataRouter,
+            contextManager: contextManager,
+            audioStream: sharedAudioStream,
+            directiveSequencer: directiveSequencer,
+            dialogManager: dialogManager,
+            sessionManager: sessionManager
+        )
         
-        ttsAgent = TTSAgent(focusManager: focusManager,
-                            upstreamDataSender: streamDataRouter,
-                            playSyncManager: playSyncManager,
-                            contextManager: contextManager,
-                            directiveSequencer: directiveSequencer)
-
-        textAgent = TextAgent(contextManager: contextManager,
-                              upstreamDataSender: streamDataRouter,
-                              directiveSequencer: directiveSequencer)
+        ttsAgent = TTSAgent(
+            focusManager: focusManager,
+            upstreamDataSender: streamDataRouter,
+            playSyncManager: playSyncManager,
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer
+        )
         
-        dialogStateAggregator = DialogStateAggregator()
+        textAgent = TextAgent(
+            contextManager: contextManager,
+            upstreamDataSender: streamDataRouter,
+            directiveSequencer: directiveSequencer,
+            dialogManager: dialogManager
+        )
+        
+        dialogStateAggregator = DialogStateAggregator(dialogManager: dialogManager)
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
         
@@ -135,6 +150,12 @@ public class NuguClient {
             upstreamDataSender: streamDataRouter,
             contextManager: contextManager,
             directiveSequencer: directiveSequencer
+        )
+        
+        sessionAgent = SessionAgent(
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer,
+            sessionManager: sessionManager
         )
 
         // setup additional roles
@@ -233,7 +254,7 @@ extension NuguClient: DialogStateDelegate {
         dialogStateAggregator.add(delegate: self)
     }
     
-    public func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
+    public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool) {
         switch state {
         case .idle:
             playSyncManager.resetTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
