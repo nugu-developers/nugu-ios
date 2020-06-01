@@ -56,6 +56,24 @@ class DisplayView: UIView {
     
     var contentButtonToken: String?
     
+    var supportFocusedItemToken: Bool? {
+        guard let displayPayload = displayPayload,
+            let payloadDictionary = try? JSONSerialization.jsonObject(with: displayPayload, options: []) as? [String: AnyHashable],
+            let isSupportFocusedItemToken = payloadDictionary["supportFocusedItemToken"] as? Bool else {
+                return nil
+        }
+        return isSupportFocusedItemToken
+    }
+    
+    var supportVisibleTokenList: Bool? {
+        guard let displayPayload = displayPayload,
+            let payloadDictionary = try? JSONSerialization.jsonObject(with: displayPayload, options: []) as? [String: AnyHashable],
+            let isSupportVisibleTokenList = payloadDictionary["supportVisibleTokenList"] as? Bool else {
+                return nil
+        }
+        return isSupportVisibleTokenList
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadFromXib()

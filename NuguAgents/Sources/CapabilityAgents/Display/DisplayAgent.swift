@@ -26,7 +26,7 @@ import RxSwift
 
 public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.3")
     private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .display)
     
     // Private
@@ -85,6 +85,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call3", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Timer", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay)
     ]
   

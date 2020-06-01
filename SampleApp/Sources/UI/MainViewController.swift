@@ -634,15 +634,17 @@ extension MainViewController: TextAgentDelegate {
 
 extension MainViewController: DisplayAgentDelegate {
     func displayAgentFocusedItemToken() -> String? {
-        guard let displayControllableView = displayView as? DisplayControllable else {
+        guard let displayControllableView = displayView as? DisplayControllable,
+            displayView?.supportFocusedItemToken == true else {
             return nil
         }
         return displayControllableView.focusedItemToken()
     }
     
     func displayAgentVisibleTokenList() -> [String]? {
-        guard let displayControllableView = displayView as? DisplayControllable else {
-            return nil
+        guard let displayControllableView = displayView as? DisplayControllable,
+            displayView?.supportVisibleTokenList == true else {
+                return nil
         }
         return displayControllableView.visibleTokenList()
     }
