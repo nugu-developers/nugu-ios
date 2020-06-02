@@ -264,7 +264,7 @@ private extension DisplayAgent {
                     item.playServiceId == payload.playServiceId,
                     let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId })?.delegate else {
                         self.sendEvent(
-                            typeInfo: .controlFocusFailed,
+                            typeInfo: .controlFocusFailed(direction: payload.direction),
                             playServiceId: payload.playServiceId,
                             referrerDialogRequestId: directive.header.dialogRequestId
                         )
@@ -275,7 +275,7 @@ private extension DisplayAgent {
                     guard let self = self else { return }
                     let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
                     
-                    let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded : .controlFocusFailed
+                    let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded(direction: payload.direction) : .controlFocusFailed(direction: payload.direction)
                     self.sendEvent(
                         typeInfo: typeInfo,
                         playServiceId: payload.playServiceId,
@@ -301,7 +301,7 @@ private extension DisplayAgent {
                     item.playServiceId == payload.playServiceId,
                     let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId })?.delegate else {
                         self.sendEvent(
-                            typeInfo: .controlScrollFailed,
+                            typeInfo: .controlScrollFailed(direction: payload.direction),
                             playServiceId: payload.playServiceId,
                             referrerDialogRequestId: directive.header.dialogRequestId
                         )
@@ -311,7 +311,7 @@ private extension DisplayAgent {
                     guard let self = self else { return }
                     let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
                     
-                    let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded : .controlScrollFailed
+                    let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded(direction: payload.direction) : .controlScrollFailed(direction: payload.direction)
                     self.sendEvent(
                         typeInfo: typeInfo,
                         playServiceId: payload.playServiceId,
