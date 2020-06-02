@@ -114,7 +114,7 @@ private extension PhoneCallAgent {
             }
             
             var recipient: PhoneCallRecipient?
-            if let recipientDictionary = payloadDictionary["recipient"] as? [String: AnyHashable],
+            if let recipientDictionary = payloadDictionary["recipientIntended"] as? [String: AnyHashable],
                 let recipientData = try? JSONSerialization.data(withJSONObject: recipientDictionary, options: []) {
                 recipient = try? JSONDecoder().decode(PhoneCallRecipient.self, from: recipientData)
             }
@@ -146,7 +146,6 @@ private extension PhoneCallAgent {
                     )
                 )
             }
-            
         }
     }
     
