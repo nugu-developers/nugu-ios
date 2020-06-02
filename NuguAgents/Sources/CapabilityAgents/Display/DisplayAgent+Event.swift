@@ -28,7 +28,7 @@ extension DisplayAgent {
         let typeInfo: TypeInfo
         
         enum TypeInfo {
-            case elementSelected(token: String)
+            case elementSelected(token: String, postback: String?)
             case closeSucceeded
             case closeFailed
             case controlFocusSucceeded(direction: DisplayControlPayload.Direction)
@@ -47,8 +47,11 @@ extension DisplayAgent.Event: Eventable {
             "playServiceId": playServiceId
         ]
         switch typeInfo {
-        case .elementSelected(let token):
+        case .elementSelected(let token, let postback):
             payload["token"] = token
+            if let postback = postback {
+                payload["postBack"] = postback
+            }
         case .controlFocusSucceeded(let direction),
              .controlFocusFailed(let direction),
              .controlScrollSucceeded(let direction),

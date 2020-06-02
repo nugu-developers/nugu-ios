@@ -57,6 +57,14 @@ struct DisplayCommonTemplate: Decodable {
             let image: Image?
             let text: String?
             let token: String
+            let postback: String?
+            let autoTrigger: AutoTrigger?
+            let closeTemplateAfter: Bool?
+            
+            struct AutoTrigger: Decodable {
+                let delayInMilliseconds: Double
+                let showTimer: Bool
+            }
             
             enum `Type`: String, Decodable {
                 case text

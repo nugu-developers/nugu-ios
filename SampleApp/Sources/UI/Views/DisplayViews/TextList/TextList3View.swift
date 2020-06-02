@@ -72,7 +72,7 @@ final class TextList3View: DisplayView {
             if let buttonItem = displayItem.title.button {
                 contentButtonContainerView.isHidden = false
                 contentButton.setTitle(buttonItem.text, for: .normal)
-                contentButtonToken = buttonItem.token
+                contentButtonTokenAndPostback = (buttonItem.token, buttonItem.postback)
             } else {
                 contentButtonContainerView.isHidden = true
             }
@@ -126,7 +126,7 @@ extension TextList3View: UITableViewDataSource {
 
 extension TextList3View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(textList3Items?[indexPath.row].token)
+        onItemSelect?(textList3Items?[indexPath.row].token, nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

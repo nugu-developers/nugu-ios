@@ -39,7 +39,7 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
     /// The Client should call this when element(view) selected(clicked).
     /// - Parameter templateId: The unique identifier for the template.
     /// - Parameter token: The unique identifier for the element.
-    @discardableResult func elementDidSelect(templateId: String, token: String, completion: ((StreamDataState) -> Void)?) -> String
+    @discardableResult func elementDidSelect(templateId: String, token: String, postback: String?, completion: ((StreamDataState) -> Void)?) -> String
     
     /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
     func notifyUserInteraction()
@@ -48,7 +48,7 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
 // MARK: - Default
 
 public extension DisplayAgentProtocol {
-    @discardableResult func elementDidSelect(templateId: String, token: String) -> String {
-        return elementDidSelect(templateId: templateId, token: token, completion: nil)
+    @discardableResult func elementDidSelect(templateId: String, token: String, postback: String?) -> String {
+        return elementDidSelect(templateId: templateId, token: token, postback: postback, completion: nil)
     }
 }

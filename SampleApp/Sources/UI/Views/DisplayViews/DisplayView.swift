@@ -36,7 +36,7 @@ class DisplayView: UIView {
     
     var onCloseButtonClick: (() -> Void)?
     
-    var onItemSelect: ((_ token: String?) -> Void)?
+    var onItemSelect: ((_ token: String?, _ postback: String?) -> Void)?
     
     var onUserInteraction: (() -> Void)?
     
@@ -54,7 +54,7 @@ class DisplayView: UIView {
     
     var displayPayload: Data?
     
-    var contentButtonToken: String?
+    var contentButtonTokenAndPostback: (token: String?, postback: String?)
     
     var supportFocusedItemToken: Bool? {
         guard let displayPayload = displayPayload,
@@ -98,7 +98,7 @@ class DisplayView: UIView {
     }
     
     @IBAction func contentButtonDidClick(_ button: UIButton) {
-        onItemSelect?(contentButtonToken)
+        onItemSelect?(contentButtonTokenAndPostback.token, contentButtonTokenAndPostback.postback)
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

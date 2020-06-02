@@ -29,8 +29,8 @@ final class TextList4ViewCell: UITableViewCell {
     @IBOutlet private weak var buttonContainerView: UIView!
     @IBOutlet private weak var button: UIButton!
     
-    private var token: String?
-    var onButtonSelect: ((_ token: String) -> Void)?
+    private var tokenAndPostback: (token: String?, postback: String?)?
+    var onButtonSelect: ((_ token: String, _ postback: String?) -> Void)?
     
     func configure(item: TextList4Template.Item?) {
         whiteBackgroundView.clipsToBounds = true
@@ -61,13 +61,13 @@ final class TextList4ViewCell: UITableViewCell {
         } else {
             buttonContainerView.isHidden = true
         }
-        token = item?.button?.token
+        tokenAndPostback = (item?.button?.token, item?.button?.postback)
     }
 }
 
 private extension TextList4ViewCell {
     @IBAction func buttonDidClick(_ button: UIButton) {
-        guard let token = token else { return }
-        onButtonSelect?(token)
+        guard let token = tokenAndPostback?.token else { return }
+        onButtonSelect?(token, tokenAndPostback?.postback)
     }
 }
