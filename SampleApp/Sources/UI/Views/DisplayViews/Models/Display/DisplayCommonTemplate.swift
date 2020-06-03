@@ -62,7 +62,7 @@ struct DisplayCommonTemplate: Decodable {
             let closeTemplateAfter: Bool?
             
             struct AutoTrigger: Decodable {
-                let delayInMilliseconds: Double
+                let delayInMilliseconds: Int
                 let showTimer: Bool
             }
             
