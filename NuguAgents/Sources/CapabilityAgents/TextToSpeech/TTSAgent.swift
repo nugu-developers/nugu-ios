@@ -26,7 +26,7 @@ import RxSwift
 
 public final class TTSAgent: TTSAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.2")
     private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .sound)
     
     // TTSAgentProtocol
@@ -218,9 +218,10 @@ extension TTSAgent: ContextInfoDelegate {
         let payload: [String: AnyHashable] = [
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
-            "engine": "skt"
+            "engine": "skt",
+            "token": currentMedia?.payload.token
         ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
