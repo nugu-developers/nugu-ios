@@ -1,8 +1,8 @@
 //
-//  DialogState.swift
-//  NuguClientKit
+//  DialogManageable.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 18/04/2019.
+//  Created by MinChul Lee on 2020/05/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +20,9 @@
 
 import Foundation
 
-/// Identifies the dialog state.
-public enum DialogState {
-    /// Ready for an interaction.
-    case idle
-    /// Passively listening.
-    case listening
-    /// Actively listening.
-    case recognizing
-    /// Waiting for a response from the server.
-    case thinking
-    /// Responding to a request with speech.
-    case speaking
+public protocol DialogManageable: class {
+    var attributes: [String: AnyHashable]? { get }
+    
+    func setAttributes(_ attributes: [String: AnyHashable])
+    func removeAttributes()
 }
-
-// MARK: - Equatable
-
-extension DialogState: Equatable {}

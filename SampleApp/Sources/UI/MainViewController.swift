@@ -540,7 +540,7 @@ extension MainViewController: KeywordDetectorDelegate {
 // MARK: - DialogStateDelegate
 
 extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
+    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool) {
         switch state {
         case .idle:
             guard NuguCentralManager.shared.isTextAgentInProcess == false else { return }
@@ -551,7 +551,7 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking:
             DispatchQueue.main.async { [weak self] in
-                guard expectSpeech == nil else {
+                guard isMultiturn == false else {
                     self?.nuguVoiceChrome.changeState(state: .speaking)
                     return
                 }
@@ -570,7 +570,6 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .processing)
             }
-        case .expectingSpeech: break
         }
     }
 }
@@ -578,7 +577,7 @@ extension MainViewController: DialogStateDelegate {
 // MARK: - AutomaticSpeechRecognitionDelegate
 
 extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?) {
+    func asrAgentDidChange(state: ASRState, dialogRequestId: String) {
         switch state {
         case .idle:
             NuguCentralManager.shared.startWakeUpDetector()
@@ -623,10 +622,6 @@ extension MainViewController: ASRAgentDelegate {
 extension MainViewController: TextAgentDelegate {
     func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool {
         return true
-    }
-    
-    func textAgentDidRequestExpectSpeech() -> ASRExpectSpeech? {
-        return NuguCentralManager.shared.client.asrAgent.expectSpeech
     }
 }
 

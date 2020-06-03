@@ -30,7 +30,4 @@ public protocol TextAgentDelegate: class {
     /// - Parameter directive: The directive of `Text.TextSource` event.
     /// - Returns: true if handled, otherwise return false
     func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool
-    
-    /// Indicates `ASRState` is in progress with multiturn.
-    func textAgentDidRequestExpectSpeech() -> ASRExpectSpeech?
 }

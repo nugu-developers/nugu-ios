@@ -28,6 +28,8 @@ public class DialogStateAggregator {
     private let dialogStateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.dialog_state_aggregator", qos: .userInitiated)
     private let dialogStateDelegates = DelegateSet<DialogStateDelegate>()
     
+    private let dialogManager: DialogManageable
+    
     private let shortTimeout: DispatchTimeInterval = .milliseconds(200)
     private var multiturnSpeakingToListeningTimer: DispatchWorkItem?
 
@@ -38,14 +40,17 @@ public class DialogStateAggregator {
             if oldValue != dialogState {
                 multiturnSpeakingToListeningTimer?.cancel()
                 dialogStateDelegates.notify { delegate in
-                    delegate.dialogStateDidChange(dialogState, expectSpeech: expectSpeech)
+                    delegate.dialogStateDidChange(dialogState, isMultiturn: dialogManager.attributes != nil)
                 }
             }
         }
     }
     private var asrState: ASRState = .idle
-    private var expectSpeech: ASRExpectSpeech?
     private var ttsState: TTSState = .finished
+    
+    init(dialogManager: DialogManageable) {
+        self.dialogManager = dialogManager
+    }
 }
 
 // MARK: - DialogStateAggregatable
@@ -67,11 +72,10 @@ extension DialogStateAggregator {
 // MARK: - ASRAgentDelegate
 
 extension DialogStateAggregator: ASRAgentDelegate {
-    public func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?) {
+    public func asrAgentDidChange(state: ASRState, dialogRequestId: String) {
         dialogStateDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             self.asrState = state
-            self.expectSpeech = expectSpeech
             self.applyState()
         }
     }
@@ -102,8 +106,6 @@ private extension DialogStateAggregator {
         switch (asrState, ttsState) {
         case (_, .playing):
             dialogState = .speaking
-        case (.expectingSpeech, _):
-            dialogState = .expectingSpeech
         case (.listening, _):
             dialogState = .listening
         case (.recognizing, _):
