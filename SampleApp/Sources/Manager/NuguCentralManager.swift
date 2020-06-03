@@ -243,7 +243,7 @@ private extension NuguCentralManager {
 // TODO: - Should consider and decide for best way for handling network errors
 
 private extension NuguCentralManager {
-    func handleNetworkError(error: Error?) {
+    func handleNetworkError(error: Error) {
         // Handle Nugu's predefined NetworkError
         if let networkError = error as? NetworkError {
             switch networkError {
@@ -378,6 +378,7 @@ extension NuguCentralManager: NuguClientDelegate {
         // Use some analytics SDK(or API) here.
         // Error: URLError or NetworkError or EventSenderError
         log.debug("\(error?.localizedDescription ?? ""): \(event.header.namespace).\(event.header.name)")
+        guard let error = error else { return }
         handleNetworkError(error: error)
     }
     
