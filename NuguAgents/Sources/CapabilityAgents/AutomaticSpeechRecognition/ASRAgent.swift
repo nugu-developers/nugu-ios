@@ -68,16 +68,9 @@ public final class ASRAgent: ASRAgentProtocol {
             }
             
             // Session
-            if let dialogRequestId = asrRequest.referrerDialogRequestId {
-                switch asrState {
-                case .listening:
-                    sessionManager.sync(dialogRequestId: dialogRequestId)
-                case .idle:
-                    sessionManager.release(dialogRequestId: dialogRequestId)
-                    dialogManager.removeAttributes()
-                default:
-                    break
-                }
+            if let dialogRequestId = asrRequest.referrerDialogRequestId, asrState == .idle {
+                sessionManager.release(dialogRequestId: dialogRequestId)
+                dialogManager.removeAttributes()
             }
             
             // Stop EPD
@@ -568,7 +561,10 @@ private extension ASRAgent {
                 completion?(.error(ASRError.listenFailed))
                 return
             }
-            
+
+            if let sessionDialogRequestId = directive?.header.dialogRequestId {
+                self.sessionManager.sync(dialogRequestId: sessionDialogRequestId)
+            }
             self.contextManager.getContexts { [weak self] contextPayload in
                 guard let self = self else { return }
 
