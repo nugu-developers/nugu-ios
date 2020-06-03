@@ -38,7 +38,7 @@ extension PhoneCallAgent {
 }
 
 extension PhoneCallAgent.Event: Eventable {
-    public var payload: [String : AnyHashable] {
+    public var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable] = [
             "playServiceId": playServiceId
         ]
@@ -50,7 +50,7 @@ extension PhoneCallAgent.Event: Eventable {
             
             if let recipient = recipient,
                 let recipientData = try? JSONEncoder().encode(recipient) {
-                payload["recipient"] = try? JSONSerialization.jsonObject(with: recipientData, options: []) as? [String: AnyHashable]
+                payload["recipientIntended"] = try? JSONSerialization.jsonObject(with: recipientData, options: []) as? [String: AnyHashable]
             }
             
             if let candidates = candidates,

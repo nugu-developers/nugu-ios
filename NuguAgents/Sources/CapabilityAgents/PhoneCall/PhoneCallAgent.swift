@@ -61,10 +61,12 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 extension PhoneCallAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         let displayItem = delegate?.phoneCallAgentRequestDisplayItem()
+        let recipientIntended = delegate?.phoneCallAgentRequestRecipientIntended()
+        let state = delegate?.phoneCallAgentRequestState()
         
         var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "state": delegate?.phoneCallAgentRequestState().rawValue ?? PhoneCallState.idle.rawValue,
+            "state": state?.rawValue ?? PhoneCallState.idle.rawValue,
             "intent": displayItem?.intent?.rawValue,
             "callType": displayItem?.callType?.rawValue
         ]
@@ -74,6 +76,10 @@ extension PhoneCallAgent: ContextInfoDelegate {
             let candidatesArray = try? JSONSerialization.jsonObject(with: candidatesData, options: []) as? [[String: AnyHashable]] {
             
             payload["candidates"] = candidatesArray
+        }
+        
+        if let recipient = recipientIntended {
+            payload["recipientIntended"] = ["name": recipient.name, "label": recipient.label] as [String: AnyHashable]
         }
         
         completion(
@@ -114,7 +120,7 @@ private extension PhoneCallAgent {
             }
             
             var recipient: PhoneCallRecipient?
-            if let recipientDictionary = payloadDictionary["recipient"] as? [String: AnyHashable],
+            if let recipientDictionary = payloadDictionary["recipientIntended"] as? [String: AnyHashable],
                 let recipientData = try? JSONSerialization.data(withJSONObject: recipientDictionary, options: []) {
                 recipient = try? JSONDecoder().decode(PhoneCallRecipient.self, from: recipientData)
             }
@@ -146,7 +152,6 @@ private extension PhoneCallAgent {
                     )
                 )
             }
-            
         }
     }
     

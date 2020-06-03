@@ -47,7 +47,7 @@ public struct PhoneCallPerson: Codable {
     
     public struct History: Codable {
         
-        public enum CallType: String, Codable {
+        public enum HistoryType: String, Codable {
             case out = "OUT"
             case outCanceled = "OUT_CANCELED"
             case incoming = "IN"
@@ -57,12 +57,21 @@ public struct PhoneCallPerson: Codable {
             case blocked = "BLOCKED"
         }
         
-        public let time: String?
-        public let type: CallType?
+        public enum CallType: String, Codable {
+            case call = "CALL"
+            case video = "VIDEO"
+            case callar = "CALLAR"
+            case group = "GROUP"
+        }
         
-        public init(time: String?, type: CallType?) {
+        public let time: String?
+        public let historyType: HistoryType?
+        public let callType: CallType?
+        
+        public init(time: String?, historyType: HistoryType?, callType: CallType?) {
             self.time = time
-            self.type = type
+            self.historyType = historyType
+            self.callType = callType
         }
     }
     
