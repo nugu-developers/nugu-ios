@@ -34,6 +34,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private let contextManager: ContextManageable
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
+    private let sessionManager: SessionManageable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -44,7 +45,15 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private var renderingInfos = [DisplayRenderingInfo]()
     
     // Current display info
-    private var currentItem: DisplayTemplate?
+    private var currentItem: DisplayTemplate? {
+        didSet {
+            if let item = currentItem {
+                sessionManager.sync(dialogRequestId: item.dialogRequestId)
+            } else if let item = oldValue {
+                sessionManager.release(dialogRequestId: item.dialogRequestId)
+            }
+        }
+    }
     
     private var disposeBag = DisposeBag()
     
@@ -92,12 +101,14 @@ public final class DisplayAgent: DisplayAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
-        directiveSequencer: DirectiveSequenceable
+        directiveSequencer: DirectiveSequenceable,
+        sessionManager: SessionManageable
     ) {
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
+        self.sessionManager = sessionManager
         
         playSyncManager.add(delegate: self)
         contextManager.add(delegate: self)

@@ -1,8 +1,8 @@
 //
-//  DialogState.swift
-//  NuguClientKit
+//  Session.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 18/04/2019.
+//  Created by MinChul Lee on 2020/05/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +20,14 @@
 
 import Foundation
 
-/// Identifies the dialog state.
-public enum DialogState {
-    /// Ready for an interaction.
-    case idle
-    /// Passively listening.
-    case listening
-    /// Actively listening.
-    case recognizing
-    /// Waiting for a response from the server.
-    case thinking
-    /// Responding to a request with speech.
-    case speaking
+public struct Session {
+    public let sessionId: String
+    public let dialogRequestId: String
+    public let playServiceId: String
+    
+    public init(sessionId: String, dialogRequestId: String, playServiceId: String) {
+        self.sessionId = sessionId
+        self.dialogRequestId = dialogRequestId
+        self.playServiceId = playServiceId
+    }
 }
-
-// MARK: - Equatable
-
-extension DialogState: Equatable {}

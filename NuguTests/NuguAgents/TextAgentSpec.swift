@@ -30,13 +30,15 @@ class TextAgentSpec: QuickSpec {
     let contextManager: ContextManageable = MockContextManager()
     let upstreamDataSender: UpstreamDataSendable = MockStreamDataRouter()
     let directiveSequencer: DirectiveSequenceable = MockDirectiveSequencer()
+    let dialogManager: DialogManageable = MockDialogManager()
     
     override func spec() {
         describe("TextAgent") {
             let textAgent: TextAgent = TextAgent(
                 contextManager: contextManager,
                 upstreamDataSender: upstreamDataSender,
-                directiveSequencer: directiveSequencer
+                directiveSequencer: directiveSequencer,
+                dialogManager: dialogManager
             )
             
             describe("context") {
