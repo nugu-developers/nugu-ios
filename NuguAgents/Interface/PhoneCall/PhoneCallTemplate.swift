@@ -1,5 +1,5 @@
 //
-//  PhoneCallDisplayItem.swift
+//  PhoneCallTemplate.swift
 //  NuguAgents
 //
 //  Created by yonghoonKwon on 2020/05/12.
@@ -20,14 +20,21 @@
 
 import Foundation
 
-public struct PhoneCallDisplayItem {
+public struct PhoneCallTemplate: Encodable {
     public let intent: PhoneCallIntent?
     public let callType: PhoneCallType?
+    public let recipientIntended: PhoneCallRecipient?
     public let candidates: [PhoneCallPerson]?
     
-    public init(intent: PhoneCallIntent?, callType: PhoneCallType?, candidates: [PhoneCallPerson]?) {
+    public init(
+        intent: PhoneCallIntent?,
+        callType: PhoneCallType?,
+        recipientIntended: PhoneCallRecipient?,
+        candidates: [PhoneCallPerson]?
+    ) {
         self.intent = intent
         self.callType = callType
+        self.recipientIntended = recipientIntended
         self.candidates = candidates
     }
 }

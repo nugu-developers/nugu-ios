@@ -22,12 +22,8 @@ import Foundation
 
 public protocol PhoneCallAgentDelegate: class {
     func phoneCallAgentRequestState() -> PhoneCallState
-    func phoneCallAgentRequestDisplayItem() -> PhoneCallDisplayItem?
-    func phoneCallAgentRequestRecipientIntended() -> PhoneCallRecipient?
+    func phoneCallAgentRequestTemplate() -> PhoneCallTemplate?
     
-    func phoneCallAgentDidReceiveSendCandidates(intent: PhoneCallIntent, callType: PhoneCallType?, recipient: PhoneCallRecipient?, candidates: [PhoneCallPerson]?) -> [PhoneCallPerson]?
+    func phoneCallAgentDidReceiveSendCandidates(intent: PhoneCallIntent, callType: PhoneCallType?, recipient: PhoneCallRecipient?, candidates: [PhoneCallPerson]?) -> Bool
     func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson) -> PhoneCallErrorCode?
-    func phoneCallAgentDidReceiveEndCall()
-    func phoneCallAgentDidReceiveAcceptCall()
-    func phoneCallAgentDidReceiveBlockIncomingCall()
 }

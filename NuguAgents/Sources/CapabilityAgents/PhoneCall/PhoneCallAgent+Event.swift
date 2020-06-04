@@ -28,14 +28,13 @@ extension PhoneCallAgent {
         let typeInfo: TypeInfo
         
         public enum TypeInfo {
-            case candidatesListed(intent: PhoneCallIntent, callType: PhoneCallType, recipient: PhoneCallRecipient?, candidates: [PhoneCallPerson]?)
-            case callArrived(callerName: String) // CHECK-ME: Is it necessary?
-            case callEnded // CHECK-ME: Is it necessary?
-            case callEstablished // CHECK-ME: Is it necessary?
+            case candidatesListed
             case makeCallFailed(errorCode: PhoneCallErrorCode, callType: PhoneCallType)
         }
     }
 }
+
+// MARK: - Eventable
 
 extension PhoneCallAgent.Event: Eventable {
     public var payload: [String: AnyHashable] {
@@ -44,24 +43,7 @@ extension PhoneCallAgent.Event: Eventable {
         ]
         
         switch typeInfo {
-        case .candidatesListed(let intent, let callType, let recipient, let candidates):
-            payload["intent"] = intent.rawValue
-            payload["callType"] = callType.rawValue
-            
-            if let recipient = recipient,
-                let recipientData = try? JSONEncoder().encode(recipient) {
-                payload["recipientIntended"] = try? JSONSerialization.jsonObject(with: recipientData, options: []) as? [String: AnyHashable]
-            }
-            
-            if let candidates = candidates,
-                let candidatesData = try? JSONEncoder().encode(candidates) {
-                payload["candidates"] = try? JSONSerialization.jsonObject(with: candidatesData, options: []) as? [[String: AnyHashable]]
-            }
-        case .callArrived(let callerName):
-            payload["callerName"] = callerName
-        case .callEnded:
-            break
-        case .callEstablished:
+        case .candidatesListed:
             break
         case .makeCallFailed(let errorCode, let callType):
             payload["errorCode"] = errorCode.rawValue
@@ -75,12 +57,6 @@ extension PhoneCallAgent.Event: Eventable {
         switch typeInfo {
         case .candidatesListed:
             return "CandidatesListed"
-        case .callArrived:
-            return "CallArrived"
-        case .callEnded:
-            return "CallEnded"
-        case .callEstablished:
-            return "CallEstablished"
         case .makeCallFailed:
             return "MakeCallFailed"
         }
