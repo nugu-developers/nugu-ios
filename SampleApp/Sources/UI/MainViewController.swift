@@ -589,6 +589,7 @@ extension MainViewController: ASRAgentDelegate {
             NuguCentralManager.shared.stopWakeUpDetector()
             DispatchQueue.main.async { [weak self] in
                 if let (item, id) = self?.chipsAgentItem, id == dialogRequestId {
+                    self?.chipsAgentItem = nil
                     let actionList = item.chips.map { $0.textSource }
                     self?.setChipsButton(actionList: actionList, normalList: [])
                 }
