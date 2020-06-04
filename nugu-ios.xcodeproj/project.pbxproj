@@ -63,7 +63,7 @@
 		1FBA3B7624596E1A001E5828 /* PhoneCallAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */; };
 		1FD061B0246E7216004F9125 /* PhoneCallAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD061AF246E7216004F9125 /* PhoneCallAgentDelegate.swift */; };
 		1FD061B224720497004F9125 /* PhoneCallState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD061B124720497004F9125 /* PhoneCallState.swift */; };
-		1FD061B4247210EC004F9125 /* PhoneCallDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD061B3247210EC004F9125 /* PhoneCallDisplayItem.swift */; };
+		1FD061B4247210EC004F9125 /* PhoneCallTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD061B3247210EC004F9125 /* PhoneCallTemplate.swift */; };
 		1FD061B62472142D004F9125 /* PhoneCallType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD061B52472142D004F9125 /* PhoneCallType.swift */; };
 		1FD061B824723064004F9125 /* PhoneCallErrorCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD061B724723064004F9125 /* PhoneCallErrorCode.swift */; };
 		1FD061BA247239E0004F9125 /* PhoneCallIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD061B9247239E0004F9125 /* PhoneCallIntent.swift */; };
@@ -670,7 +670,7 @@
 		1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneCallAgent+Event.swift"; sourceTree = "<group>"; };
 		1FD061AF246E7216004F9125 /* PhoneCallAgentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallAgentDelegate.swift; sourceTree = "<group>"; };
 		1FD061B124720497004F9125 /* PhoneCallState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallState.swift; sourceTree = "<group>"; };
-		1FD061B3247210EC004F9125 /* PhoneCallDisplayItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallDisplayItem.swift; sourceTree = "<group>"; };
+		1FD061B3247210EC004F9125 /* PhoneCallTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallTemplate.swift; sourceTree = "<group>"; };
 		1FD061B52472142D004F9125 /* PhoneCallType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallType.swift; sourceTree = "<group>"; };
 		1FD061B724723064004F9125 /* PhoneCallErrorCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallErrorCode.swift; sourceTree = "<group>"; };
 		1FD061B9247239E0004F9125 /* PhoneCallIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallIntent.swift; sourceTree = "<group>"; };
@@ -1355,7 +1355,7 @@
 				1FBA3B6D2459668F001E5828 /* PhoneCallAgentProtocol.swift */,
 				1FD061AF246E7216004F9125 /* PhoneCallAgentDelegate.swift */,
 				1FD061B124720497004F9125 /* PhoneCallState.swift */,
-				1FD061B3247210EC004F9125 /* PhoneCallDisplayItem.swift */,
+				1FD061B3247210EC004F9125 /* PhoneCallTemplate.swift */,
 				1FBA3B7124596B75001E5828 /* PhoneCallPerson.swift */,
 				1FD061B52472142D004F9125 /* PhoneCallType.swift */,
 				1FD061B724723064004F9125 /* PhoneCallErrorCode.swift */,
@@ -3706,7 +3706,7 @@
 				73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */,
 				A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */,
 				73152FB823E0414700F843C3 /* EndPointDetectorDelegate.swift in Sources */,
-				1FD061B4247210EC004F9125 /* PhoneCallDisplayItem.swift in Sources */,
+				1FD061B4247210EC004F9125 /* PhoneCallTemplate.swift in Sources */,
 				7315305823E1246F00F843C3 /* LocationInfo.swift in Sources */,
 				7315305623E1246F00F843C3 /* LocationAgentProtocol.swift in Sources */,
 				1FBA3B6E2459668F001E5828 /* PhoneCallAgentProtocol.swift in Sources */,

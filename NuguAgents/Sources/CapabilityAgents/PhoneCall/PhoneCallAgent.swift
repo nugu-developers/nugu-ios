@@ -36,10 +36,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     // Handleable Directive
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SendCandidates", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSendCandidates),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleMakeCall),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "EndCall", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleEndCall),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "AcceptCall", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleAcceptCall),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "BlockIncomingCall", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleBlockIncomingCall)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleMakeCall)
     ]
     
     public init(
@@ -60,26 +57,18 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 
 extension PhoneCallAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        let displayItem = delegate?.phoneCallAgentRequestDisplayItem()
-        let recipientIntended = delegate?.phoneCallAgentRequestRecipientIntended()
         let state = delegate?.phoneCallAgentRequestState()
+        let template = delegate?.phoneCallAgentRequestTemplate()
         
         var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "state": state?.rawValue ?? PhoneCallState.idle.rawValue,
-            "intent": displayItem?.intent?.rawValue,
-            "callType": displayItem?.callType?.rawValue
+            "state": state?.rawValue ?? PhoneCallState.idle.rawValue
         ]
         
-        if let candidates = displayItem?.candidates,
-            let candidatesData = try? JSONEncoder().encode(candidates),
-            let candidatesArray = try? JSONSerialization.jsonObject(with: candidatesData, options: []) as? [[String: AnyHashable]] {
-            
-            payload["candidates"] = candidatesArray
-        }
-        
-        if let recipient = recipientIntended {
-            payload["recipientIntended"] = ["name": recipient.name, "label": recipient.label] as [String: AnyHashable]
+        if let templateItem = template,
+            let templateData = try? JSONEncoder().encode(templateItem),
+            let templateDictionary = try? JSONSerialization.jsonObject(with: templateData, options: []) as? [String: AnyHashable] {
+            payload["template"] = templateDictionary
         }
         
         completion(
@@ -131,12 +120,17 @@ private extension PhoneCallAgent {
                 candidates = try? JSONDecoder().decode([PhoneCallPerson].self, from: candidatesData)
             }
             
-            let resultCandidates = self.delegate?.phoneCallAgentDidReceiveSendCandidates(
+            let isSuccess = self.delegate?.phoneCallAgentDidReceiveSendCandidates(
                 intent: phoneCallIntent,
                 callType: phoneCallType,
                 recipient: recipient,
                 candidates: candidates
             )
+            
+            guard isSuccess == true else {
+                log.warning("`phoneCallAgentDidReceiveSendCandidates` has returned false")
+                return
+            }
             
             self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
                 guard let self = self else { return }
@@ -144,7 +138,7 @@ private extension PhoneCallAgent {
                 self.upstreamDataSender.sendEvent(
                     Event(
                         playServiceId: playServiceId,
-                        typeInfo: .candidatesListed(intent: phoneCallIntent, callType: phoneCallType, recipient: recipient, candidates: resultCandidates)
+                        typeInfo: .candidatesListed
                     ).makeEventMessage(
                         property: self.capabilityAgentProperty,
                         dialogRequestId: TimeUUID().hexString,
@@ -197,35 +191,6 @@ private extension PhoneCallAgent {
                     )
                 }
             }
-        }
-    }
-    
-    func handleEndCall() -> HandleDirective {
-        return { [weak self] directive, completion in
-            defer { completion() }
-            
-            self?.delegate?.phoneCallAgentDidReceiveEndCall()
-            
-            // CHECK-ME: Send end-call event?
-        }
-    }
-    
-    func handleAcceptCall() -> HandleDirective {
-        return { [weak self] directive, completion in
-            defer { completion() }
-            
-            self?.delegate?.phoneCallAgentDidReceiveAcceptCall()
-            
-            // CHECK-ME: Send call-established event?
-        }
-    }
-    
-    // CHECK-ME: Is it necessary?
-    func handleBlockIncomingCall() -> HandleDirective {
-        return { [weak self] directive, completion in
-            defer { completion() }
-            
-            self?.delegate?.phoneCallAgentDidReceiveBlockIncomingCall()
         }
     }
 }
