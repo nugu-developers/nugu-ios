@@ -28,7 +28,7 @@ extension DisplayAgent {
         let typeInfo: TypeInfo
         
         enum TypeInfo {
-            case elementSelected(token: String, postback: String?)
+            case elementSelected(token: String, postback: [String: AnyHashable]?)
             case closeSucceeded
             case closeFailed
             case controlFocusSucceeded(direction: DisplayControlPayload.Direction)

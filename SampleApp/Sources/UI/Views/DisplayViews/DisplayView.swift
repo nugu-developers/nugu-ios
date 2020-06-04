@@ -36,7 +36,7 @@ class DisplayView: UIView {
     
     var onCloseButtonClick: (() -> Void)?
     
-    var onItemSelect: ((_ token: String?, _ postback: String?) -> Void)?
+    var onItemSelect: ((_ token: String?, _ postback: [String: AnyHashable]?) -> Void)?
     
     var onUserInteraction: (() -> Void)?
     
@@ -54,7 +54,7 @@ class DisplayView: UIView {
     
     var displayPayload: Data?
     
-    var contentButtonTokenAndPostback: (token: String?, postback: String?)
+    var contentButtonTokenAndPostback: (token: String?, postback: [String: AnyHashable]?)
     
     var supportFocusedItemToken: Bool? {
         guard let displayPayload = displayPayload,

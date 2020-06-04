@@ -127,7 +127,7 @@ public extension DisplayAgent {
         }
     }
     
-    @discardableResult func elementDidSelect(templateId: String, token: String, postback: String?, completion: ((StreamDataState) -> Void)?) -> String {
+    @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
         let dialogRequestId = TimeUUID().hexString
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }

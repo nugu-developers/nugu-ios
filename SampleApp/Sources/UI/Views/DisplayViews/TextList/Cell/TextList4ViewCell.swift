@@ -29,8 +29,8 @@ final class TextList4ViewCell: UITableViewCell {
     @IBOutlet private weak var buttonContainerView: UIView!
     @IBOutlet private weak var button: UIButton!
     
-    private var tokenAndPostback: (token: String?, postback: String?)?
-    var onButtonSelect: ((_ token: String, _ postback: String?) -> Void)?
+    private var tokenAndPostback: (token: String?, postback: [String: AnyHashable]?)?
+    var onButtonSelect: ((_ token: String, _ postback: [String: AnyHashable]?) -> Void)?
     
     func configure(item: TextList4Template.Item?) {
         whiteBackgroundView.clipsToBounds = true

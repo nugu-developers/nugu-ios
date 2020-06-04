@@ -57,7 +57,7 @@ struct DisplayCommonTemplate: Decodable {
             let image: Image?
             let text: String?
             let token: String
-            let postback: String?
+            let postback: [String: AnyHashable]?
             let autoTrigger: AutoTrigger?
             let closeTemplateAfter: Bool?
             
@@ -69,6 +69,30 @@ struct DisplayCommonTemplate: Decodable {
             enum `Type`: String, Decodable {
                 case text
                 case image
+            }
+            
+            enum CodingKeys: String, CodingKey {
+                case type
+                case image
+                case text
+                case token
+                case postback
+                case autoTrigger
+                case closeTemplateAfter
+            }
+            
+            init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                
+                type = try? container.decodeIfPresent(Type.self, forKey: .type)
+                image = try? container.decodeIfPresent(Image.self, forKey: .image)
+                text = try? container.decodeIfPresent(String.self, forKey: .text)
+                token = try container.decode(String.self, forKey: .token)
+                // `postback` variable is an optional `[String: AnyHashable]` type which delivers additional information when `Button` object has been clicked.
+                // for decoding `[String: AnyHashable]` type, please refer `KeyedDecodingContainer+AnyHashable.swift`
+                postback = try? container.decode([String: AnyHashable].self, forKey: .postback)
+                autoTrigger = try? container.decodeIfPresent(AutoTrigger.self, forKey: .autoTrigger)
+                closeTemplateAfter = try? container.decodeIfPresent(Bool.self, forKey: .closeTemplateAfter)
             }
         }
         
