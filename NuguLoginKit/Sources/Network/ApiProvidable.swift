@@ -1,8 +1,8 @@
 //
-//  NuguOAuthApi.swift
+//  ApiProvidable.swift
 //  NuguLoginKit
 //
-//  Created by yonghoonKwon on 2020/01/06.
+//  Created by yonghoonKwon on 2020/06/05.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,67 +20,21 @@
 
 import Foundation
 
-struct NuguOAuthApi {
-    let clientId: String
-    let clientSecret: String
-    let deviceUniqueId: String
-    let grantTypeInfo: GrantTypeInfo
+protocol ApiProvidable {
+    var httpMethod: String { get }
+    var headers: [String: String] { get }
+    var uri: String { get }
+    var bodyParams: [String: String] { get }
     
-    enum GrantTypeInfo {
-        case authorizationCode(code: String, redirectUri: String)
-        case refreshToken(refreshToken: String)
-        case clientCredentials
-    }
-}
-
-// MARK: - OAuth API Spec
-
-extension NuguOAuthApi {
-    var httpMethod: String {
-        return "post"
-    }
-    
-    var headers: [String: String] {
-        return ["Content-Type": "application/x-www-form-urlencoded; charset=utf-8"]
-    }
-    
-    var uri: String {
-        return NuguOAuthServerInfo.serverBaseUrl + "/oauth/token"
-    }
-    
-    var bodyParams: [String: String] {
-        switch grantTypeInfo {
-        case .authorizationCode(let code, let redirectUri):
-            return [
-                "grant_type": "authorization_code",
-                "client_id": clientId,
-                "client_secret": clientSecret,
-                "code": code,
-                "redirect_uri": redirectUri
-            ]
-        case .refreshToken(let refreshToken):
-            return [
-                "grant_type": "refresh_token",
-                "client_id": clientId,
-                "client_secret": clientSecret,
-                "refresh_token": refreshToken
-            ]
-        case .clientCredentials:
-            return [
-                "grant_type": "client_credentials",
-                "client_id": clientId,
-                "client_secret": clientSecret,
-                "data": "{\"deviceSerialNumber\":\"\(deviceUniqueId)\"}"
-            ]
-        }
-    }
-}
-
-// MARK: - Provider
-
-extension NuguOAuthApi {
     @discardableResult
-    func request(completion: ((Result<AuthorizationInfo, NuguLoginKitError.APIError>) -> Void)?) -> URLSessionDataTask {
+    func request(completion: ((Result<Data, NuguLoginKitError.APIError>) -> Void)?) -> URLSessionDataTask
+}
+
+// MARK: - Default method
+
+extension ApiProvidable {
+    @discardableResult
+    func request(completion: ((Result<Data, NuguLoginKitError.APIError>) -> Void)?) -> URLSessionDataTask {
         // URLRequest
         let url = URL(string: self.uri)!
         var urlRequest = URLRequest(url: url)
@@ -114,14 +68,7 @@ extension NuguOAuthApi {
                     // Validate http-status-code
                     switch response.statusCode {
                     case (200..<300):
-                        // Failed parsing
-                        guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
-                            completion?(.failure(.parsingFailed(data)))
-                            break
-                        }
-                        
-                        // Success
-                        completion?(.success(authorizationInfo))
+                        completion?(.success(data))
                     case (300..<400), (400..<500), (500..<600):
                         guard let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                             // Invalid JSON format

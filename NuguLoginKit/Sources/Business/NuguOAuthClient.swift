@@ -19,6 +19,7 @@
 //
 
 import UIKit
+import SafariServices
 
 public class NuguOAuthClient {
     /// The `deviceUniqueId` is unique identifier each device.
@@ -81,13 +82,159 @@ public class NuguOAuthClient {
 // MARK: - AuthorizationCodeGrant
 
 public extension NuguOAuthClient {
+    /// Call this method from the `UIApplicationDelegate.application(app:url:options:)` method of the AppDelegate for your app.
+    ///
+    /// It should be implemeted to receive authorization-code by `SFSafariViewController`.
+    ///
+    /// - Parameter url: The URL as passed to `UIApplicationDelegate.application(app:url:options:)`.
+    class func handle(url: URL) {
+         NotificationCenter.default.post(name: .authorization, object: nil, userInfo: ["url": url])
+    }
+    
     /// Authorize with `AuthorizationCode` grant type.
     /// - Parameter grant: The `grant` information that `AuthorizationCodeGrant`
     /// - Parameter parentViewController: The `parentViewController` will present a safariViewController.
     /// - Parameter completion: The closure to receive result for authorization.
-    func authorize(grant: AuthorizationCodeGrant, parentViewController: UIViewController, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
-        grant.stateController.completion = completion
-        let state = grant.stateController.makeState()
+    func authorize(
+        grant: AuthorizationCodeGrant,
+        parentViewController: UIViewController,
+        completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
+    ) {
+        presentAuthorize(grant: grant, parentViewController: parentViewController, completion: completion)
+    }
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - grant: <#grant description#>
+    ///   - loginTid: <#loginTid description#>
+    ///   - parentViewController: <#parentViewController description#>
+    ///   - completion: <#completion description#>
+    func showTidInfo(
+        grant: AuthorizationCodeGrant,
+        loginTid: String,
+        parentViewController: UIViewController,
+        completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
+    ) {
+        var queries = [URLQueryItem]()
+        queries.append(URLQueryItem(name: "service_type", value: "21"))
+        queries.append(URLQueryItem(name: "login_id", value: loginTid))
+        queries.append(URLQueryItem(name: "client_type", value: "MWEB"))
+        queries.append(URLQueryItem(name: "popup_request_yn", value: "N"))
+        
+        presentAuthorize(grant: grant, parentViewController: parentViewController, additionalQueries: queries, completion: completion)
+    }
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - token: <#token description#>
+    ///   - completion: <#completion description#>
+    func getTidInfo(token: String, completion: ((Result<TidInfo, NuguLoginKitError>) -> Void)?) {
+        let api = NuguOAuthUtilApi.getTid(token: token)
+        
+        api.request { (result) in
+            completion?(result
+                .flatMap({ (data) -> Result<TidInfo, NuguLoginKitError.APIError> in
+                    guard let tidInfo = try? JSONDecoder().decode(TidInfo.self, from: data) else {
+                        return .failure(.parsingFailed(data))
+                    }
+                    return .success(tidInfo)
+                })
+                .mapError({ NuguLoginKitError.apiError(error: $0) })
+            )
+        }
+    }
+}
+
+// MARK: - RefreshTokenGrant
+
+public extension NuguOAuthClient {
+    /// Authorize with `RefreshToken` grant type.
+    /// - Parameter grant: The `grant` information that `RefreshTokenGrant`
+    /// - Parameter completion: The closure to receive result for authorization.
+    func authorize(grant: RefreshTokenGrant, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
+        let api = NuguOAuthTokenApi(
+            clientId: grant.clientId,
+            clientSecret: grant.clientSecret,
+            deviceUniqueId: deviceUniqueId,
+            grantTypeInfo: .refreshToken(refreshToken: grant.refreshToken)
+        )
+        
+        api.request { (result) in
+            completion?(result
+                .flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
+                    guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
+                        return .failure(.parsingFailed(data))
+                    }
+                    return .success(authorizationInfo)
+                })
+                .mapError({ NuguLoginKitError.apiError(error: $0) })
+            )
+        }
+    }
+}
+
+// MARK: - ClientCredentialsGrant
+
+public extension NuguOAuthClient {
+    /// Authorize with `ClientCredentials` grant type.
+    /// - Parameter grant: The `grant` information that `ClientCredentialsGrant`
+    /// - Parameter completion: The closure to receive result for authorization.
+    func authorize(grant: ClientCredentialsGrant, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
+        let api = NuguOAuthTokenApi(
+            clientId: grant.clientId,
+            clientSecret: grant.clientSecret,
+            deviceUniqueId: deviceUniqueId,
+            grantTypeInfo: .clientCredentials
+        )
+        
+        api.request { (result) in
+            completion?(result
+                .flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
+                    guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
+                        return .failure(.parsingFailed(data))
+                    }
+                    return .success(authorizationInfo)
+                })
+                .mapError({ NuguLoginKitError.apiError(error: $0) })
+            )
+        }
+    }
+}
+
+// MARK: - Util API
+
+public extension NuguOAuthClient {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - clientId: <#clientId description#>
+    ///   - clientSecret: <#clientSecret description#>
+    ///   - token: <#token description#>
+    ///   - completion: <#completion description#>
+    func revoke(clientId: String, clientSecret: String, token: String, completion: ((Result<Void, NuguLoginKitError>) -> Void)?) {
+        let api = NuguOAuthUtilApi.revoke(token: token, clientId: clientId, clientSecret: clientSecret)
+        
+        api.request { (result) in
+            completion?(result
+                .flatMap({ (_) -> Result<Void, NuguLoginKitError.APIError> in
+                    return .success(())
+                })
+                .mapError({ NuguLoginKitError.apiError(error: $0) })
+            )
+        }
+    }
+}
+
+// MARK: - Private
+
+private extension NuguOAuthClient {
+    func presentAuthorize(
+        grant: AuthorizationCodeGrant,
+        parentViewController: UIViewController,
+        additionalQueries: [URLQueryItem]? = nil,
+        completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
+    ) {
+        grant.safariController.completion = completion
+        let state = grant.safariController.makeState()
         var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/oauth/authorize")
         
         var queries = [URLQueryItem]()
@@ -100,17 +247,17 @@ public extension NuguOAuthClient {
         urlComponents?.queryItems = queries
         
         guard let url = urlComponents?.url else {
-            grant.stateController.completion?(.failure(NuguLoginKitError.invalidRequestURL))
-            grant.stateController.clearState()
+            grant.safariController.completion?(.failure(NuguLoginKitError.invalidRequestURL))
+            grant.safariController.clearState()
             return
         }
         
         // Complete function
         func complete(result: Result<AuthorizationInfo, NuguLoginKitError>) {
             DispatchQueue.main.async {
-                grant.stateController.dismissSafariViewController(completion: {
-                    grant.stateController.completion?(result)
-                    grant.stateController.clearState()
+                grant.safariController.dismissSafariViewController(completion: {
+                    grant.safariController.completion?(result)
+                    grant.safariController.clearState()
                 })
             }
         }
@@ -153,13 +300,13 @@ public extension NuguOAuthClient {
                 // Validate state
                 guard
                     let state = urlComponent.queryItems?.first(where: { $0.name == "state" })?.value,
-                    state == grant.stateController.currentState else {
+                    state == grant.safariController.currentState else {
                         complete(result: .failure(NuguLoginKitError.invalidState))
                         return
                 }
                 
                 // Acquire token
-                let api = NuguOAuthApi(
+                let api = NuguOAuthTokenApi(
                     clientId: grant.clientId,
                     clientSecret: grant.clientSecret,
                     deviceUniqueId: self.deviceUniqueId,
@@ -167,61 +314,20 @@ public extension NuguOAuthClient {
                 )
                 
                 api.request { (result) in
-                    complete(result: result.mapError({ NuguLoginKitError.apiError(error: $0) }))
+                    completion?(result
+                        .flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
+                            guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
+                                return .failure(.parsingFailed(data))
+                            }
+                            return .success(authorizationInfo)
+                        })
+                        .mapError({ NuguLoginKitError.apiError(error: $0) })
+                    )
                 }
         }
         
         DispatchQueue.main.async {
-            grant.stateController.presentSafariViewController(url: url, from: parentViewController)
-        }
-    }
-    
-    /// Call this method from the `UIApplicationDelegate.application(app:url:options:)` method of the AppDelegate for your app.
-    ///
-    /// It should be implemeted to receive authorization-code by `SFSafariViewController`.
-    ///
-    /// - Parameter url: The URL as passed to `UIApplicationDelegate.application(app:url:options:)`.
-    class func handle(url: URL) {
-         NotificationCenter.default.post(name: .authorization, object: nil, userInfo: ["url": url])
-    }
-}
-
-// MARK: - RefreshTokenGrant
-
-public extension NuguOAuthClient {
-    /// Authorize with `RefreshToken` grant type.
-    /// - Parameter grant: The `grant` information that `RefreshTokenGrant`
-    /// - Parameter completion: The closure to receive result for authorization.
-    func authorize(grant: RefreshTokenGrant, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
-        let api = NuguOAuthApi(
-            clientId: grant.clientId,
-            clientSecret: grant.clientSecret,
-            deviceUniqueId: deviceUniqueId,
-            grantTypeInfo: .refreshToken(refreshToken: grant.refreshToken)
-        )
-        
-        api.request { (result) in
-            completion?(result.mapError({ NuguLoginKitError.apiError(error: $0) }))
-        }
-    }
-}
-
-// MARK: - ClientCredentialsGrant
-
-public extension NuguOAuthClient {
-    /// Authorize with `ClientCredentials` grant type.
-    /// - Parameter grant: The `grant` information that `ClientCredentialsGrant`
-    /// - Parameter completion: The closure to receive result for authorization.
-    func authorize(grant: ClientCredentialsGrant, completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?) {
-        let api = NuguOAuthApi(
-            clientId: grant.clientId,
-            clientSecret: grant.clientSecret,
-            deviceUniqueId: deviceUniqueId,
-            grantTypeInfo: .clientCredentials
-        )
-        
-        api.request { (result) in
-            completion?(result.mapError({ NuguLoginKitError.apiError(error: $0) }))
+            grant.safariController.presentSafariViewController(url: url, from: parentViewController)
         }
     }
 }
