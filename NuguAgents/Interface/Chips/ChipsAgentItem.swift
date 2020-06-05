@@ -22,10 +22,10 @@ import Foundation
 
 public struct ChipsAgentItem {
     public let playServiceId: String
-    public let type: ChipsType
+    public let target: Target
     public let chips: [Chip]
     
-    public enum ChipsType: String, Decodable {
+    public enum Target: String, Decodable {
         case dialog = "DM"
     }
     
@@ -49,7 +49,7 @@ public struct ChipsAgentItem {
 extension ChipsAgentItem: Decodable {
     enum CodingKeys: String, CodingKey {
         case playServiceId
-        case type
+        case target
         case chips
     }
 
@@ -57,7 +57,7 @@ extension ChipsAgentItem: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
-        type = try container.decode(ChipsType.self, forKey: .type)
+        target = try container.decode(Target.self, forKey: .target)
         chips = try container.decode([Chip].self, forKey: .chips)
     }
 }
