@@ -1,5 +1,5 @@
 //
-//  TidInfo.swift
+//  NuguUserInfo.swift
 //  NuguLoginKit
 //
 //  Created by yonghoonKwon on 2020/06/03.
@@ -20,9 +20,18 @@
 
 import Foundation
 
-public struct TidInfo: Decodable {
+/// The `NuguUserInfo` is simple profile in NUGU
+public struct NuguUserInfo: Decodable {
+    
+    /// Flag for anonymous member
     public let anonymous: Bool
+    
+    /// The `deviceId` in NUGU
     public let deviceId: String
+    
+    /// The `userId` in NUGU
     public let userId: String
+    
+    /// The `tid` used by NUGU users
     public let tid: String?
 }

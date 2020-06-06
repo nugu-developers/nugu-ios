@@ -21,7 +21,7 @@
 import Foundation
 
 enum NuguOAuthUtilApi {
-    case getTid(token: String)
+    case getUserInfo(token: String)
     case revoke(token: String, clientId: String, clientSecret: String)
 }
 
@@ -30,7 +30,7 @@ enum NuguOAuthUtilApi {
 extension NuguOAuthUtilApi: ApiProvidable {
     var httpMethod: String {
         switch self {
-        case .getTid:
+        case .getUserInfo:
             return "GET"
         case .revoke:
             return "POST"
@@ -39,7 +39,7 @@ extension NuguOAuthUtilApi: ApiProvidable {
     
     var headers: [String: String] {
         switch self {
-        case .getTid(let token):
+        case .getUserInfo(let token):
             return [
                 "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
                 "Authorization": "Bearer \(token)"
@@ -53,7 +53,7 @@ extension NuguOAuthUtilApi: ApiProvidable {
     
     var uri: String {
         switch self {
-        case .getTid:
+        case .getUserInfo:
             return NuguOAuthServerInfo.serverBaseUrl + "/oauth/me"
         case .revoke:
             return NuguOAuthServerInfo.serverBaseUrl + "/oauth/revoke"
@@ -62,7 +62,7 @@ extension NuguOAuthUtilApi: ApiProvidable {
     
     var bodyParams: [String: String] {
         switch self {
-        case .getTid:
+        case .getUserInfo:
             return [:]
         case .revoke(let token, let clientId, let clientSecret):
             return [

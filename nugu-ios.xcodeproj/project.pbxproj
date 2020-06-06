@@ -58,7 +58,7 @@
 		1F9C5B8C23FBA7400086CC04 /* MockFocusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */; };
 		1F9EF1F4248A1F8E000786E5 /* ApiProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EF1F3248A1F8E000786E5 /* ApiProvidable.swift */; };
 		1F9EF1F6248A327F000786E5 /* NuguOAuthUtilApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EF1F5248A327F000786E5 /* NuguOAuthUtilApi.swift */; };
-		1F9EF1F8248A4BD1000786E5 /* TidInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EF1F7248A4BD1000786E5 /* TidInfo.swift */; };
+		1F9EF1F8248A4BD1000786E5 /* NuguUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -667,7 +667,7 @@
 		1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFocusManager.swift; sourceTree = "<group>"; };
 		1F9EF1F3248A1F8E000786E5 /* ApiProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiProvidable.swift; sourceTree = "<group>"; };
 		1F9EF1F5248A327F000786E5 /* NuguOAuthUtilApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguOAuthUtilApi.swift; sourceTree = "<group>"; };
-		1F9EF1F7248A4BD1000786E5 /* TidInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TidInfo.swift; sourceTree = "<group>"; };
+		1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguUserInfo.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -2052,7 +2052,7 @@
 			isa = PBXGroup;
 			children = (
 				1FFFF44723757F6600C9A177 /* AuthorizationInfo.swift */,
-				1F9EF1F7248A4BD1000786E5 /* TidInfo.swift */,
+				1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3501,7 +3501,7 @@
 				73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */,
 				1FD1CFED23AE3C150000FB8C /* AuthorizationCodeGrant.swift in Sources */,
 				1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */,
-				1F9EF1F8248A4BD1000786E5 /* TidInfo.swift in Sources */,
+				1F9EF1F8248A4BD1000786E5 /* NuguUserInfo.swift in Sources */,
 				1FFFF45423757F6600C9A177 /* AuthorizationInfo.swift in Sources */,
 				1FFFF45323757F6600C9A177 /* NuguLoginKitError.swift in Sources */,
 				1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */,

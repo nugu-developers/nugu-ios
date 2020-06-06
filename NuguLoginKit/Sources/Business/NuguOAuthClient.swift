@@ -103,12 +103,12 @@ public extension NuguOAuthClient {
         presentAuthorize(grant: grant, parentViewController: parentViewController, completion: completion)
     }
     
-    /// <#Description#>
+    /// Shows web-page where TID information can be modified with `AuthorizationCode` grant type.
     /// - Parameters:
-    ///   - grant: <#grant description#>
-    ///   - loginTid: <#loginTid description#>
-    ///   - parentViewController: <#parentViewController description#>
-    ///   - completion: <#completion description#>
+    ///   - grant: The `grant` information that `AuthorizationCodeGrant`
+    ///   - loginTid: The `loginTid` is the value received through `getTidInfo()`.
+    ///   - parentViewController: The `parentViewController` will present a safariViewController.
+    ///   - completion: The closure to receive result for authorization.
     func showTidInfo(
         grant: AuthorizationCodeGrant,
         loginTid: String,
@@ -124,17 +124,17 @@ public extension NuguOAuthClient {
         presentAuthorize(grant: grant, parentViewController: parentViewController, additionalQueries: queries, completion: completion)
     }
     
-    /// <#Description#>
+    /// Get some tid member information.
     /// - Parameters:
-    ///   - token: <#token description#>
-    ///   - completion: <#completion description#>
-    func getTidInfo(token: String, completion: ((Result<TidInfo, NuguLoginKitError>) -> Void)?) {
-        let api = NuguOAuthUtilApi.getTid(token: token)
+    ///   - token: The `token` is access-token currently being used.
+    ///   - completion: The closure to receive result for getting tid-information.
+    func getTidInfo(token: String, completion: ((Result<NuguUserInfo, NuguLoginKitError>) -> Void)?) {
+        let api = NuguOAuthUtilApi.getUserInfo(token: token)
         
         api.request { (result) in
             completion?(result
-                .flatMap({ (data) -> Result<TidInfo, NuguLoginKitError.APIError> in
-                    guard let tidInfo = try? JSONDecoder().decode(TidInfo.self, from: data) else {
+                .flatMap({ (data) -> Result<NuguUserInfo, NuguLoginKitError.APIError> in
+                    guard let tidInfo = try? JSONDecoder().decode(NuguUserInfo.self, from: data) else {
                         return .failure(.parsingFailed(data))
                     }
                     return .success(tidInfo)
@@ -204,12 +204,12 @@ public extension NuguOAuthClient {
 // MARK: - Util API
 
 public extension NuguOAuthClient {
-    /// <#Description#>
+    /// Revoke completly with NUGU
     /// - Parameters:
-    ///   - clientId: <#clientId description#>
-    ///   - clientSecret: <#clientSecret description#>
-    ///   - token: <#token description#>
-    ///   - completion: <#completion description#>
+    ///   - clientId: The `clientId` for OAuth authentication.
+    ///   - clientSecret: The `clientSecret` for OAuth authentication.
+    ///   - token: The `token` is access-token currently being used.
+    ///   - completion: The closure to receive result for `revoke`.
     func revoke(clientId: String, clientSecret: String, token: String, completion: ((Result<Void, NuguLoginKitError>) -> Void)?) {
         let api = NuguOAuthUtilApi.revoke(token: token, clientId: clientId, clientSecret: clientSecret)
         
