@@ -106,7 +106,7 @@ public extension NuguOAuthClient {
     /// Shows web-page where TID information can be modified with `AuthorizationCode` grant type.
     /// - Parameters:
     ///   - grant: The `grant` information that `AuthorizationCodeGrant`
-    ///   - loginTid: The `loginTid` is the value received through `getTidInfo()`.
+    ///   - loginTid: The `loginTid` is the value received through `getUserInfo()`.
     ///   - parentViewController: The `parentViewController` will present a safariViewController.
     ///   - completion: The closure to receive result for authorization.
     func showTidInfo(
@@ -124,20 +124,20 @@ public extension NuguOAuthClient {
         presentAuthorize(grant: grant, parentViewController: parentViewController, additionalQueries: queries, completion: completion)
     }
     
-    /// Get some tid member information.
+    /// Get some NUGU member information.
     /// - Parameters:
     ///   - token: The `token` is access-token currently being used.
-    ///   - completion: The closure to receive result for getting tid-information.
-    func getTidInfo(token: String, completion: ((Result<NuguUserInfo, NuguLoginKitError>) -> Void)?) {
+    ///   - completion: The closure to receive result for getting NUGU member information.
+    func getUserInfo(token: String, completion: ((Result<NuguUserInfo, NuguLoginKitError>) -> Void)?) {
         let api = NuguOAuthUtilApi.getUserInfo(token: token)
         
         api.request { (result) in
             completion?(result
                 .flatMap({ (data) -> Result<NuguUserInfo, NuguLoginKitError.APIError> in
-                    guard let tidInfo = try? JSONDecoder().decode(NuguUserInfo.self, from: data) else {
+                    guard let userInfo = try? JSONDecoder().decode(NuguUserInfo.self, from: data) else {
                         return .failure(.parsingFailed(data))
                     }
-                    return .success(tidInfo)
+                    return .success(userInfo)
                 })
                 .mapError({ NuguLoginKitError.apiError(error: $0) })
             )
