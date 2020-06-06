@@ -244,6 +244,10 @@ private extension NuguOAuthClient {
         queries.append(URLQueryItem(name: "redirect_uri", value: grant.redirectUri))
         queries.append(URLQueryItem(name: "data", value: "{\"deviceSerialNumber\":\"\(deviceUniqueId)\"}"))
         
+        if let additionalQueries = additionalQueries {
+            queries.append(contentsOf: additionalQueries)
+        }
+        
         urlComponents?.queryItems = queries
         
         guard let url = urlComponents?.url else {
@@ -314,7 +318,7 @@ private extension NuguOAuthClient {
                 )
                 
                 api.request { (result) in
-                    completion?(result
+                    complete(result: result
                         .flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
                             guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
                                 return .failure(.parsingFailed(data))
