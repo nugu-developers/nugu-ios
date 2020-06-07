@@ -62,7 +62,7 @@ final class TextList1View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonToken = displayItem.title.button?.token
+            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
             textList1TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -103,7 +103,7 @@ extension TextList1View: UITableViewDataSource {
             textList1ViewCell.configure(badgeNumber: nil, item: textList1Items?[indexPath.row], toggleStyle: toggleStyle)
         }
         textList1ViewCell.onToggleSelect = { [weak self] token in
-            self?.onItemSelect?(token)
+            self?.onItemSelect?(token, nil)
         }
         return textList1ViewCell
     }
@@ -111,7 +111,7 @@ extension TextList1View: UITableViewDataSource {
 
 extension TextList1View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(textList1Items?[indexPath.row].token)
+        onItemSelect?(textList1Items?[indexPath.row].token, nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

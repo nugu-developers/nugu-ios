@@ -405,9 +405,9 @@ private extension MainViewController {
             guard let self = self else { return }
             self.dismissDisplayView()
         }
-        displayView.onItemSelect = { (selectedItemToken) in
+        displayView.onItemSelect = { (selectedItemToken, selectedItemPostback) in
             guard let selectedItemToken = selectedItemToken else { return }
-            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
+            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken, postback: selectedItemPostback)
         }
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
@@ -629,15 +629,17 @@ extension MainViewController: TextAgentDelegate {
 
 extension MainViewController: DisplayAgentDelegate {
     func displayAgentFocusedItemToken() -> String? {
-        guard let displayControllableView = displayView as? DisplayControllable else {
+        guard let displayControllableView = displayView as? DisplayControllable,
+            displayView?.supportFocusedItemToken == true else {
             return nil
         }
         return displayControllableView.focusedItemToken()
     }
     
     func displayAgentVisibleTokenList() -> [String]? {
-        guard let displayControllableView = displayView as? DisplayControllable else {
-            return nil
+        guard let displayControllableView = displayView as? DisplayControllable,
+            displayView?.supportVisibleTokenList == true else {
+                return nil
         }
         return displayControllableView.visibleTokenList()
     }

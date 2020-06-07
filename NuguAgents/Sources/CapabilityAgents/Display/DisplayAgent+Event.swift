@@ -28,13 +28,13 @@ extension DisplayAgent {
         let typeInfo: TypeInfo
         
         enum TypeInfo {
-            case elementSelected(token: String)
+            case elementSelected(token: String, postback: [String: AnyHashable]?)
             case closeSucceeded
             case closeFailed
-            case controlFocusSucceeded
-            case controlFocusFailed
-            case controlScrollSucceeded
-            case controlScrollFailed
+            case controlFocusSucceeded(direction: DisplayControlPayload.Direction)
+            case controlFocusFailed(direction: DisplayControlPayload.Direction)
+            case controlScrollSucceeded(direction: DisplayControlPayload.Direction)
+            case controlScrollFailed(direction: DisplayControlPayload.Direction)
         }
     }
 }
@@ -47,8 +47,16 @@ extension DisplayAgent.Event: Eventable {
             "playServiceId": playServiceId
         ]
         switch typeInfo {
-        case .elementSelected(let token):
+        case .elementSelected(let token, let postback):
             payload["token"] = token
+            if let postback = postback {
+                payload["postBack"] = postback
+            }
+        case .controlFocusSucceeded(let direction),
+             .controlFocusFailed(let direction),
+             .controlScrollSucceeded(let direction),
+             .controlScrollFailed(let direction):
+            payload["direction"] = direction
         default:
             break
         }
