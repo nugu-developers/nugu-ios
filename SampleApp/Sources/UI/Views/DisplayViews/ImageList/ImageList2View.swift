@@ -61,7 +61,7 @@ final class ImageList2View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonToken = displayItem.title.button?.token
+            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
             imageList2TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -107,7 +107,7 @@ extension ImageList2View: UITableViewDataSource {
 
 extension ImageList2View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(imageList2Items?[indexPath.row].token)
+        onItemSelect?(imageList2Items?[indexPath.row].token, nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

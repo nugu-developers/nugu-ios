@@ -405,9 +405,9 @@ private extension MainViewController {
             guard let self = self else { return }
             self.dismissDisplayView()
         }
-        displayView.onItemSelect = { (selectedItemToken) in
+        displayView.onItemSelect = { (selectedItemToken, selectedItemPostback) in
             guard let selectedItemToken = selectedItemToken else { return }
-            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
+            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken, postback: selectedItemPostback)
         }
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
@@ -540,7 +540,7 @@ extension MainViewController: KeywordDetectorDelegate {
 // MARK: - DialogStateDelegate
 
 extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
+    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool) {
         switch state {
         case .idle:
             guard NuguCentralManager.shared.isTextAgentInProcess == false else { return }
@@ -551,7 +551,7 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking:
             DispatchQueue.main.async { [weak self] in
-                guard expectSpeech == nil else {
+                guard isMultiturn == false else {
                     self?.nuguVoiceChrome.changeState(state: .speaking)
                     return
                 }
@@ -570,7 +570,6 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .processing)
             }
-        case .expectingSpeech: break
         }
     }
 }
@@ -578,7 +577,7 @@ extension MainViewController: DialogStateDelegate {
 // MARK: - AutomaticSpeechRecognitionDelegate
 
 extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?) {
+    func asrAgentDidChange(state: ASRState, dialogRequestId: String) {
         switch state {
         case .idle:
             NuguCentralManager.shared.startWakeUpDetector()
@@ -624,25 +623,23 @@ extension MainViewController: TextAgentDelegate {
     func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool {
         return true
     }
-    
-    func textAgentDidRequestExpectSpeech() -> ASRExpectSpeech? {
-        return NuguCentralManager.shared.client.asrAgent.expectSpeech
-    }
 }
 
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
     func displayAgentFocusedItemToken() -> String? {
-        guard let displayControllableView = displayView as? DisplayControllable else {
+        guard let displayControllableView = displayView as? DisplayControllable,
+            displayView?.supportFocusedItemToken == true else {
             return nil
         }
         return displayControllableView.focusedItemToken()
     }
     
     func displayAgentVisibleTokenList() -> [String]? {
-        guard let displayControllableView = displayView as? DisplayControllable else {
-            return nil
+        guard let displayControllableView = displayView as? DisplayControllable,
+            displayView?.supportVisibleTokenList == true else {
+                return nil
         }
         return displayControllableView.visibleTokenList()
     }

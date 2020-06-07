@@ -26,7 +26,7 @@ import RxSwift
 
 public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.4")
     private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .display)
     
     // Private
@@ -34,6 +34,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private let contextManager: ContextManageable
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
+    private let sessionManager: SessionManageable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -44,7 +45,15 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private var renderingInfos = [DisplayRenderingInfo]()
     
     // Current display info
-    private var currentItem: DisplayTemplate?
+    private var currentItem: DisplayTemplate? {
+        didSet {
+            if let item = currentItem {
+                sessionManager.sync(dialogRequestId: item.dialogRequestId)
+            } else if let item = oldValue {
+                sessionManager.release(dialogRequestId: item.dialogRequestId)
+            }
+        }
+    }
     
     private var disposeBag = DisposeBag()
     
@@ -85,6 +94,8 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call3", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Timer", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Dummy", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay)
     ]
   
@@ -92,12 +103,14 @@ public final class DisplayAgent: DisplayAgentProtocol {
         upstreamDataSender: UpstreamDataSendable,
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
-        directiveSequencer: DirectiveSequenceable
+        directiveSequencer: DirectiveSequenceable,
+        sessionManager: SessionManageable
     ) {
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
+        self.sessionManager = sessionManager
         
         playSyncManager.add(delegate: self)
         contextManager.add(delegate: self)
@@ -125,7 +138,7 @@ public extension DisplayAgent {
         }
     }
     
-    @discardableResult func elementDidSelect(templateId: String, token: String, completion: ((StreamDataState) -> Void)?) -> String {
+    @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
         let dialogRequestId = TimeUUID().hexString
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -142,7 +155,7 @@ public extension DisplayAgent {
                 self.upstreamDataSender.sendEvent(
                     Event(
                         playServiceId: template.playServiceId,
-                        typeInfo: .elementSelected(token: token)
+                        typeInfo: .elementSelected(token: token, postback: postback)
                     ).makeEventMessage(
                         property: self.capabilityAgentProperty,
                         dialogRequestId: dialogRequestId,
@@ -263,7 +276,7 @@ private extension DisplayAgent {
                     item.playServiceId == payload.playServiceId,
                     let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId })?.delegate else {
                         self.sendEvent(
-                            typeInfo: .controlFocusFailed,
+                            typeInfo: .controlFocusFailed(direction: payload.direction),
                             playServiceId: payload.playServiceId,
                             referrerDialogRequestId: directive.header.dialogRequestId
                         )
@@ -274,7 +287,7 @@ private extension DisplayAgent {
                     guard let self = self else { return }
                     let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
                     
-                    let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded : .controlFocusFailed
+                    let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded(direction: payload.direction) : .controlFocusFailed(direction: payload.direction)
                     self.sendEvent(
                         typeInfo: typeInfo,
                         playServiceId: payload.playServiceId,
@@ -300,7 +313,7 @@ private extension DisplayAgent {
                     item.playServiceId == payload.playServiceId,
                     let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId })?.delegate else {
                         self.sendEvent(
-                            typeInfo: .controlScrollFailed,
+                            typeInfo: .controlScrollFailed(direction: payload.direction),
                             playServiceId: payload.playServiceId,
                             referrerDialogRequestId: directive.header.dialogRequestId
                         )
@@ -310,7 +323,7 @@ private extension DisplayAgent {
                     guard let self = self else { return }
                     let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
                     
-                    let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded : .controlScrollFailed
+                    let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded(direction: payload.direction) : .controlScrollFailed(direction: payload.direction)
                     self.sendEvent(
                         typeInfo: typeInfo,
                         playServiceId: payload.playServiceId,

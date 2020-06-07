@@ -115,11 +115,10 @@ extension Upstream.Event {
         ) { result, context in
             result[context.name] = context.payload
         }
-        let client = contextDictionary[.client]?.reduce(
-            into: [String: AnyHashable]()
-        ) { result, context in
-            result[context.name] = context.payload
-        }
+        var client: [String: AnyHashable] = ["os": "iOS"]
+        contextDictionary[.client]?.forEach({ (contextInfo) in
+            client[contextInfo.name] = contextInfo.payload
+        })
         
         let contextDict: [String: AnyHashable] = [
             "supportedInterfaces": supportedInterfaces,

@@ -411,7 +411,7 @@ extension NuguCentralManager: SystemAgentDelegate {
     }
     
     func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason) {
-        logoutAfterErrorHandling(sampleAppError: .deviceRevoked)
+        logoutAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
     }
 }
 

@@ -1,9 +1,9 @@
 //
-//  DialogState.swift
-//  NuguClientKit
+//  MockSessionManager.swift
+//  NuguTests
 //
-//  Created by MinChul Lee on 18/04/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by MinChul Lee on 2020/05/28.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,20 +20,17 @@
 
 import Foundation
 
-/// Identifies the dialog state.
-public enum DialogState {
-    /// Ready for an interaction.
-    case idle
-    /// Passively listening.
-    case listening
-    /// Actively listening.
-    case recognizing
-    /// Waiting for a response from the server.
-    case thinking
-    /// Responding to a request with speech.
-    case speaking
+import NuguCore
+
+class MockSessionManager: SessionManageable {
+    var syncedSessions: [Session] = []
+    
+    func set(session: Session) {
+    }
+    
+    func sync(dialogRequestId: String) {
+    }
+    
+    func release(dialogRequestId: String) {
+    }
 }
-
-// MARK: - Equatable
-
-extension DialogState: Equatable {}
