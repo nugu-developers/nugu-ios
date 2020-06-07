@@ -60,7 +60,7 @@ final class ImageList3View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonToken = displayItem.title.button?.token
+            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
             imageList3TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -99,7 +99,7 @@ extension ImageList3View: UITableViewDataSource {
 
 extension ImageList3View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(imageList3Items?[indexPath.row].token)
+        onItemSelect?(imageList3Items?[indexPath.row].token, nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

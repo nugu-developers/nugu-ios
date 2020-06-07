@@ -65,7 +65,7 @@ final class Weather2View: DisplayView {
             if let buttonItem = displayItem.title.button {
                 contentButtonContainerView.isHidden = false
                 contentButton.setTitle(buttonItem.text, for: .normal)
-                contentButtonToken = buttonItem.token
+                contentButtonTokenAndPostback = (buttonItem.token, buttonItem.postback)
             } else {
                 contentButtonContainerView.isHidden = true
             }

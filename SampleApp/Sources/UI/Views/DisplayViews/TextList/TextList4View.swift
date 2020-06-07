@@ -60,7 +60,7 @@ final class TextList4View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonToken = displayItem.title.button?.token
+            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
             textList4TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -93,8 +93,8 @@ extension TextList4View: UITableViewDataSource {
         let textList4ViewCell = tableView.dequeueReusableCell(withIdentifier: "TextList4ViewCell") as! TextList4ViewCell
         // swiftlint:enable force_cast
         textList4ViewCell.configure(item: textList4Items?[indexPath.row])
-        textList4ViewCell.onButtonSelect = { [weak self] token in
-            self?.onItemSelect?(token)
+        textList4ViewCell.onButtonSelect = { [weak self] (token, postback) in
+            self?.onItemSelect?(token, postback)
         }
         return textList4ViewCell
     }
@@ -102,7 +102,7 @@ extension TextList4View: UITableViewDataSource {
 
 extension TextList4View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(textList4Items?[indexPath.row].token)
+        onItemSelect?(textList4Items?[indexPath.row].token, nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

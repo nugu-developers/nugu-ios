@@ -36,7 +36,7 @@ class DisplayView: UIView {
     
     var onCloseButtonClick: (() -> Void)?
     
-    var onItemSelect: ((_ token: String?) -> Void)?
+    var onItemSelect: ((_ token: String?, _ postback: [String: AnyHashable]?) -> Void)?
     
     var onUserInteraction: (() -> Void)?
     
@@ -54,7 +54,25 @@ class DisplayView: UIView {
     
     var displayPayload: Data?
     
-    var contentButtonToken: String?
+    var contentButtonTokenAndPostback: (token: String?, postback: [String: AnyHashable]?)
+    
+    var supportFocusedItemToken: Bool? {
+        guard let displayPayload = displayPayload,
+            let payloadDictionary = try? JSONSerialization.jsonObject(with: displayPayload, options: []) as? [String: AnyHashable],
+            let isSupportFocusedItemToken = payloadDictionary["supportFocusedItemToken"] as? Bool else {
+                return nil
+        }
+        return isSupportFocusedItemToken
+    }
+    
+    var supportVisibleTokenList: Bool? {
+        guard let displayPayload = displayPayload,
+            let payloadDictionary = try? JSONSerialization.jsonObject(with: displayPayload, options: []) as? [String: AnyHashable],
+            let isSupportVisibleTokenList = payloadDictionary["supportVisibleTokenList"] as? Bool else {
+                return nil
+        }
+        return isSupportVisibleTokenList
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -80,7 +98,7 @@ class DisplayView: UIView {
     }
     
     @IBAction func contentButtonDidClick(_ button: UIButton) {
-        onItemSelect?(contentButtonToken)
+        onItemSelect?(contentButtonTokenAndPostback.token, contentButtonTokenAndPostback.postback)
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
