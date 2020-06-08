@@ -436,10 +436,14 @@
 		7EA53F0D247F5685008731CD /* SessionManagerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */; };
 		7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0E247F583F008731CD /* MockSessionManager.swift */; };
 		7EA53F11247F5904008731CD /* MockDialogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F10247F5904008731CD /* MockDialogManager.swift */; };
+		7EA53F15247F943E008731CD /* ChipsAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F12247F943E008731CD /* ChipsAgentDelegate.swift */; };
+		7EA53F16247F943E008731CD /* ChipsAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F13247F943E008731CD /* ChipsAgentItem.swift */; };
+		7EA53F17247F943E008731CD /* ChipsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F14247F943E008731CD /* ChipsAgentProtocol.swift */; };
 		7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */; };
 		7EBB2EAF24440C7600FBBBEA /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DB237672F100C9A177 /* asrFail.wav */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */; };
+		7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
 		7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28D2375703000C9A177 /* DialogState.swift */; };
 		A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */; };
@@ -1058,9 +1062,13 @@
 		7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpec.swift; sourceTree = "<group>"; };
 		7EA53F0E247F583F008731CD /* MockSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSessionManager.swift; sourceTree = "<group>"; };
 		7EA53F10247F5904008731CD /* MockDialogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDialogManager.swift; sourceTree = "<group>"; };
+		7EA53F12247F943E008731CD /* ChipsAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentDelegate.swift; path = NuguAgents/Interface/Chips/ChipsAgentDelegate.swift; sourceTree = SOURCE_ROOT; };
+		7EA53F13247F943E008731CD /* ChipsAgentItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentItem.swift; path = NuguAgents/Interface/Chips/ChipsAgentItem.swift; sourceTree = SOURCE_ROOT; };
+		7EA53F14247F943E008731CD /* ChipsAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentProtocol.swift; path = NuguAgents/Interface/Chips/ChipsAgentProtocol.swift; sourceTree = SOURCE_ROOT; };
 		7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundAgentSpec.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
 		7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtilSpec.swift; sourceTree = "<group>"; };
+		7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsAgent.swift; sourceTree = "<group>"; };
 		7EF12B2223C822520000E158 /* DisplayClosePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayClosePayload.swift; sourceTree = "<group>"; };
 		A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+SettingsEvent.swift"; sourceTree = "<group>"; };
 		A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayControlPayload.swift; sourceTree = "<group>"; };
@@ -1295,6 +1303,7 @@
 		1F9C5B6823E42D740086CC04 /* CapabilityAgents */ = {
 			isa = PBXGroup;
 			children = (
+				7EE2DCA1247CCC0B0005DE17 /* Chips */,
 				7EA53EF7247F3AFF008731CD /* Session */,
 				7E5F4889243C370900118054 /* Sound */,
 				1FFFF32C2375707000C9A177 /* Extension */,
@@ -2365,6 +2374,7 @@
 		73152FF223E11D6E00F843C3 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				7EE2DCA2247CCC140005DE17 /* Chips */,
 				7EA53EF6247F3AF7008731CD /* Session */,
 				7E5F488A243C371300118054 /* Sound */,
 				1FFFF23D2375703000C9A177 /* Extension */,
@@ -2753,6 +2763,24 @@
 			);
 			path = Dialog;
 			sourceTree = "<group>";
+		};
+		7EE2DCA1247CCC0B0005DE17 /* Chips */ = {
+			isa = PBXGroup;
+			children = (
+				7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */,
+			);
+			path = Chips;
+			sourceTree = "<group>";
+		};
+		7EE2DCA2247CCC140005DE17 /* Chips */ = {
+			isa = PBXGroup;
+			children = (
+				7EA53F12247F943E008731CD /* ChipsAgentDelegate.swift */,
+				7EA53F13247F943E008731CD /* ChipsAgentItem.swift */,
+				7EA53F14247F943E008731CD /* ChipsAgentProtocol.swift */,
+			);
+			path = Chips;
+			sourceTree = "<unknown>";
 		};
 		A1505090241626F100671568 /* Display */ = {
 			isa = PBXGroup;
@@ -3689,8 +3717,10 @@
 				73152FBE23E0414700F843C3 /* ASRConst.swift in Sources */,
 				7315305F23E1248300F843C3 /* ExtensionAgentProtocol.swift in Sources */,
 				7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */,
+				7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */,
 				7315307623E1248300F843C3 /* TTSState.swift in Sources */,
 				7EA53EF9247F3B0E008731CD /* SessionAgentProtocol.swift in Sources */,
+				7EA53F15247F943E008731CD /* ChipsAgentDelegate.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
@@ -3735,6 +3765,7 @@
 				73152FB023E0413F00F843C3 /* AudioPlayerDisplayManageable.swift in Sources */,
 				1F31FD7A241F5774009593EB /* TextAgentSourceItem.swift in Sources */,
 				73152FDE23E045C700F843C3 /* TimeUUID.swift in Sources */,
+				7EA53F17247F943E008731CD /* ChipsAgentProtocol.swift in Sources */,
 				7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */,
 				73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */,
 				73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */,
@@ -3756,6 +3787,7 @@
 				73152FC923E0415B00F843C3 /* DisplayAgent.swift in Sources */,
 				73152FB923E0414700F843C3 /* EndPointDetectorState.swift in Sources */,
 				7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */,
+				7EA53F16247F943E008731CD /* ChipsAgentItem.swift in Sources */,
 				7E5F4898243C40EB00118054 /* SoundMedia.swift in Sources */,
 				7315306F23E1248300F843C3 /* ASRError.swift in Sources */,
 				73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */,
