@@ -28,7 +28,7 @@ public struct AuthorizationCodeGrant {
     /// The `redirectUri` for OAuth authentication.
     public let redirectUri: String
     
-    let stateController: OAuthStateController = OAuthStateController()
+    let safariController: OAuthSafariController = OAuthSafariController()
     
     /// The initializer for `AuthorizationCodeGrant`.
     /// - Parameter clientId: The `clientId` for OAuth authentication.
