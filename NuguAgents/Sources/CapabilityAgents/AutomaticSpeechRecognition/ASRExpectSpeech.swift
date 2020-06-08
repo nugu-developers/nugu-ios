@@ -25,9 +25,8 @@ import NuguCore
 /// The information about multiturn.
 ///
 /// NUGU ask you to get more information to know about you requested.
-public struct ASRExpectSpeech {
+struct ASRExpectSpeech {
     public let playServiceId: String?
-    public let sessionId: String
     public let domainTypes: [AnyHashable]?
     public let asrContext: [String: AnyHashable]?
 }
@@ -37,7 +36,6 @@ public struct ASRExpectSpeech {
 extension ASRExpectSpeech: Decodable {
     enum CodingKeys: String, CodingKey {
         case playServiceId
-        case sessionId
         case domainTypes
         case asrContext
     }
@@ -45,12 +43,7 @@ extension ASRExpectSpeech: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         playServiceId = try? container.decode(String.self, forKey: .playServiceId)
-        sessionId = try container.decode(String.self, forKey: .sessionId)
         domainTypes = try? container.decode([AnyHashable].self, forKey: .domainTypes)
         asrContext = try? container.decode([String: AnyHashable].self, forKey: .asrContext)
     }
 }
-
-// MARK: - Equatable
-
-extension ASRExpectSpeech: Equatable {}

@@ -111,7 +111,7 @@ final public class NuguVoiceChrome: UIView {
         animationContainerView.addSubview(animationView)
         
         theme = .light
-        chipsView.willStartScrolling = {
+        chipsView.willStartScrolling = { [weak self] in
             UIView.animate(withDuration: 0.3, animations: { [weak self] in
                 self?.guideTextLabel.text = nil
                 self?.layoutIfNeeded()

@@ -24,8 +24,6 @@ import Foundation
 public enum DialogState {
     /// Ready for an interaction.
     case idle
-    /// Expecting a response from the user.
-    case expectingSpeech
     /// Passively listening.
     case listening
     /// Actively listening.

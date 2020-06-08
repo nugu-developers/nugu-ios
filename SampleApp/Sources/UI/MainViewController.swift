@@ -40,6 +40,7 @@ final class MainViewController: UIViewController {
     private var displayAudioPlayerView: AudioDisplayView?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
+    private var chipsAgentItem: (item: ChipsAgentItem, dialogRequestId: String)?
     
     private var hasShownGuideWeb = false
     
@@ -165,6 +166,7 @@ private extension MainViewController {
         NuguCentralManager.shared.client.displayAgent.add(delegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
+        NuguCentralManager.shared.client.chipsAgent.delegate = self
     }
     
     /// Show nugu usage guide webpage after successful login process
@@ -248,7 +250,10 @@ private extension MainViewController {
             self.nuguVoiceChrome.removeFromSuperview()
             self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
             
-            self.setExampleChips()
+            self.setChipsButton(
+                actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
+                normalList: ["템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
+            )
             
             self.view.addSubview(self.nuguVoiceChrome)
             
@@ -281,18 +286,14 @@ private extension MainViewController {
         })
     }
     
-    func setExampleChips() {
+    func setChipsButton(actionList: [String], normalList: [String]) {
+        var chipsButtonList = [NuguChipsButton.NuguChipsButtonType]()
+        let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
+        chipsButtonList.append(contentsOf: actionButtonList)
+        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
+        chipsButtonList.append(contentsOf: normalButtonList)
         nuguVoiceChrome.setChipsData(
-            chipsData: [
-                .normal(text: "템플릿에서 도움말1"),
-                .action(text: "오늘 날씨 알려줘"),
-                .action(text: "습도 알려줘"),
-                .normal(text: "주말 날씨 알려줘"),
-                .normal(text: "주간 날씨 알려줘"),
-                .normal(text: "오존 농도 알려줘"),
-                .normal(text: "멜론 틀어줘"),
-                .normal(text: "NUGU 토픽 알려줘")
-            ],
+            chipsData: chipsButtonList,
             onChipsSelect: { [weak self] selectedChipsText in
                 self?.chipsDidSelect(selectedChipsText: selectedChipsText)
             }
@@ -314,15 +315,18 @@ private extension MainViewController {
         indicator.startAnimating()
         window.addSubview(indicator)
         
-        NuguCentralManager.shared.isTextAgentInProcess = true
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
         NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
             switch state {
+            case .sent:
+                NuguCentralManager.shared.isTextAgentInProcess = true
+                NuguCentralManager.shared.client.asrAgent.stopRecognition()
             case .finished:
                 NuguCentralManager.shared.isTextAgentInProcess = false
             case .error:
                 NuguCentralManager.shared.isTextAgentInProcess = false
-                self?.dismissVoiceChrome()
+                DispatchQueue.main.async { [weak self] in
+                    self?.dismissVoiceChrome()
+                }
             default: break
             }
             DispatchQueue.main.async {
@@ -405,9 +409,9 @@ private extension MainViewController {
             guard let self = self else { return }
             self.dismissDisplayView()
         }
-        displayView.onItemSelect = { (selectedItemToken) in
+        displayView.onItemSelect = { (selectedItemToken, selectedItemPostback) in
             guard let selectedItemToken = selectedItemToken else { return }
-            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken)
+            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken, postback: selectedItemPostback)
         }
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
@@ -540,7 +544,7 @@ extension MainViewController: KeywordDetectorDelegate {
 // MARK: - DialogStateDelegate
 
 extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, expectSpeech: ASRExpectSpeech?) {
+    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool) {
         switch state {
         case .idle:
             guard NuguCentralManager.shared.isTextAgentInProcess == false else { return }
@@ -551,7 +555,7 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking:
             DispatchQueue.main.async { [weak self] in
-                guard expectSpeech == nil else {
+                guard isMultiturn == false else {
                     self?.nuguVoiceChrome.changeState(state: .speaking)
                     return
                 }
@@ -570,7 +574,6 @@ extension MainViewController: DialogStateDelegate {
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .processing)
             }
-        case .expectingSpeech: break
         }
     }
 }
@@ -578,12 +581,19 @@ extension MainViewController: DialogStateDelegate {
 // MARK: - AutomaticSpeechRecognitionDelegate
 
 extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState, expectSpeech: ASRExpectSpeech?) {
+    func asrAgentDidChange(state: ASRState, dialogRequestId: String) {
         switch state {
         case .idle:
             NuguCentralManager.shared.startWakeUpDetector()
         case .listening:
             NuguCentralManager.shared.stopWakeUpDetector()
+            DispatchQueue.main.async { [weak self] in
+                if let (item, id) = self?.chipsAgentItem, item.target == .dialog, id == dialogRequestId {
+                    self?.chipsAgentItem = nil
+                    let actionList = item.chips.map { $0.textSource }
+                    self?.setChipsButton(actionList: actionList, normalList: [])
+                }
+            }
         default:
             break
         }
@@ -624,25 +634,23 @@ extension MainViewController: TextAgentDelegate {
     func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool {
         return true
     }
-    
-    func textAgentDidRequestExpectSpeech() -> ASRExpectSpeech? {
-        return NuguCentralManager.shared.client.asrAgent.expectSpeech
-    }
 }
 
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
     func displayAgentFocusedItemToken() -> String? {
-        guard let displayControllableView = displayView as? DisplayControllable else {
+        guard let displayControllableView = displayView as? DisplayControllable,
+            displayView?.supportFocusedItemToken == true else {
             return nil
         }
         return displayControllableView.focusedItemToken()
     }
     
     func displayAgentVisibleTokenList() -> [String]? {
-        guard let displayControllableView = displayView as? DisplayControllable else {
-            return nil
+        guard let displayControllableView = displayView as? DisplayControllable,
+            displayView?.supportVisibleTokenList == true else {
+                return nil
         }
         return displayControllableView.visibleTokenList()
     }
@@ -725,5 +733,13 @@ extension MainViewController: AudioPlayerAgentDelegate {
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }
             displayAudioPlayerView.audioPlayerState = state
         }
+    }
+}
+
+// MARK: - ChipsAgentDelegate
+
+extension MainViewController: ChipsAgentDelegate {
+    func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String) {
+        chipsAgentItem = (item: item, dialogRequestId: dialogRequestId)
     }
 }

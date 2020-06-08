@@ -62,7 +62,7 @@ final class TextList2View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonToken = displayItem.title.button?.token
+            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
             textList2TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -104,7 +104,7 @@ extension TextList2View: UITableViewDataSource {
             textList2ViewCell.configure(badgeNumber: nil, item: textList2Items?[indexPath.row], toggleStyle: toggleStyle)
         }
         textList2ViewCell.onToggleSelect = { [weak self] token in
-            self?.onItemSelect?(token)
+            self?.onItemSelect?(token, nil)
         }
         return textList2ViewCell
     }
@@ -112,7 +112,7 @@ extension TextList2View: UITableViewDataSource {
 
 extension TextList2View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(textList2Items?[indexPath.row].token)
+        onItemSelect?(textList2Items?[indexPath.row].token, nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

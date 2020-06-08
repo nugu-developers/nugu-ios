@@ -59,7 +59,7 @@ final class Score2View: DisplayView {
             score2TableView.reloadData()
             
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonToken = displayItem.title.button?.token
+            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
             score2TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -98,7 +98,7 @@ extension Score2View: UITableViewDataSource {
 
 extension Score2View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(scoreItems?[indexPath.row].token)
+        onItemSelect?(scoreItems?[indexPath.row].token, nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
