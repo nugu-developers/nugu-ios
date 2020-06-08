@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.12.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.12.0)
+Released on 2020-06-08
+#### Fixed
+- Fixes a bug where the connection timeout occurs before the `ASR.ListenTimeout` period is reached. (#333)
+- Fix HideRyrics directive name to HideLyrics (#347)
+
+#### Updated
+- Update `TTSAgent` 1.2 (upgrade capability-agent) (#334)
+- Apply `SystemAgent` v1.2 to `Sample App` (`SystemAgentRevokeReason`) (#331)
+- Add `os` parameter to `context/client` in event body. (#336)
+- Update `DisplayAgent` from v1.2 to v1.4 (upgrade capability-agent) (#339)
+
+#### Added
+- Add `SessionAgent` 1.0 (upgrade capability-agent) (#335)
+- Add `ChipsAgent` 1.0 (upgrade capability-agent) (#340)
+- Add APIs in `NuguLoginKit` (#345) 
+
+#### Removed
+- Remove `System.SynchronizedState` event that is called when initializing `NuguClient`. (#332)
+
 ## [0.11.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.11.0)
 Released on 2020-05-26
 #### Fixed
