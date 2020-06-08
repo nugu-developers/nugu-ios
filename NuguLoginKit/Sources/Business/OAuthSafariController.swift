@@ -1,5 +1,5 @@
 //
-//  OAuthStateController.swift
+//  OAuthSafariController.swift
 //  NuguLoginKit
 //
 //  Created by yonghoonKwon on 27/09/2019.
@@ -21,7 +21,7 @@
 import Foundation
 import SafariServices
 
-final class OAuthStateController: NSObject {
+final class OAuthSafariController: NSObject {
     var currentState: String?
     var safariViewController: SFSafariViewController? {
         didSet {
@@ -45,10 +45,10 @@ final class OAuthStateController: NSObject {
     }
     
     func presentSafariViewController(url: URL, from parentViewController: UIViewController) {
-        let loginSafariViewController = SFSafariViewController(url: url)
-        self.safariViewController = loginSafariViewController
+        let tidSafariViewController = SFSafariViewController(url: url)
+        self.safariViewController = tidSafariViewController
         
-        parentViewController.present(loginSafariViewController, animated: true)
+        parentViewController.present(tidSafariViewController, animated: true)
     }
     
     func dismissSafariViewController(completion: (() -> Void)? = nil) {
@@ -58,7 +58,7 @@ final class OAuthStateController: NSObject {
 
 // MARK: - SFSafariViewControllerDelegate
 
-extension OAuthStateController: SFSafariViewControllerDelegate {
+extension OAuthSafariController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         completion?(.failure(NuguLoginKitError.didFinishSafariViewController))
         clearState()
