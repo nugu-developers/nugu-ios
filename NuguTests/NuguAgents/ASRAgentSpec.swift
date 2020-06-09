@@ -33,7 +33,7 @@ class ASRAgentSpec: QuickSpec {
     let directiveSequencer: DirectiveSequenceable = MockDirectiveSequencer()
     let audioStream: AudioStreamable = MockAudioStream()
     let sessionManager: SessionManageable = MockSessionManager()
-    let dialogManager: DialogManageable = MockDialogManager()
+    let dialogAttributeStore: DialogAttributeStoreable = MockDialogAttributeStore()
     
     override func spec() {
         describe("ASRAgent") {
@@ -43,7 +43,7 @@ class ASRAgentSpec: QuickSpec {
                 contextManager: contextManager,
                 audioStream: audioStream,
                 directiveSequencer: directiveSequencer,
-                dialogManager: dialogManager,
+                dialogAttributeStore: dialogAttributeStore,
                 sessionManager: sessionManager
             )
             

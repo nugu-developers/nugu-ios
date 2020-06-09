@@ -25,7 +25,7 @@ final public class SessionManager: SessionManageable {
     
     public init() {}
     
-    public var syncedSessions: [Session] {
+    public var activeSessions: [Session] {
         sessionDispatchQueue.sync {
             return sessions
                 .filter { $0.value.refCount > 0 }
@@ -42,7 +42,7 @@ final public class SessionManager: SessionManageable {
         }
     }
     
-    public func sync(dialogRequestId: String) {
+    public func activate(dialogRequestId: String) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             let session = self.sessions[dialogRequestId]
@@ -50,7 +50,7 @@ final public class SessionManager: SessionManageable {
         }
     }
     
-    public func release(dialogRequestId: String) {
+    public func deactivate(dialogRequestId: String) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let session = self.sessions[dialogRequestId] else { return }

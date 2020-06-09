@@ -48,9 +48,9 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private var currentItem: DisplayTemplate? {
         didSet {
             if let item = currentItem {
-                sessionManager.sync(dialogRequestId: item.dialogRequestId)
+                sessionManager.activate(dialogRequestId: item.dialogRequestId)
             } else if let item = oldValue {
-                sessionManager.release(dialogRequestId: item.dialogRequestId)
+                sessionManager.deactivate(dialogRequestId: item.dialogRequestId)
             }
         }
     }

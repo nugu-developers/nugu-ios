@@ -1,5 +1,5 @@
 //
-//  DialogManageable.swift
+//  DialogAttributeStoreable.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 2020/05/28.
@@ -20,7 +20,7 @@
 
 import Foundation
 
-public protocol DialogManageable: class {
+public protocol DialogAttributeStoreable: class {
     var attributes: [String: AnyHashable]? { get }
     
     func setAttributes(_ attributes: [String: AnyHashable])

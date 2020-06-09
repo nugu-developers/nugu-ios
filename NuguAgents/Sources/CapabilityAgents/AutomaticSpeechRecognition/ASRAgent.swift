@@ -36,7 +36,7 @@ public final class ASRAgent: ASRAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     private let audioStream: AudioStreamable
-    private let dialogManager: DialogManageable
+    private let dialogAttributeStore: DialogAttributeStoreable
     private let sessionManager: SessionManageable
     
     private var options: ASROptions = ASROptions(endPointing: .server)
@@ -69,8 +69,8 @@ public final class ASRAgent: ASRAgentProtocol {
             
             // Session
             if let dialogRequestId = asrRequest.referrerDialogRequestId, asrState == .idle {
-                sessionManager.release(dialogRequestId: dialogRequestId)
-                dialogManager.removeAttributes()
+                sessionManager.deactivate(dialogRequestId: dialogRequestId)
+                dialogAttributeStore.removeAttributes()
             }
             
             // Stop EPD
@@ -167,7 +167,7 @@ public final class ASRAgent: ASRAgentProtocol {
         contextManager: ContextManageable,
         audioStream: AudioStreamable,
         directiveSequencer: DirectiveSequenceable,
-        dialogManager: DialogManageable,
+        dialogAttributeStore: DialogAttributeStoreable,
         sessionManager: SessionManageable
     ) {
         self.focusManager = focusManager
@@ -175,7 +175,7 @@ public final class ASRAgent: ASRAgentProtocol {
         self.directiveSequencer = directiveSequencer
         self.contextManager = contextManager
         self.audioStream = audioStream
-        self.dialogManager = dialogManager
+        self.dialogAttributeStore = dialogAttributeStore
         self.sessionManager = sessionManager
         
         contextManager.add(delegate: self)
@@ -229,7 +229,7 @@ public extension ASRAgent {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             // TODO: cancelAssociation = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
-            self.dialogManager.removeAttributes()
+            self.dialogAttributeStore.removeAttributes()
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
                 return
@@ -355,7 +355,7 @@ private extension ASRAgent {
                     "domainTypes": expectSpeech.domainTypes,
                     "playServiceId": expectSpeech.playServiceId
                 ]
-                self?.dialogManager.setAttributes(attributes.compactMapValues { $0 })
+                self?.dialogAttributeStore.setAttributes(attributes.compactMapValues { $0 })
             }
         }
     }
@@ -366,7 +366,7 @@ private extension ASRAgent {
         
             self?.asrDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard self.dialogManager.attributes != nil else {
+                guard self.dialogAttributeStore.attributes != nil else {
                     log.error("Dialog attributes is nil")
                     return
                 }
@@ -434,7 +434,7 @@ private extension ASRAgent {
             self.upstreamDataSender.sendEvent(
                 Event(
                     typeInfo: typeInfo,
-                    dialogAttributes: self.dialogManager.attributes
+                    dialogAttributes: self.dialogAttributeStore.attributes
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     referrerDialogRequestId: referrerDialogRequestId,
@@ -473,7 +473,7 @@ private extension ASRAgent {
         upstreamDataSender.sendStream(
             Event(
                 typeInfo: .recognize(options: asrRequest.options),
-                dialogAttributes: dialogManager.attributes
+                dialogAttributes: dialogAttributeStore.attributes
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,
                 dialogRequestId: asrRequest.dialogRequestId,
@@ -563,7 +563,7 @@ private extension ASRAgent {
             }
 
             if let sessionDialogRequestId = directive?.header.dialogRequestId {
-                self.sessionManager.sync(dialogRequestId: sessionDialogRequestId)
+                self.sessionManager.activate(dialogRequestId: sessionDialogRequestId)
             }
             self.contextManager.getContexts { [weak self] contextPayload in
                 guard let self = self else { return }
