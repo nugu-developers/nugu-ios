@@ -219,7 +219,7 @@ extension NuguCentralManager {
                     case .success:
                         sampleAppLogout()
                     case .failure(let nuguLoginKitError):
-                        NuguToast.shared.showToast(message: nuguLoginKitError.localizedDescription)
+                        log.debug(nuguLoginKitError.localizedDescription)
                     }
             }
         } else {
@@ -239,7 +239,6 @@ extension NuguCentralManager {
         oauthClient.getUserInfo(token: token) { result in
             switch result {
             case .success(let userInfo):
-                UserDefaults.Standard.tid = userInfo.tid
                 completion?(userInfo)
             case .failure:
                 completion?(nil)
@@ -247,25 +246,39 @@ extension NuguCentralManager {
         }
     }
     
-    func showTidInfo(parentViewController: UIViewController) {
+    func showTidInfo(parentViewController: UIViewController, completion: ((_ tid: String?) -> Void)?) {
         guard SampleApp.loginMethod == SampleApp.LoginMethod.type1,
             let clientId = SampleApp.clientId,
             let clientSecret = SampleApp.clientSecret,
-            let redirectUri = SampleApp.redirectUri,
-            let tid = UserDefaults.Standard.tid else {
+            let redirectUri = SampleApp.redirectUri else {
+                completion?(nil)
                 return
         }
-        let authorizationCodeGrant = AuthorizationCodeGrant(
+        
+        getUserInfo { [weak self] (userInfo) in
+            guard let tid = userInfo?.tid else {
+                completion?(nil)
+                return
+            }
+            let authorizationCodeGrant = AuthorizationCodeGrant(
                 clientId: clientId,
                 clientSecret: clientSecret,
                 redirectUri: redirectUri
-        )
-        oauthClient.showTidInfo(
-            grant: authorizationCodeGrant,
-            loginTid: tid,
-            parentViewController: parentViewController,
-            completion: nil
-        )
+            )
+            self?.oauthClient.showTidInfo(
+                grant: authorizationCodeGrant,
+                loginTid: tid,
+                parentViewController: parentViewController,
+                completion: { [weak self] (result) in
+                    if case .success(let authInfo) = result {
+                        UserDefaults.Standard.accessToken = authInfo.accessToken
+                        UserDefaults.Standard.refreshToken = authInfo.refreshToken
+                    }
+                    self?.getUserInfo(completion: { (userInfo) in
+                        completion?(userInfo?.tid)
+                    })
+            })
+        }
     }
 }
 
