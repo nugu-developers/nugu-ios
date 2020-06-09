@@ -24,10 +24,6 @@ extension UserDefaults {
     enum Standard {
         // MARK: Setting
         
-        /// User tid.
-        @UserDefault(userDefaults: .standard, key: "tid", defaultValue: nil)
-        static var tid: String?
-        
         /// Setting value for using nugu service.
         @UserDefault(userDefaults: .standard, key: "useNuguService", defaultValue: true)
         static var useNuguService: Bool

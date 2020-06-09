@@ -122,7 +122,9 @@ extension SettingViewController: UITableViewDelegate {
         let index = (indexPath.section, indexPath.row)
         switch index {
         case  (0, 0):
-            NuguCentralManager.shared.showTidInfo(parentViewController: self)
+            NuguCentralManager.shared.showTidInfo(parentViewController: self, completion: { [weak self] tid in
+                self?.tid = tid
+            })
         case (2, 2):
             let wakeUpWordActionSheet = UIAlertController(
                 title: nil,
