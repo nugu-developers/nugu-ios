@@ -36,11 +36,22 @@ final class SettingViewController: UIViewController {
         ["연결 해제"]
     ]
     
+    private var tid: String? {
+        didSet {
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+            }
+        }
+    }
+    
     // MARK: - Override
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.reloadData()
+        NuguCentralManager.shared.getUserInfo { [weak self] (nuguUserInfo) in
+            self?.tid = nuguUserInfo?.tid
+        }
     }
 }
 
@@ -61,7 +72,10 @@ extension SettingViewController: UITableViewDataSource {
         }
         let menuTitle = settingMenu[indexPath.section][indexPath.row]
         let switchEnableability = (UserDefaults.Standard.useNuguService == true)
-        if indexPath.section == 2 {
+        
+        if indexPath.section == 0 {
+            cell.configure(text: menuTitle, detailText: tid)
+        } else if indexPath.section == 2 {
             switch indexPath.row {
             case 0:
                 cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useNuguService, isSwitchEnabled: true)
@@ -107,6 +121,8 @@ extension SettingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = (indexPath.section, indexPath.row)
         switch index {
+        case  (0, 0):
+            NuguCentralManager.shared.showTidInfo(parentViewController: self)
         case (2, 2):
             let wakeUpWordActionSheet = UIAlertController(
                 title: nil,

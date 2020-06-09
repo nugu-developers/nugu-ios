@@ -201,9 +201,71 @@ extension NuguCentralManager {
     }
     
     func logout() {
-        popToRootViewController()
-        disable()
-        UserDefaults.Standard.clear()
+        let sampleAppLogout = { [weak self] in
+            self?.popToRootViewController()
+            self?.disable()
+            UserDefaults.Standard.clear()
+        }
+        
+        if SampleApp.loginMethod == SampleApp.LoginMethod.type1,
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret,
+            let token = UserDefaults.Standard.accessToken {
+            oauthClient.revoke(
+                clientId: clientId,
+                clientSecret: clientSecret,
+                token: token) { (result) in
+                    switch result {
+                    case .success:
+                        sampleAppLogout()
+                    case .failure(let nuguLoginKitError):
+                        NuguToast.shared.showToast(message: nuguLoginKitError.localizedDescription)
+                    }
+            }
+        } else {
+            sampleAppLogout()
+        }
+    }
+}
+
+// MARK: - Internal (User Info)
+
+extension NuguCentralManager {
+    func getUserInfo(completion: ((_ userInfo: NuguUserInfo?) -> Void)?) {
+        guard let token = UserDefaults.Standard.accessToken else {
+            completion?(nil)
+            return
+        }
+        oauthClient.getUserInfo(token: token) { result in
+            switch result {
+            case .success(let userInfo):
+                UserDefaults.Standard.tid = userInfo.tid
+                completion?(userInfo)
+            case .failure:
+                completion?(nil)
+            }
+        }
+    }
+    
+    func showTidInfo(parentViewController: UIViewController) {
+        guard SampleApp.loginMethod == SampleApp.LoginMethod.type1,
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret,
+            let redirectUri = SampleApp.redirectUri,
+            let tid = UserDefaults.Standard.tid else {
+                return
+        }
+        let authorizationCodeGrant = AuthorizationCodeGrant(
+                clientId: clientId,
+                clientSecret: clientSecret,
+                redirectUri: redirectUri
+        )
+        oauthClient.showTidInfo(
+            grant: authorizationCodeGrant,
+            loginTid: tid,
+            parentViewController: parentViewController,
+            completion: nil
+        )
     }
 }
 
