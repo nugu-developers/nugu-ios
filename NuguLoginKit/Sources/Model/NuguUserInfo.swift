@@ -1,9 +1,9 @@
 //
-//  TTSError.swift
-//  NuguAgents
+//  NuguUserInfo.swift
+//  NuguLoginKit
 //
-//  Created by MinChul Lee on 2020/05/06.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/06/03.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,6 +20,18 @@
 
 import Foundation
 
-public enum TTSError: Error {
-    case notSupportedSourceType
+/// The `NuguUserInfo` is simple profile in NUGU
+public struct NuguUserInfo: Decodable {
+    
+    /// Flag for anonymous member
+    public let anonymous: Bool
+    
+    /// The `deviceId` in NUGU
+    public let deviceId: String
+    
+    /// The `userId` in NUGU
+    public let userId: String
+    
+    /// The `tid` used by NUGU users
+    public let tid: String?
 }

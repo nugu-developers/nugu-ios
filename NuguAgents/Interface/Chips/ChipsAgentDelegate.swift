@@ -1,8 +1,8 @@
 //
-//  TTSError.swift
+//  ChipsAgentDelegate.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2020/05/06.
+//  Created by MinChul Lee on 2020/05/26.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@
 
 import Foundation
 
-public enum TTSError: Error {
-    case notSupportedSourceType
+/// An delegate that appllication can extend to observe chips changes.
+public protocol ChipsAgentDelegate: class {
+    func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String)
 }

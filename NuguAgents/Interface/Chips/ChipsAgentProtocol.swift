@@ -1,8 +1,8 @@
 //
-//  TTSError.swift
+//  ChipsAgentProtocol.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2020/05/06.
+//  Created by MinChul Lee on 2020/05/26.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,8 @@
 
 import Foundation
 
-public enum TTSError: Error {
-    case notSupportedSourceType
+/// Chips-agent handles directives for displaying grammer guide on voice chrome view.
+public protocol ChipsAgentProtocol: CapabilityAgentable {
+   /// The object that acts as the delegate of chips-agent
+   var delegate: ChipsAgentDelegate? { get set }
 }
