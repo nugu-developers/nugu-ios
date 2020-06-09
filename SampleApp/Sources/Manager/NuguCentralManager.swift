@@ -172,7 +172,7 @@ extension NuguCentralManager {
             // If has not refreshToken
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
                 log.debug("Try to login with refresh token when refresh token is nil")
-                logoutAfterErrorHandling(sampleAppError: .nilValue(description: "Try to login with refresh token when refresh token is nil"))
+                clearSampleAppAfterErrorHandling(sampleAppError: .nilValue(description: "Try to login with refresh token when refresh token is nil"))
                 return
             }
             
@@ -184,7 +184,7 @@ extension NuguCentralManager {
                     UserDefaults.Standard.refreshToken = authInfo.refreshToken
                     self?.enable()
                 case .failure(let sampleAppError):
-                    self?.logoutAfterErrorHandling(sampleAppError: sampleAppError)
+                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
                 }
             }
         case .type2:
@@ -194,14 +194,14 @@ extension NuguCentralManager {
                     UserDefaults.Standard.accessToken = authInfo.accessToken
                     self?.enable()
                 case .failure(let sampleAppError):
-                    self?.logoutAfterErrorHandling(sampleAppError: sampleAppError)
+                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
                 }
             }
         }
     }
     
-    func logout() {
-        let sampleAppLogout = { [weak self] in
+    func revoke() {
+        let clearSampleApp = { [weak self] in
             self?.popToRootViewController()
             self?.disable()
             UserDefaults.Standard.clear()
@@ -217,13 +217,13 @@ extension NuguCentralManager {
                 token: token) { (result) in
                     switch result {
                     case .success:
-                        sampleAppLogout()
+                        clearSampleApp()
                     case .failure(let nuguLoginKitError):
                         log.debug(nuguLoginKitError.localizedDescription)
                     }
             }
         } else {
-            sampleAppLogout()
+            clearSampleApp()
         }
     }
 }
@@ -282,7 +282,7 @@ extension NuguCentralManager {
     }
 }
 
-// MARK: - Private (Logout)
+// MARK: - Private (Clear Sample App)
 
 private extension NuguCentralManager {
     func popToRootViewController() {
@@ -293,7 +293,7 @@ private extension NuguCentralManager {
         }
     }
     
-    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
+    func clearSampleAppAfterErrorHandling(sampleAppError: SampleAppError) {
         DispatchQueue.main.async { [weak self] in
             self?.client.audioPlayerAgent.stop()
             NuguToast.shared.showToast(message: sampleAppError.errorDescription)
@@ -487,7 +487,7 @@ extension NuguCentralManager: SystemAgentDelegate {
     }
     
     func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason) {
-        logoutAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
+        clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
     }
 }
 

@@ -149,7 +149,7 @@ extension SettingViewController: UITableViewDelegate {
             UIApplication.shared.open(privacyUrl, options: [:], completionHandler: nil)
         case (4, 0):
             dismiss(animated: true, completion: {
-                NuguCentralManager.shared.logout()
+                NuguCentralManager.shared.revoke()
             })
         default:
             break
