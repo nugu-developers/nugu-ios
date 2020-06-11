@@ -78,12 +78,13 @@ extension ApiProvidable {
                         
                         let error = jsonDictionary["error"] as? String
                         let description = jsonDictionary["error_description"] as? String
+                        let errorCode = jsonDictionary["code"] as? String
                         
                         // Known error format
-                        completion?(.failure(.invalidStatusCode(reason: APIErrorReason(error: error, description: description, urlResponse: response))))
+                        completion?(.failure(.invalidStatusCode(reason: APIErrorReason(error: error, description: description, errorCode: errorCode, urlResponse: response))))
                     default:
                         // Unknown http-status-code
-                        completion?(.failure(.invalidStatusCode(reason: APIErrorReason(error: nil, description: nil, urlResponse: response))))
+                        completion?(.failure(.invalidStatusCode(reason: APIErrorReason(error: nil, description: nil, errorCode: nil, urlResponse: response))))
                     }
                 default:
                     // No has response

@@ -71,29 +71,35 @@ public enum NuguLoginKitError: Error {
 
 /// The `APIErrorReason` is the reason for the case where the `statusCode` is not 200-299.
 public struct APIErrorReason {
-    /// HTTP status code
+    /// HTTP status code.
     public let statusCode: Int
     
-    /// The `error` is like error-code
+    /// The `error` is an error for the authentication API.
     public let error: String?
     
-    /// The `description` is description of error
+    /// The `description` is description of error.
     public let description: String?
     
-    /// The `urlResponse` is response from HTTP Request
+    /// The `urlResponse` is response from HTTP Request.
     public let urlResponse: HTTPURLResponse
+    
+    /// The `errorCode` is a code for the error.
+    public let errorCode: String?
     
     /// The initializer for `APIErrorReason`.
     /// - Parameter error: The `error` is like error-code
     /// - Parameter description: The `description` is description of error
     /// - Parameter urlResponse: The `urlResponse` is response from HTTP Request
+    /// - Parameter errorCode: The `errorCode` is a code for the error.
     init(
         error: String?,
         description: String?,
+        errorCode: String?,
         urlResponse: HTTPURLResponse
     ) {
         self.error = error
         self.description = description
+        self.errorCode = errorCode
         self.urlResponse = urlResponse
         self.statusCode = urlResponse.statusCode
     }
