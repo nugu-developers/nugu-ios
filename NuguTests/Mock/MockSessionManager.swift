@@ -23,14 +23,14 @@ import Foundation
 import NuguCore
 
 class MockSessionManager: SessionManageable {
-    var syncedSessions: [Session] = []
+    var activeSessions: [Session] = []
     
     func set(session: Session) {
     }
     
-    func sync(dialogRequestId: String) {
+    func activate(dialogRequestId: String) {
     }
     
-    func release(dialogRequestId: String) {
+    func deactivate(dialogRequestId: String) {
     }
 }

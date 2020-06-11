@@ -32,7 +32,7 @@ public class NuguClient {
     public let streamDataRouter: StreamDataRoutable
     public let directiveSequencer: DirectiveSequenceable
     public let playSyncManager: PlaySyncManageable
-    public let dialogManager: DialogManageable
+    public let dialogAttributeStore: DialogAttributeStoreable
     public let sessionManager: SessionManageable
     public let systemAgent: SystemAgentProtocol
     
@@ -100,7 +100,7 @@ public class NuguClient {
         directiveSequencer = DirectiveSequencer()
         streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
-        dialogManager = DialogManager()
+        dialogAttributeStore = DialogAttributeStore()
         sessionManager = SessionManager()
         systemAgent = SystemAgent(contextManager: contextManager,
                                   streamDataRouter: streamDataRouter,
@@ -113,7 +113,7 @@ public class NuguClient {
             contextManager: contextManager,
             audioStream: sharedAudioStream,
             directiveSequencer: directiveSequencer,
-            dialogManager: dialogManager,
+            dialogAttributeStore: dialogAttributeStore,
             sessionManager: sessionManager
         )
         
@@ -129,10 +129,10 @@ public class NuguClient {
             contextManager: contextManager,
             upstreamDataSender: streamDataRouter,
             directiveSequencer: directiveSequencer,
-            dialogManager: dialogManager
+            dialogAttributeStore: dialogAttributeStore
         )
         
-        dialogStateAggregator = DialogStateAggregator(dialogManager: dialogManager)
+        dialogStateAggregator = DialogStateAggregator(dialogAttributeStore: dialogAttributeStore)
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
         

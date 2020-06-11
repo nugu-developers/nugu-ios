@@ -1,9 +1,9 @@
 //
-//  MockDialogManager.swift
-//  NuguTests
+//  DialogAttributeStore.swift
+//  NuguCore
 //
 //  Created by MinChul Lee on 2020/05/28.
-//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
+//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,14 +20,16 @@
 
 import Foundation
 
-import NuguCore
-
-class MockDialogManager: DialogManageable {
-    var attributes: [String : AnyHashable]?
+public final class DialogAttributeStore: DialogAttributeStoreable {
+    public var attributes: [String: AnyHashable]?
     
-    func setAttributes(_ attributes: [String : AnyHashable]) {
+    public init() {}
+    
+    public func setAttributes(_ attributes: [String: AnyHashable]) {
+        self.attributes = attributes
     }
     
-    func removeAttributes() {
+    public func removeAttributes() {
+        attributes = nil
     }
 }
