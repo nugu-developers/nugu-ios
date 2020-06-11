@@ -434,11 +434,11 @@
 		7EA53F00247F3CED008731CD /* SessionManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFF247F3CED008731CD /* SessionManageable.swift */; };
 		7EA53F03247F3D2C008731CD /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F02247F3D2C008731CD /* Session.swift */; };
 		7EA53F05247F3E13008731CD /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F04247F3E13008731CD /* SessionManager.swift */; };
-		7EA53F09247F3EF4008731CD /* DialogManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F08247F3EF4008731CD /* DialogManageable.swift */; };
-		7EA53F0B247F3F53008731CD /* DialogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0A247F3F53008731CD /* DialogManager.swift */; };
+		7EA53F09247F3EF4008731CD /* DialogAttributeStoreable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F08247F3EF4008731CD /* DialogAttributeStoreable.swift */; };
+		7EA53F0B247F3F53008731CD /* DialogAttributeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */; };
 		7EA53F0D247F5685008731CD /* SessionManagerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */; };
 		7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0E247F583F008731CD /* MockSessionManager.swift */; };
-		7EA53F11247F5904008731CD /* MockDialogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F10247F5904008731CD /* MockDialogManager.swift */; };
+		7EA53F11247F5904008731CD /* MockDialogAttributeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */; };
 		7EA53F15247F943E008731CD /* ChipsAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F12247F943E008731CD /* ChipsAgentDelegate.swift */; };
 		7EA53F16247F943E008731CD /* ChipsAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F13247F943E008731CD /* ChipsAgentItem.swift */; };
 		7EA53F17247F943E008731CD /* ChipsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F14247F943E008731CD /* ChipsAgentProtocol.swift */; };
@@ -1063,11 +1063,11 @@
 		7EA53EFF247F3CED008731CD /* SessionManageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManageable.swift; sourceTree = "<group>"; };
 		7EA53F02247F3D2C008731CD /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		7EA53F04247F3E13008731CD /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
-		7EA53F08247F3EF4008731CD /* DialogManageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogManageable.swift; sourceTree = "<group>"; };
-		7EA53F0A247F3F53008731CD /* DialogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogManager.swift; sourceTree = "<group>"; };
+		7EA53F08247F3EF4008731CD /* DialogAttributeStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogAttributeStoreable.swift; sourceTree = "<group>"; };
+		7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogAttributeStore.swift; sourceTree = "<group>"; };
 		7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpec.swift; sourceTree = "<group>"; };
 		7EA53F0E247F583F008731CD /* MockSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSessionManager.swift; sourceTree = "<group>"; };
-		7EA53F10247F5904008731CD /* MockDialogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDialogManager.swift; sourceTree = "<group>"; };
+		7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDialogAttributeStore.swift; sourceTree = "<group>"; };
 		7EA53F12247F943E008731CD /* ChipsAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentDelegate.swift; path = NuguAgents/Interface/Chips/ChipsAgentDelegate.swift; sourceTree = SOURCE_ROOT; };
 		7EA53F13247F943E008731CD /* ChipsAgentItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentItem.swift; path = NuguAgents/Interface/Chips/ChipsAgentItem.swift; sourceTree = SOURCE_ROOT; };
 		7EA53F14247F943E008731CD /* ChipsAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentProtocol.swift; path = NuguAgents/Interface/Chips/ChipsAgentProtocol.swift; sourceTree = SOURCE_ROOT; };
@@ -1351,7 +1351,7 @@
 				1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */,
 				1F5DD4AF240CF89500719FBC /* MockAudioStream.swift */,
 				7EA53F0E247F583F008731CD /* MockSessionManager.swift */,
-				7EA53F10247F5904008731CD /* MockDialogManager.swift */,
+				7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -2760,7 +2760,7 @@
 		7EA53F06247F3EDF008731CD /* Dialog */ = {
 			isa = PBXGroup;
 			children = (
-				7EA53F08247F3EF4008731CD /* DialogManageable.swift */,
+				7EA53F08247F3EF4008731CD /* DialogAttributeStoreable.swift */,
 			);
 			path = Dialog;
 			sourceTree = "<group>";
@@ -2768,7 +2768,7 @@
 		7EA53F07247F3EE8008731CD /* Dialog */ = {
 			isa = PBXGroup;
 			children = (
-				7EA53F0A247F3F53008731CD /* DialogManager.swift */,
+				7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */,
 			);
 			path = Dialog;
 			sourceTree = "<group>";
@@ -3421,7 +3421,7 @@
 				75082BC6243AC85E0027D76D /* FileManager+Convenience.swift in Sources */,
 				739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */,
 				7EA53F05247F3E13008731CD /* SessionManager.swift in Sources */,
-				7EA53F09247F3EF4008731CD /* DialogManageable.swift in Sources */,
+				7EA53F09247F3EF4008731CD /* DialogAttributeStoreable.swift in Sources */,
 				7315301923E11EDF00F843C3 /* MediaPlayableError.swift in Sources */,
 				7315301B23E11EDF00F843C3 /* ContextInfoDelegate.swift in Sources */,
 				7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */,
@@ -3485,7 +3485,7 @@
 				1FFFF3C42375707100C9A177 /* PlaySyncInfo.swift in Sources */,
 				7315303023E11EDF00F843C3 /* FocusChannelPriority.swift in Sources */,
 				7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */,
-				7EA53F0B247F3F53008731CD /* DialogManager.swift in Sources */,
+				7EA53F0B247F3F53008731CD /* DialogAttributeStore.swift in Sources */,
 				735A4CBE241172F1004E7A41 /* EventResponseProcessor.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
 				7315301F23E11EDF00F843C3 /* NuguTimeInterval.swift in Sources */,
@@ -3690,7 +3690,7 @@
 				1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentSpec.swift in Sources */,
 				1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */,
 				7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */,
-				7EA53F11247F5904008731CD /* MockDialogManager.swift in Sources */,
+				7EA53F11247F5904008731CD /* MockDialogAttributeStore.swift in Sources */,
 				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,
 				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
 				7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */,

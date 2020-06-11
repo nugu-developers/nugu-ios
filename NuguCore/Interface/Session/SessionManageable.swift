@@ -21,9 +21,9 @@
 import Foundation
 
 public protocol SessionManageable: class {
-    var syncedSessions: [Session] { get }
+    var activeSessions: [Session] { get }
     
     func set(session: Session)
-    func sync(dialogRequestId: String)
-    func release(dialogRequestId: String)
+    func activate(dialogRequestId: String)
+    func deactivate(dialogRequestId: String)
 }

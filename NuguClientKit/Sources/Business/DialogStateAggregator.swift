@@ -28,7 +28,7 @@ public class DialogStateAggregator {
     private let dialogStateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.dialog_state_aggregator", qos: .userInitiated)
     private let dialogStateDelegates = DelegateSet<DialogStateDelegate>()
     
-    private let dialogManager: DialogManageable
+    private let dialogAttributeStore: DialogAttributeStoreable
     
     private let shortTimeout: DispatchTimeInterval = .milliseconds(200)
     private var multiturnSpeakingToListeningTimer: DispatchWorkItem?
@@ -40,7 +40,7 @@ public class DialogStateAggregator {
             if oldValue != dialogState {
                 multiturnSpeakingToListeningTimer?.cancel()
                 dialogStateDelegates.notify { delegate in
-                    delegate.dialogStateDidChange(dialogState, isMultiturn: dialogManager.attributes != nil)
+                    delegate.dialogStateDidChange(dialogState, isMultiturn: dialogAttributeStore.attributes != nil)
                 }
             }
         }
@@ -48,8 +48,8 @@ public class DialogStateAggregator {
     private var asrState: ASRState = .idle
     private var ttsState: TTSState = .finished
     
-    init(dialogManager: DialogManageable) {
-        self.dialogManager = dialogManager
+    init(dialogAttributeStore: DialogAttributeStoreable) {
+        self.dialogAttributeStore = dialogAttributeStore
     }
 }
 
