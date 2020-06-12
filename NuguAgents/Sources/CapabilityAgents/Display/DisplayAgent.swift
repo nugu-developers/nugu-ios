@@ -221,7 +221,7 @@ extension DisplayAgent: PlaySyncDelegate {
                 .compactMap { $0.delegate }
                 .forEach { delegate in
                     DispatchQueue.main.sync {
-                        delegate.displayAgentShouldClear(template: item)
+                        delegate.displayAgentDidClear(template: item)
                     }
             }
         }
@@ -460,7 +460,7 @@ private extension DisplayAgent {
     func setRenderedTemplate(delegate: DisplayAgentDelegate, template: DisplayTemplate) -> Bool {
         displayDispatchQueue.precondition(.onQueue)
         guard let displayObject = DispatchQueue.main.sync(execute: { () -> AnyObject? in
-            return delegate.displayAgentDidRender(template: template)
+            return delegate.displayAgentShouldRender(template: template)
         }) else { return false }
 
         replace(delegate: delegate, template: template)

@@ -25,12 +25,12 @@ public protocol DisplayAgentDelegate: class {
     /// Tells the delegate that the specified template should be displayed.
     ///
     /// - Parameter template: The template to display.
-    func displayAgentDidRender(template: DisplayTemplate) -> AnyObject?
+    func displayAgentShouldRender(template: DisplayTemplate) -> AnyObject?
     
     /// Tells the delegate that the specified template should be removed from the screen.
     ///
     /// - Parameter template: The template to remove from the screen.
-    func displayAgentShouldClear(template: DisplayTemplate)
+    func displayAgentDidClear(template: DisplayTemplate)
     
     /// Tells the delegate that the displayed template should move focus with given direction.
     /// Should return whether succeeded or not.
