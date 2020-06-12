@@ -419,6 +419,17 @@ private extension AudioPlayerAgent {
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
+                // Render display before setting media player to prevent calling `AudioPlayerDisplayDelegate.audioPlayerDisplayDidRender`.
+                if let metaData = payload.audioItem.metadata,
+                    ((metaData["disableTemplate"] as? Bool) ?? false) == false {
+                    self.audioPlayerDisplayManager.display(
+                        metaData: metaData,
+                        messageId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId,
+                        playStackServiceId: payload.playStackControl?.playServiceId
+                    )
+                }
+                
                 if [.playing, .paused(temporary: true), .paused(temporary: false)].contains(self.audioPlayerState),
                     let media = self.currentMedia, let player = self.currentPlayer,
                     media.payload.audioItem.stream.token == payload.audioItem.stream.token,
@@ -434,16 +445,6 @@ private extension AudioPlayerAgent {
                 } else {
                     self.stopSilently()
                     self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
-                }
-                
-                if let metaData = payload.audioItem.metadata,
-                    ((metaData["disableTemplate"] as? Bool) ?? false) == false {
-                    self.audioPlayerDisplayManager.display(
-                        metaData: metaData,
-                        messageId: directive.header.messageId,
-                        dialogRequestId: directive.header.dialogRequestId,
-                        playStackServiceId: payload.playStackControl?.playServiceId
-                    )
                 }
                 
                 if let media = self.currentMedia {
@@ -675,7 +676,7 @@ private extension AudioPlayerAgent {
     func stopSilently() {
         guard let media = self.currentMedia, let player = self.currentPlayer else { return }
             
-        currentMedia?.cancelAssociation = true
+        currentMedia?.cancelAssociation = false
         // `AudioPlayerState` -> Event
         player.delegate = nil
         player.stop()
