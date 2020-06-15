@@ -26,7 +26,7 @@ import RxSwift
  SharedBuffer is based on RingBuffer.
  It can have only one writer and multiple reader.
  */
-public class SharedBuffer<Element> {
+class SharedBuffer<Element> {
     private var array: [Element?]
     @Atomic private var lastIndex: SharedBufferIndex
 
@@ -87,14 +87,14 @@ public class SharedBuffer<Element> {
 
 // MARK: - Writer/Reader
 extension SharedBuffer {
-    public class Writer {
+    class Writer {
         private weak var buffer: SharedBuffer?
         
         init(buffer: SharedBuffer) {
             self.buffer = buffer
         }
         
-        public func write(_ element: Element) throws {
+        func write(_ element: Element) throws {
             guard buffer?.writer === self else {
                 throw SharedBufferError.writePermissionDenied
             }
@@ -102,7 +102,7 @@ extension SharedBuffer {
             buffer?.write(element)
         }
         
-        public func finish() {
+        func finish() {
             log.debug("readers cnt: \(buffer?.readers.allObjects.count ?? 0)")
             buffer?.readers.allObjects.forEach { (reader) in
                 reader.readDisposable?.dispose()
@@ -114,7 +114,7 @@ extension SharedBuffer {
         }
     }
     
-    public class Reader {
+    class Reader {
         private let buffer: SharedBuffer
         private let readQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.reader")
         @Atomic private var readIndex: SharedBufferIndex
@@ -127,13 +127,7 @@ extension SharedBuffer {
             buffer.readers.add(self)
         }
         
-        deinit {
-            if let disposable = readDisposable {
-                disposable.dispose()
-            }
-        }
-        
-        public func read(complete: @escaping (Result<Element, Error>) -> Void) {
+        func read(complete: @escaping (Result<Element, Error>) -> Void) {
             var isCompleted = false
             readDisposable = buffer.read(index: readIndex)
                 .take(1)

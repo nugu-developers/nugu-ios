@@ -28,7 +28,7 @@ public class KeywordDetector {
     private var boundStreams: AudioBoundStreams?
     private let engine = TycheKeywordDetectorEngine()
     
-    public var audioStream: AudioStreamable
+    private let audioStream: AudioStreamable
     public weak var delegate: KeywordDetectorDelegate?
     
     public var state: KeywordDetectorState = .inactive {

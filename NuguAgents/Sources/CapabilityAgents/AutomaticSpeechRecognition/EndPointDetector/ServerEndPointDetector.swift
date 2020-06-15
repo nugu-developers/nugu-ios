@@ -71,15 +71,11 @@ class ServerEndPointDetector: NSObject, EndPointDetectable {
         boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
         let inputStream = boundStreams!.input
         
-        epdQueue.async { [weak self] in
-            guard let self = self else { return }
-
-            CFReadStreamSetDispatchQueue(inputStream, self.epdQueue)
-            inputStream.delegate = self
-            inputStream.open()
+        CFReadStreamSetDispatchQueue(inputStream, epdQueue)
+        inputStream.delegate = self
+        inputStream.open()
             
-            self.state = .listening
-        }
+        state = .listening
     }
     
     func stop() {
@@ -88,12 +84,8 @@ class ServerEndPointDetector: NSObject, EndPointDetectable {
         listeningTimer?.dispose()
         boundStreams?.stop()
         
-        epdQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.inputStream?.close()
-            self.state = .idle
-        }
+        inputStream?.close()
+        state = .idle
     }
     
     func handleNotifyResult(_ state: ASRNotifyResult.State) {
