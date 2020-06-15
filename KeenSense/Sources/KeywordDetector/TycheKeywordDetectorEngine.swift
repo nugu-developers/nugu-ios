@@ -42,7 +42,7 @@ public class TycheKeywordDetectorEngine: NSObject {
         didSet {
             if oldValue != state {
                 delegate?.tycheKeywordDetectorEngineDidChange(state: state)
-                log.debug("kwd state changed: \(state)")
+                log.debug("state changed: \(state)")
             }
         }
     }
@@ -61,42 +61,38 @@ public class TycheKeywordDetectorEngine: NSObject {
      Start Key Word Detection.
      */
     public func start(inputStream: InputStream) {
-        log.debug("kwd try to start")
+        log.debug("try to start")
+        
+        if [.closed, .notOpen].contains(inputStream.streamStatus) == false || engineHandle != nil {
+            // Release last components
+            stop()
+        }
+        
+        self.inputStream = inputStream
+        CFReadStreamSetDispatchQueue(inputStream, self.kwdQueue)
+        inputStream.delegate = self
+        inputStream.open()
 
         kwdQueue.async { [weak self] in
             guard let self = self else { return }
             
-            if self.engineHandle != nil {
-                log.debug("kwd task is going to stop")
-                log.debug("kwd task stops engine and stream.")
-                self.inputStream?.close()
-                Wakeup_Destroy(self.engineHandle)
-                self.engineHandle = nil
-                self.state = .inactive
-            }
-            
-            self.inputStream = inputStream
-            CFReadStreamSetDispatchQueue(inputStream, self.kwdQueue)
-            inputStream.delegate = self
-            inputStream.open()
-                
             do {
                 try self.initTriggerEngine()
                 self.state = .active
             } catch {
                 self.state = .inactive
                 self.delegate?.tycheKeywordDetectorEngineDidError(error)
-                log.debug("kwd error: \(error)")
+                log.debug("error: \(error)")
             }
         }
     }
     
     public func stop() {
-        log.debug("kwd try to stop")
+        log.debug("try to stop")
         
         if inputStream?.streamStatus != .closed {
-            self.inputStream?.close()
-            self.inputStream?.delegate = nil
+            inputStream?.close()
+            inputStream?.delegate = nil
             log.debug("bounded input stream is closed")
         }
 
@@ -106,7 +102,7 @@ public class TycheKeywordDetectorEngine: NSObject {
             if self.engineHandle != nil {
                 Wakeup_Destroy(self.engineHandle)
                 self.engineHandle = nil
-                log.debug("keyword detector engine is destroyed")
+                log.debug("engine is destroyed")
             }
 
             self.state = .inactive
@@ -210,14 +206,14 @@ extension TycheKeywordDetectorEngine: StreamDelegate {
             }
             
             if isDetected {
-                log.debug("kwd hasBytesAvailable detected")
+                log.debug("detected")
                 stop()
 
                 notifyDetection()
             }
             
         case .endEncountered:
-            log.debug("kwd stream endEncountered")
+            log.debug("stream endEncountered")
             stop()
             
         default:

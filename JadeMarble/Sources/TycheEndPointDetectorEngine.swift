@@ -41,7 +41,7 @@ public class TycheEndPointDetectorEngine: NSObject {
         didSet {
             if oldValue != state {
                 delegate?.tycheEndPointDetectorEngineDidChange(state: state)
-                log.debug("epd state changed: \(state)")
+                log.debug("state changed: \(state)")
             }
         }
     }
@@ -57,26 +57,20 @@ public class TycheEndPointDetectorEngine: NSObject {
         maxDuration: Int,
         pauseLength: Int
     ) {
-        log.debug("Epd engine try to start")
+        log.debug("engine try to start")
+
+        if [.closed, .notOpen].contains(inputStream.streamStatus) == false || engineHandle != nil {
+            // Release last components
+            stop()
+        }
+        
+        self.inputStream = inputStream
+        CFReadStreamSetDispatchQueue(inputStream, epdQueue)
+        inputStream.delegate = self
+        inputStream.open()
+        
         epdQueue.async { [weak self] in
             guard let self = self else { return }
-            
-            // Release last component
-            if self.inputStream?.streamStatus != .closed {
-                self.inputStream?.close()
-                self.inputStream?.delegate = nil
-            }
-            
-            if self.engineHandle != nil {
-                epdClientChannelRELEASE(self.engineHandle)
-                self.engineHandle = nil
-                self.state = .idle
-            }
-            
-            self.inputStream = inputStream
-            CFReadStreamSetDispatchQueue(inputStream, self.epdQueue)
-            inputStream.delegate = self
-            inputStream.open()
             
             do {
                 try self.initDetectorEngine(
@@ -91,31 +85,31 @@ public class TycheEndPointDetectorEngine: NSObject {
                 self.flushLength = Int((Double(self.flushTime) * sampleRate) / 1000)
             } catch {
                 self.state = .idle
-                log.error("epd engine init error: \(error)")
+                log.error("engine init error: \(error)")
                 self.delegate?.tycheEndPointDetectorEngineDidChange(state: .error)
             }
         }
     }
     
     public func stop() {
-        log.debug("epd try to stop")
+        log.debug("try to stop")
+
         if inputStream?.streamStatus != .closed {
-            log.debug("try to close bounded input stream")
             inputStream?.close()
             inputStream?.delegate = nil
+            log.debug("bounded input stream is closed")
         }
         
         epdQueue.async { [weak self] in
-            log.debug("in epd try to stop")
             guard let self = self else { return }
             
             if self.engineHandle != nil {
                 epdClientChannelRELEASE(self.engineHandle)
                 self.engineHandle = nil
+                log.debug("engine is destroyed")
             }
 
             self.state = .idle
-            log.debug("in epd engine is stopped")
         }
     }
     
@@ -216,12 +210,12 @@ extension TycheEndPointDetectorEngine: StreamDelegate {
                 do {
                     let epdInputFileName = FileManager.default.urls(for: .documentDirectory,
                                                                     in: .userDomainMask)[0].appendingPathComponent("jade_marble_input.raw")
-                    log.debug("epd input data to file :\(epdInputFileName)")
+                    log.debug("input data file :\(epdInputFileName)")
                     try inputData.write(to: epdInputFileName)
                     
                     let speexFileName = FileManager.default.urls(for: .documentDirectory,
                                                                  in: .userDomainMask)[0].appendingPathComponent("jade_marble_output.speex")
-                    log.debug("speex data to file :\(speexFileName)")
+                    log.debug("speex data file :\(speexFileName)")
                     try outputData.write(to: speexFileName)
                     
                     inputData.removeAll()
@@ -237,7 +231,7 @@ extension TycheEndPointDetectorEngine: StreamDelegate {
             }
             
         case .endEncountered:
-            log.debug("epd stream endEncountered")
+            log.debug("stream endEncountered")
             stop()
 
         default:
