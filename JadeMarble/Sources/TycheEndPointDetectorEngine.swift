@@ -22,20 +22,20 @@ import Foundation
 
 public class TycheEndPointDetectorEngine: NSObject {
     private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.jademarble.tyche_end_point_detector")
-    
     private let epdFile: URL
-    
-    private var epdWorkItem: DispatchWorkItem?
-    private var engineHandle: EpdHandle?
-    
     private var flushedLength: Int = 0
     private var flushLength: Int = 0
     private var inputStream: InputStream?
+    private var engineHandle: EpdHandle?
+    public weak var delegate: TycheEndPointDetectorEngineDelegate?
     
     #if DEBUG
     private var inputData = Data()
     private var outputData = Data()
     #endif
+    
+    /// The flush time for reverb removal.
+    public var flushTime: Int = 100
     
     public var state: State = .idle {
         didSet {
@@ -45,11 +45,6 @@ public class TycheEndPointDetectorEngine: NSObject {
             }
         }
     }
-    
-    /// The flush time for reverb removal.
-    public var flushTime: Int = 100
-    
-    public weak var delegate: TycheEndPointDetectorEngineDelegate?
     
     public init(epdFile: URL) {
         self.epdFile = epdFile
@@ -62,16 +57,25 @@ public class TycheEndPointDetectorEngine: NSObject {
         maxDuration: Int,
         pauseLength: Int
     ) {
-        log.debug("")
-        self.inputStream = inputStream
-        epdWorkItem?.cancel()
-        
-        var workItem: DispatchWorkItem!
-        workItem = DispatchWorkItem { [weak self] in
+        log.debug("Epd engine try to start")
+        epdQueue.async { [weak self] in
             guard let self = self else { return }
             
+            // Release last component
+            if self.inputStream?.streamStatus != .closed {
+                self.inputStream?.close()
+                self.inputStream?.delegate = nil
+            }
+            
+            if self.engineHandle != nil {
+                epdClientChannelRELEASE(self.engineHandle)
+                self.engineHandle = nil
+                self.state = .idle
+            }
+            
+            self.inputStream = inputStream
+            CFReadStreamSetDispatchQueue(inputStream, self.epdQueue)
             inputStream.delegate = self
-            inputStream.schedule(in: .current, forMode: .default)
             inputStream.open()
             
             do {
@@ -90,35 +94,28 @@ public class TycheEndPointDetectorEngine: NSObject {
                 log.error("epd engine init error: \(error)")
                 self.delegate?.tycheEndPointDetectorEngineDidChange(state: .error)
             }
-            
-            while workItem.isCancelled == false {
-                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
-            }
-            
-            if self.engineHandle != nil {
-                self.inputStream?.close()
-                epdClientChannelRELEASE(self.engineHandle)
-                self.engineHandle = nil
-                self.state = .idle
-            }
-            
-            workItem = nil
         }
-        epdQueue.async(execute: workItem)
-        epdWorkItem = workItem
     }
     
     public func stop() {
         log.debug("epd try to stop")
-        epdWorkItem?.cancel()
+        if inputStream?.streamStatus != .closed {
+            log.debug("try to close bounded input stream")
+            inputStream?.close()
+            inputStream?.delegate = nil
+        }
         
         epdQueue.async { [weak self] in
+            log.debug("in epd try to stop")
             guard let self = self else { return }
             
-            self.inputStream?.close()
-            epdClientChannelRELEASE(self.engineHandle)
-            self.engineHandle = nil
+            if self.engineHandle != nil {
+                epdClientChannelRELEASE(self.engineHandle)
+                self.engineHandle = nil
+            }
+
             self.state = .idle
+            log.debug("in epd engine is stopped")
         }
     }
     

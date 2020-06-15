@@ -29,7 +29,6 @@ import AVFoundation
  */
 public class TycheKeywordDetectorEngine: NSObject {
     private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keensense.tyche_key_word_detector")
-    private var kwdWorkItem: DispatchWorkItem?
     private var engineHandle: WakeupHandle?
     
     /// Window buffer for user's voice. This will help extract certain section of speaking keyword
@@ -63,20 +62,24 @@ public class TycheKeywordDetectorEngine: NSObject {
      */
     public func start(inputStream: InputStream) {
         log.debug("kwd try to start")
-        self.inputStream = inputStream
-        kwdWorkItem?.cancel()
-        
-        var workItem: DispatchWorkItem!
-        workItem = DispatchWorkItem { [weak self] in
-            log.debug("kwd task start")
-            
+
+        kwdQueue.async { [weak self] in
             guard let self = self else { return }
-            log.debug("kwd task is eligible for running ")
             
+            if self.engineHandle != nil {
+                log.debug("kwd task is going to stop")
+                log.debug("kwd task stops engine and stream.")
+                self.inputStream?.close()
+                Wakeup_Destroy(self.engineHandle)
+                self.engineHandle = nil
+                self.state = .inactive
+            }
+            
+            self.inputStream = inputStream
+            CFReadStreamSetDispatchQueue(inputStream, self.kwdQueue)
             inputStream.delegate = self
-            inputStream.schedule(in: .current, forMode: .default)
             inputStream.open()
-            
+                
             do {
                 try self.initTriggerEngine()
                 self.state = .active
@@ -85,39 +88,27 @@ public class TycheKeywordDetectorEngine: NSObject {
                 self.delegate?.tycheKeywordDetectorEngineDidError(error)
                 log.debug("kwd error: \(error)")
             }
-            
-            while workItem.isCancelled == false {
-                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
-            }
-            
-            log.debug("kwd task is going to stop")
-            if self.engineHandle != nil {
-                log.debug("kwd task stops engine and stream.")
-                self.inputStream?.close()
-                Wakeup_Destroy(self.engineHandle)
-                self.engineHandle = nil
-                self.state = .inactive
-            }
-            
-            workItem = nil
         }
-        kwdQueue.async(execute: workItem!)
-        kwdWorkItem = workItem
-        log.debug("kwd tried to start")
     }
     
     public func stop() {
         log.debug("kwd try to stop")
-        kwdWorkItem?.cancel()
         
-        kwdQueue.async { [weak self] in
-            log.debug("kwd stop task is started")
-            guard let self = self else { return }
-
-            log.debug("kwd stop task stops engine and stream.")
+        if inputStream?.streamStatus != .closed {
             self.inputStream?.close()
-            Wakeup_Destroy(self.engineHandle)
-            self.engineHandle = nil
+            self.inputStream?.delegate = nil
+            log.debug("bounded input stream is closed")
+        }
+
+        kwdQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            if self.engineHandle != nil {
+                Wakeup_Destroy(self.engineHandle)
+                self.engineHandle = nil
+                log.debug("keyword detector engine is destroyed")
+            }
+
             self.state = .inactive
         }
     }

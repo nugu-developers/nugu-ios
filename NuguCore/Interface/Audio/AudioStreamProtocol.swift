@@ -29,7 +29,7 @@ public protocol AudioStreamable {
     func makeAudioStreamReader() -> AudioStreamReadable
 }
 
-public protocol AudioStreamReadable {
+public protocol AudioStreamReadable: class {
     func read(complete: @escaping (Result<AVAudioPCMBuffer, Error>) -> Void)
 }
 

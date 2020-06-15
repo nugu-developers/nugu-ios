@@ -26,7 +26,7 @@ import RxSwift
  SharedBuffer is based on RingBuffer.
  It can have only one writer and multiple reader.
  */
-class SharedBuffer<Element> {
+public class SharedBuffer<Element> {
     private var array: [Element?]
     @Atomic private var lastIndex: SharedBufferIndex
 
@@ -87,14 +87,14 @@ class SharedBuffer<Element> {
 
 // MARK: - Writer/Reader
 extension SharedBuffer {
-    class Writer {
+    public class Writer {
         private weak var buffer: SharedBuffer?
         
         init(buffer: SharedBuffer) {
             self.buffer = buffer
         }
         
-        func write(_ element: Element) throws {
+        public func write(_ element: Element) throws {
             guard buffer?.writer === self else {
                 throw SharedBufferError.writePermissionDenied
             }
@@ -102,7 +102,7 @@ extension SharedBuffer {
             buffer?.write(element)
         }
         
-        func finish() {
+        public func finish() {
             log.debug("readers cnt: \(buffer?.readers.allObjects.count ?? 0)")
             buffer?.readers.allObjects.forEach { (reader) in
                 reader.readDisposable?.dispose()
@@ -114,7 +114,7 @@ extension SharedBuffer {
         }
     }
     
-    class Reader {
+    public class Reader {
         private let buffer: SharedBuffer
         private let readQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.reader")
         @Atomic private var readIndex: SharedBufferIndex
@@ -127,9 +127,15 @@ extension SharedBuffer {
             buffer.readers.add(self)
         }
         
-        func read(complete: @escaping (Result<Element, Error>) -> Void) {
+        deinit {
+            if let disposable = readDisposable {
+                disposable.dispose()
+            }
+        }
+        
+        public func read(complete: @escaping (Result<Element, Error>) -> Void) {
             var isCompleted = false
-            self.readDisposable = self.buffer.read(index: self.readIndex)
+            readDisposable = buffer.read(index: readIndex)
                 .take(1)
                 .observeOn(SerialDispatchQueueScheduler(queue: readQueue, internalSerialQueueName: "rx-"+readQueue.label))
                 .subscribe(onNext: { [weak self] (writtenElement) in
@@ -141,7 +147,7 @@ extension SharedBuffer {
                         complete(.failure(SharedBufferError.writerFinished))
                     }
                 })
-            self.readDisposable?.disposed(by: self.disposeBag)
+            readDisposable?.disposed(by: disposeBag)
         }
     }
 }

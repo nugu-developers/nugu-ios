@@ -478,7 +478,7 @@ private extension ASRAgent {
                 property: self.capabilityAgentProperty,
                 dialogRequestId: asrRequest.dialogRequestId,
                 contextPayload: asrRequest.contextPayload
-            )) { [weak self] (state) in
+        )) { [weak self] (state) in
                 self?.asrDispatchQueue.async { [weak self] in
                     guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
                     
@@ -555,6 +555,8 @@ private extension ASRAgent {
         let reader = audioStream.makeAudioStreamReader()
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            
+            let semaphore = DispatchSemaphore(value: 0)
 
             guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
                 log.warning("Not permitted in current state \(self.asrState)")
@@ -566,6 +568,10 @@ private extension ASRAgent {
                 self.sessionManager.activate(dialogRequestId: sessionDialogRequestId)
             }
             self.contextManager.getContexts { [weak self] contextPayload in
+                defer {
+                    semaphore.signal()
+                }
+
                 guard let self = self else { return }
 
                 self.asrRequest = ASRRequest(
@@ -579,6 +585,8 @@ private extension ASRAgent {
 
                 self.focusManager.requestFocus(channelDelegate: self)
             }
+            
+            semaphore.wait()
         }
         
         return dialogRequestId
