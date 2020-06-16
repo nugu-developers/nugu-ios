@@ -155,8 +155,8 @@ public extension PlaySyncManager {
 // MARK: - ContextInfoDelegate
 extension PlaySyncManager: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        log.debug("\(playStack.playServiceIds)")
         playSyncDispatchQueue.sync {
+            log.debug("\(playStack.playServiceIds)")
             completion(ContextInfo(contextType: .client, name: "playStack", payload: playStack.playServiceIds))
         }
     }
