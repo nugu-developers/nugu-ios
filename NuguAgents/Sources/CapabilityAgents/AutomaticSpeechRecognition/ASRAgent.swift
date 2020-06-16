@@ -55,7 +55,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 return
             }
             
-            // `expectingSpeechTimeout` -> `ASRRequest` -> `FocusState` -> EndPointDetector` -> `ASRAgentDelegate`
+            // `expectingSpeechTimeout` -> `ASRRequest` -> `FocusState` -> `Session` -> EndPointDetector` -> `ASRAgentDelegate`
             // dispose expectingSpeechTimeout
             if asrState != .expectingSpeech {
                 expectingSpeechTimeout?.dispose()
@@ -98,7 +98,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 return
             }
             
-            // ASRExpectSpeech -> `ASRState` -> Event -> `ASRAgentDelegate`
+            // `ASRState` -> Event -> `ASRAgentDelegate`
             switch asrResult {
             case .none:
                 // Focus 는 결과 directive 받은 후 release 해주어야 함.
