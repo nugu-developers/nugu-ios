@@ -709,7 +709,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     
     func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
         log.debug("")
-        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayShouldClear()
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidClear()
         dismissDisplayAudioPlayerView()
     }
     

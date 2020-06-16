@@ -419,7 +419,7 @@ private extension AudioPlayerAgent {
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                // Render display before setting media player to prevent calling `AudioPlayerDisplayDelegate.audioPlayerDisplayDidRender`.
+                // Render display before setting media player to prevent calling `AudioPlayerDisplayDelegate.audioPlayerDisplayShouldRender`.
                 if let metaData = payload.audioItem.metadata,
                     ((metaData["disableTemplate"] as? Bool) ?? false) == false {
                     self.audioPlayerDisplayManager.display(
