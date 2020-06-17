@@ -669,7 +669,8 @@ extension MainViewController: DisplayAgentDelegate {
         return displayControllableView.scroll(direction: direction)
     }
     
-    func displayAgentDidRender(template: DisplayTemplate) -> AnyObject? {
+    func displayAgentShouldRender(template: DisplayTemplate) -> AnyObject? {
+        log.debug("")
         return addDisplayView(displayTemplate: template)
     }
     
@@ -677,7 +678,8 @@ extension MainViewController: DisplayAgentDelegate {
         updateDisplayView(displayTemplate: template)
     }
     
-    func displayAgentShouldClear(template: DisplayTemplate) {
+    func displayAgentDidClear(template: DisplayTemplate) {
+        log.debug("")
         dismissDisplayView()
     }
 }
@@ -699,13 +701,15 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     
     func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool { return false }
     
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
+    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
+        log.debug("")
         NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidRender(template: template)
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) {
-        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayShouldClear()
+    func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
+        log.debug("")
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidClear()
         dismissDisplayAudioPlayerView()
     }
     
