@@ -53,6 +53,32 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     }
 }
 
+// MARK: - PhoneCallAgentProtocol
+
+public extension PhoneCallAgent {
+    @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
+        let dialogRequestId = TimeUUID().hexString
+        
+        self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
+            
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    playServiceId: playServiceId,
+                    typeInfo: .candidatesListed
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    dialogRequestId: dialogRequestId,
+                    contextPayload: contextPayload
+                ),
+                completion: completion
+            )
+        }
+        
+        return dialogRequestId
+    }
+}
+
 // MARK: - ContextInfoDelegate
 
 extension PhoneCallAgent: ContextInfoDelegate {
@@ -120,32 +146,14 @@ private extension PhoneCallAgent {
                 candidates = try? JSONDecoder().decode([PhoneCallPerson].self, from: candidatesData)
             }
             
-            let isSuccess = self.delegate?.phoneCallAgentDidReceiveSendCandidates(
+            self.delegate?.phoneCallAgentDidReceiveSendCandidates(
                 intent: phoneCallIntent,
                 callType: phoneCallType,
                 recipient: recipient,
-                candidates: candidates
+                candidates: candidates,
+                playServiceId: playServiceId,
+                dialogRequestId: directive.header.dialogRequestId
             )
-            
-            guard isSuccess == true else {
-                log.warning("`phoneCallAgentDidReceiveSendCandidates` has returned false")
-                return
-            }
-            
-            self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
-                guard let self = self else { return }
-                
-                self.upstreamDataSender.sendEvent(
-                    Event(
-                        playServiceId: playServiceId,
-                        typeInfo: .candidatesListed
-                    ).makeEventMessage(
-                        property: self.capabilityAgentProperty,
-                        dialogRequestId: TimeUUID().hexString,
-                        contextPayload: contextPayload
-                    )
-                )
-            }
         }
     }
     
@@ -174,7 +182,7 @@ private extension PhoneCallAgent {
                     return
             }
             
-            if let errorCode = self.delegate?.phoneCallAgentDidReceiveMakeCall(callType: phoneCallType, recipient: recipientPerson) {
+            if let errorCode = self.delegate?.phoneCallAgentDidReceiveMakeCall(callType: phoneCallType, recipient: recipientPerson, dialogRequestId: directive.header.dialogRequestId) {
                 // Failed to makeCall
                 self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
                     guard let self = self else { return }
