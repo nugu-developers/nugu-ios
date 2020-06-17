@@ -20,7 +20,11 @@
 
 import Foundation
 
+import NuguCore
+
 public protocol PhoneCallAgentProtocol: CapabilityAgentable {
     
     var delegate: PhoneCallAgentDelegate? { get set }
+    
+    @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
 }

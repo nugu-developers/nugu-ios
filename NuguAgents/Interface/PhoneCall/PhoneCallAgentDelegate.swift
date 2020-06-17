@@ -24,6 +24,6 @@ public protocol PhoneCallAgentDelegate: class {
     func phoneCallAgentRequestState() -> PhoneCallState
     func phoneCallAgentRequestTemplate() -> PhoneCallTemplate?
     
-    func phoneCallAgentDidReceiveSendCandidates(intent: PhoneCallIntent, callType: PhoneCallType?, recipient: PhoneCallRecipient?, candidates: [PhoneCallPerson]?) -> Bool
-    func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson) -> PhoneCallErrorCode?
+    func phoneCallAgentDidReceiveSendCandidates(intent: PhoneCallIntent, callType: PhoneCallType?, recipient: PhoneCallRecipient?, candidates: [PhoneCallPerson]?, playServiceId: String, dialogRequestId: String)
+    func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson, dialogRequestId: String) -> PhoneCallErrorCode?
 }
