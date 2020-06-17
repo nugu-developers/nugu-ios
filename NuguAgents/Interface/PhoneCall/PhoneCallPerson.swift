@@ -53,7 +53,6 @@ public struct PhoneCallPerson: Codable {
             case incoming = "IN"
             case rejected = "REJECTED"
             case missed = "MISSED"
-            case voiceMessage = "VOICE_MESSAGE"
             case blocked = "BLOCKED"
         }
         
@@ -62,6 +61,7 @@ public struct PhoneCallPerson: Codable {
             case video = "VIDEO"
             case callar = "CALLAR"
             case group = "GROUP"
+            case voiceMessage = "VOICE_MESSAGE"
         }
         
         public let time: String?
