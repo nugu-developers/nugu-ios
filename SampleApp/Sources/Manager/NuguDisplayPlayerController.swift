@@ -47,7 +47,7 @@ final class NuguDisplayPlayerController {
         }
     }
     
-    func nuguAudioPlayerDisplayShouldClear() {
+    func nuguAudioPlayerDisplayDidClear() {
         DispatchQueue.main.async { [weak self] in
             self?.remove()
         }

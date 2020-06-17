@@ -384,7 +384,7 @@ private extension TTSAgent {
     func stopSilently() {
         guard let media = currentMedia, let player = currentPlayer else { return }
 
-        currentMedia?.cancelAssociation = true
+        currentMedia?.cancelAssociation = false
         // `TTSResult` -> `TTSState` -> Event
         player.delegate = nil
         player.stop()

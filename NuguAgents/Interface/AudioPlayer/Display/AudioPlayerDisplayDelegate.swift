@@ -25,13 +25,13 @@ public protocol AudioPlayerDisplayDelegate: class {
     /// Tells the delegate that the specified template should be displayed.
     ///
     /// - Parameter template: The player template to display.
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject?
+    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> AnyObject?
     
     /// Tells the delegate that the specified template should be removed from the screen.
     ///
     /// - Parameter template: The template to remove from the screen.
     /// - Parameter reason: Reason to clear the template.
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate)
+    func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate)
     
     /// Tells the delegate that the specified template should be updated from the screen.
     ///
