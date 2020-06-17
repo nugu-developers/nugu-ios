@@ -1,5 +1,5 @@
 //
-//  Session.swift
+//  DialogAttributeStoreable.swift
 //  NuguAgents
 //
 //  Created by MinChul Lee on 2020/05/28.
@@ -20,14 +20,9 @@
 
 import Foundation
 
-public struct Session {
-    public let sessionId: String
-    public let dialogRequestId: String
-    public let playServiceId: String
+public protocol DialogAttributeStoreable: class {
+    var attributes: [String: AnyHashable]? { get }
     
-    public init(sessionId: String, dialogRequestId: String, playServiceId: String) {
-        self.sessionId = sessionId
-        self.dialogRequestId = dialogRequestId
-        self.playServiceId = playServiceId
-    }
+    func setAttributes(_ attributes: [String: AnyHashable])
+    func removeAttributes()
 }
