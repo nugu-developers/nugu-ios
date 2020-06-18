@@ -48,10 +48,10 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private var currentItem: DisplayTemplate? {
         didSet {
             if let item = currentItem {
-                sessionManager.activate(dialogRequestId: item.dialogRequestId)
+                sessionManager.activate(dialogRequestId: item.dialogRequestId, category: .display)
             }
             if let item = oldValue {
-                sessionManager.deactivate(dialogRequestId: item.dialogRequestId)
+                sessionManager.deactivate(dialogRequestId: item.dialogRequestId, category: .display)
             }
         }
     }
