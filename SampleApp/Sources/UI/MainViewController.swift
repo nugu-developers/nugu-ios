@@ -554,6 +554,7 @@ extension MainViewController: DialogStateDelegate {
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking:
+            voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 guard isMultiturn == false else {
                     self?.nuguVoiceChrome.changeState(state: .speaking)
@@ -562,6 +563,7 @@ extension MainViewController: DialogStateDelegate {
                 self?.dismissVoiceChrome()
             }
         case .listening:
+            voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
                 ASRBeepPlayer.shared.beep(type: .start)
