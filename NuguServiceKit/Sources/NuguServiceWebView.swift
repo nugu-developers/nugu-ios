@@ -30,6 +30,9 @@ public protocol NuguServiceWebJavascriptDelegate: class {
 
 final public class NuguServiceWebView: WKWebView {
     
+    // TODO: - not decided yet, to be confirmed
+    public static let serviceSettingUrl = "https://stg-webview.sktnugu.com/3pp/intro.html"
+    
     private enum MethodType: String, CaseIterable {
         case openExternalApp
         case openInAppBrowser
