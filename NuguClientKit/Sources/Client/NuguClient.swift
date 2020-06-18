@@ -44,13 +44,9 @@ public class NuguClient {
     public let audioPlayerAgent: AudioPlayerAgentProtocol
     public let soundAgent: SoundAgentProtocol
     public let sessionAgent: SessionAgentProtocol
+    public let chipsAgent: ChipsAgentProtocol
 
     // additional agents
-    public lazy var chipsAgent: ChipsAgentProtocol = ChipsAgent(
-        contextManager: contextManager,
-        directiveSequencer: directiveSequencer
-    )
-    
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
         upstreamDataSender: streamDataRouter,
         playSyncManager: playSyncManager,
@@ -132,9 +128,18 @@ public class NuguClient {
             dialogAttributeStore: dialogAttributeStore
         )
         
-        dialogStateAggregator = DialogStateAggregator(dialogAttributeStore: dialogAttributeStore)
+        chipsAgent = ChipsAgent(
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer
+        )
+        
+        dialogStateAggregator = DialogStateAggregator(
+            dialogAttributeStore: dialogAttributeStore,
+            sessionManager: sessionManager
+        )
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
+        chipsAgent.add(delegate: dialogStateAggregator)
         
         // audio player
         audioPlayerAgent = AudioPlayerAgent(

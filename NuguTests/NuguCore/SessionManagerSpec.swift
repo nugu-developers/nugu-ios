@@ -24,13 +24,14 @@ import Quick
 import Nimble
 
 @testable import NuguCore
+@testable import NuguAgents
 
 class SessionManagerSpec: QuickSpec {
     override func spec() {
         describe("SessionManager") {
             context("if it activate without session") {
                 let sessionManager = SessionManager()
-                sessionManager.activate(dialogRequestId: "1234")
+                sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
             
                 it("should has empty synced session") {
                     expect(sessionManager.activeSessions.count).to(equal(0))
@@ -39,7 +40,7 @@ class SessionManagerSpec: QuickSpec {
             context("if it activate with session") {
                 let sessionManager = SessionManager()
                 sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                sessionManager.activate(dialogRequestId: "1234")
+                sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                 
                 it("should has a synced session") {
                     expect(sessionManager.activeSessions.count).to(equal(1))
@@ -50,9 +51,9 @@ class SessionManagerSpec: QuickSpec {
             context("if it activate with session") {
                 context("and deactivate with this session") {
                     let sessionManager = SessionManager()
-                    sessionManager.activate(dialogRequestId: "1234")
+                    sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                     sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                    sessionManager.deactivate(dialogRequestId: "1234")
+                    sessionManager.deactivate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                     
                     it("should has empty synced session") {
                         expect(sessionManager.activeSessions.count).to(equal(0))
@@ -63,10 +64,10 @@ class SessionManagerSpec: QuickSpec {
             context("if it activate with session") {
                 context("and deactivate multiple with this session") {
                     let sessionManager = SessionManager()
-                    sessionManager.activate(dialogRequestId: "1234")
+                    sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                     sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                    sessionManager.deactivate(dialogRequestId: "1234")
-                    sessionManager.deactivate(dialogRequestId: "1234")
+                    sessionManager.deactivate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
+                    sessionManager.deactivate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                     
                     it("should has empty active session") {
                         expect(sessionManager.activeSessions.count).to(equal(0))
@@ -77,9 +78,22 @@ class SessionManagerSpec: QuickSpec {
             context("if it activate with session") {
                 context("and deactivate with another session") {
                     let sessionManager = SessionManager()
-                    sessionManager.activate(dialogRequestId: "1234")
+                    sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                     sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                    sessionManager.deactivate(dialogRequestId: "4567")
+                    sessionManager.deactivate(dialogRequestId: "4567", category: .automaticSpeechRecognition)
+                    
+                    it("should has a active session") {
+                        expect(sessionManager.activeSessions.count).to(equal(1))
+                    }
+                }
+            }
+
+            context("if it activate with session") {
+                context("and deactivate with another category") {
+                    let sessionManager = SessionManager()
+                    sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
+                    sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
+                    sessionManager.deactivate(dialogRequestId: "4567", category: .display)
                     
                     it("should has a active session") {
                         expect(sessionManager.activeSessions.count).to(equal(1))
@@ -89,7 +103,7 @@ class SessionManagerSpec: QuickSpec {
             
             context("if it activate with session") {
                 let sessionManager = SessionManager()
-                sessionManager.activate(dialogRequestId: "1234")
+                sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                 sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
                 
                 it("should has a active session") {
@@ -99,9 +113,9 @@ class SessionManagerSpec: QuickSpec {
             
             context("if it activate multiple with multiple session") {
                 let sessionManager = SessionManager()
-                sessionManager.activate(dialogRequestId: "1234")
+                sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                 sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                sessionManager.activate(dialogRequestId: "4567")
+                sessionManager.activate(dialogRequestId: "4567", category: .automaticSpeechRecognition)
                 sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "4567", playServiceId: "aa"))
                 
                 it("should has multiple active session") {
@@ -112,11 +126,11 @@ class SessionManagerSpec: QuickSpec {
             context("if it multiple activate with multiple session") {
                 context("and deactivate a session") {
                     let sessionManager = SessionManager()
-                    sessionManager.activate(dialogRequestId: "1234")
+                    sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                     sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                    sessionManager.activate(dialogRequestId: "4567")
+                    sessionManager.activate(dialogRequestId: "4567", category: .automaticSpeechRecognition)
                     sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "4567", playServiceId: "aa"))
-                    sessionManager.deactivate(dialogRequestId: "4567")
+                    sessionManager.deactivate(dialogRequestId: "4567", category: .automaticSpeechRecognition)
                     
                     it("should has a active session") {
                         expect(sessionManager.activeSessions.count).to(equal(1))
@@ -126,9 +140,9 @@ class SessionManagerSpec: QuickSpec {
             
             context("if it activate multiple with a session") {
                 let sessionManager = SessionManager()
-                sessionManager.activate(dialogRequestId: "1234")
+                sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                 sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                sessionManager.activate(dialogRequestId: "1234")
+                sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                 
                 it("should has a active session") {
                     expect(sessionManager.activeSessions.count).to(equal(1))
@@ -138,13 +152,13 @@ class SessionManagerSpec: QuickSpec {
             context("if it activate multiple with a session") {
                 context("and deactivate this session") {
                     let sessionManager = SessionManager()
-                    sessionManager.activate(dialogRequestId: "1234")
-                    sessionManager.activate(dialogRequestId: "1234")
+                    sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
+                    sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                     sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                    sessionManager.deactivate(dialogRequestId: "1234")
+                    sessionManager.deactivate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
                     
-                    it("should has a active session") {
-                        expect(sessionManager.activeSessions.count).to(equal(1))
+                    it("should has empty active session") {
+                        expect(sessionManager.activeSessions.count).to(equal(0))
                     }
                 }
             }
@@ -152,11 +166,11 @@ class SessionManagerSpec: QuickSpec {
             context("if it activate multiple with a session") {
                 context("and deactivate multiple with this session") {
                     let sessionManager = SessionManager()
-                    sessionManager.activate(dialogRequestId: "1234")
-                    sessionManager.activate(dialogRequestId: "1234")
+                    sessionManager.activate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
+                    sessionManager.activate(dialogRequestId: "1234", category: .display)
                     sessionManager.set(session: Session(sessionId: "abc", dialogRequestId: "1234", playServiceId: "aa"))
-                    sessionManager.deactivate(dialogRequestId: "1234")
-                    sessionManager.deactivate(dialogRequestId: "1234")
+                    sessionManager.deactivate(dialogRequestId: "1234", category: .automaticSpeechRecognition)
+                    sessionManager.deactivate(dialogRequestId: "1234", category: .display)
                     
                     it("should has empty active session") {
                         expect(sessionManager.activeSessions.count).to(equal(0))

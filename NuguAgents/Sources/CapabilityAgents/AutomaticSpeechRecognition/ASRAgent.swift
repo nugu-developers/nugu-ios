@@ -69,7 +69,7 @@ public final class ASRAgent: ASRAgentProtocol {
             
             // Session
             if let dialogRequestId = asrRequest.referrerDialogRequestId, asrState == .idle {
-                sessionManager.deactivate(dialogRequestId: dialogRequestId)
+                sessionManager.deactivate(dialogRequestId: dialogRequestId, category: .automaticSpeechRecognition)
                 dialogAttributeStore.removeAttributes()
             }
             
@@ -563,7 +563,7 @@ private extension ASRAgent {
             }
 
             if let sessionDialogRequestId = directive?.header.dialogRequestId {
-                self.sessionManager.activate(dialogRequestId: sessionDialogRequestId)
+                self.sessionManager.activate(dialogRequestId: sessionDialogRequestId, category: .automaticSpeechRecognition)
             }
             self.contextManager.getContexts { [weak self] contextPayload in
                 guard let self = self else { return }
