@@ -64,6 +64,7 @@ final public class NuguServiceWebView: WKWebView {
         webViewConfiguration.websiteDataStore = store
         
         super.init(frame: .zero, configuration: webViewConfiguration)
+        translatesAutoresizingMaskIntoConstraints = false
         
         MethodType.allCases.forEach { [weak self] (methodType) in
             guard let self = self else { return }
