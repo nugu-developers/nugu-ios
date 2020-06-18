@@ -584,7 +584,7 @@ extension MainViewController: DialogStateDelegate {
 // MARK: - AutomaticSpeechRecognitionDelegate
 
 extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState, dialogRequestId: String) {
+    func asrAgentDidChange(state: ASRState) {
         switch state {
         case .idle:
             NuguCentralManager.shared.startWakeUpDetector()

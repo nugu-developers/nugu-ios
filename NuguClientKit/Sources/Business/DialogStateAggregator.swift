@@ -80,7 +80,7 @@ extension DialogStateAggregator {
 // MARK: - ASRAgentDelegate
 
 extension DialogStateAggregator: ASRAgentDelegate {
-    public func asrAgentDidChange(state: ASRState, dialogRequestId: String) {
+    public func asrAgentDidChange(state: ASRState) {
         dialogStateDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             self.asrState = state
@@ -163,9 +163,9 @@ extension DialogStateAggregator: ChipsAgentDelegate {
 // MARK: - SessionDelegate
 
 extension DialogStateAggregator: SessionDelegate {
-    public func sessionDidActivate(session: Session) { }
+    public func sessionDidSet(session: Session) { }
     
-    public func sessionDidDeactivate(session: Session) {
+    public func sessionDidUnset(session: Session) {
         dialogStateDispatchQueue.async { [weak self] in
             self?.chipsItems[session.dialogRequestId] = nil
         }
