@@ -17,6 +17,7 @@ NUGU SDK for iOS is composed of following Libraries
 - [NuguClientKit](NuguClientKit/) - The Framework for initializing essential components and inject dependency between components to use NUGU SDK
 - [NuguLoginKit](NuguLoginKit/) - The Framework for user authentication with OAuth2.0
 - [NuguUIKit](NuguUIKit/) - The Framework for user interface components
+- [NuguServiceKit](NuguServiceKit/) - The Framework provides customized webview for NUGU service
 
 ## Sample Application
 
@@ -39,6 +40,7 @@ To install it for easy use, simply add the following line to your `Podfile`:
 pod 'NuguClientKit'
 pod 'NuguLoginKit'
 pod 'NuguUIKit'
+pod 'NuguServiceKit' 
 ```
 
 ### Carthage
