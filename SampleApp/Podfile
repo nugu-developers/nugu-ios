@@ -10,4 +10,5 @@ target 'SampleApp' do
   pod 'KeenSense', :path => '../'
   pod 'NuguAgents', :path => '../'
   pod 'NuguCore', :path => '../'
+  pod 'NuguServiceKit', :path => '../'
 end
