@@ -552,6 +552,7 @@ extension MainViewController: DialogStateDelegate {
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking:
+            voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 guard isMultiturn == false else {
                     self?.nuguVoiceChrome.changeState(state: .speaking)
@@ -560,6 +561,7 @@ extension MainViewController: DialogStateDelegate {
                 self?.dismissVoiceChrome()
             }
         case .listening(let chips):
+            voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 if let chips = chips {
                     let actionList = chips.map { $0.textSource }

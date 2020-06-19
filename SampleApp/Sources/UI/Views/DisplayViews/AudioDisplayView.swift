@@ -31,8 +31,6 @@ class AudioDisplayView: UIView {
     @IBOutlet weak var albumImageContainerView: UIView!
     @IBOutlet weak var albumImageView: UIImageView!
     @IBOutlet weak var albumImageViewShadowView: UIView!
-    @IBOutlet weak var adultContentLabel: UILabel!
-    @IBOutlet weak var preListenContainerView: UIView!
     
     @IBOutlet weak var favoriteButtonContainerView: UIView!
     @IBOutlet weak var favoriteButton: UIButton!
