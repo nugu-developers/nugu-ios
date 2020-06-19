@@ -60,7 +60,7 @@ public enum NuguLoginKitError: Error {
     case invalidState
     
     /// The error occurs when called `safariViewControllerDidFinish()` by `SFSafariViewControllerDelegate` during OAuth authentication process.
-    case didFinishSafariViewController
+    case cancelled
     
     /// The error occurs when request OAuth authentication API.
     case apiError(error: APIError)

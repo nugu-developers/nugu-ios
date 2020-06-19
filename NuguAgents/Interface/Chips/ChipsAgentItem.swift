@@ -30,7 +30,6 @@ public struct ChipsAgentItem {
     }
     
     public struct Chip {
-        public let token: String
         public let textSource: String
         public let type: ItemType
         public let icon: String?
@@ -64,7 +63,6 @@ extension ChipsAgentItem: Decodable {
 
 extension ChipsAgentItem.Chip: Decodable {
     enum CodingKeys: String, CodingKey {
-        case token
         case textSource
         case type
         case icon
@@ -75,7 +73,6 @@ extension ChipsAgentItem.Chip: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        token = try container.decode(String.self, forKey: .token)
         textSource = try container.decode(String.self, forKey: .textSource)
         type = try container.decode(ItemType.self, forKey: .type)
         icon = try? container.decode(String.self, forKey: .icon)
@@ -83,3 +80,7 @@ extension ChipsAgentItem.Chip: Decodable {
         image = try? container.decode(String.self, forKey: .image)
     }
 }
+
+// MARK: - Equatable
+
+extension ChipsAgentItem.Chip: Equatable {}

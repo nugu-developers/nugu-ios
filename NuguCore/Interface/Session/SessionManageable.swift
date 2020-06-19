@@ -1,6 +1,6 @@
 //
 //  SessionManageable.swift
-//  NuguCore
+//  NuguAgents
 //
 //  Created by MinChul Lee on 2020/05/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -21,9 +21,17 @@
 import Foundation
 
 public protocol SessionManageable: class {
+    /// Adds a delegate to be notified of `Session` changes.
+    /// - Parameter delegate: The object to add.
+    func add(delegate: SessionDelegate)
+    
+    /// Removes a delegate from session-manager.
+    /// - Parameter delegate: The object to remove.
+    func remove(delegate: SessionDelegate)
+    
     var activeSessions: [Session] { get }
     
     func set(session: Session)
-    func activate(dialogRequestId: String)
-    func deactivate(dialogRequestId: String)
+    func activate(dialogRequestId: String, category: CapabilityAgentCategory)
+    func deactivate(dialogRequestId: String, category: CapabilityAgentCategory)
 }
