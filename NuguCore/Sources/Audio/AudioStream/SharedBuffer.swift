@@ -129,7 +129,7 @@ extension SharedBuffer {
         
         func read(complete: @escaping (Result<Element, Error>) -> Void) {
             var isCompleted = false
-            self.readDisposable = self.buffer.read(index: self.readIndex)
+            readDisposable = buffer.read(index: readIndex)
                 .take(1)
                 .observeOn(SerialDispatchQueueScheduler(queue: readQueue, internalSerialQueueName: "rx-"+readQueue.label))
                 .subscribe(onNext: { [weak self] (writtenElement) in
@@ -141,7 +141,7 @@ extension SharedBuffer {
                         complete(.failure(SharedBufferError.writerFinished))
                     }
                 })
-            self.readDisposable?.disposed(by: self.disposeBag)
+            readDisposable?.disposed(by: disposeBag)
         }
     }
 }
