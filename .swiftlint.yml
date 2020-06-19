@@ -6,6 +6,7 @@ included:
   - NuguClientKit/Sources
   - NuguLoginKit/Sources
   - NuguUIKit/Sources
+  - NuguServiceKit/Sources
   - JadeMarble/Sources
   - KeenSense/Sources
   - SampleApp/Sources

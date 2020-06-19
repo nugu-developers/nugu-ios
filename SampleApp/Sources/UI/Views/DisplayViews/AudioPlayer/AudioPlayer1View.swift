@@ -33,6 +33,9 @@ final class AudioPlayer1View: AudioDisplayView {
     @IBOutlet private weak var currentLyricsLabel: UILabel!
     @IBOutlet private weak var nextLyricsLabel: UILabel!
     
+    @IBOutlet private weak var badgeImageView: UIImageView!
+    @IBOutlet private weak var badgeLabel: UILabel!
+    
     private var audioProgressTimer: DispatchSourceTimer?
     private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayer1View.audioProgress")
     
@@ -64,6 +67,10 @@ final class AudioPlayer1View: AudioDisplayView {
             titleLabel.text = template.content.title
             subtitle1Label.text = template.content.subtitle1
             subtitle2Label.text = template.content.subtitle2
+            
+            badgeImageView.isHidden = template.content.badgeImageUrl == nil
+            badgeImageView.loadImage(from: template.content.badgeImageUrl)
+            badgeLabel.text = template.content.badgeMessage
             
             lyricsData = template.content.lyrics
             lyricsView.isHidden = lyricsData?.lyricsType == .none
@@ -143,11 +150,12 @@ final class AudioPlayer1View: AudioDisplayView {
         albumImageViewShadowView.layer.shadowOffset = CGSize(width: 0, height: 5)
         albumImageViewShadowView.layer.shadowRadius = 5
         
-        adultContentLabel.layer.cornerRadius = adultContentLabel.frame.size.height/2
-        adultContentLabel.layer.borderColor = UIColor(red: 1, green: 58.0/255.0, blue: 0, alpha: 1.0).cgColor
-        adultContentLabel.layer.borderWidth = 1.5
+        badgeImageView.layer.cornerRadius = badgeImageView.frame.size.height/2
+        badgeImageView.layer.borderColor = UIColor(red: 1, green: 58.0/255.0, blue: 0, alpha: 1.0).cgColor
+        badgeImageView.layer.borderWidth = 1.5
         
-        preListenContainerView.layer.cornerRadius = 2.0
+        badgeLabel.layer.cornerRadius = 2.0
+        badgeLabel.clipsToBounds = true
     }
     
     // MARK: - Show / Hide lyrics

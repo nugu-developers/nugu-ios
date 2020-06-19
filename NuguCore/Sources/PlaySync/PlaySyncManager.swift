@@ -155,8 +155,8 @@ public extension PlaySyncManager {
 // MARK: - ContextInfoDelegate
 extension PlaySyncManager: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        log.debug("\(playStack.playServiceIds)")
         playSyncDispatchQueue.sync {
+            log.debug("\(playStack.playServiceIds)")
             completion(ContextInfo(contextType: .client, name: "playStack", payload: playStack.playServiceIds))
         }
     }
@@ -169,13 +169,19 @@ private extension PlaySyncManager {
         // Cancel timers
         removeTimer(property: property)
         
-        // Context layer policy v.1.2.9-8. NUGU service layer policy
+        // Context layer policy v.1.4.0. 2.2 Display 동작
         // TODO: Call layer.
         playStack
-            .previousPlayGroup(layerType: property.layerType, dialogRequestId: dialogRequestId)
-            .filter { $0.layerType != .media || ($0.layerType == property.layerType) }
-            .filter { $0.contextType == .display && property.contextType == .display }
-            .forEach { popFromPlayStack(property: $0) }
+            // Multi-layer 상황에서 이전에 layer 와
+            .previousPlayGroup(dialogRequestId: dialogRequestId)
+            // 동일한 신규 layer 실행 시,
+            .filter { $0.property.layerType == property.layerType }
+            // 이전 layer 의 Display 는
+            .filter { $0.property.contextType == .display }
+            // playServiceId 가 다르거나 media layer 인 경우
+            .filter { $0.play.playServiceId != playServiceId || property.layerType == .media }
+            // 종료 시킨다.
+            .forEach { popFromPlayStack(property: $0.property) }
         
         playStack[property] = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, duration: duration)
     }

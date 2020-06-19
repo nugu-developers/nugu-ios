@@ -40,7 +40,6 @@ final class MainViewController: UIViewController {
     private var displayAudioPlayerView: AudioDisplayView?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
-    private var chipsAgentItem: (item: ChipsAgentItem, dialogRequestId: String)?
     
     private var hasShownGuideWeb = false
     
@@ -166,7 +165,6 @@ private extension MainViewController {
         NuguCentralManager.shared.client.displayAgent.add(delegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
-        NuguCentralManager.shared.client.chipsAgent.delegate = self
     }
     
     /// Show nugu usage guide webpage after successful login process
@@ -554,6 +552,7 @@ extension MainViewController: DialogStateDelegate {
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
         case .speaking:
+            voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 guard isMultiturn == false else {
                     self?.nuguVoiceChrome.changeState(state: .speaking)
@@ -561,9 +560,15 @@ extension MainViewController: DialogStateDelegate {
                 }
                 self?.dismissVoiceChrome()
             }
-        case .listening:
+        case .listening(let chips):
+            voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
+                if let chips = chips {
+                    let actionList = chips.map { $0.textSource }
+                    self?.setChipsButton(actionList: actionList, normalList: [])
+                }
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
+            
                 ASRBeepPlayer.shared.beep(type: .start)
             }
         case .recognizing:
@@ -581,19 +586,12 @@ extension MainViewController: DialogStateDelegate {
 // MARK: - AutomaticSpeechRecognitionDelegate
 
 extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState, dialogRequestId: String) {
+    func asrAgentDidChange(state: ASRState) {
         switch state {
         case .idle:
             NuguCentralManager.shared.startWakeUpDetector()
         case .listening:
             NuguCentralManager.shared.stopWakeUpDetector()
-            DispatchQueue.main.async { [weak self] in
-                if let (item, id) = self?.chipsAgentItem, item.target == .dialog, id == dialogRequestId {
-                    self?.chipsAgentItem = nil
-                    let actionList = item.chips.map { $0.textSource }
-                    self?.setChipsButton(actionList: actionList, normalList: [])
-                }
-            }
         default:
             break
         }
@@ -669,7 +667,8 @@ extension MainViewController: DisplayAgentDelegate {
         return displayControllableView.scroll(direction: direction)
     }
     
-    func displayAgentDidRender(template: DisplayTemplate) -> AnyObject? {
+    func displayAgentShouldRender(template: DisplayTemplate) -> AnyObject? {
+        log.debug("")
         return addDisplayView(displayTemplate: template)
     }
     
@@ -677,7 +676,8 @@ extension MainViewController: DisplayAgentDelegate {
         updateDisplayView(displayTemplate: template)
     }
     
-    func displayAgentShouldClear(template: DisplayTemplate) {
+    func displayAgentDidClear(template: DisplayTemplate) {
+        log.debug("")
         dismissDisplayView()
     }
 }
@@ -699,13 +699,15 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     
     func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool { return false }
     
-    func audioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
+    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
+        log.debug("")
         NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidRender(template: template)
         return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
     }
     
-    func audioPlayerDisplayShouldClear(template: AudioPlayerDisplayTemplate) {
-        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayShouldClear()
+    func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
+        log.debug("")
+        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidClear()
         dismissDisplayAudioPlayerView()
     }
     
@@ -733,13 +735,5 @@ extension MainViewController: AudioPlayerAgentDelegate {
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }
             displayAudioPlayerView.audioPlayerState = state
         }
-    }
-}
-
-// MARK: - ChipsAgentDelegate
-
-extension MainViewController: ChipsAgentDelegate {
-    func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String) {
-        chipsAgentItem = (item: item, dialogRequestId: dialogRequestId)
     }
 }

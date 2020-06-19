@@ -20,17 +20,23 @@
 
 import Foundation
 
-import NuguCore
+import NuguAgents
 
 class MockSessionManager: SessionManageable {
-    var syncedSessions: [Session] = []
+    var activeSessions: [Session] = []
+    
+    func add(delegate: SessionDelegate) {
+    }
+    
+    func remove(delegate: SessionDelegate) {
+    }
     
     func set(session: Session) {
     }
     
-    func sync(dialogRequestId: String) {
+    func activate(dialogRequestId: String, category: CapabilityAgentCategory) {
     }
     
-    func release(dialogRequestId: String) {
+    func deactivate(dialogRequestId: String, category: CapabilityAgentCategory) {
     }
 }

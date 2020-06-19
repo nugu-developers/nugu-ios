@@ -1,8 +1,8 @@
 //
-//  DialogManager.swift
-//  NuguCore
+//  SessionDelegate.swift
+//  NuguAgents
 //
-//  Created by MinChul Lee on 2020/05/28.
+//  Created by MinChul Lee on 2020/06/12.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,16 +20,7 @@
 
 import Foundation
 
-public final class DialogManager: DialogManageable {
-    public var attributes: [String: AnyHashable]?
-    
-    public init() {}
-    
-    public func setAttributes(_ attributes: [String: AnyHashable]) {
-        self.attributes = attributes
-    }
-    
-    public func removeAttributes() {
-        attributes = nil
-    }
+public protocol SessionDelegate: class {
+    func sessionDidSet(session: Session)
+    func sessionDidUnset(session: Session)
 }

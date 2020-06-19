@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.13.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.13.0)
+Released on 2020-06-19
+#### Fixed
+- Fixes a bug where the session does not deactivaed. (#356)
+- Fixes a crash in `PlayStackManager`. (#357)
+- Fixes a bug about lifecycle of `Session` (#364)
+- Remove `Runloop` controls to fix crashes (#355) 
+
+#### Updated
+- Update `SystemAgentRevokeReason` to add `unknown`case (#352)
+- Update `NuguLoginKitError` to add `errorCode` (#353)
+- Apply context policy(v.1.4.0) (#354)
+- Update `DialogState` to add `chips` parameter (#360)
+- Rename from `didFinishSafariViewController` to `cancelled` (#359)
+- Update `SettingViewController` (#362) 
+
+#### Added
+- Add `NuguServiceKit` (#361) 
+
 ## [0.12.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.12.0)
 Released on 2020-06-08
 #### Fixed

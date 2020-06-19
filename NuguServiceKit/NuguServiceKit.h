@@ -1,9 +1,9 @@
 //
-//  Session.swift
-//  NuguCore
+//  NuguServiceKit.h
+//  NuguServiceKit
 //
-//  Created by MinChul Lee on 2020/05/28.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by 김진님/AI Assistant개발 Cell on 2020/06/18.
+//  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,16 +18,14 @@
 //  limitations under the License.
 //
 
-import Foundation
+#import <Foundation/Foundation.h>
 
-public struct Session {
-    public let sessionId: String
-    public let dialogRequestId: String
-    public let playServiceId: String
-    
-    public init(sessionId: String, dialogRequestId: String, playServiceId: String) {
-        self.sessionId = sessionId
-        self.dialogRequestId = dialogRequestId
-        self.playServiceId = playServiceId
-    }
-}
+//! Project version number for NuguServiceKit.
+FOUNDATION_EXPORT double NuguServiceKitVersionNumber;
+
+//! Project version string for NuguServiceKit.
+FOUNDATION_EXPORT const unsigned char NuguServiceKitVersionString[];
+
+// In this header, you should import all the public headers of your framework using statements like #import <NuguServiceKit/PublicHeader.h>
+
+

@@ -34,7 +34,7 @@ public final class TextAgent: TextAgentProtocol {
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     private let directiveSequencer: DirectiveSequenceable
-    private let dialogManager: DialogManageable
+    private let dialogAttributeStore: DialogAttributeStoreable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
@@ -47,12 +47,12 @@ public final class TextAgent: TextAgentProtocol {
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
         directiveSequencer: DirectiveSequenceable,
-        dialogManager: DialogManageable
+        dialogAttributeStore: DialogAttributeStoreable
     ) {
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
-        self.dialogManager = dialogManager
+        self.dialogAttributeStore = dialogAttributeStore
         
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         contextManager.add(delegate: self)
@@ -120,7 +120,7 @@ private extension TextAgent {
             
             self.upstreamDataSender.sendEvent(
                 Event(
-                    typeInfo: .textInput(text: text, token: token, dialogAttributes: self.dialogManager.attributes)
+                    typeInfo: .textInput(text: text, token: token, dialogAttributes: self.dialogAttributeStore.attributes)
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     dialogRequestId: dialogRequestId,

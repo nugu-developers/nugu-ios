@@ -1,6 +1,6 @@
 //
-//  DialogManageable.swift
-//  NuguCore
+//  Session.swift
+//  NuguAgents
 //
 //  Created by MinChul Lee on 2020/05/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,9 +20,14 @@
 
 import Foundation
 
-public protocol DialogManageable: class {
-    var attributes: [String: AnyHashable]? { get }
+public struct Session {
+    public let sessionId: String
+    public let dialogRequestId: String
+    public let playServiceId: String
     
-    func setAttributes(_ attributes: [String: AnyHashable])
-    func removeAttributes()
+    public init(sessionId: String, dialogRequestId: String, playServiceId: String) {
+        self.sessionId = sessionId
+        self.dialogRequestId = dialogRequestId
+        self.playServiceId = playServiceId
+    }
 }

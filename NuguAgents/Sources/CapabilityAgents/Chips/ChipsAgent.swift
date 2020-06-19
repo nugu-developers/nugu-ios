@@ -26,16 +26,14 @@ public final class ChipsAgent: ChipsAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .chips, version: "1.0")
     
-    // ExtensionAgentProtocol
-    public weak var delegate: ChipsAgentDelegate?
-    
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
+    private let delegates = DelegateSet<ChipsAgentDelegate>()
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Render", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRender)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Render", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleRender)
     ]
     
     public init(
@@ -51,6 +49,18 @@ public final class ChipsAgent: ChipsAgentProtocol {
     
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+    }
+}
+
+// MARK: - ChipsAgent + ChipsAgentProtocol
+
+public extension ChipsAgent {
+    func add(delegate: ChipsAgentDelegate) {
+        delegates.add(delegate)
+    }
+    
+    func remove(delegate: ChipsAgentDelegate) {
+        delegates.remove(delegate)
     }
 }
 
@@ -79,8 +89,10 @@ private extension ChipsAgent {
                 log.error("Invalid payload")
                 return
             }
-            
-            self?.delegate?.chipsAgentDidReceive(item: item, dialogRequestId: directive.header.dialogRequestId)
+
+            self?.delegates.notify { delegate in
+                delegate.chipsAgentDidReceive(item: item, dialogRequestId: directive.header.dialogRequestId)
+            }
         }
     }
 }

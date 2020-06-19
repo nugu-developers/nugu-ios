@@ -20,6 +20,20 @@
 
 import Foundation
 
-struct SystemAgentRevokeItem: Decodable {
+struct SystemAgentRevokeItem {
     let reason: SystemAgentRevokeReason
+}
+
+// MARK: - SystemAgentRevokeItem + Decodable
+
+extension SystemAgentRevokeItem: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case reason
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        reason = (try? container.decode(SystemAgentRevokeReason.self, forKey: .reason)) ?? .unknown
+    }
 }

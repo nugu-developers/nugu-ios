@@ -1,8 +1,8 @@
 //
-//  MockDialogManager.swift
-//  NuguTests
+//  NuguServiceWebJavascriptDelegate.swift
+//  NuguServiceKit
 //
-//  Created by MinChul Lee on 2020/05/28.
+//  Created by 김진님/AI Assistant개발 Cell on 2020/06/19.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,16 +18,9 @@
 //  limitations under the License.
 //
 
-import Foundation
+// MARK: - NuguServiceWebJavascriptDelegate
 
-import NuguCore
-
-class MockDialogManager: DialogManageable {
-    var attributes: [String : AnyHashable]?
-    
-    func setAttributes(_ attributes: [String : AnyHashable]) {
-    }
-    
-    func removeAttributes() {
-    }
+public protocol NuguServiceWebJavascriptDelegate: class {
+    func openExternalApp(openExternalAppItem: WebOpenExternalApp)
+    func openInAppBrowser(url: String)
 }

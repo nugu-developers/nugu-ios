@@ -236,7 +236,7 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
                 .compactMap { $0.delegate }
                 .forEach { delegate in
                     DispatchQueue.main.sync {
-                        delegate.audioPlayerDisplayShouldClear(template: item)
+                        delegate.audioPlayerDisplayDidClear(template: item)
                     }
             }
         }
@@ -256,7 +256,7 @@ private extension AudioPlayerDisplayManager {
     func setRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
         displayDispatchQueue.precondition(.onQueue)
         guard let displayObject = DispatchQueue.main.sync(execute: { () -> AnyObject? in
-            return delegate.audioPlayerDisplayDidRender(template: template)
+            return delegate.audioPlayerDisplayShouldRender(template: template)
         }) else { return false }
 
         replace(delegate: delegate, template: template)

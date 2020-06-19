@@ -32,7 +32,7 @@ public class NuguClient {
     public let streamDataRouter: StreamDataRoutable
     public let directiveSequencer: DirectiveSequenceable
     public let playSyncManager: PlaySyncManageable
-    public let dialogManager: DialogManageable
+    public let dialogAttributeStore: DialogAttributeStoreable
     public let sessionManager: SessionManageable
     public let systemAgent: SystemAgentProtocol
     
@@ -44,13 +44,9 @@ public class NuguClient {
     public let audioPlayerAgent: AudioPlayerAgentProtocol
     public let soundAgent: SoundAgentProtocol
     public let sessionAgent: SessionAgentProtocol
+    public let chipsAgent: ChipsAgentProtocol
 
     // additional agents
-    public lazy var chipsAgent: ChipsAgentProtocol = ChipsAgent(
-        contextManager: contextManager,
-        directiveSequencer: directiveSequencer
-    )
-    
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
         upstreamDataSender: streamDataRouter,
         playSyncManager: playSyncManager,
@@ -90,8 +86,7 @@ public class NuguClient {
     
     // keywordDetector
     public private(set) lazy var keywordDetector: KeywordDetector = {
-        let keywordDetector =  KeywordDetector()
-        keywordDetector.audioStream = sharedAudioStream
+        let keywordDetector =  KeywordDetector(audioStream: sharedAudioStream)
         contextManager.add(delegate: keywordDetector)
         
         return keywordDetector
@@ -106,7 +101,7 @@ public class NuguClient {
         directiveSequencer = DirectiveSequencer()
         streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
-        dialogManager = DialogManager()
+        dialogAttributeStore = DialogAttributeStore()
         sessionManager = SessionManager()
         systemAgent = SystemAgent(contextManager: contextManager,
                                   streamDataRouter: streamDataRouter,
@@ -119,7 +114,7 @@ public class NuguClient {
             contextManager: contextManager,
             audioStream: sharedAudioStream,
             directiveSequencer: directiveSequencer,
-            dialogManager: dialogManager,
+            dialogAttributeStore: dialogAttributeStore,
             sessionManager: sessionManager
         )
         
@@ -135,12 +130,21 @@ public class NuguClient {
             contextManager: contextManager,
             upstreamDataSender: streamDataRouter,
             directiveSequencer: directiveSequencer,
-            dialogManager: dialogManager
+            dialogAttributeStore: dialogAttributeStore
         )
         
-        dialogStateAggregator = DialogStateAggregator(dialogManager: dialogManager)
+        chipsAgent = ChipsAgent(
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer
+        )
+        
+        dialogStateAggregator = DialogStateAggregator(
+            dialogAttributeStore: dialogAttributeStore,
+            sessionManager: sessionManager
+        )
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
+        chipsAgent.add(delegate: dialogStateAggregator)
         
         // audio player
         audioPlayerAgent = AudioPlayerAgent(

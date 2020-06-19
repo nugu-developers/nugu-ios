@@ -32,7 +32,6 @@ class EventSender: NSObject {
     private let boundary: String
     private let eventQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_event")
     private let streamQueue: DispatchQueue
-    private var streamWorkItem: DispatchWorkItem?
     private let streamStateSubject = BehaviorSubject<Bool>(value: false)
     private let disposeBag = DisposeBag()
     let streams = BoundStreams()
@@ -47,22 +46,14 @@ class EventSender: NSObject {
         super.init()
         log.debug("initiated")
         
-        streamWorkItem = DispatchWorkItem { [weak self] in
-            log.debug("network bound stream task start.")
+        streamQueue.async { [weak self] in
             guard let self = self else { return }
-            log.debug("network bound stream task is eligible for running")
-            
+            log.debug("network bound stream task start.")
+
+            CFWriteStreamSetDispatchQueue(self.streams.output, self.streamQueue)
             self.streams.output.delegate = self
-            self.streams.output.schedule(in: .current, forMode: .default)
             self.streams.output.open()
-            
-            while self.streamWorkItem?.isCancelled == false {
-                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
-            }
-            
-            log.debug("network bound stream task is going to stop")
         }
-        streamQueue.async(execute: streamWorkItem!)
     }
     
     /**
@@ -147,8 +138,8 @@ class EventSender: NSObject {
             #endif
             
             self.streamStateSubject.dispose()
-            self.streamWorkItem?.cancel()
             self.streams.output.close()
+            self.streams.output.delegate = nil
         }
         .disposed(by: disposeBag)
     }

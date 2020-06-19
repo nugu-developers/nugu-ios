@@ -51,12 +51,6 @@ final class AudioPlayer2View: AudioDisplayView {
         albumImageViewShadowView.layer.shadowOpacity = 0.5
         albumImageViewShadowView.layer.shadowOffset = CGSize(width: 0, height: 5)
         albumImageViewShadowView.layer.shadowRadius = 5
-        
-        adultContentLabel.layer.cornerRadius = adultContentLabel.frame.size.height/2
-        adultContentLabel.layer.borderColor = UIColor(red: 1, green: 58.0/255.0, blue: 0, alpha: 1.0).cgColor
-        adultContentLabel.layer.borderWidth = 1.5
-        
-        preListenContainerView.layer.cornerRadius = 2.0
     }
 
     override var displayPayload: [String: AnyHashable]? {

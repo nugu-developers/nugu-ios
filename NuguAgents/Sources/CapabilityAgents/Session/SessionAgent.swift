@@ -60,7 +60,7 @@ extension SessionAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "list": sessionManager.syncedSessions.map { ["sessionId": $0.sessionId, "playServiceId": $0.playServiceId] }
+            "list": sessionManager.activeSessions.map { ["sessionId": $0.sessionId, "playServiceId": $0.playServiceId] }
         ]
         
         completion(
