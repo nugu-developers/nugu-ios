@@ -131,9 +131,12 @@ private extension NuguDisplayPlayerController {
         nowPlayingInfo[MPMediaItemPropertyArtwork] = nil
     
         let offset = NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0
+        
+        // TODO: - AudioPlayer can not start playing in background when MPRemoteCommandCenter's command target has totally removed. Adding remote commands in here is not a perfect solution. Should consider more proper solution.
+        addRemoteCommands()
+        
         switch state {
         case .playing:
-            addRemoteCommands()
             // Set playbackTime as current offset, set playbackRate as 1
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = offset
             nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
