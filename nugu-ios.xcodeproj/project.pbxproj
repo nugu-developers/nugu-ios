@@ -389,8 +389,8 @@
 		75BF16A624623F75002A4B8D /* 04_active.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF169F24623F75002A4B8D /* 04_active.json */; };
 		75BF16A724623F75002A4B8D /* 05_processing.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF16A024623F75002A4B8D /* 05_processing.json */; };
 		75BF16A824623F75002A4B8D /* 07_speaking.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF16A124623F75002A4B8D /* 07_speaking.json */; };
-		75D069E42488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */; };
 		75D069C4247F76CC000B5D1F /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */; };
+		75D069E42488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */; };
 		75F7991D2472563300655BF6 /* TextList1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F7991C2472563300655BF6 /* TextList1View.swift */; };
 		75F7991F2472564300655BF6 /* TextList1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F7991E2472564300655BF6 /* TextList1View.xib */; };
 		75F79926247256B900655BF6 /* TextList2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F79920247256B800655BF6 /* TextList2View.xib */; };
@@ -1038,8 +1038,8 @@
 		75BF169F24623F75002A4B8D /* 04_active.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 04_active.json; sourceTree = "<group>"; };
 		75BF16A024623F75002A4B8D /* 05_processing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 05_processing.json; sourceTree = "<group>"; };
 		75BF16A124623F75002A4B8D /* 07_speaking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 07_speaking.json; sourceTree = "<group>"; };
-		75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+AnyHashable.swift"; sourceTree = "<group>"; };
 		75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
+		75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+AnyHashable.swift"; sourceTree = "<group>"; };
 		75F7991C2472563300655BF6 /* TextList1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextList1View.swift; sourceTree = "<group>"; };
 		75F7991E2472564300655BF6 /* TextList1View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextList1View.xib; sourceTree = "<group>"; };
 		75F79920247256B800655BF6 /* TextList2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList2View.xib; sourceTree = "<group>"; };
@@ -4086,7 +4086,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				MODULEMAP_FILE = "$(SRCROOT)/NuguCore/NuguCore.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -4124,7 +4124,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				MODULEMAP_FILE = "$(SRCROOT)/NuguCore/NuguCore.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -4158,7 +4158,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4191,7 +4191,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4220,7 +4220,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4249,7 +4249,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4282,7 +4282,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4315,7 +4315,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4353,7 +4353,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -4398,7 +4398,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -4442,7 +4442,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
@@ -4485,7 +4485,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
@@ -4759,7 +4759,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4791,7 +4791,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4824,7 +4824,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4859,7 +4859,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12.0;
+				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
