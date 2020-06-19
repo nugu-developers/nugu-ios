@@ -19,12 +19,14 @@
 //
 
 import Foundation
+import AVFoundation
 
 public class AudioBoundStreams: NSObject, StreamDelegate {
+    private static var nextId = 0
+    private var id: Int
     private let streams = BoundStreams()
-    private var audioStreamReader: AudioStreamReadable?
-    private let streamQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_bound_stream_queue")
-    private var streamWorkItem: DispatchWorkItem?
+    private let audioStreamReader: AudioStreamReadable
+    private let streamQueue: DispatchQueue
     private let streamSemaphore = DispatchSemaphore(value: 0)
     
     public var input: InputStream {
@@ -33,56 +35,48 @@ public class AudioBoundStreams: NSObject, StreamDelegate {
     
     public init(audioStreamReader: AudioStreamReadable) {
         self.audioStreamReader = audioStreamReader
+        self.id = Self.nextId
+        Self.nextId += 1
+        self.streamQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_bound_stream_queue_\(self.id)")
         super.init()
-        
-        log.debug("initiated")
-        
-        streamWorkItem = DispatchWorkItem { [weak self] in
-            log.debug("bound stream task start")
-            guard let self = self else { return }
-            log.debug("bound stream task is eligible for running")
+        log.debug("[\(id)] initiated")
 
-            self.streams.output.delegate = self
-            self.streams.output.schedule(in: .current, forMode: .default)
-            self.streams.output.open()
-            
-            while self.streamWorkItem?.isCancelled == false {
-                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
-            }
-
-            log.debug("bound stream task is going to stop")
-        }
-        streamQueue.async(execute: streamWorkItem!)
+        CFWriteStreamSetDispatchQueue(streams.output, streamQueue)
+        streams.output.delegate = self
+        streams.output.open()
     }
     
     public func stop() {
-        log.debug("bound stream try to stop")
-        streamWorkItem?.cancel()
-        streamSemaphore.signal()
-        streams.output.close()
-        streamQueue.async { [weak self] in
-            guard let self = self else { return }
-
-            self.audioStreamReader = nil
-            log.debug("bound stream is stopped")
+        log.debug("[\(id)] bound stream try to stop")
+        
+        if streams.output.streamStatus != .closed {
+            streams.output.close()
+            streams.output.delegate = nil
+            log.debug("[\(id)] bounded output stream is closed")
         }
+
+        // To cancel running task (audioStreamReader.read)
+        streamSemaphore.signal()
     }
     
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch eventCode {
         case .hasSpaceAvailable:
-            audioStreamReader?.read(complete: { [weak self] (result) in
+            guard let audioStreamReader = audioStreamReader as? SharedBuffer<AVAudioPCMBuffer>.Reader else {
+                return
+            }
+
+            audioStreamReader.read(complete: { [weak self] (result) in
                 guard let self = self else { return }
-                
                 guard case let .success(pcmBuffer) = result else {
-                    log.debug("audio stream read failed in hasSpaceAvailable")
+                    log.debug("[\(self.id)] audio stream read failed in hasSpaceAvailable")
                     self.stop()
                     self.streamSemaphore.signal()
                     return
                 }
                 
                 guard let data = pcmBuffer.int16ChannelData?.pointee else {
-                    log.debug("pcm puffer is not suitable in hasSpaceAvailable")
+                    log.debug("[\(self.id)] pcm puffer is not suitable in hasSpaceAvailable")
                     self.streamSemaphore.signal()
                     return
                 }
@@ -97,7 +91,7 @@ public class AudioBoundStreams: NSObject, StreamDelegate {
             streamSemaphore.wait()
             
         case .endEncountered:
-            log.debug("output stream endEncountered")
+            log.debug("[\(id)] output stream endEncountered")
             stop()
 
         default:

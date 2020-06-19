@@ -37,9 +37,7 @@ class ServerEndPointDetector: NSObject, EndPointDetectable {
         queue: epdQueue,
         internalSerialQueueName: "com.sktelecom.romaine.server_end_point_detector"
     )
-    private var epdWorkItem: DispatchWorkItem?
     private var inputStream: InputStream?
-    
     private var listeningTimer: Disposable?
     
     private var state: EndPointDetectorState = .idle {
@@ -71,33 +69,13 @@ class ServerEndPointDetector: NSObject, EndPointDetectable {
         
         boundStreams?.stop()
         boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
-        
         let inputStream = boundStreams!.input
-        self.inputStream = inputStream
-        epdWorkItem?.cancel()
         
-        var workItem: DispatchWorkItem!
-        workItem = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
+        CFReadStreamSetDispatchQueue(inputStream, epdQueue)
+        inputStream.delegate = self
+        inputStream.open()
             
-            inputStream.delegate = self
-            inputStream.schedule(in: .current, forMode: .default)
-            inputStream.open()
-            
-            self.state = .listening
-            
-            while workItem.isCancelled == false {
-                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
-            }
-            
-            self.inputStream?.close()
-            self.state = .idle
-            
-            workItem = nil
-        }
-        epdQueue.async(execute: workItem)
-        epdWorkItem = workItem
-        
+        state = .listening
     }
     
     func stop() {
@@ -105,14 +83,9 @@ class ServerEndPointDetector: NSObject, EndPointDetectable {
         
         listeningTimer?.dispose()
         boundStreams?.stop()
-        epdWorkItem?.cancel()
         
-        epdQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.inputStream?.close()
-            self.state = .idle
-        }
+        inputStream?.close()
+        state = .idle
     }
     
     func handleNotifyResult(_ state: ASRNotifyResult.State) {

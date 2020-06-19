@@ -29,7 +29,6 @@ import AVFoundation
  */
 public class TycheKeywordDetectorEngine: NSObject {
     private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keensense.tyche_key_word_detector")
-    private var kwdWorkItem: DispatchWorkItem?
     private var engineHandle: WakeupHandle?
     
     /// Window buffer for user's voice. This will help extract certain section of speaking keyword
@@ -43,7 +42,7 @@ public class TycheKeywordDetectorEngine: NSObject {
         didSet {
             if oldValue != state {
                 delegate?.tycheKeywordDetectorEngineDidChange(state: state)
-                log.debug("kwd state changed: \(state)")
+                log.debug("state changed: \(state)")
             }
         }
     }
@@ -62,20 +61,20 @@ public class TycheKeywordDetectorEngine: NSObject {
      Start Key Word Detection.
      */
     public func start(inputStream: InputStream) {
-        log.debug("kwd try to start")
-        self.inputStream = inputStream
-        kwdWorkItem?.cancel()
+        log.debug("try to start")
         
-        var workItem: DispatchWorkItem!
-        workItem = DispatchWorkItem { [weak self] in
-            log.debug("kwd task start")
-            
+        if [.closed, .notOpen].contains(inputStream.streamStatus) == false || engineHandle != nil {
+            // Release last components
+            stop()
+        }
+        
+        self.inputStream = inputStream
+        CFReadStreamSetDispatchQueue(inputStream, self.kwdQueue)
+        inputStream.delegate = self
+        inputStream.open()
+
+        kwdQueue.async { [weak self] in
             guard let self = self else { return }
-            log.debug("kwd task is eligible for running ")
-            
-            inputStream.delegate = self
-            inputStream.schedule(in: .current, forMode: .default)
-            inputStream.open()
             
             do {
                 try self.initTriggerEngine()
@@ -83,41 +82,29 @@ public class TycheKeywordDetectorEngine: NSObject {
             } catch {
                 self.state = .inactive
                 self.delegate?.tycheKeywordDetectorEngineDidError(error)
-                log.debug("kwd error: \(error)")
+                log.debug("error: \(error)")
             }
-            
-            while workItem.isCancelled == false {
-                RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 1))
-            }
-            
-            log.debug("kwd task is going to stop")
-            if self.engineHandle != nil {
-                log.debug("kwd task stops engine and stream.")
-                self.inputStream?.close()
-                Wakeup_Destroy(self.engineHandle)
-                self.engineHandle = nil
-                self.state = .inactive
-            }
-            
-            workItem = nil
         }
-        kwdQueue.async(execute: workItem!)
-        kwdWorkItem = workItem
-        log.debug("kwd tried to start")
     }
     
     public func stop() {
-        log.debug("kwd try to stop")
-        kwdWorkItem?.cancel()
+        log.debug("try to stop")
         
-        kwdQueue.async { [weak self] in
-            log.debug("kwd stop task is started")
-            guard let self = self else { return }
+        if inputStream?.streamStatus != .closed {
+            inputStream?.close()
+            inputStream?.delegate = nil
+            log.debug("bounded input stream is closed")
+        }
 
-            log.debug("kwd stop task stops engine and stream.")
-            self.inputStream?.close()
-            Wakeup_Destroy(self.engineHandle)
-            self.engineHandle = nil
+        kwdQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            if self.engineHandle != nil {
+                Wakeup_Destroy(self.engineHandle)
+                self.engineHandle = nil
+                log.debug("engine is destroyed")
+            }
+
             self.state = .inactive
         }
     }
@@ -219,14 +206,14 @@ extension TycheKeywordDetectorEngine: StreamDelegate {
             }
             
             if isDetected {
-                log.debug("kwd hasBytesAvailable detected")
+                log.debug("detected")
                 stop()
 
                 notifyDetection()
             }
             
         case .endEncountered:
-            log.debug("kwd stream endEncountered")
+            log.debug("stream endEncountered")
             stop()
             
         default:

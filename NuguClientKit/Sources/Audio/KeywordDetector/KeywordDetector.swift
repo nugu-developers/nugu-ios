@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 import NuguCore
 import KeenSense
@@ -27,7 +28,7 @@ public class KeywordDetector {
     private var boundStreams: AudioBoundStreams?
     private let engine = TycheKeywordDetectorEngine()
     
-    public var audioStream: AudioStreamable!
+    private let audioStream: AudioStreamable
     public weak var delegate: KeywordDetectorDelegate?
     
     public var state: KeywordDetectorState = .inactive {
@@ -48,7 +49,8 @@ public class KeywordDetector {
         keywordSource?.keyword ?? ""
     }
     
-    public init() {
+    public init(audioStream: AudioStreamable) {
+        self.audioStream = audioStream
         engine.delegate = self
     }
     
@@ -60,6 +62,7 @@ public class KeywordDetector {
     
     public func stop() {
         boundStreams?.stop()
+        boundStreams = nil
         engine.stop()
     }
 }
@@ -69,10 +72,12 @@ public class KeywordDetector {
 extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
     public func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int) {
         delegate?.keywordDetectorDidDetect(keyword: keyword, data: data, start: start, end: end, detection: detection)
+        stop()
     }
     
     public func tycheKeywordDetectorEngineDidError(_ error: Error) {
         delegate?.keywordDetectorDidError(error)
+        stop()
     }
     
     public func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State) {
