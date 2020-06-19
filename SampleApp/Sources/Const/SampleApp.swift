@@ -69,6 +69,10 @@ struct SampleApp {
         
         return replacedUrl
     }
+    
+    static var privacyUrl: URL {
+        return URL(string: "https://privacy.sktelecom.com/view.do?ctg=policy&name=policy")!
+    }
 }
 
 // MARK: - Login Method
