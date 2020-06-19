@@ -20,7 +20,7 @@
 
 import Foundation
 
-import NuguCore
+import NuguAgents
 
 class MockDialogAttributeStore: DialogAttributeStoreable {
     var attributes: [String : AnyHashable]?

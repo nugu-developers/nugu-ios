@@ -1,8 +1,8 @@
 //
-//  DialogAttributeStoreable.swift
-//  NuguCore
+//  SessionConst.swift
+//  NuguAgents
 //
-//  Created by MinChul Lee on 2020/05/28.
+//  Created by MinChul Lee on 2020/06/17.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,6 @@
 
 import Foundation
 
-public protocol DialogAttributeStoreable: class {
-    var attributes: [String: AnyHashable]? { get }
-    
-    func setAttributes(_ attributes: [String: AnyHashable])
-    func removeAttributes()
+enum SessionConst {
+    static let sessionTimeout: DispatchTimeInterval = .seconds(60)
 }

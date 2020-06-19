@@ -29,9 +29,12 @@ public class DialogStateAggregator {
     private let dialogStateDelegates = DelegateSet<DialogStateDelegate>()
     
     private let dialogAttributeStore: DialogAttributeStoreable
+    private let sessionManager: SessionManageable
     
     private let shortTimeout: DispatchTimeInterval = .milliseconds(200)
     private var multiturnSpeakingToListeningTimer: DispatchWorkItem?
+    
+    private var chipsItems = [String: ChipsAgentItem]()
 
     private var dialogState: DialogState = .idle {
         didSet {
@@ -48,8 +51,13 @@ public class DialogStateAggregator {
     private var asrState: ASRState = .idle
     private var ttsState: TTSState = .finished
     
-    init(dialogAttributeStore: DialogAttributeStoreable) {
+    init(
+        dialogAttributeStore: DialogAttributeStoreable,
+        sessionManager: SessionManageable
+    ) {
         self.dialogAttributeStore = dialogAttributeStore
+        self.sessionManager = sessionManager
+        sessionManager.add(delegate: self)
     }
 }
 
@@ -107,7 +115,11 @@ private extension DialogStateAggregator {
         case (_, .playing):
             dialogState = .speaking
         case (.listening, _):
-            dialogState = .listening
+            let chipsItem: ChipsAgentItem? = {
+                guard let dialogRequestId = sessionManager.activeSessions.first?.dialogRequestId else { return nil }
+                return chipsItems[dialogRequestId]
+            }()
+            dialogState = .listening(chips: chipsItem?.chips)
         case (.recognizing, _):
             dialogState = .recognizing
         case (.busy, _):
@@ -133,5 +145,29 @@ private extension DialogStateAggregator {
         }
         multiturnSpeakingToListeningTimer = workItem
         dialogStateDispatchQueue.asyncAfter(deadline: .now() + shortTimeout, execute: workItem)
+    }
+}
+
+// MARK: - ChipsAgentDelegate
+
+extension DialogStateAggregator: ChipsAgentDelegate {
+    public func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String) {
+        dialogStateDispatchQueue.async { [weak self] in
+            if item.target == .dialog {
+                self?.chipsItems[dialogRequestId] = item
+            }
+        }
+    }
+}
+
+// MARK: - SessionDelegate
+
+extension DialogStateAggregator: SessionDelegate {
+    public func sessionDidActivate(session: Session) { }
+    
+    public func sessionDidDeactivate(session: Session) {
+        dialogStateDispatchQueue.async { [weak self] in
+            self?.chipsItems[session.dialogRequestId] = nil
+        }
     }
 }
