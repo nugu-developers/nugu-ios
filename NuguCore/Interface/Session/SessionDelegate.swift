@@ -21,6 +21,6 @@
 import Foundation
 
 public protocol SessionDelegate: class {
-    func sessionDidActivate(session: Session)
-    func sessionDidDeactivate(session: Session)
+    func sessionDidSet(session: Session)
+    func sessionDidUnset(session: Session)
 }

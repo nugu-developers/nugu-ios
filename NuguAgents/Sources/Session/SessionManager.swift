@@ -33,9 +33,11 @@ final public class SessionManager: SessionManageable {
     
     public var activeSessions: [Session] {
         sessionDispatchQueue.sync {
-            return activeList
+            let activeSessions = activeList
                 .filter { $0.value.count > 0 }
                 .compactMap { sessions[$0.key] }
+            log.info(activeSessions)
+            return activeSessions
         }
     }
     
@@ -58,60 +60,56 @@ final public class SessionManager: SessionManageable {
     public func set(session: Session) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            log.debug(session.dialogRequestId)
             self.sessions[session.dialogRequestId] = session
-            self.addTimer(dialogRequestId: session.dialogRequestId)
+            self.addTimer(session: session)
+            
+            self.delegates.notify { (delegate) in
+                delegate.sessionDidSet(session: session)
+            }
         }
     }
     
     public func activate(dialogRequestId: String, category: CapabilityAgentCategory) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            
+            log.debug(dialogRequestId)
             self.removeTimer(dialogRequestId: dialogRequestId)
             
             if self.activeList[dialogRequestId] == nil {
                 self.activeList[dialogRequestId] = []
             }
             self.activeList[dialogRequestId]?.insert(category)
-            
-            if let session = self.sessions[dialogRequestId] {
-                self.delegates.notify { (delegate) in
-                    delegate.sessionDidActivate(session: session)
-                }
-            }
         }
     }
     
     public func deactivate(dialogRequestId: String, category: CapabilityAgentCategory) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            
+            log.debug(dialogRequestId)
             self.activeList[dialogRequestId]?.remove(category)
             if self.activeList[dialogRequestId]?.count == 0 {
-                self.removeSession(dialogRequestId: dialogRequestId)
+                self.activeList[dialogRequestId] = nil
+                
+                if let session = self.sessions[dialogRequestId] {
+                    self.addTimer(session: session)
+                }
             }
         }
     }
 }
 
 private extension SessionManager {
-    func removeSession(dialogRequestId: String) {
-        activeList[dialogRequestId] = nil
-        if let session = sessions[dialogRequestId] {
-            sessions[dialogRequestId] = nil
-            delegates.notify { (delegate) in
-                delegate.sessionDidDeactivate(session: session)
-            }
-        }
-    }
-    
-    func addTimer(dialogRequestId: String) {
+    func addTimer(session: Session) {
         let disposeBag = DisposeBag()
         Completable.create { [weak self] (event) -> Disposable in
             guard let self = self else { return Disposables.create() }
-
-            log.debug("Timer fired. \(dialogRequestId)")
-            self.removeSession(dialogRequestId: dialogRequestId)
+            
+            log.debug("Timer fired. \(session.dialogRequestId)")
+            self.sessions[session.dialogRequestId] = nil
+            self.delegates.notify { (delegate) in
+                delegate.sessionDidUnset(session: session)
+            }
             
             event(.completed)
             return Disposables.create()
@@ -120,7 +118,7 @@ private extension SessionManager {
         .subscribe()
         .disposed(by: disposeBag)
         
-        activeTimers[dialogRequestId] = disposeBag
+        activeTimers[session.dialogRequestId] = disposeBag
     }
     
     func removeTimer(dialogRequestId: String) {
