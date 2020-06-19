@@ -21,13 +21,6 @@
 import UIKit
 import WebKit
 
-// MARK: - NuguServiceWebJavascriptDelegate
-
-public protocol NuguServiceWebJavascriptDelegate: class {
-    func openExternalApp(openExternalAppItem: WebOpenExternalApp)
-    func openInAppBrowser(url: String)
-}
-
 final public class NuguServiceWebView: WKWebView {
     
     // TODO: - not decided yet, to be confirmed
@@ -77,7 +70,7 @@ final public class NuguServiceWebView: WKWebView {
 
 extension NuguServiceWebView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-
+        log.debug(message)        
         guard let jsonDictionary = (message.body as? [String: Any]),
             let methodName = jsonDictionary["method"] as? String,
             let body = jsonDictionary["body"],
@@ -102,6 +95,8 @@ public extension NuguServiceWebView {
     func setNuguServiceCookie(domain: String, nuguServiceCookie: NuguServiceCookie) {
         guard let encodedCookie = try? JSONEncoder().encode(nuguServiceCookie),
             let cookieAsDictionary = (try? JSONSerialization.jsonObject(with: encodedCookie, options: [])) as? [String: Any] else { return }
+        
+        log.debug(cookieAsDictionary)
         
         let script = cookieAsDictionary
             .map { (element) -> HTTPCookie? in

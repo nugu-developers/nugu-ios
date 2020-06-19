@@ -15,5 +15,7 @@ Pod::Spec.new do |s|
   
   s.swift_version = '5.1'
 
+  s.dependency 'NattyLog', '~> 1'
+
   s.source_files = 'NuguServiceKit/Classes/**/*'
 end

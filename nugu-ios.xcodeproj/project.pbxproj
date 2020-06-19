@@ -342,6 +342,9 @@
 		7525AC96249B01BD006800A3 /* HttpCookie+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525AC93249B01BC006800A3 /* HttpCookie+Convenience.swift */; };
 		7525AC97249B01BD006800A3 /* WebOpenExternalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */; };
 		7525AC99249B01C8006800A3 /* NuguServiceWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */; };
+		7525ACB3249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */; };
+		7525ACB4249C4177006800A3 /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
+		7525ACB6249C4255006800A3 /* NuguServiceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525ACB5249C4255006800A3 /* NuguServiceKit.swift */; };
 		752CE556246E22C900E68733 /* ContentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CE555246E22C900E68733 /* ContentButton.swift */; };
 		752CE558246E731D00E68733 /* UILabel+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CE557246E731D00E68733 /* UILabel+Convenience.swift */; };
 		752CE55B246E849900E68733 /* DisplayTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CE55A246E849900E68733 /* DisplayTitleView.swift */; };
@@ -986,6 +989,8 @@
 		7525AC93249B01BC006800A3 /* HttpCookie+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HttpCookie+Convenience.swift"; sourceTree = "<group>"; };
 		7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebOpenExternalApp.swift; sourceTree = "<group>"; };
 		7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServiceWebView.swift; sourceTree = "<group>"; };
+		7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguServiceWebJavascriptDelegate.swift; sourceTree = "<group>"; };
+		7525ACB5249C4255006800A3 /* NuguServiceKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguServiceKit.swift; sourceTree = "<group>"; };
 		752CE555246E22C900E68733 /* ContentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentButton.swift; sourceTree = "<group>"; };
 		752CE557246E731D00E68733 /* UILabel+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Convenience.swift"; sourceTree = "<group>"; };
 		752CE55A246E849900E68733 /* DisplayTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTitleView.swift; sourceTree = "<group>"; };
@@ -1232,6 +1237,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7525ACB4249C4177006800A3 /* NattyLog.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2674,10 +2680,12 @@
 		7525AC91249B016F006800A3 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */,
 				7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */,
 				7525AC92249B01BC006800A3 /* NuguServiceCookie.swift */,
 				7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */,
 				7525AC93249B01BC006800A3 /* HttpCookie+Convenience.swift */,
+				7525ACB5249C4255006800A3 /* NuguServiceKit.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -3914,7 +3922,9 @@
 				7525AC99249B01C8006800A3 /* NuguServiceWebView.swift in Sources */,
 				7525AC95249B01BD006800A3 /* NuguServiceCookie.swift in Sources */,
 				7525AC97249B01BD006800A3 /* WebOpenExternalApp.swift in Sources */,
+				7525ACB3249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift in Sources */,
 				7525AC96249B01BD006800A3 /* HttpCookie+Convenience.swift in Sources */,
+				7525ACB6249C4255006800A3 /* NuguServiceKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4789,6 +4799,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguServiceKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -4820,6 +4834,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = NuguServiceKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
