@@ -172,7 +172,7 @@ extension NuguCentralManager {
             // If has not refreshToken
             guard let refreshToken = UserDefaults.Standard.refreshToken else {
                 log.debug("Try to login with refresh token when refresh token is nil")
-                logoutAfterErrorHandling(sampleAppError: .nilValue(description: "Try to login with refresh token when refresh token is nil"))
+                clearSampleAppAfterErrorHandling(sampleAppError: .nilValue(description: "Try to login with refresh token when refresh token is nil"))
                 return
             }
             
@@ -184,7 +184,7 @@ extension NuguCentralManager {
                     UserDefaults.Standard.refreshToken = authInfo.refreshToken
                     self?.enable()
                 case .failure(let sampleAppError):
-                    self?.logoutAfterErrorHandling(sampleAppError: sampleAppError)
+                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
                 }
             }
         case .type2:
@@ -194,20 +194,95 @@ extension NuguCentralManager {
                     UserDefaults.Standard.accessToken = authInfo.accessToken
                     self?.enable()
                 case .failure(let sampleAppError):
-                    self?.logoutAfterErrorHandling(sampleAppError: sampleAppError)
+                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
                 }
             }
         }
     }
     
-    func logout() {
-        popToRootViewController()
-        disable()
-        UserDefaults.Standard.clear()
+    func revoke() {
+        let clearSampleApp = { [weak self] in
+            self?.popToRootViewController()
+            self?.disable()
+            UserDefaults.Standard.clear()
+        }
+        
+        if SampleApp.loginMethod == SampleApp.LoginMethod.type1,
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret,
+            let token = UserDefaults.Standard.accessToken {
+            oauthClient.revoke(
+                clientId: clientId,
+                clientSecret: clientSecret,
+                token: token) { (result) in
+                    switch result {
+                    case .success:
+                        clearSampleApp()
+                    case .failure(let nuguLoginKitError):
+                        log.debug(nuguLoginKitError.localizedDescription)
+                    }
+            }
+        } else {
+            clearSampleApp()
+        }
     }
 }
 
-// MARK: - Private (Logout)
+// MARK: - Internal (User Info)
+
+extension NuguCentralManager {
+    func getUserInfo(completion: ((_ userInfo: NuguUserInfo?) -> Void)?) {
+        guard let token = UserDefaults.Standard.accessToken else {
+            completion?(nil)
+            return
+        }
+        oauthClient.getUserInfo(token: token) { result in
+            switch result {
+            case .success(let userInfo):
+                completion?(userInfo)
+            case .failure:
+                completion?(nil)
+            }
+        }
+    }
+    
+    func showTidInfo(parentViewController: UIViewController, completion: ((_ tid: String?) -> Void)?) {
+        guard SampleApp.loginMethod == SampleApp.LoginMethod.type1,
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret,
+            let redirectUri = SampleApp.redirectUri else {
+                completion?(nil)
+                return
+        }
+        
+        getUserInfo { [weak self] (userInfo) in
+            guard let tid = userInfo?.tid else {
+                completion?(nil)
+                return
+            }
+            let authorizationCodeGrant = AuthorizationCodeGrant(
+                clientId: clientId,
+                clientSecret: clientSecret,
+                redirectUri: redirectUri
+            )
+            self?.oauthClient.showTidInfo(
+                grant: authorizationCodeGrant,
+                loginTid: tid,
+                parentViewController: parentViewController,
+                completion: { [weak self] (result) in
+                    if case .success(let authInfo) = result {
+                        UserDefaults.Standard.accessToken = authInfo.accessToken
+                        UserDefaults.Standard.refreshToken = authInfo.refreshToken
+                    }
+                    self?.getUserInfo(completion: { (userInfo) in
+                        completion?(userInfo?.tid)
+                    })
+            })
+        }
+    }
+}
+
+// MARK: - Private (Clear Sample App)
 
 private extension NuguCentralManager {
     func popToRootViewController() {
@@ -218,7 +293,7 @@ private extension NuguCentralManager {
         }
     }
     
-    func logoutAfterErrorHandling(sampleAppError: SampleAppError) {
+    func clearSampleAppAfterErrorHandling(sampleAppError: SampleAppError) {
         DispatchQueue.main.async { [weak self] in
             self?.client.audioPlayerAgent.stop()
             NuguToast.shared.showToast(message: sampleAppError.errorDescription)
@@ -412,7 +487,7 @@ extension NuguCentralManager: SystemAgentDelegate {
     }
     
     func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason) {
-        logoutAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
+        clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
     }
 }
 
