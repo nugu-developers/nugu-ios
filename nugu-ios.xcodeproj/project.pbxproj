@@ -438,6 +438,14 @@
 		7E6450F72421CCB600D91129 /* Upstream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F62421CCB600D91129 /* Upstream.swift */; };
 		7E6450F92421D82300D91129 /* StreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6450F82421D82300D91129 /* StreamDataDelegate.swift */; };
 		7E6A0B03240DEC7D00C7A19E /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */; };
+		7E6D1174249C6E5900E3580C /* SessionManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D1171249C6E5800E3580C /* SessionManageable.swift */; };
+		7E6D1175249C6E5900E3580C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D1172249C6E5900E3580C /* Session.swift */; };
+		7E6D1176249C6E5900E3580C /* SessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D1173249C6E5900E3580C /* SessionDelegate.swift */; };
+		7E6D117B249C6E6B00E3580C /* ChipsAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D1178249C6E6B00E3580C /* ChipsAgentItem.swift */; };
+		7E6D117C249C6E6B00E3580C /* ChipsAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D1179249C6E6B00E3580C /* ChipsAgentDelegate.swift */; };
+		7E6D117D249C6E6B00E3580C /* ChipsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D117A249C6E6B00E3580C /* ChipsAgentProtocol.swift */; };
+		7E6D1180249C6E8100E3580C /* SessionConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D117E249C6E8100E3580C /* SessionConst.swift */; };
+		7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D117F249C6E8100E3580C /* SessionManager.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EA53EF9247F3B0E008731CD /* SessionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EF8247F3B0E008731CD /* SessionAgentProtocol.swift */; };
 		7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFA247F3B5A008731CD /* SessionAgent.swift */; };
@@ -445,9 +453,6 @@
 		7EA53F0D247F5685008731CD /* SessionManagerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */; };
 		7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0E247F583F008731CD /* MockSessionManager.swift */; };
 		7EA53F11247F5904008731CD /* MockDialogAttributeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */; };
-		7EA53F15247F943E008731CD /* ChipsAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F12247F943E008731CD /* ChipsAgentDelegate.swift */; };
-		7EA53F16247F943E008731CD /* ChipsAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F13247F943E008731CD /* ChipsAgentItem.swift */; };
-		7EA53F17247F943E008731CD /* ChipsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F14247F943E008731CD /* ChipsAgentProtocol.swift */; };
 		7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */; };
 		7EBB2EAF24440C7600FBBBEA /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DB237672F100C9A177 /* asrFail.wav */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
@@ -455,13 +460,8 @@
 		7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
 		7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28D2375703000C9A177 /* DialogState.swift */; };
-		7EF6742F2499EE2E004FA45C /* SessionManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFF247F3CED008731CD /* SessionManageable.swift */; };
-		7EF674302499EE2E004FA45C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F02247F3D2C008731CD /* Session.swift */; };
-		7EF674312499EE2E004FA45C /* SessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC7C26D249349AE0060583C /* SessionDelegate.swift */; };
 		7EF674322499EE36004FA45C /* DialogAttributeStoreable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F08247F3EF4008731CD /* DialogAttributeStoreable.swift */; };
 		7EF674372499EE3E004FA45C /* DialogAttributeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */; };
-		7EF674382499EE3E004FA45C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F04247F3E13008731CD /* SessionManager.swift */; };
-		7EF674392499EE3E004FA45C /* SessionConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF674282499E10A004FA45C /* SessionConst.swift */; };
 		A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */; };
 		A135E668241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */; };
 		A135E669241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E667241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift */; };
@@ -1087,29 +1087,29 @@
 		7E6450F62421CCB600D91129 /* Upstream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upstream.swift; sourceTree = "<group>"; };
 		7E6450F82421D82300D91129 /* StreamDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataDelegate.swift; sourceTree = "<group>"; };
 		7E6A0B02240DEC7D00C7A19E /* PlaySyncProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
+		7E6D1171249C6E5800E3580C /* SessionManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManageable.swift; sourceTree = "<group>"; };
+		7E6D1172249C6E5900E3580C /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		7E6D1173249C6E5900E3580C /* SessionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDelegate.swift; sourceTree = "<group>"; };
+		7E6D1178249C6E6B00E3580C /* ChipsAgentItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChipsAgentItem.swift; sourceTree = "<group>"; };
+		7E6D1179249C6E6B00E3580C /* ChipsAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChipsAgentDelegate.swift; sourceTree = "<group>"; };
+		7E6D117A249C6E6B00E3580C /* ChipsAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChipsAgentProtocol.swift; sourceTree = "<group>"; };
+		7E6D117E249C6E8100E3580C /* SessionConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionConst.swift; sourceTree = "<group>"; };
+		7E6D117F249C6E8100E3580C /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		7E98BACD239A1F7C00B9582D /* AuthorizationStoreDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreDelegate.swift; sourceTree = "<group>"; };
 		7E98BACF239A2ED700B9582D /* AuthorizationStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStoreable.swift; sourceTree = "<group>"; };
 		7EA53EF8247F3B0E008731CD /* SessionAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgentProtocol.swift; sourceTree = "<group>"; };
 		7EA53EFA247F3B5A008731CD /* SessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgent.swift; sourceTree = "<group>"; };
 		7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgentItem.swift; sourceTree = "<group>"; };
-		7EA53EFF247F3CED008731CD /* SessionManageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManageable.swift; sourceTree = "<group>"; };
-		7EA53F02247F3D2C008731CD /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		7EA53F04247F3E13008731CD /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		7EA53F08247F3EF4008731CD /* DialogAttributeStoreable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogAttributeStoreable.swift; sourceTree = "<group>"; };
 		7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogAttributeStore.swift; sourceTree = "<group>"; };
 		7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpec.swift; sourceTree = "<group>"; };
 		7EA53F0E247F583F008731CD /* MockSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSessionManager.swift; sourceTree = "<group>"; };
 		7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDialogAttributeStore.swift; sourceTree = "<group>"; };
-		7EA53F12247F943E008731CD /* ChipsAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentDelegate.swift; path = NuguAgents/Interface/Chips/ChipsAgentDelegate.swift; sourceTree = SOURCE_ROOT; };
-		7EA53F13247F943E008731CD /* ChipsAgentItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentItem.swift; path = NuguAgents/Interface/Chips/ChipsAgentItem.swift; sourceTree = SOURCE_ROOT; };
-		7EA53F14247F943E008731CD /* ChipsAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChipsAgentProtocol.swift; path = NuguAgents/Interface/Chips/ChipsAgentProtocol.swift; sourceTree = SOURCE_ROOT; };
 		7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundAgentSpec.swift; sourceTree = "<group>"; };
-		7EC7C26D249349AE0060583C /* SessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDelegate.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
 		7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtilSpec.swift; sourceTree = "<group>"; };
 		7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsAgent.swift; sourceTree = "<group>"; };
 		7EF12B2223C822520000E158 /* DisplayClosePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayClosePayload.swift; sourceTree = "<group>"; };
-		7EF674282499E10A004FA45C /* SessionConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionConst.swift; sourceTree = "<group>"; };
 		A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+SettingsEvent.swift"; sourceTree = "<group>"; };
 		A135E666241F3287006F82E5 /* AudioPlayerDisplayControlPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayControlPayload.swift; sourceTree = "<group>"; };
 		A135E667241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayRepeat.swift; sourceTree = "<group>"; };
@@ -2398,7 +2398,6 @@
 			isa = PBXGroup;
 			children = (
 				7EA53F07247F3EE8008731CD /* Dialog */,
-				7EA53F01247F3D21008731CD /* Session */,
 				1F9C5B6823E42D740086CC04 /* CapabilityAgents */,
 				1FFFF2A32375703000C9A177 /* Event */,
 				73152FE123E047F200F843C3 /* Extension */,
@@ -2430,9 +2429,8 @@
 		73152FF223E11D6E00F843C3 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				7E6D1177249C6E6B00E3580C /* Chips */,
 				7EA53F06247F3EDF008731CD /* Dialog */,
-				7EA53EFE247F3CE2008731CD /* Session */,
-				7EE2DCA2247CCC140005DE17 /* Chips */,
 				7EA53EF6247F3AF7008731CD /* Session */,
 				7E5F488A243C371300118054 /* Sound */,
 				1FFFF23D2375703000C9A177 /* Extension */,
@@ -2785,6 +2783,16 @@
 			path = Sound;
 			sourceTree = "<group>";
 		};
+		7E6D1177249C6E6B00E3580C /* Chips */ = {
+			isa = PBXGroup;
+			children = (
+				7E6D1178249C6E6B00E3580C /* ChipsAgentItem.swift */,
+				7E6D1179249C6E6B00E3580C /* ChipsAgentDelegate.swift */,
+				7E6D117A249C6E6B00E3580C /* ChipsAgentProtocol.swift */,
+			);
+			path = Chips;
+			sourceTree = "<group>";
+		};
 		7E98BAD1239A2FBD00B9582D /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
@@ -2796,6 +2804,9 @@
 		7EA53EF6247F3AF7008731CD /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				7E6D1172249C6E5900E3580C /* Session.swift */,
+				7E6D1173249C6E5900E3580C /* SessionDelegate.swift */,
+				7E6D1171249C6E5800E3580C /* SessionManageable.swift */,
 				7EA53EF8247F3B0E008731CD /* SessionAgentProtocol.swift */,
 			);
 			path = Session;
@@ -2804,28 +2815,10 @@
 		7EA53EF7247F3AFF008731CD /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				7E6D117E249C6E8100E3580C /* SessionConst.swift */,
+				7E6D117F249C6E8100E3580C /* SessionManager.swift */,
 				7EA53EFA247F3B5A008731CD /* SessionAgent.swift */,
 				7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */,
-			);
-			path = Session;
-			sourceTree = "<group>";
-		};
-		7EA53EFE247F3CE2008731CD /* Session */ = {
-			isa = PBXGroup;
-			children = (
-				7EA53EFF247F3CED008731CD /* SessionManageable.swift */,
-				7EA53F02247F3D2C008731CD /* Session.swift */,
-				7EC7C26D249349AE0060583C /* SessionDelegate.swift */,
-			);
-			name = Session;
-			path = ../../NuguCore/Interface/Session;
-			sourceTree = "<group>";
-		};
-		7EA53F01247F3D21008731CD /* Session */ = {
-			isa = PBXGroup;
-			children = (
-				7EA53F04247F3E13008731CD /* SessionManager.swift */,
-				7EF674282499E10A004FA45C /* SessionConst.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -2853,16 +2846,6 @@
 			);
 			path = Chips;
 			sourceTree = "<group>";
-		};
-		7EE2DCA2247CCC140005DE17 /* Chips */ = {
-			isa = PBXGroup;
-			children = (
-				7EA53F12247F943E008731CD /* ChipsAgentDelegate.swift */,
-				7EA53F13247F943E008731CD /* ChipsAgentItem.swift */,
-				7EA53F14247F943E008731CD /* ChipsAgentProtocol.swift */,
-			);
-			path = Chips;
-			sourceTree = "<unknown>";
 		};
 		A1505090241626F100671568 /* Display */ = {
 			isa = PBXGroup;
@@ -3823,43 +3806,43 @@
 				7E2A51692474E57E0099875D /* SystemAgentRevokeReason.swift in Sources */,
 				73152FB123E0413F00F843C3 /* AudioPlayerDisplayManager.swift in Sources */,
 				73152FBA23E0414700F843C3 /* ASRAgent.swift in Sources */,
+				7E6D1176249C6E5900E3580C /* SessionDelegate.swift in Sources */,
 				7315306923E1248300F843C3 /* AudioPlayerAgentDelegate.swift in Sources */,
 				736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */,
 				73152FC823E0415400F843C3 /* TTSMedia.swift in Sources */,
 				7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */,
 				A135E6952428B6C8006F82E5 /* AudioPlayerAgent+RequestPlayEvent.swift in Sources */,
 				73152FDC23E0451900F843C3 /* NuguAgents.swift in Sources */,
+				7E6D1174249C6E5900E3580C /* SessionManageable.swift in Sources */,
 				7315305D23E1246F00F843C3 /* CapabilityAgentCategory.swift in Sources */,
 				73152FB523E0413F00F843C3 /* AudioPlayerAgent+PlayEvent.swift in Sources */,
 				73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */,
 				73152FB623E0413F00F843C3 /* AudioPlayerAgentMedia.swift in Sources */,
 				7315305423E1246F00F843C3 /* TextAgentDelegate.swift in Sources */,
+				7E6D117D249C6E6B00E3580C /* ChipsAgentProtocol.swift in Sources */,
 				73152FBE23E0414700F843C3 /* ASRConst.swift in Sources */,
-				7EF6742F2499EE2E004FA45C /* SessionManageable.swift in Sources */,
 				7315305F23E1248300F843C3 /* ExtensionAgentProtocol.swift in Sources */,
 				7315305023E1246F00F843C3 /* DisplayAgentProtocol.swift in Sources */,
 				7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */,
 				7315307623E1248300F843C3 /* TTSState.swift in Sources */,
 				7EA53EF9247F3B0E008731CD /* SessionAgentProtocol.swift in Sources */,
-				7EA53F15247F943E008731CD /* ChipsAgentDelegate.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
 				7315307723E1248300F843C3 /* TTSResult.swift in Sources */,
 				7315305223E1246F00F843C3 /* DisplayTemplate.swift in Sources */,
-				7EF674312499EE2E004FA45C /* SessionDelegate.swift in Sources */,
 				736508662462F7FA00EF4549 /* OpusPlayer.swift in Sources */,
+				7E6D117C249C6E6B00E3580C /* ChipsAgentDelegate.swift in Sources */,
 				7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */,
 				7E5F4892243C388100118054 /* SoundBeepName.swift in Sources */,
 				7315307323E1248300F843C3 /* SystemAgentExceptionCode.swift in Sources */,
 				A135E669241F3287006F82E5 /* AudioPlayerDisplayRepeat.swift in Sources */,
-				7EF674392499EE3E004FA45C /* SessionConst.swift in Sources */,
+				7E6D117B249C6E6B00E3580C /* ChipsAgentItem.swift in Sources */,
 				73152FB323E0413F00F843C3 /* AudioPlayerAgent.swift in Sources */,
 				7315305723E1246F00F843C3 /* LocationAgentDelegate.swift in Sources */,
 				73152FC723E0415400F843C3 /* TTSAgent+Event.swift in Sources */,
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
 				7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */,
-				7EF674382499EE3E004FA45C /* SessionManager.swift in Sources */,
 				7315306C23E1248300F843C3 /* ASRAgentDelegate.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				A1519AAC23F3EC8700FF4159 /* DisplayControlPayload.swift in Sources */,
@@ -3883,14 +3866,12 @@
 				7E2471012435DAC200640F5E /* ASROptions.swift in Sources */,
 				7E5F488E243C379C00118054 /* SoundAgentDataSource.swift in Sources */,
 				7315306023E1248300F843C3 /* ExtensionAgentDelegate.swift in Sources */,
-				7EF674302499EE2E004FA45C /* Session.swift in Sources */,
 				7315306823E1248300F843C3 /* AudioPlayerAgentProtocol.swift in Sources */,
 				73152FCF23E0416100F843C3 /* TextAgent+Event.swift in Sources */,
 				7315306B23E1248300F843C3 /* ASRAgentProtocol.swift in Sources */,
 				73152FB023E0413F00F843C3 /* AudioPlayerDisplayManageable.swift in Sources */,
 				1F31FD7A241F5774009593EB /* TextAgentSourceItem.swift in Sources */,
 				73152FDE23E045C700F843C3 /* TimeUUID.swift in Sources */,
-				7EA53F17247F943E008731CD /* ChipsAgentProtocol.swift in Sources */,
 				7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */,
 				73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */,
 				73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */,
@@ -3905,15 +3886,16 @@
 				73152FC123E0414F00F843C3 /* SystemAgent.swift in Sources */,
 				7315305E23E1246F00F843C3 /* CapabilityAgentProperty.swift in Sources */,
 				7315305123E1246F00F843C3 /* DisplayAgentDelegate.swift in Sources */,
+				7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */,
 				73152FC323E0414F00F843C3 /* SystemAgent+Event.swift in Sources */,
 				7E5F4896243C3C8A00118054 /* SoundAgent.swift in Sources */,
 				7E5F4894243C399600118054 /* SoundState.swift in Sources */,
 				7315306D23E1248300F843C3 /* ASRState.swift in Sources */,
 				7315307223E1248300F843C3 /* SystemAgentDelegate.swift in Sources */,
+				7E6D1180249C6E8100E3580C /* SessionConst.swift in Sources */,
 				73152FC923E0415B00F843C3 /* DisplayAgent.swift in Sources */,
 				73152FB923E0414700F843C3 /* EndPointDetectorState.swift in Sources */,
 				7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */,
-				7EA53F16247F943E008731CD /* ChipsAgentItem.swift in Sources */,
 				7E5F4898243C40EB00118054 /* SoundMedia.swift in Sources */,
 				7EF674322499EE36004FA45C /* DialogAttributeStoreable.swift in Sources */,
 				7315306F23E1248300F843C3 /* ASRError.swift in Sources */,
@@ -3921,6 +3903,7 @@
 				7E35D79024622B4E003289A2 /* Eventable.swift in Sources */,
 				7315307523E1248300F843C3 /* TTSAgentDelegate.swift in Sources */,
 				73152FCC23E0415B00F843C3 /* DisplayRenderingInfo.swift in Sources */,
+				7E6D1175249C6E5900E3580C /* Session.swift in Sources */,
 				736508652462F7FA00EF4549 /* SktOpusParser.swift in Sources */,
 				7315306723E1248300F843C3 /* AudioPlayerDisplayDelegate.swift in Sources */,
 				7315306E23E1248300F843C3 /* ASRResult.swift in Sources */,
