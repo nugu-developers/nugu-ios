@@ -20,12 +20,14 @@
 
 import Foundation
 
+import NuguAgents
+
 /// Identifies the dialog state.
 public enum DialogState {
     /// Ready for an interaction.
     case idle
     /// Passively listening.
-    case listening
+    case listening(chips: [ChipsAgentItem.Chip]?)
     /// Actively listening.
     case recognizing
     /// Waiting for a response from the server.

@@ -1,8 +1,8 @@
 //
-//  ASRAgentDelegate.swift
+//  DialogAttributeStore.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 01/05/2019.
+//  Created by MinChul Lee on 2020/05/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,16 @@
 
 import Foundation
 
-/// An delegate that appllication can extend to register to observe `ASRAgent` state changes.
-public protocol ASRAgentDelegate: class {
-    /// Used to notify the observer of `ASRState` changes.
-    /// - Parameter state: The new `ASRState` of the `ASRAgent`
-    func asrAgentDidChange(state: ASRState)
+public final class DialogAttributeStore: DialogAttributeStoreable {
+    public var attributes: [String: AnyHashable]?
     
-    /// Called when received a result of `startRecognition` request.
-    /// - Parameter result: A recognized result.
-    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String)
+    public init() {}
+    
+    public func setAttributes(_ attributes: [String: AnyHashable]) {
+        self.attributes = attributes
+    }
+    
+    public func removeAttributes() {
+        attributes = nil
+    }
 }

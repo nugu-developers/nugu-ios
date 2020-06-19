@@ -48,9 +48,10 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private var currentItem: DisplayTemplate? {
         didSet {
             if let item = currentItem {
-                sessionManager.activate(dialogRequestId: item.dialogRequestId)
-            } else if let item = oldValue {
-                sessionManager.deactivate(dialogRequestId: item.dialogRequestId)
+                sessionManager.activate(dialogRequestId: item.dialogRequestId, category: .display)
+            }
+            if let item = oldValue {
+                sessionManager.deactivate(dialogRequestId: item.dialogRequestId, category: .display)
             }
         }
     }
@@ -221,7 +222,7 @@ extension DisplayAgent: PlaySyncDelegate {
                 .compactMap { $0.delegate }
                 .forEach { delegate in
                     DispatchQueue.main.sync {
-                        delegate.displayAgentShouldClear(template: item)
+                        delegate.displayAgentDidClear(template: item)
                     }
             }
         }
@@ -460,7 +461,7 @@ private extension DisplayAgent {
     func setRenderedTemplate(delegate: DisplayAgentDelegate, template: DisplayTemplate) -> Bool {
         displayDispatchQueue.precondition(.onQueue)
         guard let displayObject = DispatchQueue.main.sync(execute: { () -> AnyObject? in
-            return delegate.displayAgentDidRender(template: template)
+            return delegate.displayAgentShouldRender(template: template)
         }) else { return false }
 
         replace(delegate: delegate, template: template)

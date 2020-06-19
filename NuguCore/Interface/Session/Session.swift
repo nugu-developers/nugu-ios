@@ -1,6 +1,6 @@
 //
 //  Session.swift
-//  NuguCore
+//  NuguAgents
 //
 //  Created by MinChul Lee on 2020/05/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

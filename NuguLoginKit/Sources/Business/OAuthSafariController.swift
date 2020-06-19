@@ -60,7 +60,7 @@ final class OAuthSafariController: NSObject {
 
 extension OAuthSafariController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        completion?(.failure(NuguLoginKitError.didFinishSafariViewController))
+        completion?(.failure(NuguLoginKitError.cancelled))
         clearState()
     }
 }

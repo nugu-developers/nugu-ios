@@ -23,4 +23,5 @@ import Foundation
 public enum SystemAgentRevokeReason: String, Decodable {
     case revokeDevice = "REVOKED_DEVICE"
     case withdrawnUser = "WITHDRAWN_USER"
+    case unknown = "UNKNOWN"
 }
