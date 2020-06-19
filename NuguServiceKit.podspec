@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'NattyLog', '~> 1'
 
-  s.source_files = 'NuguServiceKit/Classes/**/*'
+  s.source_files = 'NuguServiceKit/Sources/**/*'
 end
