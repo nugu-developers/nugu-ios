@@ -128,10 +128,9 @@ private extension PhoneCallAgent {
                     return
             }
             
-            guard let callType = payloadDictionary["callType"] as? String,
-                let phoneCallType = PhoneCallType(rawValue: callType) else {
-                    log.error("Invalid phoneCallType in payload")
-                    return
+            var phoneCallType: PhoneCallType?
+            if let callType = payloadDictionary["callType"] as? String {
+                phoneCallType = PhoneCallType(rawValue: callType)
             }
             
             var recipient: PhoneCallRecipient?
