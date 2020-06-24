@@ -45,10 +45,6 @@ public class KeywordDetector {
         }
     }
     
-    private var keyword: String {
-        keywordSource?.keyword ?? ""
-    }
-    
     public init(audioStream: AudioStreamable) {
         self.audioStream = audioStream
         engine.delegate = self
@@ -71,7 +67,7 @@ public class KeywordDetector {
 
 extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
     public func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int) {
-        delegate?.keywordDetectorDidDetect(keyword: keyword, data: data, start: start, end: end, detection: detection)
+        delegate?.keywordDetectorDidDetect(keyword: keywordSource?.keyword, data: data, start: start, end: end, detection: detection)
         stop()
     }
     
@@ -94,6 +90,10 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
 
 extension KeywordDetector: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+        guard let keyword = keywordSource?.keyword else {
+            completion(nil)
+            return
+        }
         completion(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword))
     }
 }
