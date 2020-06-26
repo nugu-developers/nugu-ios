@@ -22,6 +22,6 @@
 
 @interface ObjcExceptionCatcher : NSObject
 
-+ (NSError *)objcTry:(void(^)(void))tryBlock;
++ (NSError *)objcTry:(void(NS_NOESCAPE ^)(void))tryBlock;
 
 @end
