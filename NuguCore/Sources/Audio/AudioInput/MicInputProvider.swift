@@ -82,15 +82,27 @@ public class MicInputProvider: AudioProvidable {
     private func beginTappingMicrophone(streamWriter: AudioStreamWritable) throws {
         log.debug("begin tapping to engine's input node")
         
-        let inputNode = audioEngine.inputNode
-        let inputFormat = inputNode.inputFormat(forBus: audioBus)
+        var inputNode: AVAudioInputNode!
+        var inputFormat: AVAudioFormat!
+        if let error = ObjcExceptionCatcher.objcTry({
+            // The audio engine creates a singleton on demand when inputNode is first accessed.
+            // So it could raise an ObjC exception
+            inputNode = audioEngine.inputNode
+            inputFormat = inputNode.inputFormat(forBus: audioBus)
+        }) {
+            log.error("create AVAudioInputNode error: \(error)\n" +
+                "\t\tengine output format: \(audioEngine.inputNode.outputFormat(forBus: audioBus))\n" +
+                "\t\tengine input format: \(audioEngine.inputNode.inputFormat(forBus: audioBus))")
+            
+            throw error
+        }
         
         guard let recordingFormat = audioFormat else {
             log.error("cannot make audioFormat")
             throw MicInputError.audioFormatError
         }
         
-        log.info("convert from: \(inputFormat) to: \(recordingFormat)")
+        log.info("convert from: \(String(describing: inputFormat)) to: \(recordingFormat)")
         guard let formatConverter = AVAudioConverter(from: inputFormat, to: recordingFormat) else {
             log.error("cannot make audio converter")
             throw MicInputError.resamplerError(source: inputFormat, dest: recordingFormat)
@@ -98,11 +110,9 @@ public class MicInputProvider: AudioProvidable {
         
         self.streamWriter = streamWriter
         
-        if let error = ObjcExceptionCatcher.objcTry({ [weak self] in
-            guard let self = self else { return }
-            
-            inputNode.removeTap(onBus: self.audioBus)
-            inputNode.installTap(onBus: self.audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, _) in
+        if let error = ObjcExceptionCatcher.objcTry({
+            inputNode.removeTap(onBus: audioBus)
+            inputNode.installTap(onBus: audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, _) in
                 guard let self = self else { return }
                 
                 self.audioQueue.sync {
@@ -133,9 +143,9 @@ public class MicInputProvider: AudioProvidable {
             }
         }) {
             log.error("installTap error: \(error)\n" +
-                "\t\trequested format: \(inputFormat)\n" +
+                "\t\trequested format: \(String(describing: inputFormat))\n" +
                 "\t\tengine output format: \(audioEngine.inputNode.outputFormat(forBus: audioBus))\n" +
-                "\t\tinput format: \(audioEngine.inputNode.inputFormat(forBus: audioBus))")
+                "\t\tengine input format: \(audioEngine.inputNode.inputFormat(forBus: audioBus))")
             log.error("\n\t\t\(AVAudioSession.sharedInstance().category)\n" +
                 "\t\t\(AVAudioSession.sharedInstance().categoryOptions)\n" +
                 "\t\taudio session sampleRate: \(AVAudioSession.sharedInstance().sampleRate)")
