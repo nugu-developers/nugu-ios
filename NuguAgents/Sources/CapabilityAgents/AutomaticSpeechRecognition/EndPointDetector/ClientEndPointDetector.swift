@@ -45,10 +45,14 @@ class ClientEndPointDetector: EndPointDetectable {
     }
     
     func start(audioStreamReader: AudioStreamReadable) {
+        log.debug("start")
+        
         boundStreams?.stop()
-        boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
+        let audioBoundStream = AudioBoundStreams(audioStreamReader: audioStreamReader)
+        boundStreams = audioBoundStream
+
         engine.start(
-            inputStream: boundStreams!.input,
+            inputStream: audioBoundStream.input,
             sampleRate: asrOptions.sampleRate,
             timeout: asrOptions.timeout.truncatedSeconds,
             maxDuration: asrOptions.maxDuration.truncatedSeconds,
@@ -57,6 +61,8 @@ class ClientEndPointDetector: EndPointDetectable {
     }
     
     public func stop() {
+        log.debug("stop")
+        
         boundStreams?.stop()
         engine.stop()
     }
