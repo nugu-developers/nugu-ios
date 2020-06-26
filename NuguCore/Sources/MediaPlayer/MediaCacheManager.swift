@@ -36,29 +36,28 @@ struct MediaCacheManager {
 // MARK: - Internal Methods
 
 extension MediaCacheManager {
-    static func checkCacheAvailablity(itemURL: URL, cacheKey: String, completion: @escaping (_ isAvailable: Bool, _ cacheExists: Bool, _ endUrl: URL) -> Void) {
+    static func checkCacheAvailablity(itemURL: URL, cacheKey: String) -> (isAvailable: Bool, cacheExists: Bool, endUrl: URL) {
+        var result = (false, false, itemURL)
         guard isCacheEnabled else {
-            completion(false, false, itemURL)
-            return
+            return result
         }
         
         var request: URLRequest = URLRequest(url: itemURL)
         request.httpMethod = "HEAD"
+        
+        let semaphore = DispatchSemaphore(value: 0)
         URLSession.shared.dataTask(with: request) { (_, response, _) in
             guard let httpURLResponse = response as? HTTPURLResponse,
                 let contentType = httpURLResponse.allHeaderFields["Content-Type"] as? String else {
-                    completion(false, false, itemURL)
+                    semaphore.signal()
                     return
             }
-
             log.debug("+++ \(httpURLResponse.allHeaderFields) +++")
-            
-            completion(
-                supportedMimeTypeForCaching.contains(contentType),
-                doesCacheFileExist(key: cacheKey),
-                httpURLResponse.url ?? itemURL
-            )
+            result = (supportedMimeTypeForCaching.contains(contentType), doesCacheFileExist(key: cacheKey), httpURLResponse.url ?? itemURL)
+            semaphore.signal()
         }.resume()
+        semaphore.wait()
+        return result
     }
     
     static func getCachedPlayerItem(cacheKey: String) -> MediaAVPlayerItem? {
