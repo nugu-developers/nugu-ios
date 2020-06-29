@@ -65,12 +65,12 @@ public struct PhoneCallPerson: Codable {
         }
         
         public let time: String?
-        public let historyType: HistoryType?
+        public let type: HistoryType?
         public let callType: CallType?
         
-        public init(time: String?, historyType: HistoryType?, callType: CallType?) {
+        public init(time: String?, type: HistoryType?, callType: CallType?) {
             self.time = time
-            self.historyType = historyType
+            self.type = type
             self.callType = callType
         }
     }
