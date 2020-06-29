@@ -30,15 +30,12 @@ public struct ChipsAgentItem {
     }
     
     public struct Chip {
-        public let textSource: String
-        public let type: ItemType
-        public let icon: String?
-        public let text: String?
-        public let image: String?
+        public let type: ItemType?
+        public let text: String
         
         public enum ItemType: String, Decodable {
-            case text = "TEXT"
-            case image = "IMAGE"
+            case action = "ACTION"
+            case general = "GENERAL"
         }
     }
 }
@@ -63,21 +60,15 @@ extension ChipsAgentItem: Decodable {
 
 extension ChipsAgentItem.Chip: Decodable {
     enum CodingKeys: String, CodingKey {
-        case textSource
         case type
-        case icon
         case text
-        case image
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        textSource = try container.decode(String.self, forKey: .textSource)
-        type = try container.decode(ItemType.self, forKey: .type)
-        icon = try? container.decode(String.self, forKey: .icon)
-        text = try? container.decode(String.self, forKey: .text)
-        image = try? container.decode(String.self, forKey: .image)
+        type = try? container.decode(ItemType.self, forKey: .type)
+        text = try container.decode(String.self, forKey: .text)
     }
 }
 
