@@ -31,15 +31,29 @@ public struct PhoneCallPerson: Codable {
         case none = "NONE"
     }
     
+    // MARK: Address
+    
+    public struct Address: Codable {
+        public let road: String?
+        public let jibun: String?
+        
+        public init(road: String?, jibun: String?) {
+            self.road = road
+            self.jibun = jibun
+        }
+    }
+    
     // MARK: BusinessHours
     
     public struct BusinessHours: Codable {
         public let open: String?
         public let close: String?
+        public let info: String?
         
-        public init(open: String?, close: String?) {
+        public init(open: String?, close: String?, info: String?) {
             self.open = open
             self.close = close
+            self.info = info
         }
     }
     
@@ -57,7 +71,7 @@ public struct PhoneCallPerson: Codable {
         }
         
         public enum CallType: String, Codable {
-            case call = "CALL"
+            case normal = "NORMAL"
             case video = "VIDEO"
             case callar = "CALLAR"
             case group = "GROUP"
@@ -99,7 +113,7 @@ public struct PhoneCallPerson: Codable {
     public let type: PersonType
     public let profileImgUrl: String?
     public let category: String?
-    public let address: String?
+    public let address: Address?
     public let businessHours: BusinessHours?
     public let history: History?
     public let numInCallHistory: String?
@@ -112,7 +126,7 @@ public struct PhoneCallPerson: Codable {
         type: PersonType,
         profileImgUrl: String?,
         category: String?,
-        address: String?,
+        address: Address?,
         businessHours: BusinessHours?,
         history: History?,
         numInCallHistory: String?,

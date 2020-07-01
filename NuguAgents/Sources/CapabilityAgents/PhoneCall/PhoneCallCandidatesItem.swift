@@ -1,8 +1,8 @@
 //
-//  PhoneCallAgentDelegate.swift
+//  PhoneCallCandidatesItem.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/05/12.
+//  Created by yonghoonKwon on 2020/07/01.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,19 @@
 
 import Foundation
 
-public protocol PhoneCallAgentDelegate: class {
-    func phoneCallAgentRequestState() -> PhoneCallState
-    func phoneCallAgentRequestTemplate() -> PhoneCallTemplate?
+public struct PhoneCallCandidatesItem: Decodable {
     
-    func phoneCallAgentDidReceiveSendCandidates(item: PhoneCallCandidatesItem, dialogRequestId: String)
-    func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson, dialogRequestId: String) -> PhoneCallErrorCode?
+    public let playServiceId: String
+    public let intent: PhoneCallIntent
+    public let callType: PhoneCallType?
+    public let recipient: PhoneCallRecipient?
+    public let candidates: [PhoneCallPerson]?
+    
+    public init(playServiceId: String, intent: PhoneCallIntent, callType: PhoneCallType?, recipient: PhoneCallRecipient, candidates: [PhoneCallPerson]?) {
+        self.playServiceId = playServiceId
+        self.intent = intent
+        self.callType = callType
+        self.recipient = recipient
+        self.candidates = candidates
+    }
 }

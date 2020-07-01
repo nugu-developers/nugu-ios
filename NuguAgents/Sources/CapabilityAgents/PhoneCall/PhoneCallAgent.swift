@@ -121,36 +121,14 @@ private extension PhoneCallAgent {
                 return
             }
             
-            guard let playServiceId = payloadDictionary["playServiceId"] as? String,
-                let intent = payloadDictionary["intent"] as? String,
-                let phoneCallIntent = PhoneCallIntent(rawValue: intent) else {
-                    log.error("Invalid intent or playServiceId in payload")
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
+                let candidatesItem = try? JSONDecoder().decode(PhoneCallCandidatesItem.self, from: payloadData) else {
+                    log.error("Invalid candidateItem in payload")
                     return
             }
             
-            var phoneCallType: PhoneCallType?
-            if let callType = payloadDictionary["callType"] as? String {
-                phoneCallType = PhoneCallType(rawValue: callType)
-            }
-            
-            var recipient: PhoneCallRecipient?
-            if let recipientDictionary = payloadDictionary["recipientIntended"] as? [String: AnyHashable],
-                let recipientData = try? JSONSerialization.data(withJSONObject: recipientDictionary, options: []) {
-                recipient = try? JSONDecoder().decode(PhoneCallRecipient.self, from: recipientData)
-            }
-            
-            var candidates: [PhoneCallPerson]?
-            if let candidatesArray = payloadDictionary["candidates"] as? [[String: AnyHashable]],
-                let candidatesData = try? JSONSerialization.data(withJSONObject: candidatesArray, options: []) {
-                candidates = try? JSONDecoder().decode([PhoneCallPerson].self, from: candidatesData)
-            }
-            
             self.delegate?.phoneCallAgentDidReceiveSendCandidates(
-                intent: phoneCallIntent,
-                callType: phoneCallType,
-                recipient: recipient,
-                candidates: candidates,
-                playServiceId: playServiceId,
+                item: candidatesItem,
                 dialogRequestId: directive.header.dialogRequestId
             )
         }
