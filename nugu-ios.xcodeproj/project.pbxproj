@@ -79,6 +79,7 @@
 		1FD5D18024A99993007BA384 /* PhoneCallErrorCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D17724A99993007BA384 /* PhoneCallErrorCode.swift */; };
 		1FD5D18124A99993007BA384 /* PhoneCallIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D17824A99993007BA384 /* PhoneCallIntent.swift */; };
 		1FD5D18224A99993007BA384 /* PhoneCallRecipient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D17924A99993007BA384 /* PhoneCallRecipient.swift */; };
+		1FD5D18424AC97CE007BA384 /* PhoneCallCandidatesItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D18324AC97CE007BA384 /* PhoneCallCandidatesItem.swift */; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF02823753F8A00C9A177 /* NuguUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF02623753F8A00C9A177 /* NuguUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -731,6 +732,7 @@
 		1FD5D17724A99993007BA384 /* PhoneCallErrorCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneCallErrorCode.swift; sourceTree = "<group>"; };
 		1FD5D17824A99993007BA384 /* PhoneCallIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneCallIntent.swift; sourceTree = "<group>"; };
 		1FD5D17924A99993007BA384 /* PhoneCallRecipient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneCallRecipient.swift; sourceTree = "<group>"; };
+		1FD5D18324AC97CE007BA384 /* PhoneCallCandidatesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallCandidatesItem.swift; sourceTree = "<group>"; };
 		1FFFEFFD23753F1800C9A177 /* NuguCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFFF23753F1800C9A177 /* NuguCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguCore.h; sourceTree = "<group>"; };
 		1FFFF00023753F1800C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1451,6 +1453,7 @@
 				1FD5D17424A99993007BA384 /* PhoneCallState.swift */,
 				1FD5D17624A99993007BA384 /* PhoneCallTemplate.swift */,
 				1FD5D17524A99993007BA384 /* PhoneCallType.swift */,
+				1FD5D18324AC97CE007BA384 /* PhoneCallCandidatesItem.swift */,
 			);
 			path = PhoneCall;
 			sourceTree = "<group>";
@@ -3774,6 +3777,7 @@
 				737388E524A46C5D0018DDD2 /* AudioPlayerAgentDelegate.swift in Sources */,
 				7334F47523FD170200EA5E58 /* Eventable+makeEventMessage.swift in Sources */,
 				73152FC123E0414F00F843C3 /* SystemAgent.swift in Sources */,
+				1FD5D18424AC97CE007BA384 /* PhoneCallCandidatesItem.swift in Sources */,
 				737388DD24A46C3C0018DDD2 /* SoundBeepName.swift in Sources */,
 				737388C524A46C110018DDD2 /* CapabilityAgentable.swift in Sources */,
 				737388D324A46C2B0018DDD2 /* Session.swift in Sources */,
