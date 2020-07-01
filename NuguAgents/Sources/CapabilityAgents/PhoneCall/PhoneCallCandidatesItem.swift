@@ -28,7 +28,7 @@ public struct PhoneCallCandidatesItem: Decodable {
     public let recipient: PhoneCallRecipient?
     public let candidates: [PhoneCallPerson]?
     
-    public init(playServiceId: String, intent: PhoneCallIntent, callType: PhoneCallType?, recipient: PhoneCallRecipient, candidates: [PhoneCallPerson]?) {
+    public init(playServiceId: String, intent: PhoneCallIntent, callType: PhoneCallType?, recipient: PhoneCallRecipient?, candidates: [PhoneCallPerson]?) {
         self.playServiceId = playServiceId
         self.intent = intent
         self.callType = callType
