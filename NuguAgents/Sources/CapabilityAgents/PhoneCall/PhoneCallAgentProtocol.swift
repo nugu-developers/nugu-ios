@@ -1,9 +1,9 @@
 //
-//  ObjcExceptionCatcher.h
-//  NuguCore
+//  PhoneCallAgentProtocol.swift
+//  NuguAgents
 //
-//  Created by DCs-OfficeMBP on 18/03/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/04/29.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,10 +18,13 @@
 //  limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-@interface ObjcExceptionCatcher : NSObject
+import NuguCore
 
-+ (NSError *)objcTry:(void(NS_NOESCAPE ^)(void))tryBlock;
-
-@end
+public protocol PhoneCallAgentProtocol: CapabilityAgentable {
+    
+    var delegate: PhoneCallAgentDelegate? { get set }
+    
+    @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
+}

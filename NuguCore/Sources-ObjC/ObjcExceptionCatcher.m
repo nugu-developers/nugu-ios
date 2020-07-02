@@ -23,7 +23,7 @@
 
 @implementation ObjcExceptionCatcher
 
-+ (NSError *)objcTry:(void(^)(void))tryBlock {
++ (NSError *)objcTry:(void(NS_NOESCAPE ^)(void))tryBlock {
     @try {
         tryBlock();
     } @catch (NSException *exception) {

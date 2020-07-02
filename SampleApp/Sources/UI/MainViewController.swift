@@ -564,8 +564,9 @@ extension MainViewController: DialogStateDelegate {
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 if let chips = chips {
-                    let actionList = chips.map { $0.textSource }
-                    self?.setChipsButton(actionList: actionList, normalList: [])
+                    let actionList = chips.filter { $0.type == .action }.map { $0.text }
+                    let normalList = chips.filter { $0.type == .general }.map { $0.text }
+                    self?.setChipsButton(actionList: actionList, normalList: normalList)
                 }
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
             

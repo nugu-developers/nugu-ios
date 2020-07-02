@@ -51,12 +51,17 @@ public class KeywordDetector {
     }
     
     public func start() {
+        log.debug("start")
+        
         boundStreams?.stop()
-        boundStreams = AudioBoundStreams(audioStreamReader: audioStream.makeAudioStreamReader())
-        engine.start(inputStream: boundStreams!.input)
+        let audioBoundStreams = AudioBoundStreams(audioStreamReader: audioStream.makeAudioStreamReader())
+        engine.start(inputStream: audioBoundStreams.input)
+        boundStreams = audioBoundStreams
     }
     
     public func stop() {
+        log.debug("stop")
+        
         boundStreams?.stop()
         boundStreams = nil
         engine.stop()

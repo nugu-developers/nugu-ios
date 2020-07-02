@@ -43,6 +43,7 @@ private var nattyConfiguration: NattyConfiguration {
 }
 
 /// Turn the log enable and disable in `NuguCore`.
+@available(*, deprecated, message: "Replace to `logLevel`")
 public var logEnabled: Bool {
     set {
         guard newValue == true else {
@@ -62,5 +63,14 @@ public var logEnabled: Bool {
         default:
             return true
         }
+    }
+}
+
+/// The minimum log level  in `NuguCore`.
+public var logLevel: NattyLog.LogLevel {
+    set {
+        log.configuration.minLogLevel = newValue
+    } get {
+        return log.configuration.minLogLevel
     }
 }
