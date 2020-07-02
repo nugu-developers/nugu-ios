@@ -44,7 +44,7 @@ final class NuguServiceWebViewController: UIViewController {
 private extension NuguServiceWebViewController {
     func setCookie() {
         let cookie = NuguServiceCookie(
-            authToken: UserDefaults.Standard.accessToken ?? "",
+            authToken: "Bearer \(UserDefaults.Standard.accessToken ?? "")",
             appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
             sdkVersion: Bundle(identifier: "com.sktelecom.romaine.NuguClientKit")?.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
             pocId: SampleApp.clientId ?? "",
