@@ -130,7 +130,7 @@
                         <outlet property="settingButton" destination="H7A-kt-fwH" id="wvw-g1-c4g"/>
                         <outlet property="watermarkLabel" destination="2Ns-b9-eTf" id="hCm-cA-CbZ"/>
                         <segue destination="gGQ-jV-Gla" kind="presentation" identifier="mainToGuideWeb" id="HfI-PN-nmd"/>
-                        <segue destination="YYF-Xk-QMg" kind="presentation" identifier="showSettings" modalPresentationStyle="fullScreen" id="ayc-vT-2QZ"/>
+                        <segue destination="GR6-bJ-aiM" kind="presentation" identifier="showSettings" modalPresentationStyle="fullScreen" id="XSP-sM-tXK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aSS-QQ-e3M" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -142,6 +142,22 @@
                 </view>
             </objects>
             <point key="canvasLocation" x="1143.2" y="17.733990147783253"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="yRj-DH-YeU">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="GR6-bJ-aiM" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="6z5-NC-l3I"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MeA-fX-fwR">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="YYF-Xk-QMg" kind="relationship" relationship="rootViewController" id="qkJ-1G-sWW"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ssI-IH-BXE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1934" y="18"/>
         </scene>
         <!--Web View Controller-->
         <scene sceneID="zmX-Cp-jdd">
@@ -269,11 +285,58 @@
                     <navigationItem key="navigationItem" id="fWp-jB-3oH"/>
                     <connections>
                         <outlet property="tableView" destination="4mt-z8-MSl" id="5KK-4v-8cx"/>
+                        <segue destination="7aI-qm-ARe" kind="show" identifier="showNuguServiceWebView" id="qWv-i5-dfX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FfO-uZ-u0t" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2012" y="18"/>
+            <point key="canvasLocation" x="2649" y="18"/>
+        </scene>
+        <!--Nugu Service Web View Controller-->
+        <scene sceneID="I4q-4y-CIu">
+            <objects>
+                <viewController storyboardIdentifier="NuguServiceWebViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7aI-qm-ARe" customClass="NuguServiceWebViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Lto-Ie-wFf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxj-7v-TqU" userLabel="CloseButton">
+                                <rect key="frame" x="331" y="63" width="28" height="28"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="28" id="vwU-Rj-ak8"/>
+                                    <constraint firstAttribute="height" constant="28" id="zkY-tk-Hdi"/>
+                                </constraints>
+                                <state key="normal" image="btn_close">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeButtonDidClick:" destination="7aI-qm-ARe" eventType="touchUpInside" id="yt1-nn-k3l"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kZk-Wb-I15" customClass="NuguServiceWebView" customModule="NuguServiceKit">
+                                <rect key="frame" x="0.0" y="101" width="375" height="711"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="kZk-Wb-I15" firstAttribute="trailing" secondItem="NoW-mx-6pj" secondAttribute="trailing" id="H4Y-dv-sSL"/>
+                            <constraint firstItem="rxj-7v-TqU" firstAttribute="top" secondItem="NoW-mx-6pj" secondAttribute="top" constant="19" id="bLW-Ca-3Ry"/>
+                            <constraint firstItem="kZk-Wb-I15" firstAttribute="top" secondItem="rxj-7v-TqU" secondAttribute="bottom" constant="10" id="dIP-P2-uKc"/>
+                            <constraint firstItem="NoW-mx-6pj" firstAttribute="trailing" secondItem="rxj-7v-TqU" secondAttribute="trailing" constant="16" id="kLM-OQ-YAE"/>
+                            <constraint firstItem="kZk-Wb-I15" firstAttribute="leading" secondItem="NoW-mx-6pj" secondAttribute="leading" id="n6i-Na-pmM"/>
+                            <constraint firstAttribute="bottom" secondItem="kZk-Wb-I15" secondAttribute="bottom" id="wSU-Dj-o4o"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="NoW-mx-6pj"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Hhy-q1-IjW"/>
+                    <connections>
+                        <outlet property="nuguServiceWebView" destination="kZk-Wb-I15" id="oIC-fG-jAU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1xm-9L-exs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3386" y="18"/>
         </scene>
     </scenes>
     <resources>

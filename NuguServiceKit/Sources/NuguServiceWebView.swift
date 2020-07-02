@@ -24,7 +24,8 @@ import WebKit
 final public class NuguServiceWebView: WKWebView {
     
     // TODO: - not decided yet, to be confirmed
-    public static let serviceSettingUrl = "https://stg-webview.sktnugu.com/3pp/intro.html"
+    public static let serviceSettingUrl = "https://webview.sktnugu.com/3pp/intro.html"
+    public static let agreementUrl = "https://webview.sktnugu.com/3pp/agreement/list.html"
     
     private enum MethodType: String, CaseIterable {
         case openExternalApp
