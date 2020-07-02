@@ -22,28 +22,24 @@ import Foundation
 
 public struct NuguServiceCookie: Encodable {
     let authToken: String
-    let osTypeCode: String
+    let osTypeCode: String = "MBL_IOS" // CURRENTLY SUPPORT ONLY MBL_IOS
     let appVersion: String
     let sdkVersion: String
     let pocId: String
-    let phoneModelName: String
-    let theme: String
+    let phoneModelName: String = "iphone" // CAN BE DEPRECATED
+    let theme: String // DARK or LIGHT
 
     public init(
         authToken: String,
-        osTypeCode: String,
         appVersion: String,
         sdkVersion: String,
         pocId: String,
-        phoneModelName: String,
         theme: String
     ) {
         self.authToken = authToken
-        self.osTypeCode = osTypeCode
         self.appVersion = appVersion
         self.sdkVersion = sdkVersion
         self.pocId = pocId
-        self.phoneModelName = phoneModelName
         self.theme = theme
     }
     

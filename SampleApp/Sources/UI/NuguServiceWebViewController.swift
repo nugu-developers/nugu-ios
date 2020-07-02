@@ -45,12 +45,10 @@ private extension NuguServiceWebViewController {
     func setCookie() {
         let cookie = NuguServiceCookie(
             authToken: UserDefaults.Standard.accessToken ?? "",
-            osTypeCode: "MBL_IOS",
             appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
             sdkVersion: Bundle(identifier: "com.sktelecom.romaine.NuguClientKit")?.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
             pocId: SampleApp.clientId ?? "",
-            phoneModelName: "iphone",
-            theme: "dark"
+            theme: "LIGHT"
         )
         guard let initialURLString = initialURLString,
             let initialUrl = URL(string: initialURLString),
