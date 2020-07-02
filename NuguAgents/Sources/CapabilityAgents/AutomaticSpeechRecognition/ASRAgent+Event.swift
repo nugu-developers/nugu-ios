@@ -60,7 +60,7 @@ extension ASRAgent.Event: Eventable {
             ]
             
             if case let .wakeUpKeyword(keyword, _, start, end, detection) = options.initiator {
-                var wakeup: [String: AnyHashable] = ["word": keyword]
+                var wakeup: [String: AnyHashable?] = ["word": keyword]
                 if options.endPointing == .server {
                     /**
                      KeywordDetector use 16k mono (bit depth: 16).
@@ -74,7 +74,7 @@ extension ASRAgent.Event: Eventable {
                     ]
                     wakeup["boundary"] = boundary
                 }
-                payload["wakeup"] = wakeup
+                payload["wakeup"] = wakeup.compactMapValues { $0 }
             }
         case .listenTimeout,
              .stopRecognize,
