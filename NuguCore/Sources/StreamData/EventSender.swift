@@ -116,7 +116,6 @@ class EventSender: NSObject {
                 guard let self = self else { return Completable.empty() }
 
                 var partData = Data()
-                partData.append(HTTPConst.crlfData)
                 partData.append("--\(self.boundary)--".data(using: .utf8)!)
                 partData.append(HTTPConst.crlfData)
 
@@ -206,8 +205,6 @@ private extension EventSender {
         partData.append(HTTPConst.crlfData)
         partData.append(bodyData)
         partData.append(HTTPConst.crlfData)
-        partData.append("--\(boundary)".data(using: .utf8)!)
-        partData.append(HTTPConst.crlfData)
         
         log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
@@ -221,12 +218,12 @@ private extension EventSender {
         ]
         
         var partData = Data()
+        partData.append("--\(boundary)".data(using: .utf8)!)
+        partData.append(HTTPConst.crlfData)
         partData.append(headerLines.joined(separator: (HTTPConst.crlf)).data(using: .utf8)!)
         partData.append(HTTPConst.crlfData)
         partData.append(HTTPConst.crlfData)
         partData.append(attachment.content)
-        partData.append(HTTPConst.crlfData)
-        partData.append("--\(boundary)".data(using: .utf8)!)
         partData.append(HTTPConst.crlfData)
         
         log.debug("Data(\(attachment.content)):\n\(String(data: partData, encoding: .utf8) ?? "")")
