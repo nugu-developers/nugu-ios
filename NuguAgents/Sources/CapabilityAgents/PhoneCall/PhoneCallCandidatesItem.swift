@@ -25,14 +25,14 @@ public struct PhoneCallCandidatesItem: Decodable {
     public let playServiceId: String
     public let intent: PhoneCallIntent
     public let callType: PhoneCallType?
-    public let recipient: PhoneCallRecipient?
+    public let recipientIntended: PhoneCallRecipient?
     public let candidates: [PhoneCallPerson]?
     
-    public init(playServiceId: String, intent: PhoneCallIntent, callType: PhoneCallType?, recipient: PhoneCallRecipient?, candidates: [PhoneCallPerson]?) {
+    public init(playServiceId: String, intent: PhoneCallIntent, callType: PhoneCallType?, recipientIntended: PhoneCallRecipient?, candidates: [PhoneCallPerson]?) {
         self.playServiceId = playServiceId
         self.intent = intent
         self.callType = callType
-        self.recipient = recipient
+        self.recipientIntended = recipientIntended
         self.candidates = candidates
     }
 }
