@@ -46,7 +46,6 @@ private extension NuguServiceWebViewController {
         let cookie = NuguServiceCookie(
             authToken: "Bearer \(UserDefaults.Standard.accessToken ?? "")",
             appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-            sdkVersion: Bundle(identifier: "com.sktelecom.romaine.NuguClientKit")?.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
             pocId: SampleApp.clientId ?? "",
             theme: "LIGHT"
         )

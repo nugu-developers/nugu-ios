@@ -25,7 +25,7 @@ public struct NuguServiceCookie: Encodable {
     let authToken: String
     let osTypeCode: String = "MBL_IOS" // CURRENTLY SUPPORT ONLY MBL_IOS
     let appVersion: String
-    let sdkVersion: String
+    let sdkVersion: String = Bundle(identifier: "com.sktelecom.romaine.NuguServiceKit")?.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     let pocId: String
     let phoneModelName: String = UIDevice.current.model
     let theme: String // DARK or LIGHT
@@ -33,13 +33,11 @@ public struct NuguServiceCookie: Encodable {
     public init(
         authToken: String,
         appVersion: String,
-        sdkVersion: String,
         pocId: String,
         theme: String
     ) {
         self.authToken = authToken
         self.appVersion = appVersion
-        self.sdkVersion = sdkVersion
         self.pocId = pocId
         self.theme = theme
     }
