@@ -26,13 +26,13 @@ protocol AudioPlayerDisplayManageable {
     
     func updateMetadata(payload: Data, playServiceId: String)
     
-    func showLyrics(playServiceId: String) -> Bool
+    func showLyrics(playServiceId: String, completion: @escaping (Bool) -> Void)
     
-    func hideLyrics(playServiceId: String) -> Bool
+    func hideLyrics(playServiceId: String, completion: @escaping (Bool) -> Void)
     
-    func isLyricsVisible(playServiceId: String) -> Bool
+    func isLyricsVisible(playServiceId: String, completion: @escaping (Bool) -> Void)
     
-    func controlLyricsPage(payload: AudioPlayerDisplayControlPayload) -> Bool
+    func controlLyricsPage(payload: AudioPlayerDisplayControlPayload, completion: @escaping (Bool) -> Void)
     
     /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
     ///

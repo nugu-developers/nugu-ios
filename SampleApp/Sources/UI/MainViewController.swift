@@ -638,85 +638,115 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentFocusedItemToken() -> String? {
-        guard let displayControllableView = displayView as? DisplayControllable,
-            displayView?.supportFocusedItemToken == true else {
-            return nil
+    func displayAgentRequestContext(completion: @escaping (DisplayContext?) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                let displayControllableView = self.displayView as? DisplayControllable else {
+                    return completion(nil)
+            }
+
+            let focusedItemToken: String? = {
+                guard self.displayView?.supportVisibleTokenList == true else { return nil }
+                return displayControllableView.focusedItemToken()
+            }()
+            let visibleTokenList = { () -> [String]? in
+                guard self.displayView?.supportVisibleTokenList == true else { return nil }
+                return displayControllableView.visibleTokenList()
+            }()
+            
+            completion(DisplayContext(focusedItemToken: focusedItemToken, visibleTokenList: visibleTokenList))
         }
-        return displayControllableView.focusedItemToken()
     }
     
-    func displayAgentVisibleTokenList() -> [String]? {
-        guard let displayControllableView = displayView as? DisplayControllable,
-            displayView?.supportVisibleTokenList == true else {
-                return nil
+    func displayAgentShouldMoveFocus(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            guard let displayControllableView = self?.displayView as? DisplayControllable else {
+                completion(false)
+                return
+            }
+            
+            completion(displayControllableView.focus(direction: direction))
         }
-        return displayControllableView.visibleTokenList()
     }
     
-    func displayAgentShouldMoveFocus(direction: DisplayControlPayload.Direction) -> Bool {
-        guard let displayControllableView = displayView as? DisplayControllable else {
-            return false
+    func displayAgentShouldScroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            guard let displayControllableView = self?.displayView as? DisplayControllable else {
+                completion(false)
+                return
+            }
+            completion(displayControllableView.scroll(direction: direction))
         }
-        return displayControllableView.focus(direction: direction)
     }
     
-    func displayAgentShouldScroll(direction: DisplayControlPayload.Direction) -> Bool {
-        guard let displayControllableView = displayView as? DisplayControllable else {
-            return false
-        }
-        return displayControllableView.scroll(direction: direction)
-    }
-    
-    func displayAgentShouldRender(template: DisplayTemplate) -> AnyObject? {
+    func displayAgentShouldRender(template: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         log.debug("")
-        return addDisplayView(displayTemplate: template)
+        DispatchQueue.main.async { [weak self] in
+            completion(self?.addDisplayView(displayTemplate: template))
+        }
     }
     
     func displayAgentShouldUpdate(template: DisplayTemplate) {
-        updateDisplayView(displayTemplate: template)
+        DispatchQueue.main.async { [weak self] in
+            self?.updateDisplayView(displayTemplate: template)
+        }
     }
     
     func displayAgentDidClear(template: DisplayTemplate) {
         log.debug("")
-        dismissDisplayView()
+        DispatchQueue.main.async { [weak self] in
+            self?.dismissDisplayView()
+        }
     }
 }
 
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayShouldShowLyrics() -> Bool {
-        return displayAudioPlayerView?.shouldShowLyrics() ?? false
+    func audioPlayerDisplayShouldShowLyrics(completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            completion(self?.displayAudioPlayerView?.shouldShowLyrics() ?? false)
+        }
     }
     
-    func audioPlayerDisplayShouldHideLyrics() -> Bool {
-        return displayAudioPlayerView?.shouldHideLyrics() ?? false
+    func audioPlayerDisplayShouldHideLyrics(completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            completion(self?.displayAudioPlayerView?.shouldHideLyrics() ?? false)
+        }
     }
     
-    func audioPlayerIsLyricsVisible() -> Bool {
-        return displayAudioPlayerView?.isLyricsVisible ?? false
+    func audioPlayerIsLyricsVisible(completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            completion(self?.displayAudioPlayerView?.isLyricsVisible ?? false)
+        }
     }
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool { return false }
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async {
+            completion(false)
+        }
+    }
     
-    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> AnyObject? {
+    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         log.debug("")
-        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidRender(template: template)
-        return addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template)
+        DispatchQueue.main.async { [weak self] in
+            NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidRender(template: template)
+            completion(self?.addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template))
+        }
     }
     
     func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
         log.debug("")
-        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidClear()
-        dismissDisplayAudioPlayerView()
+        DispatchQueue.main.async { [weak self] in
+            NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidClear()
+            self?.dismissDisplayAudioPlayerView()
+        }
     }
     
     func audioPlayerDisplayShouldUpdateMetadata(payload: Data) {
-        guard let displayAudioPlayerView = displayAudioPlayerView else {
-            return
+        DispatchQueue.main.async { [weak self] in
+            self?.displayAudioPlayerView?.updateSettings(payload: payload)
         }
-        displayAudioPlayerView.updateSettings(payload: payload)
     }
 }
 

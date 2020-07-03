@@ -374,22 +374,28 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
 // MARK: - ContextInfoDelegate
 
 extension AudioPlayerAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
             "offsetInMilliseconds": (offset ?? 0) * 1000,
-            "token": currentMedia?.payload.audioItem.stream.token
+            "token": currentMedia?.payload.audioItem.stream.token,
+            "lyricsVisible": false
         ]
         if let duration = duration {
             payload["durationInMilliseconds"] = duration * 1000
         }
         
         if let playServiceId = currentMedia?.payload.playServiceId {
-            payload["lyricsVisible"] = audioPlayerDisplayManager.isLyricsVisible(playServiceId: playServiceId)
-        } else {
-            payload["lyricsVisible"] = false
+            let semaphore = DispatchSemaphore(value: 0)
+            audioPlayerDisplayManager.isLyricsVisible(playServiceId: playServiceId) { result in
+                payload["lyricsVisible"] = result
+                semaphore.signal()
+            }
+            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
+                log.error("`isLyricsVisible` completion block does not called")
+            }
         }
         
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
@@ -589,13 +595,13 @@ private extension AudioPlayerAgent {
                 return
             }
             
-            let isSuccess = self.audioPlayerDisplayManager.showLyrics(playServiceId: playServiceId)
-            
-            self.sendLyricsEvent(
-                playServiceId: playServiceId,
-                referrerDialogRequestId: directive.header.dialogRequestId,
-                typeInfo: isSuccess ? .showLyricsSucceeded : .showLyricsFailed
-            )
+            self.audioPlayerDisplayManager.showLyrics(playServiceId: playServiceId) { [weak self] isSuccess in
+                self?.sendLyricsEvent(
+                    playServiceId: playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId,
+                    typeInfo: isSuccess ? .showLyricsSucceeded : .showLyricsFailed
+                )
+            }
         }
     }
     
@@ -609,13 +615,13 @@ private extension AudioPlayerAgent {
                 return
             }
             
-            let isSuccess = self.audioPlayerDisplayManager.hideLyrics(playServiceId: playServiceId)
-            
-            self.sendLyricsEvent(
-                playServiceId: playServiceId,
-                referrerDialogRequestId: directive.header.dialogRequestId,
-                typeInfo: isSuccess ? .hideLyricsSucceeded : .hideLyricsFailed
-            )
+            self.audioPlayerDisplayManager.hideLyrics(playServiceId: playServiceId) { [weak self] isSuccess in
+                self?.sendLyricsEvent(
+                    playServiceId: playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId,
+                    typeInfo: isSuccess ? .hideLyricsSucceeded : .hideLyricsFailed
+                )
+            }
         }
     }
     
@@ -629,13 +635,13 @@ private extension AudioPlayerAgent {
                 return
             }
             
-            let isSuccess = self.audioPlayerDisplayManager.controlLyricsPage(payload: payload)
-            
-            self.sendLyricsEvent(
-                playServiceId: payload.playServiceId,
-                referrerDialogRequestId: directive.header.dialogRequestId,
-                typeInfo: isSuccess ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)
-            )
+            self.audioPlayerDisplayManager.controlLyricsPage(payload: payload) { [weak self] isSuccess in
+                self?.sendLyricsEvent(
+                    playServiceId: payload.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId,
+                    typeInfo: isSuccess ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)
+                )
+            }
         }
     }
     

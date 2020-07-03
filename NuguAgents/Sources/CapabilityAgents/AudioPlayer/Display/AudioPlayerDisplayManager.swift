@@ -116,69 +116,43 @@ extension AudioPlayerDisplayManager {
     func updateMetadata(payload: Data, playServiceId: String) {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else { return }
-        DispatchQueue.main.async {
-            delegate.audioPlayerDisplayShouldUpdateMetadata(payload: payload)
-        }
+        delegate.audioPlayerDisplayShouldUpdateMetadata(payload: payload)
     }
     
-    func showLyrics(playServiceId: String) -> Bool {
+    func showLyrics(playServiceId: String, completion: @escaping (Bool) -> Void) {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else {
-                return false
+                completion(false)
+                return
         }
-        var result = false
-        if Thread.current.isMainThread {
-            return delegate.audioPlayerDisplayShouldShowLyrics()
-        }
-        DispatchQueue.main.sync {
-            result = delegate.audioPlayerDisplayShouldShowLyrics()
-        }
-        return result
+        delegate.audioPlayerDisplayShouldShowLyrics(completion: completion)
     }
     
-    func hideLyrics(playServiceId: String) -> Bool {
+    func hideLyrics(playServiceId: String, completion: @escaping (Bool) -> Void) {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else {
-                return false
+                completion(false)
+                return
         }
-        var result = false
-        if Thread.current.isMainThread {
-            return delegate.audioPlayerDisplayShouldHideLyrics()
-        }
-        DispatchQueue.main.sync {
-            result = delegate.audioPlayerDisplayShouldHideLyrics()
-        }
-        return result
+        delegate.audioPlayerDisplayShouldHideLyrics(completion: completion)
     }
     
-    func isLyricsVisible(playServiceId: String) -> Bool {
+    func isLyricsVisible(playServiceId: String, completion: @escaping (Bool) -> Void) {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
             let delegate = info.delegate else {
-                return false
+                completion(false)
+                return
         }
-        var result = false
-        if Thread.current.isMainThread {
-            return delegate.audioPlayerIsLyricsVisible()
-        }
-        DispatchQueue.main.sync {
-            result = delegate.audioPlayerIsLyricsVisible()
-        }
-        return result
+        delegate.audioPlayerIsLyricsVisible(completion: completion)
     }
     
-    func controlLyricsPage(payload: AudioPlayerDisplayControlPayload) -> Bool {
+    func controlLyricsPage(payload: AudioPlayerDisplayControlPayload, completion: @escaping (Bool) -> Void) {
         guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == payload.playServiceId }),
             let delegate = info.delegate else {
-                return false
+                completion(false)
+                return
         }
-        var result = false
-        if Thread.current.isMainThread {
-            return delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction)
-        }
-        DispatchQueue.main.sync {
-            result = delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction)
-        }
-        return result
+        delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction, completion: completion)
     }
     
     func add(delegate: AudioPlayerDisplayDelegate) {
@@ -234,11 +208,7 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
                     return self.removeRenderedTemplate(delegate: delegate, template: template)
                 })
                 .compactMap { $0.delegate }
-                .forEach { delegate in
-                    DispatchQueue.main.sync {
-                        delegate.audioPlayerDisplayDidClear(template: item)
-                    }
-            }
+                .forEach { $0.audioPlayerDisplayDidClear(template: item) }
         }
     }
 }
@@ -247,17 +217,24 @@ extension AudioPlayerDisplayManager: PlaySyncDelegate {
 
 private extension AudioPlayerDisplayManager {
     func replace(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate?) {
-        displayDispatchQueue.precondition(.onQueue)
         remove(delegate: delegate)
         let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: template)
         renderingInfos.append(info)
     }
     
     func setRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
-        displayDispatchQueue.precondition(.onQueue)
-        guard let displayObject = DispatchQueue.main.sync(execute: { () -> AnyObject? in
-            return delegate.audioPlayerDisplayShouldRender(template: template)
-        }) else { return false }
+        var displayResult: AnyObject?
+        let semaphore = DispatchSemaphore(value: 0)
+        delegate.audioPlayerDisplayShouldRender(template: template) {
+            displayResult = $0
+            semaphore.signal()
+        }
+        if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
+            log.error("`audioPlayerDisplayShouldRender` completion block does not called")
+        }
+        guard let displayObject = displayResult else {
+            return false
+        }
 
         replace(delegate: delegate, template: template)
         
@@ -276,7 +253,6 @@ private extension AudioPlayerDisplayManager {
     }
     
     func removeRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
-        displayDispatchQueue.precondition(.onQueue)
         guard self.renderingInfos.contains(
             where: { $0.delegate === delegate && $0.currentItem?.templateId == template.templateId }
             ) else { return false }
@@ -287,7 +263,6 @@ private extension AudioPlayerDisplayManager {
     }
     
     func hasRenderedDisplay(template: AudioPlayerDisplayTemplate) -> Bool {
-        displayDispatchQueue.precondition(.onQueue)
         return renderingInfos.contains { $0.currentItem?.templateId == template.templateId }
     }
 }

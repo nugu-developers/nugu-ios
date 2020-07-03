@@ -456,6 +456,7 @@
 		7E35D79424623444003289A2 /* MultiPartProcessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79324623444003289A2 /* MultiPartProcessable.swift */; };
 		7E35D79824623A22003289A2 /* TTSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79724623A22003289A2 /* TTSError.swift */; };
 		7E35D79A24623B53003289A2 /* MicInputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79924623B53003289A2 /* MicInputError.swift */; };
+		7E38656624AEE97100E78C6E /* DisplayContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E38656524AEE97100E78C6E /* DisplayContext.swift */; };
 		7E3C5707244FC62300FF36DF /* EventSenders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3C5706244FC62300FF36DF /* EventSenders.swift */; };
 		7E3C570F2450049C00FF36DF /* Keyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3C570E2450049C00FF36DF /* Keyword.swift */; };
 		7E4382542418DAB200053A0D /* PlayStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4382532418DAB200053A0D /* PlayStack.swift */; };
@@ -1128,6 +1129,7 @@
 		7E35D79324623444003289A2 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
 		7E35D79724623A22003289A2 /* TTSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSError.swift; sourceTree = "<group>"; };
 		7E35D79924623B53003289A2 /* MicInputError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicInputError.swift; sourceTree = "<group>"; };
+		7E38656524AEE97100E78C6E /* DisplayContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayContext.swift; sourceTree = "<group>"; };
 		7E3C5706244FC62300FF36DF /* EventSenders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSenders.swift; sourceTree = "<group>"; };
 		7E3C570E2450049C00FF36DF /* Keyword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyword.swift; sourceTree = "<group>"; };
 		7E4382532418DAB200053A0D /* PlayStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStack.swift; sourceTree = "<group>"; };
@@ -1834,6 +1836,7 @@
 				7373890A24A46CAE0018DDD2 /* DisplayTemplate.swift */,
 				1FFFF3562375707000C9A177 /* DisplayRenderingInfo.swift */,
 				7EF12B2223C822520000E158 /* DisplayClosePayload.swift */,
+				7E38656524AEE97100E78C6E /* DisplayContext.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -3775,6 +3778,7 @@
 				73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */,
 				A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */,
 				737388EE24A46C680018DDD2 /* AudioPlayerDisplayRepeat.swift in Sources */,
+				7E38656624AEE97100E78C6E /* DisplayContext.swift in Sources */,
 				7373890E24A46CAE0018DDD2 /* DisplayTemplate.swift in Sources */,
 				73152FB823E0414700F843C3 /* EndPointDetectorDelegate.swift in Sources */,
 				7EF674372499EE3E004FA45C /* DialogAttributeStore.swift in Sources */,

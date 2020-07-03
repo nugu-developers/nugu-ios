@@ -179,29 +179,25 @@ public extension DisplayAgent {
 
 extension DisplayAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        let sendContext = { [weak self] in
-            guard let self = self else {
-                completion(nil)
-                return
+        var payload: [String: AnyHashable?] = [
+            "version": self.capabilityAgentProperty.version,
+            "token": self.currentItem?.token,
+            "playServiceId": self.currentItem?.playServiceId
+        ]
+        if let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == self.currentItem?.templateId }),
+            let delegate = info.delegate {
+            let semaphore = DispatchSemaphore(value: 0)
+            delegate.displayAgentRequestContext { (displayContext) in
+                payload["focusedItemToken"] = displayContext?.focusedItemToken
+                payload["visibleTokenList"] = displayContext?.visibleTokenList
+                
+                semaphore.signal()
             }
-            var payload: [String: AnyHashable?] = [
-                "version": self.capabilityAgentProperty.version,
-                "token": self.currentItem?.token,
-                "playServiceId": self.currentItem?.playServiceId
-            ]
-            if let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == self.currentItem?.templateId }),
-                let delegate = info.delegate {
-                payload["focusedItemToken"] = (info.currentItem?.focusable ?? false) ? delegate.displayAgentFocusedItemToken() : nil
-                payload["visibleTokenList"] = delegate.displayAgentVisibleTokenList()
+            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
+                log.error("`displayAgentRequestContext` completion block does not called")
             }
-            completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
         }
-        
-        if Thread.current.isMainThread {
-            sendContext()
-        } else {
-            DispatchQueue.main.sync { sendContext() }
-        }
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
@@ -220,11 +216,7 @@ extension DisplayAgent: PlaySyncDelegate {
                     return self.removeRenderedTemplate(delegate: delegate, template: template)
                 })
                 .compactMap { $0.delegate }
-                .forEach { delegate in
-                    DispatchQueue.main.sync {
-                        delegate.displayAgentDidClear(template: item)
-                    }
-            }
+                .forEach { $0.displayAgentDidClear(template: item) }
         }
     }
 }
@@ -284,9 +276,8 @@ private extension DisplayAgent {
                         return
                 }
                 
-                DispatchQueue.main.async { [weak self] in
+                delegate.displayAgentShouldMoveFocus(direction: payload.direction) { [weak self] focusResult in
                     guard let self = self else { return }
-                    let focusResult = delegate.displayAgentShouldMoveFocus(direction: payload.direction)
                     
                     let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded(direction: payload.direction) : .controlFocusFailed(direction: payload.direction)
                     self.sendEvent(
@@ -320,10 +311,8 @@ private extension DisplayAgent {
                         )
                         return
                 }
-                DispatchQueue.main.async { [weak self] in
+                delegate.displayAgentShouldScroll(direction: payload.direction) { [weak self] scrollResult in
                     guard let self = self else { return }
-                    let scrollResult = delegate.displayAgentShouldScroll(direction: payload.direction)
-                    
                     let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded(direction: payload.direction) : .controlScrollFailed(direction: payload.direction)
                     self.sendEvent(
                         typeInfo: typeInfo,
@@ -362,9 +351,7 @@ private extension DisplayAgent {
                 guard let self = self else { return }
                 guard let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == updateDisplayTemplate.templateId })?.delegate else { return }
                 
-                DispatchQueue.main.async {
-                    delegate.displayAgentShouldUpdate(template: updateDisplayTemplate)
-                }
+                delegate.displayAgentShouldUpdate(template: updateDisplayTemplate)
             }
         }
     }
@@ -452,17 +439,24 @@ private extension DisplayAgent {
 
 private extension DisplayAgent {
     func replace(delegate: DisplayAgentDelegate, template: DisplayTemplate?) {
-        displayDispatchQueue.precondition(.onQueue)
         remove(delegate: delegate)
         let info = DisplayRenderingInfo(delegate: delegate, currentItem: template)
         renderingInfos.append(info)
     }
     
     func setRenderedTemplate(delegate: DisplayAgentDelegate, template: DisplayTemplate) -> Bool {
-        displayDispatchQueue.precondition(.onQueue)
-        guard let displayObject = DispatchQueue.main.sync(execute: { () -> AnyObject? in
-            return delegate.displayAgentShouldRender(template: template)
-        }) else { return false }
+        var displayResult: AnyObject?
+        let semaphore = DispatchSemaphore(value: 0)
+        delegate.displayAgentShouldRender(template: template) {
+            displayResult = $0
+            semaphore.signal()
+        }
+        if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
+            log.error("`displayAgentShouldRender` completion block does not called")
+        }
+        guard let displayObject = displayResult else {
+            return false
+        }
 
         replace(delegate: delegate, template: template)
         
@@ -481,7 +475,6 @@ private extension DisplayAgent {
     }
     
     func removeRenderedTemplate(delegate: DisplayAgentDelegate, template: DisplayTemplate) -> Bool {
-        displayDispatchQueue.precondition(.onQueue)
         guard self.renderingInfos.contains(
             where: { $0.delegate === delegate && $0.currentItem?.templateId == template.templateId }
             ) else { return false }
@@ -492,7 +485,6 @@ private extension DisplayAgent {
     }
     
     func hasRenderedDisplay(template: DisplayTemplate) -> Bool {
-        displayDispatchQueue.precondition(.onQueue)
         return renderingInfos.contains { $0.currentItem?.templateId == template.templateId }
     }
 }

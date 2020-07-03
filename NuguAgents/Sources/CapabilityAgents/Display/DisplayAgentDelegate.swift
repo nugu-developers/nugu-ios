@@ -25,7 +25,7 @@ public protocol DisplayAgentDelegate: class {
     /// Tells the delegate that the specified template should be displayed.
     ///
     /// - Parameter template: The template to display.
-    func displayAgentShouldRender(template: DisplayTemplate) -> AnyObject?
+    func displayAgentShouldRender(template: DisplayTemplate, completion: @escaping (AnyObject?) -> Void)
     
     /// Tells the delegate that the specified template should be removed from the screen.
     ///
@@ -33,20 +33,17 @@ public protocol DisplayAgentDelegate: class {
     func displayAgentDidClear(template: DisplayTemplate)
     
     /// Tells the delegate that the displayed template should move focus with given direction.
-    /// Should return whether succeeded or not.
     /// - Parameter direction: Direction to move focus.
-    func displayAgentShouldMoveFocus(direction: DisplayControlPayload.Direction) -> Bool
+    /// - Parameter completion: Whether succeeded or not
+    func displayAgentShouldMoveFocus(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
     
     /// Tells the delegate that the displayed template should scroll with given direction.
-    /// Should return whether succeeded or not.
-    /// - Parameter reason: Direction to scroll.
-    func displayAgentShouldScroll(direction: DisplayControlPayload.Direction) -> Bool
+    /// - Parameter direction: Direction to scroll.
+    /// - Parameter completion: Whether succeeded or not
+    func displayAgentShouldScroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
     
-    /// Should return currently focused item token.
-    func displayAgentFocusedItemToken() -> String?
-    
-    /// Should return currently visible item's token.
-    func displayAgentVisibleTokenList() -> [String]?
+    /// Provide a context of display-agent.
+    func displayAgentRequestContext(completion: @escaping (DisplayContext?) -> Void)
     
     /// Should update proper displaying view with given template.
     func displayAgentShouldUpdate(template: DisplayTemplate)
