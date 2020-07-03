@@ -18,7 +18,10 @@ Default Agent Implementations for Nugu service
   s.subspec 'iOS_Specific' do |iOS|
     iOS.subspec 'ASR' do |asr|
       asr.ios.source_files = 'NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/**/*'
+      
       asr.ios.dependency 'JadeMarble', '~> 0'
+      asr.ios.dependency 'NuguCore', '~> 0'
+      asr.ios.dependency 'NattyLog', '~> 1'
     end
   end
 
