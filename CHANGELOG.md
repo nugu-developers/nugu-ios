@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.14.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.14.0)
+Released on 2020-07-03
+#### Fixed
+- Handle exception during creating input node (#372) 
+- Make `boundStreams` thread-safety (#371) 
+- Remove `wakeupWord` in `context` when `KeywordDetector` disabled. (#368)
+- Modify data structure of multi-part data. (#380)
+
+#### Updated
+- Remove `textSource`, `icon` and `image` on `ChipsAgentItem.Chip`. (#369)
+- Modify `DisplayAgentDelegate` and `AudioPlayerDisplayDelegate` (#381)
+
+#### Added
+- Add `PhoneCallAgent` 1.0 (upgrade capability-agent) (#374) (#375) (#376) (#377) (#379)
+- Apply `NuguServiceKit` to `SampleApp` (#378)
+
 ## [0.13.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.13.0)
 Released on 2020-06-19
 #### Fixed
