@@ -25,7 +25,7 @@ public protocol AudioPlayerDisplayDelegate: class {
     /// Tells the delegate that the specified template should be displayed.
     ///
     /// - Parameter template: The player template to display.
-    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate) -> AnyObject?
+    func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void)
     
     /// Tells the delegate that the specified template should be removed from the screen.
     ///
@@ -38,11 +38,18 @@ public protocol AudioPlayerDisplayDelegate: class {
     /// - Parameter template: The template to update the screen.
     func audioPlayerDisplayShouldUpdateMetadata(payload: Data)
     
-    func audioPlayerDisplayShouldShowLyrics() -> Bool
+    /// Tells the delegate that the displayed template should show lyrics
+    /// - Parameter completion: Whether succeeded or not
+    func audioPlayerDisplayShouldShowLyrics(completion: @escaping (Bool) -> Void)
     
-    func audioPlayerDisplayShouldHideLyrics() -> Bool
+    /// Tells the delegate that the displayed template should hide lyrics
+    /// - Parameter completion: Whether succeeded or not
+    func audioPlayerDisplayShouldHideLyrics(completion: @escaping (Bool) -> Void)
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction) -> Bool
-    
-    func audioPlayerIsLyricsVisible() -> Bool
+    /// Tells the delegate that the displayed template should scroll with given direction.
+    /// - Parameter direction: Direction to scroll.
+    /// - Parameter completion: Whether succeeded or not
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
+
+    func audioPlayerIsLyricsVisible(completion: @escaping (Bool) -> Void)
 }
