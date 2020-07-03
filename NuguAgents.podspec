@@ -14,27 +14,34 @@ Default Agent Implementations for Nugu service
 
   s.ios.deployment_target = '10.0'
   s.swift_version = '5.1'
+
+  s.source_files = 'NuguAgents/Sources/**/*'
   
-  s.subspec 'iOS_Specific' do |iOS|
-    iOS.subspec 'ASR' do |asr|
-      asr.ios.source_files = 'NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/**/*'
-      
-      asr.ios.dependency 'JadeMarble', '~> 0'
-      asr.ios.dependency 'NuguCore', '~> 0'
-      asr.ios.dependency 'NattyLog', '~> 1'
-    end
-  end
+  s.dependency 'NuguCore', '~> 0'
+  s.dependency 'SilverTray', '~> 1'
+  s.dependency 'NattyLog', '~> 1'
+  s.ios.dependency 'JadeMarble', '~> 0'
 
-  s.subspec 'Common' do |common|
-    common.source_files = 'NuguAgents/Sources/**/*'
-    common.exclude_files = 'NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/**/*'
+  # s.subspec 'iOS_Specific' do |iOS|
+  #   iOS.subspec 'ASR' do |asr|
+  #     asr.ios.source_files = 'NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/**/*'
 
-    common.dependency 'NuguCore', '~> 0'
-    common.dependency 'NattyLog', '~> 1'
-    common.dependency 'SilverTray', '~> 1'
+  #     asr.ios.dependency 'JadeMarble', '~> 0'
+  #     asr.ios.dependency 'NuguCore', '~> 0'
+  #     asr.ios.dependency 'NattyLog', '~> 1'
+  #   end
+  # end
 
-    #common.tvos.deployment_target = '13.0'
-    #common.watchos.deployment_target = '6.0'
-    #common.macos.deployment_target = '10.15.0'
-  end
+  # s.subspec 'Common' do |common|
+  #   common.source_files = 'NuguAgents/Sources/**/*'
+  #   common.exclude_files = 'NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/**/*'
+
+  #   common.dependency 'NuguCore', '~> 0'
+  #   common.dependency 'NattyLog', '~> 1'
+  #   common.dependency 'SilverTray', '~> 1'
+
+  #   #common.tvos.deployment_target = '13.0'
+  #   #common.watchos.deployment_target = '6.0'
+  #   #common.macos.deployment_target = '10.15.0'
+  # end
 end
