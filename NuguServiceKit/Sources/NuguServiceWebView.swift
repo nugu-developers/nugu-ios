@@ -23,8 +23,8 @@ import WebKit
 
 final public class NuguServiceWebView: WKWebView {
     
-    // TODO: - not decided yet, to be confirmed
-    public static let serviceSettingUrl = "https://stg-webview.sktnugu.com/3pp/intro.html"
+    public static let serviceSettingUrl = "https://webview.sktnugu.com/3pp/main.html"
+    public static let agreementUrl = "https://webview.sktnugu.com/3pp/agreement/list.html"
     
     private enum MethodType: String, CaseIterable {
         case openExternalApp
@@ -122,28 +122,20 @@ public extension NuguServiceWebView {
 
 public extension NuguServiceWebView {
     func loadUrlString(_ urlString: String?, with queries: [URLQueryItem]? = nil) {
-        guard let urlString = urlString else {
-            return
-        }
-        
-        guard let url = URL(string: urlString) else {            
-            return
-        }
-        
-        var urlComponents = URLComponents(string: url.absoluteString)
+        guard let urlString = urlString,
+        let url = URL(string: urlString) else { return }
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
         if let queries = queries, queries.count > 0 {
-            urlComponents?.queryItems?.append(contentsOf: queries)
+            if urlComponents?.queryItems == nil {
+                urlComponents?.queryItems = queries
+            } else {
+                urlComponents?.queryItems?.append(contentsOf: queries)
+            }
         }
-        
-        guard let urlWithQueries = urlComponents?.url else {
-            return
-        }
-        
-        var urlRequest = URLRequest(url: urlWithQueries,
+        guard let urlWithQueries = urlComponents?.url else { return }
+        let urlRequest = URLRequest(url: urlWithQueries,
                                     cachePolicy: .useProtocolCachePolicy,
                                     timeoutInterval: 30)
-        
-        urlRequest.httpMethod = "get"
         load(urlRequest)
     }
 }

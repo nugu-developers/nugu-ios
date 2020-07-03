@@ -379,6 +379,7 @@
 		7525ACB3249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */; };
 		7525ACB4249C4177006800A3 /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
 		7525ACB6249C4255006800A3 /* NuguServiceKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525ACB5249C4255006800A3 /* NuguServiceKit.swift */; };
+		7525AD0824AD6054006800A3 /* NuguServiceWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525AD0724AD6054006800A3 /* NuguServiceWebViewController.swift */; };
 		752CE556246E22C900E68733 /* ContentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CE555246E22C900E68733 /* ContentButton.swift */; };
 		752CE558246E731D00E68733 /* UILabel+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CE557246E731D00E68733 /* UILabel+Convenience.swift */; };
 		752CE55B246E849900E68733 /* DisplayTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CE55A246E849900E68733 /* DisplayTitleView.swift */; };
@@ -1051,6 +1052,7 @@
 		7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServiceWebView.swift; sourceTree = "<group>"; };
 		7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguServiceWebJavascriptDelegate.swift; sourceTree = "<group>"; };
 		7525ACB5249C4255006800A3 /* NuguServiceKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguServiceKit.swift; sourceTree = "<group>"; };
+		7525AD0724AD6054006800A3 /* NuguServiceWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguServiceWebViewController.swift; sourceTree = "<group>"; };
 		752CE555246E22C900E68733 /* ContentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentButton.swift; sourceTree = "<group>"; };
 		752CE557246E731D00E68733 /* UILabel+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Convenience.swift"; sourceTree = "<group>"; };
 		752CE55A246E849900E68733 /* DisplayTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTitleView.swift; sourceTree = "<group>"; };
@@ -2126,6 +2128,7 @@
 				1FFFF4A9237672F100C9A177 /* Views */,
 				1FFFF4A5237672F100C9A177 /* SettingViewController.swift */,
 				1FFFF4A6237672F100C9A177 /* IntroViewController.swift */,
+				7525AD0724AD6054006800A3 /* NuguServiceWebViewController.swift */,
 				1FFFF4A7237672F100C9A177 /* MainViewController.swift */,
 				1FFFF4A8237672F100C9A177 /* WebViewController.swift */,
 			);
@@ -3588,6 +3591,7 @@
 				752CE56B2471295600E68733 /* Score2View.swift in Sources */,
 				75032BE2246B90A50077B824 /* TextList4Template.swift in Sources */,
 				752CE55B246E849900E68733 /* DisplayTitleView.swift in Sources */,
+				7525AD0824AD6054006800A3 /* NuguServiceWebViewController.swift in Sources */,
 				A1B741BA23E1641500D862F7 /* DisplayControllable.swift in Sources */,
 				1FFFF4F2237672F100C9A177 /* DisplayView.swift in Sources */,
 				75F799322472570C00655BF6 /* ImageList3View.swift in Sources */,

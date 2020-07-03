@@ -20,6 +20,8 @@
 
 import UIKit
 
+import NuguServiceKit
+
 import KeenSense
 
 final class SettingViewController: UIViewController {
@@ -27,7 +29,7 @@ final class SettingViewController: UIViewController {
     // MARK: - Properties
     
     @IBOutlet private weak var tableView: UITableView!
-    
+
     private let settingMenu = [
         ["TID"],
         ["서비스 관리"],
@@ -51,6 +53,13 @@ final class SettingViewController: UIViewController {
         tableView.reloadData()
         NuguCentralManager.shared.getUserInfo { [weak self] (nuguUserInfo) in
             self?.tid = nuguUserInfo?.tid
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let nuguServiceWebViewController = segue.destination as? NuguServiceWebViewController,
+            let initialURLString = sender as? String {
+            nuguServiceWebViewController.initialURLString = initialURLString
         }
     }
 }
@@ -121,10 +130,12 @@ extension SettingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = (indexPath.section, indexPath.row)
         switch index {
-        case  (0, 0):
+        case (0, 0):
             NuguCentralManager.shared.showTidInfo(parentViewController: self, completion: { [weak self] tid in
                 self?.tid = tid
             })
+        case (1, 0):
+            performSegue(withIdentifier: "showNuguServiceWebView", sender: NuguServiceWebView.serviceSettingUrl)
         case (2, 2):
             let wakeUpWordActionSheet = UIAlertController(
                 title: nil,
@@ -142,6 +153,8 @@ extension SettingViewController: UITableViewDelegate {
                 wakeUpWordActionSheet.addAction(action)
             }
             present(wakeUpWordActionSheet, animated: true)
+        case (3, 0):
+            performSegue(withIdentifier: "showNuguServiceWebView", sender: NuguServiceWebView.agreementUrl)
         case (3, 1):
             UIApplication.shared.open(SampleApp.privacyUrl, options: [:], completionHandler: nil)
         case (4, 0):
