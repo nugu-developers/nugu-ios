@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import UIKit
 
 public struct NuguServiceCookie: Encodable {
     let authToken: String
@@ -26,6 +27,7 @@ public struct NuguServiceCookie: Encodable {
     let appVersion: String
     let sdkVersion: String
     let pocId: String
+    let phoneModelName: String = UIDevice.current.model
     let theme: String // DARK or LIGHT
 
     public init(
@@ -48,6 +50,7 @@ public struct NuguServiceCookie: Encodable {
         case appVersion = "App-Version"
         case sdkVersion = "Sdk-Version"
         case pocId = "Poc-Id"
+        case phoneModelName = "Phone-Model-Name"
         case theme = "Theme"
     }
     
@@ -58,6 +61,7 @@ public struct NuguServiceCookie: Encodable {
         try container.encode(appVersion, forKey: .appVersion)
         try container.encode(sdkVersion, forKey: .sdkVersion)
         try container.encode(pocId, forKey: .pocId)
+        try container.encode(phoneModelName, forKey: .phoneModelName)
         try container.encode(theme, forKey: .theme)
     }
 }
