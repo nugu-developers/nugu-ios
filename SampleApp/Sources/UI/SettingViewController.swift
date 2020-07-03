@@ -29,9 +29,7 @@ final class SettingViewController: UIViewController {
     // MARK: - Properties
     
     @IBOutlet private weak var tableView: UITableView!
-    
-    @IBOutlet private weak var settingWebview: NuguServiceWebView!
-    
+
     private let settingMenu = [
         ["TID"],
         ["서비스 관리"],
