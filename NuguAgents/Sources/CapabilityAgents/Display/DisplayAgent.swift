@@ -27,7 +27,6 @@ import RxSwift
 public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.4")
-    private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .display)
     
     // Private
     private let playSyncManager: PlaySyncManageable
@@ -171,7 +170,11 @@ public extension DisplayAgent {
     }
     
     func notifyUserInteraction() {
-        self.playSyncManager.resetTimer(property: playSyncProperty)
+        displayDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard let item = self.currentItem else { return }
+            self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
+        }
     }
 }
 
@@ -207,7 +210,7 @@ extension DisplayAgent: PlaySyncDelegate {
     public func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, let item = self.currentItem, item.dialogRequestId == dialogRequestId else { return }
+            guard let item = self.currentItem, property == item.template.playSyncProperty, item.dialogRequestId == dialogRequestId else { return }
             
             self.currentItem = nil
             self.renderingInfos
@@ -379,7 +382,7 @@ private extension DisplayAgent {
                     self.currentItem = item
                     
                     self.playSyncManager.startPlay(
-                        property: self.playSyncProperty,
+                        property: item.template.playSyncProperty,
                         duration: item.template.duration.time,
                         playServiceId: item.template.playStackControl?.playServiceId,
                         dialogRequestId: item.dialogRequestId
