@@ -155,7 +155,7 @@ public extension DisplayAgent {
                 
                 self.upstreamDataSender.sendEvent(
                     Event(
-                        playServiceId: template.playServiceId,
+                        playServiceId: template.template.playServiceId,
                         typeInfo: .elementSelected(token: token, postback: postback)
                     ).makeEventMessage(
                         property: self.capabilityAgentProperty,
@@ -181,8 +181,8 @@ extension DisplayAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         var payload: [String: AnyHashable?] = [
             "version": self.capabilityAgentProperty.version,
-            "token": self.currentItem?.token,
-            "playServiceId": self.currentItem?.playServiceId
+            "token": self.currentItem?.template.token,
+            "playServiceId": self.currentItem?.template.playServiceId
         ]
         if let info = self.renderingInfos.first(where: { $0.currentItem?.templateId == self.currentItem?.templateId }),
             let delegate = info.delegate {
@@ -235,7 +235,7 @@ private extension DisplayAgent {
 
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard let item = self.currentItem, item.playServiceId == payload.playServiceId else {
+                guard let item = self.currentItem, item.template.playServiceId == payload.playServiceId else {
                     self.sendEvent(
                         typeInfo: .closeFailed,
                         playServiceId: payload.playServiceId,
@@ -266,7 +266,7 @@ private extension DisplayAgent {
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let item = self.currentItem,
-                    item.playServiceId == payload.playServiceId,
+                    item.template.playServiceId == payload.playServiceId,
                     let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId })?.delegate else {
                         self.sendEvent(
                             typeInfo: .controlFocusFailed(direction: payload.direction),
@@ -302,7 +302,7 @@ private extension DisplayAgent {
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let item = self.currentItem,
-                    item.playServiceId == payload.playServiceId,
+                    item.template.playServiceId == payload.playServiceId,
                     let delegate = self.renderingInfos.first(where: { $0.currentItem?.templateId == item.templateId })?.delegate else {
                         self.sendEvent(
                             typeInfo: .controlScrollFailed(direction: payload.direction),
@@ -328,11 +328,9 @@ private extension DisplayAgent {
         return { [weak self] directive, completion in
             defer { completion() }
             
-            guard let payloadDictionary = directive.payloadDictionary,
-                let token = payloadDictionary["token"] as? String,
-                let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    log.error("Invalid token or playServiceId in payload")
-                    return
+            guard let template = try? JSONDecoder().decode(DisplayTemplate.Payload.self, from: directive.payload)  else {
+                log.error("Invalid payload")
+                return
             }
             
             let updateDisplayTemplate = DisplayTemplate(
@@ -340,11 +338,7 @@ private extension DisplayAgent {
                 payload: directive.payload,
                 templateId: directive.header.messageId,
                 dialogRequestId: directive.header.dialogRequestId,
-                token: token,
-                playServiceId: playServiceId,
-                playStackServiceId: nil,
-                duration: nil,
-                focusable: nil
+                template: template
             )
             
             self?.displayDispatchQueue.async { [weak self] in
@@ -358,28 +352,18 @@ private extension DisplayAgent {
     
     func handleDisplay() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payloadDictionary = directive.payloadDictionary,
-                let token = payloadDictionary["token"] as? String,
-                let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    log.error("Invalid token or playServiceId in payload")
-                    completion()
-                    return
+            guard let template = try? JSONDecoder().decode(DisplayTemplate.Payload.self, from: directive.payload)  else {
+                log.error("Invalid payload")
+                completion()
+                return
             }
-            
-            let duration = payloadDictionary["duration"] as? String ?? DisplayTemplate.Duration.short.rawValue
-            let playStackServiceId = (payloadDictionary["playStackControl"] as? [String: AnyHashable])?["playServiceId"] as? String
-            let focusable = payloadDictionary["focusable"] as? Bool
             
             let item = DisplayTemplate(
                 type: directive.header.type,
                 payload: directive.payload,
                 templateId: directive.header.messageId,
                 dialogRequestId: directive.header.dialogRequestId,
-                token: token,
-                playServiceId: playServiceId,
-                playStackServiceId: playStackServiceId,
-                duration: DisplayTemplate.Duration(rawValue: duration),
-                focusable: focusable
+                template: template
             )
 
             self?.displayDispatchQueue.async { [weak self] in
@@ -396,8 +380,8 @@ private extension DisplayAgent {
                     
                     self.playSyncManager.startPlay(
                         property: self.playSyncProperty,
-                        duration: item.duration.time,
-                        playServiceId: item.playStackServiceId,
+                        duration: item.template.duration.time,
+                        playServiceId: item.template.playStackControl?.playServiceId,
                         dialogRequestId: item.dialogRequestId
                     )
                 }
