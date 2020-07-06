@@ -51,12 +51,10 @@ public extension PlaySyncManager {
     }
     
     func startPlay(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, dialogRequestId: String) {
-        guard let playServiceId = playServiceId else { return }
-        
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
-            log.debug("\(property) \(playServiceId)")
+            log.debug("\(property) \(playServiceId ?? "PlayServiceId is null")")
             
             // Push to play stack
             self.pushToPlayStack(property: property, duration: duration, playServiceId: playServiceId, dialogRequestId: dialogRequestId)
@@ -79,7 +77,7 @@ public extension PlaySyncManager {
             guard let self = self else { return }
             guard let play = self.playStack[property] else { return }
             
-            log.debug("\(property) \(play.playServiceId)")
+            log.debug("\(property) \(play)")
             
             // Set timers
             let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: play.dialogRequestId)
@@ -165,7 +163,7 @@ extension PlaySyncManager: ContextInfoDelegate {
 // MARK: - Private
 
 private extension PlaySyncManager {
-    func pushToPlayStack(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String, dialogRequestId: String) {
+    func pushToPlayStack(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, dialogRequestId: String) {
         // Cancel timers
         removeTimer(property: property)
         

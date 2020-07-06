@@ -31,7 +31,7 @@ struct PlayStack {
     }
     var playServiceIds: [String] {
         stack
-            .map { $0.play.playServiceId }
+            .compactMap { $0.play.playServiceId }
             .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
     }
     

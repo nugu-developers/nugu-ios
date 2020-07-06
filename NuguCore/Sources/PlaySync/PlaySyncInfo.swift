@@ -21,11 +21,11 @@
 import Foundation
 
 struct PlaySyncInfo {
-    let playServiceId: String
+    let playServiceId: String?
     let dialogRequestId: String
     let duration: DispatchTimeInterval
     
-    init(playServiceId: String, dialogRequestId: String, duration: DispatchTimeInterval) {
+    init(playServiceId: String?, dialogRequestId: String, duration: DispatchTimeInterval) {
         self.playServiceId = playServiceId
         self.dialogRequestId = dialogRequestId
         self.duration = duration
@@ -36,6 +36,6 @@ struct PlaySyncInfo {
 
 extension PlaySyncInfo: CustomStringConvertible {
     var description: String {
-        return playServiceId
+        return playServiceId ?? "PlayServiceId is null"
     }
 }
