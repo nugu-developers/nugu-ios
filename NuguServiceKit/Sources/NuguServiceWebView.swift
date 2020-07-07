@@ -64,6 +64,12 @@ final public class NuguServiceWebView: WKWebView {
             userContentController.add(WeakScriptMessageHandler(delegate: self), name: methodType.rawValue)
         }
     }
+    
+    deinit {
+        MethodType.allCases.forEach { (methodType) in
+            configuration.userContentController.removeScriptMessageHandler(forName: methodType.rawValue)
+        }
+    }
 }
 
 // MARK: - WKScriptMessageHandler
