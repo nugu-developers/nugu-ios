@@ -167,8 +167,7 @@ private extension PlaySyncManager {
         // Cancel timers
         removeTimer(property: property)
         
-        // Context layer policy v.1.4.0. 2.2 Display 동작
-        // TODO: Call layer.
+        // Layer policy v.1.4.4. 2.2 Display 동작
         playStack
             // Multi-layer 상황에서 이전에 layer 와
             .previousPlayGroup(dialogRequestId: dialogRequestId)

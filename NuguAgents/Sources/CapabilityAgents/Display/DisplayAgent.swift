@@ -352,25 +352,31 @@ private extension DisplayAgent {
                 template: template
             )
             
-            delegate.displayAgentShouldRender(template: item) { [weak self] in
+            self.displayDispatchQueue.async { [weak self] in
                 defer { completion() }
-                
                 guard let self = self else { return }
-                guard let displayObject = $0 else { return }
                 
-                // Release sync when removed all of template(May be closed by user).
-                Reactive(displayObject).deallocated
-                    .observeOn(self.displayScheduler)
-                    .subscribe({ [weak self] _ in
-                        guard let self = self else { return }
-                        
-                        if self.removeRenderedTemplate(item: item) {
-                            self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
-                        }
-                    }).disposed(by: self.disposeBag)
-                
-                self.displayDispatchQueue.async { [weak self] in
-                    self?.setRenderedTemplate(item: item)
+                let semaphore = DispatchSemaphore(value: 0)
+                delegate.displayAgentShouldRender(template: item) { [weak self] in
+                    defer { semaphore.signal() }
+                    guard let self = self else { return }
+                    guard let displayObject = $0 else { return }
+                    
+                    // Release sync when removed all of template(May be closed by user).
+                    Reactive(displayObject).deallocated
+                        .observeOn(self.displayScheduler)
+                        .subscribe({ [weak self] _ in
+                            guard let self = self else { return }
+                            
+                            if self.removeRenderedTemplate(item: item) {
+                                self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+                            }
+                        }).disposed(by: self.disposeBag)
+                    
+                    self.setRenderedTemplate(item: item)
+                }
+                if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
+                    log.error("`displayAgentShouldRender` completion block does not called")
                 }
             }
         }

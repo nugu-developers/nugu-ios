@@ -79,6 +79,7 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 
 extension AudioPlayerDisplayManager {
     func display(payload: AudioPlayerAgentMedia.Payload, messageId: String, dialogRequestId: String) {
+        guard let delegate = delegate else { return }
         guard let metaData = payload.audioItem.metadata,
             ((metaData["disableTemplate"] as? Bool) ?? false) == false else {
                 return
@@ -96,25 +97,27 @@ extension AudioPlayerDisplayManager {
             dialogRequestId: dialogRequestId,
             mediaPayload: payload
         )
-        
-        self.delegate?.audioPlayerDisplayShouldRender(template: item) { [weak self] in
-            guard let self = self else { return }
-            guard let displayObject = $0 else { return }
 
-            // Release sync when removed all of template(May be closed by user).
-            Reactive(displayObject).deallocated
-                .observeOn(self.displayScheduler)
-                .subscribe({ [weak self] _ in
-                    guard let self = self else { return }
-                    
-                    if self.currentItem?.templateId == item.templateId {
-                        self.currentItem = nil
-                        self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
-                    }
-                }).disposed(by: self.disposeBag)
+        self.displayDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
             
-            self.displayDispatchQueue.async { [weak self] in
+            let semaphore = DispatchSemaphore(value: 0)
+            delegate.audioPlayerDisplayShouldRender(template: item) { [weak self] in
+                defer { semaphore.signal() }
                 guard let self = self else { return }
+                guard let displayObject = $0 else { return }
+                
+                // Release sync when removed all of template(May be closed by user).
+                Reactive(displayObject).deallocated
+                    .observeOn(self.displayScheduler)
+                    .subscribe({ [weak self] _ in
+                        guard let self = self else { return }
+                        
+                        if self.currentItem?.templateId == item.templateId {
+                            self.currentItem = nil
+                            self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+                        }
+                    }).disposed(by: self.disposeBag)
                 
                 self.currentItem = item
                 self.playSyncManager.startPlay(
@@ -123,6 +126,9 @@ extension AudioPlayerDisplayManager {
                     playServiceId: item.mediaPayload.playStackControl?.playServiceId,
                     dialogRequestId: item.dialogRequestId
                 )
+            }
+            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
+                log.error("`audioPlayerDisplayShouldRender` completion block does not called")
             }
         }
     }
