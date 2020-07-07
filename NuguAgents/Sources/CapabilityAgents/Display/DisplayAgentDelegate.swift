@@ -29,22 +29,25 @@ public protocol DisplayAgentDelegate: class {
     
     /// Tells the delegate that the specified template should be removed from the screen.
     ///
-    /// - Parameter template: The template to remove from the screen.
-    func displayAgentDidClear(template: DisplayTemplate)
+    /// - Parameter token: The template token to remove from the screen.
+    func displayAgentDidClear(token: String)
     
     /// Tells the delegate that the displayed template should move focus with given direction.
+    /// - Parameter token: The template token to move focus.
     /// - Parameter direction: Direction to move focus.
-    /// - Parameter completion: Whether succeeded or not
-    func displayAgentShouldMoveFocus(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
+    /// - Parameter completion: Whether succeeded or not.
+    func displayAgentShouldMoveFocus(token: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
     
     /// Tells the delegate that the displayed template should scroll with given direction.
+    /// - Parameter token: The template token to scroll.
     /// - Parameter direction: Direction to scroll.
-    /// - Parameter completion: Whether succeeded or not
-    func displayAgentShouldScroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
+    /// - Parameter completion: Whether succeeded or not.
+    func displayAgentShouldScroll(token: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
     
     /// Provide a context of display-agent.
-    func displayAgentRequestContext(completion: @escaping (DisplayContext?) -> Void)
+    /// - Parameter token: The template token to send context.
+    func displayAgentRequestContext(token: String, completion: @escaping (DisplayContext?) -> Void)
     
     /// Should update proper displaying view with given template.
-    func displayAgentShouldUpdate(template: DisplayTemplate)
+    func displayAgentShouldUpdate(token: String, template: DisplayTemplate)
 }

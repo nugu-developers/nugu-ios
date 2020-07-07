@@ -162,7 +162,7 @@ private extension MainViewController {
         NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
         NuguCentralManager.shared.client.asrAgent.add(delegate: self)
         NuguCentralManager.shared.client.textAgent.delegate = self
-        NuguCentralManager.shared.client.displayAgent.add(delegate: self)
+        NuguCentralManager.shared.client.displayAgent.delegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
     }
@@ -638,7 +638,7 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentRequestContext(completion: @escaping (DisplayContext?) -> Void) {
+    func displayAgentRequestContext(token: String, completion: @escaping (DisplayContext?) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayControllableView = self.displayView as? DisplayControllable else {
@@ -658,7 +658,7 @@ extension MainViewController: DisplayAgentDelegate {
         }
     }
     
-    func displayAgentShouldMoveFocus(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+    func displayAgentShouldMoveFocus(token: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let displayControllableView = self?.displayView as? DisplayControllable else {
                 completion(false)
@@ -669,7 +669,7 @@ extension MainViewController: DisplayAgentDelegate {
         }
     }
     
-    func displayAgentShouldScroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+    func displayAgentShouldScroll(token: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let displayControllableView = self?.displayView as? DisplayControllable else {
                 completion(false)
@@ -686,13 +686,13 @@ extension MainViewController: DisplayAgentDelegate {
         }
     }
     
-    func displayAgentShouldUpdate(template: DisplayTemplate) {
+    func displayAgentShouldUpdate(token: String, template: DisplayTemplate) {
         DispatchQueue.main.async { [weak self] in
             self?.updateDisplayView(displayTemplate: template)
         }
     }
     
-    func displayAgentDidClear(template: DisplayTemplate) {
+    func displayAgentDidClear(token: String) {
         log.debug("")
         DispatchQueue.main.async { [weak self] in
             self?.dismissDisplayView()
