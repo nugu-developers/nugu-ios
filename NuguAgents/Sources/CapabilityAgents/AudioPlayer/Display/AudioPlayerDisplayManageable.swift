@@ -22,7 +22,10 @@ import Foundation
 
 /// The `AudioPlayerAgent` handles directives for controlling player template display.
 protocol AudioPlayerDisplayManageable {
-    func display(metaData: [String: AnyHashable], messageId: String, dialogRequestId: String, playStackServiceId: String?)
+    /// Sets a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
+    var delegate: AudioPlayerDisplayDelegate? { get set }
+    
+    func display(payload: AudioPlayerAgentMedia.Payload, messageId: String, dialogRequestId: String)
     
     func updateMetadata(payload: Data, playServiceId: String)
     
@@ -33,16 +36,6 @@ protocol AudioPlayerDisplayManageable {
     func isLyricsVisible(playServiceId: String, completion: @escaping (Bool) -> Void)
     
     func controlLyricsPage(payload: AudioPlayerDisplayControlPayload, completion: @escaping (Bool) -> Void)
-    
-    /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
-    ///
-    /// - Parameter delegate: The object to add.
-    func add(delegate: AudioPlayerDisplayDelegate)
-    
-    /// Removes a delegate from `AudioPlayerDisplayManager`.
-    ///
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: AudioPlayerDisplayDelegate)
     
     /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
     func notifyUserInteraction()

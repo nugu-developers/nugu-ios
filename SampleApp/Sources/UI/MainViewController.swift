@@ -163,7 +163,7 @@ private extension MainViewController {
         NuguCentralManager.shared.client.asrAgent.add(delegate: self)
         NuguCentralManager.shared.client.textAgent.delegate = self
         NuguCentralManager.shared.client.displayAgent.delegate = self
-        NuguCentralManager.shared.client.audioPlayerAgent.add(displayDelegate: self)
+        NuguCentralManager.shared.client.audioPlayerAgent.displayDelegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
     }
     
