@@ -114,7 +114,15 @@ extension AudioPlayerDisplayManager {
                 }).disposed(by: self.disposeBag)
             
             self.displayDispatchQueue.async { [weak self] in
-                self?.currentItem = item
+                guard let self = self else { return }
+                
+                self.currentItem = item
+                self.playSyncManager.startPlay(
+                    property: self.playSyncProperty,
+                    duration: .seconds(7),
+                    playServiceId: item.mediaPayload.playStackControl?.playServiceId,
+                    dialogRequestId: item.dialogRequestId
+                )
             }
         }
     }
