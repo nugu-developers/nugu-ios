@@ -61,7 +61,7 @@ final public class NuguServiceWebView: WKWebView {
         
         MethodType.allCases.forEach { [weak self] (methodType) in
             guard let self = self else { return }
-            userContentController.add(self, name: methodType.rawValue)
+            userContentController.add(WeakScriptMessageHandler(delegate: self), name: methodType.rawValue)
         }
     }
 }
