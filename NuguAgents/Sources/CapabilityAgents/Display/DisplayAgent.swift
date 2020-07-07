@@ -259,6 +259,7 @@ private extension DisplayAgent {
                 self.delegate?.displayAgentShouldMoveFocus(token: item.template.token, direction: payload.direction) { [weak self] focusResult in
                     guard let self = self else { return }
                     
+                    self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
                     let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded(direction: payload.direction) : .controlFocusFailed(direction: payload.direction)
                     self.sendEvent(
                         typeInfo: typeInfo,
@@ -291,6 +292,8 @@ private extension DisplayAgent {
                 }
                 self.delegate?.displayAgentShouldScroll(token: item.template.token, direction: payload.direction) { [weak self] scrollResult in
                     guard let self = self else { return }
+                    
+                    self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
                     let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded(direction: payload.direction) : .controlScrollFailed(direction: payload.direction)
                     self.sendEvent(
                         typeInfo: typeInfo,
@@ -319,7 +322,14 @@ private extension DisplayAgent {
                 template: template
             )
             
-            self?.delegate?.displayAgentShouldUpdate(token: updateDisplayTemplate.template.token, template: updateDisplayTemplate)
+            
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self, let delegate = self.delegate else { return }
+                guard let item = self.templateList.first(where: { $0.template.token == updateDisplayTemplate.template.token }) else { return }
+
+                self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
+                delegate.displayAgentShouldUpdate(token: item.template.token, template: updateDisplayTemplate)
+            }
         }
     }
     
