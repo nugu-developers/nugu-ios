@@ -638,7 +638,7 @@ extension MainViewController: TextAgentDelegate {
 // MARK: - DisplayAgentDelegate
 
 extension MainViewController: DisplayAgentDelegate {
-    func displayAgentRequestContext(token: String, completion: @escaping (DisplayContext?) -> Void) {
+    func displayAgentRequestContext(templateId: String, completion: @escaping (DisplayContext?) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayControllableView = self.displayView as? DisplayControllable else {
@@ -658,7 +658,7 @@ extension MainViewController: DisplayAgentDelegate {
         }
     }
     
-    func displayAgentShouldMoveFocus(token: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+    func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let displayControllableView = self?.displayView as? DisplayControllable else {
                 completion(false)
@@ -669,7 +669,7 @@ extension MainViewController: DisplayAgentDelegate {
         }
     }
     
-    func displayAgentShouldScroll(token: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+    func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let displayControllableView = self?.displayView as? DisplayControllable else {
                 completion(false)
@@ -686,13 +686,13 @@ extension MainViewController: DisplayAgentDelegate {
         }
     }
     
-    func displayAgentShouldUpdate(token: String, template: DisplayTemplate) {
+    func displayAgentShouldUpdate(templateId: String, template: DisplayTemplate) {
         DispatchQueue.main.async { [weak self] in
             self?.updateDisplayView(displayTemplate: template)
         }
     }
     
-    func displayAgentDidClear(token: String) {
+    func displayAgentDidClear(templateId: String) {
         log.debug("")
         DispatchQueue.main.async { [weak self] in
             self?.dismissDisplayView()

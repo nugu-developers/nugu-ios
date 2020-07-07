@@ -170,7 +170,7 @@ extension DisplayAgent: ContextInfoDelegate {
             ]
             if let item = item, let delegate = self.delegate {
                 let semaphore = DispatchSemaphore(value: 0)
-                delegate.displayAgentRequestContext(token: item.template.token) { (displayContext) in
+                delegate.displayAgentRequestContext(templateId: item.templateId) { (displayContext) in
                     payload["focusedItemToken"] = displayContext?.focusedItemToken
                     payload["visibleTokenList"] = displayContext?.visibleTokenList
                     
@@ -196,7 +196,7 @@ extension DisplayAgent: PlaySyncDelegate {
                 .filter { $0.template.playSyncProperty == property && $0.dialogRequestId == dialogRequestId}
                 .forEach {
                     if self.removeRenderedTemplate(item: $0) {
-                        self.delegate?.displayAgentDidClear(token: $0.template.token)
+                        self.delegate?.displayAgentDidClear(templateId: $0.templateId)
                     }
             }
         }
@@ -256,7 +256,7 @@ private extension DisplayAgent {
                     return
                 }
                 
-                self.delegate?.displayAgentShouldMoveFocus(token: item.template.token, direction: payload.direction) { [weak self] focusResult in
+                self.delegate?.displayAgentShouldMoveFocus(templateId: item.templateId, direction: payload.direction) { [weak self] focusResult in
                     guard let self = self else { return }
                     
                     self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
@@ -290,7 +290,7 @@ private extension DisplayAgent {
                     )
                     return
                 }
-                self.delegate?.displayAgentShouldScroll(token: item.template.token, direction: payload.direction) { [weak self] scrollResult in
+                self.delegate?.displayAgentShouldScroll(templateId: item.templateId, direction: payload.direction) { [weak self] scrollResult in
                     guard let self = self else { return }
                     
                     self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
@@ -322,13 +322,12 @@ private extension DisplayAgent {
                 template: template
             )
             
-            
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self, let delegate = self.delegate else { return }
-                guard let item = self.templateList.first(where: { $0.template.token == updateDisplayTemplate.template.token }) else { return }
+                guard let item = self.templateList.first(where: { $0.templateId == updateDisplayTemplate.templateId }) else { return }
 
                 self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
-                delegate.displayAgentShouldUpdate(token: item.template.token, template: updateDisplayTemplate)
+                delegate.displayAgentShouldUpdate(templateId: item.templateId, template: updateDisplayTemplate)
             }
         }
     }
@@ -426,9 +425,9 @@ private extension DisplayAgent {
     }
     
     @discardableResult func removeRenderedTemplate(item: DisplayTemplate) -> Bool {
-        guard templateList.contains(where: { $0.template.token == item.template.token }) == false else { return false }
+        guard templateList.contains(where: { $0.templateId == item.templateId }) else { return false }
         
-        templateList.removeAll { $0.template.token == item.template.token }
+        templateList.removeAll { $0.templateId == item.templateId }
         deactivateSession(dialogRequestId: item.dialogRequestId)
         return true
     }

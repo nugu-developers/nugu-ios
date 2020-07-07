@@ -107,7 +107,7 @@ extension AudioPlayerDisplayManager {
                 .subscribe({ [weak self] _ in
                     guard let self = self else { return }
                     
-                    if self.currentItem?.token == item.token {
+                    if self.currentItem?.templateId == item.templateId {
                         self.currentItem = nil
                         self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
                     }

@@ -29,25 +29,27 @@ public protocol DisplayAgentDelegate: class {
     
     /// Tells the delegate that the specified template should be removed from the screen.
     ///
-    /// - Parameter token: The template token to remove from the screen.
-    func displayAgentDidClear(token: String)
+    /// - Parameter templateId: The template id to remove from the screen.
+    func displayAgentDidClear(templateId: String)
     
     /// Tells the delegate that the displayed template should move focus with given direction.
-    /// - Parameter token: The template token to move focus.
+    /// - Parameter templateId: The template id to move focus.
     /// - Parameter direction: Direction to move focus.
     /// - Parameter completion: Whether succeeded or not.
-    func displayAgentShouldMoveFocus(token: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
+    func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
     
     /// Tells the delegate that the displayed template should scroll with given direction.
-    /// - Parameter token: The template token to scroll.
+    /// - Parameter templateId: The template id to scroll.
     /// - Parameter direction: Direction to scroll.
     /// - Parameter completion: Whether succeeded or not.
-    func displayAgentShouldScroll(token: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
+    func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
     
     /// Provide a context of display-agent.
-    /// - Parameter token: The template token to send context.
-    func displayAgentRequestContext(token: String, completion: @escaping (DisplayContext?) -> Void)
+    /// - Parameter templateId: The template id to send context.
+    func displayAgentRequestContext(templateId: String, completion: @escaping (DisplayContext?) -> Void)
     
     /// Should update proper displaying view with given template.
-    func displayAgentShouldUpdate(token: String, template: DisplayTemplate)
+    /// - Parameters:
+    ///   - templateId: The template id to update.
+    func displayAgentShouldUpdate(templateId: String, template: DisplayTemplate)
 }
