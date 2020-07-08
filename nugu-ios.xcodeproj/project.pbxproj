@@ -455,6 +455,8 @@
 		7E27374B24B46AC000602B57 /* RoutineAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27374A24B46AC000602B57 /* RoutineAgent.swift */; };
 		7E27374D24B46B2600602B57 /* Routine+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27374C24B46B2600602B57 /* Routine+Event.swift */; };
 		7E27374F24B46B3F00602B57 /* RoutineStartPlayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27374E24B46B3F00602B57 /* RoutineStartPlayload.swift */; };
+		7E27375124B5536E00602B57 /* DirectiveSequencerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375024B5536E00602B57 /* DirectiveSequencerDelegate.swift */; };
+		7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */; };
 		7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */; };
 		7E35D79024622B4E003289A2 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* Eventable.swift */; };
 		7E35D79424623444003289A2 /* MultiPartProcessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79324623444003289A2 /* MultiPartProcessable.swift */; };
@@ -1133,6 +1135,8 @@
 		7E27374A24B46AC000602B57 /* RoutineAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgent.swift; sourceTree = "<group>"; };
 		7E27374C24B46B2600602B57 /* Routine+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Routine+Event.swift"; sourceTree = "<group>"; };
 		7E27374E24B46B3F00602B57 /* RoutineStartPlayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineStartPlayload.swift; sourceTree = "<group>"; };
+		7E27375024B5536E00602B57 /* DirectiveSequencerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveSequencerDelegate.swift; sourceTree = "<group>"; };
+		7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveHandleResult.swift; sourceTree = "<group>"; };
 		7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentRevokeItem.swift; sourceTree = "<group>"; };
 		7E35D79324623444003289A2 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
 		7E35D79724623A22003289A2 /* TTSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSError.swift; sourceTree = "<group>"; };
@@ -1918,6 +1922,8 @@
 				7373894824A46E720018DDD2 /* DirectiveHandleInfo.swift */,
 				7373894624A46E710018DDD2 /* DirectiveSequenceable.swift */,
 				1FFFF3752375707000C9A177 /* DirectiveSequencer.swift */,
+				7E27375024B5536E00602B57 /* DirectiveSequencerDelegate.swift */,
+				7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */,
 			);
 			path = Directive;
 			sourceTree = "<group>";
@@ -3442,6 +3448,7 @@
 				7373892E24A46D430018DDD2 /* StreamDataDelegate.swift in Sources */,
 				7373893424A46D4D0018DDD2 /* Downstream.swift in Sources */,
 				7315302223E11EDF00F843C3 /* DelegateSet.swift in Sources */,
+				7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */,
 				7373895524A473A60018DDD2 /* FocusState.swift in Sources */,
 				1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */,
 				75082BC8243ACA280027D76D /* CryptoUtil.swift in Sources */,
@@ -3457,6 +3464,7 @@
 				73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */,
 				735A4CE2241173F4004E7A41 /* EventSenderError.swift in Sources */,
 				1FFFF38B2375707000C9A177 /* AudioStream.swift in Sources */,
+				7E27375124B5536E00602B57 /* DirectiveSequencerDelegate.swift in Sources */,
 				7373895F24A473B90018DDD2 /* PlaySyncDelegate.swift in Sources */,
 				7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */,
 				1FFFF3912375707100C9A177 /* Atomic.swift in Sources */,

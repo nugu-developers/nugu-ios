@@ -26,6 +26,7 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private var handlingDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     private var blockedDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     
+    private var delegates = DelegateSet<DirectiveSequencerDelegate>()
     private var directiveHandleInfos = DirectiveHandleInfos()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
     private let disposeBag = DisposeBag()
@@ -36,6 +37,14 @@ public class DirectiveSequencer: DirectiveSequenceable {
 // MARK: - DirectiveSequenceable
 
 public extension DirectiveSequencer {
+    func add(delegate: DirectiveSequencerDelegate) {
+        delegates.add(delegate)
+    }
+    
+    func remove(delegate: DirectiveSequencerDelegate) {
+        delegates.remove(delegate)
+    }
+    
     func add(directiveHandleInfos: DirectiveHandleInfos) {
         log.debug("add directive handles: \(directiveHandleInfos)")
         self.directiveHandleInfos.merge(directiveHandleInfos)
@@ -84,6 +93,9 @@ private extension DirectiveSequencer {
             try handler.preFetch?(directive)
             handleDirective(directive)
         } catch {
+            delegates.notify {
+                $0.directiveSequencerDidReceive(type: directive.header.type, dialogRequestId: directive.header.dialogRequestId, result: .failed)
+            }
             log.error(error)
         }
     }
@@ -107,7 +119,10 @@ private extension DirectiveSequencer {
         handler.directiveHandler(directive) { [weak self ] in
             self?.directiveSequencerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                
+
+                self.delegates.notify {
+                    $0.directiveSequencerDidReceive(type: directive.header.type, dialogRequestId: directive.header.dialogRequestId, result: .completed)
+                }
                 self.handlingDirectives.removeAll { directive.header.messageId == $0.directive.header.messageId }
                 
                 // Block 된 Directive 다시시도.

@@ -51,6 +51,7 @@ final class RoutineAgent: RoutineAgentProtocol {
         
         contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        directiveSequencer.add(delegate: self)
     }
     
     deinit {
@@ -69,6 +70,14 @@ extension RoutineAgent: ContextInfoDelegate {
         completion(
             ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
         )
+    }
+}
+
+// MARK: - DirectiveSequencerDelegate
+
+extension RoutineAgent: DirectiveSequencerDelegate {
+    func directiveSequencerDidReceive(type: String, dialogRequestId: String, result: DirectiveHandleResult) {
+        
     }
 }
 
