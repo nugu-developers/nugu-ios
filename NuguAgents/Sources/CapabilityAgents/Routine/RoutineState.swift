@@ -1,6 +1,6 @@
 //
-//  DirectiveSequencerDelegate.swift
-//  NuguCore
+//  RoutineState.swift
+//  NuguAgents
 //
 //  Created by MinChul Lee on 2020/07/08.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,6 +20,24 @@
 
 import Foundation
 
-public protocol DirectiveSequencerDelegate: class {
-    func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult)
+enum RoutineState {
+    case idle
+    case playing
+    case interrupt
+    case finished
+    case stopped
+    case failed(_ errorCode: String)
+}
+
+extension RoutineState {
+    var routineActivity: String {
+        switch self {
+        case .idle: return "IDLE"
+        case .playing: return "PLAYING"
+        case .interrupt: return "INTERRUPT"
+        case .finished: return "FINISHED"
+        case .stopped: return "STOPPED"
+        case .failed: return "STOPPED"
+        }
+    }
 }

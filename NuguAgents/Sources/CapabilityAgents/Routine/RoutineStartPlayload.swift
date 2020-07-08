@@ -23,12 +23,12 @@ import Foundation
 struct RoutineStartPlayload: Decodable {
     let playServiceId: String
     let token: String
-    let actions: Action
+    let actions: [Action]
     
     struct Action: Decodable {
         let type: Type
         let text: String?
-        let data: [String: AnyHashable]
+        let data: [String: AnyHashable]?
         let playServiceId: String?
         
         enum `Type`: String, Decodable {

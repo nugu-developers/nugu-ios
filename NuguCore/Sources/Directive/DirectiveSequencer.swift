@@ -94,7 +94,7 @@ private extension DirectiveSequencer {
             handleDirective(directive)
         } catch {
             delegates.notify {
-                $0.directiveSequencerDidReceive(type: directive.header.type, dialogRequestId: directive.header.dialogRequestId, result: .failed)
+                $0.directiveSequencerDidHandle(directive: directive, result: .failed)
             }
             log.error(error)
         }
@@ -121,7 +121,7 @@ private extension DirectiveSequencer {
                 guard let self = self else { return }
 
                 self.delegates.notify {
-                    $0.directiveSequencerDidReceive(type: directive.header.type, dialogRequestId: directive.header.dialogRequestId, result: .completed)
+                    $0.directiveSequencerDidHandle(directive: directive, result: .completed)
                 }
                 self.handlingDirectives.removeAll { directive.header.messageId == $0.directive.header.messageId }
                 

@@ -31,7 +31,33 @@ final class RoutineAgent: RoutineAgentProtocol {
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     
+    private let routineDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.routine_agent", qos: .userInitiated)
+    
+    private var state: RoutineState = .idle {
+        didSet {
+            guard let item = currentItem else { return }
+            
+            switch state {
+            case .idle:
+                break
+            case .playing:
+                currentIndex = 0
+                sendEvent(typeInfo: .started, playServiceId: item.playServiceId)
+                requestNextAction()
+            case .interrupt:
+                break
+            case .finished:
+                sendEvent(typeInfo: .finished, playServiceId: item.playServiceId)
+            case .stopped:
+                sendEvent(typeInfo: .stopped, playServiceId: item.playServiceId)
+            case .failed(let errorCode):
+                sendEvent(typeInfo: .failed(errorCode: errorCode), playServiceId: item.playServiceId)
+            }
+        }
+    }
+    
     private var currentItem: RoutineStartPlayload?
+    private var currentIndex: Int = 0
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -76,7 +102,7 @@ extension RoutineAgent: ContextInfoDelegate {
 // MARK: - DirectiveSequencerDelegate
 
 extension RoutineAgent: DirectiveSequencerDelegate {
-    func directiveSequencerDidReceive(type: String, dialogRequestId: String, result: DirectiveHandleResult) {
+    func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult) {
         
     }
 }
@@ -93,7 +119,11 @@ private extension RoutineAgent {
                 return
             }
             
-            self?.currentItem = item
+            self?.routineDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.currentItem = item
+                self.state = .playing
+            }
         }
     }
     
@@ -107,8 +137,10 @@ private extension RoutineAgent {
                     return
             }
             
-            if self?.currentItem?.token == token {
-                
+            self?.routineDispatchQueue.async { [weak self] in
+                if self?.currentItem?.token == token {
+                    
+                }
             }
         }
     }
@@ -123,8 +155,10 @@ private extension RoutineAgent {
                     return
             }
             
-            if self?.currentItem?.token == token {
-                
+            self?.routineDispatchQueue.async { [weak self] in
+                if self?.currentItem?.token == token {
+                    
+                }
             }
         }
     }
@@ -156,5 +190,69 @@ private extension RoutineAgent {
                 completion: completion
             )
         }
+    }
+    
+    func sendTextInputEvent(
+        text: String,
+        playServiceId: String?,
+        dialogRequestId: String = TimeUUID().hexString,
+        referrerDialogRequestId: String? = nil,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
+        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
+
+            let header = Upstream.Event.Header(
+                namespace: "Text",
+                name: "TextInput",
+                version: "1.1",
+                dialogRequestId: dialogRequestId,
+                messageId: TimeUUID().hexString,
+                referrerDialogRequestId: referrerDialogRequestId
+            )
+            
+            let payload = [
+                "text": text,
+                "playServiceId": playServiceId
+            ]
+            
+            self.upstreamDataSender.sendEvent(
+                Upstream.Event(
+                    payload: payload.compactMapValues { $0 },
+                    header: header,
+                    contextPayload: contextPayload
+                ),
+                completion: completion
+            )
+        }
+    }
+}
+
+// MARK: - Private
+
+private extension RoutineAgent {
+    func requestNextAction() {
+        guard let item = currentItem else { return }
+        
+        let action = item.actions[currentIndex]
+        switch action.type {
+        case .text:
+            guard let text = action.text else {
+                state = .failed("actions.text is null")
+                return
+            }
+            sendTextInputEvent(text: text, playServiceId: action.playServiceId)
+        case .data:
+            guard let data = action.data else {
+                state = .failed("actions.data is null")
+                return
+            }
+            guard let playServiceId = action.playServiceId else {
+                state = .failed("actions.playServiceId is null")
+                return
+            }
+            sendEvent(typeInfo: .actionTriggered(data: data), playServiceId: playServiceId)
+        }
+        currentIndex += 1
     }
 }
