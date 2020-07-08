@@ -33,6 +33,7 @@ public enum CapabilityAgentCategory: CaseIterable {
     case phoneCall
     case chips
     case session
+    case routine
 }
 
 public extension CapabilityAgentCategory {
@@ -50,6 +51,7 @@ public extension CapabilityAgentCategory {
         case .phoneCall: return "PhoneCall"
         case .chips: return "Chips"
         case .session: return "Session"
+        case .routine: return "Routine"
         }
     }
 }
