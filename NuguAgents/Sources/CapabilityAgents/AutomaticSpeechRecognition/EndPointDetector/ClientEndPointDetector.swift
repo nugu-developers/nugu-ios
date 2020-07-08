@@ -30,6 +30,7 @@ class ClientEndPointDetector: EndPointDetectable {
     private var engine: TycheEndPointDetectorEngine!
     
     private var boundStreams: AudioBoundStreams?
+    private let detectorQueue = DispatchQueue(label: "com.sktelecom.romaine.end_point_detector")
     
     private var state: EndPointDetectorState = .idle {
         didSet {
@@ -47,24 +48,31 @@ class ClientEndPointDetector: EndPointDetectable {
     func start(audioStreamReader: AudioStreamReadable) {
         log.debug("start")
         
-        boundStreams?.stop()
-        let audioBoundStream = AudioBoundStreams(audioStreamReader: audioStreamReader)
-        boundStreams = audioBoundStream
+        detectorQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.boundStreams?.stop()
+            self.boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
 
-        engine.start(
-            inputStream: audioBoundStream.input,
-            sampleRate: asrOptions.sampleRate,
-            timeout: asrOptions.timeout.truncatedSeconds,
-            maxDuration: asrOptions.maxDuration.truncatedSeconds,
-            pauseLength: asrOptions.pauseLength.truncatedMilliSeconds
-        )
+            self.engine.start(
+                inputStream: self.boundStreams!.input,
+                sampleRate: self.asrOptions.sampleRate,
+                timeout: self.asrOptions.timeout.truncatedSeconds,
+                maxDuration: self.asrOptions.maxDuration.truncatedSeconds,
+                pauseLength: self.asrOptions.pauseLength.truncatedMilliSeconds
+            )
+        }
+        
     }
     
     public func stop() {
         log.debug("stop")
         
-        boundStreams?.stop()
-        engine.stop()
+        detectorQueue.async { [weak self] in
+            self?.boundStreams?.stop()
+            self?.engine.stop()
+        }
+
     }
     
     func handleNotifyResult(_ state: ASRNotifyResult.State) {
