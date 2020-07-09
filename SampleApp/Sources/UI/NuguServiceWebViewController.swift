@@ -19,6 +19,7 @@
 //
 
 import UIKit
+import SafariServices
 
 import NuguServiceKit
 
@@ -36,6 +37,26 @@ final class NuguServiceWebViewController: UIViewController {
         nuguServiceWebView.javascriptDelegate = self
         setCookie()
         nuguServiceWebView.loadUrlString(initialURLString)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(refreshAfterOauth),
+            name: .oauthRefresh,
+            object: nil
+        )
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+}
+
+// MARK: - @objc (oauth_refresh)
+
+private extension NuguServiceWebViewController {
+    @objc func refreshAfterOauth() {
+        presentedViewController?.dismiss(animated: true, completion: nil)
+        nuguServiceWebView.reload()
     }
 }
 
@@ -47,16 +68,10 @@ private extension NuguServiceWebViewController {
             authToken: "Bearer \(UserDefaults.Standard.accessToken ?? "")",
             appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
             pocId: SampleApp.clientId ?? "",
-            theme: "LIGHT"
+            theme: "LIGHT",
+            oauthRedirectUri: "nugu.public.sample://oauth_refresh"
         )
-        guard let initialURLString = initialURLString,
-            let initialUrl = URL(string: initialURLString),
-            let scheme = initialUrl.scheme,
-            let domain = initialUrl.host else {
-                log.debug("setCookie failed!")
-                return
-        }
-        nuguServiceWebView.setNuguServiceCookie(domain: scheme + "://" + domain, nuguServiceCookie: cookie)
+        nuguServiceWebView.setNuguServiceCookie(nuguServiceCookie: cookie)
     }
 }
 
@@ -65,10 +80,26 @@ private extension NuguServiceWebViewController {
 extension NuguServiceWebViewController: NuguServiceWebJavascriptDelegate {
     func openExternalApp(openExternalAppItem: WebOpenExternalApp) {
         log.debug("openExternalApp : \(openExternalAppItem)")
+        if let appSchemeUrl = URL(string: openExternalAppItem.scheme ?? ""),
+            UIApplication.shared.canOpenURL(appSchemeUrl) == true {
+            UIApplication.shared.open(appSchemeUrl, options: [:], completionHandler: nil)
+            return
+        }
+        if let appId = openExternalAppItem.appId,
+            let appStoreUrl = URL(string: "https://itunes.apple.com/app/" + appId + "?mt=8"),
+            UIApplication.shared.canOpenURL(appStoreUrl) == true {
+            UIApplication.shared.open(appStoreUrl, options: [:], completionHandler: nil)
+        }
     }
     
     func openInAppBrowser(url: String) {
         log.debug("openInAppBrowser : \(url)")
+        present(SFSafariViewController(url: URL(string: url)!), animated: true, completion: nil)
+    }
+    
+    func closeWindow() {
+        log.debug("closeWindow")
+        navigationController?.popViewController(animated: true)
     }
 }
 
