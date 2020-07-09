@@ -90,7 +90,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             case .stopped, .finished:
                 stopProgressReport()
                 if media.cancelAssociation {
-                    playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
+                    playSyncManager.stopPlay(syncId: media.payload.playServiceId)
                 } else {
                     playSyncManager.endPlay(property: playSyncProperty)
                 }
@@ -403,10 +403,10 @@ extension AudioPlayerAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, syncId: String) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.currentMedia?.dialogRequestId == dialogRequestId else { return }
+            guard property == self.playSyncProperty, self.currentMedia?.payload.playServiceId == syncId else { return }
             
             self.stop(cancelAssociation: false)
         }
@@ -452,7 +452,7 @@ private extension AudioPlayerAgent {
                         property: self.playSyncProperty,
                         duration: .seconds(7),
                         playServiceId: media.payload.playStackControl?.playServiceId,
-                        dialogRequestId: media.dialogRequestId
+                        syncId: media.payload.playServiceId
                     )
                 }
             }

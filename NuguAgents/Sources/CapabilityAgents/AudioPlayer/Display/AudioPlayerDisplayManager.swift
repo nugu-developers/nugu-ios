@@ -115,7 +115,7 @@ extension AudioPlayerDisplayManager {
                         
                         if self.currentItem?.templateId == item.templateId {
                             self.currentItem = nil
-                            self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+                            self.playSyncManager.stopPlay(syncId: item.mediaPayload.playServiceId)
                         }
                     }).disposed(by: self.disposeBag)
                 
@@ -124,7 +124,7 @@ extension AudioPlayerDisplayManager {
                     property: self.playSyncProperty,
                     duration: .seconds(7),
                     playServiceId: item.mediaPayload.playStackControl?.playServiceId,
-                    dialogRequestId: item.dialogRequestId
+                    syncId: item.mediaPayload.playServiceId
                 )
             }
             if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
@@ -202,10 +202,10 @@ extension AudioPlayerDisplayManager: AudioPlayerAgentDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerDisplayManager: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, syncId: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, let item = self.currentItem, item.dialogRequestId == dialogRequestId else { return }
+            guard property == self.playSyncProperty, let item = self.currentItem, item.mediaPayload.playServiceId == syncId else { return }
             
             self.currentItem = nil
             self.delegate?.audioPlayerDisplayDidClear(template: item)

@@ -50,16 +50,16 @@ public extension PlaySyncManager {
         delegates.remove(delegate)
     }
     
-    func startPlay(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, dialogRequestId: String) {
+    func startPlay(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, syncId: String) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
             log.debug("\(property) \(playServiceId ?? "PlayServiceId is null")")
             
             // Push to play stack
-            self.pushToPlayStack(property: property, duration: duration, playServiceId: playServiceId, dialogRequestId: dialogRequestId)
+            self.pushToPlayStack(property: property, duration: duration, playServiceId: playServiceId, syncId: syncId)
             
-            let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: dialogRequestId)
+            let playGroup = self.playStack.playGroup(layerType: property.layerType, syncId: syncId)
             // Cancel timers
             log.debug("Cancel layer timer \(playGroup)")
             playGroup.forEach(self.removeTimer)
@@ -80,7 +80,7 @@ public extension PlaySyncManager {
             log.debug("\(property) \(play)")
             
             // Set timers
-            let playGroup = self.playStack.playGroup(layerType: property.layerType, dialogRequestId: play.dialogRequestId)
+            let playGroup = self.playStack.playGroup(layerType: property.layerType, syncId: play.syncId)
             log.debug("Start layer timer \(playGroup)")
             playGroup.forEach {
                 guard let duration = self.playStack[$0]?.duration else { return }
@@ -95,14 +95,14 @@ public extension PlaySyncManager {
         }
     }
     
-    func stopPlay(dialogRequestId: String) {
+    func stopPlay(syncId: String) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
-            log.debug(dialogRequestId)
+            log.debug(syncId)
             
             // Pop from play stack
-            self.playStack.playGroup(dialogRequestId: dialogRequestId).forEach(self.popFromPlayStack)
+            self.playStack.playGroup(syncId: syncId).forEach(self.popFromPlayStack)
         }
     }
     
@@ -163,14 +163,14 @@ extension PlaySyncManager: ContextInfoDelegate {
 // MARK: - Private
 
 private extension PlaySyncManager {
-    func pushToPlayStack(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, dialogRequestId: String) {
+    func pushToPlayStack(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, syncId: String) {
         // Cancel timers
         removeTimer(property: property)
         
         // Layer policy v.1.4.4. 2.2 Display 동작
         playStack
             // Multi-layer 상황에서 이전에 layer 와
-            .previousPlayGroup(dialogRequestId: dialogRequestId)
+            .previousPlayGroup(syncId: syncId)
             // 동일한 신규 layer 실행 시,
             .filter { $0.property.layerType == property.layerType }
             // 이전 layer 의 Display 는
@@ -180,7 +180,7 @@ private extension PlaySyncManager {
             // 종료 시킨다.
             .forEach { popFromPlayStack(property: $0.property) }
         
-        playStack[property] = PlaySyncInfo(playServiceId: playServiceId, dialogRequestId: dialogRequestId, duration: duration)
+        playStack[property] = PlaySyncInfo(playServiceId: playServiceId, syncId: syncId, duration: duration)
     }
     
     func popFromPlayStack(property: PlaySyncProperty) {
@@ -192,7 +192,7 @@ private extension PlaySyncManager {
         playStack[property] = nil
         
         delegates.notify { (delegate) in
-            delegate.playSyncDidRelease(property: property, dialogRequestId: play.dialogRequestId)
+            delegate.playSyncDidRelease(property: property, syncId: play.syncId)
         }
     }
     

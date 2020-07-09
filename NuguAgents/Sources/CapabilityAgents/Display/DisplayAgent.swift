@@ -188,12 +188,12 @@ extension DisplayAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension DisplayAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, syncId: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
             self.templateList
-                .filter { $0.template.playSyncProperty == property && $0.dialogRequestId == dialogRequestId}
+                .filter { $0.template.playSyncProperty == property && $0.template.playServiceId == syncId}
                 .forEach {
                     if self.removeRenderedTemplate(item: $0) {
                         self.delegate?.displayAgentDidClear(templateId: $0.templateId)
@@ -226,7 +226,7 @@ private extension DisplayAgent {
                     return
                 }
                 
-                self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+                self.playSyncManager.stopPlay(syncId: item.template.playServiceId)
                 self.sendEvent(
                     typeInfo: .closeSucceeded,
                     playServiceId: payload.playServiceId,
@@ -369,7 +369,7 @@ private extension DisplayAgent {
                             guard let self = self else { return }
                             
                             if self.removeRenderedTemplate(item: item) {
-                                self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+                                self.playSyncManager.stopPlay(syncId: item.template.playServiceId)
                             }
                         }).disposed(by: self.disposeBag)
                     
@@ -426,7 +426,7 @@ private extension DisplayAgent {
             property: item.template.playSyncProperty,
             duration: item.template.duration.time,
             playServiceId: item.template.playStackControl?.playServiceId,
-            dialogRequestId: item.dialogRequestId
+            syncId: item.template.playServiceId
         )
     }
     

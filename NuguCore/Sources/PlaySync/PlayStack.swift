@@ -48,15 +48,15 @@ struct PlayStack {
         }
     }
     
-    func playGroup(dialogRequestId: String) -> [PlaySyncProperty] {
-        return stack.filter { $0.play.dialogRequestId == dialogRequestId }.map { $0.property }
+    func playGroup(syncId: String) -> [PlaySyncProperty] {
+        return stack.filter { $0.play.syncId == syncId }.map { $0.property }
     }
     
-    func playGroup(layerType: PlaySyncProperty.LayerType, dialogRequestId: String) -> [PlaySyncProperty] {
-        return playGroup(dialogRequestId: dialogRequestId).filter { $0.layerType == layerType }
+    func playGroup(layerType: PlaySyncProperty.LayerType, syncId: String) -> [PlaySyncProperty] {
+        return playGroup(syncId: syncId).filter { $0.layerType == layerType }
     }
     
-    func previousPlayGroup(dialogRequestId: String) -> [(property: PlaySyncProperty, play: PlaySyncInfo)] {
-        stack.filter { $0.play.dialogRequestId != dialogRequestId }
+    func previousPlayGroup(syncId: String) -> [(property: PlaySyncProperty, play: PlaySyncInfo)] {
+        stack.filter { $0.play.syncId != syncId }
     }
 }
