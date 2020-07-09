@@ -59,9 +59,8 @@ public extension PhoneCallAgent {
     @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
         let dialogRequestId = TimeUUID().hexString
         
-        self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
+        self.contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
-            
             self.upstreamDataSender.sendEvent(
                 Event(
                     playServiceId: playServiceId,
