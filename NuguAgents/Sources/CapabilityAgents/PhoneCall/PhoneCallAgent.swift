@@ -36,7 +36,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     // Handleable Directive
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SendCandidates", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSendCandidates),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleMakeCall)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleMakeCall)
     ]
     
     public init(
