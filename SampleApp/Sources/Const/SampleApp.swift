@@ -73,6 +73,8 @@ struct SampleApp {
     static var privacyUrl: URL {
         return URL(string: "https://privacy.sktelecom.com/view.do?ctg=policy&name=policy")!
     }
+    
+    static let oauthRedirectUri: String = "nugu.public.sample://oauth_refresh"
 }
 
 // MARK: - Login Method
@@ -156,5 +158,5 @@ extension SampleApp {
 
 extension Notification.Name {
     static let login = Notification.Name("com.skt.Romaine.login")
-    static let oauthRefresh = Notification.Name("oauth_refresh")
+    static let oauthRefresh = Notification.Name("com.skt.Romaine.oauth_refresh")
 }

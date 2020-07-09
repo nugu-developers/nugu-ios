@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        if url.host == NSNotification.Name.oauthRefresh.rawValue {
+        if url.absoluteString == SampleApp.oauthRedirectUri {
             NotificationCenter.default.post(name: .oauthRefresh, object: nil, userInfo: nil)
             return true
         }

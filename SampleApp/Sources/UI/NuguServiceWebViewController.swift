@@ -69,7 +69,7 @@ private extension NuguServiceWebViewController {
             appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
             pocId: SampleApp.clientId ?? "",
             theme: "LIGHT",
-            oauthRedirectUri: "nugu.public.sample://oauth_refresh"
+            oauthRedirectUri: SampleApp.oauthRedirectUri
         )
         nuguServiceWebView.setNuguServiceCookie(nuguServiceCookie: cookie)
     }
