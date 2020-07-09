@@ -28,9 +28,9 @@ extension AudioPlayerAgent {
         let typeInfo: TypeInfo
         
         enum TypeInfo {
-            case favoriteCommandIssued(isOn: Bool)
-            case repeatCommandIssued(mode: AudioPlayerDisplayRepeat)
-            case shuffleCommandIssued(isOn: Bool)
+            case favoriteCommandIssued(current: Bool)
+            case repeatCommandIssued(currentMode: AudioPlayerDisplayRepeat)
+            case shuffleCommandIssued(current: Bool)
         }
     }
 }
@@ -43,12 +43,12 @@ extension AudioPlayerAgent.SettingsEvent: Eventable {
             "playServiceId": playServiceId
         ]
         switch typeInfo {
-        case .favoriteCommandIssued(let isOn):
-            eventPayload["favorite"] = isOn
-        case .repeatCommandIssued(let mode):
-            eventPayload["repeat"] = mode.rawValue
-        case .shuffleCommandIssued(let isOn):
-            eventPayload["shuffle"] = isOn
+        case .favoriteCommandIssued(let current):
+            eventPayload["favorite"] = current
+        case .repeatCommandIssued(let currentMode):
+            eventPayload["repeat"] = currentMode.rawValue
+        case .shuffleCommandIssued(let current):
+            eventPayload["shuffle"] = current
         }
         return eventPayload
     }
