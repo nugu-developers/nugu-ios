@@ -45,13 +45,17 @@ class ClientEndPointDetector: EndPointDetectable {
         engine.delegate = self
     }
     
+    deinit {
+        internalStop()
+    }
+    
     func start(audioStreamReader: AudioStreamReadable) {
         log.debug("start")
         
         detectorQueue.async { [weak self] in
             guard let self = self else { return }
             
-            self.boundStreams?.stop()
+            self.internalStop()
             self.boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
 
             self.engine.start(
@@ -69,10 +73,13 @@ class ClientEndPointDetector: EndPointDetectable {
         log.debug("stop")
         
         detectorQueue.async { [weak self] in
-            self?.boundStreams?.stop()
-            self?.engine.stop()
+            self?.internalStop()
         }
-
+    }
+    
+    private func internalStop() {
+        boundStreams?.stop()
+        engine.stop()
     }
     
     func handleNotifyResult(_ state: ASRNotifyResult.State) {

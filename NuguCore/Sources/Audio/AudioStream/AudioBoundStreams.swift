@@ -50,6 +50,10 @@ public class AudioBoundStreams {
         }
     }
     
+    deinit {
+        internalStop()
+    }
+    
     public func stop() {
         log.debug("[\(id)] bound stream try to stop")
         
