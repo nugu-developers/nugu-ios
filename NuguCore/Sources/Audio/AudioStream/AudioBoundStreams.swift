@@ -21,13 +21,13 @@
 import Foundation
 import AVFoundation
 
-public class AudioBoundStreams: NSObject, StreamDelegate {
+public class AudioBoundStreams {
     private static var nextId = 0
     private var id: Int
     private let streams = BoundStreams()
+    private var streamDelegator: OutputStreamDelegator?
     private let audioStreamReader: AudioStreamReadable
     private let streamQueue: DispatchQueue
-    private let streamSemaphore = DispatchSemaphore(value: 0)
     
     public var input: InputStream {
         return streams.input
@@ -38,64 +38,84 @@ public class AudioBoundStreams: NSObject, StreamDelegate {
         self.id = Self.nextId
         Self.nextId += 1
         self.streamQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_bound_stream_queue_\(self.id)")
-        super.init()
         log.debug("[\(id)] initiated")
-
-        CFWriteStreamSetDispatchQueue(streams.output, streamQueue)
-        streams.output.delegate = self
-        streams.output.open()
+        
+        streamQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.streamDelegator = OutputStreamDelegator(owner: self)
+            CFWriteStreamSetDispatchQueue(self.streams.output, self.streamQueue)
+            self.streams.output.delegate = self.streamDelegator
+            self.streams.output.open()
+        }
     }
     
     public func stop() {
         log.debug("[\(id)] bound stream try to stop")
         
+        streamQueue.async { [weak self] in
+            self?.internalStop()
+        }
+    }
+    
+    private func internalStop() {
         if streams.output.streamStatus != .closed {
             streams.output.close()
             streams.output.delegate = nil
             log.debug("[\(id)] bounded output stream is closed")
         }
-
-        // To cancel running task (audioStreamReader.read)
-        streamSemaphore.signal()
+        
+        streamDelegator = nil
     }
-    
-    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        switch eventCode {
-        case .hasSpaceAvailable:
-            guard let audioStreamReader = audioStreamReader as? SharedBuffer<AVAudioPCMBuffer>.Reader else {
-                return
+}
+
+// MARK: - StreamDelegate
+
+extension AudioBoundStreams {
+    private class OutputStreamDelegator: NSObject, StreamDelegate {
+        let owner: AudioBoundStreams
+        private let streamSemaphore = DispatchSemaphore(value: 0)
+        
+        init(owner: AudioBoundStreams) {
+            self.owner = owner
+        }
+        
+        public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+            switch eventCode {
+            case .hasSpaceAvailable:
+                owner.audioStreamReader.read(complete: { [weak self] (result) in
+                    guard let self = self else { return }
+                    guard case let .success(pcmBuffer) = result else {
+                        log.debug("[\(self.owner.id)] audio stream read failed in hasSpaceAvailable")
+                        self.owner.internalStop()
+                        self.streamSemaphore.signal()
+                        return
+                    }
+                    
+                    guard let data = pcmBuffer.int16ChannelData?.pointee else {
+                        log.debug("[\(self.owner.id)] pcm puffer is not suitable in hasSpaceAvailable")
+                        self.streamSemaphore.signal()
+                        return
+                    }
+                    
+                    data.withMemoryRebound(to: UInt8.self, capacity: Int(pcmBuffer.frameLength*2)) { (ptrData: UnsafeMutablePointer<UInt8>) -> Void in
+                        self.owner.streams.output.write(ptrData, maxLength: Int(pcmBuffer.frameLength*2))
+                    }
+                    
+                    self.streamSemaphore.signal()
+                })
+                
+                streamSemaphore.wait()
+                
+            case .endEncountered:
+                log.debug("[\(self.owner.id)] output stream endEncountered")
+                fallthrough
+            case .errorOccurred:
+                self.owner.internalStop()
+                
+            default:
+                break
             }
-
-            audioStreamReader.read(complete: { [weak self] (result) in
-                guard let self = self else { return }
-                guard case let .success(pcmBuffer) = result else {
-                    log.debug("[\(self.id)] audio stream read failed in hasSpaceAvailable")
-                    self.stop()
-                    self.streamSemaphore.signal()
-                    return
-                }
-                
-                guard let data = pcmBuffer.int16ChannelData?.pointee else {
-                    log.debug("[\(self.id)] pcm puffer is not suitable in hasSpaceAvailable")
-                    self.streamSemaphore.signal()
-                    return
-                }
-                
-                data.withMemoryRebound(to: UInt8.self, capacity: Int(pcmBuffer.frameLength*2)) { (ptrData: UnsafeMutablePointer<UInt8>) -> Void in
-                    self.streams.output.write(ptrData, maxLength: Int(pcmBuffer.frameLength*2))
-                }
-                
-                self.streamSemaphore.signal()
-            })
-            
-            streamSemaphore.wait()
-            
-        case .endEncountered:
-            log.debug("[\(id)] output stream endEncountered")
-            stop()
-
-        default:
-            break
         }
     }
 }

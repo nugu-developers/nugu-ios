@@ -27,7 +27,7 @@ import AVFoundation
  When the key word detected, you can take PCM data of user's voice.
  so you can do Speaker Recognition, enhance the recognizing rate and so on using this data.
  */
-public class TycheKeywordDetectorEngine: NSObject {
+public class TycheKeywordDetectorEngine {
     private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keensense.tyche_key_word_detector")
     private var engineHandle: WakeupHandle?
     
@@ -37,6 +37,7 @@ public class TycheKeywordDetectorEngine: NSObject {
     public var netFile: URL?
     public var searchFile: URL?
     public var inputStream: InputStream?
+    private var streamDelegator: InputStreamDelegator?
     public weak var delegate: TycheKeywordDetectorEngineDelegate?
     public var state: TycheKeywordDetectorEngine.State = .inactive {
         didSet {
@@ -51,10 +52,10 @@ public class TycheKeywordDetectorEngine: NSObject {
     let filename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("detecting.raw")
     #endif
     
+    public init() {}
+    
     deinit {
-        if state == .active {
-            stop()
-        }
+        internalStop()
     }
     
     /**
@@ -63,18 +64,19 @@ public class TycheKeywordDetectorEngine: NSObject {
     public func start(inputStream: InputStream) {
         log.debug("try to start")
         
-        if [.closed, .notOpen].contains(inputStream.streamStatus) == false || engineHandle != nil {
-            // Release last components
-            stop()
-        }
-        
-        self.inputStream = inputStream
-        CFReadStreamSetDispatchQueue(inputStream, self.kwdQueue)
-        inputStream.delegate = self
-        inputStream.open()
-
         kwdQueue.async { [weak self] in
             guard let self = self else { return }
+            
+            if [.closed, .notOpen].contains(inputStream.streamStatus) == false || self.engineHandle != nil {
+                // Release last components
+                self.internalStop()
+            }
+            
+            self.streamDelegator = InputStreamDelegator(owner: self)
+            self.inputStream = inputStream
+            CFReadStreamSetDispatchQueue(inputStream, self.kwdQueue)
+            inputStream.delegate = self.streamDelegator
+            inputStream.open()
             
             do {
                 try self.initTriggerEngine()
@@ -90,23 +92,26 @@ public class TycheKeywordDetectorEngine: NSObject {
     public func stop() {
         log.debug("try to stop")
         
+        kwdQueue.async { [weak self] in
+            self?.internalStop()
+        }
+    }
+    
+    private func internalStop() {
         if inputStream?.streamStatus != .closed {
             inputStream?.close()
             inputStream?.delegate = nil
             log.debug("bounded input stream is closed")
         }
-
-        kwdQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            if self.engineHandle != nil {
-                Wakeup_Destroy(self.engineHandle)
-                self.engineHandle = nil
-                log.debug("engine is destroyed")
-            }
-
-            self.state = .inactive
+        
+        if engineHandle != nil {
+            Wakeup_Destroy(engineHandle)
+            engineHandle = nil
+            log.debug("engine is destroyed")
         }
+        
+        streamDelegator = nil
+        state = .inactive
     }
 }
 
@@ -154,7 +159,7 @@ extension TycheKeywordDetectorEngine {
         //       base           start        end  detection
         let detectedRange = (detectingData.count - (detection - base))..<detectingData.count
         let detectedData = detectingData.subdata(in: detectedRange)
-
+        
         // reset buffers
         detectingData.removeAll()
         
@@ -167,7 +172,7 @@ extension TycheKeywordDetectorEngine {
             log.debug(error)
         }
         #endif
-
+        
         delegate?.tycheKeywordDetectorEngineDidDetect(
             data: detectedData,
             start: start - base,
@@ -181,43 +186,55 @@ extension TycheKeywordDetectorEngine {
     }
 }
 
-extension TycheKeywordDetectorEngine: StreamDelegate {
-    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        guard let inputStream = aStream as? InputStream,
-            inputStream == self.inputStream else { return }
+// MARK: - StreamDelegate
+
+extension TycheKeywordDetectorEngine {
+    private class InputStreamDelegator: NSObject, StreamDelegate {
+        let owner: TycheKeywordDetectorEngine
         
-        switch eventCode {
-        case .hasBytesAvailable:
-            guard engineHandle != nil else {
-                stop()
-                return
+        init(owner: TycheKeywordDetectorEngine) {
+            self.owner = owner
+            super.init()
+        }
+        
+        public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+            guard let inputStream = aStream as? InputStream,
+                inputStream == owner.inputStream else { return }
+            
+            switch eventCode {
+            case .hasBytesAvailable:
+                guard owner.engineHandle != nil else {
+                    owner.internalStop()
+                    return
+                }
+                
+                let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
+                defer { inputBuffer.deallocate() }
+                
+                let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
+                guard 0 < inputLength else { return }
+                
+                owner.detectingData.append(Data(bytes: inputBuffer, count: inputLength))
+                
+                let isDetected = inputBuffer.withMemoryRebound(to: Int16.self, capacity: inputLength/2) { (ptrPcmData) -> Bool in
+                    return Wakeup_PutAudio(owner.engineHandle, ptrPcmData, Int32(inputLength/2)) == 1
+                }
+                
+                if isDetected {
+                    log.debug("detected")
+                    owner.notifyDetection()
+                    owner.internalStop()
+                }
+                
+            case .endEncountered:
+                log.debug("stream endEncountered")
+                fallthrough
+            case .errorOccurred:
+                owner.internalStop()
+                
+            default:
+                break
             }
-            
-            let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
-            defer { inputBuffer.deallocate() }
-            
-            let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
-            guard 0 < inputLength else { return }
-
-            detectingData.append(Data(bytes: inputBuffer, count: inputLength))
-            
-            let isDetected = inputBuffer.withMemoryRebound(to: Int16.self, capacity: inputLength/2) { (ptrPcmData) -> Bool in
-                return Wakeup_PutAudio(engineHandle, ptrPcmData, Int32(inputLength/2)) == 1
-            }
-            
-            if isDetected {
-                log.debug("detected")
-                stop()
-
-                notifyDetection()
-            }
-            
-        case .endEncountered:
-            log.debug("stream endEncountered")
-            stop()
-            
-        default:
-            break
         }
     }
 }
