@@ -21,8 +21,8 @@
 import Foundation
 
 public struct WebOpenExternalApp: Decodable {
-    let scheme: String?
-    let appId: String?
+    public let scheme: String?
+    public let appId: String?
     
     enum CodingKeys: String, CodingKey {
         case scheme = "iosScheme"
