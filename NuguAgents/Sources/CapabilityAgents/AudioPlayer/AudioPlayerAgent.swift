@@ -864,7 +864,6 @@ private extension AudioPlayerAgent {
                 offset: NuguTimeInterval(seconds: payload.audioItem.stream.offset),
                 cacheKey: payload.cacheKey
             )
-
             currentPlayer = mediaPlayer
             currentMedia = AudioPlayerAgentMedia(
                 dialogRequestId: dialogRequestId,
