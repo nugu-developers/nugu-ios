@@ -426,6 +426,7 @@
 		75BF16A824623F75002A4B8D /* 07_speaking.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF16A124623F75002A4B8D /* 07_speaking.json */; };
 		75D069C4247F76CC000B5D1F /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */; };
 		75D069E42488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */; };
+		75F1A7D824B451F00023B6C9 /* WeakScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */; };
 		75F7991D2472563300655BF6 /* TextList1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F7991C2472563300655BF6 /* TextList1View.swift */; };
 		75F7991F2472564300655BF6 /* TextList1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F7991E2472564300655BF6 /* TextList1View.xib */; };
 		75F79926247256B900655BF6 /* TextList2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F79920247256B800655BF6 /* TextList2View.xib */; };
@@ -1100,6 +1101,7 @@
 		75BF16A124623F75002A4B8D /* 07_speaking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 07_speaking.json; sourceTree = "<group>"; };
 		75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+AnyHashable.swift"; sourceTree = "<group>"; };
+		75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakScriptMessageHandler.swift; sourceTree = "<group>"; };
 		75F7991C2472563300655BF6 /* TextList1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextList1View.swift; sourceTree = "<group>"; };
 		75F7991E2472564300655BF6 /* TextList1View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextList1View.xib; sourceTree = "<group>"; };
 		75F79920247256B800655BF6 /* TextList2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList2View.xib; sourceTree = "<group>"; };
@@ -2604,6 +2606,7 @@
 			isa = PBXGroup;
 			children = (
 				7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */,
+				75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */,
 				7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */,
 				7525AC92249B01BC006800A3 /* NuguServiceCookie.swift */,
 				7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */,
@@ -3822,6 +3825,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7525AC99249B01C8006800A3 /* NuguServiceWebView.swift in Sources */,
+				75F1A7D824B451F00023B6C9 /* WeakScriptMessageHandler.swift in Sources */,
 				7525AC95249B01BD006800A3 /* NuguServiceCookie.swift in Sources */,
 				7525AC97249B01BD006800A3 /* WebOpenExternalApp.swift in Sources */,
 				7525ACB3249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift in Sources */,
