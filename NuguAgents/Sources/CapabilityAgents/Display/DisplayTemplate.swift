@@ -54,10 +54,6 @@ public struct DisplayTemplate {
             PlaySyncProperty(layerType: contextLayer, contextType: .display)
         }
         
-        public struct PlayStackControl: Decodable {
-            let playServiceId: String?
-        }
-        
         public enum Duration: String, Decodable {
             case short = "SHORT"
             case mid = "MID"

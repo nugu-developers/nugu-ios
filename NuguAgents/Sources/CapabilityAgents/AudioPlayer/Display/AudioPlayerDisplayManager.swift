@@ -95,7 +95,11 @@ extension AudioPlayerDisplayManager {
             payload: metaData,
             templateId: messageId,
             dialogRequestId: dialogRequestId,
-            mediaPayload: payload
+            mediaPayload: AudioPlayerDisplayTemplate.MediaPayload(
+                token: payload.audioItem.stream.token,
+                playServiceId: payload.playServiceId,
+                playStackControl: payload.playStackControl
+            )
         )
 
         self.displayDispatchQueue.async { [weak self] in

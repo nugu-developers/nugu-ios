@@ -25,16 +25,19 @@ public struct AudioPlayerDisplayTemplate {
     public let payload: [String: AnyHashable]
     public let templateId: String
     public let dialogRequestId: String
-    public var token: String {
-        mediaPayload.audioItem.stream.token
-    }
-    let mediaPayload: AudioPlayerAgentMedia.Payload
+    public let mediaPayload: MediaPayload
     
-    init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, mediaPayload: AudioPlayerAgentMedia.Payload) {
+    init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, mediaPayload: MediaPayload) {
         self.type = type
         self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
         self.mediaPayload = mediaPayload
+    }
+    
+    public struct MediaPayload {
+        public let token: String
+        public let playServiceId: String
+        public let playStackControl: PlayStackControl?
     }
 }
