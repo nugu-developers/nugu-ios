@@ -65,13 +65,17 @@ class ServerEndPointDetector: EndPointDetectable {
         speexEncoder = SpeexEncoder(sampleRate: Int(asrOptions.sampleRate), inputType: .linearPcm16)
     }
     
+    deinit {
+        internalStop()
+    }
+    
     func start(audioStreamReader: AudioStreamReadable) {
         log.debug("")
         
         epdQueue.async { [weak self] in
             guard let self = self else { return }
             
-            self.boundStreams?.stop()
+            self.internalStop()
             self.boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
             let inputStream = self.boundStreams!.input
             
@@ -96,9 +100,10 @@ class ServerEndPointDetector: EndPointDetectable {
         listeningTimer?.dispose()
         boundStreams?.stop()
         
-        if inputStream?.streamStatus != .closed {
-            inputStream?.close()
-            inputStream?.delegate = nil
+        if let inputStream = inputStream,
+            inputStream.streamStatus != .closed {
+            inputStream.close()
+            inputStream.delegate = nil
         }
 
         state = .idle
