@@ -98,9 +98,10 @@ public class TycheKeywordDetectorEngine {
     }
     
     private func internalStop() {
-        if inputStream?.streamStatus != .closed {
-            inputStream?.close()
-            inputStream?.delegate = nil
+        if let inputStream = inputStream,
+            inputStream.streamStatus != .closed {
+            inputStream.close()
+            inputStream.delegate = nil
             log.debug("bounded input stream is closed")
         }
         
