@@ -27,7 +27,7 @@ public struct DisplayTemplate {
     public let payload: Data
     public let templateId: String
     public let dialogRequestId: String
-    let template: Payload
+    public let template: Payload
     
     init(
         type: String,
@@ -43,22 +43,22 @@ public struct DisplayTemplate {
         self.template = template
     }
     
-    struct Payload {
-        let token: String
-        let playServiceId: String
-        let playStackControl: PlayStackControl?
-        let duration: Duration
-        let focusable: Bool?
-        let contextLayer: PlaySyncProperty.LayerType
-        var playSyncProperty: PlaySyncProperty {
+    public struct Payload {
+        public let token: String
+        public let playServiceId: String
+        public let playStackControl: PlayStackControl?
+        public let duration: Duration
+        public let focusable: Bool?
+        public let contextLayer: PlaySyncProperty.LayerType
+        public var playSyncProperty: PlaySyncProperty {
             PlaySyncProperty(layerType: contextLayer, contextType: .display)
         }
         
-        struct PlayStackControl: Decodable {
+        public struct PlayStackControl: Decodable {
             let playServiceId: String?
         }
         
-        enum Duration: String, Decodable {
+        public enum Duration: String, Decodable {
             case short = "SHORT"
             case mid = "MID"
             case long = "LONG"
@@ -79,7 +79,7 @@ extension DisplayTemplate.Payload: Decodable {
         case contextLayer
     }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         token = try container.decode(String.self, forKey: .token)
@@ -92,7 +92,7 @@ extension DisplayTemplate.Payload: Decodable {
 }
 
 extension DisplayTemplate.Payload.Duration {
-    var time: DispatchTimeInterval {
+    public var time: DispatchTimeInterval {
         switch self {
         case .short: return .seconds(7)
         case .mid: return .seconds(15)
