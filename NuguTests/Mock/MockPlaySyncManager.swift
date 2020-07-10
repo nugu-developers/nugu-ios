@@ -39,7 +39,7 @@ class MockPlaySyncManager: PlaySyncManageable {
         //
     }
     
-    func stopPlay(dialogRequestId: String) {
+    func stopPlay(syncId: String) {
         //
     }
     
