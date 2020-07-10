@@ -25,6 +25,7 @@ import NuguCore
 import KeenSense
 
 public class KeywordDetector {
+    private let detectorQueue = DispatchQueue(label: "com.sktelecom.romaine.keyword_detector")
     private var boundStreams: AudioBoundStreams?
     private let engine = TycheKeywordDetectorEngine()
     
@@ -40,8 +41,10 @@ public class KeywordDetector {
     // Must set `keywordSource` for using `KeywordDetector`
     public var keywordSource: KeywordSource? {
         didSet {
-            engine.netFile = keywordSource?.netFileUrl
-            engine.searchFile = keywordSource?.searchFileUrl
+            detectorQueue.async { [weak self] in
+                self?.engine.netFile = self?.keywordSource?.netFileUrl
+                self?.engine.searchFile = self?.keywordSource?.searchFileUrl
+            }
         }
     }
     
@@ -53,18 +56,23 @@ public class KeywordDetector {
     public func start() {
         log.debug("start")
         
-        boundStreams?.stop()
-        let audioBoundStreams = AudioBoundStreams(audioStreamReader: audioStream.makeAudioStreamReader())
-        engine.start(inputStream: audioBoundStreams.input)
-        boundStreams = audioBoundStreams
+        detectorQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.boundStreams?.stop()
+            self.boundStreams = AudioBoundStreams(audioStreamReader: self.audioStream.makeAudioStreamReader())
+            self.engine.start(inputStream: self.boundStreams!.input)
+        }
     }
     
     public func stop() {
         log.debug("stop")
         
-        boundStreams?.stop()
-        boundStreams = nil
-        engine.stop()
+        detectorQueue.async { [weak self] in
+            self?.boundStreams?.stop()
+            self?.boundStreams = nil
+            self?.engine.stop()
+        }
     }
 }
 
