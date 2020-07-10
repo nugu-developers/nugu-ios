@@ -33,10 +33,10 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
         property: PlaySyncProperty,
         duration: DispatchTimeInterval,
         playServiceId: String?,
-        dialogRequestId: String
+        syncId: String
     )
     func endPlay(property: PlaySyncProperty)
-    func stopPlay(dialogRequestId: String)
+    func stopPlay(syncId: String)
     
     /// Start new timer to release `PlaySyncProperty`.
     ///

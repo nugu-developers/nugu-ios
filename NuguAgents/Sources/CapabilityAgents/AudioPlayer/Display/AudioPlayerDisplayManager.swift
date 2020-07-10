@@ -33,10 +33,10 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
         internalSerialQueueName: "com.sktelecom.romaine.audio_player_display"
     )
     
+    weak var delegate: AudioPlayerDisplayDelegate?
+    
     private let audioPlayerPauseTimeout: DispatchTimeInterval
     private let playSyncManager: PlaySyncManageable
-    
-    private var renderingInfos = [AudioPlayerDisplayRenderingInfo]()
     
     // Current display info
     private var currentItem: AudioPlayerDisplayTemplate?
@@ -78,7 +78,12 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 // MARK: - AudioPlayerDisplayManageable
 
 extension AudioPlayerDisplayManager {
-    func display(metaData: [String: AnyHashable], messageId: String, dialogRequestId: String, playStackServiceId: String?) {
+    func display(payload: AudioPlayerAgentMedia.Payload, messageId: String, dialogRequestId: String) {
+        guard let delegate = delegate else { return }
+        guard let metaData = payload.audioItem.metadata,
+            ((metaData["disableTemplate"] as? Bool) ?? false) == false else {
+                return
+        }
         guard let template = metaData["template"] as? [String: AnyHashable],
             let type = template["type"] as? String else {
                 log.error("Invalid metaData")
@@ -90,38 +95,52 @@ extension AudioPlayerDisplayManager {
             payload: metaData,
             templateId: messageId,
             dialogRequestId: dialogRequestId,
-            playStackServiceId: playStackServiceId
+            mediaPayload: payload
         )
-        
-        displayDispatchQueue.async { [weak self] in
+
+        self.displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
-            let rendered = self.renderingInfos
-                .compactMap { $0.delegate }
-                .map { self.setRenderedTemplate(delegate: $0, template: item) }
-                .contains { $0 }
-            if rendered == true {
-                self.currentItem = item
+            let semaphore = DispatchSemaphore(value: 0)
+            delegate.audioPlayerDisplayShouldRender(template: item) { [weak self] in
+                defer { semaphore.signal() }
+                guard let self = self else { return }
+                guard let displayObject = $0 else { return }
                 
+                // Release sync when removed all of template(May be closed by user).
+                Reactive(displayObject).deallocated
+                    .observeOn(self.displayScheduler)
+                    .subscribe({ [weak self] _ in
+                        guard let self = self else { return }
+                        
+                        if self.currentItem?.templateId == item.templateId {
+                            self.currentItem = nil
+                            self.playSyncManager.stopPlay(syncId: item.mediaPayload.playServiceId)
+                        }
+                    }).disposed(by: self.disposeBag)
+                
+                self.currentItem = item
                 self.playSyncManager.startPlay(
                     property: self.playSyncProperty,
                     duration: .seconds(7),
-                    playServiceId: item.playStackServiceId,
-                    dialogRequestId: item.dialogRequestId
+                    playServiceId: item.mediaPayload.playStackControl?.playServiceId,
+                    syncId: item.mediaPayload.playServiceId
                 )
+            }
+            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
+                log.error("`audioPlayerDisplayShouldRender` completion block does not called")
             }
         }
     }
     
     func updateMetadata(payload: Data, playServiceId: String) {
-        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
-            let delegate = info.delegate else { return }
-        delegate.audioPlayerDisplayShouldUpdateMetadata(payload: payload)
+        guard currentItem?.mediaPayload.playServiceId == playServiceId else { return }
+        delegate?.audioPlayerDisplayShouldUpdateMetadata(payload: payload)
     }
     
     func showLyrics(playServiceId: String, completion: @escaping (Bool) -> Void) {
-        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
-            let delegate = info.delegate else {
+        guard let delegate = delegate,
+            currentItem?.mediaPayload.playServiceId == playServiceId else {
                 completion(false)
                 return
         }
@@ -129,8 +148,8 @@ extension AudioPlayerDisplayManager {
     }
     
     func hideLyrics(playServiceId: String, completion: @escaping (Bool) -> Void) {
-        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
-            let delegate = info.delegate else {
+        guard let delegate = delegate,
+            currentItem?.mediaPayload.playServiceId == playServiceId else {
                 completion(false)
                 return
         }
@@ -138,8 +157,8 @@ extension AudioPlayerDisplayManager {
     }
     
     func isLyricsVisible(playServiceId: String, completion: @escaping (Bool) -> Void) {
-        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == playServiceId }),
-            let delegate = info.delegate else {
+        guard let delegate = delegate,
+            currentItem?.mediaPayload.playServiceId == playServiceId else {
                 completion(false)
                 return
         }
@@ -147,25 +166,12 @@ extension AudioPlayerDisplayManager {
     }
     
     func controlLyricsPage(payload: AudioPlayerDisplayControlPayload, completion: @escaping (Bool) -> Void) {
-        guard let info = renderingInfos.first(where: { $0.currentItem?.playStackServiceId == payload.playServiceId }),
-            let delegate = info.delegate else {
+        guard let delegate = delegate,
+            currentItem?.mediaPayload.playServiceId == payload.playServiceId else {
                 completion(false)
                 return
         }
         delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction, completion: completion)
-    }
-    
-    func add(delegate: AudioPlayerDisplayDelegate) {
-        remove(delegate: delegate)
-        
-        let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: nil)
-        renderingInfos.append(info)
-    }
-    
-    func remove(delegate: AudioPlayerDisplayDelegate) {
-        renderingInfos.removeAll { (info) -> Bool in
-            return info.delegate == nil || info.delegate === delegate
-        }
     }
     
     func notifyUserInteraction() {
@@ -196,73 +202,13 @@ extension AudioPlayerDisplayManager: AudioPlayerAgentDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerDisplayManager: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, syncId: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, let item = self.currentItem, item.dialogRequestId == dialogRequestId else { return }
+            guard property == self.playSyncProperty, let item = self.currentItem, item.mediaPayload.playServiceId == syncId else { return }
             
             self.currentItem = nil
-            self.renderingInfos
-                .filter({ (rederingInfo) -> Bool in
-                    guard let template = rederingInfo.currentItem, let delegate = rederingInfo.delegate else { return false }
-                    return self.removeRenderedTemplate(delegate: delegate, template: template)
-                })
-                .compactMap { $0.delegate }
-                .forEach { $0.audioPlayerDisplayDidClear(template: item) }
+            self.delegate?.audioPlayerDisplayDidClear(template: item)
         }
-    }
-}
-
-// MARK: - Private
-
-private extension AudioPlayerDisplayManager {
-    func replace(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate?) {
-        remove(delegate: delegate)
-        let info = AudioPlayerDisplayRenderingInfo(delegate: delegate, currentItem: template)
-        renderingInfos.append(info)
-    }
-    
-    func setRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
-        var displayResult: AnyObject?
-        let semaphore = DispatchSemaphore(value: 0)
-        delegate.audioPlayerDisplayShouldRender(template: template) {
-            displayResult = $0
-            semaphore.signal()
-        }
-        if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
-            log.error("`audioPlayerDisplayShouldRender` completion block does not called")
-        }
-        guard let displayObject = displayResult else {
-            return false
-        }
-
-        replace(delegate: delegate, template: template)
-        
-        Reactive(displayObject).deallocated
-            .observeOn(displayScheduler)
-            .subscribe({ [weak self] _ in
-                guard let self = self else { return }
-
-                if self.removeRenderedTemplate(delegate: delegate, template: template),
-                    self.hasRenderedDisplay(template: template) == false {
-                    // Release sync when removed all of template(May be closed by user).
-                    self.playSyncManager.stopPlay(dialogRequestId: template.dialogRequestId)
-                }
-            }).disposed(by: disposeBag)
-        return true
-    }
-    
-    func removeRenderedTemplate(delegate: AudioPlayerDisplayDelegate, template: AudioPlayerDisplayTemplate) -> Bool {
-        guard self.renderingInfos.contains(
-            where: { $0.delegate === delegate && $0.currentItem?.templateId == template.templateId }
-            ) else { return false }
-        
-        self.replace(delegate: delegate, template: nil)
-        
-        return true
-    }
-    
-    func hasRenderedDisplay(template: AudioPlayerDisplayTemplate) -> Bool {
-        return renderingInfos.contains { $0.currentItem?.templateId == template.templateId }
     }
 }

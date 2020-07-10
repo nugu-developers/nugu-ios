@@ -172,13 +172,13 @@ extension AudioDisplayView {
     }
     
     @IBAction func favoriteButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.audioPlayerAgent.favorite(isOn: favoriteButton.isSelected)
+        NuguCentralManager.shared.client.audioPlayerAgent.requestFavoriteCommand(current: favoriteButton.isSelected)
         favoriteButton.isSelected = !favoriteButton.isSelected
     }
     
     @IBAction func repeatButtonDidClick(_ button: UIButton) {
         guard let repeatMode = repeatMode else { return }
-        NuguCentralManager.shared.client.audioPlayerAgent.repeat(mode: repeatMode)
+        NuguCentralManager.shared.client.audioPlayerAgent.requestRepeatCommand(currentMode: repeatMode)
         switch repeatMode {
         case .all:
             self.repeatMode = AudioPlayerDisplayRepeat.one
@@ -190,7 +190,7 @@ extension AudioDisplayView {
     }
     
     @IBAction func shuffleButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.audioPlayerAgent.shuffle(isOn: shuffleButton.isSelected)
+        NuguCentralManager.shared.client.audioPlayerAgent.requestShuffleCommand(current: shuffleButton.isSelected)
         shuffleButton.isSelected = !shuffleButton.isSelected
     }
 }

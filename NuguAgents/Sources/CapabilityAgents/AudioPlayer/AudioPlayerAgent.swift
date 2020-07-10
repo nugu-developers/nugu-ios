@@ -31,6 +31,12 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
+    public weak var displayDelegate: AudioPlayerDisplayDelegate? {
+        didSet {
+            audioPlayerDisplayManager.delegate = displayDelegate
+        }
+    }
+    
     public var offset: Int? {
         return currentPlayer?.offset.truncatedSeconds
     }
@@ -84,7 +90,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             case .stopped, .finished:
                 stopProgressReport()
                 if media.cancelAssociation {
-                    playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
+                    playSyncManager.stopPlay(syncId: media.payload.playServiceId)
                 } else {
                     playSyncManager.endPlay(property: playSyncProperty)
                 }
@@ -215,30 +221,30 @@ public extension AudioPlayerAgent {
         }
     }
     
-    func favorite(isOn: Bool) {
+    func requestFavoriteCommand(current: Bool) {
         guard let media = currentMedia else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.sendSettingsEvent(media: media, typeInfo: .favoriteCommandIssued(isOn: isOn))
+            self.sendSettingsEvent(media: media, typeInfo: .favoriteCommandIssued(current: current))
+        }
+    }
+
+    func requestRepeatCommand(currentMode: AudioPlayerDisplayRepeat) {
+        guard let media = currentMedia else { return }
+        
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendSettingsEvent(media: media, typeInfo: .repeatCommandIssued(currentMode: currentMode))
         }
     }
     
-    func `repeat`(mode: AudioPlayerDisplayRepeat) {
+    func requestShuffleCommand(current: Bool) {
         guard let media = currentMedia else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            self.sendSettingsEvent(media: media, typeInfo: .repeatCommandIssued(mode: mode))
-        }
-    }
-    
-    func shuffle(isOn: Bool) {
-        guard let media = currentMedia else { return }
-        
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.sendSettingsEvent(media: media, typeInfo: .shuffleCommandIssued(isOn: isOn))
+            self.sendSettingsEvent(media: media, typeInfo: .shuffleCommandIssued(current: current))
         }
     }
     
@@ -247,14 +253,6 @@ public extension AudioPlayerAgent {
             guard let self = self else { return }
             self.currentPlayer?.seek(to: NuguTimeInterval(seconds: offset))
         }
-    }
-    
-    func add(displayDelegate: AudioPlayerDisplayDelegate) {
-        audioPlayerDisplayManager.add(delegate: displayDelegate)
-    }
-    
-    func remove(displayDelegate: AudioPlayerDisplayDelegate) {
-        audioPlayerDisplayManager.remove(delegate: displayDelegate)
     }
     
     func notifyUserInteraction() {
@@ -405,10 +403,10 @@ extension AudioPlayerAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, syncId: String) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.currentMedia?.dialogRequestId == dialogRequestId else { return }
+            guard property == self.playSyncProperty, self.currentMedia?.payload.playServiceId == syncId else { return }
             
             self.stop(cancelAssociation: false)
         }
@@ -426,15 +424,11 @@ private extension AudioPlayerAgent {
                 guard let self = self else { return }
                 
                 // Render display before setting media player to prevent calling `AudioPlayerDisplayDelegate.audioPlayerDisplayShouldRender`.
-                if let metaData = payload.audioItem.metadata,
-                    ((metaData["disableTemplate"] as? Bool) ?? false) == false {
-                    self.audioPlayerDisplayManager.display(
-                        metaData: metaData,
-                        messageId: directive.header.messageId,
-                        dialogRequestId: directive.header.dialogRequestId,
-                        playStackServiceId: payload.playStackControl?.playServiceId
-                    )
-                }
+                self.audioPlayerDisplayManager.display(
+                    payload: payload,
+                    messageId: directive.header.messageId,
+                    dialogRequestId: directive.header.dialogRequestId
+                )
                 
                 if [.playing, .paused(temporary: true), .paused(temporary: false)].contains(self.audioPlayerState),
                     let media = self.currentMedia, let player = self.currentPlayer,
@@ -458,7 +452,7 @@ private extension AudioPlayerAgent {
                         property: self.playSyncProperty,
                         duration: .seconds(7),
                         playServiceId: media.payload.playStackControl?.playServiceId,
-                        dialogRequestId: media.dialogRequestId
+                        syncId: media.payload.playServiceId
                     )
                 }
             }
