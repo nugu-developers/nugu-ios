@@ -24,15 +24,8 @@ import NuguCore
 
 /// The `DisplayAgent` handles directives for controlling template display.
 public protocol DisplayAgentProtocol: CapabilityAgentable {
-    /// Adds a delegate to be notified of `DisplayTemplate` changes.
-    ///
-    /// - Parameter delegate: The object to add.
-    func add(delegate: DisplayAgentDelegate)
-    
-    /// Removes a delegate from DisplayAgent.
-    ///
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: DisplayAgentDelegate)
+    /// The object that acts as the delegate of extension-agent
+    var delegate: DisplayAgentDelegate? { get set }
     
     /// All of template has a templateId and all of element has a token.
     ///
