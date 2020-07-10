@@ -63,7 +63,11 @@ final public class NuguServiceWebView: WKWebView {
         super.init(frame: .zero, configuration: webViewConfiguration)
         translatesAutoresizingMaskIntoConstraints = false
         
-        userContentController.add(self, name: scriptMessageName)
+        userContentController.add(WeakScriptMessageHandler(delegate: self), name: scriptMessageName)
+    }
+    
+    deinit {
+        configuration.userContentController.removeScriptMessageHandler(forName: scriptMessageName)
     }
 }
 
