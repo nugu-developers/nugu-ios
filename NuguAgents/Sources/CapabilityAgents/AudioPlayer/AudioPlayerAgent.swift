@@ -864,13 +864,13 @@ private extension AudioPlayerAgent {
                 log.error("Invalid payload")
                 return
             }
-            currentPlayer = MediaPlayer()
-            guard let currentPlayer = currentPlayer as? MediaPlayer else { return }
-            currentPlayer.setSource(
+            let mediaPlayer = MediaPlayer()
+            mediaPlayer.setSource(
                 url: url,
                 offset: NuguTimeInterval(seconds: payload.audioItem.stream.offset),
                 cacheKey: payload.cacheKey
             )
+            currentPlayer = mediaPlayer
             currentMedia = AudioPlayerAgentMedia(
                 dialogRequestId: dialogRequestId,
                 payload: payload
