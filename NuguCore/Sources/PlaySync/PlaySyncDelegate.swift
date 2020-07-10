@@ -21,5 +21,5 @@
 import Foundation
 
 public protocol PlaySyncDelegate: class {
-    func playSyncDidRelease(property: PlaySyncProperty, dialogRequestId: String)
+    func playSyncDidRelease(property: PlaySyncProperty, syncId: String)
 }
