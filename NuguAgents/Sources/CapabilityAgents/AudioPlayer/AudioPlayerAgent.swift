@@ -90,7 +90,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             case .stopped, .finished:
                 stopProgressReport()
                 if media.cancelAssociation {
-                    playSyncManager.stopPlay(syncId: media.payload.playServiceId)
+                    playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 } else {
                     playSyncManager.endPlay(property: playSyncProperty)
                 }
@@ -403,10 +403,10 @@ extension AudioPlayerAgent: ContextInfoDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, syncId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.currentMedia?.payload.playServiceId == syncId else { return }
+            guard property == self.playSyncProperty, self.currentMedia?.messageId == messageId else { return }
             
             self.stop(cancelAssociation: false)
         }
@@ -438,21 +438,30 @@ private extension AudioPlayerAgent {
                     // Resume and seek
                     self.currentMedia = AudioPlayerAgentMedia(
                         dialogRequestId: directive.header.dialogRequestId,
+                        messageId: directive.header.messageId,
                         payload: payload
                     )
                     
                     player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
                 } else {
                     self.stopSilently()
-                    self.setMediaPlayer(dialogRequestId: directive.header.dialogRequestId, payload: payload)
+                    self.setMediaPlayer(
+                        dialogRequestId: directive.header.dialogRequestId,
+                        messageId: directive.header.messageId,
+                        payload: payload
+                    )
                 }
                 
                 if let media = self.currentMedia {
                     self.playSyncManager.startPlay(
                         property: self.playSyncProperty,
-                        duration: .seconds(7),
-                        playServiceId: media.payload.playStackControl?.playServiceId,
-                        syncId: media.payload.playServiceId
+                        info: PlaySyncInfo(
+                            playServiceId: media.payload.playServiceId,
+                            playStackServiceId: media.payload.playStackControl?.playServiceId,
+                            dialogRequestId: media.dialogRequestId,
+                            messageId: media.messageId,
+                            duration: .seconds(7)
+                        )
                     )
                 }
             }
@@ -851,7 +860,7 @@ private extension AudioPlayerAgent {
 
 private extension AudioPlayerAgent {
     /// set mediaplayer
-    func setMediaPlayer(dialogRequestId: String, payload: AudioPlayerAgentMedia.Payload) {
+    func setMediaPlayer(dialogRequestId: String, messageId: String, payload: AudioPlayerAgentMedia.Payload) {
         switch payload.sourceType {
         case .url:
             guard let url = payload.audioItem.stream.url else {
@@ -867,6 +876,7 @@ private extension AudioPlayerAgent {
             currentPlayer = mediaPlayer
             currentMedia = AudioPlayerAgentMedia(
                 dialogRequestId: dialogRequestId,
+                messageId: messageId,
                 payload: payload
             )
         case .attachment:
@@ -874,6 +884,7 @@ private extension AudioPlayerAgent {
                 currentPlayer = try OpusPlayer()
                 currentMedia = AudioPlayerAgentMedia(
                     dialogRequestId: dialogRequestId,
+                    messageId: messageId,
                     payload: payload
                 )
             } catch {

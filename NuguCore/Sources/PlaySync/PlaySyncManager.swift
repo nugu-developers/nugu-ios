@@ -50,24 +50,25 @@ public extension PlaySyncManager {
         delegates.remove(delegate)
     }
     
-    func startPlay(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, syncId: String) {
+    func startPlay(property: PlaySyncProperty, info: PlaySyncInfo) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
-            log.debug("\(property) \(playServiceId ?? "PlayServiceId is null")")
+            log.debug("\(property) \(info)")
             
             // Push to play stack
-            self.pushToPlayStack(property: property, duration: duration, playServiceId: playServiceId, syncId: syncId)
+            self.pushToPlayStack(property: property, info: info)
             
-            let playGroup = self.playStack.playGroup(layerType: property.layerType, syncId: syncId)
             // Cancel timers
-            log.debug("Cancel layer timer \(playGroup)")
-            playGroup.forEach(self.removeTimer)
+            let timerGroup = self.playStack.playGroup(layerType: property.layerType, playServiceId: info.playServiceId)
+            log.debug("Cancel layer timer \(timerGroup)")
+            timerGroup.forEach(self.removeTimer)
             
             // Start display only timer
-            if property.contextType == .display && playGroup.count == 1 {
-                log.debug("Add display only timer \(property) \(duration)")
-                self.addTimer(property: property, duration: duration)
+            let directiveGroup = self.playStack.playGroup(dialogRequestId: info.dialogRequestId)
+            if property.contextType == .display && directiveGroup.count == 1 {
+                log.debug("Add display only timer \(property) \(info.duration)")
+                self.addTimer(property: property, duration: info.duration)
             }
         }
     }
@@ -80,9 +81,9 @@ public extension PlaySyncManager {
             log.debug("\(property) \(play)")
             
             // Set timers
-            let playGroup = self.playStack.playGroup(layerType: property.layerType, syncId: play.syncId)
-            log.debug("Start layer timer \(playGroup)")
-            playGroup.forEach {
+            let timerGroup = self.playStack.playGroup(layerType: property.layerType, playServiceId: play.playServiceId)
+            log.debug("Start layer timer \(timerGroup)")
+            timerGroup.forEach {
                 guard let duration = self.playStack[$0]?.duration else { return }
                 self.addTimer(property: $0, duration: duration)
             }
@@ -95,14 +96,14 @@ public extension PlaySyncManager {
         }
     }
     
-    func stopPlay(syncId: String) {
+    func stopPlay(dialogRequestId: String) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
-            log.debug(syncId)
+            log.debug(dialogRequestId)
             
             // Pop from play stack
-            self.playStack.playGroup(syncId: syncId).forEach(self.popFromPlayStack)
+            self.playStack.playGroup(dialogRequestId: dialogRequestId).forEach(self.popFromPlayStack)
         }
     }
     
@@ -163,24 +164,24 @@ extension PlaySyncManager: ContextInfoDelegate {
 // MARK: - Private
 
 private extension PlaySyncManager {
-    func pushToPlayStack(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, syncId: String) {
+    func pushToPlayStack(property: PlaySyncProperty, info: PlaySyncInfo) {
         // Cancel timers
         removeTimer(property: property)
         
         // Layer policy v.1.4.4. 2.2 Display 동작
         playStack
             // Multi-layer 상황에서 이전에 layer 와
-            .previousPlayGroup(syncId: syncId)
+            .previousPlayGroup(dialogRequestId: info.dialogRequestId)
             // 동일한 신규 layer 실행 시,
             .filter { $0.property.layerType == property.layerType }
             // 이전 layer 의 Display 는
             .filter { $0.property.contextType == .display }
             // playServiceId 가 다르거나 media layer 인 경우
-            .filter { $0.play.playServiceId != playServiceId || property.layerType == .media }
+            .filter { $0.play.playServiceId != info.playServiceId || property.layerType == .media }
             // 종료 시킨다.
             .forEach { popFromPlayStack(property: $0.property) }
         
-        playStack[property] = PlaySyncInfo(playServiceId: playServiceId, syncId: syncId, duration: duration)
+        playStack[property] = info
     }
     
     func popFromPlayStack(property: PlaySyncProperty) {
@@ -192,7 +193,7 @@ private extension PlaySyncManager {
         playStack[property] = nil
         
         delegates.notify { (delegate) in
-            delegate.playSyncDidRelease(property: property, syncId: play.syncId)
+            delegate.playSyncDidRelease(property: property, messageId: play.messageId)
         }
     }
     

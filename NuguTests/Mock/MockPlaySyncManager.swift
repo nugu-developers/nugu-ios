@@ -31,7 +31,7 @@ class MockPlaySyncManager: PlaySyncManageable {
         //
     }
     
-    func startPlay(property: PlaySyncProperty, duration: DispatchTimeInterval, playServiceId: String?, syncId: String) {
+    func startPlay(property: PlaySyncProperty, info: PlaySyncInfo) {
         //
     }
     
@@ -39,7 +39,7 @@ class MockPlaySyncManager: PlaySyncManageable {
         //
     }
     
-    func stopPlay(syncId: String) {
+    func stopPlay(dialogRequestId: String) {
         //
     }
     
