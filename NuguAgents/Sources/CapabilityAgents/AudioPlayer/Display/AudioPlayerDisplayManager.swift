@@ -126,7 +126,7 @@ extension AudioPlayerDisplayManager {
                 self.currentItem = item
                 self.playSyncManager.startPlay(
                     property: self.playSyncProperty,
-                    duration: .seconds(7),
+                    duration: NuguTimeInterval(seconds: 7),
                     playServiceId: item.mediaPayload.playStackControl?.playServiceId,
                     syncId: item.mediaPayload.playServiceId
                 )

@@ -1,8 +1,8 @@
 //
-//  PlaySyncInfo.swift
-//  NuguCore
+//  DisplayTemplateDuration.swift
+//  NuguAgents
 //
-//  Created by MinChul Lee on 2019/07/16.
+//  Created by MinChul Lee on 2020/07/13.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,22 +20,19 @@
 
 import Foundation
 
-struct PlaySyncInfo {
-    let playServiceId: String?
-    let syncId: String
-    let duration: TimeIntervallic
-    
-    init(playServiceId: String?, syncId: String, duration: TimeIntervallic) {
-        self.playServiceId = playServiceId
-        self.syncId = syncId
-        self.duration = duration
-    }
+import NuguCore
+
+/// The duration of `DisplayTemplate`.
+public enum DisplayTemplateDuration {
+    case veryShort
+    case short
 }
 
-// MARK: - CustomStringConvertible
-
-extension PlaySyncInfo: CustomStringConvertible {
-    var description: String {
-        return playServiceId ?? "PlayServiceId is null"
+extension DisplayTemplateDuration {
+    public var time: TimeIntervallic {
+        switch self {
+        case .veryShort: return NuguTimeInterval(seconds: 3)
+        case .short: return DisplayTemplate.Payload.Duration.short.time
+        }
     }
 }

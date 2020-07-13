@@ -68,7 +68,7 @@ public final class TTSAgent: TTSAgentProtocol {
                 if let syncId = media.payload.playServiceId {
                     playSyncManager.startPlay(
                         property: playSyncProperty,
-                        duration: .seconds(7),
+                        duration: NuguTimeInterval(seconds: 7),
                         playServiceId: media.payload.playStackControl?.playServiceId,
                         syncId: syncId
                     )

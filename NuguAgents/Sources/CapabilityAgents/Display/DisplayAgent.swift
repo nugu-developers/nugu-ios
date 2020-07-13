@@ -29,6 +29,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.4")
     
     public weak var delegate: DisplayAgentDelegate?
+    public var defaultDisplayTempalteDuration: DisplayTemplateDuration = .short
     
     // Private
     private let playSyncManager: PlaySyncManageable
@@ -424,7 +425,7 @@ private extension DisplayAgent {
         
         playSyncManager.startPlay(
             property: item.template.playSyncProperty,
-            duration: item.template.duration.time,
+            duration: item.template.duration?.time ?? defaultDisplayTempalteDuration.time,
             playServiceId: item.template.playStackControl?.playServiceId,
             syncId: item.template.playServiceId
         )

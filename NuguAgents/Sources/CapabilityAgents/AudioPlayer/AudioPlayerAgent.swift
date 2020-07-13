@@ -450,7 +450,7 @@ private extension AudioPlayerAgent {
                 if let media = self.currentMedia {
                     self.playSyncManager.startPlay(
                         property: self.playSyncProperty,
-                        duration: .seconds(7),
+                        duration: NuguTimeInterval(seconds: 7),
                         playServiceId: media.payload.playStackControl?.playServiceId,
                         syncId: media.payload.playServiceId
                     )

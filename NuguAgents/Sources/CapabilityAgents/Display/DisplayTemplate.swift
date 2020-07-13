@@ -47,7 +47,7 @@ public struct DisplayTemplate {
         public let token: String
         public let playServiceId: String
         public let playStackControl: PlayStackControl?
-        public let duration: Duration
+        public let duration: Duration?
         public let focusable: Bool?
         public let contextLayer: PlaySyncProperty.LayerType
         public var playSyncProperty: PlaySyncProperty {
@@ -81,19 +81,19 @@ extension DisplayTemplate.Payload: Decodable {
         token = try container.decode(String.self, forKey: .token)
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
         playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
-        duration = (try? container.decode(Duration.self, forKey: .duration)) ?? .short
+        duration = try? container.decode(Duration.self, forKey: .duration)
         focusable = try? container.decodeIfPresent(Bool.self, forKey: .focusable)
         contextLayer = (try? container.decode(PlaySyncProperty.LayerType.self, forKey: .contextLayer)) ?? .info
     }
 }
 
 extension DisplayTemplate.Payload.Duration {
-    public var time: DispatchTimeInterval {
+    public var time: TimeIntervallic {
         switch self {
-        case .short: return .seconds(7)
-        case .mid: return .seconds(15)
-        case .long: return .seconds(30)
-        case .longest: return .seconds(60 * 10)
+        case .short: return NuguTimeInterval(seconds: 7)
+        case .mid: return NuguTimeInterval(seconds: 15)
+        case .long: return NuguTimeInterval(seconds: 30)
+        case .longest: return NuguTimeInterval(seconds: 60 * 10)
         }
     }
 }

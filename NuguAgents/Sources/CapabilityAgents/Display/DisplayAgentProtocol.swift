@@ -27,6 +27,11 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
     /// The object that acts as the delegate of extension-agent
     var delegate: DisplayAgentDelegate? { get set }
     
+    /// The object to set the default duration of `DisplayTemplate`.
+    ///
+    /// The default is DisplayTemplateDuration.short
+    var defaultDisplayTempalteDuration: DisplayTemplateDuration { get set }
+    
     /// All of template has a templateId and all of element has a token.
     ///
     /// The Client should call this when element(view) selected(clicked).

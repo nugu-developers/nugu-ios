@@ -476,6 +476,7 @@
 		7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */; };
 		7EBB2EAF24440C7600FBBBEA /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1FFFF4DB237672F100C9A177 /* asrFail.wav */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
+		7EDCF97C24BC11CB0036805C /* DisplayTemplateDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF97B24BC11CB0036805C /* DisplayTemplateDuration.swift */; };
 		7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */; };
 		7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
@@ -1151,6 +1152,7 @@
 		7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDialogAttributeStore.swift; sourceTree = "<group>"; };
 		7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundAgentSpec.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
+		7EDCF97B24BC11CB0036805C /* DisplayTemplateDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTemplateDuration.swift; sourceTree = "<group>"; };
 		7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtilSpec.swift; sourceTree = "<group>"; };
 		7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsAgent.swift; sourceTree = "<group>"; };
 		7EF12B2223C822520000E158 /* DisplayClosePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayClosePayload.swift; sourceTree = "<group>"; };
@@ -1841,6 +1843,7 @@
 				1FFFF3562375707000C9A177 /* DisplayRenderingInfo.swift */,
 				7EF12B2223C822520000E158 /* DisplayClosePayload.swift */,
 				7E38656524AEE97100E78C6E /* DisplayContext.swift */,
+				7EDCF97B24BC11CB0036805C /* DisplayTemplateDuration.swift */,
 			);
 			path = Display;
 			sourceTree = "<group>";
@@ -3782,6 +3785,7 @@
 				1F31FD7A241F5774009593EB /* TextAgentSourceItem.swift in Sources */,
 				73152FDE23E045C700F843C3 /* TimeUUID.swift in Sources */,
 				737388F624A46C800018DDD2 /* ASRResult.swift in Sources */,
+				7EDCF97C24BC11CB0036805C /* DisplayTemplateDuration.swift in Sources */,
 				737388ED24A46C680018DDD2 /* AudioPlayerDisplayControlPayload.swift in Sources */,
 				7373891524A46CB90018DDD2 /* TextAgentProtocol.swift in Sources */,
 				737388CA24A46C1D0018DDD2 /* ChipsAgentDelegate.swift in Sources */,
