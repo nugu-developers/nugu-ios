@@ -25,11 +25,13 @@ import NuguCore
 struct TTSMedia {
     let payload: Payload
     let dialogRequestId: String
+    let messageId: String
     var cancelAssociation: Bool = false
     
-    init(payload: Payload, dialogRequestId: String) {
+    init(payload: Payload, dialogRequestId: String, messageId: String) {
         self.payload = payload
         self.dialogRequestId = dialogRequestId
+        self.messageId = messageId
     }
     
     struct Payload {
