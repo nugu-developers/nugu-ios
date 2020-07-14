@@ -50,8 +50,6 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
             switch audioPlayerState {
             case .playing:
                 playSyncManager.cancelTimer(property: playSyncProperty)
-            case .stopped, .finished:
-                playSyncManager.endPlay(property: playSyncProperty)
             case .paused(let temporary):
                 if temporary == false {
                     playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
