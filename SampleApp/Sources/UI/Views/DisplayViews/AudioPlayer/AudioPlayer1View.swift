@@ -257,6 +257,7 @@ private extension AudioPlayer1View {
                     self?.progressView.isHidden = true
                     return
             }
+            self?.progressView.isHidden = false
             let elapsedTime = Float(elapsedTimeAsInt)
             let duration = Float(durationAsInt)
             self?.elapsedTimeLabel.text = Int(elapsedTime).secondTimeString

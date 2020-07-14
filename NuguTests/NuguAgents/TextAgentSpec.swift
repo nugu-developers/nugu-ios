@@ -44,7 +44,7 @@ class TextAgentSpec: QuickSpec {
             describe("context") {
                 var contextInfo: ContextInfo?
                 
-                waitUntil(timeout: 0.05) { (done) in
+                waitUntil(timeout: 0.2) { (done) in
                     textAgent.contextInfoRequestContext { (context) in
                         contextInfo = context
                         done()

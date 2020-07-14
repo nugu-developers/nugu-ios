@@ -23,17 +23,21 @@ import WebKit
 
 final public class NuguServiceWebView: WKWebView {
     
-    public static let serviceSettingUrl = "https://webview.sktnugu.com/3pp/main.html"
+    public static let serviceSettingUrl = "https://webview.sktnugu.com/3pp/main.html?screenCode=setting_webview"
     public static let agreementUrl = "https://webview.sktnugu.com/3pp/agreement/list.html"
+    
+    private static let domain = "https://webview.sktnugu.com"
     
     private enum MethodType: String, CaseIterable {
         case openExternalApp
         case openInAppBrowser
+        case closeWindow
     }
     
     // MARK: Member Variables
     
     public weak var javascriptDelegate: NuguServiceWebJavascriptDelegate?
+    private let scriptMessageName = "NuguWebCommonHandler"
     
     // MARK: Initialize
     
@@ -59,10 +63,11 @@ final public class NuguServiceWebView: WKWebView {
         super.init(frame: .zero, configuration: webViewConfiguration)
         translatesAutoresizingMaskIntoConstraints = false
         
-        MethodType.allCases.forEach { [weak self] (methodType) in
-            guard let self = self else { return }
-            userContentController.add(self, name: methodType.rawValue)
-        }
+        userContentController.add(WeakScriptMessageHandler(delegate: self), name: scriptMessageName)
+    }
+    
+    deinit {
+        configuration.userContentController.removeScriptMessageHandler(forName: scriptMessageName)
     }
 }
 
@@ -85,6 +90,8 @@ extension NuguServiceWebView: WKScriptMessageHandler {
             guard let jsonObject = try? JSONSerialization.jsonObject(with: bodyData, options: []) as? [String: AnyHashable],
                 let url = jsonObject["url"] as? String else { return }
             javascriptDelegate?.openInAppBrowser(url: url)
+        case .closeWindow:
+            javascriptDelegate?.closeWindow()
         }
     }
 }
@@ -92,7 +99,7 @@ extension NuguServiceWebView: WKScriptMessageHandler {
 // MARK: - Cookie Setting
 
 public extension NuguServiceWebView {
-    func setNuguServiceCookie(domain: String, nuguServiceCookie: NuguServiceCookie) {
+    func setNuguServiceCookie(nuguServiceCookie: NuguServiceCookie) {
         guard let encodedCookie = try? JSONEncoder().encode(nuguServiceCookie),
             let cookieAsDictionary = (try? JSONSerialization.jsonObject(with: encodedCookie, options: [])) as? [String: Any] else { return }
         
@@ -103,7 +110,7 @@ public extension NuguServiceWebView {
                 let cookieProperties = [
                     HTTPCookiePropertyKey.name: element.key,
                     HTTPCookiePropertyKey.value: element.value,
-                    HTTPCookiePropertyKey.domain: domain,
+                    HTTPCookiePropertyKey.domain: NuguServiceWebView.domain,
                     HTTPCookiePropertyKey.path: "/"
                 ]
                 return HTTPCookie(properties: cookieProperties)

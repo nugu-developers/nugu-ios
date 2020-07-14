@@ -25,10 +25,11 @@ import JadeMarble
 
 import RxSwift
 
-class ServerEndPointDetector: NSObject, EndPointDetectable {
+class ServerEndPointDetector: EndPointDetectable {
     weak var delegate: EndPointDetectorDelegate?
     
     private var boundStreams: AudioBoundStreams?
+    private var streamDelegator: InputStreamDelegator?
     private let asrOptions: ASROptions
     private let speexEncoder: SpeexEncoder
     
@@ -64,28 +65,49 @@ class ServerEndPointDetector: NSObject, EndPointDetectable {
         speexEncoder = SpeexEncoder(sampleRate: Int(asrOptions.sampleRate), inputType: .linearPcm16)
     }
     
+    deinit {
+        internalStop()
+    }
+    
     func start(audioStreamReader: AudioStreamReadable) {
         log.debug("")
         
-        boundStreams?.stop()
-        boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
-        let inputStream = boundStreams!.input
-        
-        CFReadStreamSetDispatchQueue(inputStream, epdQueue)
-        inputStream.delegate = self
-        inputStream.open()
+        epdQueue.async { [weak self] in
+            guard let self = self else { return }
             
-        state = .listening
+            self.internalStop()
+            self.boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
+            let inputStream = self.boundStreams!.input
+            
+            self.streamDelegator = InputStreamDelegator(owner: self)
+            CFReadStreamSetDispatchQueue(inputStream, self.epdQueue)
+            inputStream.delegate = self.streamDelegator
+            inputStream.open()
+            
+            self.state = .listening
+        }
     }
     
     func stop() {
-        log.debug("")
+        log.debug("stop")
         
+        epdQueue.async { [weak self] in
+            self?.internalStop()
+        }
+    }
+    
+    private func internalStop() {
         listeningTimer?.dispose()
         boundStreams?.stop()
         
-        inputStream?.close()
+        if let inputStream = inputStream,
+            inputStream.streamStatus != .closed {
+            inputStream.close()
+            inputStream.delegate = nil
+        }
+
         state = .idle
+        streamDelegator = nil
     }
     
     func handleNotifyResult(_ state: ASRNotifyResult.State) {
@@ -118,38 +140,46 @@ class ServerEndPointDetector: NSObject, EndPointDetectable {
     }
 }
 
-extension ServerEndPointDetector: StreamDelegate {
-    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        guard let inputStream = aStream as? InputStream,
-            inputStream == self.inputStream else { return }
+extension ServerEndPointDetector {
+    private class InputStreamDelegator: NSObject, StreamDelegate {
+        private let owner: ServerEndPointDetector
         
-        switch eventCode {
-        case .hasBytesAvailable:
-            let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
-            defer { inputBuffer.deallocate() }
+        init(owner: ServerEndPointDetector) {
+            self.owner = owner
+        }
+        
+        func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+            guard let inputStream = aStream as? InputStream,
+                inputStream == owner.inputStream else { return }
             
-            let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
-            guard 0 < inputLength else { return }
-            
-            do {
-                let data = try speexEncoder.encode(data: Data(bytes: inputBuffer, count: Int(inputLength)))
-                delegate?.endPointDetectorSpeechDataExtracted(speechData: data)
+            switch eventCode {
+            case .hasBytesAvailable:
+                let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
+                defer { inputBuffer.deallocate() }
                 
-                #if DEBUG
-                outputData.append(data)
-                #endif
-            } catch {
-                log.error(error)
+                let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
+                guard 0 < inputLength else { return }
+                
+                do {
+                    let data = try owner.speexEncoder.encode(data: Data(bytes: inputBuffer, count: Int(inputLength)))
+                    owner.delegate?.endPointDetectorSpeechDataExtracted(speechData: data)
+                    
+                    #if DEBUG
+                    owner.outputData.append(data)
+                    #endif
+                } catch {
+                    log.error(error)
+                }
+                
+                if [.idle, .listening, .start].contains(owner.state) == false {
+                    owner.stop()
+                }
+            case .endEncountered:
+                log.debug("epd stream endEncountered")
+                owner.stop()
+            default:
+                break
             }
-            
-            if [.idle, .listening, .start].contains(state) == false {
-                stop()
-            }
-        case .endEncountered:
-            log.debug("epd stream endEncountered")
-            stop()
-        default:
-            break
         }
     }
 }

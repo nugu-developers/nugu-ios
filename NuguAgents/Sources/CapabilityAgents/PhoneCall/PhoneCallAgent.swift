@@ -36,7 +36,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     // Handleable Directive
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SendCandidates", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSendCandidates),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleMakeCall)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleMakeCall)
     ]
     
     public init(
@@ -59,9 +59,8 @@ public extension PhoneCallAgent {
     @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
         let dialogRequestId = TimeUUID().hexString
         
-        self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
+        self.contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
-            
             self.upstreamDataSender.sendEvent(
                 Event(
                     playServiceId: playServiceId,

@@ -31,7 +31,7 @@ struct PlayStack {
     }
     var playServiceIds: [String] {
         stack
-            .map { $0.play.playServiceId }
+            .compactMap { $0.play.playServiceId }
             .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
     }
     
@@ -48,12 +48,16 @@ struct PlayStack {
         }
     }
     
+    func playGroup(playServiceId: String) -> [PlaySyncProperty] {
+        return stack.filter { $0.play.playServiceId == playServiceId }.map { $0.property }
+    }
+    
     func playGroup(dialogRequestId: String) -> [PlaySyncProperty] {
         return stack.filter { $0.play.dialogRequestId == dialogRequestId }.map { $0.property }
     }
     
-    func playGroup(layerType: PlaySyncProperty.LayerType, dialogRequestId: String) -> [PlaySyncProperty] {
-        return playGroup(dialogRequestId: dialogRequestId).filter { $0.layerType == layerType }
+    func playGroup(layerType: PlaySyncProperty.LayerType, playServiceId: String) -> [PlaySyncProperty] {
+        return playGroup(playServiceId: playServiceId).filter { $0.layerType == layerType }
     }
     
     func previousPlayGroup(dialogRequestId: String) -> [(property: PlaySyncProperty, play: PlaySyncInfo)] {

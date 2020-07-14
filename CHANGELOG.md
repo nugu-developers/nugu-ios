@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.15.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.15.0)
+Released on 2020-07-10
+#### Fixed
+- Make streams thread safe (#387) 
+- Add `WeakScriptMessageHandler` to `NuguServiceKit`to solve memory leak (#385) 
+
+#### Updated
+- Change audioplayer's favorite / repeat / shuffle methods (#384)
+- Apply layer policy v1.4.4 (#386)
+- Upgrade `NuguServiceKit` and apply to `SampleApp` (#388)
+- Adopt blocking policy in `PhoneCallAgent` (#389)
+- Update `SendCandidates` event in `PhoneCallAgent` (#389)
+
 ## [0.14.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.14.0)
 Released on 2020-07-03
 #### Fixed

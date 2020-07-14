@@ -29,9 +29,12 @@ public struct PlaySyncProperty {
         self.contextType = contextType
     }
     
-    public enum LayerType: String {
-        case info
-        case media
+    public enum LayerType: String, Decodable {
+        case info = "INFO"
+        case media = "MEDIA"
+        case call = "CALL"
+        case alert = "ALERT"
+        case overlay = "OVERLAY"
     }
 
     public enum ContextType: String {

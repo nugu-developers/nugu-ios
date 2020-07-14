@@ -24,6 +24,17 @@ import NuguCore
 
 /// The `AudioPlayerAgent` handles directives for controlling audio playback.
 public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
+    /// Sets a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
+    var displayDelegate: AudioPlayerDisplayDelegate? { get set }
+    
+    /// Adds a delegate to be notified of `AudioPlayerState` changes.
+    /// - Parameter delegate: The object to add.
+    func add(delegate: AudioPlayerAgentDelegate)
+    
+    /// Removes a delegate from AudioPlayerAgent.
+    /// - Parameter delegate: The object to remove.
+    func remove(delegate: AudioPlayerAgentDelegate)
+    
     /// Returns the current time of the current player item.
     ///
     /// This function retrieves the offset(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
@@ -38,14 +49,6 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     ///
     /// This function retrieves the volume of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
     var volume: Float { get set }
-    
-    /// Adds a delegate to be notified of `AudioPlayerState` changes.
-    /// - Parameter delegate: The object to add.
-    func add(delegate: AudioPlayerAgentDelegate)
-    
-    /// Removes a delegate from AudioPlayerAgent.
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: AudioPlayerAgentDelegate)
     
     /// Begins playback of the current item.
     func play()
@@ -68,29 +71,19 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// Pauses playback.
     func pause()
     
-    /// Set favorite as on / off.
-    func favorite(isOn: Bool)
+    /// Change favorite status by sending current status as on / off.
+    func requestFavoriteCommand(current: Bool)
     
-    /// Set repeatMode as all / one / none.
-    func `repeat`(mode: AudioPlayerDisplayRepeat)
+    /// Change repeatMode by sending current repeatMode as all / one / none.
+    func requestRepeatCommand(currentMode: AudioPlayerDisplayRepeat)
     
-    /// Set shuffle as on / off.
-    func shuffle(isOn: Bool)
+    /// Change shuffle status by sending current status as on / off.
+    func requestShuffleCommand(current: Bool)
     
     /// Sets the current playback time to the specified time.
     ///
     /// - Parameter offset: The time(seconds) to which to seek.
     func seek(to offset: Int)
-    
-    /// Adds a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
-    ///
-    /// - Parameter displayDelegate: The object to add.
-    func add(displayDelegate: AudioPlayerDisplayDelegate)
-    
-    /// Removes a delegate from AudioPlayerAgent.
-    ///
-    /// - Parameter displayDelegate: The object to remove.
-    func remove(displayDelegate: AudioPlayerDisplayDelegate)
     
     /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
     func notifyUserInteraction()

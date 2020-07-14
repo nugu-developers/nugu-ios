@@ -426,6 +426,7 @@
 		75BF16A824623F75002A4B8D /* 07_speaking.json in Resources */ = {isa = PBXBuildFile; fileRef = 75BF16A124623F75002A4B8D /* 07_speaking.json */; };
 		75D069C4247F76CC000B5D1F /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */; };
 		75D069E42488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */; };
+		75F1A7D824B451F00023B6C9 /* WeakScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */; };
 		75F7991D2472563300655BF6 /* TextList1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F7991C2472563300655BF6 /* TextList1View.swift */; };
 		75F7991F2472564300655BF6 /* TextList1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F7991E2472564300655BF6 /* TextList1View.xib */; };
 		75F79926247256B900655BF6 /* TextList2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F79920247256B800655BF6 /* TextList2View.xib */; };
@@ -459,6 +460,7 @@
 		7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */; };
 		7E27375524B556B300602B57 /* RoutineState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375424B556B300602B57 /* RoutineState.swift */; };
 		7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */; };
+		7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2DFE9D24B8510900792529 /* PlayStackControl.swift */; };
 		7E35D79024622B4E003289A2 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* Eventable.swift */; };
 		7E35D79424623444003289A2 /* MultiPartProcessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79324623444003289A2 /* MultiPartProcessable.swift */; };
 		7E35D79824623A22003289A2 /* TTSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79724623A22003289A2 /* TTSError.swift */; };
@@ -1107,6 +1109,7 @@
 		75BF16A124623F75002A4B8D /* 07_speaking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 07_speaking.json; sourceTree = "<group>"; };
 		75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+AnyHashable.swift"; sourceTree = "<group>"; };
+		75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakScriptMessageHandler.swift; sourceTree = "<group>"; };
 		75F7991C2472563300655BF6 /* TextList1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextList1View.swift; sourceTree = "<group>"; };
 		75F7991E2472564300655BF6 /* TextList1View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextList1View.xib; sourceTree = "<group>"; };
 		75F79920247256B800655BF6 /* TextList2View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList2View.xib; sourceTree = "<group>"; };
@@ -1140,6 +1143,7 @@
 		7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveHandleResult.swift; sourceTree = "<group>"; };
 		7E27375424B556B300602B57 /* RoutineState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineState.swift; sourceTree = "<group>"; };
 		7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentRevokeItem.swift; sourceTree = "<group>"; };
+		7E2DFE9D24B8510900792529 /* PlayStackControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStackControl.swift; sourceTree = "<group>"; };
 		7E35D79324623444003289A2 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
 		7E35D79724623A22003289A2 /* TTSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSError.swift; sourceTree = "<group>"; };
 		7E35D79924623B53003289A2 /* MicInputError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicInputError.swift; sourceTree = "<group>"; };
@@ -2369,6 +2373,7 @@
 			children = (
 				7EA53F07247F3EE8008731CD /* Dialog */,
 				1F9C5B6823E42D740086CC04 /* CapabilityAgents */,
+				7E2DFE9C24B850F900792529 /* Directive */,
 				1FFFF2A32375703000C9A177 /* Event */,
 				73152FE123E047F200F843C3 /* Extension */,
 				73152FDD23E045AB00F843C3 /* Util */,
@@ -2621,6 +2626,7 @@
 			isa = PBXGroup;
 			children = (
 				7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */,
+				75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */,
 				7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */,
 				7525AC92249B01BC006800A3 /* NuguServiceCookie.swift */,
 				7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */,
@@ -2698,6 +2704,13 @@
 				7E27375424B556B300602B57 /* RoutineState.swift */,
 			);
 			path = Routine;
+        };
+		7E2DFE9C24B850F900792529 /* Directive */ = {
+			isa = PBXGroup;
+			children = (
+				7E2DFE9D24B8510900792529 /* PlayStackControl.swift */,
+			);
+			path = Directive;
 			sourceTree = "<group>";
 		};
 		7E35D796246238A2003289A2 /* Model */ = {
@@ -3773,6 +3786,7 @@
 				7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */,
 				7373890024A46C930018DDD2 /* SystemAgentRevokeReason.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
+				7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */,
 				737388DB24A46C3C0018DDD2 /* SoundAgentDataSource.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,
 				7373890F24A46CAE0018DDD2 /* DisplayAgentProtocol.swift in Sources */,
@@ -3858,6 +3872,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7525AC99249B01C8006800A3 /* NuguServiceWebView.swift in Sources */,
+				75F1A7D824B451F00023B6C9 /* WeakScriptMessageHandler.swift in Sources */,
 				7525AC95249B01BD006800A3 /* NuguServiceCookie.swift in Sources */,
 				7525AC97249B01BD006800A3 /* WebOpenExternalApp.swift in Sources */,
 				7525ACB3249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift in Sources */,
@@ -4011,7 +4026,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				MODULEMAP_FILE = "$(SRCROOT)/NuguCore/NuguCore.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -4049,7 +4064,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				MODULEMAP_FILE = "$(SRCROOT)/NuguCore/NuguCore.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -4083,7 +4098,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4116,7 +4131,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4145,7 +4160,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4174,7 +4189,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4207,7 +4222,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4240,7 +4255,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4278,7 +4293,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -4323,7 +4338,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -4367,7 +4382,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
@@ -4410,7 +4425,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
@@ -4684,7 +4699,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4716,7 +4731,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4749,7 +4764,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4784,7 +4799,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

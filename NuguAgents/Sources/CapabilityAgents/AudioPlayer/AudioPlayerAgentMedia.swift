@@ -24,12 +24,14 @@ import NuguCore
 
 struct AudioPlayerAgentMedia {
     let dialogRequestId: String
+    let messageId: String
     let payload: Payload
     var pauseReason: PauseReason = .nothing
     var cancelAssociation: Bool = false
     
-    init(dialogRequestId: String, payload: Payload) {
+    init(dialogRequestId: String, messageId: String, payload: Payload) {
         self.dialogRequestId = dialogRequestId
+        self.messageId = messageId
         self.payload = payload
     }
     
@@ -39,10 +41,6 @@ struct AudioPlayerAgentMedia {
         let cacheKey: String?
         let audioItem: AudioItem
         let playServiceId: String
-        
-        struct PlayStackControl {
-            let playServiceId: String?
-        }
         
         enum SourceType: String, Decodable {
             case url = "URL"
@@ -113,20 +111,6 @@ extension AudioPlayerAgentMedia.Payload: Decodable {
         }
         cacheKey = try? container.decodeIfPresent(String.self, forKey: .cacheKey)
         audioItem = try container.decode(AudioItem.self, forKey: .audioItem)
-        playServiceId = try container.decode(String.self, forKey: .playServiceId)
-    }
-}
-
-// MARK: - AudioPlayerMedia.Payload.PlayStackControl: Decodable
-
-extension AudioPlayerAgentMedia.Payload.PlayStackControl: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case playServiceId
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
     }
 }
