@@ -21,7 +21,8 @@
 import Foundation
 
 public enum DirectiveHandleResult {
-    case failed
-    case stopped
-    case completed
+    case failed(_ description: String)
+    case canceled
+    case stopped(cancelAssociation: Bool)
+    case finished
 }

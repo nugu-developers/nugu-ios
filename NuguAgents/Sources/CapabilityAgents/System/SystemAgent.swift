@@ -40,8 +40,8 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateState),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleException),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Revoke", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRevoke),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } }),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } })
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } }),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } })
     ]
     
     public init(
@@ -95,12 +95,12 @@ extension SystemAgent: ContextInfoDelegate {
 private extension SystemAgent {
     func handleHandOffConnection() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let serverPolicy = try? JSONDecoder().decode(Policy.ServerPolicy.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
+            defer { completion(.finished) }
+
             self?.systemDispatchQueue.async { [weak self] in
                 log.info("try to handoff policy: \(serverPolicy)")
                 self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
@@ -110,7 +110,7 @@ private extension SystemAgent {
     
     func handleUpdateState() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
+            defer { completion(.finished) }
         
             self?.sendSynchronizeStateEvent(directive: directive)
         }
@@ -118,13 +118,12 @@ private extension SystemAgent {
     
     func handleException() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
             guard let exceptionItem = try? JSONDecoder().decode(SystemAgentExceptionItem.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             self?.systemDispatchQueue.async { [weak self] in
                 switch exceptionItem.code {
                 case .fail(let code):
@@ -140,13 +139,12 @@ private extension SystemAgent {
     
     func handleRevoke() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let revokeItem = try? JSONDecoder().decode(SystemAgentRevokeItem.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             self?.systemDispatchQueue.async { [weak self] in
                 self?.delegates.notify { delegate in
                     delegate.systemAgentDidReceiveRevokeDevice(reason: revokeItem.reason)

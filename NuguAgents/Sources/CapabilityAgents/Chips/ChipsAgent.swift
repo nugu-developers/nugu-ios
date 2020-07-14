@@ -83,12 +83,11 @@ extension ChipsAgent: ContextInfoDelegate {
 private extension ChipsAgent {
     func handleRender() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let item = try? JSONDecoder().decode(ChipsAgentItem.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
+            defer { completion(.finished) }
 
             self?.delegates.notify { delegate in
                 delegate.chipsAgentDidReceive(item: item, dialogRequestId: directive.header.dialogRequestId)

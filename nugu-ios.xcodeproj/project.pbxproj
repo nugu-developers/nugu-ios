@@ -452,13 +452,8 @@
 		7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
-		7E27374924B46AB600602B57 /* RoutineAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27374824B46AB600602B57 /* RoutineAgentProtocol.swift */; };
-		7E27374B24B46AC000602B57 /* RoutineAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27374A24B46AC000602B57 /* RoutineAgent.swift */; };
-		7E27374D24B46B2600602B57 /* Routine+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27374C24B46B2600602B57 /* Routine+Event.swift */; };
-		7E27374F24B46B3F00602B57 /* RoutineStartPlayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27374E24B46B3F00602B57 /* RoutineStartPlayload.swift */; };
 		7E27375124B5536E00602B57 /* DirectiveSequencerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375024B5536E00602B57 /* DirectiveSequencerDelegate.swift */; };
 		7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */; };
-		7E27375524B556B300602B57 /* RoutineState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375424B556B300602B57 /* RoutineState.swift */; };
 		7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */; };
 		7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2DFE9D24B8510900792529 /* PlayStackControl.swift */; };
 		7E35D79024622B4E003289A2 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* Eventable.swift */; };
@@ -474,6 +469,11 @@
 		7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5F4899243C44AF00118054 /* SoundAgent+Event.swift */; };
 		7E6D1180249C6E8100E3580C /* SessionConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D117E249C6E8100E3580C /* SessionConst.swift */; };
 		7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D117F249C6E8100E3580C /* SessionManager.swift */; };
+		7E948E9124BD576B0038D0A9 /* RoutineStartPlayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E948E8C24BD576A0038D0A9 /* RoutineStartPlayload.swift */; };
+		7E948E9224BD576B0038D0A9 /* RoutineState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E948E8D24BD576A0038D0A9 /* RoutineState.swift */; };
+		7E948E9324BD576B0038D0A9 /* RoutineAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E948E8E24BD576A0038D0A9 /* RoutineAgent.swift */; };
+		7E948E9424BD576B0038D0A9 /* Routine+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E948E8F24BD576A0038D0A9 /* Routine+Event.swift */; };
+		7E948E9524BD576B0038D0A9 /* RoutineAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E948E9024BD576A0038D0A9 /* RoutineAgentProtocol.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFA247F3B5A008731CD /* SessionAgent.swift */; };
 		7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */; };
@@ -1135,13 +1135,8 @@
 		7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEndPointDetector.swift; sourceTree = "<group>"; };
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
-		7E27374824B46AB600602B57 /* RoutineAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgentProtocol.swift; sourceTree = "<group>"; };
-		7E27374A24B46AC000602B57 /* RoutineAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgent.swift; sourceTree = "<group>"; };
-		7E27374C24B46B2600602B57 /* Routine+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Routine+Event.swift"; sourceTree = "<group>"; };
-		7E27374E24B46B3F00602B57 /* RoutineStartPlayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineStartPlayload.swift; sourceTree = "<group>"; };
 		7E27375024B5536E00602B57 /* DirectiveSequencerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveSequencerDelegate.swift; sourceTree = "<group>"; };
 		7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveHandleResult.swift; sourceTree = "<group>"; };
-		7E27375424B556B300602B57 /* RoutineState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineState.swift; sourceTree = "<group>"; };
 		7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentRevokeItem.swift; sourceTree = "<group>"; };
 		7E2DFE9D24B8510900792529 /* PlayStackControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStackControl.swift; sourceTree = "<group>"; };
 		7E35D79324623444003289A2 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
@@ -1157,6 +1152,11 @@
 		7E5F4899243C44AF00118054 /* SoundAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SoundAgent+Event.swift"; sourceTree = "<group>"; };
 		7E6D117E249C6E8100E3580C /* SessionConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionConst.swift; sourceTree = "<group>"; };
 		7E6D117F249C6E8100E3580C /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		7E948E8C24BD576A0038D0A9 /* RoutineStartPlayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineStartPlayload.swift; sourceTree = "<group>"; };
+		7E948E8D24BD576A0038D0A9 /* RoutineState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineState.swift; sourceTree = "<group>"; };
+		7E948E8E24BD576A0038D0A9 /* RoutineAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineAgent.swift; sourceTree = "<group>"; };
+		7E948E8F24BD576A0038D0A9 /* Routine+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Routine+Event.swift"; sourceTree = "<group>"; };
+		7E948E9024BD576A0038D0A9 /* RoutineAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineAgentProtocol.swift; sourceTree = "<group>"; };
 		7EA53EFA247F3B5A008731CD /* SessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgent.swift; sourceTree = "<group>"; };
 		7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgentItem.swift; sourceTree = "<group>"; };
 		7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogAttributeStore.swift; sourceTree = "<group>"; };
@@ -1399,7 +1399,7 @@
 		1F9C5B6823E42D740086CC04 /* CapabilityAgents */ = {
 			isa = PBXGroup;
 			children = (
-				7E27374724B46AA300602B57 /* Routine */,
+				7E948E8B24BD576A0038D0A9 /* Routine */,
 				737388C224A46C110018DDD2 /* CapabilityAgentable.swift */,
 				737388C024A46C100018DDD2 /* CapabilityAgentCategory.swift */,
 				737388C124A46C110018DDD2 /* CapabilityAgentProperty.swift */,
@@ -2694,17 +2694,6 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
-		7E27374724B46AA300602B57 /* Routine */ = {
-			isa = PBXGroup;
-			children = (
-				7E27374824B46AB600602B57 /* RoutineAgentProtocol.swift */,
-				7E27374A24B46AC000602B57 /* RoutineAgent.swift */,
-				7E27374C24B46B2600602B57 /* Routine+Event.swift */,
-				7E27374E24B46B3F00602B57 /* RoutineStartPlayload.swift */,
-				7E27375424B556B300602B57 /* RoutineState.swift */,
-			);
-			path = Routine;
-        };
 		7E2DFE9C24B850F900792529 /* Directive */ = {
 			isa = PBXGroup;
 			children = (
@@ -2734,6 +2723,18 @@
 				737388D824A46C3C0018DDD2 /* SoundBeepName.swift */,
 			);
 			path = Sound;
+			sourceTree = "<group>";
+		};
+		7E948E8B24BD576A0038D0A9 /* Routine */ = {
+			isa = PBXGroup;
+			children = (
+				7E948E8C24BD576A0038D0A9 /* RoutineStartPlayload.swift */,
+				7E948E8D24BD576A0038D0A9 /* RoutineState.swift */,
+				7E948E8E24BD576A0038D0A9 /* RoutineAgent.swift */,
+				7E948E8F24BD576A0038D0A9 /* Routine+Event.swift */,
+				7E948E9024BD576A0038D0A9 /* RoutineAgentProtocol.swift */,
+			);
+			path = Routine;
 			sourceTree = "<group>";
 		};
 		7E98BAD1239A2FBD00B9582D /* Authorization */ = {
@@ -3744,6 +3745,7 @@
 				73152FBA23E0414700F843C3 /* ASRAgent.swift in Sources */,
 				7373891D24A46CFA0018DDD2 /* DialogAttributeStoreable.swift in Sources */,
 				1FD5D17C24A99993007BA384 /* PhoneCallPerson.swift in Sources */,
+				7E948E9524BD576B0038D0A9 /* RoutineAgentProtocol.swift in Sources */,
 				736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */,
 				73152FC823E0415400F843C3 /* TTSMedia.swift in Sources */,
 				7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */,
@@ -3765,9 +3767,7 @@
 				737388DA24A46C3C0018DDD2 /* SoundAgentProtocol.swift in Sources */,
 				1FD5D17D24A99993007BA384 /* PhoneCallState.swift in Sources */,
 				737388EF24A46C680018DDD2 /* AudioPlayerDisplayTemplate.swift in Sources */,
-				7E27375524B556B300602B57 /* RoutineState.swift in Sources */,
 				7373891924A46CC20018DDD2 /* LocationInfo.swift in Sources */,
-				7E27374B24B46AC000602B57 /* RoutineAgent.swift in Sources */,
 				737388F724A46C800018DDD2 /* ASRState.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
 				737388C424A46C110018DDD2 /* CapabilityAgentProperty.swift in Sources */,
@@ -3775,6 +3775,7 @@
 				737388D124A46C2B0018DDD2 /* SessionManageable.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
+				7E948E9224BD576B0038D0A9 /* RoutineState.swift in Sources */,
 				736508662462F7FA00EF4549 /* OpusPlayer.swift in Sources */,
 				7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */,
 				7373890124A46C930018DDD2 /* SystemAgentDelegate.swift in Sources */,
@@ -3785,13 +3786,12 @@
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
 				7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */,
 				7373890024A46C930018DDD2 /* SystemAgentRevokeReason.swift in Sources */,
+				7E948E9424BD576B0038D0A9 /* Routine+Event.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */,
 				737388DB24A46C3C0018DDD2 /* SoundAgentDataSource.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,
 				7373890F24A46CAE0018DDD2 /* DisplayAgentProtocol.swift in Sources */,
-				7E27374924B46AB600602B57 /* RoutineAgentProtocol.swift in Sources */,
-				7E27374D24B46B2600602B57 /* Routine+Event.swift in Sources */,
 				1FD5D18124A99993007BA384 /* PhoneCallIntent.swift in Sources */,
 				1F9EF1EE2488C4EA000786E5 /* AudioPlayerDisplayRenderingInfo.swift in Sources */,
 				73152FE223E0482000F843C3 /* KeyedDecodingContainerExtension.swift in Sources */,
@@ -3825,6 +3825,7 @@
 				73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */,
 				7373890924A46CA10018DDD2 /* TTSAgentDelegate.swift in Sources */,
 				73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */,
+				7E948E9324BD576B0038D0A9 /* RoutineAgent.swift in Sources */,
 				A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */,
 				737388EE24A46C680018DDD2 /* AudioPlayerDisplayRepeat.swift in Sources */,
 				7E38656624AEE97100E78C6E /* DisplayContext.swift in Sources */,
@@ -3839,6 +3840,7 @@
 				737388C524A46C110018DDD2 /* CapabilityAgentable.swift in Sources */,
 				737388D324A46C2B0018DDD2 /* Session.swift in Sources */,
 				737388E624A46C5D0018DDD2 /* AudioPlayerAgentProtocol.swift in Sources */,
+				7E948E9124BD576B0038D0A9 /* RoutineStartPlayload.swift in Sources */,
 				7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */,
 				73152FC323E0414F00F843C3 /* SystemAgent+Event.swift in Sources */,
 				7E5F4896243C3C8A00118054 /* SoundAgent.swift in Sources */,
@@ -3847,7 +3849,6 @@
 				7E6D1180249C6E8100E3580C /* SessionConst.swift in Sources */,
 				73152FC923E0415B00F843C3 /* DisplayAgent.swift in Sources */,
 				73152FB923E0414700F843C3 /* EndPointDetectorState.swift in Sources */,
-				7E27374F24B46B3F00602B57 /* RoutineStartPlayload.swift in Sources */,
 				737388D024A46C2B0018DDD2 /* SessionDelegate.swift in Sources */,
 				7373891124A46CAE0018DDD2 /* DisplayAgentDelegate.swift in Sources */,
 				7373890824A46CA10018DDD2 /* TTSResult.swift in Sources */,

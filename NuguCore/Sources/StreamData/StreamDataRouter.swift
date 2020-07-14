@@ -193,7 +193,7 @@ extension StreamDataRouter {
             directiveArray
                 .compactMap(Downstream.Directive.init)
                 .forEach { directive in
-                    log.debug("Directive: \(directive.header.dialogRequestId), \(directive.header.type)")
+                    log.debug("Directive: \(directive.header)")
                     directiveSequencer.processDirective(directive)
                     completion?(.received(part: directive))
                     delegate?.streamDataDidReceive(direcive: directive)

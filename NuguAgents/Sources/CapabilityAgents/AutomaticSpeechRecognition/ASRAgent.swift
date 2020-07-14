@@ -160,7 +160,7 @@ public final class ASRAgent: ASRAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech, cancelDirective: cancelExpectSpeech),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleNotifyResult)
     ]
     
@@ -366,8 +366,8 @@ private extension ASRAgent {
 
     func handleExpectSpeech() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
+            defer { completion(.finished) }
+            
             self?.asrDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 // ex> TTS 도중 stopRecognition 호출.
@@ -396,15 +396,24 @@ private extension ASRAgent {
         }
     }
     
+    func cancelExpectSpeech() -> CancelDirective {
+        return { [weak self] directive in
+            self?.asrDispatchQueue.async { [weak self] in
+                if self?.expectSpeechDialogRequestId == directive.header.dialogRequestId {
+                    self?.expectSpeechDialogRequestId = nil
+                }
+            }
+        }
+    }
+    
     func handleNotifyResult() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-
             guard let item = try? JSONDecoder().decode(ASRNotifyResult.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             self?.asrDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 

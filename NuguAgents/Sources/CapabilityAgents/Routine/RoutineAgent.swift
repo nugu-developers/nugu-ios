@@ -120,11 +120,11 @@ extension RoutineAgent: DirectiveSequencerDelegate {
             guard let self = self else { return }
             self.handlingDirectives.removeAll { $0.header.messageId == directive.header.messageId }
             switch result {
-            case .failed:
-                self.state = .failed("Handle directive failed")
-            case .stopped:
+            case .failed(let description):
+                self.state = .failed(description)
+            case .stopped(let cancelAssociation):
                 self.state = .interrupt
-            case .completed:
+            case .canceled, .finished:
                 if self.handlingDirectives.contains(where: { $0.header.dialogRequestId == directive.header.dialogRequestId }) == false {
                     self.requestNextAction(index: self.currentIndex + 1)
                 }
@@ -138,12 +138,11 @@ extension RoutineAgent: DirectiveSequencerDelegate {
 private extension RoutineAgent {
     func handleStart() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let item = try? JSONDecoder().decode(RoutineStartPlayload.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
+            defer { completion(.finished) }
             
             self?.routineDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -155,14 +154,13 @@ private extension RoutineAgent {
     
     func handleStop() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let payloadDictionary = directive.payloadDictionary,
                 let token = payloadDictionary["token"] as? String else {
-                    log.error("Invalid payload")
+                    completion(.failed("Invalid payload"))
                     return
             }
-            
+            defer { completion(.finished) }
+
             self?.routineDispatchQueue.async { [weak self] in
                 if self?.currentItem?.token == token {
                     self?.state = .stopped
@@ -173,14 +171,13 @@ private extension RoutineAgent {
     
     func handleContinue() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let payloadDictionary = directive.payloadDictionary,
                 let token = payloadDictionary["token"] as? String else {
-                    log.error("Invalid payload")
+                    completion(.failed("Invalid payload"))
                     return
             }
-            
+            defer { completion(.finished) }
+
             self?.routineDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 if self.currentItem?.token == token {

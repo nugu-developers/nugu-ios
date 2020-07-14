@@ -85,12 +85,11 @@ extension TextAgent: ContextInfoDelegate {
 private extension TextAgent {
     func handleTextSource() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
             guard let payload = try? JSONDecoder().decode(TextAgentSourceItem.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
+            defer { completion(.finished) }
             
             self?.textDispatchQueue.async { [weak self] in
                 self?.sendTextInput(
