@@ -119,16 +119,20 @@ extension AudioPlayerDisplayManager {
                         
                         if self.currentItem?.templateId == item.templateId {
                             self.currentItem = nil
-                            self.playSyncManager.stopPlay(syncId: item.mediaPayload.playServiceId)
+                            self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
                         }
                     }).disposed(by: self.disposeBag)
                 
                 self.currentItem = item
                 self.playSyncManager.startPlay(
                     property: self.playSyncProperty,
-                    duration: NuguTimeInterval(seconds: 7),
-                    playServiceId: item.mediaPayload.playStackControl?.playServiceId,
-                    syncId: item.mediaPayload.playServiceId
+                    info: PlaySyncInfo(
+                        playServiceId: item.mediaPayload.playServiceId,
+                        playStackServiceId: item.mediaPayload.playStackControl?.playServiceId,
+                        dialogRequestId: item.dialogRequestId,
+                        messageId: item.templateId,
+                        duration: NuguTimeInterval(seconds: 7)
+                    )
                 )
             }
             if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
@@ -206,10 +210,10 @@ extension AudioPlayerDisplayManager: AudioPlayerAgentDelegate {
 // MARK: - PlaySyncDelegate
 
 extension AudioPlayerDisplayManager: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, syncId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, let item = self.currentItem, item.mediaPayload.playServiceId == syncId else { return }
+            guard property == self.playSyncProperty, let item = self.currentItem, item.templateId == messageId else { return }
             
             self.currentItem = nil
             self.delegate?.audioPlayerDisplayDidClear(template: item)

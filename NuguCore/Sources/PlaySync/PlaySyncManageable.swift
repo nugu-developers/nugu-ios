@@ -31,12 +31,10 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
     
     func startPlay(
         property: PlaySyncProperty,
-        duration: TimeIntervallic,
-        playServiceId: String?,
-        syncId: String
+        info: PlaySyncInfo
     )
     func endPlay(property: PlaySyncProperty)
-    func stopPlay(syncId: String)
+    func stopPlay(dialogRequestId: String)
     
     /// Start new timer to release `PlaySyncProperty`.
     ///

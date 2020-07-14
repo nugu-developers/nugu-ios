@@ -65,18 +65,22 @@ public final class TTSAgent: TTSAgentProtocol {
             // `PlaySyncState` -> `TTSMedia` -> `TTSAgentDelegate`
             switch ttsState {
             case .playing:
-                if let syncId = media.payload.playServiceId {
+                if let playServiceId = media.payload.playServiceId {
                     playSyncManager.startPlay(
                         property: playSyncProperty,
-                        duration: NuguTimeInterval(seconds: 7),
-                        playServiceId: media.payload.playStackControl?.playServiceId,
-                        syncId: syncId
+                        info: PlaySyncInfo(
+                            playServiceId: playServiceId,
+                            playStackServiceId: media.payload.playStackControl?.playServiceId,
+                            dialogRequestId: media.dialogRequestId,
+                            messageId: media.messageId,
+                            duration: NuguTimeInterval(seconds: 7)
+                        )
                     )
                 }
             case .finished, .stopped:
-                if let syncId = media.payload.playServiceId {
+                if media.payload.playServiceId != nil {
                     if media.cancelAssociation {
-                        playSyncManager.stopPlay(syncId: syncId)
+                        playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                     } else {
                         playSyncManager.endPlay(property: playSyncProperty)
                     }
@@ -287,10 +291,10 @@ extension TTSAgent: MediaPlayerDelegate {
 // MARK: - PlaySyncDelegate
 
 extension TTSAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, syncId: String) {
+    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.currentMedia?.payload.playServiceId == syncId else { return }
+            guard property == self.playSyncProperty, self.currentMedia?.messageId == messageId else { return }
             
             self.stop(cancelAssociation: false)
         }
@@ -320,7 +324,8 @@ private extension TTSAgent {
                     self.currentPlayer = mediaPlayer
                     self.currentMedia = TTSMedia(
                         payload: payload,
-                        dialogRequestId: directive.header.dialogRequestId
+                        dialogRequestId: directive.header.dialogRequestId,
+                        messageId: directive.header.messageId
                     )
                 } catch {
                     // TODO: 실패시 예외처리 필요한지 확인
@@ -367,8 +372,8 @@ private extension TTSAgent {
             guard let self = self, let media = self.currentMedia else { return }
             guard self.currentPlayer != nil else {
                 // "그만" 발화시 재생 대기중이던 AudioPlayer 를 종료 시켜주기 위한 처리
-                if let syncId = media.payload.playServiceId {
-                    self.playSyncManager.stopPlay(syncId: syncId)
+                if media.payload.playServiceId != nil {
+                    self.playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 }
                 return
             }
