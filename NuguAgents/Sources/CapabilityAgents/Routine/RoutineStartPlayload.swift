@@ -26,10 +26,14 @@ struct RoutineStartPlayload: Decodable {
     let actions: [Action]
     
     struct Action: Decodable {
-        let type: Type
+        let type: String
         let text: String?
         let data: [String: AnyHashable]?
         let playServiceId: String?
+        
+        var actionType: Type? {
+            Type.init(rawValue: type)
+        }
         
         enum `Type`: String, Decodable {
             case text = "TEXT"
@@ -46,10 +50,10 @@ struct RoutineStartPlayload: Decodable {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
-            type = try container.decode(Type.self, forKey: .type)
+            type = try container.decode(String.self, forKey: .type)
             text = try? container.decode(String.self, forKey: .text)
-            data = try container.decode([String: AnyHashable].self, forKey: .data)
-            playServiceId = try container.decode(String.self, forKey: .playServiceId)
+            data = try? container.decode([String: AnyHashable].self, forKey: .data)
+            playServiceId = try? container.decode(String.self, forKey: .playServiceId)
         }
     }
 }

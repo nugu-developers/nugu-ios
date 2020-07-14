@@ -22,9 +22,9 @@ import Foundation
 
 import NuguCore
 
-final class RoutineAgent: RoutineAgentProtocol {
+public final class RoutineAgent: RoutineAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .routine, version: "1.0")
     
     // private
     private let directiveSequencer: DirectiveSequenceable
@@ -35,6 +35,7 @@ final class RoutineAgent: RoutineAgentProtocol {
     
     private var state: RoutineState = .idle {
         didSet {
+            log.info("From:\(oldValue) To:\(state)")
             guard let item = currentItem else { return }
             
             switch state {
@@ -43,7 +44,7 @@ final class RoutineAgent: RoutineAgentProtocol {
             case .playing:
                 handlingDirectives = [Downstream.Directive]()
                 sendEvent(typeInfo: .started, playServiceId: item.playServiceId)
-                requestNextAction(index: 0)
+                requestAction(index: 0)
             case .interrupt:
                 break
             case .finished:
@@ -92,7 +93,7 @@ extension RoutineAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let actions = currentItem?.actions.map { action -> [String: AnyHashable?] in
             [
-                "type": action.type.rawValue,
+                "type": action.type,
                 "text": action.text,
                 "data": action.data,
                 "playServiceId": action.playServiceId
@@ -115,18 +116,22 @@ extension RoutineAgent: ContextInfoDelegate {
 // MARK: - DirectiveSequencerDelegate
 
 extension RoutineAgent: DirectiveSequencerDelegate {
-    func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult) {
+    public func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult) {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard self.handlingDirectives.contains(where: { $0.header.messageId == directive.header.messageId }) else { return }
+            log.info("\(directive.header.type): \(result)")
             self.handlingDirectives.removeAll { $0.header.messageId == directive.header.messageId }
             switch result {
-            case .failed(let description):
-                self.state = .failed(description)
             case .stopped(let cancelAssociation):
-                self.state = .interrupt
-            case .canceled, .finished:
+                if cancelAssociation {
+                    self.state = .stopped
+                } else {
+                    self.state = .interrupt
+                }
+            default:
                 if self.handlingDirectives.contains(where: { $0.header.dialogRequestId == directive.header.dialogRequestId }) == false {
-                    self.requestNextAction(index: self.currentIndex + 1)
+                    self.requestNextAction()
                 }
             }
         }
@@ -162,8 +167,9 @@ private extension RoutineAgent {
             defer { completion(.finished) }
 
             self?.routineDispatchQueue.async { [weak self] in
-                if self?.currentItem?.token == token {
-                    self?.state = .stopped
+                guard let self = self else { return }
+                if self.currentItem?.token == token {
+                    self.state = .stopped
                 }
             }
         }
@@ -172,7 +178,8 @@ private extension RoutineAgent {
     func handleContinue() -> HandleDirective {
         return { [weak self] directive, completion in
             guard let payloadDictionary = directive.payloadDictionary,
-                let token = payloadDictionary["token"] as? String else {
+                let token = payloadDictionary["token"] as? String,
+                let playServiceId = payloadDictionary["playServiceId"] as? String else {
                     completion(.failed("Invalid payload"))
                     return
             }
@@ -181,7 +188,9 @@ private extension RoutineAgent {
             self?.routineDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 if self.currentItem?.token == token {
-                    self.requestNextAction(index: self.currentIndex + 1)
+                    self.requestNextAction()
+                } else {
+                    self.sendEvent(typeInfo: .failed(errorCode: "Invalid token"), playServiceId: playServiceId)
                 }
             }
         }
@@ -198,6 +207,7 @@ private extension RoutineAgent {
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
+        log.info("\(typeInfo)")
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -223,6 +233,7 @@ private extension RoutineAgent {
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
+        log.info("\(text)")
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
 
@@ -255,45 +266,56 @@ private extension RoutineAgent {
 // MARK: - Private
 
 private extension RoutineAgent {
-    func requestNextAction(index: Int) {
+    func requestAction(index: Int) {
         guard let item = currentItem else { return }
         guard index < item.actions.count else {
             state = .finished
             return
         }
         
-        self.currentIndex = index
+        currentIndex = index
         let action = item.actions[index]
+        log.info("\(action)")
         let completion: ((StreamDataState) -> Void) = { [weak self] result in
             self?.routineDispatchQueue.async { [weak self] in
                 switch result {
                 case .received(let directive):
-                    self?.addHandlingDirective(directive: directive)
-                case .error(let error):
-                    self?.state = .failed("Request action failed \(error)")
+                    if ["AudioPlayer.Play", "ASR.ExpectSpeech"].contains(directive.header.type) {
+                        self?.state = .stopped
+                    } else {
+                        self?.addHandlingDirective(directive: directive)
+                    }
+                case .error:
+                    self?.requestNextAction()
                 default:
                     break
                 }
             }
         }
-        switch action.type {
+        switch action.actionType {
         case .text:
             guard let text = action.text else {
-                state = .failed("actions.text is null")
+                requestNextAction()
                 return
             }
             sendTextInputEvent(text: text, playServiceId: action.playServiceId, completion: completion)
         case .data:
             guard let data = action.data else {
-                state = .failed("actions.data is null")
+                requestNextAction()
                 return
             }
             guard let playServiceId = action.playServiceId else {
-                state = .failed("actions.playServiceId is null")
+                requestNextAction()
                 return
             }
             sendEvent(typeInfo: .actionTriggered(data: data), playServiceId: playServiceId, completion: completion)
+        case .none:
+            requestNextAction()
         }
+    }
+    
+    func requestNextAction() {
+        requestAction(index: currentIndex + 1)
     }
     
     func addHandlingDirective(directive: Downstream.Directive) {

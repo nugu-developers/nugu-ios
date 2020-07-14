@@ -45,6 +45,7 @@ public class NuguClient {
     public let soundAgent: SoundAgentProtocol
     public let sessionAgent: SessionAgentProtocol
     public let chipsAgent: ChipsAgentProtocol
+    public let routineAgent: RoutineAgentProtocol
 
     // additional agents
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
@@ -134,6 +135,12 @@ public class NuguClient {
         )
         
         chipsAgent = ChipsAgent(
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer
+        )
+        
+        routineAgent = RoutineAgent(
+            upstreamDataSender: streamDataRouter,
             contextManager: contextManager,
             directiveSequencer: directiveSequencer
         )
