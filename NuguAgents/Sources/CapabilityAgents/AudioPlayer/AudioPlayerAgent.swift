@@ -423,13 +423,6 @@ private extension AudioPlayerAgent {
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                // Render display before setting media player to prevent calling `AudioPlayerDisplayDelegate.audioPlayerDisplayShouldRender`.
-                self.audioPlayerDisplayManager.display(
-                    payload: payload,
-                    messageId: directive.header.messageId,
-                    dialogRequestId: directive.header.dialogRequestId
-                )
-                
                 if [.playing, .paused(temporary: true), .paused(temporary: false)].contains(self.audioPlayerState),
                     let media = self.currentMedia, let player = self.currentPlayer,
                     media.payload.audioItem.stream.token == payload.audioItem.stream.token,
@@ -462,6 +455,12 @@ private extension AudioPlayerAgent {
                             messageId: media.messageId,
                             duration: .seconds(7)
                         )
+                    )
+                    
+                    self.audioPlayerDisplayManager.display(
+                        payload: payload,
+                        messageId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId
                     )
                 }
             }
