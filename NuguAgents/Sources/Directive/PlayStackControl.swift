@@ -24,7 +24,6 @@ public struct PlayStackControl {
     let playServiceId: String?
 }
 
-
 // MARK: - Decodable
 
 extension PlayStackControl: Decodable {

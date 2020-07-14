@@ -431,12 +431,16 @@ extension NuguCentralManager: NuguClientDelegate {
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
     
-    func nuguClientWillOpenInputSource() {
+    func nuguClientDidOpenInputSource() {
         inputStatus = true
     }
     
     func nuguClientDidCloseInputSource() {
         inputStatus = false
+    }
+    
+    func nuguClientDidErrorDuringInputSourceSetup(_ error: Error) {
+        log.error("Cannot open input source: \(error)")
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {

@@ -26,8 +26,12 @@ public protocol NuguClientDelegate: class {
     // audio session related
     func nuguClientWillRequireAudioSession() -> Bool
     func nuguClientDidReleaseAudioSession()
+    
+    // input source related
     func nuguClientWillOpenInputSource()
+    func nuguClientDidOpenInputSource()
     func nuguClientDidCloseInputSource()
+    func nuguClientDidErrorDuringInputSourceSetup(_ error: Error)
 
     // nugu server related
     func nuguClientDidReceive(direcive: Downstream.Directive)
@@ -44,7 +48,10 @@ public protocol NuguClientDelegate: class {
 public extension NuguClientDelegate {
     // audio session related
     func nuguClientDidReleaseAudioSession() {}
+    
+    // input source related
     func nuguClientWillOpenInputSource() {}
+    func nuguClientDidOpenInputSource() {}
     func nuguClientDidCloseInputSource() {}
     
     // nugu server related
