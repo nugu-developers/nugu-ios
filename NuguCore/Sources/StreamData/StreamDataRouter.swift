@@ -62,20 +62,25 @@ public extension StreamDataRouter {
         serverInitiatedDirectiveDisposable?.disposed(by: disposeBag)
     }
     
+    func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy) {
+        log.debug("change resource server to: https://\(serverPolicy.hostname).\(serverPolicy.port)")
+        serverInitiatedDirectiveRecever.serverPolicies = [serverPolicy]
+        
+        // Use stored completion closure before.
+        startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
+    }
+    
+    func restartReceiveServerInitiatedDirective() {
+        serverInitiatedDirectiveRecever.serverPolicies = []
+        
+        // Use stored completion closure before.
+        startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
+    }
+    
     func stopReceiveServerInitiatedDirective() {
         log.debug("stop receive server initiated directives")
         serverInitiatedDirectiveDisposable?.dispose()
         serverInitiatedDirectiveCompletion = nil
-    }
-    
-    func handOffResourceServer(to serverPolicy: Policy.ServerPolicy) {
-        log.debug("change resource server to: https://\(serverPolicy.hostname).\(serverPolicy.port)")
-        stopReceiveServerInitiatedDirective()
-        serverInitiatedDirectiveRecever.serverPolicies.removeAll()
-        serverInitiatedDirectiveRecever.serverPolicies.append(serverPolicy)
-        
-        // Use stored completion closure before.
-        startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
     }
 }
 

@@ -24,7 +24,7 @@ import NuguCore
 
 public final class SystemAgent: SystemAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.3")
     
     // Private
     private let contextManager: ContextManageable
@@ -41,7 +41,8 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleException),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Revoke", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRevoke),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } }),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } })
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1() } }),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ResetConnection", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleResetConnection)
     ]
     
     public init(
@@ -103,7 +104,7 @@ private extension SystemAgent {
             }
             self?.systemDispatchQueue.async { [weak self] in
                 log.info("try to handoff policy: \(serverPolicy)")
-                self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
+                self?.streamDataRouter.startReceiveServerInitiatedDirective(to: serverPolicy)
             }
         }
     }
@@ -151,6 +152,17 @@ private extension SystemAgent {
                 self?.delegates.notify { delegate in
                     delegate.systemAgentDidReceiveRevokeDevice(reason: revokeItem.reason)
                 }
+            }
+        }
+    }
+    
+    func handleResetConnection() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion() }
+            
+            self?.systemDispatchQueue.async { [weak self] in
+                log.info("")
+                self?.streamDataRouter.clearServerPolicy()
             }
         }
     }
