@@ -23,6 +23,7 @@ import Foundation
 public protocol StreamDataDelegate: class {
     func streamDataDidReceive(direcive: Downstream.Directive)
     func streamDataDidReceive(attachment: Downstream.Attachment)
+    func streamDataWillSend(event: Upstream.Event)
     func streamDataDidSend(event: Upstream.Event, error: Error?)
     func streamDataDidSend(attachment: Upstream.Attachment, error: Error?)
 }

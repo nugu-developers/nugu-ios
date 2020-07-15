@@ -291,6 +291,10 @@ extension NuguClient: StreamDataDelegate {
         delegate?.nuguClientDidReceive(attachment: attachment)
     }
     
+    public func streamDataWillSend(event: Upstream.Event) {
+        delegate?.nuguClientWillSend(event: event)
+    }
+    
     public func streamDataDidSend(event: Upstream.Event, error: Error?) {
         delegate?.nuguClientDidSend(event: event, error: error)
     }

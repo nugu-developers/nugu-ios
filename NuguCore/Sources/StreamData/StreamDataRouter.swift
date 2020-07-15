@@ -112,8 +112,9 @@ public extension StreamDataRouter {
         // write event data to the stream
         log.debug("Event: \(event.header.dialogRequestId), \(event.header.namespace).\(event.header.name)")
         eventSender.send(event)
-            .subscribe(onCompleted: {
+            .subscribe(onCompleted: { [weak self] in
                 completion?(.sent)
+                self?.delegate?.streamDataWillSend(event: event)
             }, onError: { [weak self] (error) in
                 completion?(.error(error))
                 self?.delegate?.streamDataDidSend(event: event, error: error)
