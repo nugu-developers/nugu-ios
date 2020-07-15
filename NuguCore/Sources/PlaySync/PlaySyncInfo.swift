@@ -25,14 +25,14 @@ public struct PlaySyncInfo {
     public let playStackServiceId: String?
     public let dialogRequestId: String
     public let messageId: String
-    public let duration: DispatchTimeInterval
+    public let duration: TimeIntervallic
     
     public init(
         playServiceId: String,
         playStackServiceId: String?,
         dialogRequestId: String,
         messageId: String,
-        duration: DispatchTimeInterval
+        duration: TimeIntervallic
     ) {
         self.playServiceId = playServiceId
         self.playStackServiceId = playStackServiceId

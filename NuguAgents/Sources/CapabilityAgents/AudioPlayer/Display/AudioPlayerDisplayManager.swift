@@ -129,7 +129,7 @@ extension AudioPlayerDisplayManager {
                         playStackServiceId: item.mediaPayload.playStackControl?.playServiceId,
                         dialogRequestId: item.dialogRequestId,
                         messageId: item.templateId,
-                        duration: .seconds(7)
+                        duration: NuguTimeInterval(seconds: 7)
                     )
                 )
             }

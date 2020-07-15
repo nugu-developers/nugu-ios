@@ -41,7 +41,7 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
     /// - Parameters:
     ///   - property: The object to release by timer.
     ///   - duration: The duration for timer.
-    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval)
+    func startTimer(property: PlaySyncProperty, duration: TimeIntervallic)
     
     /// Restart exist timer to release `PlaySyncProperty`.
     ///

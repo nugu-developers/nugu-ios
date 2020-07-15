@@ -43,7 +43,7 @@ class MockPlaySyncManager: PlaySyncManageable {
         //
     }
     
-    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
+    func startTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
         //
     }
     

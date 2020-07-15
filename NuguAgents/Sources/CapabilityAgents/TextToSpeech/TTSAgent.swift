@@ -73,7 +73,7 @@ public final class TTSAgent: TTSAgentProtocol {
                             playStackServiceId: media.payload.playStackControl?.playServiceId,
                             dialogRequestId: media.dialogRequestId,
                             messageId: media.messageId,
-                            duration: .seconds(7)
+                            duration: NuguTimeInterval(seconds: 7)
                         )
                     )
                 }

@@ -1,8 +1,8 @@
 //
-//  PlayStackControl.swift
+//  DisplayTemplateDuration.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2020/07/10.
+//  Created by MinChul Lee on 2020/07/13.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +20,19 @@
 
 import Foundation
 
-public struct PlayStackControl {
-    let playServiceId: String?
+import NuguCore
+
+/// The duration of `DisplayTemplate`.
+public enum DisplayTemplateDuration {
+    case veryShort
+    case short
 }
 
-// MARK: - Decodable
-
-extension PlayStackControl: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case playServiceId
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        playServiceId = try? container.decode(String.self, forKey: .playServiceId)
+extension DisplayTemplateDuration {
+    public var time: TimeIntervallic {
+        switch self {
+        case .veryShort: return NuguTimeInterval(seconds: 3)
+        case .short: return DisplayTemplate.Payload.Duration.short.time
+        }
     }
 }

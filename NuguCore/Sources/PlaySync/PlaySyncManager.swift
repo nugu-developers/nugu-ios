@@ -114,7 +114,7 @@ public extension PlaySyncManager {
         }
     }
     
-    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
+    func startTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.playStack[property] != nil else { return }
@@ -204,8 +204,8 @@ private extension PlaySyncManager {
         }
     }
     
-    func addTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
-        guard duration != .never else { return }
+    func addTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
+        guard duration.dispatchTimeInterval != .never else { return }
         
         let disposeBag = DisposeBag()
         Completable.create { [weak self] (event) -> Disposable in
@@ -217,7 +217,7 @@ private extension PlaySyncManager {
             event(.completed)
             return Disposables.create()
         }
-        .delaySubscription(duration, scheduler: playSyncScheduler)
+        .delaySubscription(duration.dispatchTimeInterval, scheduler: playSyncScheduler)
         .subscribe()
         .disposed(by: disposeBag)
         
