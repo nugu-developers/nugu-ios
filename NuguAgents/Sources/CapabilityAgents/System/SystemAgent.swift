@@ -162,7 +162,7 @@ private extension SystemAgent {
             
             self?.systemDispatchQueue.async { [weak self] in
                 log.info("")
-                self?.streamDataRouter.clearServerPolicy()
+                self?.streamDataRouter.restartReceiveServerInitiatedDirective()
             }
         }
     }
