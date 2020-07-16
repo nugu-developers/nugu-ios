@@ -449,6 +449,11 @@ extension NuguCentralManager: NuguClientDelegate {
         log.debug("\(attachment.header.namespace).\(attachment.header.name)")
     }
     
+    func nuguClientWillSend(event: Upstream.Event) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(event.header.namespace).\(event.header.name)")
+    }
+    
     func nuguClientDidSend(event: Upstream.Event, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: URLError or NetworkError or EventSenderError

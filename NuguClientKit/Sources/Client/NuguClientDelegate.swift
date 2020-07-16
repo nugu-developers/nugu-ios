@@ -32,6 +32,7 @@ public protocol NuguClientDelegate: class {
     // nugu server related
     func nuguClientDidReceive(direcive: Downstream.Directive)
     func nuguClientDidReceive(attachment: Downstream.Attachment)
+    func nuguClientWillSend(event: Upstream.Event)
     func nuguClientDidSend(event: Upstream.Event, error: Error?)
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?)
     
