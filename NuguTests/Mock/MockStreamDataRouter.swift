@@ -29,11 +29,15 @@ class MockStreamDataRouter: StreamDataRoutable {
         
     }
     
-    func stopReceiveServerInitiatedDirective() {
+    func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy) {
 
     }
     
-    func handOffResourceServer(to serverPolicy: Policy.ServerPolicy) {
+    func restartReceiveServerInitiatedDirective() {
+        
+    }
+    
+    func stopReceiveServerInitiatedDirective() {
 
     }
     

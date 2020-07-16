@@ -25,6 +25,7 @@ public protocol StreamDataRoutable: class, UpstreamDataSendable {
     var delegate: StreamDataDelegate? { get set }
     
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?)
+    func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy)
+    func restartReceiveServerInitiatedDirective()
     func stopReceiveServerInitiatedDirective()
-    func handOffResourceServer(to serverPolicy: Policy.ServerPolicy)
 }
