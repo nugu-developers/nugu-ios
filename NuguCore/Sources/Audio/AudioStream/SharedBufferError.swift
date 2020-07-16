@@ -23,6 +23,7 @@ import Foundation
 public enum SharedBufferError: Error {
     case writePermissionDenied
     case writerFinished
+    case writerNotAvailable
 }
 
 // MARK: - LocalizedError
@@ -34,6 +35,8 @@ extension SharedBufferError: LocalizedError {
             return "write proces without permission. (check current Writter)"
         case .writerFinished:
             return "Stream Writer Doens't work any longer"
+        case .writerNotAvailable:
+            return "Stream Writer can't be initialized"
         }
     }
 }

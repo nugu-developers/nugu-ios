@@ -209,10 +209,12 @@ extension NuguClient: AudioStreamDelegate {
         
         do {
             try inputProvider.start(streamWriter: self.sharedAudioStream.makeAudioStreamWriter())
-            
             log.debug("input provider is started.")
+
+            delegate?.nuguClientDidOpenInputSource()
         } catch {
-            log.debug("input provider failed to start: \(error)")
+            log.error("input provider failed to start: \(error)")
+            delegate?.nuguClientDidErrorDuringInputSourceSetup(error)
         }
     }
     
