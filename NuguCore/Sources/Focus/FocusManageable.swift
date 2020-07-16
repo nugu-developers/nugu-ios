@@ -52,4 +52,10 @@ public protocol FocusManageable: class {
     /// This method will request that the currently foregrounded Channel activity be stopped.
     /// If something was stopped, the next highest priority active Channel will be brought to the foreground.
     func stopForegroundActivity()
+    
+    /// Deactivates audio focus of the channels.
+    func deactivate()
+    
+    /// Activates audio focus of the channels.
+    func activate()
 }
