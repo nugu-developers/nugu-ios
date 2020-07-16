@@ -154,7 +154,7 @@ public extension TTSAgent {
         playServiceId: String?,
         handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)?
     ) -> String {
-        let dialogRequestId = TimeUUID().hexString
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -165,20 +165,20 @@ public extension TTSAgent {
                     typeInfo: .speechPlay(text: text)
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     contextPayload: contextPayload
                 )
             )
         }
         
         ttsResultSubject
-            .filter { $0.dialogRequestId == dialogRequestId }
+            .filter { $0.dialogRequestId == eventIdentifier.dialogRequestId }
             .take(1)
             .subscribe(onNext: { (dialogRequestId, result) in
                 handler?(result, dialogRequestId)
             })
             .disposed(by: self.disposeBag)
-        return dialogRequestId
+        return eventIdentifier.dialogRequestId
     }
     
     func stopTTS(cancelAssociation: Bool) {
@@ -460,6 +460,7 @@ private extension TTSAgent {
             return
         }
         
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -470,6 +471,7 @@ private extension TTSAgent {
                     typeInfo: info
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: media.dialogRequestId,
                     contextPayload: contextPayload
                 ),

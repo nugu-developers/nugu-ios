@@ -72,10 +72,6 @@ public extension SystemAgent {
     func remove(systemAgentDelegate: SystemAgentDelegate) {
         delegates.remove(systemAgentDelegate)
     }
-    
-    func sendSynchronizeStateEvent() {
-        sendSynchronizeStateEvent(directive: nil)
-    }
 }
 
 // MARK: - ContextInfoDelegate
@@ -112,7 +108,7 @@ private extension SystemAgent {
         return { [weak self] directive, completion in
             defer { completion() }
         
-            self?.sendSynchronizeStateEvent(directive: directive)
+            self?.sendSynchronizeStateEvent(referrerDialogRequestId: directive.header.dialogRequestId)
         }
     }
     
@@ -159,7 +155,8 @@ private extension SystemAgent {
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
-    func sendSynchronizeStateEvent(directive: Downstream.Directive? = nil) {
+    func sendSynchronizeStateEvent(referrerDialogRequestId: String? = nil) {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
@@ -168,7 +165,8 @@ private extension SystemAgent {
                     typeInfo: .synchronizeState
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    referrerDialogRequestId: directive?.header.dialogRequestId,
+                    eventIdentifier: eventIdentifier,
+                    referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 )
             )

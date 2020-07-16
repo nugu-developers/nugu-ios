@@ -118,7 +118,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
 
 public extension DisplayAgent {
     @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
-        let dialogRequestId = TimeUUID().hexString
+        let eventIdentifier = EventIdentifier()
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let item = self.templateList.first(where: { $0.templateId == templateId }) else {
@@ -136,7 +136,7 @@ public extension DisplayAgent {
                         typeInfo: .elementSelected(token: token, postback: postback)
                     ).makeEventMessage(
                         property: self.capabilityAgentProperty,
-                        dialogRequestId: dialogRequestId,
+                        eventIdentifier: eventIdentifier,
                         referrerDialogRequestId: item.dialogRequestId,
                         contextPayload: contextPayload
                     ),
@@ -144,7 +144,7 @@ public extension DisplayAgent {
                 )
             }
         }
-        return dialogRequestId
+        return eventIdentifier.dialogRequestId
     }
     
     func notifyUserInteraction() {
@@ -387,13 +387,13 @@ private extension DisplayAgent {
 // MARK: - Private (Event)
 
 private extension DisplayAgent {
-    func sendEvent(
+    @discardableResult func sendEvent(
         typeInfo: Event.TypeInfo,
         playServiceId: String,
-        dialogRequestId: String = TimeUUID().hexString,
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)? = nil
-    ) {
+    ) -> String {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -403,13 +403,14 @@ private extension DisplayAgent {
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 ),
                 completion: completion
             )
         }
+        return eventIdentifier.dialogRequestId
     }
 }
 
