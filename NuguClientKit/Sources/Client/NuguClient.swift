@@ -209,10 +209,12 @@ extension NuguClient: AudioStreamDelegate {
         
         do {
             try inputProvider.start(streamWriter: self.sharedAudioStream.makeAudioStreamWriter())
-            
             log.debug("input provider is started.")
+
+            delegate?.nuguClientDidOpenInputSource()
         } catch {
-            log.debug("input provider failed to start: \(error)")
+            log.error("input provider failed to start: \(error)")
+            delegate?.nuguClientDidErrorDuringInputSourceSetup(error)
         }
     }
     
@@ -289,6 +291,10 @@ extension NuguClient: StreamDataDelegate {
     
     public func streamDataDidReceive(attachment: Downstream.Attachment) {
         delegate?.nuguClientDidReceive(attachment: attachment)
+    }
+    
+    public func streamDataWillSend(event: Upstream.Event) {
+        delegate?.nuguClientWillSend(event: event)
     }
     
     public func streamDataDidSend(event: Upstream.Event, error: Error?) {

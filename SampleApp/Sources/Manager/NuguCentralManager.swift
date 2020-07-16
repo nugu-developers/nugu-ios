@@ -424,19 +424,25 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
+        NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
         return NuguAudioSessionManager.shared.updateAudioSession()
     }
     
     func nuguClientDidReleaseAudioSession() {
+        NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
     
-    func nuguClientWillOpenInputSource() {
+    func nuguClientDidOpenInputSource() {
         inputStatus = true
     }
     
     func nuguClientDidCloseInputSource() {
         inputStatus = false
+    }
+    
+    func nuguClientDidErrorDuringInputSourceSetup(_ error: Error) {
+        log.error("Cannot open input source: \(error)")
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {
@@ -447,6 +453,11 @@ extension NuguCentralManager: NuguClientDelegate {
     func nuguClientDidReceive(attachment: Downstream.Attachment) {
         // Use some analytics SDK(or API) here.
         log.debug("\(attachment.header.namespace).\(attachment.header.name)")
+    }
+    
+    func nuguClientWillSend(event: Upstream.Event) {
+        // Use some analytics SDK(or API) here.
+        log.debug("\(event.header.namespace).\(event.header.name)")
     }
     
     func nuguClientDidSend(event: Upstream.Event, error: Error?) {
