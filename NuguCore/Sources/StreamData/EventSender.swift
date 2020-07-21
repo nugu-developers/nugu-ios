@@ -30,7 +30,6 @@ import RxSwift
  */
 class EventSender {
     private let boundary: String
-    private let eventQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_event")
     private let streamQueue: DispatchQueue
     private var streamDelegator: DataStreamDelegator?
     private let streamStateSubject = BehaviorSubject<Bool>(value: false)
@@ -86,7 +85,7 @@ class EventSender {
             guard let self = self else { return Completable.empty() }
             return self.sendData(self.makeMultipartData(event))
         }
-        .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "event_queue_\(event.header.dialogRequestId)"))
+        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_event_\(event.header.dialogRequestId)"))
     }
     
     /**
@@ -101,7 +100,7 @@ class EventSender {
                 guard let self = self else { return Completable.empty() }
                 return self.sendData(self.makeMultipartData(attachment))
         }
-        .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "attachment_queue_\(attachment.header.seq)"))
+        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_attachment_\(attachment.header.seq)"))
         
     }
     
@@ -123,6 +122,7 @@ class EventSender {
                 log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
                 return self.sendData(partData)
         }
+        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_finish"))
         .subscribe { [weak self] _ in
             guard let self = self else { return }
             
