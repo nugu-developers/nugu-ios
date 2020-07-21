@@ -61,9 +61,10 @@ extension FocusManager {
                 return
             }
             
-            // 현재 foreground channel 이 우선수위가 낮으면 background 로 변경
+            guard self.foregroundChannelDelegate !== channelDelegate else { return }
+            
+            // Move current foreground channel to background If Its priority is lower than requested.
             if let foregroundChannelDelegate = self.foregroundChannelDelegate,
-                foregroundChannelDelegate !== channelDelegate,
                 channelDelegate.focusChannelPriority().rawValue >= foregroundChannelDelegate.focusChannelPriority().rawValue {
                 self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
             }
