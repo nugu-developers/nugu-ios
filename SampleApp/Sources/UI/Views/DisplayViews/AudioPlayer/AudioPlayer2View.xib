@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -10,7 +10,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AudioPlayer2View" customModule="SampleApp" customModuleProvider="target">
             <connections>
-                <outlet property="adultContentLabel" destination="nhp-6V-gOx" id="L0I-9p-hwV"/>
                 <outlet property="albumImageContainerView" destination="Zlv-FV-ep8" id="GwQ-G9-mcc"/>
                 <outlet property="albumImageView" destination="vnv-ly-bzE" id="Xj4-DT-9K2"/>
                 <outlet property="albumImageViewShadowView" destination="Dqa-vx-tCH" id="UaG-qN-kwM"/>
@@ -24,7 +23,6 @@
                 <outlet property="idleBar" destination="pG4-6i-DuM" id="QVP-Nb-ZUl"/>
                 <outlet property="nextButton" destination="YE8-JB-xca" id="eNb-Wt-RVp"/>
                 <outlet property="playPauseButton" destination="YUI-1h-wfS" id="UY9-8c-euk"/>
-                <outlet property="preListenContainerView" destination="naI-Oj-gDg" id="1ko-oF-bUG"/>
                 <outlet property="prevButton" destination="lMn-Hj-Wwq" id="DcY-zT-7l3"/>
                 <outlet property="progressView" destination="veS-tW-n4N" id="xD7-ij-ghF"/>
                 <outlet property="repeatButton" destination="b9I-Jw-Nw0" id="2Sk-CP-1SI"/>

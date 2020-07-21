@@ -54,6 +54,8 @@ class AudioDisplayView: UIView {
     @IBOutlet weak var audioPlayerBarViewContainerView: UIView!
     @IBOutlet weak var audioPlayerBarView: AudioPlayerBarView!
     
+    var isSeekable: Bool = false
+    
     var isBarMode: Bool {
         return audioPlayerBarViewContainerView.isHidden == false
     }

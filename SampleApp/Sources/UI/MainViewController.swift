@@ -477,6 +477,7 @@ private extension MainViewController {
         }
         
         guard let audioPlayerView = displayAudioPlayerView else { return nil }
+        audioPlayerView.isSeekable = audioPlayerDisplayTemplate.isSeekable
         audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         audioPlayerView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
