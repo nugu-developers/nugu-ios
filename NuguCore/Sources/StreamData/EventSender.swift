@@ -28,10 +28,10 @@ import RxSwift
  
  - Note: You can send event only once. because stream cannot be opened after close.
  */
-class EventSender: NSObject {
+class EventSender {
     private let boundary: String
-    private let eventQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_event")
     private let streamQueue: DispatchQueue
+    private var streamDelegator: DataStreamDelegator?
     private let streamStateSubject = BehaviorSubject<Bool>(value: false)
     private let disposeBag = DisposeBag()
     let streams = BoundStreams()
@@ -43,15 +43,15 @@ class EventSender: NSObject {
     public init(boundary: String) {
         self.boundary = boundary
         streamQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_stream_\(boundary)")
-        super.init()
         log.debug("initiated")
         
         streamQueue.async { [weak self] in
             guard let self = self else { return }
             log.debug("network bound stream task start.")
-
+            
+            self.streamDelegator = DataStreamDelegator(sender: self)
             CFWriteStreamSetDispatchQueue(self.streams.output, self.streamQueue)
-            self.streams.output.delegate = self
+            self.streams.output.delegate = self.streamDelegator
             self.streams.output.open()
         }
     }
@@ -85,7 +85,7 @@ class EventSender: NSObject {
             guard let self = self else { return Completable.empty() }
             return self.sendData(self.makeMultipartData(event))
         }
-        .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "event_queue_\(event.header.dialogRequestId)"))
+        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_event_\(event.header.dialogRequestId)"))
     }
     
     /**
@@ -100,7 +100,7 @@ class EventSender: NSObject {
                 guard let self = self else { return Completable.empty() }
                 return self.sendData(self.makeMultipartData(attachment))
         }
-        .subscribeOn(SerialDispatchQueueScheduler(queue: eventQueue, internalSerialQueueName: "attachment_queue_\(attachment.header.seq)"))
+        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_attachment_\(attachment.header.seq)"))
         
     }
     
@@ -114,14 +114,15 @@ class EventSender: NSObject {
             .asSingle()
             .flatMapCompletable { [weak self] _ in
                 guard let self = self else { return Completable.empty() }
-
+                
                 var partData = Data()
                 partData.append("--\(self.boundary)--".data(using: .utf8)!)
                 partData.append(HTTPConst.crlfData)
-
+                
                 log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
                 return self.sendData(partData)
         }
+        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_finish"))
         .subscribe { [weak self] _ in
             guard let self = self else { return }
             
@@ -139,6 +140,7 @@ class EventSender: NSObject {
             self.streamStateSubject.dispose()
             self.streams.output.close()
             self.streams.output.delegate = nil
+            self.streamDelegator = nil
         }
         .disposed(by: disposeBag)
     }
@@ -233,22 +235,30 @@ private extension EventSender {
 
 // MARK: - StreamDelegate
 
-extension EventSender: StreamDelegate {
-    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        guard let outputStream = aStream as? OutputStream,
-            outputStream === streams.output else {
-                return
+extension EventSender {
+    private class DataStreamDelegator: NSObject, StreamDelegate {
+        private let sender: EventSender
+        
+        init(sender: EventSender) {
+            self.sender = sender
         }
         
-        switch eventCode {
-        case .hasSpaceAvailable:
-            streamStateSubject.onNext(true)
-        case .endEncountered,
-             .errorOccurred:
-            streamStateSubject.onNext(false)
-            streamStateSubject.onCompleted()
-        default:
-            break
+        func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+            guard let outputStream = aStream as? OutputStream,
+                outputStream === sender.streams.output else {
+                    return
+            }
+            
+            switch eventCode {
+            case .hasSpaceAvailable:
+                sender.streamStateSubject.onNext(true)
+            case .endEncountered,
+                 .errorOccurred:
+                sender.streamStateSubject.onNext(false)
+                sender.streamStateSubject.onCompleted()
+            default:
+                break
+            }
         }
     }
 }

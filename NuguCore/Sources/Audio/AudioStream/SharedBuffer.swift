@@ -105,7 +105,7 @@ extension SharedBuffer {
         func finish() {
             log.debug("readers cnt: \(buffer?.readers.allObjects.count ?? 0)")
             buffer?.readers.allObjects.forEach { (reader) in
-                reader.readDisposable?.dispose()
+                reader.stop()
             }
 
             if let buffer = buffer, buffer.writer === self {
@@ -118,8 +118,9 @@ extension SharedBuffer {
         private let buffer: SharedBuffer
         private let readQueue = DispatchQueue(label: "com.sktelecom.romaine.ring_buffer.reader")
         @Atomic private var readIndex: SharedBufferIndex
-        public var readDisposable: Disposable?
+        private var readDisposable: Disposable?
         private let disposeBag = DisposeBag()
+        private var isAvailable = true
         
         init(buffer: SharedBuffer) {
             self.buffer = buffer
@@ -128,20 +129,37 @@ extension SharedBuffer {
         }
         
         func read(complete: @escaping (Result<Element, Error>) -> Void) {
-            var isCompleted = false
-            readDisposable = buffer.read(index: readIndex)
-                .take(1)
-                .observeOn(SerialDispatchQueueScheduler(queue: readQueue, internalSerialQueueName: "rx-"+readQueue.label))
-                .subscribe(onNext: { [weak self] (writtenElement) in
-                    isCompleted = true
-                    self?.readIndex += 1
-                    complete(.success(writtenElement))
-                }, onDisposed: {
-                    if isCompleted == false {
-                        complete(.failure(SharedBufferError.writerFinished))
-                    }
-                })
-            readDisposable?.disposed(by: disposeBag)
+            readQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                guard self.isAvailable else {
+                    complete(.failure(SharedBufferError.writerNotAvailable))
+                    return
+                }
+                
+                var isCompleted = false
+                self.readDisposable = self.buffer.read(index: self.readIndex)
+                    .take(1)
+                    .observeOn(SerialDispatchQueueScheduler(queue: self.readQueue, internalSerialQueueName: "rx-"+self.readQueue.label))
+                    .subscribe(onNext: { [weak self] (writtenElement) in
+                        isCompleted = true
+                        self?.readIndex += 1
+                        complete(.success(writtenElement))
+                    }, onDisposed: {
+                        if isCompleted == false {
+                            complete(.failure(SharedBufferError.writerFinished))
+                        }
+                    })
+                self.readDisposable?.disposed(by: self.disposeBag)
+            }
+        }
+        
+        func stop() {
+            readQueue.async { [weak self] in
+                self?.isAvailable = false
+                self?.readDisposable?.dispose()
+                self?.readDisposable = nil
+            }
         }
     }
 }

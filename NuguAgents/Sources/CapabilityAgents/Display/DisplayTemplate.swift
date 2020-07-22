@@ -20,60 +20,80 @@
 
 import Foundation
 
+import NuguCore
+
 public struct DisplayTemplate {
     public let type: String
     public let payload: Data
     public let templateId: String
     public let dialogRequestId: String
-    public let token: String
-    public let playServiceId: String
-    public let playStackServiceId: String?
-    public let duration: Duration
-    public let focusable: Bool?
+    public let template: Payload
     
-    public init(
+    init(
         type: String,
         payload: Data,
         templateId: String,
         dialogRequestId: String,
-        token: String,
-        playServiceId: String,
-        playStackServiceId: String?,
-        duration: Duration?,
-        focusable: Bool?
+        template: Payload
     ) {
         self.type = type
         self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
-        self.token = token
-        self.playServiceId = playServiceId
-        self.playStackServiceId = playStackServiceId
-        self.duration = duration ?? .short
-        self.focusable = focusable
+        self.template = template
+    }
+    
+    public struct Payload {
+        public let token: String
+        public let playServiceId: String
+        public let playStackControl: PlayStackControl?
+        public let duration: Duration?
+        public let focusable: Bool?
+        public let contextLayer: PlaySyncProperty.LayerType
+        public var playSyncProperty: PlaySyncProperty {
+            PlaySyncProperty(layerType: contextLayer, contextType: .display)
+        }
+        
+        public enum Duration: String, Decodable {
+            case short = "SHORT"
+            case mid = "MID"
+            case long = "LONG"
+            case longest = "LONGEST"
+        }
     }
 }
 
-public extension DisplayTemplate {
-    enum Duration: String {
-        /// <#Description#>
-        case short = "SHORT"
-        /// <#Description#>
-        case mid = "MID"
-        /// <#Description#>
-        case long = "LONG"
-        /// <#Description#>
-        case longest = "LONGEST"
+// MARK: - DisplayTemplate.Payload: Decodable
+
+extension DisplayTemplate.Payload: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case token
+        case playServiceId
+        case playStackControl
+        case duration
+        case focusable
+        case contextLayer
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        token = try container.decode(String.self, forKey: .token)
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        playStackControl = try? container.decode(PlayStackControl.self, forKey: .playStackControl)
+        duration = try? container.decode(Duration.self, forKey: .duration)
+        focusable = try? container.decodeIfPresent(Bool.self, forKey: .focusable)
+        contextLayer = (try? container.decode(PlaySyncProperty.LayerType.self, forKey: .contextLayer)) ?? .info
     }
 }
 
-public extension DisplayTemplate.Duration {
-    var time: DispatchTimeInterval {
+extension DisplayTemplate.Payload.Duration {
+    public var time: TimeIntervallic {
         switch self {
-        case .short: return .seconds(7)
-        case .mid: return .seconds(15)
-        case .long: return .seconds(30)
-        case .longest: return .seconds(60 * 10)
+        case .short: return NuguTimeInterval(seconds: 7)
+        case .mid: return NuguTimeInterval(seconds: 15)
+        case .long: return NuguTimeInterval(seconds: 30)
+        case .longest: return NuguTimeInterval(seconds: 60 * 10)
         }
     }
 }

@@ -52,7 +52,13 @@ public class MicInputProvider: AudioProvidable {
             return
         }
         
-        try beginTappingMicrophone(streamWriter: streamWriter)
+        do {
+            try beginTappingMicrophone(streamWriter: streamWriter)
+        } catch {
+            stop() // Unless Mic input is opened, It should be reset
+            throw error
+        }
+
         
         // when audio session interrupted, audio engine will be stopped automatically. so we have to handle it.
         NotificationCenter.default.addObserver(self,
@@ -81,6 +87,7 @@ public class MicInputProvider: AudioProvidable {
     
     private func beginTappingMicrophone(streamWriter: AudioStreamWritable) throws {
         log.debug("begin tapping to engine's input node")
+        self.streamWriter = streamWriter
         
         var inputNode: AVAudioInputNode!
         var inputFormat: AVAudioFormat!
@@ -97,9 +104,10 @@ public class MicInputProvider: AudioProvidable {
             throw error
         }
         
-        guard let recordingFormat = audioFormat else {
-            log.error("cannot make audioFormat")
-            throw MicInputError.audioFormatError
+        guard 0 < inputFormat.channelCount,
+            let recordingFormat = audioFormat else {
+                log.error("AudioFormat is not available")
+                throw MicInputError.audioFormatError
         }
         
         log.info("convert from: \(String(describing: inputFormat)) to: \(recordingFormat)")
@@ -107,8 +115,6 @@ public class MicInputProvider: AudioProvidable {
             log.error("cannot make audio converter")
             throw MicInputError.resamplerError(source: inputFormat, dest: recordingFormat)
         }
-        
-        self.streamWriter = streamWriter
         
         if let error = ObjcExceptionCatcher.objcTry({
             inputNode.removeTap(onBus: audioBus)
@@ -159,6 +165,7 @@ public class MicInputProvider: AudioProvidable {
             try audioEngine.start()
         } catch {
             log.error(error.localizedDescription)
+            throw error
         }
     }
     
@@ -191,6 +198,5 @@ public class MicInputProvider: AudioProvidable {
         guard let streamWriter = streamWriter else { return }
         
         try? beginTappingMicrophone(streamWriter: streamWriter)
-        
     }
 }

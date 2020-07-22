@@ -31,6 +31,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        if url.absoluteString == SampleApp.oauthRedirectUri {
+            NotificationCenter.default.post(name: .oauthRefresh, object: nil, userInfo: nil)
+            return true
+        }
         // Only for free pass of Sample app's Oauth validation check
         guard let schemeReplacedUrl = SampleApp.schemeReplacedUrl(openUrl: url) else { return false }
         

@@ -20,12 +20,13 @@
 
 import Foundation
 
-public class TycheEndPointDetectorEngine: NSObject {
+public class TycheEndPointDetectorEngine {
     private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.jademarble.tyche_end_point_detector")
     private let epdFile: URL
     private var flushedLength: Int = 0
     private var flushLength: Int = 0
     private var inputStream: InputStream?
+    private var streamDelegator: InputStreamDelegator?
     private var engineHandle: EpdHandle?
     public weak var delegate: TycheEndPointDetectorEngineDelegate?
     
@@ -50,6 +51,10 @@ public class TycheEndPointDetectorEngine: NSObject {
         self.epdFile = epdFile
     }
     
+    deinit {
+        internalStop()
+    }
+    
     public func start(
         inputStream: InputStream,
         sampleRate: Double,
@@ -58,19 +63,20 @@ public class TycheEndPointDetectorEngine: NSObject {
         pauseLength: Int
     ) {
         log.debug("engine try to start")
-
-        if [.closed, .notOpen].contains(inputStream.streamStatus) == false || engineHandle != nil {
-            // Release last components
-            stop()
-        }
-        
-        self.inputStream = inputStream
-        CFReadStreamSetDispatchQueue(inputStream, epdQueue)
-        inputStream.delegate = self
-        inputStream.open()
         
         epdQueue.async { [weak self] in
             guard let self = self else { return }
+            
+            if [.closed, .notOpen].contains(inputStream.streamStatus) == false || self.engineHandle != nil {
+                // Release last components
+                self.internalStop()
+            }
+            
+            self.streamDelegator = InputStreamDelegator(owner: self)
+            self.inputStream = inputStream
+            CFReadStreamSetDispatchQueue(inputStream, self.epdQueue)
+            inputStream.delegate = self.streamDelegator
+            inputStream.open()
             
             do {
                 try self.initDetectorEngine(
@@ -93,24 +99,28 @@ public class TycheEndPointDetectorEngine: NSObject {
     
     public func stop() {
         log.debug("try to stop")
-
-        if inputStream?.streamStatus != .closed {
-            inputStream?.close()
-            inputStream?.delegate = nil
+        
+        epdQueue.async { [weak self] in
+            self?.internalStop()
+        }
+    }
+    
+    private func internalStop() {
+        if let inputStream = inputStream,
+            inputStream.streamStatus != .closed {
+            inputStream.close()
+            inputStream.delegate = nil
             log.debug("bounded input stream is closed")
         }
         
-        epdQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            if self.engineHandle != nil {
-                epdClientChannelRELEASE(self.engineHandle)
-                self.engineHandle = nil
-                log.debug("engine is destroyed")
-            }
-
-            self.state = .idle
+        if engineHandle != nil {
+            epdClientChannelRELEASE(engineHandle)
+            engineHandle = nil
+            log.debug("engine is destroyed")
         }
+        
+        streamDelegator = nil
+        state = .idle
     }
     
     private func initDetectorEngine(
@@ -138,104 +148,117 @@ public class TycheEndPointDetectorEngine: NSObject {
                 ) else {
                     throw EndPointDetectorError.initFailed
             }
-
+            
             self.engineHandle = epdHandle
         }
     }
 }
 
-extension TycheEndPointDetectorEngine: StreamDelegate {
-    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        guard let inputStream = aStream as? InputStream,
-            inputStream == self.inputStream else { return }
+// MARK: - StreamDelegate
 
-        switch eventCode {
-        case .hasBytesAvailable:
-            guard engineHandle != nil else {
-                stop()
-                return
-            }
+extension TycheEndPointDetectorEngine {
+    private class InputStreamDelegator: NSObject, StreamDelegate {
+        let owner: TycheEndPointDetectorEngine
+        
+        init(owner: TycheEndPointDetectorEngine) {
+            self.owner = owner
+            super.init()
+        }
+        
+        public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+            guard let inputStream = aStream as? InputStream,
+                inputStream == owner.inputStream else { return }
             
-            let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
-            defer { inputBuffer.deallocate() }
-            
-            let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
-            guard 0 < inputLength else { return }
-            
-            let engineState = inputBuffer.withMemoryRebound(to: Int16.self, capacity: inputLength/2) { (ptrPcmData) -> Int32 in
-                // Calculate flusehd audio frame length.
-                var adjustLength = 0
-                if flushedLength + (inputLength/2) <= flushLength {
-                    flushedLength += (inputLength/2)
-                    return -1
-                } else if flushedLength < flushLength {
-                    flushedLength += (inputLength/2)
-                    adjustLength = (inputLength/2) - (flushedLength - flushLength)
+            switch eventCode {
+            case .hasBytesAvailable:
+                guard owner.engineHandle != nil else {
+                    owner.internalStop()
+                    return
                 }
                 
-                return epdClientChannelRUN(
-                    engineHandle,
-                    ptrPcmData + adjustLength,
-                    myint((UInt32(inputLength)/2 - UInt32(adjustLength))*2),
-                    0
-                )
-            }
-            
-            guard 0 <= engineState else { return }
-            
-            #if DEBUG
-            inputData.append(inputBuffer, count: inputLength)
-            #endif
-            
-            let length = epdClientChannelGetOutputDataSize(engineHandle)
-            if 0 < length {
-                let detectedBytes = UnsafeMutablePointer<Int8>.allocate(capacity: Int(length))
-                defer { detectedBytes.deallocate() }
+                let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
+                defer { inputBuffer.deallocate() }
                 
-                let result = epdClientChannelGetOutputData(engineHandle, detectedBytes, length)
-                if 0 < result {
-                    let detectedData = Data(bytes: detectedBytes, count: Int(result))
-                    delegate?.tycheEndPointDetectorEngineDidExtract(speechData: detectedData)
+                let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
+                guard 0 < inputLength else { return }
+                
+                let engineState = inputBuffer.withMemoryRebound(to: Int16.self, capacity: inputLength/2) { (ptrPcmData) -> Int32 in
+                    // Calculate flusehd audio frame length.
+                    var adjustLength = 0
+                    if owner.flushedLength + (inputLength/2) <= owner.flushLength {
+                        owner.flushedLength += (inputLength/2)
+                        return -1
+                    } else if owner.flushedLength < owner.flushLength {
+                        owner.flushedLength += (inputLength/2)
+                        adjustLength = (inputLength/2) - (owner.flushedLength - owner.flushLength)
+                    }
                     
-                    #if DEBUG
-                    outputData.append(detectedData)
-                    #endif
+                    return epdClientChannelRUN(
+                        owner.engineHandle,
+                        ptrPcmData + adjustLength,
+                        myint((UInt32(inputLength)/2 - UInt32(adjustLength))*2),
+                        0
+                    )
                 }
-            }
-            
-            state = TycheEndPointDetectorEngine.State(engineState: engineState)
-            
-            #if DEBUG
-            if state == .end {
-                do {
-                    let epdInputFileName = FileManager.default.urls(for: .documentDirectory,
-                                                                    in: .userDomainMask)[0].appendingPathComponent("jade_marble_input.raw")
-                    log.debug("input data file :\(epdInputFileName)")
-                    try inputData.write(to: epdInputFileName)
+                
+                guard 0 <= engineState else { return }
+                
+                #if DEBUG
+                owner.inputData.append(inputBuffer, count: inputLength)
+                #endif
+                
+                let length = epdClientChannelGetOutputDataSize(owner.engineHandle)
+                if 0 < length {
+                    let detectedBytes = UnsafeMutablePointer<Int8>.allocate(capacity: Int(length))
+                    defer { detectedBytes.deallocate() }
                     
-                    let speexFileName = FileManager.default.urls(for: .documentDirectory,
-                                                                 in: .userDomainMask)[0].appendingPathComponent("jade_marble_output.speex")
-                    log.debug("speex data file :\(speexFileName)")
-                    try outputData.write(to: speexFileName)
-                    
-                    inputData.removeAll()
-                    outputData.removeAll()
-                } catch {
-                    log.debug(error)
+                    let result = epdClientChannelGetOutputData(owner.engineHandle, detectedBytes, length)
+                    if 0 < result {
+                        let detectedData = Data(bytes: detectedBytes, count: Int(result))
+                        owner.delegate?.tycheEndPointDetectorEngineDidExtract(speechData: detectedData)
+                        
+                        #if DEBUG
+                        owner.outputData.append(detectedData)
+                        #endif
+                    }
                 }
+                
+                owner.state = TycheEndPointDetectorEngine.State(engineState: engineState)
+                
+                #if DEBUG
+                if owner.state == .end {
+                    do {
+                        let epdInputFileName = FileManager.default.urls(for: .documentDirectory,
+                                                                        in: .userDomainMask)[0].appendingPathComponent("jade_marble_input.raw")
+                        log.debug("input data file :\(epdInputFileName)")
+                        try owner.inputData.write(to: epdInputFileName)
+                        
+                        let speexFileName = FileManager.default.urls(for: .documentDirectory,
+                                                                     in: .userDomainMask)[0].appendingPathComponent("jade_marble_output.speex")
+                        log.debug("speex data file :\(speexFileName)")
+                        try owner.outputData.write(to: speexFileName)
+                        
+                        owner.inputData.removeAll()
+                        owner.outputData.removeAll()
+                    } catch {
+                        log.debug(error)
+                    }
+                }
+                #endif
+                
+                if [.idle, .listening, .start].contains(owner.state) == false {
+                    owner.internalStop()
+                }
+                
+            case .endEncountered:
+                log.debug("stream endEncountered")
+                fallthrough
+            case .errorOccurred:
+                owner.internalStop()
+                
+            default:
+                break
             }
-            #endif
-            
-            if [.idle, .listening, .start].contains(state) == false {
-                stop()
-            }
-            
-        case .endEncountered:
-            log.debug("stream endEncountered")
-            stop()
-
-        default:
-            break
         }
     }
 }
