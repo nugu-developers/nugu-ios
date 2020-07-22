@@ -34,6 +34,10 @@ final class IntroViewController: UIViewController {
         super.viewDidLoad()
         
         refreshView()
+        
+        if SampleApp.loginMethod == .type1 && UserDefaults.Standard.refreshToken != nil {
+            logIn()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,10 +66,10 @@ final class IntroViewController: UIViewController {
     deinit {}
 }
 
-// MARK: - IBAction
+// MARK: - Private (login)
 
 private extension IntroViewController {
-    @IBAction func nuguLoginButtonDidClick(_ button: UIButton) {
+    func logIn() {
         guard SampleApp.loginMethod != nil else {
             presentNoDataPopup()
             return
@@ -90,6 +94,14 @@ private extension IntroViewController {
                 }
             }
         })
+    }
+}
+
+// MARK: - IBAction
+
+private extension IntroViewController {
+    @IBAction func nuguLoginButtonDidClick(_ button: UIButton) {
+        logIn()
     }
 }
 
