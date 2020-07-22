@@ -104,7 +104,8 @@ private extension NuguAudioSessionManager {
         switch type {
         case .began:
             // Interruption began, take appropriate actions
-            NuguCentralManager.shared.client.focusManager.deactivate()
+            NuguCentralManager.shared.client.audioPlayerAgent.pause()
+            NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: true)
             
             // When supportMixWithOthersOption is on,
             // AudioSession's category option should be changed as including mixWithOthers option when paused with interruption.
@@ -116,7 +117,7 @@ private extension NuguAudioSessionManager {
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
-                    NuguCentralManager.shared.client.focusManager.activate()
+                    NuguCentralManager.shared.client.audioPlayerAgent.play()
                 } else {
                     // Interruption Ended - playback should NOT resume
                 }

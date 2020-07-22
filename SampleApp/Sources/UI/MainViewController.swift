@@ -405,6 +405,7 @@ private extension MainViewController {
         displayView.displayPayload = displayTemplate.payload
         displayView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
+            NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: true)
             self.dismissDisplayView()
         }
         displayView.onItemSelect = { (selectedItemToken, selectedItemPostback) in
@@ -755,6 +756,12 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
         NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerAgentDidChange(state: state)
+        switch state {
+        case .paused, .playing:
+            NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
+        case .idle, .finished, .stopped:
+            NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
+        }
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }

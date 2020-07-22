@@ -424,12 +424,10 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
         return NuguAudioSessionManager.shared.updateAudioSession()
     }
     
     func nuguClientDidReleaseAudioSession() {
-        NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
     
