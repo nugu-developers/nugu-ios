@@ -61,14 +61,11 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 
 public extension ExtensionAgent {
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        let dialogRequestId = TimeUUID().hexString
-        sendEvent(
+        return sendEvent(
             typeInfo: .commandIssued(data: data),
             playServiceId: playServiceId,
-            dialogRequestId: dialogRequestId,
             completion: completion
         )
-        return dialogRequestId
     }
 }
 
@@ -120,13 +117,13 @@ private extension ExtensionAgent {
 // MARK: - Private (Event)
 
 private extension ExtensionAgent {
-    func sendEvent(
+    @discardableResult func sendEvent(
         typeInfo: Event.TypeInfo,
         playServiceId: String,
-        dialogRequestId: String = TimeUUID().hexString,
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)? = nil
-    ) {
+    ) -> String {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -136,12 +133,13 @@ private extension ExtensionAgent {
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 ),
                 completion: completion
             )
         }
+        return eventIdentifier.dialogRequestId
     }
 }

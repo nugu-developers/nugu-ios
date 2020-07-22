@@ -97,10 +97,10 @@ public final class ASRAgent: ASRAgentProtocol {
                 expectSpeechDialogRequestId = nil
             case .cancel:
                 asrState = .idle
-                upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
+                upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
                 sendEvent(
                     typeInfo: .stopRecognize,
-                    referrerDialogRequestId: asrRequest.dialogRequestId
+                    referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                 )
                 expectSpeechDialogRequestId = nil
             case .error(let error):
@@ -109,19 +109,19 @@ public final class ASRAgent: ASRAgentProtocol {
                 case NetworkError.timeout:
                     sendEvent(
                         typeInfo: .responseTimeout,
-                        referrerDialogRequestId: asrRequest.dialogRequestId
+                        referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     )
                 case ASRError.listeningTimeout:
-                    upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
+                    upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
                     sendEvent(
                         typeInfo: .listenTimeout,
-                        referrerDialogRequestId: asrRequest.dialogRequestId
+                        referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     )
                 case ASRError.listenFailed:
-                    upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.dialogRequestId)
+                    upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
                     sendEvent(
                         typeInfo: .listenFailed,
-                        referrerDialogRequestId: asrRequest.dialogRequestId
+                        referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     )
                 case ASRError.recognizeFailed:
                     break
@@ -132,7 +132,7 @@ public final class ASRAgent: ASRAgentProtocol {
             }
             
             asrDelegates.notify { (delegate) in
-                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.dialogRequestId)
+                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
             }
         }
     }
@@ -338,7 +338,7 @@ extension ASRAgent: EndPointDetectorDelegate {
             
             let attachmentHeader = Upstream.Attachment.Header(seq: self.attachmentSeq, isEnd: false, type: "audio/speex", messageId: TimeUUID().hexString)
             let attachment = Upstream.Attachment(content: speechData, header: attachmentHeader)
-            self.upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.dialogRequestId)
+            self.upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
         }
@@ -434,6 +434,7 @@ private extension ASRAgent {
         typeInfo: Event.TypeInfo,
         referrerDialogRequestId: String
     ) {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -443,6 +444,7 @@ private extension ASRAgent {
                     dialogAttributes: self.dialogAttributeStore.attributes
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 )
@@ -482,11 +484,11 @@ private extension ASRAgent {
                 dialogAttributes: dialogAttributeStore.attributes
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,
-                dialogRequestId: asrRequest.dialogRequestId,
+                eventIdentifier: asrRequest.eventIdentifier,
                 contextPayload: asrRequest.contextPayload
         )) { [weak self] (state) in
                 self?.asrDispatchQueue.async { [weak self] in
-                    guard self?.asrRequest?.dialogRequestId == asrRequest.dialogRequestId else { return }
+                    guard self?.asrRequest?.eventIdentifier == asrRequest.eventIdentifier else { return }
                     
                     switch state {
                     case .finished:
@@ -542,7 +544,7 @@ private extension ASRAgent {
 
         let attachmentHeader = Upstream.Attachment.Header(seq: self.attachmentSeq, isEnd: true, type: "audio/speex", messageId: TimeUUID().hexString)
         let attachment = Upstream.Attachment(content: Data(), header: attachmentHeader)
-        upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.dialogRequestId)
+        upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
     }
     
     @discardableResult func startRecognition(
@@ -551,11 +553,11 @@ private extension ASRAgent {
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         log.debug("startRecognition, initiator: \(options.initiator)")
-        let dialogRequestId = TimeUUID().hexString
+        let eventIdentifier = EventIdentifier()
         if options.endPointing == .server {
             log.warning("Server side end point detector does not support yet.")
             completion?(.error(ASRError.listenFailed))
-            return dialogRequestId
+            return eventIdentifier.dialogRequestId
         }
         // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
         let reader = audioStream.makeAudioStreamReader()
@@ -578,7 +580,7 @@ private extension ASRAgent {
                 self.asrRequest = ASRRequest(
                     contextPayload: contextPayload,
                     reader: reader,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     options: options,
                     referrerDialogRequestId: directive?.header.dialogRequestId,
                     completion: completion
@@ -590,6 +592,6 @@ private extension ASRAgent {
             semaphore.wait()
         }
         
-        return dialogRequestId
+        return eventIdentifier.dialogRequestId
     }
 }

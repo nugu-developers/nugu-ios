@@ -1,8 +1,8 @@
 //
-//  ASRRequest.swift
+//  EventIdentifier.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 13/05/2019.
+//  Created by MinChul Lee on 2020/07/16.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +22,7 @@ import Foundation
 
 import NuguCore
 
-struct ASRRequest {
-    let contextPayload: [ContextInfo]
-    let reader: AudioStreamReadable
-    let eventIdentifier: EventIdentifier
-    let options: ASROptions
-    let referrerDialogRequestId: String?
-    let completion: ((StreamDataState) -> Void)?
+struct EventIdentifier: Equatable {
+    let dialogRequestId: String = TimeUUID().hexString
+    let messageId: String = TimeUUID().hexString
 }

@@ -24,7 +24,7 @@ import NuguCore
 extension Eventable {
     func makeEventMessage(
         property: CapabilityAgentProperty,
-        dialogRequestId: String? = nil,
+        eventIdentifier: EventIdentifier,
         referrerDialogRequestId: String? = nil,
         contextPayload: [ContextInfo]
     ) -> Upstream.Event {
@@ -32,15 +32,11 @@ extension Eventable {
             namespace: property.name,
             name: name,
             version: property.version,
-            dialogRequestId: dialogRequestId ?? TimeUUID().hexString,
-            messageId: TimeUUID().hexString,
+            dialogRequestId: eventIdentifier.dialogRequestId,
+            messageId: eventIdentifier.messageId,
             referrerDialogRequestId: referrerDialogRequestId
         )
         
-        return Upstream.Event(
-            payload: payload,
-            header: header,
-            contextPayload: contextPayload
-        )
+        return Upstream.Event(payload: payload, header: header, contextPayload: contextPayload)
     }
 }

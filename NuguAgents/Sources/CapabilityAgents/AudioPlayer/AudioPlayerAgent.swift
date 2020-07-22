@@ -193,25 +193,25 @@ public extension AudioPlayerAgent {
     }
     
     @discardableResult func next(completion: ((StreamDataState) -> Void)?) -> String {
-        let dialogRequestId = TimeUUID().hexString
+        let eventIdentifier = EventIdentifier()
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
-            self.sendPlayEvent(media: media, typeInfo: .nextCommandIssued, dialogRequestId: dialogRequestId, completion: completion)
+            self.sendPlayEvent(media: media, typeInfo: .nextCommandIssued, eventIdentifier: eventIdentifier, completion: completion)
         }
-        return dialogRequestId
+        return eventIdentifier.dialogRequestId
     }
     
     @discardableResult func prev(completion: ((StreamDataState) -> Void)?) -> String {
-        let dialogRequestId = TimeUUID().hexString
+        let eventIdentifier = EventIdentifier()
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard let media = self.currentMedia else { return }
             
-            self.sendPlayEvent(media: media, typeInfo: .previousCommandIssued, dialogRequestId: dialogRequestId, completion: completion)
+            self.sendPlayEvent(media: media, typeInfo: .previousCommandIssued, eventIdentifier: eventIdentifier, completion: completion)
         }
-        return dialogRequestId
+        return eventIdentifier.dialogRequestId
     }
     
     func pause() {
@@ -699,7 +699,7 @@ private extension AudioPlayerAgent {
     func sendPlayEvent(
         media: AudioPlayerAgentMedia,
         typeInfo: PlayEvent.TypeInfo,
-        dialogRequestId: String = TimeUUID().hexString,
+        eventIdentifier: EventIdentifier = EventIdentifier(),
         completion: ((StreamDataState) -> Void)? = nil
     ) {
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
@@ -713,7 +713,7 @@ private extension AudioPlayerAgent {
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: media.dialogRequestId,
                     contextPayload: contextPayload
                 ),
@@ -723,6 +723,7 @@ private extension AudioPlayerAgent {
     }
     
     func sendRequestCommandFailedEvent(directive: Downstream.Directive) {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -731,6 +732,7 @@ private extension AudioPlayerAgent {
                     typeInfo: .requestCommandFailed(state: self.audioPlayerState, directiveType: directive.header.type)
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: directive.header.dialogRequestId,
                     contextPayload: contextPayload
                 )
@@ -743,6 +745,7 @@ private extension AudioPlayerAgent {
         typeInfo: RequestPlayEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -751,6 +754,7 @@ private extension AudioPlayerAgent {
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 ),
@@ -764,6 +768,7 @@ private extension AudioPlayerAgent {
         typeInfo: SettingsEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -773,6 +778,7 @@ private extension AudioPlayerAgent {
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: media.dialogRequestId,
                     contextPayload: contextPayload
                 ),
@@ -787,6 +793,7 @@ private extension AudioPlayerAgent {
         typeInfo: LyricsEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -796,6 +803,7 @@ private extension AudioPlayerAgent {
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 ),

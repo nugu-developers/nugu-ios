@@ -20,10 +20,7 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol Eventable {
-    /// <#Description#>
+protocol Eventable {
     var payload: [String: AnyHashable] { get }
-    /// <#Description#>
     var name: String { get }
 }
