@@ -106,7 +106,7 @@ extension NuguCentralManager {
         stopWakeUpDetector()
         client.stopReceiveServerInitiatedDirective()
         client.asrAgent.stopRecognition()
-        client.ttsAgent.stopTTS(cancelAssociation: true)
+        client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
     }
 }
@@ -424,12 +424,10 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
         return NuguAudioSessionManager.shared.updateAudioSession()
     }
     
     func nuguClientDidReleaseAudioSession() {
-        NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
         NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
     }
     

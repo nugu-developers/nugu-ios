@@ -209,6 +209,7 @@ private extension NuguDisplayPlayerController {
         if playCommandTarget == nil {
             playCommandTarget = MPRemoteCommandCenter.shared()
                 .playCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
+                    NuguCentralManager.shared.client.ttsAgent.stopTTS()
                     NuguCentralManager.shared.client.audioPlayerAgent.play()
                     return .success
             }
