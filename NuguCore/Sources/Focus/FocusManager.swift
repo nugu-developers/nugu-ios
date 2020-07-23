@@ -61,7 +61,10 @@ extension FocusManager {
                 return
             }
             
-            guard self.foregroundChannelDelegate !== channelDelegate else { return }
+            guard self.foregroundChannelDelegate !== channelDelegate else {
+                self.update(channelDelegate: channelDelegate, focusState: .foreground)
+                return
+            }
             
             // Move current foreground channel to background If Its priority is lower than requested.
             if let foregroundChannelDelegate = self.foregroundChannelDelegate,
