@@ -105,7 +105,7 @@ private extension NuguAudioSessionManager {
         case .began:
             // Interruption began, take appropriate actions
             NuguCentralManager.shared.client.audioPlayerAgent.pause()
-            NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: true)
+            NuguCentralManager.shared.client.ttsAgent.stopTTS()
             
             // When supportMixWithOthersOption is on,
             // AudioSession's category option should be changed as including mixWithOthers option when paused with interruption.

@@ -405,7 +405,7 @@ private extension MainViewController {
         displayView.displayPayload = displayTemplate.payload
         displayView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
-            NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: true)
+            NuguCentralManager.shared.client.ttsAgent.stopTTS()
             self.dismissDisplayView()
         }
         displayView.onItemSelect = { (selectedItemToken, selectedItemPostback) in

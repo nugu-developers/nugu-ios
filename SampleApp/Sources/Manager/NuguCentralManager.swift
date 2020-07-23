@@ -106,7 +106,7 @@ extension NuguCentralManager {
         stopWakeUpDetector()
         client.stopReceiveServerInitiatedDirective()
         client.asrAgent.stopRecognition()
-        client.ttsAgent.stopTTS(cancelAssociation: true)
+        client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
     }
 }
