@@ -65,6 +65,9 @@ extension UserDefaults {
         /// Default value is type1.
         @UserDefault(userDefaults: .standard, key: "currentloginMethod", defaultValue: 0)
         static var currentloginMethod: Int
+        
+        @UserDefault(userDefaults: .standard, key: "hasSeenGuideWeb", defaultValue: false)
+        static var hasSeenGuideWeb: Bool
     }
 }
 
