@@ -26,13 +26,15 @@ public struct AudioPlayerDisplayTemplate {
     public let templateId: String
     public let dialogRequestId: String
     public let mediaPayload: MediaPayload
+    public let isSeekable: Bool
     
-    init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, mediaPayload: MediaPayload) {
+    init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, mediaPayload: MediaPayload, isSeekable: Bool) {
         self.type = type
         self.payload = payload
         self.templateId = templateId
         self.dialogRequestId = dialogRequestId
         self.mediaPayload = mediaPayload
+        self.isSeekable = isSeekable
     }
     
     public struct MediaPayload {

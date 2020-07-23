@@ -79,7 +79,15 @@ final class AudioPlayer2View: AudioDisplayView {
                 return .normal(text: grammarGuide)
             }) ?? []
             
-            startProgressTimer()
+            if isSeekable {
+                startProgressTimer()
+            } else {
+                stopProgressTimer()
+                elapsedTimeLabel.text = nil
+                durationTimeLabel.text = nil
+                progressView.isHidden = true
+            }
+            
             audioPlayerBarView.setData(
                 imageUrl: template.content.imageUrl,
                 headerText: template.content.title,
