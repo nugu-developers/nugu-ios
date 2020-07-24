@@ -34,10 +34,7 @@ final class NuguCentralManager {
     lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
         
-        // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
-        if NuguAudioSessionManager.shared.supportMixWithOthersOption == false {
-            displayPlayerController = NuguDisplayPlayerController()
-        }
+        displayPlayerController = NuguDisplayPlayerController()
         
         // local tts agent
         localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
@@ -50,10 +47,7 @@ final class NuguCentralManager {
     }()
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
 
-    // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = {
-        return NuguAudioSessionManager.shared.supportMixWithOthersOption ? nil : NuguDisplayPlayerController()
-    }()
+    var displayPlayerController: NuguDisplayPlayerController?
     
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
@@ -428,7 +422,7 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientDidReleaseAudioSession() {
-        NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
+        
     }
     
     func nuguClientDidOpenInputSource() {
