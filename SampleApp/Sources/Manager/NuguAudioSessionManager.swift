@@ -53,27 +53,6 @@ extension NuguAudioSessionManager {
         }
         return updateAudioSessionCategoryWithOptions(requestingFocus: true)
     }
-    
-    @objc func inputStatusDidChanged(_ notification: Notification) {
-        guard let status = notification.userInfo?["status"] as? Bool,
-            status == false else {
-                return
-        }
-        
-        do {
-            // Defer statement for recovering audioSession and wakeUpDetector
-            defer {
-                updateAudioSessionCategoryWithOptions()
-                NuguCentralManager.shared.startWakeUpDetector()
-            }
-            // Notify audio session deactivation to 3rd party apps
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        } catch {
-            log.debug("notifyOthersOnDeactivation failed: \(error)")
-        }
-        
-        NotificationCenter.default.removeObserver(self, name: .nuguClientInputStatus, object: nil)
-    }
 }
 
 // MARK: - private
