@@ -26,7 +26,7 @@ public class AudioBoundStreams {
     private var id: Int
     private let streams = BoundStreams()
     private var streamDelegator: OutputStreamDelegator?
-    private let audioStreamReader: AudioStreamReadable
+    private var audioStreamReader: AudioStreamReadable?
     private let streamQueue: DispatchQueue
     
     public var input: InputStream {
@@ -70,6 +70,7 @@ public class AudioBoundStreams {
         }
         
         streamDelegator = nil
+        audioStreamReader = nil
     }
 }
 
@@ -87,17 +88,19 @@ extension AudioBoundStreams {
         public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
             switch eventCode {
             case .hasSpaceAvailable:
-                owner.audioStreamReader.read(complete: { [weak self] (result) in
+                guard let audioStreamReader = owner.audioStreamReader else { return }
+                
+                audioStreamReader.read(complete: { [weak self] (result) in
                     guard let self = self else { return }
                     guard case let .success(pcmBuffer) = result else {
-                        log.debug("[\(self.owner.id)] audio stream read failed in hasSpaceAvailable")
+                        log.error("[\(self.owner.id)] audio stream read failed in hasSpaceAvailable")
                         self.owner.internalStop()
                         self.streamSemaphore.signal()
                         return
                     }
                     
                     guard let data = pcmBuffer.int16ChannelData?.pointee else {
-                        log.debug("[\(self.owner.id)] pcm puffer is not suitable in hasSpaceAvailable")
+                        log.error("[\(self.owner.id)] pcm puffer is not suitable in hasSpaceAvailable")
                         self.streamSemaphore.signal()
                         return
                     }
