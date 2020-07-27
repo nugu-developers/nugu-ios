@@ -36,71 +36,20 @@ extension NuguAudioSessionManager {
         }
     }
     
-    func observeAVAudioSessionInterruptionNotification() {
-        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(interruptionNotification(_ :)), name: AVAudioSession.interruptionNotification, object: nil)
-    }
-    
-    func removeObservingAVAudioSessionInterruptionNotification() {
-        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
-    }
-    
     @discardableResult func updateAudioSession() -> Bool {
-        // When AudioSession default value has not been set, updating AudioSession should be done first
-        guard AVAudioSession.sharedInstance().category == .playAndRecord,
-            AVAudioSession.sharedInstance().categoryOptions.contains(defaultCategoryOptions) else {
-                return updateAudioSessionCategoryWithOptions()
-        }
-        return updateAudioSessionCategoryWithOptions(requestingFocus: true)
-    }
-}
-
-// MARK: - private
-
-private extension NuguAudioSessionManager {
-    @objc func interruptionNotification(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
-        switch type {
-        case .began:
-            // Interruption began, take appropriate actions
-            NuguCentralManager.shared.client.audioPlayerAgent.pause()
-            NuguCentralManager.shared.client.ttsAgent.stopTTS()
-        case .ended:
-            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
-                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
-                if options.contains(.shouldResume) {
-                    NuguCentralManager.shared.client.audioPlayerAgent.play()
-                } else {
-                    // Interruption Ended - playback should NOT resume
-                }
-            }
-        @unknown default: break
-        }
-    }
-    
-    /// Update AudioSession.Category and AudioSession.CategoryOptions
-    /// - Parameter requestingFocus: whether updating AudioSession is for requesting focus or just updating without requesting focus
-    @discardableResult func updateAudioSessionCategoryWithOptions(requestingFocus: Bool = false) -> Bool {
-        var options = defaultCategoryOptions
-        if requestingFocus == false {
-            options.insert(.mixWithOthers)
-        }
-        
         // If audioSession is already has been set properly, resetting audioSession is unnecessary
-        guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options else {
+        guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != defaultCategoryOptions else {
             return true
         }
-        
+
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
                 mode: .default,
-                options: options
+                options: defaultCategoryOptions
             )
             try AVAudioSession.sharedInstance().setActive(true)
-            log.debug("set audio session = \(options)")
+            log.debug("set audio session success")
             return true
         } catch {
             log.debug("updateAudioSessionCategoryOptions failed: \(error)")
