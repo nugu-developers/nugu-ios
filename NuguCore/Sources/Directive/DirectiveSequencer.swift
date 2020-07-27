@@ -85,12 +85,10 @@ public extension DirectiveSequencer {
 private extension DirectiveSequencer {
     func prefetchDirective(_ directive: Downstream.Directive) {
         guard let handler = directiveHandleInfos[directive.header.type] else {
-            log.warning("No handler registered \(directive.header)")
             notifyDirectiveHandleResult(directive: directive, result: .failed("No handler registered \(directive.header)"))
             return
         }
         guard canceledDialogRequestIds.contains(directive.header.dialogRequestId) == false else {
-            log.debug("Canceled directive \(directive.header)")
             notifyDirectiveHandleResult(directive: directive, result: .canceled)
             return
         }
@@ -107,7 +105,6 @@ private extension DirectiveSequencer {
     
     func handleDirective(_ directive: Downstream.Directive) {
         guard let handler = directiveHandleInfos[directive.header.type] else {
-            log.warning("No handler registered \(directive.header)")
             notifyDirectiveHandleResult(directive: directive, result: .failed("No handler registered \(directive.header)"))
             return
         }
@@ -121,7 +118,6 @@ private extension DirectiveSequencer {
             return
         }
         guard canceledDialogRequestIds.contains(directive.header.dialogRequestId) == false else {
-            log.debug("Canceled directive \(directive.header)")
             handler.cancelDirective?(directive)
             notifyDirectiveHandleResult(directive: directive, result: .canceled)
             return
@@ -132,7 +128,6 @@ private extension DirectiveSequencer {
             self?.directiveSequencerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
 
-                log.debug("\(directive.header) \(result)")
                 if case .stopped(let cancelAssociation) = result, cancelAssociation == true {
                     self.canceledDialogRequestIds.append(directive.header.dialogRequestId)
                     if self.canceledDialogRequestIds.count > 10 {
@@ -153,6 +148,7 @@ private extension DirectiveSequencer {
     }
     
     func notifyDirectiveHandleResult(directive: Downstream.Directive, result: DirectiveHandleResult) {
+        log.debug("\(directive.header): \(result)")
         delegates.notify {
             $0.directiveSequencerDidHandle(directive: directive, result: result)
         }

@@ -231,8 +231,6 @@ public extension ASRAgent {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            // TODO: cancelAssociation = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
-            self.expectSpeechDialogRequestId = nil
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
                 return
