@@ -28,8 +28,8 @@ final class NuguAudioSessionManager {
     /// NUGU Service should set AudioSession.Category as .playAndRecord for recording voice and playing media
     /// Setting AudioSession.Category as .playAndRecord leads you to stop on going 3rd party app's music player
     /// To avoid 3rd party app's music player being stopped, application should append .mixWithOthers option to AudioSession.CategoryOptions
-    /// To support mixWithOthersOption, simply change following value to 'true'
-    let supportMixWithOthersOption = false
+    /// To unsupport mixWithOthersOption, simply change following value to 'false'
+    let supportMixWithOthersOption = true
     
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
 }
@@ -105,6 +105,7 @@ private extension NuguAudioSessionManager {
         case .began:
             // Interruption began, take appropriate actions
             NuguCentralManager.shared.client.audioPlayerAgent.pause()
+            NuguCentralManager.shared.client.ttsAgent.stopTTS()
             
             // When supportMixWithOthersOption is on,
             // AudioSession's category option should be changed as including mixWithOthers option when paused with interruption.

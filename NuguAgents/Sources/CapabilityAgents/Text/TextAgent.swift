@@ -95,7 +95,7 @@ private extension TextAgent {
                 self?.sendTextInput(
                     text: payload.text,
                     token: payload.token,
-                    directive: directive,
+                    referrerDialogRequestId: directive.header.dialogRequestId,
                     completion: nil
                 )
             }
@@ -109,11 +109,10 @@ private extension TextAgent {
     @discardableResult func sendTextInput(
         text: String,
         token: String?,
-        directive: Downstream.Directive? = nil,
+        referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
-        let dialogRequestId = TimeUUID().hexString
-        
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -122,13 +121,13 @@ private extension TextAgent {
                     typeInfo: .textInput(text: text, token: token, dialogAttributes: self.dialogAttributeStore.attributes)
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
-                    referrerDialogRequestId: directive?.header.dialogRequestId,
+                    eventIdentifier: eventIdentifier,
+                    referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 ),
                 completion: completion
             )
         }
-        return dialogRequestId
+        return eventIdentifier.dialogRequestId
     }
 }

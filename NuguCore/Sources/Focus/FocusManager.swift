@@ -29,6 +29,8 @@ public class FocusManager: FocusManageable {
     
     private var releaseFocusWorkItem: DispatchWorkItem?
     
+    private var activated: Bool = true
+    
     public init() {}
 }
 
@@ -59,18 +61,21 @@ extension FocusManager {
                 return
             }
             
-            // 우선순위에 따른 Focus 부여
-            if let foregroundChannelDelegate = self.foregroundChannelDelegate {
-                if foregroundChannelDelegate === channelDelegate {
-                    self.update(channelDelegate: channelDelegate, focusState: .foreground)
-                } else if channelDelegate.focusChannelPriority().rawValue >= foregroundChannelDelegate.focusChannelPriority().rawValue {
-                    self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
-                    self.update(channelDelegate: channelDelegate, focusState: .foreground)
-                } else {
-                    self.update(channelDelegate: channelDelegate, focusState: .background)
-                }
-            } else {
+            guard self.foregroundChannelDelegate !== channelDelegate else {
                 self.update(channelDelegate: channelDelegate, focusState: .foreground)
+                return
+            }
+            
+            // Move current foreground channel to background If Its priority is lower than requested.
+            if let foregroundChannelDelegate = self.foregroundChannelDelegate,
+                channelDelegate.focusChannelPriority().rawValue >= foregroundChannelDelegate.focusChannelPriority().rawValue {
+                self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
+            }
+            
+            if self.activated == true && self.foregroundChannelDelegate == nil {
+                self.update(channelDelegate: channelDelegate, focusState: .foreground)
+            } else {
+                self.update(channelDelegate: channelDelegate, focusState: .background)
             }
         }
     }
@@ -98,6 +103,26 @@ extension FocusManager {
             self.update(channelDelegate: foregroundChannelDelegate, focusState: .nothing)
         }
     }
+    
+    public func deactivate() {
+        focusDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.activated = false
+            if let foregroundChannelDelegate = self.foregroundChannelDelegate {
+                self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
+            }
+        }
+    }
+    
+    public func activate() {
+        focusDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.activated = true
+            self.assignForeground()
+        }
+    }
 }
 
 // MARK: - Private
@@ -116,7 +141,10 @@ private extension FocusManager {
         case .nothing:
             assignForeground()
             notifyReleaseFocusIfNeeded()
-        case .foreground, .background:
+        case .background:
+            assignForeground()
+            releaseFocusWorkItem?.cancel()
+        case .foreground:
             releaseFocusWorkItem?.cancel()
         }
     }
@@ -125,7 +153,8 @@ private extension FocusManager {
         // Background -> Foreground
         focusDispatchQueue.asyncAfter(deadline: .now() + FocusConst.shortLatency) { [weak self] in
             guard let self = self else { return }
-            guard self.foregroundChannelDelegate == nil,
+            guard self.activated == true,
+                self.foregroundChannelDelegate == nil,
                 let backgroundChannelDelegate = self.backgroundChannelDelegate else {
                     return
             }

@@ -50,8 +50,6 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
             switch audioPlayerState {
             case .playing:
                 playSyncManager.cancelTimer(property: playSyncProperty)
-            case .stopped, .finished:
-                playSyncManager.endPlay(property: playSyncProperty)
             case .paused(let temporary):
                 if temporary == false {
                     playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
@@ -85,10 +83,15 @@ extension AudioPlayerDisplayManager {
                 return
         }
         guard let template = metaData["template"] as? [String: AnyHashable],
-            let type = template["type"] as? String else {
+            let type = template["type"] as? String,
+            let content = template["content"] as? [String: AnyHashable] else {
                 log.error("Invalid metaData")
                 return
         }
+
+        // Seekable : when sourceType is "URL" and durationSec should be over than 0 (Followed by AudioPlayerInterface v1.4)
+        let isSeekable = (payload.sourceType?.rawValue == "URL")
+            && (Int(content["durationSec"] as? String ?? "0") ?? 0 > 0)
         
         let item = AudioPlayerDisplayTemplate(
             type: type,
@@ -99,7 +102,8 @@ extension AudioPlayerDisplayManager {
                 token: payload.audioItem.stream.token,
                 playServiceId: payload.playServiceId,
                 playStackControl: payload.playStackControl
-            )
+            ),
+            isSeekable: isSeekable
         )
 
         self.displayDispatchQueue.async { [weak self] in
@@ -131,7 +135,7 @@ extension AudioPlayerDisplayManager {
                         playStackServiceId: item.mediaPayload.playStackControl?.playServiceId,
                         dialogRequestId: item.dialogRequestId,
                         messageId: item.templateId,
-                        duration: .seconds(7)
+                        duration: NuguTimeInterval(seconds: 7)
                     )
                 )
             }

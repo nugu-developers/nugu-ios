@@ -41,8 +41,6 @@ final class MainViewController: UIViewController {
     
     private var nuguVoiceChrome = NuguVoiceChrome()
     
-    private var hasShownGuideWeb = false
-    
     // MARK: Override
     
     override func viewDidLoad() {
@@ -98,7 +96,7 @@ final class MainViewController: UIViewController {
             guard let webViewController = segue.destination as? WebViewController else { return }
             webViewController.initialURL = sender as? URL
             
-            hasShownGuideWeb = true
+            UserDefaults.Standard.hasSeenGuideWeb = true
         default:
             return
         }
@@ -169,7 +167,7 @@ private extension MainViewController {
     
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
-        guard hasShownGuideWeb == false,
+        guard UserDefaults.Standard.hasSeenGuideWeb == false,
             let url = SampleApp.makeGuideWebURL(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) else { return }
         
         performSegue(withIdentifier: "mainToGuideWeb", sender: url)
@@ -405,6 +403,7 @@ private extension MainViewController {
         displayView.displayPayload = displayTemplate.payload
         displayView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
+            NuguCentralManager.shared.client.ttsAgent.stopTTS()
             self.dismissDisplayView()
         }
         displayView.onItemSelect = { (selectedItemToken, selectedItemPostback) in
@@ -477,6 +476,7 @@ private extension MainViewController {
         }
         
         guard let audioPlayerView = displayAudioPlayerView else { return nil }
+        audioPlayerView.isSeekable = audioPlayerDisplayTemplate.isSeekable
         audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         audioPlayerView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }

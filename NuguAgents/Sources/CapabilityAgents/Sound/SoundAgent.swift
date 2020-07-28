@@ -245,6 +245,7 @@ private extension SoundAgent {
 
 private extension SoundAgent {
     func sendEvent(playServiceId: String, referrerDialogRequestId: String, info: Event.TypeInfo) {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -254,6 +255,7 @@ private extension SoundAgent {
                     typeInfo: info
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 )

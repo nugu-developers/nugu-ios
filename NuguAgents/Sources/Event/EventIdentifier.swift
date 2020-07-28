@@ -1,8 +1,8 @@
 //
-//  PlayStackControl.swift
+//  EventIdentifier.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2020/07/10.
+//  Created by MinChul Lee on 2020/07/16.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +20,9 @@
 
 import Foundation
 
-public struct PlayStackControl {
-    let playServiceId: String?
-}
+import NuguCore
 
-// MARK: - Decodable
-
-extension PlayStackControl: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case playServiceId
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        playServiceId = try? container.decode(String.self, forKey: .playServiceId)
-    }
+struct EventIdentifier: Equatable {
+    let dialogRequestId: String = TimeUUID().hexString
+    let messageId: String = TimeUUID().hexString
 }

@@ -104,7 +104,15 @@ final class AudioPlayer1View: AudioDisplayView {
                 return .normal(text: grammarGuide)
             }) ?? []
             
-            startProgressTimer()
+            if isSeekable {
+                startProgressTimer()
+            } else {
+                stopProgressTimer()
+                elapsedTimeLabel.text = nil
+                durationTimeLabel.text = nil
+                progressView.isHidden = true
+            }
+                
             audioPlayerBarView.setData(
                 imageUrl: template.content.imageUrl,
                 headerText: template.content.title,
@@ -225,18 +233,21 @@ private extension AudioPlayer1View {
                 return
             }
             
+            guard let currentIndexTime = lyricsInfoList[self.lyricsIndex].time,
+                let nextIndexTime = self.lyricsIndex+1 >= lyricsInfoList.count ? nil : lyricsInfoList[self.lyricsIndex+1].time else { return }
+            
             let offSetInMilliseconds = offSet * 1000
             let currentLyrics = lyricsInfoList[self.lyricsIndex].text
             let nextLyrics = self.lyricsIndex+1 >= lyricsInfoList.count ? "" : lyricsInfoList[self.lyricsIndex+1].text
             
-            if lyricsInfoList[self.lyricsIndex].time > offSetInMilliseconds {
+            if currentIndexTime > offSetInMilliseconds {
                 self.currentLyricsLabel.textColor = UIColor(red: 136/255.0, green: 136/255.0, blue: 136/255.0, alpha: 1.0)
                 self.currentLyricsLabel.text = currentLyrics
                 self.nextLyricsLabel.text = nextLyrics
             } else if self.lyricsIndex >= lyricsInfoList.count - 1 {
                 self.currentLyricsLabel.text = currentLyrics
                 self.nextLyricsLabel.text = nextLyrics
-            } else if lyricsInfoList[self.lyricsIndex].time <= offSetInMilliseconds && lyricsInfoList[self.lyricsIndex + 1].time > offSetInMilliseconds {
+            } else if currentIndexTime <= offSetInMilliseconds && nextIndexTime > offSetInMilliseconds {
                 self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
                 self.currentLyricsLabel.text = currentLyrics
                 self.nextLyricsLabel.text = nextLyrics

@@ -25,6 +25,4 @@ import Foundation
 public protocol SystemAgentProtocol: CapabilityAgentable {
     func add(systemAgentDelegate: SystemAgentDelegate)
     func remove(systemAgentDelegate: SystemAgentDelegate)
-    
-    func sendSynchronizeStateEvent()
 }

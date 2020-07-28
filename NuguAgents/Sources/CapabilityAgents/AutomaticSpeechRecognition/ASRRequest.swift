@@ -25,7 +25,7 @@ import NuguCore
 struct ASRRequest {
     let contextPayload: [ContextInfo]
     let reader: AudioStreamReadable
-    let dialogRequestId: String
+    let eventIdentifier: EventIdentifier
     let options: ASROptions
     let referrerDialogRequestId: String?
     let completion: ((StreamDataState) -> Void)?

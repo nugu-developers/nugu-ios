@@ -21,7 +21,7 @@
 import Foundation
 
 struct PlayStack {
-    private var stack = [(property: PlaySyncProperty, play: PlaySyncInfo)]()
+    private var stack = [(property: PlaySyncProperty, info: PlaySyncInfo)]()
     
     var multiLayerSynced: Bool {
         stack
@@ -31,13 +31,13 @@ struct PlayStack {
     }
     var playServiceIds: [String] {
         stack
-            .compactMap { $0.play.playServiceId }
+            .compactMap { $0.info.playServiceId }
             .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
     }
     
     subscript(property: PlaySyncProperty) -> PlaySyncInfo? {
         get {
-            return stack.first { $0.property == property }?.play
+            return stack.first { $0.property == property }?.info
         }
         set {
             stack.removeAll { $0.property == property }
@@ -48,19 +48,7 @@ struct PlayStack {
         }
     }
     
-    func playGroup(playServiceId: String) -> [PlaySyncProperty] {
-        return stack.filter { $0.play.playServiceId == playServiceId }.map { $0.property }
-    }
-    
-    func playGroup(dialogRequestId: String) -> [PlaySyncProperty] {
-        return stack.filter { $0.play.dialogRequestId == dialogRequestId }.map { $0.property }
-    }
-    
-    func playGroup(layerType: PlaySyncProperty.LayerType, playServiceId: String) -> [PlaySyncProperty] {
-        return playGroup(playServiceId: playServiceId).filter { $0.layerType == layerType }
-    }
-    
-    func previousPlayGroup(dialogRequestId: String) -> [(property: PlaySyncProperty, play: PlaySyncInfo)] {
-        stack.filter { $0.play.dialogRequestId != dialogRequestId }
+    func filter(isIncluded predict: ((property: PlaySyncProperty, info: PlaySyncInfo)) -> Bool) -> [(property: PlaySyncProperty, info: PlaySyncInfo)] {
+        return stack.filter(predict)
     }
 }

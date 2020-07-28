@@ -60,12 +60,14 @@ public extension PlaySyncManager {
             self.pushToPlayStack(property: property, info: info)
             
             // Cancel timers
-            let timerGroup = self.playStack.playGroup(layerType: property.layerType, playServiceId: info.playServiceId)
+            let timerGroup = self.playStack
+                .filter { $0.property.layerType == property.layerType && $0.info.playServiceId == info.playServiceId }
+                .map { $0.property }
             log.debug("Cancel layer timer \(timerGroup)")
             timerGroup.forEach(self.removeTimer)
             
             // Start display only timer
-            let directiveGroup = self.playStack.playGroup(dialogRequestId: info.dialogRequestId)
+            let directiveGroup = self.playStack.filter { $0.info.dialogRequestId == info.dialogRequestId }
             if property.contextType == .display && directiveGroup.count == 1 {
                 log.debug("Add display only timer \(property) \(info.duration)")
                 self.addTimer(property: property, duration: info.duration)
@@ -81,7 +83,9 @@ public extension PlaySyncManager {
             log.debug("\(property) \(play)")
             
             // Set timers
-            let timerGroup = self.playStack.playGroup(layerType: property.layerType, playServiceId: play.playServiceId)
+            let timerGroup = self.playStack
+                .filter { $0.property.layerType == property.layerType && $0.info.playServiceId == play.playServiceId }
+                .map { $0.property }
             log.debug("Start layer timer \(timerGroup)")
             timerGroup.forEach {
                 guard let duration = self.playStack[$0]?.duration else { return }
@@ -103,11 +107,14 @@ public extension PlaySyncManager {
             log.debug(dialogRequestId)
             
             // Pop from play stack
-            self.playStack.playGroup(dialogRequestId: dialogRequestId).forEach(self.popFromPlayStack)
+            self.playStack
+                .filter { $0.info.dialogRequestId == dialogRequestId }
+                .map { $0.property }
+                .forEach(self.popFromPlayStack)
         }
     }
     
-    func startTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
+    func startTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
         playSyncDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.playStack[property] != nil else { return }
@@ -171,13 +178,13 @@ private extension PlaySyncManager {
         // Layer policy v.1.4.4. 2.2 Display 동작
         playStack
             // Multi-layer 상황에서 이전에 layer 와
-            .previousPlayGroup(dialogRequestId: info.dialogRequestId)
+            .filter { $0.info.dialogRequestId != info.dialogRequestId }
             // 동일한 신규 layer 실행 시,
             .filter { $0.property.layerType == property.layerType }
             // 이전 layer 의 Display 는
             .filter { $0.property.contextType == .display }
             // playServiceId 가 다르거나 media layer 인 경우
-            .filter { $0.play.playServiceId != info.playServiceId || property.layerType == .media }
+            .filter { $0.info.playServiceId != info.playServiceId || property.layerType == .media }
             // 종료 시킨다.
             .forEach { popFromPlayStack(property: $0.property) }
         
@@ -197,8 +204,8 @@ private extension PlaySyncManager {
         }
     }
     
-    func addTimer(property: PlaySyncProperty, duration: DispatchTimeInterval) {
-        guard duration != .never else { return }
+    func addTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
+        guard duration.dispatchTimeInterval != .never else { return }
         
         let disposeBag = DisposeBag()
         Completable.create { [weak self] (event) -> Disposable in
@@ -210,7 +217,7 @@ private extension PlaySyncManager {
             event(.completed)
             return Disposables.create()
         }
-        .delaySubscription(duration, scheduler: playSyncScheduler)
+        .delaySubscription(duration.dispatchTimeInterval, scheduler: playSyncScheduler)
         .subscribe()
         .disposed(by: disposeBag)
         

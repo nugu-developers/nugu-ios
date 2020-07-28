@@ -44,4 +44,10 @@ class MockFocusManager: FocusManageable {
     func stopForegroundActivity() {
         //
     }
+    
+    func deactivate() {
+    }
+    
+    func activate() {
+    }
 }

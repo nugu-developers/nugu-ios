@@ -24,7 +24,7 @@ import NuguCore
 
 public final class SystemAgent: SystemAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.3")
     
     // Private
     private let contextManager: ContextManageable
@@ -41,7 +41,8 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleException),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Revoke", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRevoke),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } }),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } })
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } }),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ResetConnection", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleResetConnection)
     ]
     
     public init(
@@ -72,10 +73,6 @@ public extension SystemAgent {
     func remove(systemAgentDelegate: SystemAgentDelegate) {
         delegates.remove(systemAgentDelegate)
     }
-    
-    func sendSynchronizeStateEvent() {
-        sendSynchronizeStateEvent(directive: nil)
-    }
 }
 
 // MARK: - ContextInfoDelegate
@@ -103,7 +100,7 @@ private extension SystemAgent {
 
             self?.systemDispatchQueue.async { [weak self] in
                 log.info("try to handoff policy: \(serverPolicy)")
-                self?.streamDataRouter.handOffResourceServer(to: serverPolicy)
+                self?.streamDataRouter.startReceiveServerInitiatedDirective(to: serverPolicy)
             }
         }
     }
@@ -112,7 +109,7 @@ private extension SystemAgent {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
         
-            self?.sendSynchronizeStateEvent(directive: directive)
+            self?.sendSynchronizeStateEvent(referrerDialogRequestId: directive.header.dialogRequestId)
         }
     }
     
@@ -152,12 +149,24 @@ private extension SystemAgent {
             }
         }
     }
+    
+    func handleResetConnection() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion(.finished) }
+            
+            self?.systemDispatchQueue.async { [weak self] in
+                log.info("")
+                self?.streamDataRouter.restartReceiveServerInitiatedDirective()
+            }
+        }
+    }
 }
 
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
-    func sendSynchronizeStateEvent(directive: Downstream.Directive? = nil) {
+    func sendSynchronizeStateEvent(referrerDialogRequestId: String? = nil) {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             
@@ -166,7 +175,8 @@ private extension SystemAgent {
                     typeInfo: .synchronizeState
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    referrerDialogRequestId: directive?.header.dialogRequestId,
+                    eventIdentifier: eventIdentifier,
+                    referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 )
             )

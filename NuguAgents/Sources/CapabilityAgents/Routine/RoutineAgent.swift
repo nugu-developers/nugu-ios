@@ -208,16 +208,17 @@ private extension RoutineAgent {
         completion: ((StreamDataState) -> Void)? = nil
     ) {
         log.info("\(typeInfo)")
+        let eventIdentifier = EventIdentifier()
+        
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
             self.upstreamDataSender.sendEvent(
                 Event(
-                    playServiceId: playServiceId,
-                    typeInfo: typeInfo
+                    playServiceId: playServiceId, typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 ),
@@ -234,6 +235,8 @@ private extension RoutineAgent {
         completion: ((StreamDataState) -> Void)? = nil
     ) {
         log.info("\(text)")
+        let eventIdentifier = EventIdentifier()
+        
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
 
@@ -241,8 +244,8 @@ private extension RoutineAgent {
                 namespace: "Text",
                 name: "TextInput",
                 version: "1.1",
-                dialogRequestId: dialogRequestId,
-                messageId: TimeUUID().hexString,
+                dialogRequestId: eventIdentifier.dialogRequestId,
+                messageId: eventIdentifier.messageId,
                 referrerDialogRequestId: referrerDialogRequestId
             )
             

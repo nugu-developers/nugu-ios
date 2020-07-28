@@ -57,8 +57,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 
 public extension PhoneCallAgent {
     @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        let dialogRequestId = TimeUUID().hexString
-        
+        let eventIdentifier = EventIdentifier()
         self.contextManager.getContexts { [weak self] (contextPayload) in
             guard let self = self else { return }
             self.upstreamDataSender.sendEvent(
@@ -67,14 +66,14 @@ public extension PhoneCallAgent {
                     typeInfo: .candidatesListed
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     contextPayload: contextPayload
                 ),
                 completion: completion
             )
         }
         
-        return dialogRequestId
+        return eventIdentifier.dialogRequestId
     }
 }
 
@@ -153,6 +152,7 @@ private extension PhoneCallAgent {
                 guard let self = self else { return }
                 
                 // Failed to makeCall
+                let eventIdentifier = EventIdentifier()
                 self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
                     guard let self = self else { return }
                     
@@ -162,7 +162,7 @@ private extension PhoneCallAgent {
                             typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType)
                         ).makeEventMessage(
                             property: self.capabilityAgentProperty,
-                            dialogRequestId: TimeUUID().hexString,
+                            eventIdentifier: eventIdentifier,
                             contextPayload: contextPayload
                         )
                     )
