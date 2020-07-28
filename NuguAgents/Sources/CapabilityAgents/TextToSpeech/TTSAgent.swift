@@ -296,7 +296,7 @@ extension TTSAgent: PlaySyncDelegate {
             guard let self = self else { return }
             guard property == self.playSyncProperty, self.currentMedia?.messageId == messageId else { return }
             
-            self.stop(cancelAssociation: false)
+            self.stop(cancelAssociation: true)
         }
     }
 }
