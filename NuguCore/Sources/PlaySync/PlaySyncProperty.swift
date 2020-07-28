@@ -35,6 +35,7 @@ public struct PlaySyncProperty {
         case call = "CALL"
         case alert = "ALERT"
         case overlay = "OVERLAY"
+        case asr = "ASR"
     }
 
     public enum ContextType: String {

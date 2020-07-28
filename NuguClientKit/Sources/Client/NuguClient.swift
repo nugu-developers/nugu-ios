@@ -115,7 +115,8 @@ public class NuguClient {
             audioStream: sharedAudioStream,
             directiveSequencer: directiveSequencer,
             dialogAttributeStore: dialogAttributeStore,
-            sessionManager: sessionManager
+            sessionManager: sessionManager,
+            playSyncManager: playSyncManager
         )
         
         ttsAgent = TTSAgent(
