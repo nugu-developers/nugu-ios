@@ -34,6 +34,8 @@ final class NuguCentralManager {
     lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
         
+        displayPlayerController = NuguDisplayPlayerController()
+        
         // local tts agent
         localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
         
@@ -44,6 +46,8 @@ final class NuguCentralManager {
         return client
     }()
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
+
+    var displayPlayerController: NuguDisplayPlayerController?
     
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
