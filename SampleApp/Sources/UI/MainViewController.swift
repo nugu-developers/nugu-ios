@@ -421,7 +421,7 @@ private extension MainViewController {
         }
         
         displayView.alpha = 0
-        view.addSubview(displayView)
+        view.insertSubview(displayView, belowSubview: nuguVoiceChrome)
         UIView.animate(withDuration: 0.3) {
             displayView.alpha = 1.0
         }
@@ -494,7 +494,7 @@ private extension MainViewController {
         }
         
         audioPlayerView.alpha = 0
-        view.addSubview(audioPlayerView)
+        view.insertSubview(audioPlayerView, belowSubview: nuguVoiceChrome)
         UIView.animate(withDuration: 0.3) {
             audioPlayerView.alpha = 1.0
         }
