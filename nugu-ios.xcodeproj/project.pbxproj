@@ -80,6 +80,12 @@
 		1FD5D18124A99993007BA384 /* PhoneCallIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D17824A99993007BA384 /* PhoneCallIntent.swift */; };
 		1FD5D18224A99993007BA384 /* PhoneCallRecipient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D17924A99993007BA384 /* PhoneCallRecipient.swift */; };
 		1FD5D18424AC97CE007BA384 /* PhoneCallCandidatesItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D18324AC97CE007BA384 /* PhoneCallCandidatesItem.swift */; };
+		1FD5D18F24C82224007BA384 /* MediaPlayerAgentSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D18E24C82224007BA384 /* MediaPlayerAgentSong.swift */; };
+		1FD5D19124C82F3B007BA384 /* MediaPlayerAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D19024C82F3B007BA384 /* MediaPlayerAgent+Event.swift */; };
+		1FD5D19324D2A0F0007BA384 /* MediaPlayerAgentContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D19224D2A0F0007BA384 /* MediaPlayerAgentContext.swift */; };
+		1FD5D19624D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D19524D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift */; };
+		1FD5D19C24D34F3A007BA384 /* MediaPlayerAgentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D19B24D34F3A007BA384 /* MediaPlayerAgentResult.swift */; };
+		1FD5D19E24D35281007BA384 /* MediaPlayerAgentPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D19D24D35281007BA384 /* MediaPlayerAgentPlaylist.swift */; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF02823753F8A00C9A177 /* NuguUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF02623753F8A00C9A177 /* NuguUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -741,6 +747,12 @@
 		1FD5D17824A99993007BA384 /* PhoneCallIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneCallIntent.swift; sourceTree = "<group>"; };
 		1FD5D17924A99993007BA384 /* PhoneCallRecipient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneCallRecipient.swift; sourceTree = "<group>"; };
 		1FD5D18324AC97CE007BA384 /* PhoneCallCandidatesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallCandidatesItem.swift; sourceTree = "<group>"; };
+		1FD5D18E24C82224007BA384 /* MediaPlayerAgentSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerAgentSong.swift; sourceTree = "<group>"; };
+		1FD5D19024C82F3B007BA384 /* MediaPlayerAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaPlayerAgent+Event.swift"; sourceTree = "<group>"; };
+		1FD5D19224D2A0F0007BA384 /* MediaPlayerAgentContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerAgentContext.swift; sourceTree = "<group>"; };
+		1FD5D19524D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerAgentDirectivePayload.swift; sourceTree = "<group>"; };
+		1FD5D19B24D34F3A007BA384 /* MediaPlayerAgentResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerAgentResult.swift; sourceTree = "<group>"; };
+		1FD5D19D24D35281007BA384 /* MediaPlayerAgentPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerAgentPlaylist.swift; sourceTree = "<group>"; };
 		1FFFEFFD23753F1800C9A177 /* NuguCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFFF23753F1800C9A177 /* NuguCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguCore.h; sourceTree = "<group>"; };
 		1FFFF00023753F1800C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2345,6 +2357,12 @@
 				680EF96024B30DA4003DE266 /* MediaPlayerAgent.swift */,
 				680EF96224B30DAE003DE266 /* MediaPlayerAgentProtocol.swift */,
 				680EF96424B30DBB003DE266 /* MediaPlayerAgentDelegate.swift */,
+				1FD5D19224D2A0F0007BA384 /* MediaPlayerAgentContext.swift */,
+				1FD5D19024C82F3B007BA384 /* MediaPlayerAgent+Event.swift */,
+				1FD5D18E24C82224007BA384 /* MediaPlayerAgentSong.swift */,
+				1FD5D19524D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift */,
+				1FD5D19D24D35281007BA384 /* MediaPlayerAgentPlaylist.swift */,
+				1FD5D19B24D34F3A007BA384 /* MediaPlayerAgentResult.swift */,
 			);
 			path = MediaPlayer;
 			sourceTree = "<group>";
@@ -3755,6 +3773,7 @@
 				737388DA24A46C3C0018DDD2 /* SoundAgentProtocol.swift in Sources */,
 				680EF96324B30DAE003DE266 /* MediaPlayerAgentProtocol.swift in Sources */,
 				1FD5D17D24A99993007BA384 /* PhoneCallState.swift in Sources */,
+				1FD5D19E24D35281007BA384 /* MediaPlayerAgentPlaylist.swift in Sources */,
 				737388EF24A46C680018DDD2 /* AudioPlayerDisplayTemplate.swift in Sources */,
 				7373891924A46CC20018DDD2 /* LocationInfo.swift in Sources */,
 				737388F724A46C800018DDD2 /* ASRState.swift in Sources */,
@@ -3762,6 +3781,7 @@
 				737388C424A46C110018DDD2 /* CapabilityAgentProperty.swift in Sources */,
 				737388EC24A46C680018DDD2 /* AudioPlayerDisplayDelegate.swift in Sources */,
 				737388D124A46C2B0018DDD2 /* SessionManageable.swift in Sources */,
+				1FD5D18F24C82224007BA384 /* MediaPlayerAgentSong.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
 				736508662462F7FA00EF4549 /* OpusPlayer.swift in Sources */,
@@ -3779,6 +3799,7 @@
 				7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */,
 				737388DB24A46C3C0018DDD2 /* SoundAgentDataSource.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,
+				1FD5D19C24D34F3A007BA384 /* MediaPlayerAgentResult.swift in Sources */,
 				7373890F24A46CAE0018DDD2 /* DisplayAgentProtocol.swift in Sources */,
 				1FD5D18124A99993007BA384 /* PhoneCallIntent.swift in Sources */,
 				1F9EF1EE2488C4EA000786E5 /* AudioPlayerDisplayRenderingInfo.swift in Sources */,
@@ -3814,6 +3835,7 @@
 				73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */,
 				7373890924A46CA10018DDD2 /* TTSAgentDelegate.swift in Sources */,
 				73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */,
+				1FD5D19324D2A0F0007BA384 /* MediaPlayerAgentContext.swift in Sources */,
 				A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */,
 				737388EE24A46C680018DDD2 /* AudioPlayerDisplayRepeat.swift in Sources */,
 				7E38656624AEE97100E78C6E /* DisplayContext.swift in Sources */,
@@ -3847,8 +3869,10 @@
 				73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */,
 				7E35D79024622B4E003289A2 /* Eventable.swift in Sources */,
 				1FBA3B702459669B001E5828 /* PhoneCallAgent.swift in Sources */,
+				1FD5D19624D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift in Sources */,
 				73152FCC23E0415B00F843C3 /* DisplayRenderingInfo.swift in Sources */,
 				736508652462F7FA00EF4549 /* SktOpusParser.swift in Sources */,
+				1FD5D19124C82F3B007BA384 /* MediaPlayerAgent+Event.swift in Sources */,
 				737388C924A46C1D0018DDD2 /* ChipsAgentProtocol.swift in Sources */,
 				1FD5D17E24A99993007BA384 /* PhoneCallType.swift in Sources */,
 				680EF96524B30DBB003DE266 /* MediaPlayerAgentDelegate.swift in Sources */,

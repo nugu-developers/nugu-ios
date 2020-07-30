@@ -1,8 +1,8 @@
 //
-//  MediaPlayerAgentProtocol.swift
+//  MediaPlayerAgentPlaylist.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/07/06.
+//  Created by yonghoonKwon on 2020/07/27.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,12 @@
 
 import Foundation
 
-protocol MediaPlayerAgentProtocol: CapabilityAgentable {
-    /// <#Description#>
-    var delegate: MediaPlayerAgentDelegate? { get set }
+public struct MediaPlayerAgentPlaylist: Encodable {
+    public let name: String?
+    public let number: String
     
+    init(name: String?, number: String) {
+        self.name = name
+        self.number = number
+    }
 }
