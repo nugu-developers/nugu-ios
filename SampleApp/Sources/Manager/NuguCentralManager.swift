@@ -418,11 +418,11 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        return NuguAudioSessionManager.shared.updateAudioSession()
+        return NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: true)
     }
     
     func nuguClientDidReleaseAudioSession() {
-        
+        NuguAudioSessionManager.shared.updateAudioSession()
     }
     
     func nuguClientDidOpenInputSource() {

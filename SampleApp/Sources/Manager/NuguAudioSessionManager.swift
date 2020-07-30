@@ -45,13 +45,32 @@ extension NuguAudioSessionManager {
         NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
     }
     
-    @discardableResult func updateAudioSession() -> Bool {
-        // When AudioSession default value has not been set, updating AudioSession should be done first
-        guard AVAudioSession.sharedInstance().category == .playAndRecord,
-            AVAudioSession.sharedInstance().categoryOptions.contains(defaultCategoryOptions) else {
-                return updateAudioSessionCategoryWithOptions()
+    /// Update AudioSession.Category and AudioSession.CategoryOptions
+    /// - Parameter requestingFocus: whether updating AudioSession is for requesting focus or just updating without requesting focus
+    @discardableResult func updateAudioSession(requestingFocus: Bool = false) -> Bool {
+        var options = defaultCategoryOptions
+        if requestingFocus == false {
+            options.insert(.mixWithOthers)
         }
-        return updateAudioSessionCategoryWithOptions(requestingFocus: true)
+        
+        // If audioSession is already has been set properly, resetting audioSession is unnecessary
+        guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options else {
+            return true
+        }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                .playAndRecord,
+                mode: .default,
+                options: options
+            )
+            try AVAudioSession.sharedInstance().setActive(true)
+            log.debug("set audio session = \(options)")
+            return true
+        } catch {
+            log.debug("updateAudioSessionCategoryOptions failed: \(error)")
+            return false
+        }
     }
 }
 
@@ -77,34 +96,6 @@ private extension NuguAudioSessionManager {
                 }
             }
         @unknown default: break
-        }
-    }
-    
-    /// Update AudioSession.Category and AudioSession.CategoryOptions
-    /// - Parameter requestingFocus: whether updating AudioSession is for requesting focus or just updating without requesting focus
-    @discardableResult func updateAudioSessionCategoryWithOptions(requestingFocus: Bool = false) -> Bool {
-        var options = defaultCategoryOptions
-        if requestingFocus == false {
-            options.insert(.mixWithOthers)
-        }
-        
-        // If audioSession is already has been set properly, resetting audioSession is unnecessary
-        guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options else {
-            return true
-        }
-        
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: options
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
-            log.debug("set audio session = \(options)")
-            return true
-        } catch {
-            log.debug("updateAudioSessionCategoryOptions failed: \(error)")
-            return false
         }
     }
 }
