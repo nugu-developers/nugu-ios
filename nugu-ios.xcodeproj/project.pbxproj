@@ -480,6 +480,7 @@
 		7EDCF97C24BC11CB0036805C /* DisplayTemplateDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF97B24BC11CB0036805C /* DisplayTemplateDuration.swift */; };
 		7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */; };
 		7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */; };
+		7EE6233124D2B7F5004B89D7 /* FocusManagerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6233024D2B7F5004B89D7 /* FocusManagerSpec.swift */; };
 		7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28E2375703000C9A177 /* DialogStateDelegate.swift */; };
 		7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF28D2375703000C9A177 /* DialogState.swift */; };
 		7EF674372499EE3E004FA45C /* DialogAttributeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */; };
@@ -1157,6 +1158,7 @@
 		7EDCF97B24BC11CB0036805C /* DisplayTemplateDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTemplateDuration.swift; sourceTree = "<group>"; };
 		7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtilSpec.swift; sourceTree = "<group>"; };
 		7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsAgent.swift; sourceTree = "<group>"; };
+		7EE6233024D2B7F5004B89D7 /* FocusManagerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusManagerSpec.swift; sourceTree = "<group>"; };
 		7EF12B2223C822520000E158 /* DisplayClosePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayClosePayload.swift; sourceTree = "<group>"; };
 		A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+SettingsEvent.swift"; sourceTree = "<group>"; };
 		A135E66A241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+LyricsEvent.swift"; sourceTree = "<group>"; };
@@ -1447,6 +1449,7 @@
 				1F31FD7B2424CBD8009593EB /* UpstreamSpec.swift */,
 				7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */,
 				7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */,
+				7EE6233024D2B7F5004B89D7 /* FocusManagerSpec.swift */,
 			);
 			path = NuguCore;
 			sourceTree = "<group>";
@@ -3694,6 +3697,7 @@
 				1F5DD4AC240CF0D600719FBC /* MockPlaySyncManager.swift in Sources */,
 				1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentSpec.swift in Sources */,
 				1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */,
+				7EE6233124D2B7F5004B89D7 /* FocusManagerSpec.swift in Sources */,
 				7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */,
 				7EA53F11247F5904008731CD /* MockDialogAttributeStore.swift in Sources */,
 				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,

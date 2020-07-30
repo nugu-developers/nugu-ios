@@ -238,8 +238,6 @@ private extension MainViewController {
                 return
             }
             
-            NuguCentralManager.shared.localTTSAgent.stopLocalTTS()
-            
             let options = ASROptions(initiator: initiator, endPointing: .client(epdFile: epdFile))
             NuguCentralManager.shared.client.asrAgent.startRecognition(options: options)
             

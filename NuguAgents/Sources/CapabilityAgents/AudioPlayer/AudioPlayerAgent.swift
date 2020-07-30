@@ -274,7 +274,7 @@ public extension AudioPlayerAgent {
 
 extension AudioPlayerAgent: FocusChannelDelegate {
     public func focusChannelPriority() -> FocusChannelPriority {
-        return .content
+        return .media
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
