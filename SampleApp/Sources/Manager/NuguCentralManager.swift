@@ -58,17 +58,21 @@ final class NuguCentralManager {
         }
     }()
     
-    var inputStatus: Bool = false {
+    private var inputStatus: Bool = false {
         didSet {
-            NotificationCenter.default.post(name: .nuguClientInputStatus, object: nil, userInfo: ["status": inputStatus])
+            notifyAudioSessionDeactivationIfNeeded()
         }
     }
     
-    // TODO: - Consider managing inside SDK
-    var isTextAgentInProcess = false
-    
-    private init() {
+    private var outputStatus: Bool = false {
+        didSet {
+            notifyAudioSessionDeactivationIfNeeded()
+        }
     }
+    
+    var isTextAgentInProcess = false 
+    
+    private init() {}
 }
 
 // MARK: - Internal (Enable / Disable)
@@ -385,6 +389,17 @@ private extension NuguCentralManager {
     }
 }
 
+// MARK: - Private (AudioSession Deactivation)
+
+private extension NuguCentralManager {
+    func notifyAudioSessionDeactivationIfNeeded() {
+        // check wheather audio session is completly 'not in use' status before notifying audio session deactivation
+        if outputStatus == false, inputStatus == false, isTextAgentInProcess == false {
+            NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
+        }
+    }
+}
+
 // MARK: - Internal (WakeUpDetector)
 
 extension NuguCentralManager {
@@ -418,11 +433,17 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        return NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: true)
+        let result = NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: true)
+        outputStatus = result
+        return result
     }
     
     func nuguClientDidReleaseAudioSession() {
-        NuguAudioSessionManager.shared.updateAudioSession()
+        if inputStatus == true {
+            // Clean up all I/O before deactivating audioSession
+            stopWakeUpDetector()
+        }
+        outputStatus = false
     }
     
     func nuguClientDidOpenInputSource() {
@@ -505,8 +526,4 @@ extension NuguCentralManager: SoundAgentDataSource {
         }
         return url
     }
-}
-extension Notification.Name {
-    static let nuguClientInputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
-    static let nuguClientNetworkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")
 }

@@ -72,6 +72,20 @@ extension NuguAudioSessionManager {
             return false
         }
     }
+    
+    func notifyAudioSessionDeactivation() {
+        do {
+            // Defer statement for recovering audioSession and wakeUpDetector
+            defer {
+                updateAudioSession()
+                NuguCentralManager.shared.startWakeUpDetector()
+            }
+            // Notify audio session deactivation to 3rd party apps
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            log.debug("notifyOthersOnDeactivation failed: \(error)")
+        }
+    }
 }
 
 // MARK: - private
