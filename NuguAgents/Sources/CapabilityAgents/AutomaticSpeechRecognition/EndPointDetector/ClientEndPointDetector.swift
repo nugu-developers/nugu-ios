@@ -79,6 +79,7 @@ class ClientEndPointDetector: EndPointDetectable {
     
     private func internalStop() {
         boundStreams?.stop()
+        boundStreams = nil
         engine.stop()
     }
     

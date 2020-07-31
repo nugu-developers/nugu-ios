@@ -229,8 +229,10 @@ extension TycheKeywordDetectorEngine {
                 
             case .endEncountered:
                 log.debug("stream endEncountered")
-                fallthrough
+                owner.internalStop()
+
             case .errorOccurred:
+                log.error("stream errorOccurred")
                 owner.internalStop()
                 
             default:
