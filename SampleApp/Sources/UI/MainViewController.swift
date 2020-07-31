@@ -253,10 +253,6 @@ private extension MainViewController {
             
             self.view.addSubview(self.nuguVoiceChrome)
             
-            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissVoiceChrome))
-            tapGestureRecognizer.delegate = self
-            self.view.addGestureRecognizer(tapGestureRecognizer)
-            
             self.nuguButton.isActivated = false
             
             UIView.animate(withDuration: 0.3) { [weak self] in
@@ -294,6 +290,12 @@ private extension MainViewController {
                 self?.chipsDidSelect(selectedChipsText: selectedChipsText)
             }
         )
+    }
+    
+    func addTapGestureRecognizerForDismissVoiceChrome() {
+        view.gestureRecognizers?.forEach { view.removeGestureRecognizer($0) }
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissVoiceChrome))
+        view.addGestureRecognizer(tapGestureRecognizer)
     }
 }
 
@@ -563,6 +565,7 @@ extension MainViewController: DialogStateDelegate {
         case .listening(let chips):
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
+                self?.addTapGestureRecognizerForDismissVoiceChrome()
                 if let chips = chips {
                     let actionList = chips.filter { $0.type == .action }.map { $0.text }
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
