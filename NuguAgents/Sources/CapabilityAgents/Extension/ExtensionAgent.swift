@@ -61,14 +61,11 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 
 public extension ExtensionAgent {
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        let dialogRequestId = TimeUUID().hexString
-        sendEvent(
+        return sendEvent(
             typeInfo: .commandIssued(data: data),
             playServiceId: playServiceId,
-            dialogRequestId: dialogRequestId,
             completion: completion
         )
-        return dialogRequestId
     }
 }
 
@@ -92,13 +89,12 @@ extension ExtensionAgent: ContextInfoDelegate {
 private extension ExtensionAgent {
     func handleAction() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let item = try? JSONDecoder().decode(ExtensionAgentItem.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             self?.delegate?.extensionAgentDidReceiveAction(
                 data: item.data,
                 playServiceId: item.playServiceId,
@@ -120,13 +116,13 @@ private extension ExtensionAgent {
 // MARK: - Private (Event)
 
 private extension ExtensionAgent {
-    func sendEvent(
+    @discardableResult func sendEvent(
         typeInfo: Event.TypeInfo,
         playServiceId: String,
-        dialogRequestId: String = TimeUUID().hexString,
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)? = nil
-    ) {
+    ) -> String {
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -136,12 +132,13 @@ private extension ExtensionAgent {
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
                 ),
                 completion: completion
             )
         }
+        return eventIdentifier.dialogRequestId
     }
 }

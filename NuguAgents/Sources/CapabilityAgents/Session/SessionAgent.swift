@@ -74,13 +74,12 @@ extension SessionAgent: ContextInfoDelegate {
 private extension SessionAgent {
     func handleSet() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let item = try? JSONDecoder().decode(SessionAgentItem.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             let session = Session(sessionId: item.sessionId, dialogRequestId: directive.header.dialogRequestId, playServiceId: item.playServiceId)
             self?.sessionManager.set(session: session)
         }

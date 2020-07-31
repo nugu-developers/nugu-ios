@@ -48,14 +48,4 @@ public protocol FocusManageable: class {
     /// Channel via an focusChannelDidChange:focusState: callback that it has gained foreground focus.
     /// - Parameter channelDelegate: The object to release focus.
     func releaseFocus(channelDelegate: FocusChannelDelegate)
-    
-    /// This method will request that the currently foregrounded Channel activity be stopped.
-    /// If something was stopped, the next highest priority active Channel will be brought to the foreground.
-    func stopForegroundActivity()
-    
-    /// Deactivates audio focus of the channels.
-    func deactivate()
-    
-    /// Activates audio focus of the channels.
-    func activate()
 }

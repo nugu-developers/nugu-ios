@@ -34,10 +34,7 @@ final class NuguCentralManager {
     lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
         
-        // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
-        if NuguAudioSessionManager.shared.supportMixWithOthersOption == false {
-            displayPlayerController = NuguDisplayPlayerController()
-        }
+        displayPlayerController = NuguDisplayPlayerController()
         
         // local tts agent
         localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
@@ -50,10 +47,7 @@ final class NuguCentralManager {
     }()
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
 
-    // iOS does not support control center when AVAudioSession.CategoryOptions.mixWithOthers is on
-    lazy private(set) var displayPlayerController: NuguDisplayPlayerController? = {
-        return NuguAudioSessionManager.shared.supportMixWithOthersOption ? nil : NuguDisplayPlayerController()
-    }()
+    var displayPlayerController: NuguDisplayPlayerController?
     
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
@@ -64,17 +58,21 @@ final class NuguCentralManager {
         }
     }()
     
-    var inputStatus: Bool = false {
+    private var inputStatus: Bool = false {
         didSet {
-            NotificationCenter.default.post(name: .nuguClientInputStatus, object: nil, userInfo: ["status": inputStatus])
+            notifyAudioSessionDeactivationIfNeeded()
         }
     }
     
-    // TODO: - Consider managing inside SDK
-    var isTextAgentInProcess = false
-    
-    private init() {
+    private var outputStatus: Bool = false {
+        didSet {
+            notifyAudioSessionDeactivationIfNeeded()
+        }
     }
+    
+    var isTextAgentInProcess = false 
+    
+    private init() {}
 }
 
 // MARK: - Internal (Enable / Disable)
@@ -106,7 +104,7 @@ extension NuguCentralManager {
         stopWakeUpDetector()
         client.stopReceiveServerInitiatedDirective()
         client.asrAgent.stopRecognition()
-        client.ttsAgent.stopTTS(cancelAssociation: true)
+        client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
     }
 }
@@ -391,6 +389,17 @@ private extension NuguCentralManager {
     }
 }
 
+// MARK: - Private (AudioSession Deactivation)
+
+private extension NuguCentralManager {
+    func notifyAudioSessionDeactivationIfNeeded() {
+        // check wheather audio session is completly 'not in use' status before notifying audio session deactivation
+        if outputStatus == false, inputStatus == false, isTextAgentInProcess == false {
+            NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
+        }
+    }
+}
+
 // MARK: - Internal (WakeUpDetector)
 
 extension NuguCentralManager {
@@ -424,13 +433,17 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
-        return NuguAudioSessionManager.shared.updateAudioSession()
+        let result = NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: true)
+        outputStatus = result
+        return result
     }
     
     func nuguClientDidReleaseAudioSession() {
-        NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
-        NuguAudioSessionManager.shared.notifyAudioSessionDeactivationIfNeeded()
+        if inputStatus == true {
+            // Clean up all I/O before deactivating audioSession
+            stopWakeUpDetector()
+        }
+        outputStatus = false
     }
     
     func nuguClientDidOpenInputSource() {
@@ -513,8 +526,4 @@ extension NuguCentralManager: SoundAgentDataSource {
         }
         return url
     }
-}
-extension Notification.Name {
-    static let nuguClientInputStatus = NSNotification.Name("Audio_Input_Status_Notification_Name")
-    static let nuguClientNetworkStatus = NSNotification.Name("Audio_Network_Status_Notification_Name")
 }

@@ -154,7 +154,7 @@ public extension TTSAgent {
         playServiceId: String?,
         handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)?
     ) -> String {
-        let dialogRequestId = TimeUUID().hexString
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -165,20 +165,20 @@ public extension TTSAgent {
                     typeInfo: .speechPlay(text: text)
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: dialogRequestId,
+                    eventIdentifier: eventIdentifier,
                     contextPayload: contextPayload
                 )
             )
         }
         
         ttsResultSubject
-            .filter { $0.dialogRequestId == dialogRequestId }
+            .filter { $0.dialogRequestId == eventIdentifier.dialogRequestId }
             .take(1)
             .subscribe(onNext: { (dialogRequestId, result) in
                 handler?(result, dialogRequestId)
             })
             .disposed(by: self.disposeBag)
-        return dialogRequestId
+        return eventIdentifier.dialogRequestId
     }
     
     func stopTTS(cancelAssociation: Bool) {
@@ -296,7 +296,7 @@ extension TTSAgent: PlaySyncDelegate {
             guard let self = self else { return }
             guard property == self.playSyncProperty, self.currentMedia?.messageId == messageId else { return }
             
-            self.stop(cancelAssociation: false)
+            self.stop(cancelAssociation: true)
         }
     }
 }
@@ -339,12 +339,11 @@ private extension TTSAgent {
         return { [weak self] directive, completion in
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else {
-                    completion()
+                    completion(.canceled)
                     return
                 }
                 guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
-                    log.warning("TTSMedia is not exist or dialogRequesttId is not valid")
-                    completion()
+                    completion(.failed("TTSMedia is not exist or dialogRequesttId is not valid"))
                     return
                 }
                 
@@ -355,8 +354,15 @@ private extension TTSAgent {
                 self.ttsResultSubject
                     .filter { $0.dialogRequestId == media.dialogRequestId }
                     .take(1)
-                    .subscribe(onNext: { (_, _) in
-                        completion()
+                    .subscribe(onNext: { (_, result) in
+                        switch result {
+                        case .finished:
+                            completion(.finished)
+                        case .stopped(let cancelAssociation):
+                            completion(.stopped(cancelAssociation: cancelAssociation))
+                        case .error(let error):
+                            completion(.failed("\(error)"))
+                        }
                     })
                     .disposed(by: self.disposeBag)
                 
@@ -367,7 +373,7 @@ private extension TTSAgent {
     
     func handleStop() -> HandleDirective {
         return { [weak self] _, completion in
-            defer { completion() }
+            defer { completion(.finished) }
             
             guard let self = self, let media = self.currentMedia else { return }
             guard self.currentPlayer != nil else {
@@ -460,6 +466,7 @@ private extension TTSAgent {
             return
         }
         
+        let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
@@ -470,6 +477,7 @@ private extension TTSAgent {
                     typeInfo: info
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: media.dialogRequestId,
                     contextPayload: contextPayload
                 ),

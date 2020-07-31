@@ -24,7 +24,7 @@ struct AudioPlayerLyricsTemplate: Decodable {
     let lyricsInfoList: [LyricsInfo]
     
     struct LyricsInfo: Decodable {
-        let time: Int
+        let time: Int?
         let text: String
     }
 }

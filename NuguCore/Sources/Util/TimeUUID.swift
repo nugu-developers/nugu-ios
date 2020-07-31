@@ -1,6 +1,6 @@
 //
 //  TimeUUID.swift
-//  NuguAgents
+//  NuguCore
 //
 //  Created by MinChul Lee on 2019/06/21.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,8 +20,6 @@
 
 import Foundation
 import CommonCrypto
-
-import NuguCore
 
 public struct TimeUUID {
     // seconds

@@ -76,7 +76,11 @@ private extension NuguDisplayPlayerController {
         addPauseCommand()
         addPreviousTrackCommand()
         addNextTackCommand()
-        addChangePlaybackPositionCommand()
+        if currentItem?.isSeekable == true {
+            addChangePlaybackPositionCommand()
+        } else {
+            removeChangePlaybackPositionCommand()
+        }
     }
     
     func removeRemoteCommands() {
@@ -85,6 +89,29 @@ private extension NuguDisplayPlayerController {
         removePreviousTrackCommand()
         removeNextTrackCommand()
         removeChangePlaybackPositionCommand()
+    }
+    
+    func parsePayload(template: AudioPlayerDisplayTemplate) -> (title: String, albumTitle: String, imageUrl: String?)? {
+        guard let payloadAsData = try? JSONSerialization.data(withJSONObject: template.payload, options: []) else {
+            return nil
+        }
+        switch template.type {
+        case "AudioPlayer.Template1":
+            guard let payload = try? JSONDecoder().decode(AudioPlayer1Template.self, from: payloadAsData) else {
+                remove()
+                return nil
+            }
+            return (payload.template.title.text, payload.template.content.title, payload.template.content.imageUrl)
+        case "AudioPlayer.Template2":
+            guard let payload = try? JSONDecoder().decode(AudioPlayer2Template.self, from: payloadAsData) else {
+                remove()
+                return nil
+            }
+            return (payload.template.title.text, payload.template.content.title, payload.template.content.imageUrl)
+        default:
+            remove()
+            return nil
+        }
     }
     
     func update(
@@ -104,11 +131,9 @@ private extension NuguDisplayPlayerController {
             return
         }
         
-        guard let payloadAsData = try? JSONSerialization.data(withJSONObject: playerItem.payload, options: []),
-            let payload = try? JSONDecoder().decode(AudioPlayer1Template.self, from: payloadAsData) else {
-                log.debug("invalid payload")
-                remove()
-                return
+        guard let parsedPayload = parsePayload(template: playerItem) else {
+            log.debug("invalid payload")
+            return
         }
         
         nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
@@ -118,10 +143,10 @@ private extension NuguDisplayPlayerController {
         let albumTitle: String
         let imageUrl: String?
         
-        duration = NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0
-        title = payload.template.title.text
-        albumTitle = payload.template.content.title
-        imageUrl = payload.template.content.imageUrl
+        duration = currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0) : 0
+        title = parsedPayload.title
+        albumTitle = parsedPayload.albumTitle
+        imageUrl = parsedPayload.imageUrl
         
         // Set nowPlayingInfo display properties
         var nowPlayingInfo = nowPlayingInfoCenter?.nowPlayingInfo ?? [:]
@@ -130,7 +155,7 @@ private extension NuguDisplayPlayerController {
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
         nowPlayingInfo[MPMediaItemPropertyArtwork] = nil
     
-        let offset = NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0
+        let offset = currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0) : 0
         
         // TODO: - AudioPlayer can not start playing in background when MPRemoteCommandCenter's command target has totally removed. Adding remote commands in here is not a perfect solution. Should consider more proper solution.
         addRemoteCommands()
@@ -184,6 +209,7 @@ private extension NuguDisplayPlayerController {
         if playCommandTarget == nil {
             playCommandTarget = MPRemoteCommandCenter.shared()
                 .playCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
+                    NuguCentralManager.shared.client.ttsAgent.stopTTS()
                     NuguCentralManager.shared.client.audioPlayerAgent.play()
                     return .success
             }

@@ -1,8 +1,8 @@
 //
-//  ASRRequest.swift
-//  NuguAgents
+//  DirectiveHandleResult.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 13/05/2019.
+//  Created by MinChul Lee on 2020/07/08.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,9 @@
 
 import Foundation
 
-import NuguCore
-
-struct ASRRequest {
-    let contextPayload: [ContextInfo]
-    let reader: AudioStreamReadable
-    let eventIdentifier: EventIdentifier
-    let options: ASROptions
-    let referrerDialogRequestId: String?
-    let completion: ((StreamDataState) -> Void)?
+public enum DirectiveHandleResult {
+    case failed(_ description: String)
+    case canceled
+    case stopped(cancelAssociation: Bool)
+    case finished
 }

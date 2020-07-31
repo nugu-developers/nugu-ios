@@ -29,8 +29,6 @@ final public class NuguChipsView: UIView {
         static let scrollViewOriginY = CGFloat(14.0)
         static let spaceBetweenChips = CGFloat(8.0)
         static let chipsHeight = CGFloat(40.0)
-        static let minChipsCount = 2
-        static let maxChipsCount = 10
         static let maxChipsWidth = UIScreen.main.bounds.size.width - CGFloat(180.0)
     }
     
@@ -52,10 +50,8 @@ final public class NuguChipsView: UIView {
     public var chipsData: [NuguChipsButton.NuguChipsButtonType] = [] {
         didSet {
             chipsScrollView.subviews.forEach({ $0.removeFromSuperview() })
-            guard chipsData.count >= ChipsConst.minChipsCount else { return }
             var origin = CGPoint(x: ChipsConst.scrollViewOriginX, y: ChipsConst.scrollViewOriginY)
-            chipsData.enumerated().forEach { (index, chipsType) in
-                guard index < ChipsConst.maxChipsCount else { return }
+            chipsData.forEach { chipsType in
                 let chipsButton = NuguChipsButton(theme: (self.theme == .light) ? .light : .dark, type: chipsType)
                 chipsButton.addTarget(self, action: #selector(chipsDidSelect(button:)), for: .touchUpInside)
                 chipsButton.sizeToFit()
