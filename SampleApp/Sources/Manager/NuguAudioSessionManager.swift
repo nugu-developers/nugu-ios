@@ -25,6 +25,18 @@ import NuguAgents
 final class NuguAudioSessionManager {
     static let shared = NuguAudioSessionManager()
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
+    
+    init() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(interruptionNotification),
+                                               name: AVAudioSession.interruptionNotification,
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(engineConfigurationChange),
+                                               name: .AVAudioEngineConfigurationChange,
+                                               object: nil)
+    }
 }
 
 // MARK: - Internal
@@ -34,15 +46,6 @@ extension NuguAudioSessionManager {
         AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
             response(isGranted)
         }
-    }
-    
-    func observeAVAudioSessionInterruptionNotification() {
-        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(interruptionNotification(_ :)), name: AVAudioSession.interruptionNotification, object: nil)
-    }
-    
-    func removeObservingAVAudioSessionInterruptionNotification() {
-        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
     }
     
     /// Update AudioSession.Category and AudioSession.CategoryOptions
@@ -105,11 +108,18 @@ private extension NuguAudioSessionManager {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
                     NuguCentralManager.shared.client.audioPlayerAgent.play()
+                    NuguCentralManager.shared.startWakeUpDetector()
                 } else {
                     // Interruption Ended - playback should NOT resume
                 }
             }
         @unknown default: break
         }
+    }
+    
+    /// recover when the audio engine is stopped by OS.
+    @objc func engineConfigurationChange(notification: Notification) {
+        log.debug("engineConfigurationChange: \(notification)")
+        NuguCentralManager.shared.startWakeUpDetector()
     }
 }

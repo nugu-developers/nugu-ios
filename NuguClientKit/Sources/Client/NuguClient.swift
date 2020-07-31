@@ -170,7 +170,6 @@ public class NuguClient {
         )
 
         // setup additional roles
-        setupAudioStream()
         setupAuthorizationStore()
         setupAudioSessionRequester()
         setupDialogStateAggregator()
@@ -187,48 +186,6 @@ public extension NuguClient {
     
     func stopReceiveServerInitiatedDirective() {
         streamDataRouter.stopReceiveServerInitiatedDirective()
-    }
-}
-
-// MARK: - Audio Stream Control
-
-extension NuguClient: AudioStreamDelegate {
-    private func setupAudioStream() {
-        if let audioStream = sharedAudioStream as? AudioStream {
-            audioStream.delegate = self
-        }
-    }
-    
-    public func audioStreamWillStart() {
-        log.debug("")
-        guard inputProvider.isRunning == false else {
-            log.debug("input provider is already started.")
-            return
-        }
-        
-        delegate?.nuguClientWillOpenInputSource()
-        
-        do {
-            try inputProvider.start(streamWriter: self.sharedAudioStream.makeAudioStreamWriter())
-            log.debug("input provider is started.")
-
-            delegate?.nuguClientDidOpenInputSource()
-        } catch {
-            log.error("input provider failed to start: \(error)")
-            delegate?.nuguClientDidErrorDuringInputSourceSetup(error)
-        }
-    }
-    
-    public func audioStreamDidStop() {
-        log.debug("")
-        guard self.inputProvider.isRunning == true else {
-            log.debug("input provider is not running")
-            return
-        }
-        
-        self.inputProvider.stop()
-        self.delegate?.nuguClientDidCloseInputSource()
-        log.debug("input provider is stopped.")
     }
 }
 
