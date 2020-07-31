@@ -66,7 +66,7 @@ extension FocusManager {
             
             // Move current foreground channel to background If Its priority is lower than requested.
             if let foregroundChannelDelegate = self.foregroundChannelDelegate,
-                channelDelegate.focusChannelPriority().rawValue >= foregroundChannelDelegate.focusChannelPriority().rawValue {
+                channelDelegate.focusChannelPriority().requestPriority >= foregroundChannelDelegate.focusChannelPriority().maintainPriority {
                 self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
             }
             
@@ -151,7 +151,7 @@ private extension FocusManager {
         return self.channelInfos
             .filter { $0.focusState == .background }
             .compactMap { $0.delegate}
-            .sorted { $0.focusChannelPriority().rawValue > $1.focusChannelPriority().rawValue }
+            .sorted { $0.focusChannelPriority().requestPriority > $1.focusChannelPriority().requestPriority }
             .first
     }
 }

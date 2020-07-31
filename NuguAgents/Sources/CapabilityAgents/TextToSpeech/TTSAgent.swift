@@ -251,17 +251,17 @@ extension TTSAgent: MediaPlayerDelegate {
             case .resume, .bufferRefilled:
                 self.ttsState = .playing
             case .finish:
-                self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                 self.ttsState = .finished
                 self.sendEvent(media: media, info: .speechFinished) { [weak self] state in
                     self?.ttsDispatchQueue.async { [weak self] in
                         guard let self = self else { return }
                         
                         switch state {
-                        case .finished where self.currentPlayer == nil:
-                            self.releaseFocusIfNeeded()
-                        case .error:
-                            self.releaseFocusIfNeeded()
+                        case .finished, .error:
+                            if self.currentPlayer == nil {
+                                self.releaseFocusIfNeeded()
+                            }
+                            self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                         default:
                             break
                         }

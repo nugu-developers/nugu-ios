@@ -252,7 +252,7 @@ public extension ASRAgent {
 
 extension ASRAgent: FocusChannelDelegate {
     public func focusChannelPriority() -> FocusChannelPriority {
-        return .recognition
+        return expectSpeechDialogRequestId != nil ? .dmRecognition : .userRecognition
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
@@ -268,7 +268,7 @@ extension ASRAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Background 허용 안함.
-            case _ where self.asrRequest != nil:
+            case (_, let asrState) where [.listening, .recognizing, .expectingSpeech].contains(asrState):
                 self.asrResult = .cancel
             default:
                 break

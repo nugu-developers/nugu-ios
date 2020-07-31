@@ -40,7 +40,7 @@ final class LocalTTSAgent: NSObject {
     
     // MARK: FocusChannelPriority
     
-    private let channelPriority = FocusChannelPriority(rawValue: 400)
+    private let channelPriority = FocusChannelPriority(requestPriority: 400, maintainPriority: 100)
     
     // MARK: CurrentTTSType
     
