@@ -430,8 +430,8 @@ private extension ASRAgent {
     func cancelExpectSpeech() -> CancelDirective {
         return { [weak self] directive in
             self?.asrDispatchQueue.async { [weak self] in
-                if self?.expectSpeechDialogRequestId == directive.header.dialogRequestId {
-                    self?.expectSpeechDialogRequestId = nil
+                if self?.expectSpeechDirective?.header.dialogRequestId == directive.header.dialogRequestId {
+                    self?.expectSpeechDirective = nil
                 }
             }
         }
