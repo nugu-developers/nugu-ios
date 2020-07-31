@@ -263,7 +263,7 @@ extension ASRAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Background 허용 안함.
-            case _ where self.asrRequest != nil:
+            case (_, let asrState) where [.listening, .recognizing, .expectingSpeech].contains(asrState):
                 self.asrResult = .cancel
             default:
                 break
