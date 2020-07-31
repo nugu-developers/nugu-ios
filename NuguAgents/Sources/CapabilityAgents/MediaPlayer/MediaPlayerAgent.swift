@@ -84,16 +84,14 @@ extension MediaPlayerAgent: ContextInfoDelegate {
 private extension MediaPlayerAgent {
     func handlePlay() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let playPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Play.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
             
-            self.delegate?.mediaPlayerAgentReceivePlay(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceivePlay(
                 payload: playPayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
@@ -104,18 +102,16 @@ private extension MediaPlayerAgent {
     
     func handleStop() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let payloadDictionary = directive.payloadDictionary,
                 let playServiceId = payloadDictionary["playServiceId"] as? String,
                 let token = payloadDictionary["token"] as? String else {
-                log.error("Invalid payload")
-                return
+                    completion(.failed("Invalid payload"))
+                    return
             }
             
-            self.delegate?.mediaPlayerAgentReceiveStop(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveStop(
                 playServiceId: playServiceId,
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
@@ -127,16 +123,14 @@ private extension MediaPlayerAgent {
     
     func handleSearch() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let searchPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Search.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
             
-            self.delegate?.mediaPlayerAgentReceiveSearch(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveSearch(
                 payload: searchPayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
@@ -147,16 +141,14 @@ private extension MediaPlayerAgent {
     
     func handlePrevious() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let previousPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Previous.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
             
-            self.delegate?.mediaPlayerAgentReceivePrevious(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceivePrevious(
                 payload: previousPayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
@@ -167,16 +159,14 @@ private extension MediaPlayerAgent {
     
     func handleNext() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let nextPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Next.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
             
-            self.delegate?.mediaPlayerAgentReceiveNext(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveNext(
                 payload: nextPayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
@@ -187,16 +177,14 @@ private extension MediaPlayerAgent {
     
     func handleMove() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let movePayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Move.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
             
-            self.delegate?.mediaPlayerAgentReceiveMove(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveMove(
                 payload: movePayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
@@ -207,18 +195,16 @@ private extension MediaPlayerAgent {
     
     func handlePause() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let payloadDictionary = directive.payloadDictionary,
                 let playServiceId = payloadDictionary["playServiceId"] as? String,
                 let token = payloadDictionary["token"] as? String else {
-                log.error("Invalid payload")
-                return
+                    completion(.failed("Invalid payload"))
+                    return
             }
             
-            self.delegate?.mediaPlayerAgentReceivePause(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceivePause(
                 playServiceId: playServiceId,
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
@@ -230,18 +216,16 @@ private extension MediaPlayerAgent {
     
     func handleResume() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let payloadDictionary = directive.payloadDictionary,
                 let playServiceId = payloadDictionary["playServiceId"] as? String,
                 let token = payloadDictionary["token"] as? String else {
-                log.error("Invalid payload")
-                return
+                    completion(.failed("Invalid payload"))
+                    return
             }
             
-            self.delegate?.mediaPlayerAgentReceiveResume(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveResume(
                 playServiceId: playServiceId,
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
@@ -253,18 +237,16 @@ private extension MediaPlayerAgent {
     
     func handleRewind() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let payloadDictionary = directive.payloadDictionary,
                 let playServiceId = payloadDictionary["playServiceId"] as? String,
                 let token = payloadDictionary["token"] as? String else {
-                log.error("Invalid payload")
-                return
+                    completion(.failed("Invalid payload"))
+                    return
             }
             
-            self.delegate?.mediaPlayerAgentReceiveRewind(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveRewind(
                 playServiceId: playServiceId,
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
@@ -276,16 +258,14 @@ private extension MediaPlayerAgent {
     
     func handleToggle() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let togglePayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Toggle.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
             
-            self.delegate?.mediaPlayerAgentReceiveToggle(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveToggle(
                 payload: togglePayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
@@ -296,18 +276,16 @@ private extension MediaPlayerAgent {
     
     func handleGetInfo() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
-            guard let self = self else { return }
-            
             guard let payloadDictionary = directive.payloadDictionary,
                 let playServiceId = payloadDictionary["playServiceId"] as? String,
                 let token = payloadDictionary["token"] as? String else {
-                log.error("Invalid payload")
-                return
+                    completion(.failed("Invalid payload"))
+                    return
             }
             
-            self.delegate?.mediaPlayerAgentReceiveGetInfo(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveGetInfo(
                 playServiceId: playServiceId,
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
@@ -325,10 +303,12 @@ private extension MediaPlayerAgent {
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] (contextPayload) in
             guard let self = self else { return }
             
+            let eventIdentifier = EventIdentifier()
+            
             self.upstreamDataSender.sendEvent(
                 event.makeEventMessage(
                     property: self.capabilityAgentProperty,
-                    dialogRequestId: TimeUUID().hexString,
+                    eventIdentifier: eventIdentifier,
                     contextPayload: contextPayload
                 )
             )
