@@ -251,17 +251,17 @@ extension TTSAgent: MediaPlayerDelegate {
             case .resume, .bufferRefilled:
                 self.ttsState = .playing
             case .finish:
-                self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                 self.ttsState = .finished
                 self.sendEvent(media: media, info: .speechFinished) { [weak self] state in
                     self?.ttsDispatchQueue.async { [weak self] in
                         guard let self = self else { return }
                         
                         switch state {
-                        case .finished where self.currentPlayer == nil:
-                            self.releaseFocusIfNeeded()
-                        case .error:
-                            self.releaseFocusIfNeeded()
+                        case .finished, .error:
+                            if self.currentPlayer == nil {
+                                self.releaseFocusIfNeeded()
+                            }
+                            self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
                         default:
                             break
                         }
@@ -296,7 +296,7 @@ extension TTSAgent: PlaySyncDelegate {
             guard let self = self else { return }
             guard property == self.playSyncProperty, self.currentMedia?.messageId == messageId else { return }
             
-            self.stop(cancelAssociation: false)
+            self.stop(cancelAssociation: true)
         }
     }
 }
@@ -339,12 +339,11 @@ private extension TTSAgent {
         return { [weak self] directive, completion in
             self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else {
-                    completion()
+                    completion(.canceled)
                     return
                 }
                 guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
-                    log.warning("TTSMedia is not exist or dialogRequesttId is not valid")
-                    completion()
+                    completion(.failed("TTSMedia is not exist or dialogRequesttId is not valid"))
                     return
                 }
                 
@@ -355,8 +354,15 @@ private extension TTSAgent {
                 self.ttsResultSubject
                     .filter { $0.dialogRequestId == media.dialogRequestId }
                     .take(1)
-                    .subscribe(onNext: { (_, _) in
-                        completion()
+                    .subscribe(onNext: { (_, result) in
+                        switch result {
+                        case .finished:
+                            completion(.finished)
+                        case .stopped(let cancelAssociation):
+                            completion(.stopped(cancelAssociation: cancelAssociation))
+                        case .error(let error):
+                            completion(.failed("\(error)"))
+                        }
                     })
                     .disposed(by: self.disposeBag)
                 
@@ -367,7 +373,7 @@ private extension TTSAgent {
     
     func handleStop() -> HandleDirective {
         return { [weak self] _, completion in
-            defer { completion() }
+            defer { completion(.finished) }
             
             guard let self = self, let media = self.currentMedia else { return }
             guard self.currentPlayer != nil else {

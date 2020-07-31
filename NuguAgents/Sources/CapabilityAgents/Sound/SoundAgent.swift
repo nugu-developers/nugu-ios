@@ -206,7 +206,7 @@ private extension SoundAgent {
     
     func handleBeep() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
+            defer { completion(.finished) }
             
             self?.soundDispatchQueue.async { [weak self] in
                 guard let self = self else { return }

@@ -59,7 +59,6 @@ public class MicInputProvider: AudioProvidable {
             throw error
         }
 
-        
         // when audio session interrupted, audio engine will be stopped automatically. so we have to handle it.
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(audioSessionInterruption),
@@ -170,33 +169,13 @@ public class MicInputProvider: AudioProvidable {
     }
     
     @objc func audioSessionInterruption(notification: Notification) {
-        log.debug("audioSessionInterruption")
-        
-        guard let info = notification.userInfo,
-            let typeValue = info[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
-                return
-        }
-        
-        if type == .ended {
-            guard let optionsValue =
-                info[AVAudioSessionInterruptionOptionKey] as? UInt else {
-                    return
-            }
-            let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
-            if options.contains(.shouldResume) {
-                try? audioEngine.start()
-            }
-        }
+        log.debug("audioSessionInterruption: \(notification)")
+        stop()
     }
     
     /// recover when the audio engine is stopped by OS.
     @objc func engineConfigurationChange(notification: Notification) {
-        log.debug("engineConfigurationChange - \(notification)")
-        
-        guard audioEngine.isRunning == false else { return }
-        guard let streamWriter = streamWriter else { return }
-        
-        try? beginTappingMicrophone(streamWriter: streamWriter)
+        log.debug("engineConfigurationChange: \(notification)")
+        stop()
     }
 }

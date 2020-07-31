@@ -27,6 +27,7 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private var blockedDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     
     private var directiveHandleInfos = DirectiveHandleInfos()
+    private var canceledDialogRequestIds = [String]()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
     private let disposeBag = DisposeBag()
 
@@ -49,7 +50,7 @@ public extension DirectiveSequencer {
     }
     
     func processDirective(_ directive: Downstream.Directive) {
-        log.info("\(directive.header.messageId)")
+        log.info("\(directive.header)")
         
         directiveSequencerDispatchQueue.async { [weak self] in
             self?.prefetchDirective(directive)
@@ -57,9 +58,9 @@ public extension DirectiveSequencer {
     }
     
     func processAttachment(_ attachment: Downstream.Attachment) {
-        log.info("attachment messageId: \(attachment.header.messageId)")
+        log.info("attachment messageId: \(attachment.header)")
         guard let handler = directiveHandleInfos[attachment.header.type] else {
-            log.warning("No handler registered \(attachment.header.messageId)")
+            log.warning("No handler registered \(attachment.header)")
             return
         }
         
@@ -75,7 +76,11 @@ public extension DirectiveSequencer {
 private extension DirectiveSequencer {
     func prefetchDirective(_ directive: Downstream.Directive) {
         guard let handler = directiveHandleInfos[directive.header.type] else {
-            log.warning("No handler registered \(directive.header.messageId)")
+            log.warning("No handler registered \(directive.header)")
+            return
+        }
+        guard canceledDialogRequestIds.contains(directive.header.dialogRequestId) == false else {
+            log.warning("Cancel directive \(directive.header)")
             return
         }
         
@@ -90,7 +95,7 @@ private extension DirectiveSequencer {
     
     func handleDirective(_ directive: Downstream.Directive) {
         guard let handler = directiveHandleInfos[directive.header.type] else {
-            log.warning("No handler registered \(directive.header.messageId)")
+            log.warning("No handler registered \(directive.header)")
             return
         }
         guard handlingDirectives.contains(where: {
@@ -98,16 +103,26 @@ private extension DirectiveSequencer {
                 $0.blockingPolicy.medium == handler.blockingPolicy.medium &&
                 $0.directive.header.dialogRequestId == directive.header.dialogRequestId
         }) == false else {
-            log.debug("Block directive \(directive.header.messageId)")
+            log.debug("Block directive \(directive.header)")
             blockedDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
+            return
+        }
+        guard canceledDialogRequestIds.contains(directive.header.dialogRequestId) == false else {
+            handler.cancelDirective?(directive)
             return
         }
         
         handlingDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
-        handler.directiveHandler(directive) { [weak self ] in
+        handler.directiveHandler(directive) { [weak self ] result in
             self?.directiveSequencerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                
+
+                if case .stopped(let cancelAssociation) = result, cancelAssociation == true {
+                    self.canceledDialogRequestIds.append(directive.header.dialogRequestId)
+                    if self.canceledDialogRequestIds.count > 10 {
+                        self.canceledDialogRequestIds.remove(at: 0)
+                    }
+                }
                 self.handlingDirectives.removeAll { directive.header.messageId == $0.directive.header.messageId }
                 
                 // Block 된 Directive 다시시도.

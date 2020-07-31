@@ -209,12 +209,11 @@ extension DisplayAgent: PlaySyncDelegate {
 private extension DisplayAgent {
     func handleClose() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let payload = try? JSONDecoder().decode(DisplayClosePayload.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
+            defer { completion(.finished) }
 
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -239,12 +238,11 @@ private extension DisplayAgent {
     
     func handleControlFocus() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
             guard let payload = try? JSONDecoder().decode(DisplayControlPayload.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
+            defer { completion(.finished) }
             
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -274,13 +272,12 @@ private extension DisplayAgent {
     
     func handleControlScroll() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let payload = try? JSONDecoder().decode(DisplayControlPayload.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let item = self.templateList.first(where: { $0.template.playServiceId == payload.playServiceId }) else {
@@ -308,13 +305,12 @@ private extension DisplayAgent {
     
     func handleUpdate() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let template = try? JSONDecoder().decode(DisplayTemplate.Payload.self, from: directive.payload)  else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             let updateDisplayTemplate = DisplayTemplate(
                 type: directive.header.type,
                 payload: directive.payload,
@@ -336,12 +332,11 @@ private extension DisplayAgent {
     func handleDisplay() -> HandleDirective {
         return { [weak self] directive, completion in
             guard let self = self, let delegate = self.delegate else {
-                completion()
+                completion(.canceled)
                 return
             }
             guard let template = try? JSONDecoder().decode(DisplayTemplate.Payload.self, from: directive.payload)  else {
-                log.error("Invalid payload")
-                completion()
+                completion(.failed("Invalid payload"))
                 return
             }
             
@@ -354,8 +349,7 @@ private extension DisplayAgent {
             )
             
             self.displayDispatchQueue.async { [weak self] in
-                defer { completion() }
-                guard let self = self else { return }
+                defer { completion(.finished) }
                 
                 let semaphore = DispatchSemaphore(value: 0)
                 delegate.displayAgentShouldRender(template: item) { [weak self] in

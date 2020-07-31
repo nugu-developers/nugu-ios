@@ -24,20 +24,25 @@ import Foundation
 ///
 /// Use a initializer if you want to create priorities directly in application.
 /// The predetermined focus channel includes `recognition`(priority = 300), `information`(priority = 200) and `content`(priority = 100).
-public struct FocusChannelPriority: RawRepresentable {
-    public typealias RawValue = Int
+public struct FocusChannelPriority {
+    public let requestPriority: Int
+    public let maintainPriority: Int
     
-    /// The `rawValue` is priority of the channel
-    public var rawValue: Int
-    
-    /// A priority of `recognition` channel is 300
-    public static let recognition = FocusChannelPriority(rawValue: 300)
-    /// A priority of `information` channel is 200
-    public static let information = FocusChannelPriority(rawValue: 200)
-    /// A priority of `content` channel is 100
-    public static let content = FocusChannelPriority(rawValue: 100)
-
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
+    public init(requestPriority: Int, maintainPriority: Int) {
+        self.requestPriority = requestPriority
+        self.maintainPriority = maintainPriority
     }
+    
+    /// A priority of `call` channel.
+    public static let call = FocusChannelPriority(requestPriority: 300, maintainPriority: 300)
+    /// A priority of `userRecognition` channel.
+    public static let userRecognition = FocusChannelPriority(requestPriority: 300, maintainPriority: 200)
+    /// A priority of `dmRecognition` channel.
+    public static let dmRecognition = FocusChannelPriority(requestPriority: 100, maintainPriority: 200)
+    /// A priority of `alerts` channel.
+    public static let alerts = FocusChannelPriority(requestPriority: 200, maintainPriority: 200)
+    /// A priority of `information` channel.
+    public static let information = FocusChannelPriority(requestPriority: 200, maintainPriority: 200)
+    /// A priority of `media` channel.
+    public static let media = FocusChannelPriority(requestPriority: 200, maintainPriority: 100)
 }

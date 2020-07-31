@@ -73,6 +73,14 @@ extension Downstream.Header {
     
 }
 
+// MARK: - Downstream.Header + CustomStringConvertible
+
+extension Downstream.Header: CustomStringConvertible {
+    public var description: String {
+        return "\(type)(\(messageId)"
+    }
+}
+
 // MARK: - Downstream.Directive
 
 extension Downstream.Directive {
