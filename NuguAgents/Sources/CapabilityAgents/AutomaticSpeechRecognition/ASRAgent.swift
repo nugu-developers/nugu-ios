@@ -305,13 +305,13 @@ extension ASRAgent: EndPointDetectorDelegate {
             case .listening, .recognizing:
                 break
             case .idle, .expectingSpeech, .busy:
-                log.warning("Not permitted in current state \(self.asrState)")
+                log.info("Not permitted in current state \(self.asrState)")
                 return
             }
             
             switch state {
             case .idle:
-                break
+                self.asrResult = .error(ASRError.listenFailed)
             case .listening:
                 break
             case .start:
