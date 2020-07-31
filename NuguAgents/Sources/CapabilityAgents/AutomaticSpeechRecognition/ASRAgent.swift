@@ -164,7 +164,7 @@ public final class ASRAgent: ASRAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech, cancelDirective: cancelExpectSpeech),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleNotifyResult)
     ]
     
@@ -238,8 +238,6 @@ public extension ASRAgent {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            // TODO: cancelAssociation = true 로 tts 가 종료되어도 expectSpeech directive 가 전달되는 현상으로 우선 currentExpectSpeech nil 처리.
-            self.expectSpeechDirective = nil
             guard self.asrState != .idle else {
                 log.info("Not permitted in current state, \(self.asrState)")
                 return
@@ -399,8 +397,8 @@ private extension ASRAgent {
 
     func handleExpectSpeech() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
+            defer { completion(.finished) }
+            
             self?.asrDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 // ex> TTS 도중 stopRecognition 호출.
@@ -429,15 +427,24 @@ private extension ASRAgent {
         }
     }
     
+    func cancelExpectSpeech() -> CancelDirective {
+        return { [weak self] directive in
+            self?.asrDispatchQueue.async { [weak self] in
+                if self?.expectSpeechDirective?.header.dialogRequestId == directive.header.dialogRequestId {
+                    self?.expectSpeechDirective = nil
+                }
+            }
+        }
+    }
+    
     func handleNotifyResult() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-
             guard let item = try? JSONDecoder().decode(ASRNotifyResult.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             self?.asrDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 

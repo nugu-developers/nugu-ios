@@ -89,13 +89,12 @@ extension ExtensionAgent: ContextInfoDelegate {
 private extension ExtensionAgent {
     func handleAction() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let item = try? JSONDecoder().decode(ExtensionAgentItem.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
+            defer { completion(.finished) }
+
             self?.delegate?.extensionAgentDidReceiveAction(
                 data: item.data,
                 playServiceId: item.playServiceId,

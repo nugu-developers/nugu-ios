@@ -451,6 +451,7 @@
 		7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
+		7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */; };
 		7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */; };
 		7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2DFE9D24B8510900792529 /* PlayStackControl.swift */; };
 		7E35D79024622B4E003289A2 /* EventIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* EventIdentifier.swift */; };
@@ -1130,6 +1131,7 @@
 		7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEndPointDetector.swift; sourceTree = "<group>"; };
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
+		7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveHandleResult.swift; sourceTree = "<group>"; };
 		7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentRevokeItem.swift; sourceTree = "<group>"; };
 		7E2DFE9D24B8510900792529 /* PlayStackControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStackControl.swift; sourceTree = "<group>"; };
 		7E35D79324623444003289A2 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
@@ -1920,6 +1922,7 @@
 				7373894824A46E720018DDD2 /* DirectiveHandleInfo.swift */,
 				7373894624A46E710018DDD2 /* DirectiveSequenceable.swift */,
 				1FFFF3752375707000C9A177 /* DirectiveSequencer.swift */,
+				7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */,
 			);
 			path = Directive;
 			sourceTree = "<group>";
@@ -3443,6 +3446,7 @@
 				7373893424A46D4D0018DDD2 /* Downstream.swift in Sources */,
 				7EB81CD824C0576D000910A9 /* TimeUUID.swift in Sources */,
 				7315302223E11EDF00F843C3 /* DelegateSet.swift in Sources */,
+				7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */,
 				7373895524A473A60018DDD2 /* FocusState.swift in Sources */,
 				1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */,
 				75082BC8243ACA280027D76D /* CryptoUtil.swift in Sources */,

@@ -408,7 +408,7 @@ extension AudioPlayerAgent: PlaySyncDelegate {
             guard let self = self else { return }
             guard property == self.playSyncProperty, self.currentMedia?.messageId == messageId else { return }
             
-            self.stop(cancelAssociation: false)
+            self.stop(cancelAssociation: true)
         }
     }
 }
@@ -469,40 +469,43 @@ private extension AudioPlayerAgent {
     
    func handlePlay() -> HandleDirective {
         return { [weak self] _, completion in
+            defer { completion(.finished) }
+        
             self?.play()
-            completion()
         }
     }
     
    func handleStop() -> HandleDirective {
         return { [weak self] _, completion in
+            defer { completion(.finished) }
+        
             self?.stop(cancelAssociation: true)
-            completion()
         }
     }
     
    func handlePause() -> HandleDirective {
         return { [weak self] _, completion in
+            defer { completion(.finished) }
+            
             self?.pause()
-            completion()
         }
     }
     
     func handleRequestPlayCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
             guard let payloadDictionary = directive.payloadDictionary else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
+            defer { completion(.finished) }
+
             self?.sendRequestPlayEvent(referrerDialogRequestId: directive.header.dialogRequestId, typeInfo: .requestPlayCommandIssued(payload: payloadDictionary))
         }
     }
     
     func handleRequestResumeCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
+            defer { completion(.finished) }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -517,7 +520,7 @@ private extension AudioPlayerAgent {
     
     func handleRequestNextCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
+            defer { completion(.finished) }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -532,7 +535,7 @@ private extension AudioPlayerAgent {
     
     func handleRequestPreviousCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
+            defer { completion(.finished) }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -547,7 +550,7 @@ private extension AudioPlayerAgent {
     
     func handleRequestPauseCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
+            defer { completion(.finished) }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -562,7 +565,7 @@ private extension AudioPlayerAgent {
     
     func handleRequestStopCommand() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
+            defer { completion(.finished) }
             
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -577,27 +580,25 @@ private extension AudioPlayerAgent {
     
     func handleUpdateMetadata() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-            
             guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
+            defer { completion(.finished) }
+            
             self?.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId)
         }
     }
     
     func handleShowLyrics() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
-            guard let self = self else { return }
             guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
-            self.audioPlayerDisplayManager.showLyrics(playServiceId: playServiceId) { [weak self] isSuccess in
+            defer { completion(.finished) }
+
+            self?.audioPlayerDisplayManager.showLyrics(playServiceId: playServiceId) { [weak self] isSuccess in
                 self?.sendLyricsEvent(
                     playServiceId: playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId,
@@ -609,15 +610,13 @@ private extension AudioPlayerAgent {
     
     func handleHideLyrics() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
-            guard let self = self else { return }
             guard let playServiceId = directive.payloadDictionary?["playServiceId"] as? String else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
-            self.audioPlayerDisplayManager.hideLyrics(playServiceId: playServiceId) { [weak self] isSuccess in
+            defer { completion(.finished) }
+
+            self?.audioPlayerDisplayManager.hideLyrics(playServiceId: playServiceId) { [weak self] isSuccess in
                 self?.sendLyricsEvent(
                     playServiceId: playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId,
@@ -629,15 +628,13 @@ private extension AudioPlayerAgent {
     
     func handleControlLyricsPage() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion() }
-        
-            guard let self = self else { return }
             guard let payload = try? JSONDecoder().decode(AudioPlayerDisplayControlPayload.self, from: directive.payload) else {
-                log.error("Invalid payload")
+                completion(.failed("Invalid payload"))
                 return
             }
-            
-            self.audioPlayerDisplayManager.controlLyricsPage(payload: payload) { [weak self] isSuccess in
+            defer { completion(.finished) }
+
+            self?.audioPlayerDisplayManager.controlLyricsPage(payload: payload) { [weak self] isSuccess in
                 self?.sendLyricsEvent(
                     playServiceId: payload.playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId,
