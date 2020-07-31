@@ -32,16 +32,11 @@ final public class SessionManager: SessionManageable {
     )
     
     public var activeSessions: [Session] {
-        var activeSessions = [Session]()
-        let semaphore = DispatchSemaphore(value: 0)
-        sessionDispatchQueue.async { [weak self] in
-            defer { semaphore.signal() }
-            guard let self = self else { return }
-            activeSessions = self.activeList
+        sessionDispatchQueue.sync {
+            activeSessions = activeList
                 .filter { $0.value.count > 0 }
-                .compactMap { self.sessions[$0.key]
+                .compactMap { sessions[$0.key]
             }}
-        semaphore.wait()
         log.info(activeSessions)
         return activeSessions
     }
