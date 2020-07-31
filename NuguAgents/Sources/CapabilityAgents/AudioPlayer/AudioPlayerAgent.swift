@@ -842,7 +842,6 @@ private extension AudioPlayerAgent {
             .filter { $0 > 0 }
             .filter { $0 != lastOffset}
             .subscribe(onNext: { [weak self] (offset) in
-                log.debug("offset: \(offset)")
                 if delayReportTime > 0, offset == delayReportTime {
                     self?.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
                 }

@@ -29,8 +29,6 @@ public class FocusManager: FocusManageable {
     
     private var releaseFocusWorkItem: DispatchWorkItem?
     
-    private var activated: Bool = true
-    
     public init() {}
 }
 
@@ -72,7 +70,7 @@ extension FocusManager {
                 self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
             }
             
-            if self.activated == true && self.foregroundChannelDelegate == nil {
+            if self.foregroundChannelDelegate == nil {
                 self.update(channelDelegate: channelDelegate, focusState: .foreground)
             } else {
                 self.update(channelDelegate: channelDelegate, focusState: .background)
@@ -89,38 +87,6 @@ extension FocusManager {
             }
             
             self.update(channelDelegate: channelDelegate, focusState: .nothing)
-        }
-    }
-
-    public func stopForegroundActivity() {
-        focusDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let foregroundChannelDelegate = self.foregroundChannelDelegate else {
-                log.info("Foreground channel not exist")
-                return
-            }
-            
-            self.update(channelDelegate: foregroundChannelDelegate, focusState: .nothing)
-        }
-    }
-    
-    public func deactivate() {
-        focusDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.activated = false
-            if let foregroundChannelDelegate = self.foregroundChannelDelegate {
-                self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
-            }
-        }
-    }
-    
-    public func activate() {
-        focusDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.activated = true
-            self.assignForeground()
         }
     }
 }
@@ -153,8 +119,7 @@ private extension FocusManager {
         // Background -> Foreground
         focusDispatchQueue.asyncAfter(deadline: .now() + FocusConst.shortLatency) { [weak self] in
             guard let self = self else { return }
-            guard self.activated == true,
-                self.foregroundChannelDelegate == nil,
+            guard self.foregroundChannelDelegate == nil,
                 let backgroundChannelDelegate = self.backgroundChannelDelegate else {
                     return
             }
