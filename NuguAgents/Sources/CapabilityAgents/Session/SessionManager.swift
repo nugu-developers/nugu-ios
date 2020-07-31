@@ -33,12 +33,12 @@ final public class SessionManager: SessionManageable {
     
     public var activeSessions: [Session] {
         sessionDispatchQueue.sync {
-            activeSessions = activeList
+            let activeSessions = activeList
                 .filter { $0.value.count > 0 }
-                .compactMap { sessions[$0.key]
-            }}
-        log.info(activeSessions)
-        return activeSessions
+                .compactMap { sessions[$0.key] }
+            log.info(activeSessions)
+            return activeSessions
+        }
     }
     
     // private
