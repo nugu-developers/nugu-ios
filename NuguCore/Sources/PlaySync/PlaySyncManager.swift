@@ -160,10 +160,14 @@ public extension PlaySyncManager {
 
 // MARK: - ContextInfoDelegate
 extension PlaySyncManager: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        playSyncDispatchQueue.sync {
-            log.debug("\(playStack.playServiceIds)")
-            completion(ContextInfo(contextType: .client, name: "playStack", payload: playStack.playServiceIds))
+    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
+        playSyncDispatchQueue.async { [weak self] in
+            guard let self = self else {
+                completion(nil)
+                return
+            }
+            log.debug("\(self.playStack.playServiceIds)")
+            completion(ContextInfo(contextType: .client, name: "playStack", payload: self.playStack.playServiceIds))
         }
     }
 }

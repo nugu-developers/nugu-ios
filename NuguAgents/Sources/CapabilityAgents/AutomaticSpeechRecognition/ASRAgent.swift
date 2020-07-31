@@ -252,7 +252,7 @@ public extension ASRAgent {
 
 extension ASRAgent: FocusChannelDelegate {
     public func focusChannelPriority() -> FocusChannelPriority {
-        return expectSpeechDialogRequestId != nil ? .dmRecognition : .userRecognition
+        return expectSpeechDirective != nil ? .dmRecognition : .userRecognition
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
