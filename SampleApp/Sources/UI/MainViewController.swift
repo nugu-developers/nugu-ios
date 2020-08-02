@@ -252,16 +252,15 @@ private extension MainViewController {
                 }
                 return
             }
-            guard let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") else {
-                log.error("EPD model file not exist")
-                DispatchQueue.main.async { [weak self] in
-                    self?.dismissVoiceChrome()
-                }
-                return
-            }
             
-            let options = ASROptions(initiator: initiator, endPointing: .client(epdFile: epdFile))
-            NuguCentralManager.shared.client.asrAgent.startRecognition(options: options)
+            NuguCentralManager.shared.startRecognition(initiator: initiator) { [weak self] success in
+                guard success == true else {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.dismissVoiceChrome()
+                    }
+                    return
+                }
+            }
         }
     }
     
@@ -596,9 +595,20 @@ extension MainViewController: ASRAgentDelegate {
     func asrAgentDidChange(state: ASRState) {
         switch state {
         case .idle:
-            NuguCentralManager.shared.startWakeUpDetector()
+            if UserDefaults.Standard.useWakeUpDetector == true {
+                NuguCentralManager.shared.startWakeUpDetector()
+            } else {
+                NuguCentralManager.shared.stopMicInputProvider()
+            }
         case .listening:
             NuguCentralManager.shared.stopWakeUpDetector()
+        case .expectingSpeech:
+            NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
+                guard success == true else {
+                    NuguCentralManager.shared.stopRecognition()
+                    return
+                }
+            }
         default:
             break
         }

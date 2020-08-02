@@ -31,17 +31,25 @@ final class NuguAudioSessionManager {
                                                selector: #selector(interruptionNotification),
                                                name: AVAudioSession.interruptionNotification,
                                                object: nil)
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(engineConfigurationChange),
-                                               name: .AVAudioEngineConfigurationChange,
-                                               object: nil)
     }
 }
 
 // MARK: - Internal
 
 extension NuguAudioSessionManager {
+    func addEngineConfigurationChangeNotification() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(engineConfigurationChange),
+                                               name: .AVAudioEngineConfigurationChange,
+                                               object: nil)
+    }
+    
+    func removeEngineConfigurationChangeNotification() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .AVAudioEngineConfigurationChange,
+                                                  object: nil)
+    }
+    
     func requestRecordPermission(_ response: @escaping PermissionBlock) {
         AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
             response(isGranted)
@@ -78,11 +86,20 @@ extension NuguAudioSessionManager {
     
     func notifyAudioSessionDeactivation() {
         do {
-            // Defer statement for recovering audioSession and wakeUpDetector
+            // Defer statement for recovering audioSession and MicInputProvider
             defer {
                 updateAudioSession()
-                NuguCentralManager.shared.startWakeUpDetector()
+                if UserDefaults.Standard.useWakeUpDetector == true {
+                    NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { success in
+                        log.debug("startMicInputProvider : \(success)")
+                    }
+                }
             }
+            
+            // Clean up all I/O before deactivating audioSession
+            NuguCentralManager.shared.stopMicInputProvider()
+            ASRBeepPlayer.shared.stop()
+            
             // Notify audio session deactivation to 3rd party apps
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         } catch {
@@ -108,7 +125,6 @@ private extension NuguAudioSessionManager {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
                     NuguCentralManager.shared.client.audioPlayerAgent.play()
-                    NuguCentralManager.shared.startWakeUpDetector()
                 } else {
                     // Interruption Ended - playback should NOT resume
                 }
@@ -120,6 +136,8 @@ private extension NuguAudioSessionManager {
     /// recover when the audio engine is stopped by OS.
     @objc func engineConfigurationChange(notification: Notification) {
         log.debug("engineConfigurationChange: \(notification)")
-        NuguCentralManager.shared.startWakeUpDetector()
+        NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
+            log.debug("engineConfigurationChange: \(success)")
+        }
     }
 }
