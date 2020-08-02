@@ -34,20 +34,17 @@ final class NuguCentralManager {
     lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
         
-        displayPlayerController = NuguDisplayPlayerController()
-        
-        // local tts agent
-        localTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
-        
         client.locationAgent.delegate = self
         client.systemAgent.add(systemAgentDelegate: self)
         client.soundAgent.dataSource = self
         
         return client
     }()
+    
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
+    lazy private(set) var asrBeepPlayer: ASRBeepPlayer = ASRBeepPlayer(focusManager: client.focusManager)
 
-    var displayPlayerController: NuguDisplayPlayerController?
+    let displayPlayerController = NuguDisplayPlayerController()
     
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
@@ -328,7 +325,7 @@ private extension NuguCentralManager {
             guard let urlError = error as? URLError else { return }
             switch urlError.code {
             case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
-                NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+                localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
             default: // Handle other URLErrors with your own way
                 break
             }
