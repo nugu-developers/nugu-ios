@@ -85,7 +85,10 @@ extension NuguCentralManager {
         if UserDefaults.Standard.useWakeUpDetector,
             let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
             client.keywordDetector.keywordSource = keyword.keywordSource
-            startWakeUpDetector()
+            startMicInputProvider(requestingFocus: false) { [weak self] (success) in
+                guard success else { return }
+                self?.startWakeUpDetector()
+            }
         } else {
             stopWakeUpDetector()
             stopMicInputProvider()
@@ -96,8 +99,8 @@ extension NuguCentralManager {
         log.debug("")
         stopWakeUpDetector()
         stopMicInputProvider()
+        stopRecognition()
         client.stopReceiveServerInitiatedDirective()
-        client.asrAgent.stopRecognition()
         client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
     }
@@ -383,33 +386,16 @@ private extension NuguCentralManager {
     }
 }
 
-// MARK: - Internal (WakeUpDetector)
+// MARK: - Internal (MicInputProvider)
 
 extension NuguCentralManager {
-    func startWakeUpDetector() {
-        DispatchQueue.main.async { [weak self] in
-            // Should check application state, because iOS audio input can not be start using in background state
-            guard UIApplication.shared.applicationState == .active,
-                UserDefaults.Standard.useWakeUpDetector else {
-                    self?.stopMicInputProvider()
-                    return
-            }
-
-            self?.startMicInputProvider(requestingFocus: false) { [weak self] (success) in
-                guard success else {
-                    log.error("Start MicInputProvider failed")
-                    return
-                }
-                self?.client.keywordDetector.start()
+    func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async {
+            guard UIApplication.shared.applicationState == .active else {
+                completion(false)
+                return
             }
         }
-    }
-    
-    func stopWakeUpDetector() {
-        client.keywordDetector.stop()
-    }
-    
-    func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
         NuguAudioSessionManager.shared.requestRecordPermission { [unowned self] isGranted in
             guard isGranted else {
                 log.error("Record permission denied")
@@ -417,6 +403,8 @@ extension NuguCentralManager {
                 return
             }
             self.micQueue.async { [unowned self] in
+                NuguAudioSessionManager.shared.removeEngineConfigurationChangeNotification()
+                NuguAudioSessionManager.shared.addEngineConfigurationChangeNotification()
                 self.micInputProvider.stop()
                 if requestingFocus {
                     NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
@@ -435,7 +423,40 @@ extension NuguCentralManager {
     func stopMicInputProvider() {
         micQueue.sync {
             micInputProvider.stop()
+            NuguAudioSessionManager.shared.removeEngineConfigurationChangeNotification()
         }
+    }
+}
+ 
+// MARK: - Internal (WakeUpDetector)
+
+extension NuguCentralManager {
+    func startWakeUpDetector() {
+        client.keywordDetector.start()
+    }
+    
+    func stopWakeUpDetector() {
+        client.keywordDetector.stop()
+    }
+}
+
+// MARK: - Internal (ASR)
+
+extension NuguCentralManager {
+    func startRecognition(initiator: ASROptions.Initiator, completion: (Bool) -> Void) {
+        guard let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") else {
+            log.error("EPD model file not exist")
+            completion(false)
+            return
+        }
+        
+        let options = ASROptions(initiator: initiator, endPointing: .client(epdFile: epdFile))
+        client.asrAgent.startRecognition(options: options)
+        completion(true)
+    }
+    
+    func stopRecognition() {
+        client.asrAgent.stopRecognition()
     }
 }
 
@@ -452,8 +473,6 @@ extension NuguCentralManager: NuguClientDelegate {
     
     func nuguClientDidReleaseAudioSession() {
         if isTextAgentInProcess == false {
-            // Clean up all I/O before deactivating audioSession
-            stopMicInputProvider()
             NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
         }
     }
