@@ -75,4 +75,8 @@ final class ASRBeepPlayer {
             log.error("Failed to play sound file : \(error.localizedDescription)")
         }
     }
+    
+    func stop() {
+        player?.stop()
+    }
 }

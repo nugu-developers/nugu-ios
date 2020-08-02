@@ -403,8 +403,11 @@ extension NuguCentralManager {
                 return
             }
             self.micQueue.async { [unowned self] in
-                NuguAudioSessionManager.shared.removeEngineConfigurationChangeNotification()
-                NuguAudioSessionManager.shared.addEngineConfigurationChangeNotification()
+                defer {
+                    log.debug("addEngineConfigurationChangeNotification")
+                    NuguAudioSessionManager.shared.removeEngineConfigurationChangeNotification()
+                    NuguAudioSessionManager.shared.addEngineConfigurationChangeNotification()
+                }
                 self.micInputProvider.stop()
                 if requestingFocus {
                     NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)

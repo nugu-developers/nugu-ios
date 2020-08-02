@@ -98,6 +98,7 @@ extension NuguAudioSessionManager {
             
             // Clean up all I/O before deactivating audioSession
             NuguCentralManager.shared.stopMicInputProvider()
+            ASRBeepPlayer.shared.stop()
             
             // Notify audio session deactivation to 3rd party apps
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
