@@ -20,12 +20,29 @@
 
 import AVFoundation
 
-final class ASRBeepPlayer {
-    static let shared = ASRBeepPlayer()
+import NuguCore
+
+final class ASRBeepPlayer: NSObject {
+    private let focusManager: FocusManageable
+    
+    init(focusManager: FocusManageable) {
+        self.focusManager = focusManager
+        super.init()
+        
+        focusManager.add(channelDelegate: self)
+    }
     
     // MARK: ASRBeepPlayer
     
     private var player: AVAudioPlayer?
+    
+    // MARK: FocusChannelPriority
+    
+    private let channelPriority = FocusChannelPriority(requestPriority: 0, maintainPriority: 0)
+    
+    // MARK: CurrentBeepType
+    
+    private var requestedBeepType: BeepType?
     
     // MARK: BeepType
     
@@ -58,25 +75,47 @@ final class ASRBeepPlayer {
     // MARK: Internal (beep)
     
     func beep(type: BeepType) {
+        requestedBeepType = type
+        focusManager.requestFocus(channelDelegate: self)
+    }
+}
+
+// MARK: Private (play / stop)
+
+private extension ASRBeepPlayer {
+    func play(type: BeepType) {
         guard let url = Bundle.main.url(forResource: type.fileName, withExtension: type.extention) else {
             log.error("Can't find sound file")
             return
         }
-        
-        guard type.isEnabled == true else {
-            log.info("\(type) is disabled")
-            return
-        }
-        
         do {
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: type.fileTypeHint)
             player?.play()
         } catch {
-            log.error("Failed to play sound file : \(error.localizedDescription)")
+            log.error("Failed to play local beep file : \(error.localizedDescription)")
         }
     }
+}
+
+// MARK: FocusChannelDelegate
+
+extension ASRBeepPlayer: FocusChannelDelegate {
+    func focusChannelPriority() -> FocusChannelPriority {
+        return channelPriority
+    }
     
-    func stop() {
-        player?.stop()
+    func focusChannelDidChange(focusState: FocusState) {
+        log.debug("focusChannelDidChange = \(focusState)")
+        guard let requestedBeepType = requestedBeepType else {
+            log.error("focus channel has been changed while requested beepType is nil")
+            return
+        }
+        switch focusState {
+        case .foreground, .background:
+            play(type: requestedBeepType)
+            focusManager.releaseFocus(channelDelegate: self)
+        case .nothing:
+            break
+        }
     }
 }

@@ -485,7 +485,7 @@ private extension MainViewController {
         audioPlayerView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
             self.dismissDisplayAudioPlayerView()
-            NuguCentralManager.shared.displayPlayerController?.remove()
+            NuguCentralManager.shared.displayPlayerController.remove()
         }
         audioPlayerView.onUserInteraction = {
             NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
@@ -574,8 +574,7 @@ extension MainViewController: DialogStateDelegate {
                     self?.setChipsButton(actionList: actionList, normalList: normalList)
                 }
                 self?.nuguVoiceChrome.changeState(state: .listeningPassive)
-            
-                ASRBeepPlayer.shared.beep(type: .start)
+                NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
             }
         case .recognizing:
             DispatchQueue.main.async { [weak self] in
@@ -619,7 +618,7 @@ extension MainViewController: ASRAgentDelegate {
         case .complete(let text):
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
-                ASRBeepPlayer.shared.beep(type: .success)
+                NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
             }
         case .partial(let text):
             DispatchQueue.main.async { [weak self] in
@@ -629,12 +628,12 @@ extension MainViewController: ASRAgentDelegate {
             DispatchQueue.main.async { [weak self] in
                 switch error {
                 case ASRError.listenFailed:
-                    ASRBeepPlayer.shared.beep(type: .fail)
+                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
                     self?.nuguVoiceChrome.changeState(state: .speakingError)
                 case ASRError.recognizeFailed:
                     NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
                 default:
-                    ASRBeepPlayer.shared.beep(type: .fail)
+                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
                 }
             }
         default: break
@@ -746,7 +745,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         log.debug("")
         DispatchQueue.main.async { [weak self] in
-            NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidRender(template: template)
+            NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerDisplayDidRender(template: template)
             completion(self?.addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template))
         }
     }
@@ -754,7 +753,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
         log.debug("")
         DispatchQueue.main.async { [weak self] in
-            NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerDisplayDidClear()
+            NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerDisplayDidClear()
             self?.dismissDisplayAudioPlayerView()
         }
     }
@@ -770,7 +769,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
-        NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerAgentDidChange(state: state)
+        NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(state: state)
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }

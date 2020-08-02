@@ -24,7 +24,6 @@ import MediaPlayer
 import NuguAgents
 import NuguClientKit
 
-// NuguClient에서 처리할 수 있을지 검토예정
 final class NuguDisplayPlayerController {
     
     // MARK: Properties
