@@ -37,8 +37,3 @@ public protocol AudioStreamWritable {
     func write(_ element: AVAudioPCMBuffer) throws
     func finish()
 }
-
-public protocol AudioStreamDelegate: class {
-    func audioStreamWillStart()
-    func audioStreamDidStop()
-}

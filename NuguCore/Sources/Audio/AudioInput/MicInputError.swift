@@ -22,7 +22,6 @@ import Foundation
 import AVFoundation
 
 public enum MicInputError: Error {
-    case permissionDenied
     case audioFormatError
     case resamplerError(source: AVAudioFormat, dest: AVAudioFormat)
 }
@@ -32,8 +31,6 @@ public enum MicInputError: Error {
 extension MicInputError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .permissionDenied:
-            return "permission denied"
         case .audioFormatError:
             return "audio format error"
         case .resamplerError(let source, let dest):

@@ -29,11 +29,6 @@ import AVFoundation
  */
 public class AudioStream {
     private let buffer: AudioBuffer
-    public weak var delegate: AudioStreamDelegate? {
-        didSet {
-            buffer.streamDelegate = delegate
-        }
-    }
 
     public init(capacity: Int) {
         buffer = AudioBuffer(capacity: capacity)
@@ -42,36 +37,6 @@ public class AudioStream {
 
 extension AudioStream {
     class AudioBuffer: SharedBuffer<AVAudioPCMBuffer> {
-        public weak var streamDelegate: AudioStreamDelegate?
-        private let delegateQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_stream_delegate")
-        private var refCnt = 0 {
-            didSet {
-                log.debug("audio reference count: \(oldValue) -> \(refCnt)")
-                switch (oldValue, refCnt) {
-                case (_, 0):
-                    streamDelegate?.audioStreamDidStop()
-                case (0, 1):
-                    streamDelegate?.audioStreamWillStart()
-                default:
-                    break
-                }
-            }
-        }
-        
-        private func increaseRef() {
-            delegateQueue.sync { [weak self] in
-                guard let self = self else { return }
-                self.refCnt += 1
-            }
-        }
-        
-        private func decreaseRef() {
-            delegateQueue.sync { [weak self] in
-                guard let self = self else { return }
-                self.refCnt -= 1
-            }
-        }
-        
         override func makeBufferReader() -> SharedBuffer<AVAudioPCMBuffer>.Reader {
             return AudioBufferReader(buffer: self)
         }
@@ -82,11 +47,6 @@ extension AudioStream {
             init(buffer: AudioBuffer) {
                 audioBuffer = buffer
                 super.init(buffer: buffer)
-                audioBuffer?.increaseRef()
-            }
-            
-            deinit {
-                audioBuffer?.decreaseRef()
             }
         }
     }

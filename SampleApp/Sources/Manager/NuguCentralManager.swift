@@ -58,19 +58,7 @@ final class NuguCentralManager {
         }
     }()
     
-    private var inputStatus: Bool = false {
-        didSet {
-            notifyAudioSessionDeactivationIfNeeded()
-        }
-    }
-    
-    private var outputStatus: Bool = false {
-        didSet {
-            notifyAudioSessionDeactivationIfNeeded()
-        }
-    }
-    
-    var isTextAgentInProcess = false 
+    var isTextAgentInProcess = false
     
     private init() {}
 }
@@ -389,39 +377,55 @@ private extension NuguCentralManager {
     }
 }
 
-// MARK: - Private (AudioSession Deactivation)
-
-private extension NuguCentralManager {
-    func notifyAudioSessionDeactivationIfNeeded() {
-        // check wheather audio session is completly 'not in use' status before notifying audio session deactivation
-        if outputStatus == false, inputStatus == false, isTextAgentInProcess == false {
-            NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
-        }
-    }
-}
-
 // MARK: - Internal (WakeUpDetector)
 
 extension NuguCentralManager {
     func startWakeUpDetector() {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
             // Should check application state, because iOS audio input can not be start using in background state
             guard UIApplication.shared.applicationState == .active else { return }
             guard UserDefaults.Standard.useWakeUpDetector else { return }
 
-            NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
-                guard let self = self else { return }
-                guard isGranted else {
-                    log.error("Record permission denied")
+            self?.startMicInputProvider(requestingFocus: false) { [weak self] (success) in
+                guard success else {
+                    log.error("Start MicInputProvider failed")
                     return
                 }
-                self.client.keywordDetector.start()
+                self?.client.keywordDetector.start()
             }
         }
     }
     
     func stopWakeUpDetector() {
         client.keywordDetector.stop()
+    }
+    
+    func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
+        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
+            guard isGranted else {
+                log.error("Record permission denied")
+                completion(false)
+                return
+            }
+            DispatchQueue.global().async { [weak self] in
+                guard let self = self else {
+                    completion(false)
+                    return
+                }
+                
+                self.client.inputProvider.stop()
+                if requestingFocus {
+                    NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
+                }
+                do {
+                    try self.client.inputProvider.start(streamWriter: self.client.sharedAudioStream.makeAudioStreamWriter())
+                    completion(true)
+                } catch {
+                    log.error(error)
+                    completion(false)
+                }
+            }
+        }
     }
 }
 
@@ -433,29 +437,15 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        let result = NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: true)
-        outputStatus = result
-        return result
+        return NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: true)
     }
     
     func nuguClientDidReleaseAudioSession() {
-        if inputStatus == true {
+        if isTextAgentInProcess == false {
             // Clean up all I/O before deactivating audioSession
-            stopWakeUpDetector()
+            client.inputProvider.stop()
+            NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
         }
-        outputStatus = false
-    }
-    
-    func nuguClientDidOpenInputSource() {
-        inputStatus = true
-    }
-    
-    func nuguClientDidCloseInputSource() {
-        inputStatus = false
-    }
-    
-    func nuguClientDidErrorDuringInputSourceSetup(_ error: Error) {
-        log.error("Cannot open input source: \(error)")
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {

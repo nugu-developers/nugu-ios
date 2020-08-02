@@ -58,24 +58,10 @@ public class MicInputProvider: AudioProvidable {
             stop() // Unless Mic input is opened, It should be reset
             throw error
         }
-
-        // when audio session interrupted, audio engine will be stopped automatically. so we have to handle it.
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(audioSessionInterruption),
-                                               name: AVAudioSession.interruptionNotification,
-                                               object: nil)
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(engineConfigurationChange),
-                                               name: .AVAudioEngineConfigurationChange,
-                                               object: nil)
     }
     
     public func stop() {
         log.debug("try to stop")
-        
-        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .AVAudioEngineConfigurationChange, object: nil)
         
         streamWriter?.finish()
         streamWriter = nil
@@ -166,16 +152,5 @@ public class MicInputProvider: AudioProvidable {
             log.error(error.localizedDescription)
             throw error
         }
-    }
-    
-    @objc func audioSessionInterruption(notification: Notification) {
-        log.debug("audioSessionInterruption: \(notification)")
-        stop()
-    }
-    
-    /// recover when the audio engine is stopped by OS.
-    @objc func engineConfigurationChange(notification: Notification) {
-        log.debug("engineConfigurationChange: \(notification)")
-        stop()
     }
 }

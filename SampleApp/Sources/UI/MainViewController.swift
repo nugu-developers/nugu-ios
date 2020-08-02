@@ -226,37 +226,42 @@ private extension MainViewController {
 private extension MainViewController {
     func presentVoiceChrome(initiator: ASROptions.Initiator) {
         voiceChromeDismissWorkItem?.cancel()
+        nuguVoiceChrome.removeFromSuperview()
+        nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
         
-        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
+        setChipsButton(
+            actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
+            normalList: ["템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
+        )
+        
+        view.addSubview(self.nuguVoiceChrome)
+        
+        nuguButton.isActivated = false
+        
+        UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            guard isGranted else {
-                log.error("Record permission denied")
+            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
+        }
+        
+        NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { [weak self] success in
+            guard let self = self else { return }
+            guard success else {
+                log.error("Start MicInputProvider failed")
+                DispatchQueue.main.async { [weak self] in
+                    self?.dismissVoiceChrome()
+                }
                 return
             }
             guard let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") else {
                 log.error("EPD model file not exist")
+                DispatchQueue.main.async { [weak self] in
+                    self?.dismissVoiceChrome()
+                }
                 return
             }
             
             let options = ASROptions(initiator: initiator, endPointing: .client(epdFile: epdFile))
             NuguCentralManager.shared.client.asrAgent.startRecognition(options: options)
-            
-            self.nuguVoiceChrome.removeFromSuperview()
-            self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
-            
-            self.setChipsButton(
-                actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
-                normalList: ["템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
-            )
-            
-            self.view.addSubview(self.nuguVoiceChrome)
-            
-            self.nuguButton.isActivated = false
-            
-            UIView.animate(withDuration: 0.3) { [weak self] in
-                guard let self = self else { return }
-                self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
-            }
         }
     }
     
@@ -756,12 +761,6 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
         NuguCentralManager.shared.displayPlayerController?.nuguAudioPlayerAgentDidChange(state: state)
-        switch state {
-        case .paused, .playing:
-            NuguAudioSessionManager.shared.observeAVAudioSessionInterruptionNotification()
-        case .idle, .finished, .stopped:
-            NuguAudioSessionManager.shared.removeObservingAVAudioSessionInterruptionNotification()
-        }
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }
