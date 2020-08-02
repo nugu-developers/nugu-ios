@@ -80,7 +80,7 @@ final class MainViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NuguCentralManager.shared.stopWakeUpDetector()
+        NuguCentralManager.shared.stopMicInputProvider()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -118,7 +118,7 @@ final class MainViewController: UIViewController {
     /// - Parameter notification: UIApplication.willResignActiveNotification
     func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
-        NuguCentralManager.shared.stopWakeUpDetector()
+        NuguCentralManager.shared.stopMicInputProvider()
     }
     
     /// Catch becoming active notification to refresh mic status & Nugu button
@@ -134,7 +134,7 @@ final class MainViewController: UIViewController {
 
 private extension MainViewController {
     @IBAction func showSettingsButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.stopWakeUpDetector()
+        NuguCentralManager.shared.stopMicInputProvider()
 
         performSegue(withIdentifier: "showSettings", sender: nil)
     }

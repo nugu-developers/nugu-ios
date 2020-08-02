@@ -70,14 +70,6 @@ public class NuguClient {
     )
     
     /**
-     Audio input source
-     
-     You can change this property when you want to use the audio data stream from other sources.
-     - Note: Default audio source is hardware mic.
-     */
-    public var inputProvider: AudioProvidable = MicInputProvider()
-    
-    /**
      Audio stream made from ring buffer.
      
      - Note: default capacity of ring is 300.

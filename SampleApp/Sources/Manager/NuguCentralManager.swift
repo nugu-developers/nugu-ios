@@ -60,6 +60,10 @@ final class NuguCentralManager {
     
     var isTextAgentInProcess = false
     
+    // Audio input source
+    private let micQueue = DispatchQueue(label: "central_manager_mic_input_queue")
+    private let micInputProvider = MicInputProvider()
+    
     private init() {}
 }
 
@@ -84,12 +88,14 @@ extension NuguCentralManager {
             startWakeUpDetector()
         } else {
             stopWakeUpDetector()
+            stopMicInputProvider()
         }
     }
     
     func disable() {
         log.debug("")
         stopWakeUpDetector()
+        stopMicInputProvider()
         client.stopReceiveServerInitiatedDirective()
         client.asrAgent.stopRecognition()
         client.ttsAgent.stopTTS()
@@ -383,8 +389,11 @@ extension NuguCentralManager {
     func startWakeUpDetector() {
         DispatchQueue.main.async { [weak self] in
             // Should check application state, because iOS audio input can not be start using in background state
-            guard UIApplication.shared.applicationState == .active else { return }
-            guard UserDefaults.Standard.useWakeUpDetector else { return }
+            guard UIApplication.shared.applicationState == .active,
+                UserDefaults.Standard.useWakeUpDetector else {
+                    self?.stopMicInputProvider()
+                    return
+            }
 
             self?.startMicInputProvider(requestingFocus: false) { [weak self] (success) in
                 guard success else {
@@ -401,30 +410,31 @@ extension NuguCentralManager {
     }
     
     func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
-        NuguAudioSessionManager.shared.requestRecordPermission { [weak self] isGranted in
+        NuguAudioSessionManager.shared.requestRecordPermission { [unowned self] isGranted in
             guard isGranted else {
                 log.error("Record permission denied")
                 completion(false)
                 return
             }
-            DispatchQueue.global().async { [weak self] in
-                guard let self = self else {
-                    completion(false)
-                    return
-                }
-                
-                self.client.inputProvider.stop()
+            self.micQueue.async { [unowned self] in
+                self.micInputProvider.stop()
                 if requestingFocus {
                     NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
                 }
                 do {
-                    try self.client.inputProvider.start(streamWriter: self.client.sharedAudioStream.makeAudioStreamWriter())
+                    try self.micInputProvider.start(streamWriter: self.client.sharedAudioStream.makeAudioStreamWriter())
                     completion(true)
                 } catch {
                     log.error(error)
                     completion(false)
                 }
             }
+        }
+    }
+    
+    func stopMicInputProvider() {
+        micQueue.sync {
+            micInputProvider.stop()
         }
     }
 }
@@ -443,7 +453,7 @@ extension NuguCentralManager: NuguClientDelegate {
     func nuguClientDidReleaseAudioSession() {
         if isTextAgentInProcess == false {
             // Clean up all I/O before deactivating audioSession
-            client.inputProvider.stop()
+            stopMicInputProvider()
             NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
         }
     }
