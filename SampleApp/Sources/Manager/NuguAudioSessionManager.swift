@@ -124,6 +124,11 @@ private extension NuguAudioSessionManager {
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
+                    if UserDefaults.Standard.useWakeUpDetector == true {
+                        NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
+                            log.debug("startMicInputProvider: \(success)")
+                        }
+                    }
                     NuguCentralManager.shared.client.audioPlayerAgent.play()
                 } else {
                     // Interruption Ended - playback should NOT resume
@@ -137,7 +142,7 @@ private extension NuguAudioSessionManager {
     @objc func engineConfigurationChange(notification: Notification) {
         log.debug("engineConfigurationChange: \(notification)")
         NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
-            log.debug("engineConfigurationChange: \(success)")
+            log.debug("startMicInputProvider: \(success)")
         }
     }
 }

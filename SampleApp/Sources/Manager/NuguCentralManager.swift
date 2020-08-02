@@ -395,29 +395,30 @@ extension NuguCentralManager {
                 completion(false)
                 return
             }
-        }
-        NuguAudioSessionManager.shared.requestRecordPermission { [unowned self] isGranted in
-            guard isGranted else {
-                log.error("Record permission denied")
-                completion(false)
-                return
-            }
-            self.micQueue.async { [unowned self] in
-                defer {
-                    log.debug("addEngineConfigurationChangeNotification")
-                    NuguAudioSessionManager.shared.removeEngineConfigurationChangeNotification()
-                    NuguAudioSessionManager.shared.addEngineConfigurationChangeNotification()
-                }
-                self.micInputProvider.stop()
-                if requestingFocus {
-                    NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
-                }
-                do {
-                    try self.micInputProvider.start(streamWriter: self.client.sharedAudioStream.makeAudioStreamWriter())
-                    completion(true)
-                } catch {
-                    log.error(error)
+            
+            NuguAudioSessionManager.shared.requestRecordPermission { [unowned self] isGranted in
+                guard isGranted else {
+                    log.error("Record permission denied")
                     completion(false)
+                    return
+                }
+                self.micQueue.async { [unowned self] in
+                    defer {
+                        log.debug("addEngineConfigurationChangeNotification")
+                        NuguAudioSessionManager.shared.removeEngineConfigurationChangeNotification()
+                        NuguAudioSessionManager.shared.addEngineConfigurationChangeNotification()
+                    }
+                    self.micInputProvider.stop()
+                    if requestingFocus {
+                        NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
+                    }
+                    do {
+                        try self.micInputProvider.start(streamWriter: self.client.sharedAudioStream.makeAudioStreamWriter())
+                        completion(true)
+                    } catch {
+                        log.error(error)
+                        completion(false)
+                    }
                 }
             }
         }
