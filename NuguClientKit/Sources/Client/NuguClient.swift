@@ -69,16 +69,9 @@ public class NuguClient {
         upstreamDataSender: streamDataRouter
     )
     
-    /**
-     Audio stream made from ring buffer.
-     
-     - Note: default capacity of ring is 300.
-     */
-    public var sharedAudioStream: AudioStreamable = AudioStream(capacity: 300)
-    
     // keywordDetector
     public private(set) lazy var keywordDetector: KeywordDetector = {
-        let keywordDetector =  KeywordDetector(audioStream: sharedAudioStream)
+        let keywordDetector =  KeywordDetector()
         contextManager.add(delegate: keywordDetector)
         
         return keywordDetector
@@ -104,7 +97,6 @@ public class NuguClient {
             focusManager: focusManager,
             upstreamDataSender: streamDataRouter,
             contextManager: contextManager,
-            audioStream: sharedAudioStream,
             directiveSequencer: directiveSequencer,
             dialogAttributeStore: dialogAttributeStore,
             sessionManager: sessionManager,

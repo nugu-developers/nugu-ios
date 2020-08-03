@@ -25,11 +25,7 @@ import NuguCore
 import KeenSense
 
 public class KeywordDetector {
-    private let detectorQueue = DispatchQueue(label: "com.sktelecom.romaine.keyword_detector")
-    private var boundStreams: AudioBoundStreams?
     private let engine = TycheKeywordDetectorEngine()
-    
-    private let audioStream: AudioStreamable
     public weak var delegate: KeywordDetectorDelegate?
     
     public var state: KeywordDetectorState = .inactive {
@@ -41,38 +37,26 @@ public class KeywordDetector {
     // Must set `keywordSource` for using `KeywordDetector`
     public var keywordSource: KeywordSource? {
         didSet {
-            detectorQueue.async { [weak self] in
-                self?.engine.netFile = self?.keywordSource?.netFileUrl
-                self?.engine.searchFile = self?.keywordSource?.searchFileUrl
-            }
+            engine.netFile = keywordSource?.netFileUrl
+            engine.searchFile = keywordSource?.searchFileUrl
         }
     }
     
-    public init(audioStream: AudioStreamable) {
-        self.audioStream = audioStream
+    public init() {
         engine.delegate = self
     }
     
     public func start() {
         log.debug("start")
-        
-        detectorQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.boundStreams?.stop()
-            self.boundStreams = AudioBoundStreams(audioStreamReader: self.audioStream.makeAudioStreamReader())
-            self.engine.start(inputStream: self.boundStreams!.input)
-        }
+        engine.start()
+    }
+    
+    public func putAudioBuffer(buffer: AVAudioPCMBuffer) {
+        engine.putAudioBuffer(buffer: buffer)
     }
     
     public func stop() {
-        log.debug("stop")
-        
-        detectorQueue.async { [weak self] in
-            self?.boundStreams?.stop()
-            self?.boundStreams = nil
-            self?.engine.stop()
-        }
+        engine.stop()
     }
 }
 
