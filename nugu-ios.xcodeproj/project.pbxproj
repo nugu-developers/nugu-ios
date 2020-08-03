@@ -41,7 +41,6 @@
 		1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentSpec.swift */; };
 		1F5DD4AC240CF0D600719FBC /* MockPlaySyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */; };
 		1F5DD4AE240CF7D100719FBC /* ASRAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AD240CF7D100719FBC /* ASRAgentSpec.swift */; };
-		1F5DD4B0240CF89500719FBC /* MockAudioStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4AF240CF89500719FBC /* MockAudioStream.swift */; };
 		1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B2240CFC8800719FBC /* TTSAgentSpec.swift */; };
 		1F5DD4B5240CFEEB00719FBC /* DisplayAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DD4B4240CFEEB00719FBC /* DisplayAgentSpec.swift */; };
 		1F721C66241767E100023EF8 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F721C64241767E100023EF8 /* Quick.framework */; };
@@ -99,7 +98,6 @@
 		1FFFF3882375707000C9A177 /* SharedBufferIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31C2375707000C9A177 /* SharedBufferIndex.swift */; };
 		1FFFF3892375707000C9A177 /* SharedBufferError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31D2375707000C9A177 /* SharedBufferError.swift */; };
 		1FFFF38A2375707000C9A177 /* SharedBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31E2375707000C9A177 /* SharedBuffer.swift */; };
-		1FFFF38B2375707000C9A177 /* AudioStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31F2375707000C9A177 /* AudioStream.swift */; };
 		1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3212375707000C9A177 /* Collection+Convenience.swift */; };
 		1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */; };
 		1FFFF3912375707100C9A177 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3272375707000C9A177 /* Atomic.swift */; };
@@ -292,8 +290,6 @@
 		7373892124A46D120018DDD2 /* MediaPlayerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373891E24A46D110018DDD2 /* MediaPlayerDelegate.swift */; };
 		7373892224A46D120018DDD2 /* MediaPlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373891F24A46D110018DDD2 /* MediaPlayerState.swift */; };
 		7373892324A46D120018DDD2 /* MediaPlayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373892024A46D110018DDD2 /* MediaPlayable.swift */; };
-		7373892524A46D1F0018DDD2 /* AudioProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373892424A46D1F0018DDD2 /* AudioProvidable.swift */; };
-		7373892724A46D270018DDD2 /* AudioStreamProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373892624A46D270018DDD2 /* AudioStreamProtocol.swift */; };
 		7373892C24A46D430018DDD2 /* StreamDataState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373892824A46D420018DDD2 /* StreamDataState.swift */; };
 		7373892D24A46D430018DDD2 /* StreamDataRoutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373892924A46D420018DDD2 /* StreamDataRoutable.swift */; };
 		7373892E24A46D430018DDD2 /* StreamDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373892A24A46D420018DDD2 /* StreamDataDelegate.swift */; };
@@ -322,7 +318,6 @@
 		7373895E24A473B90018DDD2 /* PlaySyncProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373895B24A473B90018DDD2 /* PlaySyncProperty.swift */; };
 		7373895F24A473B90018DDD2 /* PlaySyncDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7373895C24A473B90018DDD2 /* PlaySyncDelegate.swift */; };
 		7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */; };
-		738D520A23D59B2F00FDECAF /* AudioBoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */; };
 		739078FD241A3E0C007D753F /* ServerSideEventReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */; };
 		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
@@ -457,7 +452,6 @@
 		75F7994724728ED500655BF6 /* TextList4ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F7994124728ED500655BF6 /* TextList4ViewCell.xib */; };
 		75F7994824728ED500655BF6 /* TextList2ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F7994224728ED500655BF6 /* TextList2ViewCell.xib */; };
 		75F7994924728ED500655BF6 /* TextList3ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F7994324728ED500655BF6 /* TextList3ViewCell.swift */; };
-		7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
 		7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */; };
@@ -700,7 +694,6 @@
 		1F5DD4A9240CEAF500719FBC /* AudioPlayerAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentSpec.swift; sourceTree = "<group>"; };
 		1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPlaySyncManager.swift; sourceTree = "<group>"; };
 		1F5DD4AD240CF7D100719FBC /* ASRAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRAgentSpec.swift; sourceTree = "<group>"; };
-		1F5DD4AF240CF89500719FBC /* MockAudioStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAudioStream.swift; sourceTree = "<group>"; };
 		1F5DD4B2240CFC8800719FBC /* TTSAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSAgentSpec.swift; sourceTree = "<group>"; };
 		1F5DD4B4240CFEEB00719FBC /* DisplayAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayAgentSpec.swift; sourceTree = "<group>"; };
 		1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentSourceItem.swift; sourceTree = "<group>"; };
@@ -792,7 +785,6 @@
 		1FFFF31C2375707000C9A177 /* SharedBufferIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedBufferIndex.swift; sourceTree = "<group>"; };
 		1FFFF31D2375707000C9A177 /* SharedBufferError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedBufferError.swift; sourceTree = "<group>"; };
 		1FFFF31E2375707000C9A177 /* SharedBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedBuffer.swift; sourceTree = "<group>"; };
-		1FFFF31F2375707000C9A177 /* AudioStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioStream.swift; sourceTree = "<group>"; };
 		1FFFF3212375707000C9A177 /* Collection+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+Convenience.swift"; sourceTree = "<group>"; };
 		1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+DeepMerge.swift"; sourceTree = "<group>"; };
 		1FFFF3242375707000C9A177 /* KeyedDecodingContainerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedDecodingContainerExtension.swift; sourceTree = "<group>"; };
@@ -984,8 +976,6 @@
 		7373891E24A46D110018DDD2 /* MediaPlayerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerDelegate.swift; sourceTree = "<group>"; };
 		7373891F24A46D110018DDD2 /* MediaPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayerState.swift; sourceTree = "<group>"; };
 		7373892024A46D110018DDD2 /* MediaPlayable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayable.swift; sourceTree = "<group>"; };
-		7373892424A46D1F0018DDD2 /* AudioProvidable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioProvidable.swift; sourceTree = "<group>"; };
-		7373892624A46D270018DDD2 /* AudioStreamProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioStreamProtocol.swift; sourceTree = "<group>"; };
 		7373892824A46D420018DDD2 /* StreamDataState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamDataState.swift; sourceTree = "<group>"; };
 		7373892924A46D420018DDD2 /* StreamDataRoutable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamDataRoutable.swift; sourceTree = "<group>"; };
 		7373892A24A46D420018DDD2 /* StreamDataDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamDataDelegate.swift; sourceTree = "<group>"; };
@@ -1014,7 +1004,6 @@
 		7373895B24A473B90018DDD2 /* PlaySyncProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncProperty.swift; sourceTree = "<group>"; };
 		7373895C24A473B90018DDD2 /* PlaySyncDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySyncDelegate.swift; sourceTree = "<group>"; };
 		7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClientDelegate.swift; sourceTree = "<group>"; };
-		738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBoundStreams.swift; sourceTree = "<group>"; };
 		739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiver.swift; sourceTree = "<group>"; };
 		739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiverState.swift; sourceTree = "<group>"; };
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
@@ -1147,7 +1136,6 @@
 		75F7994124728ED500655BF6 /* TextList4ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList4ViewCell.xib; sourceTree = "<group>"; };
 		75F7994224728ED500655BF6 /* TextList2ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList2ViewCell.xib; sourceTree = "<group>"; };
 		75F7994324728ED500655BF6 /* TextList3ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList3ViewCell.swift; sourceTree = "<group>"; };
-		7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEndPointDetector.swift; sourceTree = "<group>"; };
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveHandleResult.swift; sourceTree = "<group>"; };
@@ -1456,7 +1444,6 @@
 				1F9C5B7723F2BF8B0086CC04 /* MockContextManager.swift */,
 				1F9C5B8B23FBA7400086CC04 /* MockFocusManager.swift */,
 				1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */,
-				1F5DD4AF240CF89500719FBC /* MockAudioStream.swift */,
 				7EA53F0E247F583F008731CD /* MockSessionManager.swift */,
 				7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */,
 			);
@@ -1698,7 +1685,6 @@
 		1FFFF3182375707000C9A177 /* AudioInput */ = {
 			isa = PBXGroup;
 			children = (
-				7373892424A46D1F0018DDD2 /* AudioProvidable.swift */,
 				1FFFF3192375707000C9A177 /* MicInputProvider.swift */,
 				1FFFF31A2375707000C9A177 /* MicInputConst.swift */,
 				7E35D79924623B53003289A2 /* MicInputError.swift */,
@@ -1709,9 +1695,6 @@
 		1FFFF31B2375707000C9A177 /* AudioStream */ = {
 			isa = PBXGroup;
 			children = (
-				7373892624A46D270018DDD2 /* AudioStreamProtocol.swift */,
-				1FFFF31F2375707000C9A177 /* AudioStream.swift */,
-				738D520923D59B2F00FDECAF /* AudioBoundStreams.swift */,
 				1FFFF31E2375707000C9A177 /* SharedBuffer.swift */,
 				1FFFF31C2375707000C9A177 /* SharedBufferIndex.swift */,
 				1FFFF31D2375707000C9A177 /* SharedBufferError.swift */,
@@ -2383,7 +2366,6 @@
 				7303C68523C5BFD400610343 /* ClientEndPointDetector.swift */,
 				7303C68323C5BFD400610343 /* EndPointDetectorDelegate.swift */,
 				7303C68423C5BFD400610343 /* EndPointDetectorState.swift */,
-				7E0E0B052437065600198FCB /* ServerEndPointDetector.swift */,
 				7E0E0B072437077F00198FCB /* EndPointDetectable.swift */,
 			);
 			path = EndPointDetector;
@@ -3478,7 +3460,6 @@
 				7315302123E11EDF00F843C3 /* DelegateDictionary.swift in Sources */,
 				7373894524A46E5F0018DDD2 /* ContextManageable.swift in Sources */,
 				7E3C5707244FC62300FF36DF /* EventSenders.swift in Sources */,
-				7373892524A46D1F0018DDD2 /* AudioProvidable.swift in Sources */,
 				7303C68A23C5C00F00610343 /* BoundStreams.swift in Sources */,
 				7373892E24A46D430018DDD2 /* StreamDataDelegate.swift in Sources */,
 				7373893424A46D4D0018DDD2 /* Downstream.swift in Sources */,
@@ -3494,12 +3475,10 @@
 				1FFFF3C12375707100C9A177 /* Policy.swift in Sources */,
 				1FFFF3C82375707100C9A177 /* FocusConst.swift in Sources */,
 				7373895924A473A60018DDD2 /* FocusManageable.swift in Sources */,
-				7373892724A46D270018DDD2 /* AudioStreamProtocol.swift in Sources */,
 				7373892C24A46D430018DDD2 /* StreamDataState.swift in Sources */,
 				7373894224A46E5F0018DDD2 /* ContextInfo.swift in Sources */,
 				73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */,
 				735A4CE2241173F4004E7A41 /* EventSenderError.swift in Sources */,
-				1FFFF38B2375707000C9A177 /* AudioStream.swift in Sources */,
 				7373895F24A473B90018DDD2 /* PlaySyncDelegate.swift in Sources */,
 				7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */,
 				1FFFF3912375707100C9A177 /* Atomic.swift in Sources */,
@@ -3513,7 +3492,6 @@
 				1FD4A98423A22576002EB56D /* NuguCore.swift in Sources */,
 				1FFFF3862375707000C9A177 /* MicInputProvider.swift in Sources */,
 				7373893824A46D6C0018DDD2 /* AuthorizationStoreDelegate.swift in Sources */,
-				738D520A23D59B2F00FDECAF /* AudioBoundStreams.swift in Sources */,
 				735A4CC624117339004E7A41 /* MultiPartParserError.swift in Sources */,
 				7E35D79A24623B53003289A2 /* MicInputError.swift in Sources */,
 				1FFFF3D4237570C900C9A177 /* ObjcExceptionCatcher.m in Sources */,
@@ -3746,7 +3724,6 @@
 				1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */,
 				1F31FD7C2424CBD8009593EB /* UpstreamSpec.swift in Sources */,
 				1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */,
-				1F5DD4B0240CF89500719FBC /* MockAudioStream.swift in Sources */,
 				1F9C5B7C23F4E8C40086CC04 /* SystemAgentSpec.swift in Sources */,
 				7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */,
 				1F5DD4AE240CF7D100719FBC /* ASRAgentSpec.swift in Sources */,
@@ -3766,7 +3743,6 @@
 				1FD5D17C24A99993007BA384 /* PhoneCallPerson.swift in Sources */,
 				736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */,
 				73152FC823E0415400F843C3 /* TTSMedia.swift in Sources */,
-				7E0E0B062437065600198FCB /* ServerEndPointDetector.swift in Sources */,
 				A135E6952428B6C8006F82E5 /* AudioPlayerAgent+RequestPlayEvent.swift in Sources */,
 				73152FDC23E0451900F843C3 /* NuguAgents.swift in Sources */,
 				737388C324A46C110018DDD2 /* CapabilityAgentCategory.swift in Sources */,

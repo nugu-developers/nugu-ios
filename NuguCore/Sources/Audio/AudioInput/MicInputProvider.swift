@@ -23,14 +23,13 @@ import AVFoundation
 
 import NuguCore.ObjcExceptionCatcher
 
-public class MicInputProvider: AudioProvidable {
+public class MicInputProvider {
     public var isRunning: Bool {
         return audioEngine.isRunning
     }
     
     public var audioFormat: AVAudioFormat?
     private let audioBus = 0
-    private var streamWriter: AudioStreamWritable?
     private let audioEngine = AVAudioEngine()
     private let audioQueue = DispatchQueue(label: "romain_mic_input_audio_queue")
     
@@ -46,14 +45,14 @@ public class MicInputProvider: AudioProvidable {
         self.audioFormat = inputFormat
     }
     
-    public func start(streamWriter: AudioStreamWritable) throws {
+    public func start(tapBlock: @escaping AVAudioNodeTapBlock) throws {
         guard audioEngine.isRunning == false else {
             log.warning("audio engine is already running")
             return
         }
         
         do {
-            try beginTappingMicrophone(streamWriter: streamWriter)
+            try beginTappingMicrophone(tapBlock: tapBlock)
         } catch {
             stop() // Unless Mic input is opened, It should be reset
             throw error
@@ -63,16 +62,12 @@ public class MicInputProvider: AudioProvidable {
     public func stop() {
         log.debug("try to stop")
         
-        streamWriter?.finish()
-        streamWriter = nil
-        
         audioEngine.inputNode.removeTap(onBus: audioBus)
         audioEngine.stop()
     }
     
-    private func beginTappingMicrophone(streamWriter: AudioStreamWritable) throws {
+    private func beginTappingMicrophone(tapBlock: @escaping AVAudioNodeTapBlock) throws {
         log.debug("begin tapping to engine's input node")
-        self.streamWriter = streamWriter
         
         var inputNode: AVAudioInputNode!
         var inputFormat: AVAudioFormat!
@@ -103,7 +98,7 @@ public class MicInputProvider: AudioProvidable {
         
         if let error = ObjcExceptionCatcher.objcTry({
             inputNode.removeTap(onBus: audioBus)
-            inputNode.installTap(onBus: audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, _) in
+            inputNode.installTap(onBus: audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, when) in
                 guard let self = self else { return }
                 
                 self.audioQueue.sync {
@@ -123,13 +118,8 @@ public class MicInputProvider: AudioProvidable {
                         log.error("audio convert error: \(error!)")
                         return
                     }
-
-                    do {
-                        try self.streamWriter?.write(pcmBuffer)
-                    } catch {
-                        log.error(error)
-                        inputNode.removeTap(onBus: self.audioBus)
-                    }
+                    
+                    tapBlock(pcmBuffer, when)
                 }
             }
         }) {

@@ -24,7 +24,6 @@ import NuguCore
 
 struct ASRRequest {
     let contextPayload: [ContextInfo]
-    let reader: AudioStreamReadable
     let eventIdentifier: EventIdentifier
     let options: ASROptions
     let referrerDialogRequestId: String?

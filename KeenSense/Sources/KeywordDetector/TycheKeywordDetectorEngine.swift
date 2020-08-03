@@ -36,8 +36,6 @@ public class TycheKeywordDetectorEngine {
     
     public var netFile: URL?
     public var searchFile: URL?
-    public var inputStream: InputStream?
-    private var streamDelegator: InputStreamDelegator?
     public weak var delegate: TycheKeywordDetectorEngineDelegate?
     public var state: TycheKeywordDetectorEngine.State = .inactive {
         didSet {
@@ -61,30 +59,49 @@ public class TycheKeywordDetectorEngine {
     /**
      Start Key Word Detection.
      */
-    public func start(inputStream: InputStream) {
+    public func start() {
         log.debug("try to start")
         
         kwdQueue.async { [weak self] in
             guard let self = self else { return }
             
-            if [.closed, .notOpen].contains(inputStream.streamStatus) == false || self.engineHandle != nil {
+            if self.engineHandle != nil {
                 // Release last components
                 self.internalStop()
             }
             
-            self.streamDelegator = InputStreamDelegator(owner: self)
-            self.inputStream = inputStream
-            CFReadStreamSetDispatchQueue(inputStream, self.kwdQueue)
-            inputStream.delegate = self.streamDelegator
-            inputStream.open()
-            
-            do {
+             do {
                 try self.initTriggerEngine()
                 self.state = .active
             } catch {
                 self.state = .inactive
                 self.delegate?.tycheKeywordDetectorEngineDidError(error)
                 log.debug("error: \(error)")
+            }
+        }
+    }
+    
+    public func putAudioBuffer(buffer: AVAudioPCMBuffer) {
+        log.debug("try to put audio buffer")
+        
+        kwdQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard let ptrPcmData = buffer.int16ChannelData?.pointee,
+                0 < buffer.frameLength else {
+                    log.warning("There's no 16bit audio data.")
+                    return
+            }
+            
+            ptrPcmData.withMemoryRebound(to: UInt8.self, capacity: Int(buffer.frameLength*2)) { (ptrData: UnsafeMutablePointer<UInt8>) -> Void in
+                self.detectingData.append(Data(bytes: ptrData, count: Int(buffer.frameLength)*2))
+            }
+            
+            let inputLength = Int(buffer.frameLength)
+            let isDetected = Wakeup_PutAudio(self.engineHandle, ptrPcmData, Int32(inputLength)) == 1
+            if isDetected {
+                log.debug("detected")
+                self.notifyDetection()
+                self.internalStop()
             }
         }
     }
@@ -98,20 +115,12 @@ public class TycheKeywordDetectorEngine {
     }
     
     private func internalStop() {
-        if let inputStream = inputStream,
-            inputStream.streamStatus != .closed {
-            inputStream.close()
-            inputStream.delegate = nil
-            log.debug("bounded input stream is closed")
-        }
-        
         if engineHandle != nil {
             Wakeup_Destroy(engineHandle)
             engineHandle = nil
             log.debug("engine is destroyed")
         }
         
-        streamDelegator = nil
         state = .inactive
     }
 }
@@ -184,60 +193,5 @@ extension TycheKeywordDetectorEngine {
     
     private func convertTimeToDataOffset(_ time: Int32) -> Int {
         return (Int(time) * KeywordDetectorConst.sampleRate * 2) / 1000
-    }
-}
-
-// MARK: - StreamDelegate
-
-extension TycheKeywordDetectorEngine {
-    private class InputStreamDelegator: NSObject, StreamDelegate {
-        let owner: TycheKeywordDetectorEngine
-        
-        init(owner: TycheKeywordDetectorEngine) {
-            self.owner = owner
-            super.init()
-        }
-        
-        public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-            guard let inputStream = aStream as? InputStream,
-                inputStream == owner.inputStream else { return }
-            
-            switch eventCode {
-            case .hasBytesAvailable:
-                guard owner.engineHandle != nil else {
-                    owner.internalStop()
-                    return
-                }
-                
-                let inputBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(4096))
-                defer { inputBuffer.deallocate() }
-                
-                let inputLength = inputStream.read(inputBuffer, maxLength: 4096)
-                guard 0 < inputLength else { return }
-                
-                owner.detectingData.append(Data(bytes: inputBuffer, count: inputLength))
-                
-                let isDetected = inputBuffer.withMemoryRebound(to: Int16.self, capacity: inputLength/2) { (ptrPcmData) -> Bool in
-                    return Wakeup_PutAudio(owner.engineHandle, ptrPcmData, Int32(inputLength/2)) == 1
-                }
-                
-                if isDetected {
-                    log.debug("detected")
-                    owner.notifyDetection()
-                    owner.internalStop()
-                }
-                
-            case .endEncountered:
-                log.debug("stream endEncountered")
-                owner.internalStop()
-
-            case .errorOccurred:
-                log.error("stream errorOccurred")
-                owner.internalStop()
-                
-            default:
-                break
-            }
-        }
     }
 }
