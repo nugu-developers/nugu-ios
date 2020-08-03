@@ -31,7 +31,6 @@ class ASRAgentSpec: QuickSpec {
     let upstreamDataSender: UpstreamDataSendable = MockStreamDataRouter()
     let focusManager: FocusManageable = MockFocusManager()
     let directiveSequencer: DirectiveSequenceable = MockDirectiveSequencer()
-    let audioStream: AudioStreamable = MockAudioStream()
     let sessionManager: SessionManageable = MockSessionManager()
     let playSyncmanager: PlaySyncManageable = MockPlaySyncManager()
     let dialogAttributeStore: DialogAttributeStoreable = MockDialogAttributeStore()
@@ -42,7 +41,6 @@ class ASRAgentSpec: QuickSpec {
                 focusManager: focusManager,
                 upstreamDataSender: upstreamDataSender,
                 contextManager: contextManager,
-                audioStream: audioStream,
                 directiveSequencer: directiveSequencer,
                 dialogAttributeStore: dialogAttributeStore,
                 sessionManager: sessionManager,

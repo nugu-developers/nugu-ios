@@ -29,6 +29,8 @@ import RxSwift
  - Note: You can send event only once. because stream cannot be opened after close.
  */
 class EventSender {
+    private static var id = 0
+    public let id: Int
     private let boundary: String
     private let streamQueue: DispatchQueue
     private var streamDelegator: DataStreamDelegator?
@@ -41,13 +43,19 @@ class EventSender {
     #endif
     
     public init(boundary: String) {
+        if EventSender.id == Int.max {
+            EventSender.id = 0
+        }
+        self.id = EventSender.id
+        EventSender.id += 1
+        
         self.boundary = boundary
         streamQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_stream_\(boundary)")
-        log.debug("initiated")
+        log.debug("[\(id)] initiated")
         
         streamQueue.async { [weak self] in
             guard let self = self else { return }
-            log.debug("network bound stream task start.")
+            log.debug("[\(self.id)] network bound stream task start.")
             
             self.streamDelegator = DataStreamDelegator(sender: self)
             CFWriteStreamSetDispatchQueue(self.streams.output, self.streamQueue)
@@ -64,26 +72,16 @@ class EventSender {
      - Parameter event: UpstreamEventMessage you want to send.
      */
     func send(_ event: Upstream.Event) -> Completable {
-        return Completable.create { [weak self] (complete) -> Disposable in
-            let disposable = Disposables.create()
-            
-            // check input stream was opened before.
-            guard self?.streams.input.streamStatus == .notOpen else {
-                complete(.error(EventSenderError.requestMultipleEvents))
-                return disposable
-            }
-            
-            complete(.completed)
-            return disposable
-        }
-        .andThen(self.streamStateSubject)
-        .filter { $0 }
-        .take(1)
-        .asSingle()
-        .flatMapCompletable { [weak self] _ in
-            // send UpstreamEventMessage as a part data
-            guard let self = self else { return Completable.empty() }
-            return self.sendData(self.makeMultipartData(event))
+        log.debug("[\(id)] try send event")
+        
+        return streamStateSubject
+            .filter { $0 }
+            .take(1)
+            .asSingle()
+            .flatMapCompletable { [weak self] _ in
+                // send UpstreamEventMessage as a part data
+                guard let self = self else { return Completable.empty() }
+                return self.sendData(self.makeMultipartData(event))
         }
         .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_event_\(event.header.dialogRequestId)"))
     }
@@ -92,7 +90,9 @@ class EventSender {
      Send attachment through pre-opened stream
      */
     public func send(_ attachment: Upstream.Attachment) -> Completable {
-        streamStateSubject
+        log.debug("[\(id)] send attachment")
+        
+        return streamStateSubject
             .filter { $0 }
             .take(1)
             .asSingle()
@@ -108,6 +108,8 @@ class EventSender {
      Send delemeter to notify End of Stream and close the stream
      */
     func finish() {
+        log.debug("[\(id)] finish")
+        
         streamStateSubject
             .filter { $0 }
             .take(1)
@@ -131,9 +133,9 @@ class EventSender {
                 let sentFilename = FileManager.default.urls(for: .documentDirectory,
                                                             in: .userDomainMask)[0].appendingPathComponent("sent_event.dat")
                 try self.sentData.write(to: sentFilename)
-                log.debug("sent event data to file :\(sentFilename)")
+                log.debug("[\(self.id)] sent event data to file :\(sentFilename)")
             } catch {
-                log.debug("write sent event data failed: \(error)")
+                log.debug("[\(self.id)] write sent event data failed: \(error)")
             }
             #endif
             
@@ -149,6 +151,8 @@ class EventSender {
      Write data to output stream.
      */
     private func sendData(_ data: Data) -> Completable {
+        log.debug("[\(id)] try to send data stream")
+        
         return Completable.create { [weak self] (event) -> Disposable in
             let disposable = Disposables.create()
             guard let self = self else { return disposable }
@@ -208,7 +212,7 @@ private extension EventSender {
         partData.append(bodyData)
         partData.append(HTTPConst.crlfData)
         
-        log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
+        log.debug("[\(id)] \n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
     }
     
@@ -228,7 +232,7 @@ private extension EventSender {
         partData.append(attachment.content)
         partData.append(HTTPConst.crlfData)
         
-        log.debug("Data(\(attachment.content)):\n\(String(data: partData, encoding: .utf8) ?? "")")
+        log.debug("[\(id)] Data(\(attachment.content)):\n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
     }
 }

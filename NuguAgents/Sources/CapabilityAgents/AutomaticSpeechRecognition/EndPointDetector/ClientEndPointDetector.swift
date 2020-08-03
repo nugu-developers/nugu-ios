@@ -19,18 +19,15 @@
 //
 
 import Foundation
+import AVFoundation
 
 import NuguCore
 import JadeMarble
 
 class ClientEndPointDetector: EndPointDetectable {
     public weak var delegate: EndPointDetectorDelegate?
-    
+    private let engine: TycheEndPointDetectorEngine
     private let asrOptions: ASROptions
-    private var engine: TycheEndPointDetectorEngine!
-    
-    private var boundStreams: AudioBoundStreams?
-    private let detectorQueue = DispatchQueue(label: "com.sktelecom.romaine.end_point_detector")
     
     private var state: EndPointDetectorState = .idle {
         didSet {
@@ -40,46 +37,28 @@ class ClientEndPointDetector: EndPointDetectable {
     
     public init(asrOptions: ASROptions, epdFile: URL) {
         self.asrOptions = asrOptions
-        
         engine = TycheEndPointDetectorEngine(epdFile: epdFile)
         engine.delegate = self
     }
     
     deinit {
-        internalStop()
+        stop()
     }
     
-    func start(audioStreamReader: AudioStreamReadable) {
-        log.debug("start")
-        
-        detectorQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.internalStop()
-            self.boundStreams = AudioBoundStreams(audioStreamReader: audioStreamReader)
-
-            self.engine.start(
-                inputStream: self.boundStreams!.input,
-                sampleRate: self.asrOptions.sampleRate,
-                timeout: self.asrOptions.timeout.truncatedSeconds,
-                maxDuration: self.asrOptions.maxDuration.truncatedSeconds,
-                pauseLength: self.asrOptions.pauseLength.truncatedMilliSeconds
-            )
-        }
-        
+    func start() {
+        engine.start(
+            sampleRate: asrOptions.sampleRate,
+            timeout: asrOptions.timeout.truncatedSeconds,
+            maxDuration: asrOptions.maxDuration.truncatedSeconds,
+            pauseLength: asrOptions.pauseLength.truncatedMilliSeconds
+        )
+    }
+    
+    func putAudioBuffer(buffer: AVAudioPCMBuffer) {
+        engine.putAudioBuffer(buffer: buffer)
     }
     
     public func stop() {
-        log.debug("stop")
-        
-        detectorQueue.async { [weak self] in
-            self?.internalStop()
-        }
-    }
-    
-    private func internalStop() {
-        boundStreams?.stop()
-        boundStreams = nil
         engine.stop()
     }
     

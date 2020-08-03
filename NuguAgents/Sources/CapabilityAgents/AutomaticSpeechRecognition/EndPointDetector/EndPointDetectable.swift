@@ -19,13 +19,15 @@
 //
 
 import Foundation
+import AVFoundation
 
 import NuguCore
 
 protocol EndPointDetectable: class {
     var delegate: EndPointDetectorDelegate? { get set }
     
-    func start(audioStreamReader: AudioStreamReadable)
+    func start()
+    func putAudioBuffer(buffer: AVAudioPCMBuffer)
     func stop()
     func handleNotifyResult(_ state: ASRNotifyResult.State)
 }

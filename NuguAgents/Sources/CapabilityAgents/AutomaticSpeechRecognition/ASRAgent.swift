@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 import NuguCore
 import JadeMarble
@@ -36,7 +37,6 @@ public final class ASRAgent: ASRAgentProtocol {
     private let contextManager: ContextManageable
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
-    private let audioStream: AudioStreamable
     private let dialogAttributeStore: DialogAttributeStoreable
     private let sessionManager: SessionManageable
     private let playSyncManager: PlaySyncManageable
@@ -172,7 +172,6 @@ public final class ASRAgent: ASRAgentProtocol {
         focusManager: FocusManageable,
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
-        audioStream: AudioStreamable,
         directiveSequencer: DirectiveSequenceable,
         dialogAttributeStore: DialogAttributeStoreable,
         sessionManager: SessionManageable,
@@ -182,7 +181,6 @@ public final class ASRAgent: ASRAgentProtocol {
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
         self.contextManager = contextManager
-        self.audioStream = audioStream
         self.dialogAttributeStore = dialogAttributeStore
         self.sessionManager = sessionManager
         self.playSyncManager = playSyncManager
@@ -232,6 +230,10 @@ public extension ASRAgent {
                 return
             }
         }
+    }
+    
+    func putAudioBuffer(buffer: AVAudioPCMBuffer) {
+        endPointDetector?.putAudioBuffer(buffer: buffer)
     }
     
     func stopRecognition() {
@@ -517,7 +519,6 @@ private extension ASRAgent {
             return
         }
         
-        asrState = .listening
         upstreamDataSender.sendStream(
             Event(
                 typeInfo: .recognize(options: asrRequest.options),
@@ -535,6 +536,8 @@ private extension ASRAgent {
                         self?.asrState = .idle
                     case .error(let error):
                         self?.asrResult = .error(error)
+                    case .sent:
+                        self?.asrState = .listening
                     default:
                         break
                     }
@@ -548,21 +551,23 @@ private extension ASRAgent {
         case .client(let epdFile):
             endPointDetector = ClientEndPointDetector(asrOptions: asrRequest.options, epdFile: epdFile)
         case .server:
-            endPointDetector = ServerEndPointDetector(asrOptions: asrRequest.options)
-
-            // send wake up voice data
-            if case let .wakeUpKeyword(_, data, _, _, _) = asrRequest.options.initiator {
-                do {
-                    let speexData = try SpeexEncoder(sampleRate: Int(asrRequest.options.sampleRate), inputType: .linearPcm16).encode(data: data)
-                    
-                    endPointDetectorSpeechDataExtracted(speechData: speexData)
-                } catch {
-                    log.error(error)
-                }
-            }
+            // TODO: after server preparation.
+//            endPointDetector = ServerEndPointDetector(asrOptions: asrRequest.options)
+//
+//            // send wake up voice data
+//            if case let .wakeUpKeyword(_, data, _, _, _) = asrRequest.options.initiator {
+//                do {
+//                    let speexData = try SpeexEncoder(sampleRate: Int(asrRequest.options.sampleRate), inputType: .linearPcm16).encode(data: data)
+//
+//                    endPointDetectorSpeechDataExtracted(speechData: speexData)
+//                } catch {
+//                    log.error(error)
+//                }
+//            }
+            break
         }
         endPointDetector?.delegate = self
-        endPointDetector?.start(audioStreamReader: asrRequest.reader)
+        endPointDetector?.start()
     }
     
     /// asrDispatchQueue
@@ -599,8 +604,7 @@ private extension ASRAgent {
             completion?(.error(ASRError.listenFailed))
             return eventIdentifier.dialogRequestId
         }
-        // reader 는 최대한 빨리 만들어줘야 Data 유실이 없음.
-        let reader = audioStream.makeAudioStreamReader()
+
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
@@ -619,7 +623,6 @@ private extension ASRAgent {
 
                 self.asrRequest = ASRRequest(
                     contextPayload: contextPayload,
-                    reader: reader,
                     eventIdentifier: eventIdentifier,
                     options: options,
                     referrerDialogRequestId: directive?.header.dialogRequestId,

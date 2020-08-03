@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 import NuguCore
 
@@ -44,6 +45,9 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
         options: ASROptions,
         completion: ((StreamDataState) -> Void)?
     ) -> String
+    
+    /// Put the audio buffer to be processed.
+    func putAudioBuffer(buffer: AVAudioPCMBuffer)
     
     /// This function forces the `ASRAgent` back to the `idle` state.
     ///

@@ -311,17 +311,18 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
-        guard let inputStream = eventResponseProcessors[task]?.inputStream else {
+        guard let processor = eventResponseProcessors[task] else {
             log.error("Can't send an event. Unknown URLSessionTask requested input stream")
             return
         }
         
-        guard inputStream.streamStatus == .notOpen else {
+        guard processor.inputStream.streamStatus == .notOpen else {
             log.error("Can't send an event. Input stream was opened before")
+            processor.subject.onError(NetworkError.streamInitializeFailed)
             return
         }
         
-        completionHandler(inputStream)
+        completionHandler(processor.inputStream)
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
