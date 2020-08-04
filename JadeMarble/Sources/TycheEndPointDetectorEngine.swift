@@ -98,32 +98,29 @@ public class TycheEndPointDetectorEngine {
                 return
             }
 
-            let inputLength = Int(buffer.frameLength)
-            var engineState: Int32 {
-                // Calculate flusehd audio frame length.
+            let engineState = ptrPcmData.withMemoryRebound(to: UInt8.self, capacity: Int(buffer.frameLength*2)) { (ptrData) -> Int32 in
+                #if DEBUG
+                self.inputData.append(ptrData, count: Int(buffer.frameLength)*2)
+                #endif
+                
+                // Calculate flushed audio frame length.
                 var adjustLength = 0
-                if self.flushedLength + (inputLength) <= self.flushLength {
-                    self.flushedLength += (inputLength)
+                if self.flushedLength + Int(buffer.frameLength) <= self.flushLength {
+                    self.flushedLength += Int(buffer.frameLength)
                     return -1
                 } else if self.flushedLength < self.flushLength {
-                    self.flushedLength += (inputLength)
-                    adjustLength = (inputLength) - (self.flushedLength - self.flushLength)
+                    self.flushedLength += Int(buffer.frameLength)
+                    adjustLength = Int(buffer.frameLength) - (self.flushedLength - self.flushLength)
                 }
                 
                 return epdClientChannelRUN(
                     self.engineHandle,
-                    ptrPcmData + adjustLength,
-                    myint((UInt32(inputLength)/2 - UInt32(adjustLength))*2),
+                    ptrData,
+                    myint(UInt32(buffer.frameLength) - UInt32(adjustLength))*2, // data length is double of frame length, because It is 16bit audio data.
                     0
                 )
             }
             guard 0 <= engineState else { return }
-            
-            #if DEBUG
-            ptrPcmData.withMemoryRebound(to: UInt8.self, capacity: Int(buffer.frameLength*2)) { (ptrData: UnsafeMutablePointer<UInt8>) -> Void in
-                self.inputData.append(ptrData, count: Int(buffer.frameLength)*2)
-            }
-            #endif
             
             let length = epdClientChannelGetOutputDataSize(self.engineHandle)
             if 0 < length {
