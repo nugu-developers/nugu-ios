@@ -196,12 +196,6 @@ extension NuguCentralManager {
     }
     
     func revoke() {
-        let clearSampleApp = { [weak self] in
-            self?.popToRootViewController()
-            self?.disable()
-            UserDefaults.Standard.clear()
-        }
-        
         if SampleApp.loginMethod == SampleApp.LoginMethod.type1,
             let clientId = SampleApp.clientId,
             let clientSecret = SampleApp.clientSecret,
@@ -209,10 +203,10 @@ extension NuguCentralManager {
             oauthClient.revoke(
                 clientId: clientId,
                 clientSecret: clientSecret,
-                token: token) { (result) in
+                token: token) { [weak self] (result) in
                     switch result {
                     case .success:
-                        clearSampleApp()
+                        self?.clearSampleApp()
                     case .failure(let nuguLoginKitError):
                         log.debug(nuguLoginKitError.localizedDescription)
                     }
@@ -220,6 +214,12 @@ extension NuguCentralManager {
         } else {
             clearSampleApp()
         }
+    }
+    
+    func clearSampleApp() {
+        popToRootViewController()
+        disable()
+        UserDefaults.Standard.clear()
     }
 }
 

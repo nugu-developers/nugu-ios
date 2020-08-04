@@ -91,7 +91,9 @@ extension NuguServiceWebView: WKScriptMessageHandler {
                 let url = jsonObject["url"] as? String else { return }
             javascriptDelegate?.openInAppBrowser(url: url)
         case .closeWindow:
-            javascriptDelegate?.closeWindow()
+            guard let jsonObject = try? JSONSerialization.jsonObject(with: bodyData, options: []) as? [String: AnyHashable],
+                let reason = jsonObject["reason"] as? String else { return }
+            javascriptDelegate?.closeWindow(reason: reason)
         }
     }
 }

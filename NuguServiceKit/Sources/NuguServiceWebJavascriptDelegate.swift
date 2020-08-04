@@ -23,5 +23,5 @@
 public protocol NuguServiceWebJavascriptDelegate: class {
     func openExternalApp(openExternalAppItem: WebOpenExternalApp)
     func openInAppBrowser(url: String)
-    func closeWindow()
+    func closeWindow(reason: String)
 }
