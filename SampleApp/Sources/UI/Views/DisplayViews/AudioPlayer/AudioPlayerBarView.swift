@@ -78,7 +78,6 @@ final class AudioPlayerBarView: UIView {
         if button.isSelected {
             NuguCentralManager.shared.client.audioPlayerAgent.pause()
         } else {
-            NuguCentralManager.shared.client.ttsAgent.stopTTS()
             NuguCentralManager.shared.client.audioPlayerAgent.play()
         }
     }

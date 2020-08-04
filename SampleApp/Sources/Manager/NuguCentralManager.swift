@@ -61,11 +61,7 @@ final class NuguCentralManager {
     private let micQueue = DispatchQueue(label: "central_manager_mic_input_queue")
     private let micInputProvider = MicInputProvider()
     
-    // asr state
-    private var asrState: ASRState = .idle
-    
     private init() {
-        client.asrAgent.add(delegate: self)
     }
 }
 
@@ -417,12 +413,12 @@ extension NuguCentralManager {
                         NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
                     }
                     do {
-                        try self.micInputProvider.start { [weak self] (buffer, when) in
+                        try self.micInputProvider.start { [weak self] (buffer, _) in
                             if self?.client.keywordDetector.state == .active {
                                 self?.client.keywordDetector.putAudioBuffer(buffer: buffer)
                             }
                             
-                            if [.listening, .recognizing].contains(self?.asrState) {
+                            if [.listening, .recognizing].contains(self?.client.asrAgent.asrState) {
                                 self?.client.asrAgent.putAudioBuffer(buffer: buffer)
                             }
                         }
@@ -560,17 +556,5 @@ extension NuguCentralManager: SoundAgentDataSource {
             url = Bundle.main.url(forResource: "asrFail", withExtension: "wav")
         }
         return url
-    }
-}
-
-// MARK: ASRAgentDelegate
-
-extension NuguCentralManager: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState) {
-        asrState = state
-    }
-    
-    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        // Nothing to do
     }
 }

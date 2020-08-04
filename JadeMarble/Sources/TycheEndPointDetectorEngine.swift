@@ -90,8 +90,6 @@ public class TycheEndPointDetectorEngine {
     }
     
     public func putAudioBuffer(buffer: AVAudioPCMBuffer) {
-        log.debug("try to put audio buffer")
-        
         epdQueue.async { [weak self] in
             guard let self = self else { return }
             guard let ptrPcmData = buffer.int16ChannelData?.pointee,

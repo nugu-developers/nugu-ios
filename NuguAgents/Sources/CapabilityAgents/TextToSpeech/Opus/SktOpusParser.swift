@@ -43,7 +43,6 @@ class SktOpusParser {
             // get content size
             let contentSizeData: Data = packetizedDataStream.subdata(in: 0..<Self.contentSizeIndicatorByteCount)
             let contentSize = Int(contentSizeData[3]) | (Int(contentSizeData[2]) << 8) | (Int(contentSizeData[1]) << 16) | (Int(contentSizeData[0]) << 24)
-            log.debug("opus chunk size: \(contentSize)")
             
             // garbage from server. (we don't know the reason why this useless byte is sent by server)
             let rangeData = packetizedDataStream.subdata(in: Self.contentSizeIndicatorByteCount..<Self.headerSize)

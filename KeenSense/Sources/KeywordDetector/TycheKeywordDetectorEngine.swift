@@ -82,8 +82,6 @@ public class TycheKeywordDetectorEngine {
     }
     
     public func putAudioBuffer(buffer: AVAudioPCMBuffer) {
-        log.debug("try to put audio buffer")
-        
         kwdQueue.async { [weak self] in
             guard let self = self else { return }
             guard let ptrPcmData = buffer.int16ChannelData?.pointee,
