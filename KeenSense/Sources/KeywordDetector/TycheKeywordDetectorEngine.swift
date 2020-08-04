@@ -94,8 +94,7 @@ public class TycheKeywordDetectorEngine {
                 self.detectingData.append(Data(bytes: ptrData, count: Int(buffer.frameLength)*2))
             }
             
-            let inputLength = Int(buffer.frameLength)
-            let isDetected = Wakeup_PutAudio(self.engineHandle, ptrPcmData, Int32(inputLength)) == 1
+            let isDetected = Wakeup_PutAudio(self.engineHandle, ptrPcmData, Int32(buffer.frameLength)) == 1
             if isDetected {
                 log.debug("detected")
                 self.notifyDetection()
