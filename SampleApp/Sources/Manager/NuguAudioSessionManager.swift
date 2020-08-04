@@ -133,7 +133,7 @@ private extension NuguAudioSessionManager {
             log.debug("Interruption began")
             // Interruption began, take appropriate actions
             NuguCentralManager.shared.client.audioPlayerAgent.pause()
-            NuguCentralManager.shared.client.ttsAgent.stopTTS()
+            NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: false)
             DispatchQueue.main.async { [weak self] in
                 log.debug("application state = \(UIApplication.shared.applicationState.rawValue)")
                 if UIApplication.shared.applicationState == .inactive {
