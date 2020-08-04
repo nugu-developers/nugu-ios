@@ -48,7 +48,7 @@ public final class ASRAgent: ASRAgentProtocol {
     
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
     
-    private var asrState: ASRState = .idle {
+    private(set) public var asrState: ASRState = .idle {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
             
