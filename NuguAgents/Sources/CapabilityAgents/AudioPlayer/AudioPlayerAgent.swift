@@ -51,6 +51,10 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         }
     }
     
+    public var isPlaying: Bool {
+        return audioPlayerState == .playing
+    }
+    
     // Private
     private let playSyncManager: PlaySyncManageable
     private let contextManager: ContextManageable

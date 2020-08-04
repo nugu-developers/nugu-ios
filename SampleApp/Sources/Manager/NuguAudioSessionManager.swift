@@ -19,6 +19,7 @@
 //
 
 import AVFoundation
+import UIKit
 
 import NuguAgents
 
@@ -27,16 +28,29 @@ final class NuguAudioSessionManager {
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
     
     init() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(interruptionNotification),
-                                               name: AVAudioSession.interruptionNotification,
-                                               object: nil)
+        addAudioInterruptionNotification()
     }
+    
+    var interruptionOccuredWhenInactiveState = false
 }
 
 // MARK: - Internal
 
 extension NuguAudioSessionManager {
+    func addAudioInterruptionNotification() {
+        removeAudioInterruptionNotification()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(interruptionNotification),
+                                               name: AVAudioSession.interruptionNotification,
+                                               object: nil)
+    }
+    
+    func removeAudioInterruptionNotification() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: AVAudioSession.interruptionNotification,
+                                                  object: nil)
+    }
+    
     func addEngineConfigurationChangeNotification() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(engineConfigurationChange),
@@ -116,10 +130,19 @@ private extension NuguAudioSessionManager {
             let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
         switch type {
         case .began:
+            log.debug("Interruption began")
             // Interruption began, take appropriate actions
             NuguCentralManager.shared.client.audioPlayerAgent.pause()
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
+            DispatchQueue.main.async { [weak self] in
+                log.debug("application state = \(UIApplication.shared.applicationState.rawValue)")
+                if UIApplication.shared.applicationState == .inactive {
+                    self?.interruptionOccuredWhenInactiveState = true
+                }
+            }
         case .ended:
+            log.debug("Interruption ended")
+            interruptionOccuredWhenInactiveState = false
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {

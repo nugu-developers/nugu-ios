@@ -82,6 +82,8 @@ extension NuguCentralManager {
 
         NuguLocationManager.shared.startUpdatingLocation()
         
+        guard NuguAudioSessionManager.shared.interruptionOccuredWhenInactiveState == false else { return }
+            
         // Set Last WakeUp Keyword
         // If you don't want to use saved wakeup-word, don't need to be implemented
         if UserDefaults.Standard.useWakeUpDetector,
