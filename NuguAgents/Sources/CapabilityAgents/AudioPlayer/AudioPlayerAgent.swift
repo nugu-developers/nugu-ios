@@ -287,16 +287,13 @@ extension AudioPlayerAgent: FocusChannelDelegate {
             guard let self = self else { return }
             
             switch (focusState, self.audioPlayerState) {
-            case (.foreground, let playerState) where [.idle, .stopped, .finished].contains(playerState):
-                self.currentPlayer?.play()
             // Directive 에 의한 Pause 인경우 재생하지 않음.
             case (.foreground, .paused):
                 if self.currentMedia?.pauseReason != .user {
                     self.currentPlayer?.resume()
                 }
-            // Foreground. playing 무시
             case (.foreground, _):
-                break
+                self.currentPlayer?.play()
             case (.background, .playing):
                 self.currentMedia?.pauseReason = .focus
                 self.currentPlayer?.pause()
