@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.16.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.16.0)
+Released on 2020-08-04
+#### Fixed
+- [NuguCore] Fix bugs about layer policy.  (#397) (#398) 
+
+#### Updated
+- [NuguCore] Apply layer policy v1.4.6 (#397) (#414) (#417)
+- [NuguCore] Cancel directive when associated directive was canceled. (#415) 
+- [NuguAgents] Add `defaultDisplayTempalteDuration` property to `DisplayAgent` (#396)
+- [NuguClientKit] Add `nuguClientWillSend` function to `NuguClientDelegate` (#399) 
+- [NuguAgents] `SystemAgent` 1.3 (upgrade capability-agent) (#401)
+- [NuguAgents] Add `isSeekable` variable to `AudioPlayerDisplayTemplate` (#406)
+- [NuguUIKit] Remove chips count limit (#411)
+- [NuguUIKit] Update lottie animation files (#407)
+- [Sample] Open mic from application. (#423) (#424) (#429)
+
+#### Added
+- [NuguAgents] Implement `MediaPlayerAgent` (#418)
+
 ## [0.15.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.15.0)
 Released on 2020-07-10
 #### Fixed
