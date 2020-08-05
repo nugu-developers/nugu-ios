@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.16.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.16.1)
+Released on 2020-08-05
+#### Fixed
+- [JadeMarble] Pass the audio pcm data as UInt8 to Tyche EPD engine. (#435)
+- [NuguServiceKit] Add reason parameter in `closeWindow` delegate of `NuguServiceWebJavascriptDelegate` (#433)
+
 ## [0.16.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.16.0)
 Released on 2020-08-04
 #### Fixed
