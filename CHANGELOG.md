@@ -3,6 +3,27 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.17.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.17.0)
+Released on 2020-08-12
+#### Added
+- [NuguAgents] Add `InteractionControlManager` to keep the voice chrome when processing multi-turn (#443)
+
+#### Fixed
+- [SampleApp] Fix `AVAudioSession` issues. (#436)
+- [NuguAgents] Fix audio focus issues. (#437) (#438) (#450)
+- [NuguAgents] Cancel directive when message id does not match. (#444)
+- [NuguCore] Fix layer synchronization issues. (#449) (#451)
+
+#### Update
+- [NuguAgents] Add `includeDialogAttribute` parameter to `TextAgentProtocol.requestTextInput` function. (#445)
+- [NuguClientKit] Move `chips` parameter from `DialogState.listening` to `DialogStateDelegate.dialogStateDidChange` (#446)
+
+## [0.16.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.16.1)
+Released on 2020-08-05
+#### Fixed
+- [JadeMarble] Pass the audio pcm data as UInt8 to Tyche EPD engine. (#435)
+- [NuguServiceKit] Add reason parameter in `closeWindow` delegate of `NuguServiceWebJavascriptDelegate` (#433)
+
 ## [0.16.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.16.0)
 Released on 2020-08-04
 #### Fixed
