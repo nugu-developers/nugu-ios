@@ -32,6 +32,7 @@ final class NuguAudioSessionManager {
     }
     
     var interruptionOccuredWhenInactiveState = false
+    var pausedByInterruption = false
 }
 
 // MARK: - Internal
@@ -133,6 +134,12 @@ private extension NuguAudioSessionManager {
             log.debug("Interruption began")
             // Interruption began, take appropriate actions
             NuguCentralManager.shared.client.audioPlayerAgent.pause()
+            if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
+                NuguCentralManager.shared.client.audioPlayerAgent.pause()
+                DispatchQueue.global().asyncAfter(deadline: .now()+0.1) { [weak self] in
+                    self?.pausedByInterruption = true
+                }
+            }
             NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: false)
             DispatchQueue.main.async { [weak self] in
                 log.debug("application state = \(UIApplication.shared.applicationState.rawValue)")
@@ -151,7 +158,9 @@ private extension NuguAudioSessionManager {
                             log.debug("startMicInputProvider: \(success)")
                         }
                     }
-                    NuguCentralManager.shared.client.audioPlayerAgent.play()
+                    if pausedByInterruption == true {
+                        NuguCentralManager.shared.client.audioPlayerAgent.play()
+                    }
                 } else {
                     // Interruption Ended - playback should NOT resume
                 }
