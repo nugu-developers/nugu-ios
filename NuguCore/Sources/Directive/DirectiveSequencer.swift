@@ -38,19 +38,19 @@ public class DirectiveSequencer: DirectiveSequenceable {
 
 public extension DirectiveSequencer {
     func add(directiveHandleInfos: DirectiveHandleInfos) {
-        log.debug("add directive handles: \(directiveHandleInfos)")
+        log.debug(directiveHandleInfos)
         self.directiveHandleInfos.merge(directiveHandleInfos)
     }
     
     func remove(directiveHandleInfos: DirectiveHandleInfos) {
-        log.debug("remove directive handles: \(directiveHandleInfos)")
+        log.debug(directiveHandleInfos)
         directiveHandleInfos.keys.forEach { key in
             self.directiveHandleInfos.removeValue(forKey: key)
         }
     }
     
     func processDirective(_ directive: Downstream.Directive) {
-        log.info("\(directive.header)")
+        log.info(directive.header)
         
         directiveSequencerDispatchQueue.async { [weak self] in
             self?.prefetchDirective(directive)
@@ -58,7 +58,7 @@ public extension DirectiveSequencer {
     }
     
     func processAttachment(_ attachment: Downstream.Attachment) {
-        log.info("attachment messageId: \(attachment.header)")
+        log.info(attachment.header)
         guard let handler = directiveHandleInfos[attachment.header.type] else {
             log.warning("No handler registered \(attachment.header)")
             return
@@ -86,6 +86,7 @@ private extension DirectiveSequencer {
         
         // Directives should be prefetch sequentially.
         do {
+            log.info(directive.header)
             try handler.preFetch?(directive)
             handleDirective(directive)
         } catch {
@@ -108,10 +109,12 @@ private extension DirectiveSequencer {
             return
         }
         guard canceledDialogRequestIds.contains(directive.header.dialogRequestId) == false else {
+            log.debug("Cancel directive \(directive.header)")
             handler.cancelDirective?(directive)
             return
         }
         
+        log.info(directive.header)
         handlingDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
         handler.directiveHandler(directive) { [weak self ] result in
             self?.directiveSequencerDispatchQueue.async { [weak self] in

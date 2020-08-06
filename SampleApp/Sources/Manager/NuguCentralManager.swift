@@ -484,9 +484,7 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientDidReleaseAudioSession() {
-        if isTextAgentInProcess == false {
-            NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
-        }
+        NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {

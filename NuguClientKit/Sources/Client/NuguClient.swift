@@ -52,7 +52,8 @@ public class NuguClient {
         playSyncManager: playSyncManager,
         contextManager: contextManager,
         directiveSequencer: directiveSequencer,
-        sessionManager: sessionManager
+        sessionManager: sessionManager,
+        focusManager: focusManager
     )
     
     public lazy var extensionAgent: ExtensionAgentProtocol = ExtensionAgent(
@@ -115,7 +116,8 @@ public class NuguClient {
             contextManager: contextManager,
             upstreamDataSender: streamDataRouter,
             directiveSequencer: directiveSequencer,
-            dialogAttributeStore: dialogAttributeStore
+            dialogAttributeStore: dialogAttributeStore,
+            focusManager: focusManager
         )
         
         chipsAgent = ChipsAgent(

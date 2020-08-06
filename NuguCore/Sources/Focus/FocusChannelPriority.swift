@@ -45,4 +45,6 @@ public struct FocusChannelPriority {
     public static let information = FocusChannelPriority(requestPriority: 200, maintainPriority: 200)
     /// A priority of `media` channel.
     public static let media = FocusChannelPriority(requestPriority: 200, maintainPriority: 100)
+    /// A priority of `background` channel.
+    public static let background = FocusChannelPriority(requestPriority: 0, maintainPriority: 0)
 }

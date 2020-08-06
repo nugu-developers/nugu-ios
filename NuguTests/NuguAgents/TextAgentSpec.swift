@@ -27,6 +27,7 @@ import Nimble
 class TextAgentSpec: QuickSpec {
     
     // NuguCore(Mock)
+    let focusManager: FocusManageable = MockFocusManager()
     let contextManager: ContextManageable = MockContextManager()
     let upstreamDataSender: UpstreamDataSendable = MockStreamDataRouter()
     let directiveSequencer: DirectiveSequenceable = MockDirectiveSequencer()
@@ -38,13 +39,14 @@ class TextAgentSpec: QuickSpec {
                 contextManager: contextManager,
                 upstreamDataSender: upstreamDataSender,
                 directiveSequencer: directiveSequencer,
-                dialogAttributeStore: dialogAttributeStore
+                dialogAttributeStore: dialogAttributeStore,
+                focusManager: focusManager
             )
             
             describe("context") {
                 var contextInfo: ContextInfo?
                 
-                waitUntil(timeout: 0.2) { (done) in
+                waitUntil(timeout: 1) { (done) in
                     textAgent.contextInfoRequestContext { (context) in
                         contextInfo = context
                         done()
