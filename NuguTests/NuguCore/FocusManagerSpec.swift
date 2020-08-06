@@ -59,6 +59,9 @@ class FocusManagerSpec: QuickSpec, FocusDelegate {
                                 currentFocus = .foreground
                                 nextFocus = .background
                             }
+                        } else if current === userRecognition, next === media {
+                            currentFocus = .foreground
+                            nextFocus = .background
                         } else {
                             currentFocus = .background
                             nextFocus = .foreground
