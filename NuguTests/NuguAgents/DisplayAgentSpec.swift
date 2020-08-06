@@ -41,12 +41,13 @@ class DisplayAgentSpec: QuickSpec {
                 playSyncManager: playSyncManager,
                 contextManager: contextManager,
                 directiveSequencer: directiveSequencer,
-                sessionManager: sessionManager
+                sessionManager: sessionManager,
+                focusManager: focusManager
             )
             
             describe("context") {
                 var contextInfo: ContextInfo?
-                waitUntil(timeout: 0.2) { (done) in
+                waitUntil(timeout: 1) { (done) in
                     displayAgent.contextInfoRequestContext { (context) in
                         contextInfo = context
                         done()
