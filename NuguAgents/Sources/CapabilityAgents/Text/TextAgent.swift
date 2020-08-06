@@ -35,6 +35,7 @@ public final class TextAgent: TextAgentProtocol {
     private let upstreamDataSender: UpstreamDataSendable
     private let directiveSequencer: DirectiveSequenceable
     private let dialogAttributeStore: DialogAttributeStoreable
+    private let focusManager: FocusManageable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
@@ -47,15 +48,18 @@ public final class TextAgent: TextAgentProtocol {
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
         directiveSequencer: DirectiveSequenceable,
-        dialogAttributeStore: DialogAttributeStoreable
+        dialogAttributeStore: DialogAttributeStoreable,
+        focusManager: FocusManageable
     ) {
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
         self.dialogAttributeStore = dialogAttributeStore
+        self.focusManager = focusManager
         
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         contextManager.add(delegate: self)
+        focusManager.add(channelDelegate: self)
     }
     
     deinit {
@@ -77,6 +81,18 @@ extension TextAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]        
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+    }
+}
+
+// MARK: - FocusChannelDelegate
+
+extension TextAgent: FocusChannelDelegate {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return .background
+    }
+    
+    public func focusChannelDidChange(focusState: FocusState) {
+        log.info(focusState)
     }
 }
 
@@ -112,6 +128,7 @@ private extension TextAgent {
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
+        focusManager.requestFocus(channelDelegate: self)
         let eventIdentifier = EventIdentifier()
         contextManager.getContexts { [weak self] contextPayload in
             guard let self = self else { return }
@@ -124,9 +141,16 @@ private extension TextAgent {
                     eventIdentifier: eventIdentifier,
                     referrerDialogRequestId: referrerDialogRequestId,
                     contextPayload: contextPayload
-                ),
-                completion: completion
-            )
+                )
+            ) { [weak self] state in
+                guard let self = self else { return }
+                
+                switch state {
+                case .finished, .error:
+                    self.focusManager.releaseFocus(channelDelegate: self)
+                default: break
+                }
+            }
         }
         return eventIdentifier.dialogRequestId
     }

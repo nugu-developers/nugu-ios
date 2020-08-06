@@ -216,7 +216,7 @@ extension DisplayAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        log.info("\(focusState)")
+        log.info(focusState)
     }
 }
 
