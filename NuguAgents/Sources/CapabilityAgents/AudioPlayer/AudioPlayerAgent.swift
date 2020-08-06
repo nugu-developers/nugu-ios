@@ -220,8 +220,22 @@ public extension AudioPlayerAgent {
     
     func pause() {
         audioPlayerDispatchQueue.async { [weak self] in
-            self?.currentMedia?.pauseReason = .user
-            self?.currentPlayer?.pause()
+            guard let self = self,
+                let media = self.currentMedia,
+                let player = self.currentPlayer else {
+                    return
+            }
+            switch self.audioPlayerState {
+            case .playing:
+                self.currentMedia?.pauseReason = .user
+                player.pause()
+            case .paused:
+                self.currentMedia?.pauseReason = .user
+                self.audioPlayerState = .paused(temporary: false)
+                self.sendPlayEvent(media: media, typeInfo: .playbackPaused)
+            default:
+                break
+            }
         }
     }
     
