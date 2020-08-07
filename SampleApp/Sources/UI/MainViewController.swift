@@ -329,18 +329,12 @@ private extension MainViewController {
         indicator.startAnimating()
         window.addSubview(indicator)
         
-        NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { [weak self] state in
+        NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = true
+        NuguCentralManager.shared.client.asrAgent.stopRecognition()
+        NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { state in
             switch state {
-            case .sent:
-                NuguCentralManager.shared.isTextAgentInProcess = true
-                NuguCentralManager.shared.client.asrAgent.stopRecognition()
-            case .finished:
-                NuguCentralManager.shared.isTextAgentInProcess = false
-            case .error:
-                NuguCentralManager.shared.isTextAgentInProcess = false
-                DispatchQueue.main.async { [weak self] in
-                    self?.dismissVoiceChrome()
-                }
+            case .finished, .error:
+                NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = false
             default: break
             }
             DispatchQueue.main.async {
@@ -563,7 +557,6 @@ extension MainViewController: DialogStateDelegate {
     func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool) {
         switch state {
         case .idle:
-            guard NuguCentralManager.shared.isTextAgentInProcess == false else { return }
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
                 self?.dismissVoiceChrome()
             })
