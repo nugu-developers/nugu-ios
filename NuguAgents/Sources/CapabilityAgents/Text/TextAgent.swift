@@ -143,6 +143,7 @@ private extension TextAgent {
                     contextPayload: contextPayload
                 )
             ) { [weak self] state in
+                completion?(state)
                 guard let self = self else { return }
                 
                 switch state {
