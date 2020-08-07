@@ -40,6 +40,7 @@ public final class ASRAgent: ASRAgentProtocol {
     private let dialogAttributeStore: DialogAttributeStoreable
     private let sessionManager: SessionManageable
     private let playSyncManager: PlaySyncManageable
+    private let interactionControlManager: InteractionControlManageable
     
     private var options: ASROptions = ASROptions(endPointing: .server)
     private var endPointDetector: EndPointDetectable?
@@ -152,12 +153,13 @@ public final class ASRAgent: ASRAgentProtocol {
             }
             if let dialogRequestId = expectSpeechDirective?.header.dialogRequestId {
                 sessionManager.activate(dialogRequestId: dialogRequestId, category: .automaticSpeechRecognition)
-            } else {
-                playSyncManager.endPlay(property: playSyncProperty)
+                interactionControlManager.start(mode: .multiTurn, category: capabilityAgentProperty.category)
             }
             if let dialogRequestId = oldValue?.header.dialogRequestId {
                 sessionManager.deactivate(dialogRequestId: dialogRequestId, category: .automaticSpeechRecognition)
+                playSyncManager.endPlay(property: playSyncProperty)
                 dialogAttributeStore.removeAttributes()
+                interactionControlManager.finish(mode: .multiTurn, category: capabilityAgentProperty.category)
             }
         }
     }
@@ -175,7 +177,8 @@ public final class ASRAgent: ASRAgentProtocol {
         directiveSequencer: DirectiveSequenceable,
         dialogAttributeStore: DialogAttributeStoreable,
         sessionManager: SessionManageable,
-        playSyncManager: PlaySyncManageable
+        playSyncManager: PlaySyncManageable,
+        interactionControlManager: InteractionControlManageable
     ) {
         self.focusManager = focusManager
         self.upstreamDataSender = upstreamDataSender
@@ -184,6 +187,7 @@ public final class ASRAgent: ASRAgentProtocol {
         self.dialogAttributeStore = dialogAttributeStore
         self.sessionManager = sessionManager
         self.playSyncManager = playSyncManager
+        self.interactionControlManager = interactionControlManager
         
         playSyncManager.add(delegate: self)
         contextManager.add(delegate: self)

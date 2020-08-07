@@ -34,6 +34,7 @@ class ASRAgentSpec: QuickSpec {
     let sessionManager: SessionManageable = MockSessionManager()
     let playSyncmanager: PlaySyncManageable = MockPlaySyncManager()
     let dialogAttributeStore: DialogAttributeStoreable = MockDialogAttributeStore()
+    let interactionControlManager: InteractionControlManageable = MockInteractionControlManager()
     
     override func spec() {
         describe("ASRAgent") {
@@ -44,7 +45,8 @@ class ASRAgentSpec: QuickSpec {
                 directiveSequencer: directiveSequencer,
                 dialogAttributeStore: dialogAttributeStore,
                 sessionManager: sessionManager,
-                playSyncManager: playSyncmanager
+                playSyncManager: playSyncmanager,
+                interactionControlManager: interactionControlManager
             )
             
             describe("context") {

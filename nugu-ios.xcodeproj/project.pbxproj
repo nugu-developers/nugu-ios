@@ -455,6 +455,12 @@
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
 		7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */; };
+		7E284D9924DD2B4A00BF9640 /* InteractionControlManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284D9124DD260200BF9640 /* InteractionControlManageable.swift */; };
+		7E284D9A24DD2B4A00BF9640 /* InteractionControlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284D9324DD266D00BF9640 /* InteractionControlDelegate.swift */; };
+		7E284D9B24DD2B4A00BF9640 /* InteractionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284D9524DD26DB00BF9640 /* InteractionControl.swift */; };
+		7E284D9C24DD2B4A00BF9640 /* InteractionControlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284D9724DD278300BF9640 /* InteractionControlManager.swift */; };
+		7E284DA124DD482800BF9640 /* InteractionControlConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284DA024DD482800BF9640 /* InteractionControlConst.swift */; };
+		7E284DA324DD533E00BF9640 /* MockInteractionControlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */; };
 		7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */; };
 		7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2DFE9D24B8510900792529 /* PlayStackControl.swift */; };
 		7E35D79024622B4E003289A2 /* EventIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* EventIdentifier.swift */; };
@@ -1139,6 +1145,12 @@
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveHandleResult.swift; sourceTree = "<group>"; };
+		7E284D9124DD260200BF9640 /* InteractionControlManageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControlManageable.swift; sourceTree = "<group>"; };
+		7E284D9324DD266D00BF9640 /* InteractionControlDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControlDelegate.swift; sourceTree = "<group>"; };
+		7E284D9524DD26DB00BF9640 /* InteractionControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControl.swift; sourceTree = "<group>"; };
+		7E284D9724DD278300BF9640 /* InteractionControlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControlManager.swift; sourceTree = "<group>"; };
+		7E284DA024DD482800BF9640 /* InteractionControlConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControlConst.swift; sourceTree = "<group>"; };
+		7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInteractionControlManager.swift; sourceTree = "<group>"; };
 		7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentRevokeItem.swift; sourceTree = "<group>"; };
 		7E2DFE9D24B8510900792529 /* PlayStackControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStackControl.swift; sourceTree = "<group>"; };
 		7E35D79324623444003289A2 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
@@ -1415,6 +1427,7 @@
 				1FFFF3592375707000C9A177 /* Text */,
 				1FFFF3402375707000C9A177 /* Location */,
 				680EF95F24B30D8D003DE266 /* MediaPlayer */,
+				7E284D9024DD255C00BF9640 /* Interaction */,
 			);
 			path = CapabilityAgents;
 			sourceTree = "<group>";
@@ -1446,6 +1459,7 @@
 				1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */,
 				7EA53F0E247F583F008731CD /* MockSessionManager.swift */,
 				7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */,
+				7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -2706,6 +2720,18 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		7E284D9024DD255C00BF9640 /* Interaction */ = {
+			isa = PBXGroup;
+			children = (
+				7E284D9124DD260200BF9640 /* InteractionControlManageable.swift */,
+				7E284D9324DD266D00BF9640 /* InteractionControlDelegate.swift */,
+				7E284D9524DD26DB00BF9640 /* InteractionControl.swift */,
+				7E284D9724DD278300BF9640 /* InteractionControlManager.swift */,
+				7E284DA024DD482800BF9640 /* InteractionControlConst.swift */,
+			);
+			path = Interaction;
+			sourceTree = "<group>";
+		};
 		7E2DFE9C24B850F900792529 /* Directive */ = {
 			isa = PBXGroup;
 			children = (
@@ -3721,6 +3747,7 @@
 				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
 				7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
+				7E284DA324DD533E00BF9640 /* MockInteractionControlManager.swift in Sources */,
 				1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */,
 				1F31FD7C2424CBD8009593EB /* UpstreamSpec.swift in Sources */,
 				1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */,
@@ -3752,6 +3779,7 @@
 				737388E724A46C5D0018DDD2 /* AudioPlayerState.swift in Sources */,
 				73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */,
 				73152FB623E0413F00F843C3 /* AudioPlayerAgentMedia.swift in Sources */,
+				7E284D9924DD2B4A00BF9640 /* InteractionControlManageable.swift in Sources */,
 				737388E024A46C4A0018DDD2 /* ExtensionAgentProtocol.swift in Sources */,
 				1FD5D17A24A99993007BA384 /* PhoneCallAgentDelegate.swift in Sources */,
 				7373891424A46CB90018DDD2 /* TextAgentDelegate.swift in Sources */,
@@ -3797,6 +3825,7 @@
 				737388DC24A46C3C0018DDD2 /* SoundAgentDelegate.swift in Sources */,
 				737388E124A46C4A0018DDD2 /* ExtensionAgentDelegate.swift in Sources */,
 				73152FCB23E0415B00F843C3 /* DisplayAgent+Event.swift in Sources */,
+				7E284DA124DD482800BF9640 /* InteractionControlConst.swift in Sources */,
 				73152FA923E0412D00F843C3 /* ExtensionAgent+Event.swift in Sources */,
 				7E35D79824623A22003289A2 /* TTSError.swift in Sources */,
 				737388F824A46C800018DDD2 /* ASRAgentDelegate.swift in Sources */,
@@ -3832,6 +3861,7 @@
 				7EF674372499EE3E004FA45C /* DialogAttributeStore.swift in Sources */,
 				737388E524A46C5D0018DDD2 /* AudioPlayerAgentDelegate.swift in Sources */,
 				7334F47523FD170200EA5E58 /* Eventable+makeEventMessage.swift in Sources */,
+				7E284D9A24DD2B4A00BF9640 /* InteractionControlDelegate.swift in Sources */,
 				73152FC123E0414F00F843C3 /* SystemAgent.swift in Sources */,
 				1FD5D18424AC97CE007BA384 /* PhoneCallCandidatesItem.swift in Sources */,
 				737388DD24A46C3C0018DDD2 /* SoundBeepName.swift in Sources */,
@@ -3848,6 +3878,7 @@
 				73152FB923E0414700F843C3 /* EndPointDetectorState.swift in Sources */,
 				737388D024A46C2B0018DDD2 /* SessionDelegate.swift in Sources */,
 				7373891124A46CAE0018DDD2 /* DisplayAgentDelegate.swift in Sources */,
+				7E284D9B24DD2B4A00BF9640 /* InteractionControl.swift in Sources */,
 				7373890824A46CA10018DDD2 /* TTSResult.swift in Sources */,
 				737388F924A46C800018DDD2 /* ASRAgentProtocol.swift in Sources */,
 				7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */,
@@ -3860,6 +3891,7 @@
 				1FD5D19624D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift in Sources */,
 				73152FCC23E0415B00F843C3 /* DisplayRenderingInfo.swift in Sources */,
 				736508652462F7FA00EF4549 /* SktOpusParser.swift in Sources */,
+				7E284D9C24DD2B4A00BF9640 /* InteractionControlManager.swift in Sources */,
 				1FD5D19124C82F3B007BA384 /* MediaPlayerAgent+Event.swift in Sources */,
 				737388C924A46C1D0018DDD2 /* ChipsAgentProtocol.swift in Sources */,
 				1FD5D17E24A99993007BA384 /* PhoneCallType.swift in Sources */,

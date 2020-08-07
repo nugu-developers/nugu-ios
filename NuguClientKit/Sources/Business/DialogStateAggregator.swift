@@ -28,8 +28,8 @@ public class DialogStateAggregator {
     private let dialogStateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.dialog_state_aggregator", qos: .userInitiated)
     private let dialogStateDelegates = DelegateSet<DialogStateDelegate>()
     
-    private let dialogAttributeStore: DialogAttributeStoreable
     private let sessionManager: SessionManageable
+    private let focusManager: FocusManageable
     
     private let shortTimeout: DispatchTimeInterval = .milliseconds(200)
     private var multiturnSpeakingToListeningTimer: DispatchWorkItem?
@@ -38,26 +38,48 @@ public class DialogStateAggregator {
 
     private var dialogState: DialogState = .idle {
         didSet {
-            log.info("\(oldValue) \(dialogState)")
+            log.info("from \(oldValue) to \(dialogState) isMultiturn \(isMultiturn)")
 
+            if dialogState == .idle {
+                focusManager.releaseFocus(channelDelegate: self)
+            } else {
+                focusManager.requestFocus(channelDelegate: self)
+            }
+            
             if oldValue != dialogState {
                 multiturnSpeakingToListeningTimer?.cancel()
                 dialogStateDelegates.notify { delegate in
-                    delegate.dialogStateDidChange(dialogState, isMultiturn: dialogAttributeStore.attributes != nil)
+                    delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn)
                 }
             }
         }
     }
     private var asrState: ASRState = .idle
     private var ttsState: TTSState = .finished
+    private var isMultiturn: Bool = false
+    // TODO: Refactor
+    public var isChipsRequestInProgress: Bool = false {
+        didSet {
+            log.debug(isChipsRequestInProgress)
+            dialogStateDispatchQueue.async { [weak self] in
+                if self?.isChipsRequestInProgress == false {
+                    self?.tryEnterIdleState()
+                }
+            }
+        }
+    }
     
     init(
-        dialogAttributeStore: DialogAttributeStoreable,
-        sessionManager: SessionManageable
+        sessionManager: SessionManageable,
+        interactionControlManager: InteractionControlManageable,
+        focusManager: FocusManageable
     ) {
-        self.dialogAttributeStore = dialogAttributeStore
         self.sessionManager = sessionManager
+        self.focusManager = focusManager
+        
         sessionManager.add(delegate: self)
+        interactionControlManager.delegate = self
+        focusManager.add(channelDelegate: self)
     }
 }
 
@@ -105,6 +127,32 @@ extension DialogStateAggregator: TTSAgentDelegate {
     }
 }
 
+// MARK: - InteractionControlDelegate
+
+extension DialogStateAggregator: InteractionControlDelegate {
+    public func interactionControlDidChange(isMultiturn: Bool) {
+        log.debug(isMultiturn)
+        dialogStateDispatchQueue.async { [weak self] in
+            self?.isMultiturn = isMultiturn
+            if isMultiturn == false {
+                self?.tryEnterIdleState()
+            }
+        }
+    }
+}
+
+// MARK: - FocusChannelDelegate
+
+extension DialogStateAggregator: FocusChannelDelegate {
+    public func focusChannelPriority() -> FocusChannelPriority {
+        return .background
+    }
+    
+    public func focusChannelDidChange(focusState: FocusState) {
+        log.info(focusState)
+    }
+}
+
 // MARK: - Private
 
 private extension DialogStateAggregator {
@@ -136,6 +184,7 @@ private extension DialogStateAggregator {
         multiturnSpeakingToListeningTimer?.cancel()
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
+            guard self.isMultiturn == false, self.isChipsRequestInProgress == false else { return }
             switch (self.asrState, self.ttsState) {
             case (.idle, let ttsState) where [.idle, .finished, .stopped].contains(ttsState):
                 self.dialogState = .idle

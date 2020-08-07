@@ -32,6 +32,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
+    private let interactionControlManager: InteractionControlManageable
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
@@ -42,11 +43,13 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     public init(
         directiveSequencer: DirectiveSequenceable,
         contextManager: ContextManageable,
-        upstreamDataSender: UpstreamDataSendable
+        upstreamDataSender: UpstreamDataSendable,
+        interactionControlManager: InteractionControlManageable
     ) {
         self.directiveSequencer = directiveSequencer
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
+        self.interactionControlManager = interactionControlManager
         
         contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
@@ -68,9 +71,17 @@ public extension PhoneCallAgent {
                     property: self.capabilityAgentProperty,
                     eventIdentifier: eventIdentifier,
                     contextPayload: contextPayload
-                ),
-                completion: completion
-            )
+                )
+            ) { [weak self] state in
+                completion?(state)
+                guard let self = self else { return }
+                switch state {
+                case .finished, .error:
+                    self.interactionControlManager.finish(mode: .multiTurn, category: self.capabilityAgentProperty.category)
+                default:
+                    break
+                }
+            }
         }
         
         return eventIdentifier.dialogRequestId
@@ -119,9 +130,15 @@ private extension PhoneCallAgent {
                     completion(.failed("Invalid candidateItem in payload"))
                     return
             }
+            guard let self = self, let delegate = self.delegate else {
+                completion(.canceled)
+                return
+            }
             defer { completion(.finished) }
-
-            self?.delegate?.phoneCallAgentDidReceiveSendCandidates(
+            
+            // TODO: Check interaction mode in payload.
+            self.interactionControlManager.start(mode: .multiTurn, category: self.capabilityAgentProperty.category)
+            delegate.phoneCallAgentDidReceiveSendCandidates(
                 item: candidatesItem,
                 dialogRequestId: directive.header.dialogRequestId
             )

@@ -43,7 +43,7 @@ final public class SessionManager: SessionManageable {
     
     // private
     private let delegates = DelegateSet<SessionDelegate>()
-    private var activeTimers = [String: DisposeBag]()
+    private var activeTimers = [String: Disposable]()
     private var sessions = [String: Session]()
     private var activeList = [String: Set<CapabilityAgentCategory>]()
     
@@ -101,8 +101,7 @@ final public class SessionManager: SessionManageable {
 
 private extension SessionManager {
     func addTimer(session: Session) {
-        let disposeBag = DisposeBag()
-        Completable.create { [weak self] (event) -> Disposable in
+        activeTimers[session.dialogRequestId] = Completable.create { [weak self] (event) -> Disposable in
             guard let self = self else { return Disposables.create() }
             
             log.debug("Timer fired. \(session.dialogRequestId)")
@@ -116,12 +115,10 @@ private extension SessionManager {
         }
         .delaySubscription(SessionConst.sessionTimeout, scheduler: sessionScheduler)
         .subscribe()
-        .disposed(by: disposeBag)
-        
-        activeTimers[session.dialogRequestId] = disposeBag
     }
     
     func removeTimer(dialogRequestId: String) {
+        activeTimers[dialogRequestId]?.dispose()
         activeTimers[dialogRequestId] = nil
     }
 }

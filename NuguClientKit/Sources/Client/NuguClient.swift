@@ -35,6 +35,7 @@ public class NuguClient {
     public let dialogAttributeStore: DialogAttributeStoreable
     public let sessionManager: SessionManageable
     public let systemAgent: SystemAgentProtocol
+    public let interactionControlManager: InteractionControlManageable
     
     // default agents
     public let dialogStateAggregator: DialogStateAggregator
@@ -67,7 +68,8 @@ public class NuguClient {
     public lazy var phoneCallAgent: PhoneCallAgentProtocol = PhoneCallAgent(
         directiveSequencer: directiveSequencer,
         contextManager: contextManager,
-        upstreamDataSender: streamDataRouter
+        upstreamDataSender: streamDataRouter,
+        interactionControlManager: interactionControlManager
     )
     
     // keywordDetector
@@ -89,6 +91,8 @@ public class NuguClient {
         playSyncManager = PlaySyncManager(contextManager: contextManager)
         dialogAttributeStore = DialogAttributeStore()
         sessionManager = SessionManager()
+        interactionControlManager = InteractionControlManager()
+        
         systemAgent = SystemAgent(contextManager: contextManager,
                                   streamDataRouter: streamDataRouter,
                                   directiveSequencer: directiveSequencer)
@@ -101,7 +105,8 @@ public class NuguClient {
             directiveSequencer: directiveSequencer,
             dialogAttributeStore: dialogAttributeStore,
             sessionManager: sessionManager,
-            playSyncManager: playSyncManager
+            playSyncManager: playSyncManager,
+            interactionControlManager: interactionControlManager
         )
         
         ttsAgent = TTSAgent(
@@ -116,8 +121,7 @@ public class NuguClient {
             contextManager: contextManager,
             upstreamDataSender: streamDataRouter,
             directiveSequencer: directiveSequencer,
-            dialogAttributeStore: dialogAttributeStore,
-            focusManager: focusManager
+            dialogAttributeStore: dialogAttributeStore
         )
         
         chipsAgent = ChipsAgent(
@@ -126,8 +130,9 @@ public class NuguClient {
         )
         
         dialogStateAggregator = DialogStateAggregator(
-            dialogAttributeStore: dialogAttributeStore,
-            sessionManager: sessionManager
+            sessionManager: sessionManager,
+            interactionControlManager: interactionControlManager,
+            focusManager: focusManager
         )
         asrAgent.add(delegate: dialogStateAggregator)
         ttsAgent.add(delegate: dialogStateAggregator)
