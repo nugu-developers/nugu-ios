@@ -30,8 +30,6 @@ final class NuguAudioSessionManager {
     init() {
         addAudioInterruptionNotification()
     }
-    
-    var interruptionOccuredWhenInactiveState = false
     var pausedByInterruption = false
 }
 
@@ -53,6 +51,7 @@ extension NuguAudioSessionManager {
     }
     
     func addEngineConfigurationChangeNotification() {
+        removeEngineConfigurationChangeNotification()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(engineConfigurationChange),
                                                name: .AVAudioEngineConfigurationChange,
@@ -133,7 +132,6 @@ private extension NuguAudioSessionManager {
         case .began:
             log.debug("Interruption began")
             // Interruption began, take appropriate actions
-            NuguCentralManager.shared.client.audioPlayerAgent.pause()
             if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
                 NuguCentralManager.shared.client.audioPlayerAgent.pause()
                 DispatchQueue.global().asyncAfter(deadline: .now()+0.1) { [weak self] in
@@ -141,15 +139,8 @@ private extension NuguAudioSessionManager {
                 }
             }
             NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: false)
-            DispatchQueue.main.async { [weak self] in
-                log.debug("application state = \(UIApplication.shared.applicationState.rawValue)")
-                if UIApplication.shared.applicationState == .inactive {
-                    self?.interruptionOccuredWhenInactiveState = true
-                }
-            }
         case .ended:
             log.debug("Interruption ended")
-            interruptionOccuredWhenInactiveState = false
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
@@ -172,8 +163,10 @@ private extension NuguAudioSessionManager {
     /// recover when the audio engine is stopped by OS.
     @objc func engineConfigurationChange(notification: Notification) {
         log.debug("engineConfigurationChange: \(notification)")
-        NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
-            log.debug("startMicInputProvider: \(success)")
+        if UserDefaults.Standard.useWakeUpDetector == true {
+            NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
+                log.debug("startMicInputProvider: \(success)")
+            }
         }
     }
 }

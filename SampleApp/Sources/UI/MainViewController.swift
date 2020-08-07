@@ -59,13 +59,6 @@ final class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(didEnterBackground(_:)),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(didBecomeActive(_:)),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
@@ -128,17 +121,10 @@ final class MainViewController: UIViewController {
         NuguCentralManager.shared.stopMicInputProvider()
     }
     
-    func didEnterBackground(_ notification: Notification) {
-        if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == false {
-            NuguAudioSessionManager.shared.removeAudioInterruptionNotification()
-        }
-    }
-    
     /// Catch becoming active notification to refresh mic status & Nugu button
     /// Recover all status for any issues caused from becoming background
     /// - Parameter notification: UIApplication.didBecomeActiveNotification
     func didBecomeActive(_ notification: Notification) {
-        NuguAudioSessionManager.shared.addAudioInterruptionNotification()
         guard navigationController?.visibleViewController == self else { return }
         refreshNugu()
     }
@@ -618,6 +604,7 @@ extension MainViewController: ASRAgentDelegate {
         case .expectingSpeech:
             NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
                 guard success == true else {
+                    log.debug("startMicInputProvider failed!")
                     NuguCentralManager.shared.stopRecognition()
                     return
                 }

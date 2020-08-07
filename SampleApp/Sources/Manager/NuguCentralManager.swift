@@ -57,6 +57,8 @@ final class NuguCentralManager {
     
     var isTextAgentInProcess = false
     
+    private var startMicWorkItem: DispatchWorkItem?
+    
     // Audio input source
     private let micQueue = DispatchQueue(label: "central_manager_mic_input_queue")
     private let micInputProvider = MicInputProvider()
@@ -78,17 +80,24 @@ extension NuguCentralManager {
 
         NuguLocationManager.shared.startUpdatingLocation()
         
-        guard NuguAudioSessionManager.shared.interruptionOccuredWhenInactiveState == false else { return }
-            
         // Set Last WakeUp Keyword
         // If you don't want to use saved wakeup-word, don't need to be implemented
         if UserDefaults.Standard.useWakeUpDetector,
             let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
             client.keywordDetector.keywordSource = keyword.keywordSource
-            startMicInputProvider(requestingFocus: false) { [weak self] (success) in
-                guard success else { return }
-                self?.startWakeUpDetector()
-            }
+            startMicWorkItem?.cancel()
+            startMicWorkItem = DispatchWorkItem(block: { [weak self] in
+                log.debug("startMicWorkItem start")
+                self?.startMicInputProvider(requestingFocus: false) { [weak self] (success) in
+                    guard success else {
+                        log.debug("startMicWorkItem failed!")
+                        return
+                    }
+                    self?.startWakeUpDetector()
+                }
+            })
+            guard let startMicWorkItem = startMicWorkItem else { return }
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: startMicWorkItem)
         } else {
             stopWakeUpDetector()
             stopMicInputProvider()
@@ -405,7 +414,6 @@ extension NuguCentralManager {
                 self.micQueue.async { [unowned self] in
                     defer {
                         log.debug("addEngineConfigurationChangeNotification")
-                        NuguAudioSessionManager.shared.removeEngineConfigurationChangeNotification()
                         NuguAudioSessionManager.shared.addEngineConfigurationChangeNotification()
                     }
                     self.micInputProvider.stop()
@@ -434,6 +442,7 @@ extension NuguCentralManager {
     
     func stopMicInputProvider() {
         micQueue.sync {
+            startMicWorkItem?.cancel()
             micInputProvider.stop()
             NuguAudioSessionManager.shared.removeEngineConfigurationChangeNotification()
         }
