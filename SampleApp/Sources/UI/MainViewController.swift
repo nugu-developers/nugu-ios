@@ -59,13 +59,6 @@ final class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(didEnterBackground(_:)),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(didBecomeActive(_:)),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
@@ -128,17 +121,10 @@ final class MainViewController: UIViewController {
         NuguCentralManager.shared.stopMicInputProvider()
     }
     
-    func didEnterBackground(_ notification: Notification) {
-        if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == false {
-            NuguAudioSessionManager.shared.removeAudioInterruptionNotification()
-        }
-    }
-    
     /// Catch becoming active notification to refresh mic status & Nugu button
     /// Recover all status for any issues caused from becoming background
     /// - Parameter notification: UIApplication.didBecomeActiveNotification
     func didBecomeActive(_ notification: Notification) {
-        NuguAudioSessionManager.shared.addAudioInterruptionNotification()
         guard navigationController?.visibleViewController == self else { return }
         refreshNugu()
     }
@@ -245,7 +231,7 @@ private extension MainViewController {
         
         setChipsButton(
             actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
-            normalList: ["템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
+            normalList: ["템플릿 열어줘", "템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
         )
         
         view.addSubview(self.nuguVoiceChrome)
@@ -611,6 +597,7 @@ extension MainViewController: ASRAgentDelegate {
         case .expectingSpeech:
             NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
                 guard success == true else {
+                    log.debug("startMicInputProvider failed!")
                     NuguCentralManager.shared.stopRecognition()
                     return
                 }
@@ -776,6 +763,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
+        log.debug("audioPlayerAgentDidChange : \(state)")
         NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(state: state)
         NuguAudioSessionManager.shared.pausedByInterruption = false
         DispatchQueue.main.async { [weak self] in
