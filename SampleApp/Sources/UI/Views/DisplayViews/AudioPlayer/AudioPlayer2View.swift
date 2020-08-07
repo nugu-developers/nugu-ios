@@ -88,6 +88,9 @@ final class AudioPlayer2View: AudioDisplayView {
                 progressView.isHidden = true
             }
             
+            playPauseButton.isSelected = NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true
+            audioPlayerBarView.playPauseButton.isSelected = NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true
+            
             audioPlayerBarView.setData(
                 imageUrl: template.content.imageUrl,
                 headerText: template.content.title,

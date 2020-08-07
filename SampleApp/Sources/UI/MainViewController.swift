@@ -245,7 +245,7 @@ private extension MainViewController {
         
         setChipsButton(
             actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
-            normalList: ["템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
+            normalList: ["템플릿 열어줘", "템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
         )
         
         view.addSubview(self.nuguVoiceChrome)
@@ -783,6 +783,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
+        log.debug("audioPlayerAgentDidChange : \(state)")
         NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(state: state)
         NuguAudioSessionManager.shared.pausedByInterruption = false
         DispatchQueue.main.async { [weak self] in
