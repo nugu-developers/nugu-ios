@@ -125,6 +125,9 @@ private extension NuguDisplayPlayerController {
             currentState = state
         }
         
+        // When control center should be updated without AudioPlayerDisplayTemplate,
+        // Update only play and pause command and button.
+        // In case of background audio play with out AudioPlayerDisplayTemplate.
         guard let playerItem = item else {
             remove()
             nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
@@ -133,13 +136,10 @@ private extension NuguDisplayPlayerController {
             var nowPlayingInfo = nowPlayingInfoCenter?.nowPlayingInfo ?? [:]
             switch state {
             case .playing:
-                // Set playbackTime as current offset, set playbackRate as 1
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
             case .paused:
-                // Set playbackRate as 0, set playbackTime as current offset
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
             default:
-                // Set playbackRate as 0, set playbackTime as 0
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
             }
             nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
