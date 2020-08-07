@@ -55,7 +55,7 @@ final class NuguCentralManager {
         }
     }()
     
-    var isTextAgentInProcess = false
+    private var startMicWorkItem: DispatchWorkItem?
 
     // Audio input source
     private let micQueue = DispatchQueue(label: "central_manager_mic_input_queue")
