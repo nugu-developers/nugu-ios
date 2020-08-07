@@ -32,7 +32,7 @@ public class InteractionControlManager: InteractionControlManageable {
     public weak var delegate: InteractionControlDelegate?
     
     private var interactionControls = Set<CapabilityAgentCategory>()
-    private var timeoutTimers = [String: DisposeBag]()
+    private var timeoutTimers = [String: Disposable]()
     
     public init() {}
     
@@ -66,8 +66,7 @@ public class InteractionControlManager: InteractionControlManageable {
 private extension InteractionControlManager {
     func addTimer(category: CapabilityAgentCategory) {
         log.debug(category)
-        let disposeBag = DisposeBag()
-        Completable.create { [weak self] (event) -> Disposable in
+        timeoutTimers[category.name] = Completable.create { [weak self] (event) -> Disposable in
             guard let self = self else { return Disposables.create() }
             
             log.debug("Timer fired. \(category)")
@@ -81,13 +80,11 @@ private extension InteractionControlManager {
         }
         .delaySubscription(InteractionControlConst.timeout, scheduler: interactioniScheduler)
         .subscribe()
-        .disposed(by: disposeBag)
-        
-        timeoutTimers[category.name] = disposeBag
     }
     
     func removeTimer(category: CapabilityAgentCategory) {
         log.debug(category)
+        timeoutTimers[category.name]?.dispose()
         timeoutTimers[category.name] = nil
     }
 }
