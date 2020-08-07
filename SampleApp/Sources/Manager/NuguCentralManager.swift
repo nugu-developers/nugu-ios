@@ -399,6 +399,7 @@ private extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
+        startMicWorkItem?.cancel()
         DispatchQueue.main.async {
             guard UIApplication.shared.applicationState == .active else {
                 completion(false)
