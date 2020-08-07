@@ -460,6 +460,7 @@
 		7E284D9B24DD2B4A00BF9640 /* InteractionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284D9524DD26DB00BF9640 /* InteractionControl.swift */; };
 		7E284D9C24DD2B4A00BF9640 /* InteractionControlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284D9724DD278300BF9640 /* InteractionControlManager.swift */; };
 		7E284DA124DD482800BF9640 /* InteractionControlConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284DA024DD482800BF9640 /* InteractionControlConst.swift */; };
+		7E284DA324DD533E00BF9640 /* MockInteractionControlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */; };
 		7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */; };
 		7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2DFE9D24B8510900792529 /* PlayStackControl.swift */; };
 		7E35D79024622B4E003289A2 /* EventIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* EventIdentifier.swift */; };
@@ -1149,6 +1150,7 @@
 		7E284D9524DD26DB00BF9640 /* InteractionControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControl.swift; sourceTree = "<group>"; };
 		7E284D9724DD278300BF9640 /* InteractionControlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControlManager.swift; sourceTree = "<group>"; };
 		7E284DA024DD482800BF9640 /* InteractionControlConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControlConst.swift; sourceTree = "<group>"; };
+		7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInteractionControlManager.swift; sourceTree = "<group>"; };
 		7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentRevokeItem.swift; sourceTree = "<group>"; };
 		7E2DFE9D24B8510900792529 /* PlayStackControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStackControl.swift; sourceTree = "<group>"; };
 		7E35D79324623444003289A2 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
@@ -1457,6 +1459,7 @@
 				1F5DD4AB240CF0D600719FBC /* MockPlaySyncManager.swift */,
 				7EA53F0E247F583F008731CD /* MockSessionManager.swift */,
 				7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */,
+				7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -3744,6 +3747,7 @@
 				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
 				7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
+				7E284DA324DD533E00BF9640 /* MockInteractionControlManager.swift in Sources */,
 				1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */,
 				1F31FD7C2424CBD8009593EB /* UpstreamSpec.swift in Sources */,
 				1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */,

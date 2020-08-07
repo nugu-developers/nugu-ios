@@ -39,8 +39,7 @@ class TextAgentSpec: QuickSpec {
                 contextManager: contextManager,
                 upstreamDataSender: upstreamDataSender,
                 directiveSequencer: directiveSequencer,
-                dialogAttributeStore: dialogAttributeStore,
-                focusManager: focusManager
+                dialogAttributeStore: dialogAttributeStore
             )
             
             describe("context") {
