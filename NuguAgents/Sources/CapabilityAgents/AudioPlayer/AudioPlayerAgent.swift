@@ -483,10 +483,17 @@ private extension AudioPlayerAgent {
     }
     
    func handlePlay() -> HandleDirective {
-        return { [weak self] _, completion in
+        return { [weak self] directive, completion in
             defer { completion(.finished) }
-        
-            self?.play()
+            
+            self?.audioPlayerDispatchQueue.async { [weak self] in
+                guard self?.currentMedia?.messageId == directive.header.messageId else {
+                    log.info("Message id does not match")
+                    return
+                }
+                
+                self?.play()
+            }
         }
     }
     

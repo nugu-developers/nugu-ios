@@ -193,7 +193,8 @@ private extension SoundAgent {
                 self.currentMedia = SoundMedia(
                     player: mediaPlayer,
                     payload: payload,
-                    dialogRequestId: directive.header.dialogRequestId
+                    dialogRequestId: directive.header.dialogRequestId,
+                    messageId: directive.header.messageId
                 )
                 self.sendEvent(
                     playServiceId: payload.playServiceId,
@@ -210,8 +211,8 @@ private extension SoundAgent {
             
             self?.soundDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
-                    log.warning("SoundMedia is not exist or dialogRequesttId is not valid")
+                guard self.currentMedia?.messageId == directive.header.messageId else {
+                    log.info("Message id does not match")
                     return
                 }
                 
