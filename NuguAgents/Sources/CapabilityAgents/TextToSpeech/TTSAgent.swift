@@ -342,8 +342,9 @@ private extension TTSAgent {
                     completion(.canceled)
                     return
                 }
-                guard let media = self.currentMedia, media.dialogRequestId == directive.header.dialogRequestId else {
-                    completion(.failed("TTSMedia is not exist or dialogRequesttId is not valid"))
+                guard let media = self.currentMedia, media.messageId == directive.header.messageId else {
+                    completion(.canceled)
+                    log.info("Message id does not match")
                     return
                 }
                 

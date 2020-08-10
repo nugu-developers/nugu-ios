@@ -408,8 +408,8 @@ private extension ASRAgent {
             self?.asrDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 // ex> TTS 도중 stopRecognition 호출.
-                guard self.expectSpeechDirective != nil else {
-                    log.info("Expect speech canceled")
+                guard self.expectSpeechDirective?.header.messageId == directive.header.messageId else {
+                    log.info("Message id does not match")
                     return
                 }
                 // ex> TTS 도중 wakeup
