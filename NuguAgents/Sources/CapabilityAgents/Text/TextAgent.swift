@@ -66,8 +66,8 @@ public final class TextAgent: TextAgentProtocol {
 // MARK: - TextAgentProtocol
 
 extension TextAgent {
-    @discardableResult public func requestTextInput(text: String, completion: ((StreamDataState) -> Void)?) -> String {
-        return sendTextInput(text: text, token: nil, completion: completion)
+    @discardableResult public func requestTextInput(text: String, includeDialogAttribute: Bool, completion: ((StreamDataState) -> Void)?) -> String {
+        return sendTextInput(text: text, token: nil, includeDialogAttribute: includeDialogAttribute, completion: completion)
     }
 }
 
@@ -95,6 +95,7 @@ private extension TextAgent {
                 self?.sendTextInput(
                     text: payload.text,
                     token: payload.token,
+                    includeDialogAttribute: true,
                     referrerDialogRequestId: directive.header.dialogRequestId,
                     completion: nil
                 )
@@ -109,6 +110,7 @@ private extension TextAgent {
     @discardableResult func sendTextInput(
         text: String,
         token: String?,
+        includeDialogAttribute: Bool,
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
@@ -118,7 +120,11 @@ private extension TextAgent {
             
             self.upstreamDataSender.sendEvent(
                 Event(
-                    typeInfo: .textInput(text: text, token: token, dialogAttributes: self.dialogAttributeStore.attributes)
+                    typeInfo: .textInput(
+                        text: text,
+                        token: token,
+                        dialogAttributes: includeDialogAttribute ? self.dialogAttributeStore.attributes : nil
+                    )
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     eventIdentifier: eventIdentifier,
