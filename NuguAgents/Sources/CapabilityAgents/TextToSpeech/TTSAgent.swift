@@ -383,7 +383,7 @@ private extension TTSAgent {
             
             guard let self = self, let media = self.currentMedia else { return }
             guard self.currentPlayer != nil else {
-                // "그만" 발화시 재생 대기중이던 AudioPlayer 를 종료 시켜주기 위한 처리
+                // Release synchronized layer after playback finished.
                 if media.payload.playServiceId != nil {
                     self.playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 }

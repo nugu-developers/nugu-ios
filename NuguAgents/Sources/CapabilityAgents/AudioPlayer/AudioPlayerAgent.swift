@@ -500,8 +500,16 @@ private extension AudioPlayerAgent {
    func handleStop() -> HandleDirective {
         return { [weak self] _, completion in
             defer { completion(.finished) }
+            
+            guard let self = self, let media = self.currentMedia else { return }
+            guard self.currentPlayer != nil else {
+                // Release synchronized layer after playback finished.
+                self.playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
+                return
+            }
+            
         
-            self?.stop(cancelAssociation: true)
+            self.stop(cancelAssociation: true)
         }
     }
     
