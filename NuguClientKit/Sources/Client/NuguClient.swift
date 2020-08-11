@@ -215,7 +215,7 @@ extension NuguClient: DialogStateDelegate {
         dialogStateAggregator.add(delegate: self)
     }
     
-    public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool) {
+    public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?) {
         switch state {
         case .idle:
             playSyncManager.resetTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))

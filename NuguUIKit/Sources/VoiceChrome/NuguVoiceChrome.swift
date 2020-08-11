@@ -173,6 +173,7 @@ public extension NuguVoiceChrome {
     }
     
     func setChipsData(chipsData: [NuguChipsButton.NuguChipsButtonType], onChipsSelect: @escaping (_ text: String?) -> Void) {
+        recognizedTextLabel.text = nil
         chipsView.chipsData = chipsData
         chipsView.isHidden = false
         chipsView.onChipsSelect = { [weak self] text in

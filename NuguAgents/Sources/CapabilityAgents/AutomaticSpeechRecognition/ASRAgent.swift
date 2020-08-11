@@ -154,12 +154,13 @@ public final class ASRAgent: ASRAgentProtocol {
             if let dialogRequestId = expectSpeechDirective?.header.dialogRequestId {
                 sessionManager.activate(dialogRequestId: dialogRequestId, category: .automaticSpeechRecognition)
                 interactionControlManager.start(mode: .multiTurn, category: capabilityAgentProperty.category)
-            }
-            if let dialogRequestId = oldValue?.header.dialogRequestId {
-                sessionManager.deactivate(dialogRequestId: dialogRequestId, category: .automaticSpeechRecognition)
+            } else if oldValue?.header.dialogRequestId != nil {
                 playSyncManager.endPlay(property: playSyncProperty)
                 dialogAttributeStore.removeAttributes()
                 interactionControlManager.finish(mode: .multiTurn, category: capabilityAgentProperty.category)
+            }
+            if let dialogRequestId = oldValue?.header.dialogRequestId {
+                sessionManager.deactivate(dialogRequestId: dialogRequestId, category: .automaticSpeechRecognition)
             }
         }
     }
