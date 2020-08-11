@@ -375,12 +375,27 @@ private extension DisplayAgent {
                 }
                 
                 self.focusManager.requestFocus(channelDelegate: self)
+                self.sessionManager.activate(dialogRequestId: item.dialogRequestId, category: .display)
+                self.playSyncManager.startPlay(
+                    property: item.template.playSyncProperty,
+                    info: PlaySyncInfo(
+                        playServiceId: item.template.playServiceId,
+                        playStackServiceId: item.template.playStackControl?.playServiceId,
+                        dialogRequestId: item.dialogRequestId,
+                        messageId: item.templateId,
+                        duration: item.template.duration?.time ?? self.defaultDisplayTempalteDuration.time
+                    )
+                )
                 
                 let semaphore = DispatchSemaphore(value: 0)
                 delegate.displayAgentShouldRender(template: item) { [weak self] in
                     defer { semaphore.signal() }
                     guard let self = self else { return }
-                    guard let displayObject = $0 else { return }
+                    guard let displayObject = $0 else {
+                        self.sessionManager.deactivate(dialogRequestId: item.dialogRequestId, category: .display)
+                        self.playSyncManager.endPlay(property: item.template.playSyncProperty)
+                        return
+                    }
                     
                     // Release sync when removed all of template(May be closed by user).
                     Reactive(displayObject).deallocated
@@ -441,18 +456,6 @@ private extension DisplayAgent {
             .filter { $0.template.contextLayer == item.template.contextLayer }
             .forEach { removeRenderedTemplate(item: $0) }
         templateList.insert(item, at: 0)
-        sessionManager.activate(dialogRequestId: item.dialogRequestId, category: .display)
-        
-        playSyncManager.startPlay(
-            property: item.template.playSyncProperty,
-            info: PlaySyncInfo(
-                playServiceId: item.template.playServiceId,
-                playStackServiceId: item.template.playStackControl?.playServiceId,
-                dialogRequestId: item.dialogRequestId,
-                messageId: item.templateId,
-                duration: item.template.duration?.time ?? defaultDisplayTempalteDuration.time
-            )
-        )
     }
     
     @discardableResult func removeRenderedTemplate(item: DisplayTemplate) -> Bool {

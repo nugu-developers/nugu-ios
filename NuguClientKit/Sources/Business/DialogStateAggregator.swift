@@ -46,11 +46,9 @@ public class DialogStateAggregator {
                 focusManager.requestFocus(channelDelegate: self)
             }
             
-            if oldValue != dialogState {
-                multiturnSpeakingToListeningTimer?.cancel()
-                dialogStateDelegates.notify { delegate in
-                    delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn)
-                }
+            multiturnSpeakingToListeningTimer?.cancel()
+            dialogStateDelegates.notify { delegate in
+                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn)
             }
         }
     }
