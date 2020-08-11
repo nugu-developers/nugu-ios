@@ -370,8 +370,8 @@ private extension DisplayAgent {
                     return
                 }
                 defer {
-                    completion(.finished)
                     self.focusManager.releaseFocus(channelDelegate: self)
+                    completion(.finished)
                 }
                 
                 self.focusManager.requestFocus(channelDelegate: self)

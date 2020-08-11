@@ -668,8 +668,8 @@ private extension AudioPlayerAgent {
     
     func handleAttachment() -> HandleAttachment {
         return { [weak self] attachment in
-            log.info("\(attachment.header.messageId)")
             self?.audioPlayerDispatchQueue.async { [weak self] in
+                log.info("\(attachment.header.messageId)")
                 guard let self = self else { return }
                 guard let dataSource = self.currentPlayer as? MediaOpusStreamDataSource,
                     self.currentMedia?.dialogRequestId == attachment.header.dialogRequestId else {
