@@ -99,6 +99,7 @@ extension NuguAudioSessionManager {
     }
     
     func notifyAudioSessionDeactivation() {
+        log.debug("")
         do {
             // Defer statement for recovering audioSession and MicInputProvider
             defer {
