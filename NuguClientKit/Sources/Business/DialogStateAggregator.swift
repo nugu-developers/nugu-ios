@@ -47,7 +47,6 @@ public class DialogStateAggregator {
             }
             
             multiturnSpeakingToListeningTimer?.cancel()
-            
             let chipsItem = sessionManager.activeSessions
                 .first { chipsItems[$0.dialogRequestId] != nil }
                 .map { chipsItems[$0.dialogRequestId] }

@@ -147,7 +147,7 @@ private extension MainViewController {
     @IBAction func sendTextInput(_ button: UIButton) {
         guard let textInput = textInputTextField.text else { return }
         textInputTextField.resignFirstResponder()
-        NuguCentralManager.shared.client.textAgent.requestTextInput(text: textInput)
+        NuguCentralManager.shared.client.textAgent.requestTextInput(text: textInput, includeDialogAttribute: false)
     }
 }
 
@@ -548,6 +548,7 @@ extension MainViewController: KeywordDetectorDelegate {
 
 extension MainViewController: DialogStateDelegate {
     func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?) {
+        log.debug("\(state) \(isMultiturn)")
         switch state {
         case .idle:
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
