@@ -142,6 +142,12 @@ private extension MainViewController {
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
         presentVoiceChrome(initiator: .user)
     }
+    
+    @IBAction func requestTextButtonDidClick(_ button: UIButton) {
+        guard let text = button.currentTitle else { return }
+        
+        NuguCentralManager.shared.client.textAgent.requestTextInput(text: text, includeDialogAttribute: false)
+    }
 }
 
 // MARK: - Private (Nugu)

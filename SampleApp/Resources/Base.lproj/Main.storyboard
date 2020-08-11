@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
     <device id="retina5_9" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -111,15 +111,37 @@
                                     <action selector="startRecognizeButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="188-nt-X30"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="jlp-kT-YAC">
+                                <rect key="frame" x="16" y="381" width="343" height="60"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Um-MJ-V1K">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="30"/>
+                                        <state key="normal" title="지금 몇시야"/>
+                                        <connections>
+                                            <action selector="requestTextButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="EqK-ks-Gbf"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="duz-V4-KeW">
+                                        <rect key="frame" x="0.0" y="30" width="343" height="30"/>
+                                        <state key="normal" title="오늘 연예 뉴스 알려줘"/>
+                                        <connections>
+                                            <action selector="requestTextButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="thi-uv-ECk"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="bottom" secondItem="1pN-zT-foV" secondAttribute="bottom" constant="20" id="2kg-rq-IoR"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" secondItem="H7A-kt-fwH" secondAttribute="trailing" constant="50" id="4Tm-uC-Cli"/>
+                            <constraint firstItem="jlp-kT-YAC" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="16" id="8mN-oc-sQA"/>
                             <constraint firstItem="2Ns-b9-eTf" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="5" id="HWk-vD-Fki"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2Ns-b9-eTf" secondAttribute="trailing" symbolic="YES" id="RUL-G7-INd"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fng-5l-cHx" secondAttribute="leading" symbolic="YES" id="Tv9-i1-zVn"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="50" id="cjZ-E8-mLe"/>
+                            <constraint firstItem="jlp-kT-YAC" firstAttribute="centerY" secondItem="Fng-5l-cHx" secondAttribute="centerY" id="fIr-62-kkW"/>
+                            <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" secondItem="jlp-kT-YAC" secondAttribute="trailing" constant="16" id="xCK-q7-h2h"/>
                             <constraint firstItem="2Ns-b9-eTf" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="15" id="yv9-4H-Zba"/>
                             <constraint firstItem="1pN-zT-foV" firstAttribute="centerX" secondItem="Fng-5l-cHx" secondAttribute="centerX" id="ziq-Ma-Uj5"/>
                         </constraints>

@@ -77,7 +77,7 @@ extension Downstream.Header {
 
 extension Downstream.Header: CustomStringConvertible {
     public var description: String {
-        return "\(type)(\(messageId)"
+        return "\(type)(\(messageId))"
     }
 }
 
