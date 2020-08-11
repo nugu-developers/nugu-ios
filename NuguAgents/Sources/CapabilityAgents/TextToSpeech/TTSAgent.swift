@@ -194,9 +194,9 @@ extension TTSAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        log.info("\(focusState) \(ttsState)")
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            log.info("\(focusState) \(self.ttsState)")
             
             switch (focusState, self.ttsState) {
             case (.foreground, let ttsState) where [.idle, .stopped, .finished].contains(ttsState):
@@ -337,12 +337,19 @@ private extension TTSAgent {
     
     func handlePlay() -> HandleDirective {
         return { [weak self] directive, completion in
-            self?.ttsDispatchQueue.async { [weak self] in
+            guard let self = self else {
+                completion(.canceled)
+                return
+            }
+            log.debug("")
+            self.focusManager.requestFocus(channelDelegate: self)
+            self.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else {
                     completion(.canceled)
                     return
                 }
                 guard let media = self.currentMedia, media.messageId == directive.header.messageId else {
+                    self.releaseFocusIfNeeded()
                     completion(.canceled)
                     log.info("Message id does not match")
                     return
@@ -366,8 +373,6 @@ private extension TTSAgent {
                         }
                     })
                     .disposed(by: self.disposeBag)
-                
-                self.focusManager.requestFocus(channelDelegate: self)
             }
         }
     }
@@ -378,7 +383,7 @@ private extension TTSAgent {
             
             guard let self = self, let media = self.currentMedia else { return }
             guard self.currentPlayer != nil else {
-                // "그만" 발화시 재생 대기중이던 AudioPlayer 를 종료 시켜주기 위한 처리
+                // Release synchronized layer after playback finished.
                 if media.payload.playServiceId != nil {
                     self.playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
                 }
@@ -419,12 +424,12 @@ private extension TTSAgent {
         #endif
         
         return { [weak self] attachment in
-            log.info("\(attachment.header.messageId)")
             #if DEBUG
             totalAttachmentData.append(attachment.content)
             #endif
             
             self?.ttsDispatchQueue.async { [weak self] in
+                log.info("\(attachment.header)")
                 guard let self = self else { return }
                 guard let dataSource = self.currentPlayer as? MediaOpusStreamDataSource,
                     self.currentMedia?.dialogRequestId == attachment.header.dialogRequestId else {

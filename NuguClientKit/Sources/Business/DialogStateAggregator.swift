@@ -47,8 +47,11 @@ public class DialogStateAggregator {
             }
             
             multiturnSpeakingToListeningTimer?.cancel()
+            let chipsItem = sessionManager.activeSessions
+                .first { chipsItems[$0.dialogRequestId] != nil }
+                .map { chipsItems[$0.dialogRequestId] }
             dialogStateDelegates.notify { delegate in
-                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn)
+                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem??.chips)
             }
         }
     }
@@ -161,11 +164,7 @@ private extension DialogStateAggregator {
         case (_, .playing):
             dialogState = .speaking
         case (.listening, _):
-            let chipsItem: ChipsAgentItem? = {
-                guard let dialogRequestId = sessionManager.activeSessions.first?.dialogRequestId else { return nil }
-                return chipsItems[dialogRequestId]
-            }()
-            dialogState = .listening(chips: chipsItem?.chips)
+            dialogState = .listening
         case (.recognizing, _):
             dialogState = .recognizing
         case (.busy, _):
