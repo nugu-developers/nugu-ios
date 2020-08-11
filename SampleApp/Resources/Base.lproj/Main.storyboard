@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
     <device id="retina5_9" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -111,15 +111,32 @@
                                     <action selector="startRecognizeButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="188-nt-X30"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G3T-6h-BDk">
+                                <rect key="frame" x="268.66666666666669" y="154" width="64" height="30"/>
+                                <state key="normal" title="send text"/>
+                                <connections>
+                                    <action selector="sendTextInput:" destination="CDe-cd-LHH" eventType="touchUpInside" id="wCp-Sl-nj0"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8kh-3V-rnE">
+                                <rect key="frame" x="19.999999999999986" y="152" width="218.66666666666663" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="bottom" secondItem="1pN-zT-foV" secondAttribute="bottom" constant="20" id="2kg-rq-IoR"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" secondItem="H7A-kt-fwH" secondAttribute="trailing" constant="50" id="4Tm-uC-Cli"/>
+                            <constraint firstItem="G3T-6h-BDk" firstAttribute="leading" secondItem="8kh-3V-rnE" secondAttribute="trailing" constant="30" id="DcZ-cJ-nCC"/>
                             <constraint firstItem="2Ns-b9-eTf" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="5" id="HWk-vD-Fki"/>
+                            <constraint firstItem="G3T-6h-BDk" firstAttribute="centerX" secondItem="H7A-kt-fwH" secondAttribute="centerX" id="Kkh-yT-Q5s"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2Ns-b9-eTf" secondAttribute="trailing" symbolic="YES" id="RUL-G7-INd"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fng-5l-cHx" secondAttribute="leading" symbolic="YES" id="Tv9-i1-zVn"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="50" id="cjZ-E8-mLe"/>
+                            <constraint firstItem="8kh-3V-rnE" firstAttribute="centerY" secondItem="G3T-6h-BDk" secondAttribute="centerY" id="qNq-eV-1Ue"/>
+                            <constraint firstItem="8kh-3V-rnE" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="20" id="sVa-RI-eEA"/>
+                            <constraint firstItem="G3T-6h-BDk" firstAttribute="top" secondItem="H7A-kt-fwH" secondAttribute="bottom" constant="30" id="vU5-Ap-X4A"/>
                             <constraint firstItem="2Ns-b9-eTf" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="15" id="yv9-4H-Zba"/>
                             <constraint firstItem="1pN-zT-foV" firstAttribute="centerX" secondItem="Fng-5l-cHx" secondAttribute="centerX" id="ziq-Ma-Uj5"/>
                         </constraints>
@@ -128,6 +145,7 @@
                     <connections>
                         <outlet property="nuguButton" destination="1pN-zT-foV" id="esl-yf-Cut"/>
                         <outlet property="settingButton" destination="H7A-kt-fwH" id="wvw-g1-c4g"/>
+                        <outlet property="textInputTextField" destination="8kh-3V-rnE" id="E3J-0d-nPO"/>
                         <outlet property="watermarkLabel" destination="2Ns-b9-eTf" id="hCm-cA-CbZ"/>
                         <segue destination="gGQ-jV-Gla" kind="presentation" identifier="mainToGuideWeb" id="HfI-PN-nmd"/>
                         <segue destination="GR6-bJ-aiM" kind="presentation" identifier="showSettings" modalPresentationStyle="fullScreen" id="XSP-sM-tXK"/>

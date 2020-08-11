@@ -33,6 +33,7 @@ final class MainViewController: UIViewController {
     @IBOutlet private weak var nuguButton: NuguButton!
     @IBOutlet private weak var settingButton: UIButton!
     @IBOutlet private weak var watermarkLabel: UILabel!
+    @IBOutlet private weak var textInputTextField: UITextField!
     
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
@@ -141,6 +142,12 @@ private extension MainViewController {
     
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
         presentVoiceChrome(initiator: .user)
+    }
+    
+    @IBAction func sendTextInput(_ button: UIButton) {
+        guard let textInput = textInputTextField.text else { return }
+        textInputTextField.resignFirstResponder()
+        NuguCentralManager.shared.client.textAgent.requestTextInput(text: textInput)
     }
 }
 
