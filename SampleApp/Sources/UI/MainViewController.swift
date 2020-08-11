@@ -540,7 +540,7 @@ extension MainViewController: KeywordDetectorDelegate {
 // MARK: - DialogStateDelegate
 
 extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool) {
+    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?) {
         switch state {
         case .idle:
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
@@ -551,13 +551,19 @@ extension MainViewController: DialogStateDelegate {
         case .speaking:
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
-                guard isMultiturn == false else {
-                    self?.nuguVoiceChrome.changeState(state: .speaking)
+                guard isMultiturn else {
+                    self?.dismissVoiceChrome()
                     return
                 }
-                self?.dismissVoiceChrome()
+                if let chips = chips {
+                    let actionList = chips.filter { $0.type == .action }.map { $0.text }
+                    let normalList = chips.filter { $0.type == .general }.map { $0.text }
+                    self?.setChipsButton(actionList: actionList, normalList: normalList)
+                }
+                
+                self?.nuguVoiceChrome.changeState(state: .speaking)
             }
-        case .listening(let chips):
+        case .listening:
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 self?.addTapGestureRecognizerForDismissVoiceChrome()

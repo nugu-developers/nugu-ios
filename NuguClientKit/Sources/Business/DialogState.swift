@@ -27,7 +27,7 @@ public enum DialogState {
     /// Ready for an interaction.
     case idle
     /// Passively listening.
-    case listening(chips: [ChipsAgentItem.Chip]?)
+    case listening
     /// Actively listening.
     case recognizing
     /// Waiting for a response from the server.
