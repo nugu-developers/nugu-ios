@@ -27,7 +27,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.3")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.4")
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
@@ -390,6 +390,7 @@ extension AudioPlayerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
+            "playServiceId": currentMedia?.payload.playServiceId,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
             "offsetInMilliseconds": (offset ?? 0) * 1000,
