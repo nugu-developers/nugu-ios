@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `TTSAgent` handles directives for controlling speech playback.
 public protocol TTSAgentProtocol: CapabilityAgentable {
     /// Returns the current time of the current player item.
@@ -36,6 +38,9 @@ public protocol TTSAgentProtocol: CapabilityAgentable {
     ///
     /// This function retrieves the volume of the current `MediaPlayable` handled by the `TTSAgent`.
     var volume: Float { get set }
+    
+    /// The cancellation policy when playback is implicitly stopped.
+    var directiveCancelPolicy: DirectiveCancelPolicy { get set }
     
     /// Adds a delegate to be notified of `TTSState` changes.
     ///
