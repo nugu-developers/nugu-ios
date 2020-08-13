@@ -591,7 +591,9 @@ extension MainViewController: DialogStateDelegate {
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
                     self?.setChipsButton(actionList: actionList, normalList: normalList)
                 }
-                self?.nuguVoiceChrome.changeState(state: .listeningPassive)
+                if isMultiturn {
+                    self?.nuguVoiceChrome.changeState(state: .listeningPassive)
+                }
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
             }
         case .recognizing:

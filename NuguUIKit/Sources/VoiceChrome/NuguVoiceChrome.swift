@@ -117,6 +117,8 @@ final public class NuguVoiceChrome: UIView {
                 self?.layoutIfNeeded()
             })
         }
+        
+        changeState(state: .listeningPassive)
     }
 }
 
