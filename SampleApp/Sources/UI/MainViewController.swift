@@ -539,7 +539,18 @@ extension MainViewController: KeywordDetectorDelegate {
     
     func keywordDetectorDidStop() {}
     
-    func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {}
+    func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {
+        switch state {
+        case .active:
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguButton.startFlipAnimation()
+            }
+        case .inactive:
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguButton.stopFlipAnimation()
+            }
+        }
+    }
     
     func keywordDetectorDidError(_ error: Error) {}
 }
