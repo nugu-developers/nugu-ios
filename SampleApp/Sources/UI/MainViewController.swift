@@ -539,7 +539,18 @@ extension MainViewController: KeywordDetectorDelegate {
     
     func keywordDetectorDidStop() {}
     
-    func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {}
+    func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {
+        switch state {
+        case .active:
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguButton.startFlipAnimation()
+            }
+        case .inactive:
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguButton.stopFlipAnimation()
+            }
+        }
+    }
     
     func keywordDetectorDidError(_ error: Error) {}
 }
@@ -580,7 +591,9 @@ extension MainViewController: DialogStateDelegate {
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
                     self?.setChipsButton(actionList: actionList, normalList: normalList)
                 }
-                self?.nuguVoiceChrome.changeState(state: .listeningPassive)
+                if isMultiturn {
+                    self?.nuguVoiceChrome.changeState(state: .listeningPassive)
+                }
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
             }
         case .recognizing:

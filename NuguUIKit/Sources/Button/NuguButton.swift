@@ -90,6 +90,7 @@ final public class NuguButton: UIButton {
     
     public var nuguButtonType: NuguButtonType = .fab(color: .blue) {
         didSet {
+            addImageViews()
             setButtonImages()
         }
     }
@@ -100,40 +101,148 @@ final public class NuguButton: UIButton {
         }
     }
     
+    // MARK: - Private Properties
+    
     private var deactivateAnimationView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 44.0, height: 44.0)))
     
     private var highlightedDotIndex = 0
     
     private var animationTimer: DispatchSourceTimer?
     
+    private var micFlipAnimationTimer: DispatchSourceTimer?
+    
+    private let micFlipAnimationTimerQueue = DispatchQueue(label: "MicFlipAnimation")
+    
+    private var micImageView = UIImageView(frame: .zero)
+    
+    private var backgroundImageView = UIImageView(frame: .zero)
+    
+    private var flipped: Bool = false {
+        didSet {
+            updateButtonImages()
+        }
+    }
+    
     // MARK: - Override
+    
+    public override var isHighlighted: Bool {
+        didSet {
+            updateButtonImages()
+        }
+    }
+    
+    public override var isEnabled: Bool {
+        didSet {
+            if self.isEnabled {
+                switch nuguButtonType {
+                case .fab(let color):
+                    micImageView.image = UIImage(named: "fab_\(color.rawValue)_mic", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                    backgroundImageView.image = UIImage(named: "fab_\(color.rawValue)_background", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                case .button(let color):
+                    micImageView.image = UIImage(named: "btn_\(color.rawValue)_mic", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                    backgroundImageView.image = UIImage(named: "btn_\(color.rawValue)_background", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                }
+            } else {
+                switch nuguButtonType {
+                case .fab:
+                    micImageView.image = UIImage(named: "fab_mic_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                    backgroundImageView.image = UIImage(named: "fab_background_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                case .button:
+                    micImageView.image = UIImage(named: "btn_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                    backgroundImageView.image = UIImage(named: "btn_background_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                }
+            }
+        }
+    }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        addImageViews()
         setButtonImages()
         updateActivationState()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        addImageViews()
         setButtonImages()
         updateActivationState()
+    }
+    
+    // MARK: - Public Methods (Flip Animation)
+    
+    public func startFlipAnimation() {
+        guard micImageView.layer.animationKeys() == nil else {
+            return
+        }
+        flipped = false
+        micFlipAnimationTimer?.cancel()
+        micFlipAnimationTimer = DispatchSource.makeTimerSource(queue: micFlipAnimationTimerQueue)
+        micFlipAnimationTimer?.schedule(deadline: .now(), repeating: 3.0)
+        micFlipAnimationTimer?.setEventHandler(handler: {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.flipMic()
+            }
+        })
+        micFlipAnimationTimer?.resume()
+    }
+    
+    public func stopFlipAnimation() {
+        flipped = false
+        micImageView.layer.transform = CATransform3DIdentity
+        micImageView.layer.removeAllAnimations()
+        micFlipAnimationTimer?.cancel()
+        micFlipAnimationTimer = nil
     }
 }
 
 // MARK: - Private
 
 private extension NuguButton {
+    func updateButtonImages() {
+        guard isEnabled == true else { return }
+        if isHighlighted {
+            switch nuguButtonType {
+            case .fab(let color):
+                micImageView.image = flipped ? UIImage(named: "fab_\(color.rawValue)_logo_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil) : UIImage(named: "fab_\(color.rawValue)_mic_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                backgroundImageView.image = UIImage(named: "fab_\(color.rawValue)_background_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+            case .button(let color):
+                micImageView.image = flipped ? UIImage(named: "btn_\(color.rawValue)_logo_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil) : UIImage(named: "btn_\(color.rawValue)_mic_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                backgroundImageView.image = UIImage(named: "btn_\(color.rawValue)_background_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+            }
+        } else {
+            switch nuguButtonType {
+            case .fab(let color):
+                micImageView.image = flipped ? UIImage(named: "fab_\(color.rawValue)_logo", in: Bundle(for: NuguButton.self), compatibleWith: nil) : UIImage(named: "fab_\(color.rawValue)_mic", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                backgroundImageView.image = UIImage(named: "fab_\(color.rawValue)_background", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+            case .button(let color):
+                micImageView.image = flipped ? UIImage(named: "btn_\(color.rawValue)_logo", in: Bundle(for: NuguButton.self), compatibleWith: nil) : UIImage(named: "btn_\(color.rawValue)_mic", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+                backgroundImageView.image = UIImage(named: "btn_\(color.rawValue)_background", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+            }
+        }
+    }
+    
+    func addImageViews() {
+        switch nuguButtonType {
+        case .fab:
+            micImageView.frame = bounds.inset(by: UIEdgeInsets(top: 13.0, left: 17.0, bottom: 21.0, right: 17.0))
+        case .button:
+            micImageView.frame = bounds.inset(by: UIEdgeInsets(top: 13.0, left: 13.0, bottom: 13.0, right: 13.0))
+        }
+        backgroundImageView.frame = bounds
+        backgroundImageView.addSubview(micImageView)
+        addSubview(backgroundImageView)
+    }
+    
     func setButtonImages() {
         switch nuguButtonType {
         case .fab(let color):
-            setImage(UIImage(named: "fab_\(color.rawValue)", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .normal)
-            setImage(UIImage(named: "fab_\(color.rawValue)_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .highlighted)
-            setImage(UIImage(named: "fab_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .disabled)
+            micImageView.image = UIImage(named: "fab_\(color.rawValue)_mic", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+            backgroundImageView.image = UIImage(named: "fab_\(color.rawValue)_background", in: Bundle(for: NuguButton.self), compatibleWith: nil)
         case .button(let color):
-            setImage(UIImage(named: "btn_\(color.rawValue)", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .normal)
-            setImage(UIImage(named: "btn_\(color.rawValue)_pressed", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .highlighted)
-            setImage(UIImage(named: "btn_disabled", in: Bundle(for: NuguButton.self), compatibleWith: nil), for: .disabled)
+            micImageView.image = UIImage(named: "btn_\(color.rawValue)_mic", in: Bundle(for: NuguButton.self), compatibleWith: nil)
+            backgroundImageView.image = UIImage(named: "btn_\(color.rawValue)_background", in: Bundle(for: NuguButton.self), compatibleWith: nil)
         }
     }
     
@@ -174,7 +283,7 @@ private extension NuguButton {
         animationTimer?.resume()
         
         addSubview(deactivateAnimationView)
-        setImage(nil, for: .normal)
+        backgroundImageView.isHidden = true
         isUserInteractionEnabled = false
     }
     
@@ -183,7 +292,21 @@ private extension NuguButton {
         highlightedDotIndex = 0
         animationTimer?.cancel()
         deactivateAnimationView.removeFromSuperview()
-        setButtonImages()
+        backgroundImageView.isHidden = false
         isUserInteractionEnabled = true
+    }
+    
+    func flipMic() {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
+            self?.micImageView.layer.transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(Double.pi/2), 0.0, 1.0, 0.0)
+            }, completion: { [weak self] _ in
+                guard let self = self else { return }
+                self.flipped = !self.flipped
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
+                    self?.micImageView.layer.transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(2*Double.pi), 0.0, 1.0, 0.0)
+                    }, completion: { [weak self] _ in
+                        self?.micImageView.layer.transform = CATransform3DIdentity
+                })
+        })
     }
 }
