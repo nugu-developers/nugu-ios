@@ -34,7 +34,7 @@ public class DialogStateAggregator {
     private let shortTimeout: DispatchTimeInterval = .milliseconds(200)
     private var multiturnSpeakingToListeningTimer: DispatchWorkItem?
     
-    private var chipsItems = [String: ChipsAgentItem]()
+    private var chipsItems = [(dialogRequestId: String, item: ChipsAgentItem)]()
 
     private var dialogState: DialogState = .idle {
         didSet {
@@ -47,11 +47,12 @@ public class DialogStateAggregator {
             }
             
             multiturnSpeakingToListeningTimer?.cancel()
-            let chipsItem = sessionManager.activeSessions
-                .first { chipsItems[$0.dialogRequestId] != nil }
-                .map { chipsItems[$0.dialogRequestId] }
+            
+            let chipsItem = chipsItems.last { (dialogRequestId, _) -> Bool in
+                 sessionManager.activeSessions.contains { $0.dialogRequestId == dialogRequestId }
+            }?.item
             dialogStateDelegates.notify { delegate in
-                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem??.chips)
+                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem?.chips)
             }
         }
     }
@@ -205,7 +206,7 @@ extension DialogStateAggregator: ChipsAgentDelegate {
     public func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String) {
         dialogStateDispatchQueue.async { [weak self] in
             if item.target == .dialog {
-                self?.chipsItems[dialogRequestId] = item
+                self?.chipsItems.append((dialogRequestId: dialogRequestId, item: item))
             }
         }
     }
@@ -218,7 +219,7 @@ extension DialogStateAggregator: SessionDelegate {
     
     public func sessionDidUnset(session: Session) {
         dialogStateDispatchQueue.async { [weak self] in
-            self?.chipsItems[session.dialogRequestId] = nil
+            self?.chipsItems.removeAll { $0.dialogRequestId == session.dialogRequestId }
         }
     }
 }
