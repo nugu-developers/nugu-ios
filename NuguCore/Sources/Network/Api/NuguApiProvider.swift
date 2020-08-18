@@ -40,7 +40,7 @@ class NuguApiProvider: NSObject {
     }
 
     // handle response for upload task.
-    private var eventResponseProcessors = [URLSessionTask: EventResponseProcessor]()
+    private var eventResponseProcessors = AtomicDictionary<URLSessionTask, EventResponseProcessor>()
 
     // handle received directives by server side event
     private var serverSideEventProcessor: ServerSideEventProcessor?

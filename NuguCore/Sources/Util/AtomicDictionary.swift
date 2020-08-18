@@ -1,5 +1,5 @@
 //
-//  EventSenders.swift
+//  AtomicDictionary.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 2020/04/22.
@@ -20,20 +20,27 @@
 
 import Foundation
 
-struct EventSenders {
-    private let sendersQueue = DispatchQueue(label: "com.sktelecom.romaine.event_senders")
+struct AtomicDictionary<Key: Hashable, Value> {
+    private let dictionaryQueue = DispatchQueue(label: "com.sktelecom.romaine.atomic_dictionary")
     
-    private var senders = [String: EventSender]()
+    private var dictionary = [Key: Value]()
     
-    subscript(dialogRequestId: String) -> EventSender? {
+    var keys: Dictionary<Key, Value>.Keys {
+        dictionary.keys
+    }
+    var values: Dictionary<Key, Value>.Values {
+        dictionary.values
+    }
+    
+    subscript(key: Key) -> Value? {
         get {
-            return sendersQueue.sync {
-                senders[dialogRequestId]
+            return dictionaryQueue.sync {
+                dictionary[key]
             }
         }
         set {
-            sendersQueue.sync {
-                senders[dialogRequestId] = newValue
+            dictionaryQueue.sync {
+                dictionary[key] = newValue
             }
         }
     }

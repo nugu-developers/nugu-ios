@@ -27,7 +27,8 @@ public class StreamDataRouter: StreamDataRoutable {
     
     private let nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
-    private var eventSenders = EventSenders()
+    private var eventSenders = AtomicDictionary<String, EventSender>()
+    private var eventDisposables = AtomicDictionary<String, Disposable>()
     private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
@@ -127,7 +128,7 @@ public extension StreamDataRouter {
             .disposed(by: self.disposeBag)
         
         // request event as multi part stream
-        nuguApiProvider.events(boundary: boundary, inputStream: eventSender.streams.input)
+        eventDisposables[event.header.dialogRequestId] = nuguApiProvider.events(boundary: boundary, inputStream: eventSender.streams.input)
             .subscribe(onNext: { [weak self] (part) in
                 self?.notifyMessage(with: part, completion: completion)
             }, onError: { [weak self] (error) in
@@ -138,9 +139,9 @@ public extension StreamDataRouter {
                 completion?(.finished)
                 self?.delegate?.streamDataDidSend(event: event, error: nil)
             }, onDisposed: { [weak self] in
+                self?.eventDisposables[event.header.dialogRequestId]  = nil
                 self?.eventSenders[event.header.dialogRequestId] = nil
             })
-            .disposed(by: self.disposeBag)
     }
     
     /**
@@ -173,9 +174,8 @@ public extension StreamDataRouter {
     }
     
     func cancelEvent(dialogRequestId: String) {
-        guard let eventSender = eventSenders[dialogRequestId] else { return }
-
-        eventSender.finish()
+        eventSenders[dialogRequestId]?.finish()
+        eventDisposables[dialogRequestId]?.dispose()
     }
 }
 
