@@ -27,7 +27,7 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private var blockedDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     
     private var directiveHandleInfos = DirectiveHandleInfos()
-    private var canceledDialogRequestIds = [String]()
+    private var directiveCancelPolicies = [(dialogRequestId: String, policy: DirectiveCancelPolicy)]()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
     private let disposeBag = DisposeBag()
 
@@ -79,7 +79,7 @@ private extension DirectiveSequencer {
             log.warning("No handler registered \(directive.header)")
             return
         }
-        guard canceledDialogRequestIds.contains(directive.header.dialogRequestId) == false else {
+        guard isCancelledDirective(directive) == false else {
             log.warning("Cancel directive \(directive.header)")
             return
         }
@@ -108,7 +108,7 @@ private extension DirectiveSequencer {
             blockedDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
             return
         }
-        guard canceledDialogRequestIds.contains(directive.header.dialogRequestId) == false else {
+        guard isCancelledDirective(directive) == false else {
             log.debug("Cancel directive \(directive.header)")
             handler.cancelDirective?(directive)
             return
@@ -120,10 +120,10 @@ private extension DirectiveSequencer {
             self?.directiveSequencerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
 
-                if case .stopped(let cancelAssociation) = result, cancelAssociation == true {
-                    self.canceledDialogRequestIds.append(directive.header.dialogRequestId)
-                    if self.canceledDialogRequestIds.count > 10 {
-                        self.canceledDialogRequestIds.remove(at: 0)
+                if case .stopped(let directiveCancelPolicy) = result {
+                    self.directiveCancelPolicies.append((dialogRequestId: directive.header.dialogRequestId, policy: directiveCancelPolicy))
+                    if self.directiveCancelPolicies.count > 10 {
+                        self.directiveCancelPolicies.remove(at: 0)
                     }
                 }
                 self.handlingDirectives.removeAll { directive.header.messageId == $0.directive.header.messageId }
@@ -135,6 +135,15 @@ private extension DirectiveSequencer {
                     directives.map { $0.directive }.forEach(self.handleDirective)
                 }
             }
+        }
+    }
+    
+    func isCancelledDirective(_ directive: Downstream.Directive) -> Bool {
+        directiveCancelPolicies.contains {
+            let (dialogRequestId, policy) = $0
+            guard directive.header.dialogRequestId == dialogRequestId else { return false }
+
+            return policy.cancelAll || policy.cancelTargets.contains { $0 == directive.header.type }
         }
     }
 }

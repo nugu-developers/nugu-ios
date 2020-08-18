@@ -1,8 +1,8 @@
 //
-//  DirectiveHandleResult.swift
+//  DirectiveCancelPolicy.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 2020/07/08.
+//  Created by MinChul Lee on 2020/08/13.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,15 @@
 
 import Foundation
 
-public enum DirectiveHandleResult {
-    case failed(_ description: String)
-    case canceled
-    case stopped(directiveCancelPolicy: DirectiveCancelPolicy)
-    case finished
+public struct DirectiveCancelPolicy {
+    public let cancelAll: Bool
+    public let cancelTargets: [String]
+    
+    public init(cancelAll: Bool, cancelTargets: [String]) {
+        self.cancelAll = cancelAll
+        self.cancelTargets = cancelTargets
+    }
+    
+    public static let cancelAll = DirectiveCancelPolicy(cancelAll: true, cancelTargets: [])
+    public static let cancelNone = DirectiveCancelPolicy(cancelAll: false, cancelTargets: [])
 }

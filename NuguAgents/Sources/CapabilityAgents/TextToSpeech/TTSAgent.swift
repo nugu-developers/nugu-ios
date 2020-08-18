@@ -30,6 +30,7 @@ public final class TTSAgent: TTSAgentProtocol {
     private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .sound)
     
     // TTSAgentProtocol
+    public var directiveCancelPolicy: DirectiveCancelPolicy = .cancelNone
     public var offset: Int? {
         return currentPlayer?.offset.truncatedSeconds
     }
@@ -362,12 +363,20 @@ private extension TTSAgent {
                 self.ttsResultSubject
                     .filter { $0.dialogRequestId == media.dialogRequestId }
                     .take(1)
-                    .subscribe(onNext: { (_, result) in
+                    .subscribe(onNext: { [weak self] (_, result) in
+                        guard let self = self else {
+                            completion(.canceled)
+                            return
+                        }
                         switch result {
                         case .finished:
                             completion(.finished)
                         case .stopped(let cancelAssociation):
-                            completion(.stopped(cancelAssociation: cancelAssociation))
+                            if cancelAssociation {
+                                completion(.stopped(directiveCancelPolicy: .cancelAll))
+                            } else {
+                                completion(.stopped(directiveCancelPolicy: self.directiveCancelPolicy))
+                            }
                         case .error(let error):
                             completion(.failed("\(error)"))
                         }
