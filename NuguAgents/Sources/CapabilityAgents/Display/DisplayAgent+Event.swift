@@ -50,7 +50,7 @@ extension DisplayAgent.Event: Eventable {
         case .elementSelected(let token, let postback):
             payload["token"] = token
             if let postback = postback {
-                payload["postBack"] = postback
+                payload["postback"] = postback
             }
         case .controlFocusSucceeded(let direction),
              .controlFocusFailed(let direction),
