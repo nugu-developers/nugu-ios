@@ -22,12 +22,11 @@ import AVFoundation
 
 import NuguCore
 
-final class ASRBeepPlayer: NSObject {
+final class ASRBeepPlayer {
     private let focusManager: FocusManageable
     
     init(focusManager: FocusManageable) {
         self.focusManager = focusManager
-        super.init()
         
         focusManager.add(channelDelegate: self)
     }
@@ -35,14 +34,6 @@ final class ASRBeepPlayer: NSObject {
     // MARK: ASRBeepPlayer
     
     private var player: AVAudioPlayer?
-    
-    // MARK: FocusChannelPriority
-    
-    private let channelPriority = FocusChannelPriority(requestPriority: 0, maintainPriority: 0)
-    
-    // MARK: CurrentBeepType
-    
-    private var requestedBeepType: BeepType?
     
     // MARK: BeepType
     
@@ -75,8 +66,13 @@ final class ASRBeepPlayer: NSObject {
     // MARK: Internal (beep)
     
     func beep(type: BeepType) {
-        requestedBeepType = type
+        play(type: type)
         focusManager.requestFocus(channelDelegate: self)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+            guard let self = self else { return }
+            
+            self.focusManager.releaseFocus(channelDelegate: self)
+        }
     }
 }
 
@@ -101,21 +97,10 @@ private extension ASRBeepPlayer {
 
 extension ASRBeepPlayer: FocusChannelDelegate {
     func focusChannelPriority() -> FocusChannelPriority {
-        return channelPriority
+        return .beep
     }
     
     func focusChannelDidChange(focusState: FocusState) {
-        log.debug("focusChannelDidChange = \(focusState)")
-        guard let requestedBeepType = requestedBeepType else {
-            log.error("focus channel has been changed while requested beepType is nil")
-            return
-        }
-        switch focusState {
-        case .foreground, .background:
-            play(type: requestedBeepType)
-            focusManager.releaseFocus(channelDelegate: self)
-        case .nothing:
-            break
-        }
+        log.debug(focusState)
     }
 }

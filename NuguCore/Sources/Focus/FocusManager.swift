@@ -107,17 +107,14 @@ private extension FocusManager {
         case .nothing:
             assignForeground()
             notifyReleaseFocusIfNeeded()
-        case .background:
-            assignForeground()
-            releaseFocusWorkItem?.cancel()
-        case .foreground:
+        case .background, .foreground:
             releaseFocusWorkItem?.cancel()
         }
     }
     
     func assignForeground() {
         // Background -> Foreground
-        focusDispatchQueue.asyncAfter(deadline: .now() + FocusConst.shortLatency) { [weak self] in
+        focusDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.foregroundChannelDelegate == nil,
                 let backgroundChannelDelegate = self.backgroundChannelDelegate else {

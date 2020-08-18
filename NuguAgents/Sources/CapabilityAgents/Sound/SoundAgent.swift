@@ -98,7 +98,7 @@ public final class SoundAgent: SoundAgentProtocol {
 
 extension SoundAgent: FocusChannelDelegate {
     public func focusChannelPriority() -> FocusChannelPriority {
-        return .information
+        return .beep
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
@@ -146,9 +146,7 @@ extension SoundAgent: MediaPlayerDelegate {
             guard let self = self else { return }
             // `SoundState` -> `FocusState`
             switch state {
-            case .start:
-                self.soundState = .playing
-            case .resume, .bufferRefilled:
+            case .start, .resume:
                 self.soundState = .playing
             case .finish:
                 self.soundState = .finished
@@ -156,7 +154,7 @@ extension SoundAgent: MediaPlayerDelegate {
                 self.stop()
             case .stop:
                 self.soundState = .stopped
-            case .bufferUnderrun:
+            case .bufferUnderrun, .bufferRefilled:
                 break
             case .error:
                 self.soundState = .stopped
