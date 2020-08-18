@@ -106,8 +106,20 @@ extension DialogStateAggregator: ASRAgentDelegate {
     public func asrAgentDidChange(state: ASRState) {
         dialogStateDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            
             self.asrState = state
-            self.applyState()
+            switch state {
+            case .idle:
+                self.tryEnterIdleState()
+            case .listening:
+                self.dialogState = .listening
+            case .recognizing:
+                self.dialogState = .recognizing
+            case .busy:
+                self.dialogState = .thinking
+            case .expectingSpeech:
+                break
+            }
         }
     }
     
@@ -122,8 +134,17 @@ extension DialogStateAggregator: TTSAgentDelegate {
     
     public func ttsAgentDidChange(state: TTSState, dialogRequestId: String) {
         dialogStateDispatchQueue.async { [weak self] in
-            self?.ttsState = state
-            self?.applyState()
+            guard let self = self else { return }
+            
+            self.ttsState = state
+            switch state {
+            case .idle:
+                break
+            case .playing:
+                self.dialogState = .speaking
+            case .finished, .stopped:
+                self.tryEnterIdleState()
+            }
         }
     }
 }
@@ -158,22 +179,6 @@ extension DialogStateAggregator: FocusChannelDelegate {
 
 private extension DialogStateAggregator {
     /// dialogStateDispatchQueue
-    func applyState() {
-        log.info("\(asrState)\(ttsState)")
-        switch (asrState, ttsState) {
-        case (_, .playing):
-            dialogState = .speaking
-        case (.listening, _):
-            dialogState = .listening
-        case (.recognizing, _):
-            dialogState = .recognizing
-        case (.busy, _):
-            dialogState = .thinking
-        default:
-            tryEnterIdleState()
-        }
-    }
-    
     func tryEnterIdleState() {
         log.info("")
         guard dialogState != .idle else { return }
