@@ -163,7 +163,6 @@ private extension NuguAudioSessionManager {
     
     /// recover when the audio engine is stopped by OS.
     @objc func engineConfigurationChange(notification: Notification) {
-        log.debug("engineConfigurationChange: \(notification)")
         if UserDefaults.Standard.useWakeUpDetector == true {
             NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
                 log.debug("startMicInputProvider: \(success)")
