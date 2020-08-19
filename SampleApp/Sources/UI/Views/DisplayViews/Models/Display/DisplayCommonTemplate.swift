@@ -52,11 +52,18 @@ struct DisplayCommonTemplate: Decodable {
             let color: String?
         }
         
+        struct TextInput: Decodable {
+            let text: String
+            let playServiceId: String?
+        }
+        
         struct Button: Decodable {
             let type: Type?
             let image: Image?
             let text: String?
             let token: String
+            let eventType: EventType?
+            let textInput: TextInput?
             let postback: [String: AnyHashable]?
             let autoTrigger: AutoTrigger?
             let closeTemplateAfter: Bool?
@@ -76,6 +83,8 @@ struct DisplayCommonTemplate: Decodable {
                 case image
                 case text
                 case token
+                case eventType
+                case textInput
                 case postback
                 case autoTrigger
                 case closeTemplateAfter
@@ -88,6 +97,8 @@ struct DisplayCommonTemplate: Decodable {
                 image = try? container.decodeIfPresent(Image.self, forKey: .image)
                 text = try? container.decodeIfPresent(String.self, forKey: .text)
                 token = try container.decode(String.self, forKey: .token)
+                eventType = try? container.decodeIfPresent(EventType.self, forKey: .eventType)
+                textInput = try? container.decodeIfPresent(TextInput.self, forKey: .textInput)
                 // `postback` variable is an optional `[String: AnyHashable]` type which delivers additional information when `Button` object has been clicked.
                 // for decoding `[String: AnyHashable]` type, please refer `KeyedDecodingContainer+AnyHashable.swift`
                 postback = try? container.decode([String: AnyHashable].self, forKey: .postback)
@@ -113,6 +124,11 @@ struct DisplayCommonTemplate: Decodable {
         enum BadgeNumberMode {
             case immutability
             case page
+        }
+        
+        enum EventType {
+            case elementSelected
+            case textInput
         }
         
         struct Toggle: Decodable {
@@ -191,6 +207,18 @@ extension DisplayCommonTemplate.Common.BadgeNumberMode: Decodable {
         case "IMMUTABILITY": self = .immutability
         case "PAGE": self = .page
         default: self = .immutability
+        }
+    }
+}
+
+extension DisplayCommonTemplate.Common.EventType: Decodable {
+    public init(from decoder: Decoder) throws {
+        let value = try decoder.singleValueContainer().decode(String.self)
+        
+        switch value {
+        case "Display.ElementSelected": self = .elementSelected
+        case "Text.TextInput": self = .textInput
+        default: self = .elementSelected
         }
     }
 }
