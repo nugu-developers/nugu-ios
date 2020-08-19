@@ -88,7 +88,10 @@ private extension DirectiveSequencer {
         do {
             log.info(directive.header)
             try handler.preFetch?(directive)
-            handleDirective(directive)
+            
+            directiveSequencerDispatchQueue.async { [weak self] in
+                self?.handleDirective(directive)
+            }
         } catch {
             log.error(error)
         }
