@@ -147,7 +147,7 @@ private extension MainViewController {
     @IBAction func sendTextInput(_ button: UIButton) {
         guard let textInput = textInputTextField.text else { return }
         textInputTextField.resignFirstResponder()
-        NuguCentralManager.shared.client.textAgent.requestTextInput(text: textInput, includeDialogAttribute: false)
+        NuguCentralManager.shared.requestTextInput(text: textInput, includeDialogAttribute: false)
     }
 }
 
@@ -322,14 +322,7 @@ private extension MainViewController {
         indicator.startAnimating()
         window.addSubview(indicator)
         
-        NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = true
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
-        NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { state in
-            switch state {
-            case .finished, .error:
-                NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = false
-            default: break
-            }
+        NuguCentralManager.shared.requestTextInput(text: selectedChipsText) {
             DispatchQueue.main.async {
                 indicator.removeFromSuperview()
             }

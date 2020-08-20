@@ -81,6 +81,14 @@ extension Downstream.Header: CustomStringConvertible {
     }
 }
 
+// MARK: - Downstream.Attachment + CustomStringConvertible
+
+extension Downstream.Attachment: CustomStringConvertible {
+    public var description: String {
+        return "\(header)), \(seq), \(isEnd)"
+    }
+}
+
 // MARK: - Downstream.Directive
 
 extension Downstream.Directive {
