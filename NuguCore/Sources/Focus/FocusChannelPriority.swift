@@ -38,7 +38,7 @@ public struct FocusChannelPriority {
     /// A priority of `userRecognition` channel.
     public static let userRecognition = FocusChannelPriority(requestPriority: 300, maintainPriority: 250)
     /// A priority of `dmRecognition` channel.
-    public static let dmRecognition = FocusChannelPriority(requestPriority: 100, maintainPriority: 200)
+    public static let dmRecognition = FocusChannelPriority(requestPriority: 150, maintainPriority: 200)
     /// A priority of `alerts` channel.
     public static let alerts = FocusChannelPriority(requestPriority: 250, maintainPriority: 200)
     /// A priority of `information` channel.
@@ -46,7 +46,7 @@ public struct FocusChannelPriority {
     /// A priority of `media` channel.
     public static let media = FocusChannelPriority(requestPriority: 200, maintainPriority: 100)
     /// A priority of `beep` channel.
-    public static let beep = FocusChannelPriority(requestPriority: 0, maintainPriority: 50)
+    public static let beep = FocusChannelPriority(requestPriority: 100, maintainPriority: 150)
     /// A priority of `background` channel.
     public static let background = FocusChannelPriority(requestPriority: 0, maintainPriority: 0)
 }
