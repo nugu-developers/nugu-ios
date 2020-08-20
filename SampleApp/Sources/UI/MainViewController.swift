@@ -119,6 +119,7 @@ final class MainViewController: UIViewController {
     /// - Parameter notification: UIApplication.willResignActiveNotification
     func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
+        NuguCentralManager.shared.client.asrAgent.stopRecognition()
         NuguCentralManager.shared.stopMicInputProvider()
     }
     
@@ -128,6 +129,11 @@ final class MainViewController: UIViewController {
     func didBecomeActive(_ notification: Notification) {
         guard navigationController?.visibleViewController == self else { return }
         refreshNugu()
+    }
+        
+    func didTapForDismissVoiceChrome() {
+        dismissVoiceChrome()
+        NuguCentralManager.shared.client.asrAgent.stopRecognition()
     }
 }
 
@@ -271,11 +277,10 @@ private extension MainViewController {
         }
     }
     
-    @objc func dismissVoiceChrome() {
+    func dismissVoiceChrome() {
         view.gestureRecognizers = nil
         
         voiceChromeDismissWorkItem?.cancel()
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
         
         nuguButton.isActivated = true
         
@@ -303,7 +308,7 @@ private extension MainViewController {
     
     func addTapGestureRecognizerForDismissVoiceChrome() {
         view.gestureRecognizers?.forEach { view.removeGestureRecognizer($0) }
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissVoiceChrome))
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForDismissVoiceChrome))
         view.addGestureRecognizer(tapGestureRecognizer)
     }
 }
@@ -564,6 +569,7 @@ extension MainViewController: DialogStateDelegate {
         case .idle:
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
                 self?.dismissVoiceChrome()
+                NuguCentralManager.shared.client.asrAgent.stopRecognition()
             })
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
