@@ -569,7 +569,6 @@ extension MainViewController: DialogStateDelegate {
         case .idle:
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
                 self?.dismissVoiceChrome()
-                NuguCentralManager.shared.client.asrAgent.stopRecognition()
             })
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
