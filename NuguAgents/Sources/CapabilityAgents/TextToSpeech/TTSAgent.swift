@@ -312,7 +312,7 @@ private extension TTSAgent {
                 throw TTSError.notSupportedSourceType
             }
             
-            self?.ttsDispatchQueue.async { [weak self] in
+            self?.ttsDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
                 
                 self.stopSilently()
