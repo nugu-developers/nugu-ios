@@ -60,7 +60,14 @@ final class TextList4View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
+            switch displayItem.title.button?.eventType {
+            case .elementSelected:
+                contentButtonEventType = .elementSelected(token: displayItem.title.button?.token, postback: displayItem.title.button?.postback)
+            case .textInput:
+                contentButtonEventType = .textInput(textInput: displayItem.title.button?.textInput)
+            default:
+                break
+            }
             textList4TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -93,8 +100,8 @@ extension TextList4View: UITableViewDataSource {
         let textList4ViewCell = tableView.dequeueReusableCell(withIdentifier: "TextList4ViewCell") as! TextList4ViewCell
         // swiftlint:enable force_cast
         textList4ViewCell.configure(item: textList4Items?[indexPath.row])
-        textList4ViewCell.onButtonSelect = { [weak self] (token, postback) in
-            self?.onItemSelect?(token, postback)
+        textList4ViewCell.onButtonSelect = { [weak self] (buttonEventType) in
+            self?.onItemSelect?(buttonEventType)
         }
         return textList4ViewCell
     }
@@ -102,7 +109,14 @@ extension TextList4View: UITableViewDataSource {
 
 extension TextList4View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(textList4Items?[indexPath.row].token, nil)
+        switch textList4Items?[indexPath.row].eventType {
+        case .elementSelected:
+            onItemSelect?(DisplayItemEventType.elementSelected(token: textList4Items?[indexPath.row].token, postback: nil))
+        case .textInput:
+            onItemSelect?(DisplayItemEventType.textInput(textInput: textList4Items?[indexPath.row].textInput))
+        default:
+            break
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

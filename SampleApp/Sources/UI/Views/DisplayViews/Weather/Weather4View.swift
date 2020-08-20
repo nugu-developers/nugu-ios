@@ -60,7 +60,15 @@ final class Weather4View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
+                        
+            switch displayItem.title.button?.eventType {
+            case .elementSelected:
+                contentButtonEventType = .elementSelected(token: displayItem.title.button?.token, postback: displayItem.title.button?.postback)
+            case .textInput:
+                contentButtonEventType = .textInput(textInput: displayItem.title.button?.textInput)
+            default:
+                break
+            }
             weather4TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)

@@ -72,7 +72,14 @@ final class TextList3View: DisplayView {
             if let buttonItem = displayItem.title.button {
                 contentButtonContainerView.isHidden = false
                 contentButton.setTitle(buttonItem.text, for: .normal)
-                contentButtonTokenAndPostback = (buttonItem.token, buttonItem.postback)
+                switch buttonItem.eventType {
+                case .elementSelected:
+                    contentButtonEventType = .elementSelected(token: buttonItem.token, postback: buttonItem.postback)
+                case .textInput:
+                    contentButtonEventType = .textInput(textInput: buttonItem.textInput)
+                default:
+                    break
+                }
             } else {
                 contentButtonContainerView.isHidden = true
             }
@@ -126,7 +133,14 @@ extension TextList3View: UITableViewDataSource {
 
 extension TextList3View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(textList3Items?[indexPath.row].token, nil)
+        switch textList3Items?[indexPath.row].eventType {
+        case .elementSelected:
+            onItemSelect?(DisplayItemEventType.elementSelected(token: textList3Items?[indexPath.row].token, postback: nil))
+        case .textInput:
+            onItemSelect?(DisplayItemEventType.textInput(textInput: textList3Items?[indexPath.row].textInput))
+        default:
+            break
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

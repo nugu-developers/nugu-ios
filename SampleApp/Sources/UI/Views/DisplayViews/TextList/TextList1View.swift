@@ -62,7 +62,14 @@ final class TextList1View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
+            switch displayItem.title.button?.eventType {
+            case .elementSelected:
+                contentButtonEventType = .elementSelected(token: displayItem.title.button?.token, postback: displayItem.title.button?.postback)
+            case .textInput:
+                contentButtonEventType = .textInput(textInput: displayItem.title.button?.textInput)
+            default:
+                break
+            }
             textList1TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -103,7 +110,7 @@ extension TextList1View: UITableViewDataSource {
             textList1ViewCell.configure(badgeNumber: nil, item: textList1Items?[indexPath.row], toggleStyle: toggleStyle)
         }
         textList1ViewCell.onToggleSelect = { [weak self] token in
-            self?.onItemSelect?(token, nil)
+            self?.onItemSelect?(.elementSelected(token: token, postback: nil))
         }
         return textList1ViewCell
     }
@@ -111,7 +118,14 @@ extension TextList1View: UITableViewDataSource {
 
 extension TextList1View: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onItemSelect?(textList1Items?[indexPath.row].token, nil)
+        switch textList1Items?[indexPath.row].eventType {
+        case .elementSelected:
+            onItemSelect?(DisplayItemEventType.elementSelected(token: textList1Items?[indexPath.row].token, postback: nil))
+        case .textInput:
+            onItemSelect?(DisplayItemEventType.textInput(textInput: textList1Items?[indexPath.row].textInput))
+        default:
+            break
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

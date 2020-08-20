@@ -61,7 +61,14 @@ final class ImageList1View: DisplayView {
             
             // Set content button
             contentButton.setTitle(displayItem.title.button?.text, for: .normal)
-            contentButtonTokenAndPostback = (displayItem.title.button?.token, displayItem.title.button?.postback)
+            switch displayItem.title.button?.eventType {
+            case .elementSelected:
+                contentButtonEventType = .elementSelected(token: displayItem.title.button?.token, postback: displayItem.title.button?.postback)
+            case .textInput:
+                contentButtonEventType = .textInput(textInput: displayItem.title.button?.textInput)
+            default:
+                break
+            }
             imageList1TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
@@ -103,8 +110,8 @@ extension ImageList1View: UITableViewDataSource {
         let badgeNumberString = badgeNumber == true ? String(indexPath.row*2+1) : nil
         let rightItem = indexPath.row*2+1 >= imageList1Items.count ? nil : imageList1Items[indexPath.row*2+1]
         imageList1TableViewCell.configure(badgeNumber: badgeNumberString, leftItem: imageList1Items[indexPath.row*2], rightItem: rightItem)
-        imageList1TableViewCell.onItemSelect = { [weak self] selectedItemToken in
-            self?.onItemSelect?(selectedItemToken, nil)
+        imageList1TableViewCell.onItemSelect = { [weak self] selectedItemEventType in
+            self?.onItemSelect?(selectedItemEventType)
         }
         return imageList1TableViewCell
     }
