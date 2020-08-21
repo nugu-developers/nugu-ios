@@ -28,6 +28,10 @@ struct AudioPlayerAgentMedia {
     let payload: Payload
     var pauseReason: PauseReason = .nothing
     var cancelAssociation: Bool = false
+    /// Keep the offset before playback stopped.
+    var offset: Int?
+    /// Keep the duration before playback stopped.
+    var duration: Int?
     
     init(dialogRequestId: String, messageId: String, payload: Payload) {
         self.dialogRequestId = dialogRequestId

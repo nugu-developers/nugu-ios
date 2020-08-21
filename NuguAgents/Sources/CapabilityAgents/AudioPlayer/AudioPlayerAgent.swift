@@ -393,11 +393,11 @@ extension AudioPlayerAgent: ContextInfoDelegate {
             "playServiceId": currentMedia?.payload.playServiceId,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
-            "offsetInMilliseconds": (offset ?? 0) * 1000,
+            "offsetInMilliseconds": (offset ?? currentMedia?.offset ?? 0) * 1000,
             "token": currentMedia?.payload.audioItem.stream.token,
             "lyricsVisible": false
         ]
-        if let duration = duration {
+        if let duration = duration ?? currentMedia?.duration {
             payload["durationInMilliseconds"] = duration * 1000
         }
         
@@ -703,6 +703,9 @@ private extension AudioPlayerAgent {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self, let player = self.currentPlayer else { return }
             
+            // Keep the offset and duration to be sent with the `AudioPlayer.PlaybackStopped` event.
+            self.currentMedia?.offset = self.offset
+            self.currentMedia?.duration = self.duration
             self.currentMedia?.cancelAssociation = cancelAssociation
             player.stop()
         }
@@ -710,8 +713,11 @@ private extension AudioPlayerAgent {
     
     /// Stop mediaplayer
     func stopSilently() {
-        guard let media = self.currentMedia, let player = self.currentPlayer else { return }
+        guard let media = currentMedia, let player = currentPlayer else { return }
             
+        // Keep the offset and duration to be sent with the `AudioPlayer.PlaybackStopped` event.
+        currentMedia?.offset = offset
+        currentMedia?.duration = duration
         currentMedia?.cancelAssociation = false
         // `AudioPlayerState` -> Event
         player.delegate = nil
@@ -736,7 +742,7 @@ private extension AudioPlayerAgent {
             self.upstreamDataSender.sendEvent(
                 PlayEvent(
                     token: media.payload.audioItem.stream.token,
-                    offsetInMilliseconds: (self.offset ?? 0) * 1000, // This is a mandatory in Play kit.
+                    offsetInMilliseconds: (self.offset ?? self.currentMedia?.offset ?? 0) * 1000, // This is a mandatory in Play kit.
                     playServiceId: media.payload.playServiceId,
                     typeInfo: typeInfo
                 ).makeEventMessage(
