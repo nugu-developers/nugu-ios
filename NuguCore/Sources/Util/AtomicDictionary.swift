@@ -20,27 +20,32 @@
 
 import Foundation
 
-struct AtomicDictionary<Key: Hashable, Value> {
-    private let dictionaryQueue = DispatchQueue(label: "com.sktelecom.romaine.atomic_dictionary")
+class AtomicDictionary<Key: Hashable, Value> {
+    private let dictionaryQueue = DispatchQueue(label: "com.sktelecom.romaine.atomic_dictionary", attributes: .concurrent)
     
     private var dictionary = [Key: Value]()
     
     var keys: Dictionary<Key, Value>.Keys {
-        dictionary.keys
+        dictionaryQueue.sync {
+            dictionary.keys
+        }
     }
     var values: Dictionary<Key, Value>.Values {
-        dictionary.values
+        dictionaryQueue.sync {
+            dictionary.values
+        }
     }
     
     subscript(key: Key) -> Value? {
         get {
-            return dictionaryQueue.sync {
+            dictionaryQueue.sync {
                 dictionary[key]
             }
         }
         set {
-            dictionaryQueue.sync {
-                dictionary[key] = newValue
+            dictionaryQueue.async(flags: .barrier) { [weak self] in
+                self?.dictionary[key] = newValue
+                print(Thread.current)
             }
         }
     }
