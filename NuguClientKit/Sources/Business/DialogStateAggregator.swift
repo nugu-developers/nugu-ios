@@ -64,8 +64,14 @@ public class DialogStateAggregator {
         didSet {
             log.debug(isChipsRequestInProgress)
             dialogStateDispatchQueue.async { [weak self] in
-                if self?.isChipsRequestInProgress == false {
-                    self?.tryEnterIdleState()
+                guard let self = self else { return }
+                
+                if self.isChipsRequestInProgress {
+                    self.focusManager.requestFocus(channelDelegate: self)
+                } else if self.dialogState == .idle {
+                    self.focusManager.releaseFocus(channelDelegate: self)
+                } else {
+                    self.tryEnterIdleState()
                 }
             }
         }

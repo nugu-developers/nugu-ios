@@ -480,6 +480,23 @@ extension NuguCentralManager {
     }
 }
 
+// MARK: - Internal (Text)
+
+extension NuguCentralManager {
+    func requestTextInput(text: String, includeDialogAttribute: Bool = true, completion: (() -> Void)? = nil) {
+        client.dialogStateAggregator.isChipsRequestInProgress = true
+        client.asrAgent.stopRecognition()
+        client.textAgent.requestTextInput(text: text, includeDialogAttribute: includeDialogAttribute) { state in
+            switch state {
+            case .finished, .error:
+                NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = false
+                completion?()
+            default: break
+            }
+        }
+    }
+}
+
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {

@@ -150,7 +150,7 @@ private extension NuguAudioSessionManager {
                             log.debug("startMicInputProvider: \(success)")
                         }
                     }
-                    if pausedByInterruption == true {
+                    if pausedByInterruption == true || NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
                         NuguCentralManager.shared.client.audioPlayerAgent.play()
                     }
                 } else {

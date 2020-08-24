@@ -312,7 +312,7 @@ private extension TTSAgent {
                 throw TTSError.notSupportedSourceType
             }
             
-            self?.ttsDispatchQueue.async { [weak self] in
+            self?.ttsDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
                 
                 self.stopSilently()
@@ -438,7 +438,7 @@ private extension TTSAgent {
             #endif
             
             self?.ttsDispatchQueue.async { [weak self] in
-                log.info("\(attachment.header)")
+                log.info("\(attachment)")
                 guard let self = self else { return }
                 guard let dataSource = self.currentPlayer as? MediaOpusStreamDataSource,
                     self.currentMedia?.dialogRequestId == attachment.header.dialogRequestId else {

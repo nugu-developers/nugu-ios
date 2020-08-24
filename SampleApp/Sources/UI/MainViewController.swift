@@ -119,6 +119,7 @@ final class MainViewController: UIViewController {
     /// - Parameter notification: UIApplication.willResignActiveNotification
     func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
+        NuguCentralManager.shared.client.asrAgent.stopRecognition()
         NuguCentralManager.shared.stopMicInputProvider()
     }
     
@@ -128,6 +129,11 @@ final class MainViewController: UIViewController {
     func didBecomeActive(_ notification: Notification) {
         guard navigationController?.visibleViewController == self else { return }
         refreshNugu()
+    }
+        
+    func didTapForDismissVoiceChrome() {
+        dismissVoiceChrome()
+        NuguCentralManager.shared.client.asrAgent.stopRecognition()
     }
 }
 
@@ -147,7 +153,7 @@ private extension MainViewController {
     @IBAction func sendTextInput(_ button: UIButton) {
         guard let textInput = textInputTextField.text else { return }
         textInputTextField.resignFirstResponder()
-        NuguCentralManager.shared.client.textAgent.requestTextInput(text: textInput, includeDialogAttribute: false)
+        NuguCentralManager.shared.requestTextInput(text: textInput, includeDialogAttribute: false)
     }
 }
 
@@ -271,11 +277,10 @@ private extension MainViewController {
         }
     }
     
-    @objc func dismissVoiceChrome() {
+    func dismissVoiceChrome() {
         view.gestureRecognizers = nil
         
         voiceChromeDismissWorkItem?.cancel()
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
         
         nuguButton.isActivated = true
         
@@ -303,7 +308,7 @@ private extension MainViewController {
     
     func addTapGestureRecognizerForDismissVoiceChrome() {
         view.gestureRecognizers?.forEach { view.removeGestureRecognizer($0) }
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissVoiceChrome))
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForDismissVoiceChrome))
         view.addGestureRecognizer(tapGestureRecognizer)
     }
 }
@@ -322,14 +327,7 @@ private extension MainViewController {
         indicator.startAnimating()
         window.addSubview(indicator)
         
-        NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = true
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
-        NuguCentralManager.shared.client.textAgent.requestTextInput(text: selectedChipsText) { state in
-            switch state {
-            case .finished, .error:
-                NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = false
-            default: break
-            }
+        NuguCentralManager.shared.requestTextInput(text: selectedChipsText) {
             DispatchQueue.main.async {
                 indicator.removeFromSuperview()
             }
