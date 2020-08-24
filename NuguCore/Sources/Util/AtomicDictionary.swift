@@ -45,7 +45,6 @@ class AtomicDictionary<Key: Hashable, Value> {
         set {
             dictionaryQueue.async(flags: .barrier) { [weak self] in
                 self?.dictionary[key] = newValue
-                print(Thread.current)
             }
         }
     }
