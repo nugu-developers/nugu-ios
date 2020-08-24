@@ -411,10 +411,17 @@ private extension MainViewController {
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
             self.dismissDisplayView()
         }
-        displayView.onItemSelect = { (selectedItemToken, selectedItemPostback) in
-            guard let selectedItemToken = selectedItemToken else { return }
-            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: selectedItemToken, postback: selectedItemPostback)
+        displayView.onItemSelect = { eventType in
+            switch eventType {
+            case .elementSelected(let token, let postback):
+                guard let token = token else { return }
+                NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
+            case .textInput(let textInput):
+                guard let textInput = textInput else { return }
+                NuguCentralManager.shared.client.textAgent.requestTextInput(text: textInput.text)
+            }
         }
+        
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
         }
