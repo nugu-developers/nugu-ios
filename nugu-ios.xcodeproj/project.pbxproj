@@ -364,6 +364,7 @@
 		75047D9A24F4DE8F007BBF22 /* responsefail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9724F4DE8E007BBF22 /* responsefail.wav */; };
 		75047D9B24F4DE8F007BBF22 /* listening_end.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9824F4DE8F007BBF22 /* listening_end.wav */; };
 		75047D9C24F4DE8F007BBF22 /* listening_start.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9924F4DE8F007BBF22 /* listening_start.wav */; };
+		75047D9F24F4F05D007BBF22 /* responsefail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9724F4DE8E007BBF22 /* responsefail.wav */; };
 		75082BC4243AC5B20027D76D /* MediaCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC3243AC5B20027D76D /* MediaCacheManager.swift */; };
 		75082BC6243AC85E0027D76D /* FileManager+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC5243AC85E0027D76D /* FileManager+Convenience.swift */; };
 		75082BC8243ACA280027D76D /* CryptoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC7243ACA280027D76D /* CryptoUtil.swift */; };
@@ -3367,6 +3368,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75047D9F24F4F05D007BBF22 /* responsefail.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
