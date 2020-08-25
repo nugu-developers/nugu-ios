@@ -47,6 +47,8 @@ public struct FocusChannelPriority {
     public static let media = FocusChannelPriority(requestPriority: 200, maintainPriority: 100)
     /// A priority of `beep` channel.
     public static let beep = FocusChannelPriority(requestPriority: 100, maintainPriority: 150)
+    /// A priority of `sound` channel.
+    public static let sound = FocusChannelPriority(requestPriority: 100, maintainPriority: 100)
     /// A priority of `background` channel.
     public static let background = FocusChannelPriority(requestPriority: 0, maintainPriority: 0)
 }

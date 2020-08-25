@@ -23,13 +23,11 @@ import Foundation
 import NuguCore
 
 struct SoundMedia {
-    let player: MediaPlayable
     let payload: Payload
     let dialogRequestId: String
     let messageId: String
     
-    init(player: MediaPlayable, payload: Payload, dialogRequestId: String, messageId: String) {
-        self.player = player
+    init(payload: Payload, dialogRequestId: String, messageId: String) {
         self.payload = payload
         self.dialogRequestId = dialogRequestId
         self.messageId = messageId

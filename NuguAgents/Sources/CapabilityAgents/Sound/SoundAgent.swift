@@ -31,7 +31,7 @@ public final class SoundAgent: SoundAgentProtocol {
     public weak var delegate: SoundAgentDelegate?
     public var volume: Float = 1.0 {
         didSet {
-            currentMedia?.player.volume = volume
+            currentPlayer?.volume = volume
         }
     }
     
@@ -66,6 +66,7 @@ public final class SoundAgent: SoundAgentProtocol {
         }
     }
     private var currentMedia: SoundMedia?
+    private var currentPlayer: MediaPlayable?
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
@@ -90,7 +91,7 @@ public final class SoundAgent: SoundAgentProtocol {
     
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        currentMedia?.player.stop()
+        currentPlayer?.stop()
     }
 }
 
@@ -98,7 +99,7 @@ public final class SoundAgent: SoundAgentProtocol {
 
 extension SoundAgent: FocusChannelDelegate {
     public func focusChannelPriority() -> FocusChannelPriority {
-        return .beep
+        return .sound
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
@@ -108,7 +109,7 @@ extension SoundAgent: FocusChannelDelegate {
             
             switch (focusState, self.soundState) {
             case (.foreground, let soundState) where [.idle, .stopped, .finished].contains(soundState):
-                self.currentMedia?.player.play()
+                self.currentPlayer?.play()
             // Foreground. playing 무시
             case (.foreground, _):
                 break
@@ -188,8 +189,8 @@ private extension SoundAgent {
                 mediaPlayer.delegate = self
                 mediaPlayer.volume = self.volume
                 
+                self.currentPlayer = mediaPlayer
                 self.currentMedia = SoundMedia(
-                    player: mediaPlayer,
                     payload: payload,
                     dialogRequestId: directive.header.dialogRequestId,
                     messageId: directive.header.messageId
@@ -225,17 +226,17 @@ private extension SoundAgent {
 private extension SoundAgent {
     func stop() {
         soundDispatchQueue.precondition(.onQueue)
-        currentMedia?.player.stop()
+        currentPlayer?.stop()
     }
     
     /// Synchronously stop previously playing beep
     func stopSilently() {
         soundDispatchQueue.precondition(.onQueue)
-        guard let media = currentMedia else { return }
+        guard let player = currentPlayer else { return }
         
         // `MediaPlayer` -> `SoundState`
-        media.player.delegate = nil
-        media.player.stop()
+        player.delegate = nil
+        player.stop()
         soundState = .stopped
     }
 }

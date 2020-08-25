@@ -69,8 +69,12 @@ extension FocusManager {
                 channelDelegate.focusChannelPriority().requestPriority >= foregroundChannelDelegate.focusChannelPriority().maintainPriority {
                 self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
             }
-            
-            if self.foregroundChannelDelegate == nil {
+
+            if let backgroundChannelDelegate = self.backgroundChannelDelegate,
+                channelDelegate.focusChannelPriority().requestPriority < backgroundChannelDelegate.focusChannelPriority().maintainPriority {
+                // Assign a higher background channel to the foreground in the future.
+                self.update(channelDelegate: channelDelegate, focusState: .background)
+            } else if self.foregroundChannelDelegate == nil {
                 self.update(channelDelegate: channelDelegate, focusState: .foreground)
             } else {
                 self.update(channelDelegate: channelDelegate, focusState: .background)
@@ -113,8 +117,8 @@ private extension FocusManager {
     }
     
     func assignForeground() {
-        // Background -> Foreground
-        focusDispatchQueue.async { [weak self] in
+        // Assign a higher background channel to the foreground with some delay so that it doesn't acquire the focus temporarily.
+        focusDispatchQueue.asyncAfter(deadline: .now() + FocusConst.shortLatency) { [weak self] in
             guard let self = self else { return }
             guard self.foregroundChannelDelegate == nil,
                 let backgroundChannelDelegate = self.backgroundChannelDelegate else {
@@ -148,7 +152,7 @@ private extension FocusManager {
         return self.channelInfos
             .filter { $0.focusState == .background }
             .compactMap { $0.delegate}
-            .sorted { $0.focusChannelPriority().requestPriority > $1.focusChannelPriority().requestPriority }
+            .sorted { $0.focusChannelPriority().maintainPriority > $1.focusChannelPriority().maintainPriority }
             .first
     }
 }
