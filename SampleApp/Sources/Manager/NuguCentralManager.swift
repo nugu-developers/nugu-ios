@@ -576,7 +576,7 @@ extension NuguCentralManager: SoundAgentDataSource {
         let url: URL?
         switch beepName {
         case .responseFail:
-            url = Bundle.main.url(forResource: "asrFail", withExtension: "wav")
+            url = Bundle.main.url(forResource: "responsefail", withExtension: "wav")
         }
         return url
     }
