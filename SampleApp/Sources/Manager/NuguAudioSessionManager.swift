@@ -100,17 +100,16 @@ extension NuguAudioSessionManager {
     
     func notifyAudioSessionDeactivation() {
         log.debug("")
-        do {
-            // Defer statement for recovering audioSession and MicInputProvider
-            defer {
-                updateAudioSession()
-                if UserDefaults.Standard.useWakeUpDetector == true {
-                    NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { success in
-                        log.debug("startMicInputProvider : \(success)")
-                    }
+        // Defer statement for recovering audioSession and MicInputProvider
+        defer {
+            updateAudioSession()
+            if UserDefaults.Standard.useWakeUpDetector == true {
+                NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { success in
+                    log.debug("startMicInputProvider : \(success)")
                 }
             }
-            
+        }
+        do {
             // Clean up all I/O before deactivating audioSession
             NuguCentralManager.shared.stopMicInputProvider()
             
