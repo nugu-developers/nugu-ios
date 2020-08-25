@@ -51,7 +51,14 @@ final class ASRBeepPlayer {
         }
         
         fileprivate var fileName: String {
-            return "asr\(rawValue.capitalized)"
+            switch self {
+            case .start:
+                return "listening_start"
+            case .success:
+                return "listening_end"
+            case .fail:
+                return "responsefail"
+            }
         }
             
         fileprivate var extention: String {
