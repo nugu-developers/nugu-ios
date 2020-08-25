@@ -47,6 +47,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     
     // Current display info
     private var templateList = [DisplayTemplate]()
+    private var updateTemplateList = [DisplayTemplate]()
     
     private var disposeBag = DisposeBag()
     
@@ -337,9 +338,11 @@ private extension DisplayAgent {
             
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self, let delegate = self.delegate else { return }
-                guard let item = self.templateList.first(where: { $0.templateId == updateDisplayTemplate.templateId }) else { return }
+                guard let item = self.templateList.first(where: { $0.template.token == updateDisplayTemplate.template.token }) else { return }
 
+                self.updateTemplateList.append(updateDisplayTemplate)
                 self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
+                self.sessionManager.activate(dialogRequestId: updateDisplayTemplate.dialogRequestId, category: .display)
                 delegate.displayAgentShouldUpdate(templateId: item.templateId, template: updateDisplayTemplate)
             }
         }
@@ -463,6 +466,10 @@ private extension DisplayAgent {
         
         templateList.removeAll { $0.templateId == item.templateId }
         deactivateSession(dialogRequestId: item.dialogRequestId)
+        updateTemplateList
+            .filter { $0.template.token == item.template.token }
+            .forEach { deactivateSession(dialogRequestId: $0.dialogRequestId) }
+        updateTemplateList.removeAll { $0.template.token == item.template.token }
         return true
     }
     
