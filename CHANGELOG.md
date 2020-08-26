@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.18.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.18.0)
+Released on 2020-08-26
+#### Fixed
+[SampleApp] Fixes a crash issue (#461)
+[SampleApp] Separate stopRecognize() from dismissVoiceChrome() (#464)
+[NuguCore] Fix crash issues (#457) (#469)
+[NuguAgents] Modify `postBack` to `postback` in payload of `Display.ElementSelected` event. (#460)
+[NuguClientKit] Fixes a bug where passing the wrong `DialogState`. (#455)
+[NuguClientKit] Sort `ChipsAgentItem` in chronological order. (#458)
+
+#### Update
+[SampleApp] Modify focus channel priority of `ASRBeepPlayer` (#459) (#463)
+[SampleApp] Request focus when before sending text input event. (#465)
+[SampleApp] Update sound resources (#472)
+[NuguUIKit] Add nugu button flip animation (#456)
+[NuguAgents] `AudioPlayerAgent` 1.4(upgrade capability-agent) (#401) (#452) 
+[NuguAgents] Add `directiveCancelPolicy` to `TTSAgentProtocol` (#454)
+[NuguAgents] Modify focus channel priority of `SoundAgent` (#459) (#463)
+[NuguAgents] Upgrade displayAgent from v1.4 to v1.5 (#468)
+
 ## [0.17.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.17.0)
 Released on 2020-08-12
 #### Added
