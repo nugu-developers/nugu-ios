@@ -37,9 +37,6 @@
 		7E6A0B14241084C000C7A19E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B0F241084C000C7A19E /* Assets.xcassets */; };
 		7E6A0B15241084C000C7A19E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B10241084C000C7A19E /* LaunchScreen.storyboard */; };
 		7E6A0B16241084C000C7A19E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B12241084C000C7A19E /* Main.storyboard */; };
-		7E6A0B362410888000C7A19E /* asrStart.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2B2410888000C7A19E /* asrStart.wav */; };
-		7E6A0B372410888000C7A19E /* asrSuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2C2410888000C7A19E /* asrSuccess.wav */; };
-		7E6A0B382410888000C7A19E /* asrFail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2D2410888000C7A19E /* asrFail.wav */; };
 		7E6A0B392410888000C7A19E /* device_GW_error_003.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2F2410888000C7A19E /* device_GW_error_003.wav */; };
 		7E6A0B3A2410888000C7A19E /* device_GW_error_002.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B302410888000C7A19E /* device_GW_error_002.wav */; };
 		7E6A0B3B2410888000C7A19E /* device_GW_error_001.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B312410888000C7A19E /* device_GW_error_001.wav */; };
@@ -52,6 +49,10 @@
 		7E91D19024AF281E00E48017 /* NuguServiceWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E91D18F24AF281E00E48017 /* NuguServiceWebViewController.swift */; };
 		7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */; };
 		7EBD76292391130100CA9C9C /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBD76272391130100CA9C9C /* NuguLocationManager.swift */; };
+		7ECD3DEA24F645A2007F29CE /* DisplayItemEventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECD3DE924F645A2007F29CE /* DisplayItemEventType.swift */; };
+		7ECD3DEE24F64605007F29CE /* responsefail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD3DEB24F64604007F29CE /* responsefail.wav */; };
+		7ECD3DEF24F64605007F29CE /* listening_end.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD3DEC24F64605007F29CE /* listening_end.wav */; };
+		7ECD3DF024F64605007F29CE /* listening_start.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD3DED24F64605007F29CE /* listening_start.wav */; };
 		7EE2DCB2247CF45F0005DE17 /* AudioDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB1247CF45F0005DE17 /* AudioDisplayView.swift */; };
 		7EE2DD0B247CF4750005DE17 /* AudioPlayer1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB4247CF4750005DE17 /* AudioPlayer1View.xib */; };
 		7EE2DD0C247CF4750005DE17 /* AudioPlayer1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB5247CF4750005DE17 /* AudioPlayer1View.swift */; };
@@ -190,9 +191,6 @@
 		7E6A0B0F241084C000C7A19E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7E6A0B11241084C000C7A19E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7E6A0B13241084C000C7A19E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		7E6A0B2B2410888000C7A19E /* asrStart.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrStart.wav; sourceTree = "<group>"; };
-		7E6A0B2C2410888000C7A19E /* asrSuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrSuccess.wav; sourceTree = "<group>"; };
-		7E6A0B2D2410888000C7A19E /* asrFail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = asrFail.wav; sourceTree = "<group>"; };
 		7E6A0B2F2410888000C7A19E /* device_GW_error_003.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_003.wav; sourceTree = "<group>"; };
 		7E6A0B302410888000C7A19E /* device_GW_error_002.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_002.wav; sourceTree = "<group>"; };
 		7E6A0B312410888000C7A19E /* device_GW_error_001.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_001.wav; sourceTree = "<group>"; };
@@ -205,6 +203,10 @@
 		7E91D18F24AF281E00E48017 /* NuguServiceWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServiceWebViewController.swift; sourceTree = "<group>"; };
 		7EBD76262391130100CA9C9C /* NuguAudioSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguAudioSessionManager.swift; sourceTree = "<group>"; };
 		7EBD76272391130100CA9C9C /* NuguLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
+		7ECD3DE924F645A2007F29CE /* DisplayItemEventType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayItemEventType.swift; sourceTree = "<group>"; };
+		7ECD3DEB24F64604007F29CE /* responsefail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = responsefail.wav; sourceTree = "<group>"; };
+		7ECD3DEC24F64605007F29CE /* listening_end.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = listening_end.wav; sourceTree = "<group>"; };
+		7ECD3DED24F64605007F29CE /* listening_start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = listening_start.wav; sourceTree = "<group>"; };
 		7EE2DCB1247CF45F0005DE17 /* AudioDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioDisplayView.swift; sourceTree = "<group>"; };
 		7EE2DCB4247CF4750005DE17 /* AudioPlayer1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayer1View.xib; sourceTree = "<group>"; };
 		7EE2DCB5247CF4750005DE17 /* AudioPlayer1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer1View.swift; sourceTree = "<group>"; };
@@ -509,6 +511,7 @@
 		7E0B69732434A0AC00D8C6AD /* Display */ = {
 			isa = PBXGroup;
 			children = (
+				7ECD3DE924F645A2007F29CE /* DisplayItemEventType.swift */,
 				7EE2DD68247CF48F0005DE17 /* FullImageTemplate.swift */,
 				7EE2DD64247CF48F0005DE17 /* FullText1Template.swift */,
 				7EE2DD5C247CF48E0005DE17 /* FullText2Template.swift */,
@@ -575,9 +578,9 @@
 		7E6A0B2A2410888000C7A19E /* AsrBeep */ = {
 			isa = PBXGroup;
 			children = (
-				7E6A0B2B2410888000C7A19E /* asrStart.wav */,
-				7E6A0B2C2410888000C7A19E /* asrSuccess.wav */,
-				7E6A0B2D2410888000C7A19E /* asrFail.wav */,
+				7ECD3DEC24F64605007F29CE /* listening_end.wav */,
+				7ECD3DED24F64605007F29CE /* listening_start.wav */,
+				7ECD3DEB24F64604007F29CE /* responsefail.wav */,
 			);
 			path = AsrBeep;
 			sourceTree = "<group>";
@@ -833,7 +836,9 @@
 				7EE2DD23247CF4750005DE17 /* Score1View.xib in Resources */,
 				7EE2DD31247CF4750005DE17 /* Weather4ViewCell.xib in Resources */,
 				7EE2DD35247CF4750005DE17 /* TextList4View.xib in Resources */,
+				7ECD3DF024F64605007F29CE /* listening_start.wav in Resources */,
 				7EE2DD0D247CF4750005DE17 /* AudioPlayer2View.xib in Resources */,
+				7ECD3DEF24F64605007F29CE /* listening_end.wav in Resources */,
 				7E6A0B3F2410888000C7A19E /* device_GW_error_006.wav in Resources */,
 				7EE2DD32247CF4750005DE17 /* Weather5View.xib in Resources */,
 				7EE2DD1F247CF4750005DE17 /* FullText3View.xib in Resources */,
@@ -843,7 +848,6 @@
 				7EE2DD21247CF4750005DE17 /* FullText2View.xib in Resources */,
 				7EE2DD55247CF4750005DE17 /* ImageList2View.xib in Resources */,
 				7EE2DD40247CF4750005DE17 /* TextList3ViewCell.xib in Resources */,
-				7E6A0B382410888000C7A19E /* asrFail.wav in Resources */,
 				7EE2DD0F247CF4750005DE17 /* AudioPlayerBarView.xib in Resources */,
 				7EE2DD19247CF4750005DE17 /* ImageText2View.xib in Resources */,
 				7EE2DD4D247CF4750005DE17 /* ImageList2ViewCell.xib in Resources */,
@@ -859,15 +863,14 @@
 				7E6A0B15241084C000C7A19E /* LaunchScreen.storyboard in Resources */,
 				7EE2DD33247CF4750005DE17 /* Weather4View.xib in Resources */,
 				7EE2DD26247CF4750005DE17 /* Score2ViewCell.xib in Resources */,
-				7E6A0B362410888000C7A19E /* asrStart.wav in Resources */,
 				7EE2DD2A247CF4750005DE17 /* Weather1View.xib in Resources */,
 				7EE2DD15247CF4750005DE17 /* ImageText4View.xib in Resources */,
-				7E6A0B372410888000C7A19E /* asrSuccess.wav in Resources */,
 				7E6A0B3A2410888000C7A19E /* device_GW_error_002.wav in Resources */,
 				7EE2DD39247CF4750005DE17 /* TextList4ViewCell.xib in Resources */,
 				7EE2DD1C247CF4750005DE17 /* ImageText1View.xib in Resources */,
 				7EE2DD42247CF4750005DE17 /* TextList2View.xib in Resources */,
 				7EE2DD53247CF4750005DE17 /* ImageList3View.xib in Resources */,
+				7ECD3DEE24F64605007F29CE /* responsefail.wav in Resources */,
 				7EE2DD46247CF4750005DE17 /* DisplayIdleBar.xib in Resources */,
 				7EE2DD1B247CF4750005DE17 /* ImageText3View.xib in Resources */,
 				7EE2DD50247CF4750005DE17 /* ImageList3ViewCell.xib in Resources */,
@@ -1022,6 +1025,7 @@
 				73F284F723815CC9004EBBDF /* Int+Convenience.swift in Sources */,
 				7EE2DD4E247CF4750005DE17 /* ImageList1ViewCell.swift in Sources */,
 				7EE2DD4C247CF4750005DE17 /* ImageList2ViewCell.swift in Sources */,
+				7ECD3DEA24F645A2007F29CE /* DisplayItemEventType.swift in Sources */,
 				7EE2DD7C247CF4900005DE17 /* ImageList1Template.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
