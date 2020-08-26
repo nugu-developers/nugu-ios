@@ -416,7 +416,7 @@ private extension MainViewController {
                 NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
             case .textInput(let textInput):
                 guard let textInput = textInput else { return }
-                NuguCentralManager.shared.client.textAgent.requestTextInput(text: textInput.text)
+                NuguCentralManager.shared.requestTextInput(text: textInput.text)
             }
         }
         
