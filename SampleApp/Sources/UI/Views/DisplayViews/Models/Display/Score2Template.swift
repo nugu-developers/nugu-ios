@@ -32,5 +32,8 @@ struct Score2Template: Decodable {
         let schedule: DisplayCommonTemplate.Common.Text?
         let status: DisplayCommonTemplate.Common.Text
         let match: [DisplayCommonTemplate.Common.Match]
+        
+        let eventType: DisplayCommonTemplate.Common.EventType?
+        let textInput: DisplayCommonTemplate.Common.TextInput?
     }
 }

@@ -38,5 +38,8 @@ struct TextList3Template: Decodable {
         let header: DisplayCommonTemplate.Common.Text
         let body: [DisplayCommonTemplate.Common.Text]
         let footer: DisplayCommonTemplate.Common.Text?
+        
+        let eventType: DisplayCommonTemplate.Common.EventType?
+        let textInput: DisplayCommonTemplate.Common.TextInput?
     }
 }

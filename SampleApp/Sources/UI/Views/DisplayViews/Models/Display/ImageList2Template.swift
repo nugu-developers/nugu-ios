@@ -37,5 +37,8 @@ struct ImageList2Template: Decodable {
         let icon: DisplayCommonTemplate.Common.Image?
         let header: DisplayCommonTemplate.Common.Text
         let footer: DisplayCommonTemplate.Common.Text?
+        
+        let eventType: DisplayCommonTemplate.Common.EventType?
+        let textInput: DisplayCommonTemplate.Common.TextInput?
     }
 }

@@ -428,6 +428,7 @@
 		75C61BB724C6DB8700265228 /* 07_speaking.json in Resources */ = {isa = PBXBuildFile; fileRef = 75C61BB024C6DB8700265228 /* 07_speaking.json */; };
 		75C61BB824C6DB8700265228 /* 02_passive.json in Resources */ = {isa = PBXBuildFile; fileRef = 75C61BB124C6DB8700265228 /* 02_passive.json */; };
 		75C61BB924C6DB8700265228 /* 03_transition.json in Resources */ = {isa = PBXBuildFile; fileRef = 75C61BB224C6DB8700265228 /* 03_transition.json */; };
+		75CD549524EE37B600488CB4 /* DisplayItemEventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CD549424EE37B600488CB4 /* DisplayItemEventType.swift */; };
 		75D069C4247F76CC000B5D1F /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */; };
 		75D069E42488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */; };
 		75F1A7D824B451F00023B6C9 /* WeakScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */; };
@@ -1118,6 +1119,7 @@
 		75C61BB024C6DB8700265228 /* 07_speaking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 07_speaking.json; sourceTree = "<group>"; };
 		75C61BB124C6DB8700265228 /* 02_passive.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 02_passive.json; sourceTree = "<group>"; };
 		75C61BB224C6DB8700265228 /* 03_transition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 03_transition.json; sourceTree = "<group>"; };
+		75CD549424EE37B600488CB4 /* DisplayItemEventType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayItemEventType.swift; sourceTree = "<group>"; };
 		75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+AnyHashable.swift"; sourceTree = "<group>"; };
 		75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakScriptMessageHandler.swift; sourceTree = "<group>"; };
@@ -2814,6 +2816,7 @@
 		A1505090241626F100671568 /* Display */ = {
 			isa = PBXGroup;
 			children = (
+				75CD549424EE37B600488CB4 /* DisplayItemEventType.swift */,
 				75032BC5246B90A30077B824 /* FullImageTemplate.swift */,
 				75032BBE246B88FC0077B824 /* FullText1Template.swift */,
 				75032BD9246B90A50077B824 /* FullText2Template.swift */,
@@ -3731,6 +3734,7 @@
 				75032BDC246B90A50077B824 /* ImageList1Template.swift in Sources */,
 				1FFFF4F7237672F100C9A177 /* Int+Convenience.swift in Sources */,
 				7500491024766B1500B73DD8 /* AudioDisplayView.swift in Sources */,
+				75CD549524EE37B600488CB4 /* DisplayItemEventType.swift in Sources */,
 				75032C0B246B9B3E0077B824 /* ImageText4View.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

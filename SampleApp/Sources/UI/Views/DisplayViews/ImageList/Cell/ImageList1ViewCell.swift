@@ -38,12 +38,19 @@ final class ImageList1ViewCell: UITableViewCell {
     @IBOutlet private weak var rightHeaderLabel: UILabel!
     @IBOutlet private weak var rightFooterLabel: UILabel!
     
-    var onItemSelect: ((_ token: String?) -> Void)?
-    private var leftItemToken: String?
-    private var rightItemToken: String?
+    var onItemSelect: ((_ eventType: DisplayItemEventType) -> Void)?
+    private var leftItemEventType: DisplayItemEventType?
+    private var rightItemEventType: DisplayItemEventType?
     
     func configure(badgeNumber: String?, leftItem: ImageList1Template.Item, rightItem: ImageList1Template.Item?) {
-        leftItemToken = leftItem.token
+        switch leftItem.eventType {
+        case .elementSelected:
+            leftItemEventType = .elementSelected(token: leftItem.token, postback: nil)
+        case .textInput:
+            leftItemEventType = .textInput(textInput: leftItem.textInput)
+        default:
+            leftItemEventType = nil
+        }
         
         leftContentImageView.clipsToBounds = true
         leftContentImageView.layer.cornerRadius = 4.0
@@ -62,11 +69,18 @@ final class ImageList1ViewCell: UITableViewCell {
         guard let rightItem = rightItem else {
             rightStackView.isHidden = true
             rightContentImageView.isHidden = true
-            rightItemToken = nil
+            rightItemEventType = nil
             return
         }
         
-        rightItemToken = rightItem.token
+        switch rightItem.eventType {
+        case .elementSelected:
+            rightItemEventType = .elementSelected(token: rightItem.token, postback: nil)
+        case .textInput:
+            rightItemEventType = .textInput(textInput: rightItem.textInput)
+        default:
+            rightItemEventType = nil
+        }
         rightStackView.isHidden = false
         rightContentImageView.isHidden = false
         
@@ -89,10 +103,12 @@ final class ImageList1ViewCell: UITableViewCell {
     }
     
     @objc func onLeftItemDidClick() {
-        onItemSelect?(leftItemToken)
+        guard let leftItemEventType = leftItemEventType else { return }
+        onItemSelect?(leftItemEventType)
     }
     
     @objc func onRightItemDidClick() {
-        onItemSelect?(rightItemToken)
+        guard let rightItemEventType = rightItemEventType else { return }
+        onItemSelect?(rightItemEventType)
     }
 }

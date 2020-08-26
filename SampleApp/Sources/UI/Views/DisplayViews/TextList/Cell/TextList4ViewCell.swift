@@ -29,8 +29,8 @@ final class TextList4ViewCell: UITableViewCell {
     @IBOutlet private weak var buttonContainerView: UIView!
     @IBOutlet private weak var button: UIButton!
     
-    private var tokenAndPostback: (token: String?, postback: [String: AnyHashable]?)?
-    var onButtonSelect: ((_ token: String, _ postback: [String: AnyHashable]?) -> Void)?
+    private var buttonEventType: DisplayItemEventType?
+    var onButtonSelect: ((_ eventType: DisplayItemEventType) -> Void)?
     
     func configure(item: TextList4Template.Item?) {
         whiteBackgroundView.clipsToBounds = true
@@ -61,13 +61,20 @@ final class TextList4ViewCell: UITableViewCell {
         } else {
             buttonContainerView.isHidden = true
         }
-        tokenAndPostback = (item?.button?.token, item?.button?.postback)
+        switch item?.button?.eventType {
+        case .elementSelected:
+            buttonEventType = .elementSelected(token: item?.button?.token, postback: item?.button?.postback)
+        case .textInput:
+            buttonEventType = .textInput(textInput: item?.button?.textInput)
+        default:
+            buttonEventType = nil
+        }
     }
 }
 
 private extension TextList4ViewCell {
     @IBAction func buttonDidClick(_ button: UIButton) {
-        guard let token = tokenAndPostback?.token else { return }
-        onButtonSelect?(token, tokenAndPostback?.postback)
+        guard let buttonEventType = buttonEventType else { return }
+        onButtonSelect?(buttonEventType)
     }
 }

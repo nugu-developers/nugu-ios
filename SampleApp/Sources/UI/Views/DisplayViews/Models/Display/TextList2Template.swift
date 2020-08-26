@@ -41,5 +41,8 @@ struct TextList2Template: Decodable {
         let footer: DisplayCommonTemplate.Common.Text?
         let type: String?
         let toggle: DisplayCommonTemplate.Common.Toggle?
+        
+        let eventType: DisplayCommonTemplate.Common.EventType?
+        let textInput: DisplayCommonTemplate.Common.TextInput?
     }
 }
