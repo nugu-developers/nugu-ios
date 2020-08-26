@@ -20,9 +20,8 @@
 
 import Foundation
 
-// FIXME: Modify `class` to `struct` for better performance.
 final class AtomicDictionary<Key: Hashable, Value> {
-    private let dictionaryQueue = DispatchQueue(label: "com.sktelecom.romaine.atomic_dictionary", attributes: .concurrent)
+    private let dictionaryQueue = DispatchQueue(label: "com.sktelecom.romaine.atomic_dictionary")
     
     private var dictionary = [Key: Value]()
     
@@ -44,9 +43,8 @@ final class AtomicDictionary<Key: Hashable, Value> {
             }
         }
         set {
-            // FIXME: Modify `async` to `sync` for better performance.
-            dictionaryQueue.async(flags: .barrier) { [weak self] in
-                self?.dictionary[key] = newValue
+            dictionaryQueue.sync {
+                dictionary[key] = newValue
             }
         }
     }
