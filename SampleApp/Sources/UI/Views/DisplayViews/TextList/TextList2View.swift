@@ -36,12 +36,6 @@ final class TextList2View: DisplayView {
             guard let payloadData = displayPayload,
                 let displayItem = try? JSONDecoder().decode(TextList2Template.self, from: payloadData) else { return }
             
-            if oldValue != nil {
-                textList2Items = displayItem.listItems
-                textList2TableView.reloadData()
-                return
-            }
-            
             // Set backgroundColor
             backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
                         
@@ -76,6 +70,8 @@ final class TextList2View: DisplayView {
             default:
                 break
             }
+            
+            contentButtonContainerView.isHidden = (displayItem.title.button == nil)
             textList2TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)

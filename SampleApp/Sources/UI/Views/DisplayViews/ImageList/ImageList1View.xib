@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -25,6 +25,64 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" id="rTX-KB-aqh" userLabel="SubTitleView">
+                    <rect key="frame" x="0.0" y="434" width="414" height="28"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="02z-fq-Kfw">
+                            <rect key="frame" x="0.0" y="5" width="414" height="18"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eQM-E3-wKo">
+                                    <rect key="frame" x="0.0" y="0.0" width="19" height="18"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="eQM-E3-wKo" secondAttribute="height" multiplier="1:1" constant="1" id="k7k-vl-19r"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="서브텍스트" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nrG-W7-aX6">
+                                    <rect key="frame" x="21" y="0.0" width="393" height="18"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="18" id="YhZ-3M-jSh"/>
+                            </constraints>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="02z-fq-Kfw" secondAttribute="trailing" id="Gei-lq-c1g"/>
+                        <constraint firstItem="02z-fq-Kfw" firstAttribute="top" secondItem="rTX-KB-aqh" secondAttribute="top" constant="5" id="iQD-7W-lXU"/>
+                        <constraint firstItem="02z-fq-Kfw" firstAttribute="leading" secondItem="rTX-KB-aqh" secondAttribute="leading" id="kel-Mn-6vr"/>
+                        <constraint firstAttribute="bottom" secondItem="02z-fq-Kfw" secondAttribute="bottom" constant="5" id="t1n-nW-Vdd"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="zod-74-YDc"/>
+                </view>
+                <view contentMode="scaleToFill" id="ONQ-Od-5A8">
+                    <rect key="frame" x="0.0" y="412" width="414" height="72"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OAL-id-x7z" customClass="ContentButton" customModule="SampleApp" customModuleProvider="target">
+                            <rect key="frame" x="149.5" y="16" width="115" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="eJh-HR-p3J"/>
+                            </constraints>
+                            <inset key="contentEdgeInsets" minX="16" minY="10" maxX="16" maxY="10"/>
+                            <state key="normal" title="컨텐츠 버튼">
+                                <color key="titleColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="contentButtonDidClick:" destination="-1" eventType="touchUpInside" id="6M2-jl-C2Z"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="OAL-id-x7z" firstAttribute="top" secondItem="ONQ-Od-5A8" secondAttribute="top" constant="16" id="Ljg-8v-IEb"/>
+                        <constraint firstAttribute="bottom" secondItem="OAL-id-x7z" secondAttribute="bottom" constant="16" id="X4x-gE-B4Q"/>
+                        <constraint firstItem="OAL-id-x7z" firstAttribute="centerX" secondItem="ONQ-Od-5A8" secondAttribute="centerX" id="pYB-0b-8TD"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="rJE-Hm-qEc"/>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mcK-QI-xUP" customClass="DisplayTitleView" customModule="SampleApp" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="66" width="414" height="76"/>
                     <constraints>
@@ -61,68 +119,6 @@
             </constraints>
             <viewLayoutGuide key="safeArea" id="w34-LH-ZZB"/>
             <point key="canvasLocation" x="128.98550724637681" y="135.9375"/>
-        </view>
-        <view contentMode="scaleToFill" id="rTX-KB-aqh" userLabel="SubTitleView">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="28"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="02z-fq-Kfw">
-                    <rect key="frame" x="0.0" y="5" width="414" height="18"/>
-                    <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eQM-E3-wKo">
-                            <rect key="frame" x="0.0" y="0.0" width="19" height="18"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="eQM-E3-wKo" secondAttribute="height" multiplier="1:1" constant="1" id="k7k-vl-19r"/>
-                            </constraints>
-                        </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="서브텍스트" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nrG-W7-aX6">
-                            <rect key="frame" x="21" y="0.0" width="393" height="18"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="18" id="YhZ-3M-jSh"/>
-                    </constraints>
-                </stackView>
-            </subviews>
-            <constraints>
-                <constraint firstAttribute="trailing" secondItem="02z-fq-Kfw" secondAttribute="trailing" id="Gei-lq-c1g"/>
-                <constraint firstItem="02z-fq-Kfw" firstAttribute="top" secondItem="rTX-KB-aqh" secondAttribute="top" constant="5" id="iQD-7W-lXU"/>
-                <constraint firstItem="02z-fq-Kfw" firstAttribute="leading" secondItem="rTX-KB-aqh" secondAttribute="leading" id="kel-Mn-6vr"/>
-                <constraint firstAttribute="bottom" secondItem="02z-fq-Kfw" secondAttribute="bottom" constant="5" id="t1n-nW-Vdd"/>
-            </constraints>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="zod-74-YDc"/>
-            <point key="canvasLocation" x="129" y="483"/>
-        </view>
-        <view contentMode="scaleToFill" id="ONQ-Od-5A8">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="72"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OAL-id-x7z" customClass="ContentButton" customModule="SampleApp" customModuleProvider="target">
-                    <rect key="frame" x="149.5" y="16" width="115" height="40"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="40" id="eJh-HR-p3J"/>
-                    </constraints>
-                    <inset key="contentEdgeInsets" minX="16" minY="10" maxX="16" maxY="10"/>
-                    <state key="normal" title="컨텐츠 버튼">
-                        <color key="titleColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
-                    </state>
-                    <connections>
-                        <action selector="contentButtonDidClick:" destination="-1" eventType="touchUpInside" id="6M2-jl-C2Z"/>
-                    </connections>
-                </button>
-            </subviews>
-            <constraints>
-                <constraint firstItem="OAL-id-x7z" firstAttribute="top" secondItem="ONQ-Od-5A8" secondAttribute="top" constant="16" id="Ljg-8v-IEb"/>
-                <constraint firstAttribute="bottom" secondItem="OAL-id-x7z" secondAttribute="bottom" constant="16" id="X4x-gE-B4Q"/>
-                <constraint firstItem="OAL-id-x7z" firstAttribute="centerX" secondItem="ONQ-Od-5A8" secondAttribute="centerX" id="pYB-0b-8TD"/>
-            </constraints>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="rJE-Hm-qEc"/>
-            <point key="canvasLocation" x="130" y="543"/>
         </view>
     </objects>
 </document>
