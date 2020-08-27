@@ -222,3 +222,15 @@ extension DisplayCommonTemplate.Common.EventType: Decodable {
         }
     }
 }
+
+extension DisplayCommonTemplate.Common.Toggle.Status {
+    public init(from decoder: Decoder) throws {
+        let value = try decoder.singleValueContainer().decode(String.self).lowercased()
+        
+        switch value {
+        case "on": self = .on
+        case "off": self = .off
+        default: self = .on
+        }
+    }
+}

@@ -244,7 +244,7 @@ private extension MainViewController {
         
         setChipsButton(
             actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
-            normalList: ["템플릿 열어줘", "템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
+            normalList: ["라디오 목록 알려줘", "템플릿 열어줘", "템플릿에서 도움말1", "주말 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
         )
         
         view.addSubview(self.nuguVoiceChrome)

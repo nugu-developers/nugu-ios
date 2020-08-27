@@ -36,6 +36,12 @@ final class TextList2View: DisplayView {
             guard let payloadData = displayPayload,
                 let displayItem = try? JSONDecoder().decode(TextList2Template.self, from: payloadData) else { return }
             
+            if oldValue != nil {
+                textList2Items = displayItem.listItems
+                textList2TableView.reloadData()
+                return
+            }
+            
             // Set backgroundColor
             backgroundColor = UIColor.backgroundColor(rgbHexString: displayItem.background?.color)
                         
