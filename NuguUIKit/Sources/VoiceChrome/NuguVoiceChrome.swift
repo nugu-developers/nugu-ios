@@ -71,6 +71,7 @@ final public class NuguVoiceChrome: UIView {
     
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var guideTextLabel: UILabel!
+    @IBOutlet private weak var guideTextLabelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var recognizedTextLabel: UILabel!
     @IBOutlet private weak var animationContainerView: UIView!
     @IBOutlet private weak var chipsView: NuguChipsView!
@@ -114,6 +115,7 @@ final public class NuguVoiceChrome: UIView {
         chipsView.willStartScrolling = { [weak self] in
             UIView.animate(withDuration: 0.3, animations: { [weak self] in
                 self?.guideTextLabel.text = nil
+                self?.guideTextLabelTrailingConstraint.constant = 0
                 self?.layoutIfNeeded()
             })
         }
@@ -209,5 +211,6 @@ private extension NuguVoiceChrome {
     func showSpeechGuideText() {
         recognizedTextLabel.text = nil
         guideTextLabel.text = speechGuideText
+        guideTextLabelTrailingConstraint.constant = -14
     }
 }

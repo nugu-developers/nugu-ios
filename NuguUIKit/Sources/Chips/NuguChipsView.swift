@@ -25,7 +25,7 @@ final public class NuguChipsView: UIView {
     // MARK: - NuguChipsView.Const
     
     private struct ChipsConst {
-        static let scrollViewOriginX = CGFloat(14.0)
+        static let scrollViewOriginX = CGFloat(0.0)
         static let scrollViewOriginY = CGFloat(14.0)
         static let spaceBetweenChips = CGFloat(8.0)
         static let chipsHeight = CGFloat(40.0)
