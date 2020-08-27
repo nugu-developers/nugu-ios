@@ -35,6 +35,10 @@ let media = FocusChannel(name: "media", priority: .media)
 let dmRecognition = FocusChannel(name: "dmRecognition", priority: .dmRecognition)
 
 class FocusManagerSpec: QuickSpec, FocusDelegate {
+    
+    // NuguCore(Mock)
+    let directiveSequencer: DirectiveSequenceable = MockDirectiveSequencer()
+    
     override func spec() {
         let channels = [userRecognition, call, alerts, information, media, dmRecognition]
         describe("FocusManager") {
@@ -93,7 +97,7 @@ class FocusManagerSpec: QuickSpec, FocusDelegate {
     }
     
     func initializeFocusManager() -> FocusManageable {
-        let focusManager = FocusManager()
+        let focusManager = FocusManager(directiveSequencer: directiveSequencer)
         focusManager.delegate = self
         focusManager.add(channelDelegate: call)
         focusManager.add(channelDelegate: userRecognition)
