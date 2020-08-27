@@ -138,6 +138,11 @@ public extension StreamDataRouter {
             }, onCompleted: { [weak self] in
                 completion?(.finished)
                 self?.delegate?.streamDataDidSend(event: event, error: nil)
+                // Send end_stream after receiving end_stream from server.
+                // ex> Send `ASR.Recoginze` event with invalid access token.
+                if eventSender.streams.output.streamStatus != .closed {
+                    eventSender.streams.output.close()
+                }
             }, onDisposed: { [weak self] in
                 self?.eventDisposables[event.header.dialogRequestId]  = nil
                 self?.eventSenders[event.header.dialogRequestId] = nil
