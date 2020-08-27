@@ -58,4 +58,10 @@ class MockPlaySyncManager: PlaySyncManageable {
     func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         completion(nil)
     }
+    
+    func pauseTimer(property: PlaySyncProperty) {
+    }
+    
+    func resumeTimer(property: PlaySyncProperty) {
+    }
 }
