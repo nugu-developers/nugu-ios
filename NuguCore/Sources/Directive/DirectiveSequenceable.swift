@@ -21,6 +21,14 @@
 import Foundation
 
 public protocol DirectiveSequenceable {
+    /// Adds a delegate to be notified of `Directive` handling states.
+    /// - Parameter delegate: The object to add.
+    func add(delegate: DirectiveSequencerDelegate)
+    
+    /// Removes a delegate from directive-sequencer.
+    /// - Parameter delegate: The object to remove.
+    func remove(delegate: DirectiveSequencerDelegate)
+
     /**
      Add directive handler.
      
