@@ -181,7 +181,8 @@ public extension NuguVoiceChrome {
         chipsView.chipsData = chipsData
         chipsView.isHidden = false
         chipsView.onChipsSelect = { [weak self] text in
-            self?.setRecognizedText(text: text)
+            self?.animationView.stop()
+            self?.setRecognizedText(text: nil)
             onChipsSelect(text)
         }
     }
