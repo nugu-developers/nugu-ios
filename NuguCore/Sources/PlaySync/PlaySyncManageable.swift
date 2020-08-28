@@ -53,4 +53,14 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
     ///
     /// - Parameter property: The object to release by timer.
     func cancelTimer(property: PlaySyncProperty)
+    
+    /// Hold timer until `resumeTimer` is called.
+    ///
+    /// - Parameter property: The object to pause timer.
+    func pauseTimer(property: PlaySyncProperty)
+    
+    /// Resume timers paused by'pauseTimer'.
+    ///
+    /// - Parameter property: The object to resume timer.
+    func resumeTimer(property: PlaySyncProperty)
 }

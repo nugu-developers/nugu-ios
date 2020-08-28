@@ -217,9 +217,9 @@ extension NuguClient: DialogStateDelegate {
     public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?) {
         switch state {
         case .idle:
-            playSyncManager.resetTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+            playSyncManager.resumeTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
         case .listening:
-            playSyncManager.cancelTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+            playSyncManager.pauseTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
         default:
             break
         }
