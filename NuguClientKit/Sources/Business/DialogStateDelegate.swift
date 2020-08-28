@@ -27,5 +27,5 @@ public protocol DialogStateDelegate: class {
     /// Used to notify the observer of DialogState changes.
     /// - Parameter state: The new `DialogState` of the `DialogStateAggregator`
     /// - Parameter isMultiturn: indicates `DialogState` is in progress with multiturn.
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?)
+    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool)
 }
