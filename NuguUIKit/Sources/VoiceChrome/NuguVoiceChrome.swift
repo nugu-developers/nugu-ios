@@ -170,7 +170,7 @@ public extension NuguVoiceChrome {
         switch state {
         case .listeningPassive:
             showSpeechGuideText()
-        case .listeningActive:
+        case .listeningActive, .speaking:
             setRecognizedText(text: nil)
         default: break
         }
