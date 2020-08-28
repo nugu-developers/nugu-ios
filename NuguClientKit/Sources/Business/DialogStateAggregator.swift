@@ -56,7 +56,7 @@ public class DialogStateAggregator {
                 currentChips = nil
             }
             dialogStateDelegates.notify { delegate in
-                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem?.chips)
+                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem?.chips, sessionActivated: !sessionManager.activeSessions.isEmpty)
             }
         }
     }
