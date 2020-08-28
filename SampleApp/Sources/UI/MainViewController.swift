@@ -563,8 +563,8 @@ extension MainViewController: KeywordDetectorDelegate {
 // MARK: - DialogStateDelegate
 
 extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?) {
-        log.debug("\(state) \(isMultiturn)")
+    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
+        log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
         switch state {
         case .idle:
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
@@ -596,8 +596,9 @@ extension MainViewController: DialogStateDelegate {
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
                     self?.setChipsButton(actionList: actionList, normalList: normalList)
                 }
-                if isMultiturn {
+                if isMultiturn || sessionActivated {
                     self?.nuguVoiceChrome.changeState(state: .listeningPassive)
+                    self?.nuguVoiceChrome.setRecognizedText(text: nil)
                 }
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
             }
