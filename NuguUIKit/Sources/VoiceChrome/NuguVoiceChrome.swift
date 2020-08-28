@@ -60,6 +60,7 @@ final public class NuguVoiceChrome: UIView {
     public var theme: NuguVoiceChromeTheme = .light {
         didSet {
             backgroundView.backgroundColor = theme.backgroundColor
+            coverView.backgroundColor = theme.backgroundColor
             guideTextLabel.textColor = theme.textColor
             recognizedTextLabel.textColor = theme.textColor
             animationContainerView.backgroundColor = theme.backgroundColor
@@ -70,6 +71,7 @@ final public class NuguVoiceChrome: UIView {
     // MARK: - Private Properties
     
     @IBOutlet private weak var backgroundView: UIView!
+    @IBOutlet private weak var coverView: UIView!
     @IBOutlet private weak var guideTextLabel: UILabel!
     @IBOutlet private weak var guideTextLabelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var recognizedTextLabel: UILabel!
