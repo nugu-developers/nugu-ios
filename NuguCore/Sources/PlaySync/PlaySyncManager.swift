@@ -210,17 +210,17 @@ private extension PlaySyncManager {
         // Cancel timers
         removeTimer(property: property)
         
-        // Layer policy v.1.4.4. 2.2 Display 동작
+        // Layer policy v.1.4.8. 2.2 Display 동작. Multi-layer 상황 Display 표출정책
         playStack
-            // Multi-layer 상황에서 이전에 layer 와
+            // Multi-layer 상황에서
             .filter { $0.info.dialogRequestId != info.dialogRequestId }
-            // 동일한 신규 layer 실행 시,
-            .filter { $0.property.layerType == property.layerType }
-            // 이전 layer 의 Display 는
+            // 이전 layer 가 info 나 alerts 이면
+            .filter { $0.property.layerType == .info || $0.property.layerType == .alert }
+            // 해당 layer의 display 표출 중
             .filter { $0.property.contextType == .display }
-            // playServiceId 가 다르거나 media layer 인 경우
-            .filter { $0.info.playServiceId != info.playServiceId || property.layerType == .media }
-            // 종료 시킨다.
+            // 다른 display 또는 다른 play 동작 시
+            .filter { property.contextType == .display || $0.info.playServiceId != info.playServiceId }
+            // 이전 display 를 종료함
             .forEach { popFromPlayStack(property: $0.property) }
         
         playStack[property] = info
