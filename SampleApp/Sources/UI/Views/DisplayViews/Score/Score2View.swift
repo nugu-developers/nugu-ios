@@ -69,6 +69,7 @@ final class Score2View: DisplayView {
                 break
             }
 
+            contentButtonContainerView.isHidden = (displayItem.title.button == nil)
             score2TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)

@@ -69,6 +69,7 @@ final class Weather4View: DisplayView {
             default:
                 break
             }
+            contentButtonContainerView.isHidden = (displayItem.title.button == nil)
             weather4TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)
