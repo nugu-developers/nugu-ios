@@ -22,16 +22,46 @@ import Foundation
 
 public struct PhoneCallCandidatesItem: Decodable {
     
+    // MARK: SearchTarget
+    
+    public enum SearchTarget: Decodable {
+        case contact
+        case exchange
+        case t114
+        case unknown
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            
+            let value = try container.decode(String.self)
+            switch value {
+            case "CONTACT": self = .contact
+            case "EXCHANGE": self = .exchange
+            case "T114": self = .t114
+            default: self = .unknown
+            }
+        }
+    }
+    
     public let playServiceId: String
     public let intent: PhoneCallIntent
     public let callType: PhoneCallType?
+    public let searchTargetList: [SearchTarget]?
     public let recipientIntended: PhoneCallRecipient?
     public let candidates: [PhoneCallPerson]?
     
-    public init(playServiceId: String, intent: PhoneCallIntent, callType: PhoneCallType?, recipientIntended: PhoneCallRecipient?, candidates: [PhoneCallPerson]?) {
+    public init(
+        playServiceId: String,
+        intent: PhoneCallIntent,
+        callType: PhoneCallType?,
+        searchTargetList: [SearchTarget]?,
+        recipientIntended: PhoneCallRecipient?,
+        candidates: [PhoneCallPerson]?
+    ) {
         self.playServiceId = playServiceId
         self.intent = intent
         self.callType = callType
+        self.searchTargetList = searchTargetList
         self.recipientIntended = recipientIntended
         self.candidates = candidates
     }
