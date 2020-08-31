@@ -598,6 +598,7 @@ extension MainViewController: DialogStateDelegate {
                 }
                 if isMultiturn {
                     self?.nuguVoiceChrome.changeState(state: .listeningPassive)
+                    self?.nuguButton.isActivated = false
                 }
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
             }
@@ -608,6 +609,7 @@ extension MainViewController: DialogStateDelegate {
         case .thinking:
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.changeState(state: .processing)
+                self?.nuguButton.pauseDeactivateAnimation()
             }
         }
     }
