@@ -70,6 +70,7 @@ final class TextList1View: DisplayView {
             default:
                 break
             }
+            contentButtonContainerView.isHidden = (displayItem.title.button == nil)
             textList1TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)

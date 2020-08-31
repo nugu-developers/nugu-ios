@@ -69,6 +69,7 @@ final class ImageList1View: DisplayView {
             default:
                 break
             }
+            contentButtonContainerView.isHidden = (displayItem.title.button == nil)
             imageList1TableView.tableFooterView = (displayItem.title.button == nil) ? nil : contentButtonContainerView
             
             // Set chips data (grammarGuide)

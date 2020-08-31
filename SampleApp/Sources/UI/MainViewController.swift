@@ -244,7 +244,7 @@ private extension MainViewController {
         
         setChipsButton(
             actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
-            normalList: ["템플릿 열어줘", "템플릿에서 도움말1", "주말 날씨 알려줘", "주간 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
+            normalList: ["라디오 목록 알려줘", "템플릿 열어줘", "템플릿에서 도움말1", "주말 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
         )
         
         view.addSubview(self.nuguVoiceChrome)
@@ -563,8 +563,8 @@ extension MainViewController: KeywordDetectorDelegate {
 // MARK: - DialogStateDelegate
 
 extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?) {
-        log.debug("\(state) \(isMultiturn)")
+    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
+        log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
         switch state {
         case .idle:
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
@@ -596,8 +596,9 @@ extension MainViewController: DialogStateDelegate {
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
                     self?.setChipsButton(actionList: actionList, normalList: normalList)
                 }
-                if isMultiturn {
+                if isMultiturn || sessionActivated {
                     self?.nuguVoiceChrome.changeState(state: .listeningPassive)
+                    self?.nuguVoiceChrome.setRecognizedText(text: nil)
                     self?.nuguButton.isActivated = false
                 }
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)

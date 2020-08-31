@@ -33,6 +33,8 @@ public class PlaySyncManager: PlaySyncManageable {
     
     private var playStack = PlayStack()
     private var playContextTimers = [PlaySyncProperty: DisposeBag]()
+    private var timerPaused = false
+    private var pausedTimers = Set<PlaySyncProperty>()
     
     public init(contextManager: ContextManageable) {
         contextManager.add(delegate: self)
@@ -156,6 +158,35 @@ public extension PlaySyncManager {
             self.playContextTimers[property] = DisposeBag()
         }
     }
+    
+    func pauseTimer(property: PlaySyncProperty) {
+        playSyncDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            log.debug(property)
+            self.timerPaused = true
+            
+            if self.playContextTimers[property] != nil {
+                self.pausedTimers.insert(property)
+                self.removeTimer(property: property)
+            }
+        }
+    }
+    
+    func resumeTimer(property: PlaySyncProperty) {
+        playSyncDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            log.debug(property)
+            self.timerPaused = false
+
+            self.pausedTimers.forEach { property in
+                guard let play = self.playStack[property] else { return }
+                self.addTimer(property: property, duration: play.duration)
+            }
+            self.pausedTimers.removeAll()
+        }
+    }
 }
 
 // MARK: - ContextInfoDelegate
@@ -210,6 +241,10 @@ private extension PlaySyncManager {
     
     func addTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
         guard duration.dispatchTimeInterval != .never else { return }
+        guard timerPaused == false else {
+            pausedTimers.insert(property)
+            return
+        }
         
         let disposeBag = DisposeBag()
         Completable.create { [weak self] (event) -> Disposable in
