@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 public class PhoneCallAgent: PhoneCallAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.1")
     
     // PhoneCallAgentProtocol
     public weak var delegate: PhoneCallAgentDelegate?
