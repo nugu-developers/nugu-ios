@@ -45,11 +45,13 @@ public enum Upstream {
         
         public let payload: [String: AnyHashable]
         public let header: Header
+        public let httpHeaderFields: [String: String]?
         public let contextPayload: [ContextInfo]
         
-        public init(payload: [String: AnyHashable], header: Header, contextPayload: [ContextInfo]) {
+        public init(payload: [String: AnyHashable], header: Header, httpHeaderFields: [String: String]? = nil, contextPayload: [ContextInfo]) {
             self.payload = payload
             self.header = header
+            self.httpHeaderFields = httpHeaderFields
             self.contextPayload = contextPayload
         }
     }
