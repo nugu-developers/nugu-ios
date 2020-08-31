@@ -362,7 +362,6 @@ private extension DisplayAgent {
                 self.playSyncManager.startPlay(
                     property: item.template.playSyncProperty,
                     info: PlaySyncInfo(
-                        playServiceId: item.template.playServiceId,
                         playStackServiceId: item.template.playStackControl?.playServiceId,
                         dialogRequestId: item.dialogRequestId,
                         messageId: item.templateId,

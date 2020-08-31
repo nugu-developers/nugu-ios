@@ -63,7 +63,7 @@ public extension PlaySyncManager {
             
             // Cancel timers
             let timerGroup = self.playStack
-                .filter { $0.property.layerType == property.layerType && $0.info.playServiceId == info.playServiceId }
+                .filter { $0.property.layerType == property.layerType && $0.info.playStackServiceId == info.playStackServiceId }
                 .map { $0.property }
             log.debug("Cancel layer timer \(timerGroup)")
             timerGroup.forEach(self.removeTimer)
@@ -86,7 +86,7 @@ public extension PlaySyncManager {
             
             // Set timers
             let timerGroup = self.playStack
-                .filter { $0.property.layerType == property.layerType && $0.info.playServiceId == play.playServiceId }
+                .filter { $0.property.layerType == property.layerType && $0.info.playStackServiceId == play.playStackServiceId }
                 .map { $0.property }
             log.debug("Start layer timer \(timerGroup)")
             timerGroup.forEach {
@@ -219,7 +219,7 @@ private extension PlaySyncManager {
             // 해당 layer의 display 표출 중
             .filter { $0.property.contextType == .display }
             // 다른 display 또는 다른 play 동작 시
-            .filter { property.contextType == .display || $0.info.playServiceId != info.playServiceId }
+            .filter { property.contextType == .display || $0.info.playStackServiceId != info.playStackServiceId }
             // 이전 display 를 종료함
             .forEach { popFromPlayStack(property: $0.property) }
         
