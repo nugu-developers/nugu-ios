@@ -265,5 +265,6 @@ private extension PlaySyncManager {
     
     func removeTimer(property: PlaySyncProperty) {
         playContextTimers[property] = nil
+        pausedTimers.remove(property)
     }
 }
