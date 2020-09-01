@@ -564,6 +564,9 @@ extension NuguCentralManager: SystemAgentDelegate {
             localTTSAgent.playLocalTTS(type: .deviceGatewayTTSConnectionError)
         case .unauthorizedRequestException:
             handleAuthError()
+        case .internalServiceException:
+            // TODO: - Process error handling
+            break
         }
     }
     
