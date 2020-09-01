@@ -67,7 +67,7 @@ public final class TextAgent: TextAgentProtocol {
 
 extension TextAgent {
     @discardableResult public func requestTextInput(text: String, includeDialogAttribute: Bool, completion: ((StreamDataState) -> Void)?) -> String {
-        return sendTextInput(text: text, token: nil, includeDialogAttribute: includeDialogAttribute, completion: completion)
+        return sendTextInput(text: text, token: nil, playServiceId: nil, includeDialogAttribute: includeDialogAttribute, completion: completion)
     }
 }
 
@@ -95,6 +95,7 @@ private extension TextAgent {
                 self?.sendTextInput(
                     text: payload.text,
                     token: payload.token,
+                    playServiceId: payload.playServiceId,
                     includeDialogAttribute: true,
                     referrerDialogRequestId: directive.header.dialogRequestId,
                     completion: nil
@@ -110,6 +111,7 @@ private extension TextAgent {
     @discardableResult func sendTextInput(
         text: String,
         token: String?,
+        playServiceId: String?,
         includeDialogAttribute: Bool,
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)?

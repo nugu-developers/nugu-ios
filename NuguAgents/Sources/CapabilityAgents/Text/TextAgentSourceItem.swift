@@ -23,4 +23,5 @@ import Foundation
 struct TextAgentSourceItem: Decodable {
     let text: String
     let token: String
+    let playServiceId: String?
 }
