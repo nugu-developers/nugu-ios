@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct Session {
+public struct Session: Equatable {
     public let sessionId: String
     public let dialogRequestId: String
     public let playServiceId: String
@@ -29,5 +29,13 @@ public struct Session {
         self.sessionId = sessionId
         self.dialogRequestId = dialogRequestId
         self.playServiceId = playServiceId
+    }
+}
+
+// MARK: - CustomStringConvertible
+
+extension Session: CustomStringConvertible {
+    public var description: String {
+        return "\(dialogRequestId)-\(sessionId)"
     }
 }

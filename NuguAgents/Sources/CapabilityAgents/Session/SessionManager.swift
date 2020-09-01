@@ -31,21 +31,29 @@ final public class SessionManager: SessionManageable {
         internalSerialQueueName: "com.sktelecom.romaine.session"
     )
     
-    public var activeSessions: [Session] {
-        sessionDispatchQueue.sync {
-            let activeSessions = activeList
-                .filter { $0.value.count > 0 }
-                .compactMap { sessions[$0.key] }
-            log.info(activeSessions)
-            return activeSessions
+    /// Active sessions sorted chronologically.
+    public var activeSessions = [Session]() {
+        didSet {
+            if oldValue != activeSessions {
+                log.debug(activeSessions)
+            }
         }
     }
     
     // private
     private let delegates = DelegateSet<SessionDelegate>()
     private var activeTimers = [String: Disposable]()
-    private var sessions = [String: Session]()
-    private var activeList = [String: Set<CapabilityAgentCategory>]()
+    private var sessions = [String: Session]() {
+        didSet {
+            updateActiveSession()
+        }
+    }
+
+    private var activeList = [String: Set<CapabilityAgentCategory>]() {
+        didSet {
+            updateActiveSession()
+        }
+    }
     
     public init() {}
     
@@ -64,6 +72,7 @@ final public class SessionManager: SessionManageable {
             self.sessions[session.dialogRequestId] = session
             self.addTimer(session: session)
             
+            self.addActiveSession(dialogRequestId: session.dialogRequestId)
             self.delegates.notify { (delegate) in
                 delegate.sessionDidSet(session: session)
             }
@@ -80,6 +89,7 @@ final public class SessionManager: SessionManageable {
                 self.activeList[dialogRequestId] = []
             }
             self.activeList[dialogRequestId]?.insert(category)
+            self.addActiveSession(dialogRequestId: dialogRequestId)
         }
     }
     
@@ -120,5 +130,18 @@ private extension SessionManager {
     func removeTimer(dialogRequestId: String) {
         activeTimers[dialogRequestId]?.dispose()
         activeTimers[dialogRequestId] = nil
+    }
+    
+    func addActiveSession(dialogRequestId: String) {
+        guard let session = sessions[dialogRequestId], activeList[dialogRequestId] != nil else { return }
+        
+        activeSessions.removeAll { $0.dialogRequestId == dialogRequestId }
+        activeSessions.append(session)
+    }
+    
+    func updateActiveSession() {
+        activeSessions.removeAll { (session) -> Bool in
+            sessions[session.dialogRequestId] == nil || activeList[session.dialogRequestId] == nil
+        }
     }
 }
