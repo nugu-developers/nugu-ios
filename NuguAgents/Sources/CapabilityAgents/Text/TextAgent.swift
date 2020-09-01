@@ -120,12 +120,21 @@ private extension TextAgent {
         contextManager.getContexts { [weak self] contextPayload in
             guard let self = self else { return }
             
+            let dialogAttributes: [String: AnyHashable]?
+            if playServiceId == nil, includeDialogAttribute == true {
+                dialogAttributes = self.dialogAttributeStore.attributes
+            } else if playServiceId != nil, includeDialogAttribute == true {
+                dialogAttributes = ["playServiceId": playServiceId]
+            } else {
+                dialogAttributes = nil
+            }
+            
             self.upstreamDataSender.sendEvent(
                 Event(
                     typeInfo: .textInput(
                         text: text,
                         token: token,
-                        dialogAttributes: includeDialogAttribute ? self.dialogAttributeStore.attributes : nil
+                        dialogAttributes: dialogAttributes
                     )
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
