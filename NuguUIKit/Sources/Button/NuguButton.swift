@@ -195,6 +195,10 @@ final public class NuguButton: UIButton {
         micFlipAnimationTimer?.cancel()
         micFlipAnimationTimer = nil
     }
+    
+    public func pauseDeactivateAnimation() {
+        animationTimer?.cancel()
+    }
 }
 
 // MARK: - Private

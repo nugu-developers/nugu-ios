@@ -29,7 +29,7 @@ final public class NuguChipsView: UIView {
         static let scrollViewOriginY = CGFloat(14.0)
         static let spaceBetweenChips = CGFloat(8.0)
         static let chipsHeight = CGFloat(40.0)
-        static let maxChipsWidth = UIScreen.main.bounds.size.width - CGFloat(180.0)
+        static let maxChipsWidth = CGFloat(346.0)
     }
     
     // MARK: - NuguChipsView.NuguChipsViewTheme

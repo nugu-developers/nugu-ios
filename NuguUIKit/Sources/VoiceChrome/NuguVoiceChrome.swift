@@ -60,6 +60,7 @@ final public class NuguVoiceChrome: UIView {
     public var theme: NuguVoiceChromeTheme = .light {
         didSet {
             backgroundView.backgroundColor = theme.backgroundColor
+            coverView.backgroundColor = theme.backgroundColor
             guideTextLabel.textColor = theme.textColor
             recognizedTextLabel.textColor = theme.textColor
             animationContainerView.backgroundColor = theme.backgroundColor
@@ -70,6 +71,7 @@ final public class NuguVoiceChrome: UIView {
     // MARK: - Private Properties
     
     @IBOutlet private weak var backgroundView: UIView!
+    @IBOutlet private weak var coverView: UIView!
     @IBOutlet private weak var guideTextLabel: UILabel!
     @IBOutlet private weak var guideTextLabelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var recognizedTextLabel: UILabel!
@@ -170,7 +172,7 @@ public extension NuguVoiceChrome {
         switch state {
         case .listeningPassive:
             showSpeechGuideText()
-        case .listeningActive:
+        case .listeningActive, .speaking:
             setRecognizedText(text: nil)
         default: break
         }
@@ -181,7 +183,8 @@ public extension NuguVoiceChrome {
         chipsView.chipsData = chipsData
         chipsView.isHidden = false
         chipsView.onChipsSelect = { [weak self] text in
-            self?.setRecognizedText(text: text)
+            self?.animationView.stop()
+            self?.setRecognizedText(text: nil)
             onChipsSelect(text)
         }
     }
