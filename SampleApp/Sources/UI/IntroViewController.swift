@@ -131,6 +131,7 @@ private extension IntroViewController {
         alertController.addAction(
             UIAlertAction(title: "Confirm", style: .default, handler: { (_) in
                 UserDefaults.Standard.clear()
+                UserDefaults.Nugu.clear()
             }
         ))
         DispatchQueue.main.async { [weak self] in

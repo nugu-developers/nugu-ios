@@ -227,6 +227,7 @@ extension NuguCentralManager {
         popToRootViewController()
         disable()
         UserDefaults.Standard.clear()
+        UserDefaults.Nugu.clear()
     }
 }
 
@@ -305,11 +306,13 @@ private extension NuguCentralManager {
                 self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
                     self?.disable()
                     UserDefaults.Standard.clear()
+                    UserDefaults.Nugu.clear()
                 })
             default:
                 self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
                     self?.disable()
                     UserDefaults.Standard.clear()
+                    UserDefaults.Nugu.clear()
                 })
             }
         }

@@ -42,6 +42,12 @@ public final class ASRAgent: ASRAgentProtocol {
     private let playSyncManager: PlaySyncManageable
     private let interactionControlManager: InteractionControlManageable
     
+    private let eventTimeFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"
+        return dateFormatter
+    }()
+    
     private var options: ASROptions = ASROptions(endPointing: .server)
     private var endPointDetector: EndPointDetectable?
     
@@ -527,6 +533,10 @@ private extension ASRAgent {
             return
         }
         
+        var httpHeaderFields = [String: String]()
+        if let lastAsrEventTime = UserDefaults.Nugu.lastAsrEventTime {
+            httpHeaderFields["Last-Asr-Event-Time"] = lastAsrEventTime
+        }
         upstreamDataSender.sendStream(
             Event(
                 typeInfo: .recognize(options: asrRequest.options),
@@ -534,6 +544,7 @@ private extension ASRAgent {
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,
                 eventIdentifier: asrRequest.eventIdentifier,
+                httpHeaderFields: httpHeaderFields,
                 contextPayload: asrRequest.contextPayload
         )) { [weak self] (state) in
                 self?.asrDispatchQueue.async { [weak self] in
@@ -546,6 +557,9 @@ private extension ASRAgent {
                         self?.asrResult = .error(error)
                     case .sent:
                         self?.asrState = .listening
+                        if let formatter = self?.eventTimeFormatter {
+                            UserDefaults.Nugu.lastAsrEventTime = formatter.string(from: Date())
+                        }
                     default:
                         break
                     }

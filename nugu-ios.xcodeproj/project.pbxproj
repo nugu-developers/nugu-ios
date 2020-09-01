@@ -454,6 +454,8 @@
 		75F7994724728ED500655BF6 /* TextList4ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F7994124728ED500655BF6 /* TextList4ViewCell.xib */; };
 		75F7994824728ED500655BF6 /* TextList2ViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F7994224728ED500655BF6 /* TextList2ViewCell.xib */; };
 		75F7994924728ED500655BF6 /* TextList3ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F7994324728ED500655BF6 /* TextList3ViewCell.swift */; };
+		7E0713DB24FCD01C009314DA /* NuguUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0713DA24FCD01C009314DA /* NuguUserDefault.swift */; };
+		7E0713DE24FCD02C009314DA /* UserDefaults+Nugu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
 		7E1A28C724E4E1F2003A8817 /* DirectiveCancelPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1A28C624E4E1F2003A8817 /* DirectiveCancelPolicy.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
@@ -1146,6 +1148,8 @@
 		75F7994124728ED500655BF6 /* TextList4ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList4ViewCell.xib; sourceTree = "<group>"; };
 		75F7994224728ED500655BF6 /* TextList2ViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextList2ViewCell.xib; sourceTree = "<group>"; };
 		75F7994324728ED500655BF6 /* TextList3ViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextList3ViewCell.swift; sourceTree = "<group>"; };
+		7E0713DA24FCD01C009314DA /* NuguUserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguUserDefault.swift; sourceTree = "<group>"; };
+		7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Nugu.swift"; sourceTree = "<group>"; };
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
 		7E1A28C624E4E1F2003A8817 /* DirectiveCancelPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveCancelPolicy.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
@@ -1441,6 +1445,7 @@
 		1F9C5B6923E42F660086CC04 /* PropertyWrappers */ = {
 			isa = PBXGroup;
 			children = (
+				7E0713DA24FCD01C009314DA /* NuguUserDefault.swift */,
 				73454FBC2382C1E50073AF48 /* Publish.swift */,
 				1FFFF3272375707000C9A177 /* Atomic.swift */,
 			);
@@ -1659,6 +1664,7 @@
 		1FFFF30B2375707000C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7E0713DC24FCD02C009314DA /* Store */,
 				1FFFF30D2375707000C9A177 /* MediaPlayer */,
 				1FFFF3172375707000C9A177 /* Audio */,
 				1F9C5B6923E42F660086CC04 /* PropertyWrappers */,
@@ -2728,6 +2734,14 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		7E0713DC24FCD02C009314DA /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
 		7E284D9024DD255C00BF9640 /* Interaction */ = {
 			isa = PBXGroup;
 			children = (
@@ -3503,6 +3517,7 @@
 				7315302223E11EDF00F843C3 /* DelegateSet.swift in Sources */,
 				7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */,
 				7373895524A473A60018DDD2 /* FocusState.swift in Sources */,
+				7E0713DE24FCD02C009314DA /* UserDefaults+Nugu.swift in Sources */,
 				1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */,
 				75082BC8243ACA280027D76D /* CryptoUtil.swift in Sources */,
 				7373895D24A473B90018DDD2 /* PlaySyncManageable.swift in Sources */,
@@ -3536,6 +3551,7 @@
 				1FFFF3892375707000C9A177 /* SharedBufferError.swift in Sources */,
 				7373892F24A46D430018DDD2 /* UpstreamDataSendable.swift in Sources */,
 				7E4382542418DAB200053A0D /* PlayStack.swift in Sources */,
+				7E0713DB24FCD01C009314DA /* NuguUserDefault.swift in Sources */,
 				7373895E24A473B90018DDD2 /* PlaySyncProperty.swift in Sources */,
 				1FFFF3882375707000C9A177 /* SharedBufferIndex.swift in Sources */,
 				7373894324A46E5F0018DDD2 /* ContextInfoDelegate.swift in Sources */,
