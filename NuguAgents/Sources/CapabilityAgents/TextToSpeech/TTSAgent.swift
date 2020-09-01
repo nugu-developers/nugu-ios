@@ -70,7 +70,6 @@ public final class TTSAgent: TTSAgentProtocol {
                     playSyncManager.startPlay(
                         property: playSyncProperty,
                         info: PlaySyncInfo(
-                            playServiceId: playServiceId,
                             playStackServiceId: media.payload.playStackControl?.playServiceId,
                             dialogRequestId: media.dialogRequestId,
                             messageId: media.messageId,

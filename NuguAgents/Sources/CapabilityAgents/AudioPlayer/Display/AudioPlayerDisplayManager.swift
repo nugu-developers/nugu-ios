@@ -131,7 +131,6 @@ extension AudioPlayerDisplayManager {
                 self.playSyncManager.startPlay(
                     property: self.playSyncProperty,
                     info: PlaySyncInfo(
-                        playServiceId: item.mediaPayload.playServiceId,
                         playStackServiceId: item.mediaPayload.playStackControl?.playServiceId,
                         dialogRequestId: item.dialogRequestId,
                         messageId: item.templateId,

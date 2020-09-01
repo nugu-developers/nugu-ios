@@ -392,8 +392,7 @@ private extension ASRAgent {
                     self.playSyncManager.startPlay(
                         property: self.playSyncProperty,
                         info: PlaySyncInfo(
-                            playServiceId: playServiceId,
-                            playStackServiceId: nil,
+                            playStackServiceId: playServiceId,
                             dialogRequestId: directive.header.dialogRequestId,
                             messageId: directive.header.messageId,
                             duration: NuguTimeInterval(seconds: 0)
