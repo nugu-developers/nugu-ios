@@ -66,20 +66,16 @@ public class InteractionControlManager: InteractionControlManageable {
 private extension InteractionControlManager {
     func addTimer(category: CapabilityAgentCategory) {
         log.debug(category)
-        timeoutTimers[category.name] = Completable.create { [weak self] (event) -> Disposable in
-            guard let self = self else { return Disposables.create() }
-            
-            log.debug("Timer fired. \(category)")
-            self.interactionControls.remove(category)
-            if self.interactionControls.isEmpty {
-                self.delegate?.interactionControlDidChange(isMultiturn: false)
-            }
-            
-            event(.completed)
-            return Disposables.create()
-        }
-        .delaySubscription(InteractionControlConst.timeout, scheduler: interactioniScheduler)
-        .subscribe()
+        timeoutTimers[category.name] = Single<Int>.timer(InteractionControlConst.timeout, scheduler: interactioniScheduler)
+            .subscribe(onSuccess: { [weak self] _ in
+                guard let self = self else { return }
+                
+                log.debug("Timer fired. \(category)")
+                self.interactionControls.remove(category)
+                if self.interactionControls.isEmpty {
+                    self.delegate?.interactionControlDidChange(isMultiturn: false)
+                }
+            })
     }
     
     func removeTimer(category: CapabilityAgentCategory) {
