@@ -87,22 +87,16 @@ public enum Upstream {
 
 extension Upstream.Event {
     var headerString: String {
-        let jsonData: Data
-        
-        do {
-            jsonData = try JSONEncoder().encode(header)
-        } catch {
-            log.debug("Failed to encoding")
-            return ""
+        guard let data = try? JSONEncoder().encode(header),
+            let jsonString = String(data: data, encoding: .utf8) else {
+                return ""
         }
         
-        let jsonString = String(decoding: jsonData, as: UTF8.self)
         return jsonString
     }
     
     var payloadString: String {
-        guard
-            let data = try? JSONSerialization.data(withJSONObject: payload, options: []),
+        guard let data = try? JSONSerialization.data(withJSONObject: payload, options: []),
             let payloadString = String(data: data, encoding: .utf8) else {
                 return ""
         }
