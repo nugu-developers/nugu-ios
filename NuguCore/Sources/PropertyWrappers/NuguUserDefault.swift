@@ -1,8 +1,8 @@
 //
-//  Session.swift
-//  NuguAgents
+//  NuguUserDefault.swift
+//  JadeMarble
 //
-//  Created by MinChul Lee on 2020/05/28.
+//  Created by MinChul Lee on 2020/08/31.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,22 +20,23 @@
 
 import Foundation
 
-public struct Session: Equatable {
-    public let sessionId: String
-    public let dialogRequestId: String
-    public let playServiceId: String
+@propertyWrapper
+public struct NuguUserDefault<T> {
+    let userDefaults: UserDefaults
+    let key: String
+    let defaultValue: T
     
-    public init(sessionId: String, dialogRequestId: String, playServiceId: String) {
-        self.sessionId = sessionId
-        self.dialogRequestId = dialogRequestId
-        self.playServiceId = playServiceId
+    public var wrappedValue: T {
+        get {
+            return userDefaults.object(forKey: key) as? T ?? defaultValue
+        } set {
+            userDefaults.set(newValue, forKey: key)
+        }
     }
 }
 
-// MARK: - CustomStringConvertible
+// MARK: - Custom
 
-extension Session: CustomStringConvertible {
-    public var description: String {
-        return "\(dialogRequestId)-\(sessionId)"
-    }
+public extension UserDefaults {
+    static let nugu = UserDefaults(suiteName: "group.com.sktelecom.nugu")!
 }

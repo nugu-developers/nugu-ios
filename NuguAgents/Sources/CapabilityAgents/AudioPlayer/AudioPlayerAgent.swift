@@ -465,7 +465,6 @@ private extension AudioPlayerAgent {
                     self.playSyncManager.startPlay(
                         property: self.playSyncProperty,
                         info: PlaySyncInfo(
-                            playServiceId: media.payload.playServiceId,
                             playStackServiceId: media.payload.playStackControl?.playServiceId,
                             dialogRequestId: media.dialogRequestId,
                             messageId: media.messageId,

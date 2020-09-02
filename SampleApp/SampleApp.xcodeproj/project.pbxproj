@@ -30,7 +30,6 @@
 		7E0B697D2434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69722434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift */; };
 		7E0B69822434A0AC00D8C6AD /* DisplayCommonTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69782434A0AC00D8C6AD /* DisplayCommonTemplate.swift */; };
 		7E56DD252419FF88004A3508 /* DisplayControllable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E56DD242419FF88004A3508 /* DisplayControllable.swift */; };
-		7E56DD272419FF9C004A3508 /* Dictionary+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */; };
 		7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */; };
 		7E6A0B0C2410849C00C7A19E /* ASRBeepPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */; };
 		7E6A0B0D2410849C00C7A19E /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */; };
@@ -53,6 +52,7 @@
 		7ECD3DEE24F64605007F29CE /* responsefail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD3DEB24F64604007F29CE /* responsefail.wav */; };
 		7ECD3DEF24F64605007F29CE /* listening_end.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD3DEC24F64605007F29CE /* listening_end.wav */; };
 		7ECD3DF024F64605007F29CE /* listening_start.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD3DED24F64605007F29CE /* listening_start.wav */; };
+		7ECD3DF924F90C22007F29CE /* Container+Merge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECD3DF824F90C22007F29CE /* Container+Merge.swift */; };
 		7EE2DCB2247CF45F0005DE17 /* AudioDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB1247CF45F0005DE17 /* AudioDisplayView.swift */; };
 		7EE2DD0B247CF4750005DE17 /* AudioPlayer1View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB4247CF4750005DE17 /* AudioPlayer1View.xib */; };
 		7EE2DD0C247CF4750005DE17 /* AudioPlayer1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE2DCB5247CF4750005DE17 /* AudioPlayer1View.swift */; };
@@ -184,7 +184,6 @@
 		7E0B69722434A0AC00D8C6AD /* AudioPlayerLyricsTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerLyricsTemplate.swift; sourceTree = "<group>"; };
 		7E0B69782434A0AC00D8C6AD /* DisplayCommonTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayCommonTemplate.swift; sourceTree = "<group>"; };
 		7E56DD242419FF88004A3508 /* DisplayControllable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DisplayControllable.swift; path = DisplayViews/DisplayControllable.swift; sourceTree = "<group>"; };
-		7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Convenience.swift"; sourceTree = "<group>"; };
 		7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
 		7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsWrapper.swift; sourceTree = "<group>"; };
@@ -207,6 +206,7 @@
 		7ECD3DEB24F64604007F29CE /* responsefail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = responsefail.wav; sourceTree = "<group>"; };
 		7ECD3DEC24F64605007F29CE /* listening_end.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = listening_end.wav; sourceTree = "<group>"; };
 		7ECD3DED24F64605007F29CE /* listening_start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = listening_start.wav; sourceTree = "<group>"; };
+		7ECD3DF824F90C22007F29CE /* Container+Merge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Container+Merge.swift"; sourceTree = "<group>"; };
 		7EE2DCB1247CF45F0005DE17 /* AudioDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioDisplayView.swift; sourceTree = "<group>"; };
 		7EE2DCB4247CF4750005DE17 /* AudioPlayer1View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayer1View.xib; sourceTree = "<group>"; };
 		7EE2DCB5247CF4750005DE17 /* AudioPlayer1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer1View.swift; sourceTree = "<group>"; };
@@ -439,9 +439,9 @@
 		73F284C023815CC9004EBBDF /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				7ECD3DF824F90C22007F29CE /* Container+Merge.swift */,
 				7E6D116D249C6DE000E3580C /* KeyedDecodingContainer+AnyHashable.swift */,
 				7EE2DD86247CF4C70005DE17 /* UILabel+Convenience.swift */,
-				7E56DD262419FF9C004A3508 /* Dictionary+Convenience.swift */,
 				73F284C123815CC9004EBBDF /* UIColor+Convenience.swift */,
 				73F284C223815CC9004EBBDF /* Int+Convenience.swift */,
 			);
@@ -961,7 +961,6 @@
 				7EBD76282391130100CA9C9C /* NuguAudioSessionManager.swift in Sources */,
 				7E91D19024AF281E00E48017 /* NuguServiceWebViewController.swift in Sources */,
 				7EE2DD7B247CF4900005DE17 /* Score1Template.swift in Sources */,
-				7E56DD272419FF9C004A3508 /* Dictionary+Convenience.swift in Sources */,
 				7E6D1170249C6E1800E3580C /* SettingTableViewCell.swift in Sources */,
 				73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */,
 				7EE2DD16247CF4750005DE17 /* ImageText3View.swift in Sources */,
@@ -1010,6 +1009,7 @@
 				7EE2DD7A247CF4900005DE17 /* FullText1Template.swift in Sources */,
 				7EE2DD72247CF4900005DE17 /* FullText2Template.swift in Sources */,
 				7E0B697A2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift in Sources */,
+				7ECD3DF924F90C22007F29CE /* Container+Merge.swift in Sources */,
 				7EE2DD30247CF4750005DE17 /* Weather4ViewCell.swift in Sources */,
 				73F284FA23815CC9004EBBDF /* SampleApp.swift in Sources */,
 				7EE2DD87247CF4C80005DE17 /* UILabel+Convenience.swift in Sources */,

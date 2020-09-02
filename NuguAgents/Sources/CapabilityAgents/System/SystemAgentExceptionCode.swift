@@ -27,12 +27,12 @@ public enum SystemAgentExceptionCode: Equatable {
         case unauthorizedRequestException = "UNAUTHORIZED_REQUEST_EXCEPTION"
         case playRouterProcessingException = "PLAY_ROUTER_PROCESSING_EXCEPTION"
         case ttsSpeakingException = "TTS_SPEAKING_EXCEPTION"
+        case internalServiceException = "INTERNAL_SERVICE_EXCEPTION"
     }
     
     /// <#Description#>
     public enum Warning: String, Decodable, Equatable {
         case asrRecognizingException = "ASR_RECOGNIZING_EXCEPTION"
-        case internalServiceException = "INTERNAL_SERVICE_EXCEPTION"
     }
     
     case fail(code: Fail)

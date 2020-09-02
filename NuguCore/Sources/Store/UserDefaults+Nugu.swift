@@ -1,8 +1,8 @@
 //
-//  Session.swift
-//  NuguAgents
+//  UserDefaults+Nugu.swift
+//  JadeMarble
 //
-//  Created by MinChul Lee on 2020/05/28.
+//  Created by MinChul Lee on 2020/08/31.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,22 +20,22 @@
 
 import Foundation
 
-public struct Session: Equatable {
-    public let sessionId: String
-    public let dialogRequestId: String
-    public let playServiceId: String
-    
-    public init(sessionId: String, dialogRequestId: String, playServiceId: String) {
-        self.sessionId = sessionId
-        self.dialogRequestId = dialogRequestId
-        self.playServiceId = playServiceId
+extension UserDefaults {
+    public enum Nugu {
+        @NuguUserDefault(userDefaults: .nugu, key: "lastAsrEventTime", defaultValue: nil)
+        public static var lastAsrEventTime: String?
     }
 }
 
-// MARK: - CustomStringConvertible
+// MARK: - Helper
 
-extension Session: CustomStringConvertible {
-    public var description: String {
-        return "\(dialogRequestId)-\(sessionId)"
+extension UserDefaults.Nugu {
+    public static func clear() {
+        UserDefaults.nugu
+            .dictionaryRepresentation()
+            .keys
+            .forEach({ (key) in
+                UserDefaults.standard.removeObject(forKey: key)
+            })
     }
 }

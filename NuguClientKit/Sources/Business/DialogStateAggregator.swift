@@ -34,7 +34,7 @@ public class DialogStateAggregator {
     private let shortTimeout: DispatchTimeInterval = .milliseconds(200)
     private var multiturnSpeakingToListeningTimer: DispatchWorkItem?
     
-    private var chipsItems = [(dialogRequestId: String, item: ChipsAgentItem)]()
+    private var currentChips: (dialogRequestId: String, item: ChipsAgentItem)?
 
     private var dialogState: DialogState = .idle {
         didSet {
@@ -48,9 +48,13 @@ public class DialogStateAggregator {
             
             multiturnSpeakingToListeningTimer?.cancel()
             
-            let chipsItem = chipsItems.last { (dialogRequestId, _) -> Bool in
-                 sessionManager.activeSessions.contains { $0.dialogRequestId == dialogRequestId }
-            }?.item
+            var chipsItem: ChipsAgentItem?
+            if sessionManager.activeSessions.last?.dialogRequestId == currentChips?.dialogRequestId {
+                chipsItem = currentChips?.item
+            } else {
+                // Delete the chips if it is not for the most recently active session.
+                currentChips = nil
+            }
             dialogStateDelegates.notify { delegate in
                 delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem?.chips, sessionActivated: !sessionManager.activeSessions.isEmpty)
             }
@@ -85,7 +89,6 @@ public class DialogStateAggregator {
         self.sessionManager = sessionManager
         self.focusManager = focusManager
         
-        sessionManager.add(delegate: self)
         interactionControlManager.delegate = self
         focusManager.add(channelDelegate: self)
     }
@@ -212,20 +215,8 @@ extension DialogStateAggregator: ChipsAgentDelegate {
     public func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String) {
         dialogStateDispatchQueue.async { [weak self] in
             if item.target == .dialog {
-                self?.chipsItems.append((dialogRequestId: dialogRequestId, item: item))
+                self?.currentChips = (dialogRequestId: dialogRequestId, item: item)
             }
-        }
-    }
-}
-
-// MARK: - SessionDelegate
-
-extension DialogStateAggregator: SessionDelegate {
-    public func sessionDidSet(session: Session) { }
-    
-    public func sessionDidUnset(session: Session) {
-        dialogStateDispatchQueue.async { [weak self] in
-            self?.chipsItems.removeAll { $0.dialogRequestId == session.dialogRequestId }
         }
     }
 }

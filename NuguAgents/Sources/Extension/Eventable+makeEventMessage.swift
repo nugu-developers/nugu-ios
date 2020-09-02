@@ -26,6 +26,7 @@ extension Eventable {
         property: CapabilityAgentProperty,
         eventIdentifier: EventIdentifier,
         referrerDialogRequestId: String? = nil,
+        httpHeaderFields: [String: String]? = nil,
         contextPayload: [ContextInfo]
     ) -> Upstream.Event {
         let header = Upstream.Event.Header(
@@ -37,6 +38,6 @@ extension Eventable {
             referrerDialogRequestId: referrerDialogRequestId
         )
         
-        return Upstream.Event(payload: payload, header: header, contextPayload: contextPayload)
+        return Upstream.Event(payload: payload, header: header, httpHeaderFields: httpHeaderFields, contextPayload: contextPayload)
     }
 }
