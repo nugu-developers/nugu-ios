@@ -66,8 +66,12 @@ public final class TextAgent: TextAgentProtocol {
 // MARK: - TextAgentProtocol
 
 extension TextAgent {
-    @discardableResult public func requestTextInput(text: String, includeDialogAttribute: Bool, completion: ((StreamDataState) -> Void)?) -> String {
-        return sendTextInput(text: text, token: nil, playServiceId: nil, includeDialogAttribute: includeDialogAttribute, completion: completion)
+    @discardableResult public func requestTextInput(
+        text: String,
+        requestType: TextAgentRequestType,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String {
+        return sendTextInput(text: text, token: nil, requestType: requestType, completion: completion)
     }
 }
 
@@ -92,11 +96,18 @@ private extension TextAgent {
             defer { completion(.finished) }
             
             self?.textDispatchQueue.async { [weak self] in
+                
+                let requestType: TextAgentRequestType
+                if let playServiceId = payload.playServiceId {
+                    requestType = .specific(playServiceId: playServiceId)
+                } else {
+                    requestType = .dialog
+                }
+                
                 self?.sendTextInput(
                     text: payload.text,
                     token: payload.token,
-                    playServiceId: payload.playServiceId,
-                    includeDialogAttribute: true,
+                    requestType: requestType,
                     referrerDialogRequestId: directive.header.dialogRequestId,
                     completion: nil
                 )
@@ -111,8 +122,7 @@ private extension TextAgent {
     @discardableResult func sendTextInput(
         text: String,
         token: String?,
-        playServiceId: String?,
-        includeDialogAttribute: Bool,
+        requestType: TextAgentRequestType,
         referrerDialogRequestId: String? = nil,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
@@ -120,13 +130,14 @@ private extension TextAgent {
         contextManager.getContexts { [weak self] contextPayload in
             guard let self = self else { return }
             
-            let dialogAttributes: [String: AnyHashable]?
-            if playServiceId == nil, includeDialogAttribute == true {
-                dialogAttributes = self.dialogAttributeStore.attributes
-            } else if playServiceId != nil, includeDialogAttribute == true {
-                dialogAttributes = ["playServiceId": playServiceId]
-            } else {
-                dialogAttributes = nil
+            let attributes: [String: AnyHashable]?
+            switch requestType {
+            case .specific(let playServiceId):
+                attributes = ["playServiceId": playServiceId]
+            case .dialog:
+                attributes = self.dialogAttributeStore.attributes
+            case .normal:
+                attributes = nil
             }
             
             self.upstreamDataSender.sendEvent(
@@ -134,7 +145,7 @@ private extension TextAgent {
                     typeInfo: .textInput(
                         text: text,
                         token: token,
-                        dialogAttributes: dialogAttributes
+                        attributes: attributes
                     )
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
