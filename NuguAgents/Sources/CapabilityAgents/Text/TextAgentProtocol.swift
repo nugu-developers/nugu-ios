@@ -55,12 +55,11 @@ public extension TextAgentProtocol {
     
     @discardableResult func requestTextInput(
         text: String,
-        requestType: TextAgentRequestType = .dialog,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         return requestTextInput(
             text: text,
-            requestType: requestType,
+            requestType: .dialog,
             completion: completion
         )
     }
