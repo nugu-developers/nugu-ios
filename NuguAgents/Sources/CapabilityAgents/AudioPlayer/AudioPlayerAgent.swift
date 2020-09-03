@@ -297,6 +297,7 @@ extension AudioPlayerAgent: FocusChannelDelegate {
     
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(audioPlayerState)")
+        
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             

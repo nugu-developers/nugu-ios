@@ -798,7 +798,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1120;
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1170;
 				ORGANIZATIONNAME = sktelecom;
 				TargetAttributes = {
 					73F2841F238157A7004EBBDF = {

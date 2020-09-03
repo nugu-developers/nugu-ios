@@ -66,7 +66,7 @@ public final class TTSAgent: TTSAgentProtocol {
             // `PlaySyncState` -> `TTSMedia` -> `TTSAgentDelegate`
             switch ttsState {
             case .playing:
-                if let playServiceId = media.payload.playServiceId {
+                if media.payload.playServiceId != nil {
                     playSyncManager.startPlay(
                         property: playSyncProperty,
                         info: PlaySyncInfo(
