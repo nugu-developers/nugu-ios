@@ -194,9 +194,10 @@ extension TTSAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
+        log.info("\(focusState) \(ttsState)")
+        
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            log.info("\(focusState) \(self.ttsState)")
             
             switch (focusState, self.ttsState) {
             case (.foreground, let ttsState) where [.idle, .stopped, .finished].contains(ttsState):

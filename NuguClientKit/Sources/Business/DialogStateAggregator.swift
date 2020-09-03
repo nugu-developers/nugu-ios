@@ -56,13 +56,17 @@ public class DialogStateAggregator {
                 currentChips = nil
             }
             dialogStateDelegates.notify { delegate in
-                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem?.chips, sessionActivated: !sessionManager.activeSessions.isEmpty)
+                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem?.chips, sessionActivated: sessionActivated)
             }
         }
     }
     private var asrState: ASRState = .idle
     private var ttsState: TTSState = .finished
-    private var isMultiturn: Bool = false
+    
+    public var sessionActivated: Bool {
+        !sessionManager.activeSessions.isEmpty
+    }
+    public var isMultiturn: Bool = false
     // TODO: Refactor
     public var isChipsRequestInProgress: Bool = false {
         didSet {
