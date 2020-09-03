@@ -349,7 +349,6 @@ private extension TTSAgent {
                     return
                 }
                 guard let media = self.currentMedia, media.messageId == directive.header.messageId else {
-                    self.releaseFocusIfNeeded()
                     completion(.canceled)
                     log.info("Message id does not match")
                     return
