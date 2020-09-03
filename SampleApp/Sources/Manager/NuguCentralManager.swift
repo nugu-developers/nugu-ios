@@ -565,8 +565,9 @@ extension NuguCentralManager: SystemAgentDelegate {
         case .unauthorizedRequestException:
             handleAuthError()
         case .internalServiceException:
-            // TODO: - Process error handling
-            break
+            DispatchQueue.main.async {
+                NuguToast.shared.showToast(message: SampleAppError.internalServiceException.errorDescription)
+            }
         }
     }
     

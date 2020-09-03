@@ -31,6 +31,8 @@ enum SampleAppError: Error {
     case loginWithRefreshTokenFailed
     
     case deviceRevoked(reason: SystemAgentRevokeReason)
+    
+    case internalServiceException
 }
 
 // MARK: - LocalizedError
@@ -52,6 +54,8 @@ extension SampleAppError: LocalizedError {
             return "누구 앱과의 연결이 해제되었습니다. 다시 연결해주세요."
         case .deviceRevoked(reason: let reason) where reason == .withdrawnUser:
             return "탈퇴된 사용자입니다. 다시 연결해주세요."
+        case .internalServiceException:
+            return "NUGU 서비스와 연결할 수 없습니다. 잠시 후 다시 말씀해주세요."
         default:
             return "Undefined error"
         }

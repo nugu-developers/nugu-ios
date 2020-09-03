@@ -40,6 +40,10 @@ final class NuguDisplayPlayerController {
     
     private var renderingContext: AnyObject?
     
+    init() {
+        update()
+    }
+    
     func nuguAudioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
         DispatchQueue.main.async { [weak self] in
             self?.update(newItem: template)
