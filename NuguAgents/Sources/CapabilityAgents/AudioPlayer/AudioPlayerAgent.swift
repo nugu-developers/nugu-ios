@@ -484,16 +484,13 @@ private extension AudioPlayerAgent {
     
    func handlePlay() -> HandleDirective {
         return { [weak self] directive, completion in
+            guard let self = self else {
+                completion(.canceled)
+                return
+            }
             defer { completion(.finished) }
             
-            self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard self?.currentMedia?.messageId == directive.header.messageId else {
-                    log.info("Message id does not match")
-                    return
-                }
-                
-                self?.play()
-            }
+            self.focusManager.requestFocus(channelDelegate: self)
         }
     }
     
@@ -508,7 +505,6 @@ private extension AudioPlayerAgent {
                 return
             }
             
-        
             self.stop(cancelAssociation: true)
         }
     }
