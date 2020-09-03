@@ -132,6 +132,7 @@ final class MainViewController: UIViewController {
     }
         
     func didTapForDismissVoiceChrome() {
+        guard nuguVoiceChrome.currentState == .listeningPassive || nuguVoiceChrome.currentState == .listeningActive  else { return }
         dismissVoiceChrome()
         NuguCentralManager.shared.client.asrAgent.stopRecognition()
     }
