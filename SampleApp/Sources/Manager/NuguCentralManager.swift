@@ -29,6 +29,8 @@ import NuguUIKit
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     
+    var isMultiturnInProgress = false
+    
     private let supportServerInitiatedDirective = false
     
     lazy private(set) var client: NuguClient = {
