@@ -32,7 +32,7 @@ public class PlaySyncManager: PlaySyncManageable {
     private let delegates = DelegateSet<PlaySyncDelegate>()
     
     private var playStack = PlayStack()
-    private var playContextTimers = [PlaySyncProperty: DisposeBag]()
+    private var playContextTimers = [PlaySyncProperty: Disposable]()
     private var timerPaused = false
     private var pausedTimers = Set<PlaySyncProperty>()
     
@@ -123,9 +123,6 @@ public extension PlaySyncManager {
             
             log.debug("\(property) \(duration)")
             
-            // Cancel timers
-            self.removeTimer(property: property)
-
             // Start timers
             self.addTimer(property: property, duration: duration)
         }
@@ -139,9 +136,6 @@ public extension PlaySyncManager {
             
             log.debug("\(property) \(play.duration)")
             
-            // Cancel timers
-            self.removeTimer(property: property)
-
             // Start timers
             self.addTimer(property: property, duration: play.duration)
         }
@@ -155,7 +149,7 @@ public extension PlaySyncManager {
             log.debug(property)
             
             // Cancel timers
-            self.playContextTimers[property] = DisposeBag()
+            self.playContextTimers[property]?.dispose()
         }
     }
     
@@ -240,30 +234,25 @@ private extension PlaySyncManager {
     }
     
     func addTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
+        log.debug(property)
+        removeTimer(property: property)
+        
         guard duration.dispatchTimeInterval != .never else { return }
         guard timerPaused == false else {
             pausedTimers.insert(property)
             return
         }
         
-        let disposeBag = DisposeBag()
-        Completable.create { [weak self] (event) -> Disposable in
-            guard let self = self else { return Disposables.create() }
-
-            log.debug("Timer fired. \(property) duration \(duration)")
-            self.popFromPlayStack(property: property)
-            
-            event(.completed)
-            return Disposables.create()
-        }
-        .delaySubscription(duration.dispatchTimeInterval, scheduler: playSyncScheduler)
-        .subscribe()
-        .disposed(by: disposeBag)
-        
-        playContextTimers[property] = disposeBag
+        playContextTimers[property] = Single<Int>.timer(duration.dispatchTimeInterval, scheduler: playSyncScheduler)
+            .subscribe(onSuccess: { [weak self] _ in
+                log.debug("Timer fired. \(property) duration \(duration)")
+                self?.popFromPlayStack(property: property)
+            })
     }
     
     func removeTimer(property: PlaySyncProperty) {
+        log.debug(property)
+        playContextTimers[property]?.dispose()
         playContextTimers[property] = nil
         pausedTimers.remove(property)
     }

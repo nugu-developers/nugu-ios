@@ -111,20 +111,14 @@ final public class SessionManager: SessionManageable {
 
 private extension SessionManager {
     func addTimer(session: Session) {
-        activeTimers[session.dialogRequestId] = Completable.create { [weak self] (event) -> Disposable in
-            guard let self = self else { return Disposables.create() }
-            
-            log.debug("Timer fired. \(session.dialogRequestId)")
-            self.sessions[session.dialogRequestId] = nil
-            self.delegates.notify { (delegate) in
-                delegate.sessionDidUnset(session: session)
-            }
-            
-            event(.completed)
-            return Disposables.create()
-        }
-        .delaySubscription(SessionConst.sessionTimeout, scheduler: sessionScheduler)
-        .subscribe()
+        activeTimers[session.dialogRequestId] = Single<Int>.timer(SessionConst.sessionTimeout, scheduler: sessionScheduler)
+            .subscribe(onSuccess: { [weak self] _ in
+                log.debug("Timer fired. \(session.dialogRequestId)")
+                self?.sessions[session.dialogRequestId] = nil
+                self?.delegates.notify { (delegate) in
+                    delegate.sessionDidUnset(session: session)
+                }
+            })
     }
     
     func removeTimer(dialogRequestId: String) {
