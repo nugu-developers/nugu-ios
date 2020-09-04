@@ -724,21 +724,21 @@ extension MainViewController: DisplayAgentDelegate {
     }
     
     func displayAgentShouldRender(template: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        log.debug(template.templateId)
+        log.debug("templateId: \(template.templateId)")
         DispatchQueue.main.async { [weak self] in
             completion(self?.addDisplayView(displayTemplate: template))
         }
     }
     
     func displayAgentShouldUpdate(templateId: String, template: DisplayTemplate) {
-        log.debug(templateId)
+        log.debug("templateId: \(templateId)")
         DispatchQueue.main.async { [weak self] in
             self?.updateDisplayView(displayTemplate: template)
         }
     }
     
     func displayAgentDidClear(templateId: String) {
-        log.debug(templateId)
+        log.debug("templateId: \(templateId)")
         DispatchQueue.main.async { [weak self] in
             self?.dismissDisplayView()
         }

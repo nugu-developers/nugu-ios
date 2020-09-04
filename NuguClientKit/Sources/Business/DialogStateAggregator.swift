@@ -64,7 +64,7 @@ public class DialogStateAggregator {
     private var ttsState: TTSState = .finished
     
     public var sessionActivated: Bool {
-        !sessionManager.activeSessions.isEmpty
+        sessionManager.activeSessions.isEmpty == false
     }
     public var isMultiturn: Bool = false
     // TODO: Refactor
