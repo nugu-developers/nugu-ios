@@ -1,9 +1,9 @@
 //
-//  TextAgentSourceItem.swift
+//  TextAgentRequestType.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/03/05.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/09/02.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
 
 import Foundation
 
-struct TextAgentSourceItem: Decodable {
-    let text: String
-    let token: String
-    let playServiceId: String?
+public enum TextAgentRequestType {
+    case specific(playServiceId: String)
+    case dialog
+    case normal
 }
