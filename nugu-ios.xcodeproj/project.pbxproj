@@ -85,6 +85,7 @@
 		1FD5D19624D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D19524D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift */; };
 		1FD5D19C24D34F3A007BA384 /* MediaPlayerAgentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D19B24D34F3A007BA384 /* MediaPlayerAgentResult.swift */; };
 		1FD5D19E24D35281007BA384 /* MediaPlayerAgentPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D19D24D35281007BA384 /* MediaPlayerAgentPlaylist.swift */; };
+		1FD5D1A224FF7035007BA384 /* TextAgentRequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5D1A124FF7035007BA384 /* TextAgentRequestType.swift */; };
 		1FFFF00E23753F3100C9A177 /* NuguClientKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF00C23753F3100C9A177 /* NuguClientKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF01B23753F7D00C9A177 /* NuguLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF01923753F7D00C9A177 /* NuguLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF02823753F8A00C9A177 /* NuguUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF02623753F8A00C9A177 /* NuguUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -760,6 +761,7 @@
 		1FD5D19524D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerAgentDirectivePayload.swift; sourceTree = "<group>"; };
 		1FD5D19B24D34F3A007BA384 /* MediaPlayerAgentResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerAgentResult.swift; sourceTree = "<group>"; };
 		1FD5D19D24D35281007BA384 /* MediaPlayerAgentPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerAgentPlaylist.swift; sourceTree = "<group>"; };
+		1FD5D1A124FF7035007BA384 /* TextAgentRequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentRequestType.swift; sourceTree = "<group>"; };
 		1FFFEFFD23753F1800C9A177 /* NuguCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FFFEFFF23753F1800C9A177 /* NuguCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguCore.h; sourceTree = "<group>"; };
 		1FFFF00023753F1800C9A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1892,6 +1894,7 @@
 				1FFFF35B2375707000C9A177 /* TextAgent.swift */,
 				1FFFF35A2375707000C9A177 /* TextAgent+Event.swift */,
 				7373891324A46CB90018DDD2 /* TextAgentProtocol.swift */,
+				1FD5D1A124FF7035007BA384 /* TextAgentRequestType.swift */,
 				7373891224A46CB90018DDD2 /* TextAgentDelegate.swift */,
 				1F5DD4B62410CB8600719FBC /* TextAgentSourceItem.swift */,
 			);
@@ -3872,6 +3875,7 @@
 				7EDCF97C24BC11CB0036805C /* DisplayTemplateDuration.swift in Sources */,
 				7EB81CD724C04F3B000910A9 /* Eventable.swift in Sources */,
 				737388ED24A46C680018DDD2 /* AudioPlayerDisplayControlPayload.swift in Sources */,
+				1FD5D1A224FF7035007BA384 /* TextAgentRequestType.swift in Sources */,
 				7373891524A46CB90018DDD2 /* TextAgentProtocol.swift in Sources */,
 				737388CA24A46C1D0018DDD2 /* ChipsAgentDelegate.swift in Sources */,
 				737388FF24A46C930018DDD2 /* SystemAgentExceptionCode.swift in Sources */,
