@@ -120,7 +120,7 @@ final class MainViewController: UIViewController {
     func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
         // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
-        if NuguCentralManager.shared.isMultiturnInProgress {
+        if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
         }
         NuguCentralManager.shared.client.asrAgent.stopRecognition()
@@ -570,7 +570,6 @@ extension MainViewController: KeywordDetectorDelegate {
 extension MainViewController: DialogStateDelegate {
     func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
         log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
-        NuguCentralManager.shared.isMultiturnInProgress = isMultiturn
         switch state {
         case .idle:
             voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
