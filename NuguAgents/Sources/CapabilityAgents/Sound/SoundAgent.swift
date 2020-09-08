@@ -104,6 +104,7 @@ extension SoundAgent: FocusChannelDelegate {
     
     public func focusChannelDidChange(focusState: FocusState) {
         log.info("\(focusState) \(soundState)")
+        
         soundDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             

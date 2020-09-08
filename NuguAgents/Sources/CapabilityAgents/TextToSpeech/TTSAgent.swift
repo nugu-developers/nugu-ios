@@ -66,7 +66,7 @@ public final class TTSAgent: TTSAgentProtocol {
             // `PlaySyncState` -> `TTSMedia` -> `TTSAgentDelegate`
             switch ttsState {
             case .playing:
-                if let playServiceId = media.payload.playServiceId {
+                if media.payload.playServiceId != nil {
                     playSyncManager.startPlay(
                         property: playSyncProperty,
                         info: PlaySyncInfo(
@@ -194,9 +194,10 @@ extension TTSAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
+        log.info("\(focusState) \(ttsState)")
+        
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            log.info("\(focusState) \(self.ttsState)")
             
             switch (focusState, self.ttsState) {
             case (.foreground, let ttsState) where [.idle, .stopped, .finished].contains(ttsState):
@@ -349,7 +350,6 @@ private extension TTSAgent {
                     return
                 }
                 guard let media = self.currentMedia, media.messageId == directive.header.messageId else {
-                    self.releaseFocusIfNeeded()
                     completion(.canceled)
                     log.info("Message id does not match")
                     return

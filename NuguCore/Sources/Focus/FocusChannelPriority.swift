@@ -50,5 +50,5 @@ public struct FocusChannelPriority {
     /// A priority of `sound` channel.
     public static let sound = FocusChannelPriority(requestPriority: 100, maintainPriority: 100)
     /// A priority of `background` channel.
-    public static let background = FocusChannelPriority(requestPriority: 0, maintainPriority: 0)
+    public static let background = FocusChannelPriority(requestPriority: 0, maintainPriority: 100)
 }

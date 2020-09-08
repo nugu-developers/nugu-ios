@@ -215,7 +215,6 @@ private extension EventSender {
         partData.append("--\(boundary)".data(using: .utf8)!)
         partData.append(HTTPConst.crlfData)
 
-        
         log.debug("[\(id)] \n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
     }
