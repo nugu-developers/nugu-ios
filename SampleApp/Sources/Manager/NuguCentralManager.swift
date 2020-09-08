@@ -235,11 +235,15 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func getUserInfo(completion: ((_ userInfo: NuguUserInfo?) -> Void)?) {
-        guard let token = UserDefaults.Standard.accessToken else {
-            completion?(nil)
-            return
+        guard
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret,
+            let token = UserDefaults.Standard.accessToken else {
+                completion?(nil)
+                return
         }
-        oauthClient.getUserInfo(token: token) { result in
+        
+        oauthClient.getUserInfo(clientId: clientId, clientSecret: clientSecret, token: token) { result in
             switch result {
             case .success(let userInfo):
                 completion?(userInfo)
@@ -259,7 +263,7 @@ extension NuguCentralManager {
         }
         
         getUserInfo { [weak self] (userInfo) in
-            guard let tid = userInfo?.tid else {
+            guard let tid = userInfo?.username else {
                 completion?(nil)
                 return
             }
@@ -278,7 +282,7 @@ extension NuguCentralManager {
                         UserDefaults.Standard.refreshToken = authInfo.refreshToken
                     }
                     self?.getUserInfo(completion: { (userInfo) in
-                        completion?(userInfo?.tid)
+                        completion?(userInfo?.username)
                     })
             })
         }
