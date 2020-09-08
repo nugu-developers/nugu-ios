@@ -253,35 +253,31 @@ extension NuguCentralManager {
         guard SampleApp.loginMethod == SampleApp.LoginMethod.type1,
             let clientId = SampleApp.clientId,
             let clientSecret = SampleApp.clientSecret,
-            let redirectUri = SampleApp.redirectUri else {
+            let redirectUri = SampleApp.redirectUri,
+            let token = UserDefaults.Standard.accessToken else {
                 completion?(nil)
                 return
         }
         
-        getUserInfo { [weak self] (userInfo) in
-            guard let tid = userInfo?.tid else {
-                completion?(nil)
-                return
-            }
-            let authorizationCodeGrant = AuthorizationCodeGrant(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                redirectUri: redirectUri
-            )
-            self?.oauthClient.showTidInfo(
-                grant: authorizationCodeGrant,
-                loginTid: tid,
-                parentViewController: parentViewController,
-                completion: { [weak self] (result) in
-                    if case .success(let authInfo) = result {
-                        UserDefaults.Standard.accessToken = authInfo.accessToken
-                        UserDefaults.Standard.refreshToken = authInfo.refreshToken
-                    }
-                    self?.getUserInfo(completion: { (userInfo) in
-                        completion?(userInfo?.tid)
-                    })
-            })
-        }
+        let authorizationCodeGrant = AuthorizationCodeGrant(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectUri: redirectUri
+        )
+        
+        oauthClient.showTidInfo(
+            grant: authorizationCodeGrant,
+            token: token,
+            parentViewController: parentViewController,
+            completion: { [weak self] (result) in
+                if case .success(let authInfo) = result {
+                    UserDefaults.Standard.accessToken = authInfo.accessToken
+                    UserDefaults.Standard.refreshToken = authInfo.refreshToken
+                }
+                self?.getUserInfo(completion: { (userInfo) in
+                    completion?(userInfo?.tid)
+                })
+        })
     }
 }
 
