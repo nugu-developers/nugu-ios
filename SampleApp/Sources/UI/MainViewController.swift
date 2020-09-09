@@ -158,7 +158,7 @@ private extension MainViewController {
     @IBAction func sendTextInput(_ button: UIButton) {
         guard let textInput = textInputTextField.text else { return }
         textInputTextField.resignFirstResponder()
-        NuguCentralManager.shared.requestTextInput(text: textInput, includeDialogAttribute: false)
+        NuguCentralManager.shared.requestTextInput(text: textInput, requestType: .normal)
     }
 }
 
@@ -332,7 +332,7 @@ private extension MainViewController {
         indicator.startAnimating()
         window.addSubview(indicator)
         
-        NuguCentralManager.shared.requestTextInput(text: selectedChipsText) {
+        NuguCentralManager.shared.requestTextInput(text: selectedChipsText, requestType: .dialog) {
             DispatchQueue.main.async {
                 indicator.removeFromSuperview()
             }
@@ -420,8 +420,12 @@ private extension MainViewController {
                 guard let token = token else { return }
                 NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
             case .textInput(let textInput):
-                guard let textInput = textInput else { return }
-                NuguCentralManager.shared.requestTextInput(text: textInput.text, includeDialogAttribute: false)
+                guard let textInput = textInput  else { return }
+                if let playServiceId = textInput.playServiceId {
+                    NuguCentralManager.shared.requestTextInput(text: textInput.text, requestType: .specific(playServiceId: playServiceId))
+                } else {
+                    NuguCentralManager.shared.requestTextInput(text: textInput.text, requestType: .normal)
+                }
             }
         }
         
