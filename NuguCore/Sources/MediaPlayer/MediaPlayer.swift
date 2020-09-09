@@ -26,6 +26,7 @@ public class MediaPlayer: NSObject, MediaPlayable {
     public weak var delegate: MediaPlayerDelegate?
     
     private var player: AVQueuePlayer?
+    private var timeControlObserver: NSKeyValueObservation?
     private var playerItem: MediaAVPlayerItem?
     
     private var downloadSession: URLSession?
@@ -67,6 +68,7 @@ extension MediaPlayer {
         playerItem?.delegate = nil  // CHECK-ME: 타이밍 이슈 없을지 확인
         
         playerItem = nil
+        timeControlObserver?.invalidate()
         player = nil
         
         delegate?.mediaPlayerDidChange(state: .stop)
@@ -81,8 +83,6 @@ extension MediaPlayer {
         }
         
         mediaPlayer.pause()
-        
-        delegate?.mediaPlayerDidChange(state: .pause)
     }
     
     public func resume() {
@@ -166,6 +166,15 @@ extension MediaPlayer: MediaUrlDataSource {
         playerItem?.cacheKey = cacheKey
         playerItem?.delegate = self
         player = AVQueuePlayer(playerItem: playerItem)
+        timeControlObserver = player?.observe(\.timeControlStatus, changeHandler: { [weak self] (observedPlayer, _) in
+            switch observedPlayer.timeControlStatus {
+            case .paused:
+                // Paused state should be delivered only by observing timeControlStatus because of system caused pause. (ex> automatically paused by interruption, routeChange)
+                self?.delegate?.mediaPlayerDidChange(state: .pause)
+            default:
+                break
+            }
+        })
         
         if offset.seconds > 0 {
             player?.seek(to: offset.cmTime)
