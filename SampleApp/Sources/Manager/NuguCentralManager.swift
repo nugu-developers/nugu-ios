@@ -560,7 +560,7 @@ extension NuguCentralManager: LocationAgentDelegate {
 // MARK: - SystemAgentDelegate
 
 extension NuguCentralManager: SystemAgentDelegate {
-    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail) {
+    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail, dialogRequestId: String) {
         switch code {
         case .playRouterProcessingException:
             localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
@@ -575,7 +575,7 @@ extension NuguCentralManager: SystemAgentDelegate {
         }
     }
     
-    func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason) {
+    func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason, dialogRequestId: String) {
         clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
     }
 }
@@ -583,7 +583,7 @@ extension NuguCentralManager: SystemAgentDelegate {
 // MARK: - SoundAgentDataSource
 
 extension NuguCentralManager: SoundAgentDataSource {
-    func soundAgentRequestUrl(beepName: SoundBeepName) -> URL? {
+    func soundAgentRequestUrl(beepName: SoundBeepName, dialogRequestId: String) -> URL? {
         let url: URL?
         switch beepName {
         case .responseFail:
