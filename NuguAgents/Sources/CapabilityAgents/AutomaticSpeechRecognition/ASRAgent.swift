@@ -44,7 +44,9 @@ public final class ASRAgent: ASRAgentProtocol {
     
     private let eventTimeFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
+        // IMF-fixdate https://tools.ietf.org/html/rfc7231#section-7.1.1.1
         dateFormatter.dateFormat = "EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
         return dateFormatter
     }()
     
