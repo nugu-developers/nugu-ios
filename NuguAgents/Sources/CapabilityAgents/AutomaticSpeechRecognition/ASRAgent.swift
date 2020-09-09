@@ -251,12 +251,11 @@ public extension ASRAgent {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard self.asrState != .idle else {
-                log.info("Not permitted in current state, \(self.asrState)")
-                return
+            
+            self.expectSpeechDirective = nil
+            if self.asrState != .idle {
+                self.asrResult = .cancel
             }
-
-            self.asrResult = .cancel
         }
     }
 }
