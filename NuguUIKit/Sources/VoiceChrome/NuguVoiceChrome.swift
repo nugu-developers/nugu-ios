@@ -68,6 +68,8 @@ final public class NuguVoiceChrome: UIView {
         }
     }
     
+    public private(set) var currentState: State = .listeningPassive
+    
     // MARK: - Private Properties
     
     @IBOutlet private weak var backgroundView: UIView!
@@ -168,7 +170,8 @@ public extension NuguVoiceChrome {
 
 public extension NuguVoiceChrome {
     func changeState(state: NuguVoiceChrome.State) {
-        playAnimationByState(state: state)
+        currentState = state
+        playAnimationByState()
         switch state {
         case .listeningPassive:
             showSpeechGuideText()
@@ -199,14 +202,15 @@ public extension NuguVoiceChrome {
 // MARK: - Private
 
 private extension NuguVoiceChrome {
-    func playAnimationByState(state: NuguVoiceChrome.State) {
-        animationView.animation = Animation.named(state.transitionFileName, bundle: Bundle(for: NuguVoiceChrome.self))
+    func playAnimationByState() {
+        animationView.animation = Animation.named(currentState.transitionFileName, bundle: Bundle(for: NuguVoiceChrome.self))
         animationView.loopMode = .playOnce
         animationView.play { [weak self] (finished) in
+            guard let self = self else { return }
             if finished {
-                self?.animationView.animation = Animation.named(state.animationFileName, bundle: Bundle(for: NuguVoiceChrome.self))
-                self?.animationView.loopMode = .loop
-                self?.animationView.play()
+                self.animationView.animation = Animation.named(self.currentState.animationFileName, bundle: Bundle(for: NuguVoiceChrome.self))
+                self.animationView.loopMode = .loop
+                self.animationView.play()
             }
         }
     }

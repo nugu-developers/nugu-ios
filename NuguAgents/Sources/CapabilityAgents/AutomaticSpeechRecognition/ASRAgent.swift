@@ -44,7 +44,9 @@ public final class ASRAgent: ASRAgentProtocol {
     
     private let eventTimeFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
+        // IMF-fixdate https://tools.ietf.org/html/rfc7231#section-7.1.1.1
         dateFormatter.dateFormat = "EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
         return dateFormatter
     }()
     
@@ -251,12 +253,11 @@ public extension ASRAgent {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard self.asrState != .idle else {
-                log.info("Not permitted in current state, \(self.asrState)")
-                return
+            
+            self.expectSpeechDirective = nil
+            if self.asrState != .idle {
+                self.asrResult = .cancel
             }
-
-            self.asrResult = .cancel
         }
     }
 }

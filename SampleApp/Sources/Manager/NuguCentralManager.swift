@@ -235,11 +235,15 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func getUserInfo(completion: ((_ userInfo: NuguUserInfo?) -> Void)?) {
-        guard let token = UserDefaults.Standard.accessToken else {
-            completion?(nil)
-            return
+        guard
+            let clientId = SampleApp.clientId,
+            let clientSecret = SampleApp.clientSecret,
+            let token = UserDefaults.Standard.accessToken else {
+                completion?(nil)
+                return
         }
-        oauthClient.getUserInfo(token: token) { result in
+        
+        oauthClient.getUserInfo(clientId: clientId, clientSecret: clientSecret, token: token) { result in
             switch result {
             case .success(let userInfo):
                 completion?(userInfo)
@@ -275,7 +279,7 @@ extension NuguCentralManager {
                     UserDefaults.Standard.refreshToken = authInfo.refreshToken
                 }
                 self?.getUserInfo(completion: { (userInfo) in
-                    completion?(userInfo?.tid)
+                    completion?(userInfo?.username)
                 })
         })
     }
@@ -482,14 +486,13 @@ extension NuguCentralManager {
 // MARK: - Internal (Text)
 
 extension NuguCentralManager {
-    func requestTextInput(text: String, includeDialogAttribute: Bool = true, completion: (() -> Void)? = nil) {
+    func requestTextInput(text: String, requestType: TextAgentRequestType, completion: (() -> Void)? = nil) {
         client.dialogStateAggregator.isChipsRequestInProgress = true
         client.asrAgent.stopRecognition()
-        
-        // TODO: - Fix requestType
+
         client.textAgent.requestTextInput(
             text: text,
-            requestType: .dialog
+            requestType: requestType
         ) { state in
             switch state {
             case .finished, .error:

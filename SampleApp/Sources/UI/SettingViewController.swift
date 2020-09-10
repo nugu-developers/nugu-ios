@@ -52,7 +52,7 @@ final class SettingViewController: UIViewController {
         super.viewDidLoad()
         tableView.reloadData()
         NuguCentralManager.shared.getUserInfo { [weak self] (nuguUserInfo) in
-            self?.tid = nuguUserInfo?.tid
+            self?.tid = nuguUserInfo?.username
         }
     }
     

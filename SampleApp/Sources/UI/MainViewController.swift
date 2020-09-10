@@ -119,6 +119,10 @@ final class MainViewController: UIViewController {
     /// - Parameter notification: UIApplication.willResignActiveNotification
     func willResignActive(_ notification: Notification) {
         dismissVoiceChrome()
+        // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
+        if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
+            NuguCentralManager.shared.client.ttsAgent.stopTTS()
+        }
         NuguCentralManager.shared.client.asrAgent.stopRecognition()
         NuguCentralManager.shared.stopMicInputProvider()
     }
@@ -132,6 +136,7 @@ final class MainViewController: UIViewController {
     }
         
     func didTapForDismissVoiceChrome() {
+        guard nuguVoiceChrome.currentState == .listeningPassive || nuguVoiceChrome.currentState == .listeningActive  else { return }
         dismissVoiceChrome()
         NuguCentralManager.shared.client.asrAgent.stopRecognition()
     }
@@ -153,7 +158,7 @@ private extension MainViewController {
     @IBAction func sendTextInput(_ button: UIButton) {
         guard let textInput = textInputTextField.text else { return }
         textInputTextField.resignFirstResponder()
-        NuguCentralManager.shared.requestTextInput(text: textInput, includeDialogAttribute: false)
+        NuguCentralManager.shared.requestTextInput(text: textInput, requestType: .normal)
     }
 }
 
@@ -327,7 +332,7 @@ private extension MainViewController {
         indicator.startAnimating()
         window.addSubview(indicator)
         
-        NuguCentralManager.shared.requestTextInput(text: selectedChipsText) {
+        NuguCentralManager.shared.requestTextInput(text: selectedChipsText, requestType: .dialog) {
             DispatchQueue.main.async {
                 indicator.removeFromSuperview()
             }
@@ -415,8 +420,12 @@ private extension MainViewController {
                 guard let token = token else { return }
                 NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
             case .textInput(let textInput):
-                guard let textInput = textInput else { return }
-                NuguCentralManager.shared.requestTextInput(text: textInput.text, includeDialogAttribute: false)
+                guard let textInput = textInput  else { return }
+                if let playServiceId = textInput.playServiceId {
+                    NuguCentralManager.shared.requestTextInput(text: textInput.text, requestType: .specific(playServiceId: playServiceId))
+                } else {
+                    NuguCentralManager.shared.requestTextInput(text: textInput.text, requestType: .normal)
+                }
             }
         }
         
@@ -590,16 +599,33 @@ extension MainViewController: DialogStateDelegate {
         case .listening:
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
-                self?.addTapGestureRecognizerForDismissVoiceChrome()
+                guard let self = self else { return }
+                // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
+                let showVoiceChromeAnimation = {
+                    UIView.animate(withDuration: 0.3) { [weak self] in
+                        guard let self = self else { return }
+                        self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
+                    }
+                }
+                if self.view.subviews.contains(self.nuguVoiceChrome) == false {
+                    self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
+                    self.view.addSubview(self.nuguVoiceChrome)
+                    showVoiceChromeAnimation()
+                } else {
+                    if self.nuguVoiceChrome.frame.origin.y != self.view.frame.size.height - self.nuguVoiceChrome.bounds.height {
+                        showVoiceChromeAnimation()
+                    }
+                }
+                self.addTapGestureRecognizerForDismissVoiceChrome()
                 if let chips = chips {
                     let actionList = chips.filter { $0.type == .action }.map { $0.text }
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
-                    self?.setChipsButton(actionList: actionList, normalList: normalList)
+                    self.setChipsButton(actionList: actionList, normalList: normalList)
                 }
                 if isMultiturn || sessionActivated {
-                    self?.nuguVoiceChrome.changeState(state: .listeningPassive)
-                    self?.nuguVoiceChrome.setRecognizedText(text: nil)
-                    self?.nuguButton.isActivated = false
+                    self.nuguVoiceChrome.changeState(state: .listeningPassive)
+                    self.nuguVoiceChrome.setRecognizedText(text: nil)
+                    self.nuguButton.isActivated = false
                 }
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
             }
