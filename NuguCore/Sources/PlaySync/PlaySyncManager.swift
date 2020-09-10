@@ -209,11 +209,22 @@ private extension PlaySyncManager {
             // Multi-layer 상황에서
             .filter { $0.info.dialogRequestId != info.dialogRequestId }
             // 이전 layer 가 info 나 alerts 이면
-            .filter { $0.property.layerType == .info || $0.property.layerType == .alert }
+            .filter { [.info, .alert].contains($0.property.layerType) }
             // 해당 layer의 display 표출 중
             .filter { $0.property.contextType == .display }
             // 다른 display 또는 다른 play 동작 시
             .filter { property.contextType == .display || $0.info.playStackServiceId != info.playStackServiceId }
+            // 이전 display 를 종료함
+            .forEach { popFromPlayStack(property: $0.property) }
+        playStack
+            // Multi-layer 상황에서
+            .filter { $0.info.dialogRequestId != info.dialogRequestId }
+            // 이전 layer 가 media 나 call 이면
+            .filter { [.media, .call].contains($0.property.layerType) }
+            // 해당 layer의 display 표출 중
+            .filter { $0.property.contextType == .display }
+            // 같은 layer 실행 시
+            .filter { $0.property.layerType == property.layerType }
             // 이전 display 를 종료함
             .forEach { popFromPlayStack(property: $0.property) }
         
