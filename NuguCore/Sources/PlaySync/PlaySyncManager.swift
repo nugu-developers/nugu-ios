@@ -161,8 +161,8 @@ public extension PlaySyncManager {
             self.timerPaused = true
             
             if self.playContextTimers[property] != nil {
-                self.pausedTimers.insert(property)
                 self.removeTimer(property: property)
+                self.pausedTimers.insert(property)
             }
         }
     }
@@ -234,8 +234,8 @@ private extension PlaySyncManager {
     }
     
     func addTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
-        log.debug(property)
         removeTimer(property: property)
+        log.debug(property)
         
         guard duration.dispatchTimeInterval != .never else { return }
         guard timerPaused == false else {
