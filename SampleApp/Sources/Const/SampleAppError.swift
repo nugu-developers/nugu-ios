@@ -62,7 +62,7 @@ extension SampleAppError: LocalizedError {
                 case (_, "invalid_token"):
                     return "유효하지 않은 토큰입니다."
                 case (_, "invalid_client"):
-                    return "유효하지 않은 클라이언 정보입니다."
+                    return "유효하지 않은 클라이언트 정보입니다."
                 case (_, "access_denied"):
                     return "접근이 거부 되었습니다."
                 default:
