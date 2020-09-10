@@ -126,10 +126,12 @@ public extension NuguOAuthClient {
     
     /// Get some NUGU member information.
     /// - Parameters:
+    ///   - clientId: The `clientId` for OAuth authentication.
+    ///   - clientSecret: The `clientSecret` for OAuth authentication.
     ///   - token: The `token` is access-token currently being used.
     ///   - completion: The closure to receive result for getting NUGU member information.
-    func getUserInfo(token: String, completion: ((Result<NuguUserInfo, NuguLoginKitError>) -> Void)?) {
-        let api = NuguOAuthUtilApi.getUserInfo(token: token)
+    func getUserInfo(clientId: String, clientSecret: String, token: String, completion: ((Result<NuguUserInfo, NuguLoginKitError>) -> Void)?) {
+        let api = NuguOAuthUtilApi.getUserInfo(token: token, clientId: clientId, clientSecret: clientSecret)
         
         api.request { (result) in
             completion?(result

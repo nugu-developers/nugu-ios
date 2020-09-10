@@ -23,15 +23,9 @@ import Foundation
 /// The `NuguUserInfo` is simple profile in NUGU
 public struct NuguUserInfo: Decodable {
     
-    /// Flag for anonymous member
-    public let anonymous: Bool
+    /// The `active` is indicates the NUGU's activation status.
+    public let active: Bool
     
-    /// The `deviceId` in NUGU
-    public let deviceId: String
-    
-    /// The `userId` in NUGU
-    public let userId: String
-    
-    /// The `tid` used by NUGU users
-    public let tid: String?
+    /// The `username` used by NUGU users
+    public let username: String?
 }
