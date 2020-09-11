@@ -56,14 +56,16 @@ extension NuguOAuthTokenApi: ApiProvidable {
                 "client_id": clientId,
                 "client_secret": clientSecret,
                 "code": code,
-                "redirect_uri": redirectUri
+                "redirect_uri": redirectUri,
+                "data": "{\"deviceSerialNumber\":\"\(deviceUniqueId)\"}"
             ]
         case .refreshToken(let refreshToken):
             return [
                 "grant_type": "refresh_token",
                 "client_id": clientId,
                 "client_secret": clientSecret,
-                "refresh_token": refreshToken
+                "refresh_token": refreshToken,
+                "data": "{\"deviceSerialNumber\":\"\(deviceUniqueId)\"}"
             ]
         case .clientCredentials:
             return [
