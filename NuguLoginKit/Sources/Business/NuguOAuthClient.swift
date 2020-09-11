@@ -106,20 +106,18 @@ public extension NuguOAuthClient {
     /// Shows web-page where TID information can be modified with `AuthorizationCode` grant type.
     /// - Parameters:
     ///   - grant: The `grant` information that `AuthorizationCodeGrant`
-    ///   - loginTid: The `loginTid` is the value received through `getUserInfo()`.
+    ///   - token: The `token` is access-token currently being used.
     ///   - parentViewController: The `parentViewController` will present a safariViewController.
     ///   - completion: The closure to receive result for authorization.
     func showTidInfo(
         grant: AuthorizationCodeGrant,
-        loginTid: String,
+        token: String,
         parentViewController: UIViewController,
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
         var queries = [URLQueryItem]()
-        queries.append(URLQueryItem(name: "service_type", value: "21"))
-        queries.append(URLQueryItem(name: "login_id", value: loginTid))
-        queries.append(URLQueryItem(name: "client_type", value: "MWEB"))
-        queries.append(URLQueryItem(name: "popup_request_yn", value: "N"))
+        queries.append(URLQueryItem(name: "prompt", value: "mypage"))
+        queries.append(URLQueryItem(name: "access_token", value: token))
         
         presentAuthorize(grant: grant, parentViewController: parentViewController, additionalQueries: queries, completion: completion)
     }
