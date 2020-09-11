@@ -131,7 +131,13 @@ public extension NuguOAuthClient {
     ///   - token: The `token` is access-token currently being used.
     ///   - completion: The closure to receive result for getting NUGU member information.
     func getUserInfo(clientId: String, clientSecret: String, token: String, completion: ((Result<NuguUserInfo, NuguLoginKitError>) -> Void)?) {
-        let api = NuguOAuthUtilApi.getUserInfo(token: token, clientId: clientId, clientSecret: clientSecret)
+        let api = NuguOAuthUtilApi(
+            token: token,
+            clientId: clientId,
+            clientSecret: clientSecret,
+            deviceUniqueId: deviceUniqueId,
+            typeInfo: .getUserInfo
+        )
         
         api.request { (result) in
             completion?(result
@@ -213,7 +219,13 @@ public extension NuguOAuthClient {
     ///   - token: The `token` is access-token currently being used.
     ///   - completion: The closure to receive result for `revoke`.
     func revoke(clientId: String, clientSecret: String, token: String, completion: ((Result<Void, NuguLoginKitError>) -> Void)?) {
-        let api = NuguOAuthUtilApi.revoke(token: token, clientId: clientId, clientSecret: clientSecret)
+        let api = NuguOAuthUtilApi(
+            token: token,
+            clientId: clientId,
+            clientSecret: clientSecret,
+            deviceUniqueId: deviceUniqueId,
+            typeInfo: .revoke
+        )
         
         api.request { (result) in
             completion?(result

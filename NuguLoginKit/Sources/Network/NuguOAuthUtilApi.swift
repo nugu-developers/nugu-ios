@@ -20,16 +20,25 @@
 
 import Foundation
 
-enum NuguOAuthUtilApi {
-    case getUserInfo(token: String, clientId: String, clientSecret: String)
-    case revoke(token: String, clientId: String, clientSecret: String)
+
+struct NuguOAuthUtilApi {
+    let token: String
+    let clientId: String
+    let clientSecret: String
+    let deviceUniqueId: String
+    let typeInfo: TypeInfo
+    
+    enum TypeInfo {
+        case getUserInfo
+        case revoke
+    }
 }
 
 // MARK: - ApiProvidable
 
 extension NuguOAuthUtilApi: ApiProvidable {
     var httpMethod: String {
-        switch self {
+        switch typeInfo {
         case .getUserInfo:
             return "POST"
         case .revoke:
@@ -38,7 +47,7 @@ extension NuguOAuthUtilApi: ApiProvidable {
     }
     
     var headers: [String: String] {
-        switch self {
+        switch typeInfo {
         case .getUserInfo:
             return [
                 "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
@@ -51,7 +60,7 @@ extension NuguOAuthUtilApi: ApiProvidable {
     }
     
     var uri: String {
-        switch self {
+        switch typeInfo {
         case .getUserInfo:
             return NuguOAuthServerInfo.serverBaseUrl + "/oauth/introspect"
         case .revoke:
@@ -60,18 +69,20 @@ extension NuguOAuthUtilApi: ApiProvidable {
     }
     
     var bodyParams: [String: String] {
-        switch self {
-        case .getUserInfo(let token, let clientId, let clientSecret):
+        switch typeInfo {
+        case .getUserInfo:
             return [
                 "token": token,
                 "client_id": clientId,
-                "client_secret": clientSecret
+                "client_secret": clientSecret,
+                "data": "{\"deviceSerialNumber\":\"\(deviceUniqueId)\"}"
             ]
-        case .revoke(let token, let clientId, let clientSecret):
+        case .revoke:
             return [
                 "token": token,
                 "client_id": clientId,
-                "client_secret": clientSecret
+                "client_secret": clientSecret,
+                "data": "{\"deviceSerialNumber\":\"\(deviceUniqueId)\"}"
             ]
         }
     }
