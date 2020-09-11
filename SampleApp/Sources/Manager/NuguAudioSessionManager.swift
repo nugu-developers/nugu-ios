@@ -29,6 +29,7 @@ final class NuguAudioSessionManager {
     
     init() {
         addAudioInterruptionNotification()
+        addAudioRouteChangedNotification()
     }
     var pausedByInterruption = false
 }
@@ -47,6 +48,20 @@ extension NuguAudioSessionManager {
     func removeAudioInterruptionNotification() {
         NotificationCenter.default.removeObserver(self,
                                                   name: AVAudioSession.interruptionNotification,
+                                                  object: nil)
+    }
+    
+    func addAudioRouteChangedNotification() {
+        removeAudioRouteChangedNotification()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(routeChangedNotification),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
+    }
+    
+    func removeAudioRouteChangedNotification() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: AVAudioSession.routeChangeNotification,
                                                   object: nil)
     }
     
@@ -157,6 +172,20 @@ private extension NuguAudioSessionManager {
                 }
             }
         @unknown default: break
+        }
+    }
+    
+    @objc func routeChangedNotification(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+            let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
+        switch reason {
+        case .oldDeviceUnavailable:
+            log.debug("Route changed due to oldDeviceUnavailable")
+            if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
+                NuguCentralManager.shared.client.audioPlayerAgent.pause()
+            }
+        default: break
         }
     }
     
