@@ -38,12 +38,17 @@ private var nattyConfiguration: NattyConfiguration {
 // MARK: - Url
 
 struct SampleApp {
+    // Own poc_id issued from Nugu Developers site ( https://developers.nugu.co.kr/#/sdk/pocList)
+    static var pocId: String {
+        return "nugu.public.sample"
+    }
+    
     /// Web page url for NUGU usage guide of own device
     /// URLQueryItem["poc_id"]: put your own poc_id issued from Nugu Developers site ( https://developers.nugu.co.kr/#/sdk/pocList)
     static func makeGuideWebURL(deviceUniqueId: String) -> URL? {
         var urlComponent = URLComponents(string: "https://webview.sktnugu.com/v2/3pp/confirm.html")
         urlComponent?.queryItems = [
-            URLQueryItem(name: "poc_id", value: "own.poc.id"),
+            URLQueryItem(name: "poc_id", value: pocId),
             URLQueryItem(name: "device_unique_id", value: deviceUniqueId)
         ]
         return urlComponent?.url
