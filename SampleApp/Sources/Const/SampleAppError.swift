@@ -54,7 +54,7 @@ extension SampleAppError: LocalizedError {
                 case ("user_device_disconnected", _):
                     return "연결 해제된 상태입니다."
                 case ("user_device_unexpected", _):
-                    return "내부 검증 토큰이 불일치 합니다."
+                    return "내부 검증 토큰이 불일치합니다."
                 case (_, "unauthorized"):
                     return "인가되지 않은 사용자 정보입니다."
                 case (_, "unauthorized_client"):
@@ -64,7 +64,7 @@ extension SampleAppError: LocalizedError {
                 case (_, "invalid_client"):
                     return "유효하지 않은 클라이언트 정보입니다."
                 case (_, "access_denied"):
-                    return "접근이 거부 되었습니다."
+                    return "접근이 거부되었습니다."
                 default:
                     break
                 }
