@@ -149,6 +149,8 @@ private extension NuguAudioSessionManager {
             // Interruption began, take appropriate actions
             if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
                 NuguCentralManager.shared.client.audioPlayerAgent.pause()
+                // PausedByInterruption flag should not be changed before paused delegate method has been called
+                // Giving small delay for changing flag value can be a solution for this situation
                 DispatchQueue.global().asyncAfter(deadline: .now()+0.1) { [weak self] in
                     self?.pausedByInterruption = true
                 }

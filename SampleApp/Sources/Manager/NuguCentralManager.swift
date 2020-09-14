@@ -95,6 +95,9 @@ extension NuguCentralManager {
                 }
             })
             guard let startMicWorkItem = startMicWorkItem else { return }
+            // When mic has been activated before interruption end notification has been fired,
+            // Option's .shouldResume factor never comes in. (even when it has to be)
+            // Giving small delay for starting mic can be a solution for this situation
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: startMicWorkItem)
         } else {
             stopWakeUpDetector()
