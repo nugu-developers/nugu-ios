@@ -44,9 +44,31 @@ extension SampleAppError: LocalizedError {
             return description
         case .loginFailed(let error):
             return "login has failed (reason: \(error))"
-        case .loginUnauthorized:
-            // Sample application does not present any detail informations about unauthorized reason.
-            // Please check APIErrorReason for detail reason of unauthorization.
+        case .loginUnauthorized(let reason):
+            if reason.statusCode == 401 {
+                switch (reason.errorCode, reason.error) {
+                case ("user_account_closed", _):
+                    return "탈퇴한 사용자입니다."
+                case ("user_account_paused", _):
+                    return "휴면 상태 사용자입니다."
+                case ("user_device_disconnected", _):
+                    return "연결 해제된 상태입니다."
+                case ("user_device_unexpected", _):
+                    return "내부 검증 토큰이 불일치합니다."
+                case (_, "unauthorized"):
+                    return "인가되지 않은 사용자 정보입니다."
+                case (_, "unauthorized_client"):
+                    return "인가되지 않은 클라이언트입니다."
+                case (_, "invalid_token"):
+                    return "유효하지 않은 토큰입니다."
+                case (_, "invalid_client"):
+                    return "유효하지 않은 클라이언트 정보입니다."
+                case (_, "access_denied"):
+                    return "접근이 거부되었습니다."
+                default:
+                    break
+                }
+            }
             return "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "NuguSample")의 누구 서비스가 종료되었습니다."
         case .loginWithRefreshTokenFailed:
             return "Login with refresh token has failed"
