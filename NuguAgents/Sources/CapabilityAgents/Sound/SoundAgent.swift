@@ -103,11 +103,10 @@ extension SoundAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        log.info("\(focusState) \(soundState)")
-        
-        soundDispatchQueue.async { [weak self] in
+        soundDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
-            
+
+            log.info("\(focusState) \(self.soundState)")
             switch (focusState, self.soundState) {
             case (.foreground, let soundState) where [.idle, .stopped, .finished].contains(soundState):
                 self.currentPlayer?.play()

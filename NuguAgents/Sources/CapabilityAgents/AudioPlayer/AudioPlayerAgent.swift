@@ -296,11 +296,10 @@ extension AudioPlayerAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        log.info("\(focusState) \(audioPlayerState)")
-        
-        audioPlayerDispatchQueue.async { [weak self] in
+        audioPlayerDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
             
+            log.info("\(focusState) \(self.audioPlayerState)")
             switch (focusState, self.audioPlayerState) {
             // Directive 에 의한 Pause 인경우 재생하지 않음.
             case (.foreground, .paused):
