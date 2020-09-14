@@ -34,6 +34,10 @@ public struct AuthorizationInfo: Decodable {
     /// If has a `refreshToken`, can request oauth authentication that grant-type is refresh_token.
     public let refreshToken: String?
     
+    /// The authorization server uses the "scope" response parameter to inform the client of the scope of the access token issued.
+    public let scopes: [String]
+    private let scope: String?
+    
     /// Expiration date of access-token.
     public let expireDate: Date
     private let expireTime: Int
@@ -43,6 +47,7 @@ public struct AuthorizationInfo: Decodable {
         case tokenType = "token_type"
         case refreshToken = "refresh_token"
         case expireTime = "expires_in"
+        case scope = "scope"
     }
     
     public init(from decoder: Decoder) throws {
@@ -52,6 +57,9 @@ public struct AuthorizationInfo: Decodable {
         tokenType = try container.decode(String.self, forKey: .tokenType)
         refreshToken = try container.decodeIfPresent(String.self, forKey: .refreshToken)
         expireTime = try container.decode(Int.self, forKey: .expireTime)
+        scope = try container.decodeIfPresent(String.self, forKey: .scope)
+
+        scopes = scope?.components(separatedBy: " ").filter { $0.count != 0 } ?? []
         expireDate = Date().addingTimeInterval(TimeInterval(expireTime))
     }
 }
