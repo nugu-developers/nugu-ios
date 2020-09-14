@@ -125,7 +125,7 @@ private extension SystemAgent {
                 switch exceptionItem.code {
                 case .fail(let code):
                     self?.delegates.notify { delegate in
-                        delegate.systemAgentDidReceiveExceptionFail(code: code)
+                        delegate.systemAgentDidReceiveExceptionFail(code: code, dialogRequestId: directive.header.dialogRequestId)
                     }
                 case .warning(let code):
                     log.debug("received warning code: \(code)")
@@ -144,7 +144,7 @@ private extension SystemAgent {
 
             self?.systemDispatchQueue.async { [weak self] in
                 self?.delegates.notify { delegate in
-                    delegate.systemAgentDidReceiveRevokeDevice(reason: revokeItem.reason)
+                    delegate.systemAgentDidReceiveRevokeDevice(reason: revokeItem.reason, dialogRequestId: directive.header.dialogRequestId)
                 }
             }
         }
