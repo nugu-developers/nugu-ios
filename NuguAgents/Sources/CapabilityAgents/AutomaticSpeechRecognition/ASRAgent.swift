@@ -273,11 +273,10 @@ extension ASRAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        log.info("Focus:\(focusState) ASR:\(asrState)")
-        
-        asrDispatchQueue.async { [weak self] in
+        asrDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
-            
+
+            log.info("Focus:\(focusState) ASR:\(self.asrState)")
             switch (focusState, self.asrState) {
             case (.foreground, let asrState) where [.idle, .expectingSpeech].contains(asrState):
                 self.executeStartCapture()

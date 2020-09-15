@@ -23,6 +23,8 @@ import Foundation
 import NuguCore
 
 class MockFocusManager: FocusManageable {
+    private let focusDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.focus_manager", qos: .userInitiated)
+    
     var delegate: FocusDelegate?
     
     func add(channelDelegate: FocusChannelDelegate) {
@@ -34,11 +36,15 @@ class MockFocusManager: FocusManageable {
     }
     
     func requestFocus(channelDelegate: FocusChannelDelegate) {
-        channelDelegate.focusChannelDidChange(focusState: .foreground)
+        focusDispatchQueue.async {
+            channelDelegate.focusChannelDidChange(focusState: .foreground)
+        }
     }
     
     func releaseFocus(channelDelegate: FocusChannelDelegate) {
-        channelDelegate.focusChannelDidChange(focusState: .nothing)
+        focusDispatchQueue.async {
+            channelDelegate.focusChannelDidChange(focusState: .nothing)
+        }
     }
     
     func stopForegroundActivity() {
