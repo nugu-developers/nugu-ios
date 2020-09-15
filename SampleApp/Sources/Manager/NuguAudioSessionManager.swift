@@ -29,6 +29,7 @@ final class NuguAudioSessionManager {
     
     init() {
         addAudioInterruptionNotification()
+        addAudioRouteChangedNotification()
     }
     var pausedByInterruption = false
 }
@@ -47,6 +48,20 @@ extension NuguAudioSessionManager {
     func removeAudioInterruptionNotification() {
         NotificationCenter.default.removeObserver(self,
                                                   name: AVAudioSession.interruptionNotification,
+                                                  object: nil)
+    }
+    
+    func addAudioRouteChangedNotification() {
+        removeAudioRouteChangedNotification()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(routeChangedNotification),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
+    }
+    
+    func removeAudioRouteChangedNotification() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: AVAudioSession.routeChangeNotification,
                                                   object: nil)
     }
     
@@ -134,6 +149,8 @@ private extension NuguAudioSessionManager {
             // Interruption began, take appropriate actions
             if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
                 NuguCentralManager.shared.client.audioPlayerAgent.pause()
+                // PausedByInterruption flag should not be changed before paused delegate method has been called
+                // Giving small delay for changing flag value can be a solution for this situation
                 DispatchQueue.global().asyncAfter(deadline: .now()+0.1) { [weak self] in
                     self?.pausedByInterruption = true
                 }
@@ -157,6 +174,20 @@ private extension NuguAudioSessionManager {
                 }
             }
         @unknown default: break
+        }
+    }
+    
+    @objc func routeChangedNotification(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+            let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
+        switch reason {
+        case .oldDeviceUnavailable:
+            log.debug("Route changed due to oldDeviceUnavailable")
+            if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
+                NuguCentralManager.shared.client.audioPlayerAgent.pause()
+            }
+        default: break
         }
     }
     
