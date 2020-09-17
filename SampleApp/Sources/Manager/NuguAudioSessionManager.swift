@@ -79,10 +79,8 @@ extension NuguAudioSessionManager {
                                                   object: nil)
     }
     
-    func requestRecordPermission(_ response: @escaping PermissionBlock) {
-        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
-            response(isGranted)
-        }
+    func requestRecordPermission(_ response: @escaping (Bool) -> Void) {
+        AVAudioSession.sharedInstance().requestRecordPermission(response)
     }
     
     /// Update AudioSession.Category and AudioSession.CategoryOptions
