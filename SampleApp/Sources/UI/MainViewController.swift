@@ -580,7 +580,7 @@ extension MainViewController: DialogStateDelegate {
                 self?.dismissVoiceChrome()
             })
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
+            DispatchQueue.main.async(execute: voiceChromeDismissWorkItem)
         case .speaking:
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
