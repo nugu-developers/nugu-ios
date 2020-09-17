@@ -21,8 +21,6 @@
 import Foundation
 import AVFoundation
 
-import NuguCore.ObjcExceptionCatcher
-
 public class MicInputProvider {
     public var isRunning: Bool {
         return audioEngine.isRunning
@@ -71,7 +69,7 @@ public class MicInputProvider {
         
         var inputNode: AVAudioInputNode!
         var inputFormat: AVAudioFormat!
-        if let error = ObjcExceptionCatcher.objcTry({
+        if let error = NCObjcExceptionCatcher.objcTry({
             // The audio engine creates a singleton on demand when inputNode is first accessed.
             // So it could raise an ObjC exception
             inputNode = audioEngine.inputNode
@@ -96,7 +94,7 @@ public class MicInputProvider {
             throw MicInputError.resamplerError(source: inputFormat, dest: recordingFormat)
         }
         
-        if let error = ObjcExceptionCatcher.objcTry({
+        if let error = NCObjcExceptionCatcher.objcTry({
             inputNode.removeTap(onBus: audioBus)
             inputNode.installTap(onBus: audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, when) in
                 guard let self = self else { return }

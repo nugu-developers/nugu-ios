@@ -24,7 +24,7 @@ PODS:
   - NuguUIKit (0.18.0):
     - lottie-ios (~> 3)
   - RxSwift (5.1.1)
-  - SilverTray (1.1.0)
+  - SilverTray (1.1.1)
 
 DEPENDENCIES:
   - JadeMarble (from `../`)
@@ -68,13 +68,13 @@ SPEC CHECKSUMS:
   NattyLog: c7715745466791306a6c83bb68524d2d1b1b350d
   NuguAgents: 5ee1aed3346416624c5b135a34c8115bfeddf75d
   NuguClientKit: 713f9f3de5f4c6b06aad8a591cb1049b0fede97d
-  NuguCore: cfbbc4d34ef728eb9d39ec29a4c61315c99691b9
+  NuguCore: e8f3302fd3aad330b5b7e3d6d7bf7805270128ee
   NuguLoginKit: 94c61a1fbbd3c2baafd6b041d1cf05215e5c79d2
   NuguServiceKit: bdd29cfb9eb1454e391ad953d4e80e3f24b2a99d
-  NuguUIKit: 1472d44f0f28410d1ec972edbcdc296acb56d41a
+  NuguUIKit: eb0b4111422d5ccc8bdf7497fc6f4f949aed13e0
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
-  SilverTray: 0b1f086eb8a105d2c1b2138bba03974bffd74fac
+  SilverTray: 293595e8d7314a1d4cbde932ce171cfb21aa7084
 
 PODFILE CHECKSUM: fed1a1aa73e7405ed59ad9f1441a792ea394d47a
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.9.3

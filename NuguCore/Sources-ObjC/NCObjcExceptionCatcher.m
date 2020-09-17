@@ -19,9 +19,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ObjcExceptionCatcher.h"
+#import "NCObjcExceptionCatcher.h"
 
-@implementation ObjcExceptionCatcher
+@implementation NCObjcExceptionCatcher
 
 + (NSError *)objcTry:(void(NS_NOESCAPE ^)(void))tryBlock {
     @try {

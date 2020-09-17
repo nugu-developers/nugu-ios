@@ -1,5 +1,5 @@
 //
-//  ObjcExceptionCatcher.h
+//  NCObjcExceptionCatcher.h
 //  NuguCore
 //
 //  Created by DCs-OfficeMBP on 18/03/2019.
@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ObjcExceptionCatcher : NSObject
+@interface NCObjcExceptionCatcher : NSObject
 
 + (NSError *)objcTry:(void(NS_NOESCAPE ^)(void))tryBlock;
 
