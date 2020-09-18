@@ -24,7 +24,6 @@
 		73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CC23815CC9004EBBDF /* AppDelegate.swift */; };
 		73F284FF23815CC9004EBBDF /* UserDefaults+Romaine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CE23815CC9004EBBDF /* UserDefaults+Romaine.swift */; };
 		73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */; };
-		7E0713E124FE0CE9009314DA /* Container+Merge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0713E024FE0CE9009314DA /* Container+Merge.swift */; };
 		7E092F2B2452E72B009779F1 /* Keyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E092F2A2452E72B009779F1 /* Keyword.swift */; };
 		7E0B697A2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */; };
 		7E0B697C2434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */; };
@@ -179,7 +178,6 @@
 		73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Standard.swift"; sourceTree = "<group>"; };
 		73F284D223815CC9004EBBDF /* SampleApp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SampleApp.entitlements; sourceTree = "<group>"; };
 		73F284D823815CC9004EBBDF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7E0713E024FE0CE9009314DA /* Container+Merge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Container+Merge.swift"; sourceTree = "<group>"; };
 		7E092F2A2452E72B009779F1 /* Keyword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keyword.swift; sourceTree = "<group>"; };
 		7E0B696F2434A0AC00D8C6AD /* AudioPlayerSettingsTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerSettingsTemplate.swift; sourceTree = "<group>"; };
 		7E0B69712434A0AC00D8C6AD /* AudioPlayerUpdateMetadataPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerUpdateMetadataPayload.swift; sourceTree = "<group>"; };
@@ -800,7 +798,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1120;
-				LastUpgradeCheck = 1170;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = sktelecom;
 				TargetAttributes = {
 					73F2841F238157A7004EBBDF = {
@@ -1080,6 +1078,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1140,6 +1139,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
