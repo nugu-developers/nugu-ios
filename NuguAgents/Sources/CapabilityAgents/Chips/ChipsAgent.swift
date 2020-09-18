@@ -24,7 +24,7 @@ import NuguCore
 
 public final class ChipsAgent: ChipsAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .chips, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .chips, version: "1.1")
     
     // private
     private let directiveSequencer: DirectiveSequenceable

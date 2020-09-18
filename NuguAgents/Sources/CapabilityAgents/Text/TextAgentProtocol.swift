@@ -34,6 +34,7 @@ public protocol TextAgentProtocol: CapabilityAgentable {
     /// - Returns: The dialogRequestId for request.
     @discardableResult func requestTextInput(
         text: String,
+        token: String?,
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String
@@ -44,10 +45,12 @@ public protocol TextAgentProtocol: CapabilityAgentable {
 public extension TextAgentProtocol {
     @discardableResult func requestTextInput(
         text: String,
-        requestType: TextAgentRequestType = .dialog
+        token: String? = nil,
+        requestType: TextAgentRequestType
     ) -> String {
         return requestTextInput(
             text: text,
+            token: token,
             requestType: requestType,
             completion: nil
         )
@@ -55,10 +58,12 @@ public extension TextAgentProtocol {
     
     @discardableResult func requestTextInput(
         text: String,
+        requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         return requestTextInput(
             text: text,
+            token: nil,
             requestType: .dialog,
             completion: completion
         )
