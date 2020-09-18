@@ -303,7 +303,7 @@ private extension MainViewController {
         var chipsButtonList = [NuguChipsButton.NuguChipsButtonType]()
         let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
         chipsButtonList.append(contentsOf: actionButtonList)
-        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
+        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0) }
         chipsButtonList.append(contentsOf: normalButtonList)
         nuguVoiceChrome.setChipsData(
             chipsData: chipsButtonList,
