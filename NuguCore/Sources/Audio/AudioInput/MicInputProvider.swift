@@ -62,8 +62,12 @@ public class MicInputProvider {
     public func stop() {
         log.debug("try to stop")
         
-        audioEngine.inputNode.removeTap(onBus: audioBus)
-        audioEngine.stop()
+        if let error = ObjcExceptionCatcher.objcTry({
+            audioEngine.inputNode.removeTap(onBus: audioBus)
+            audioEngine.stop()
+        }) {
+            log.error("stop error: \(error)\n")
+        }
     }
     
     private func beginTappingMicrophone(tapBlock: @escaping AVAudioNodeTapBlock) throws {
