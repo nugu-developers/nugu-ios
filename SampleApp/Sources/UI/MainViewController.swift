@@ -253,13 +253,8 @@ private extension MainViewController {
         )
         
         view.addSubview(self.nuguVoiceChrome)
-        
         nuguButton.isActivated = false
-        
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
-        }
+        showVoiceChrome()
         
         NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { [weak self] success in
             guard let self = self else { return }
@@ -279,6 +274,13 @@ private extension MainViewController {
                     return
                 }
             }
+        }
+    }
+    
+    func showVoiceChrome() {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self = self else { return }
+            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
         }
     }
     
@@ -584,36 +586,41 @@ extension MainViewController: DialogStateDelegate {
         case .speaking:
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
-                guard isMultiturn else {
-                    self?.dismissVoiceChrome()
+                guard let self = self else { return }
+                guard isMultiturn == true else {
+                    self.dismissVoiceChrome()
                     return
                 }
+                // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
+                if self.view.subviews.contains(self.nuguVoiceChrome) == false {
+                    self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
+                    self.view.addSubview(self.nuguVoiceChrome)
+                    self.showVoiceChrome()
+                } else {
+                    if self.nuguVoiceChrome.frame.origin.y != self.view.frame.size.height - self.nuguVoiceChrome.bounds.height {
+                        self.showVoiceChrome()
+                    }
+                }
+                self.addTapGestureRecognizerForDismissVoiceChrome()
                 if let chips = chips {
                     let actionList = chips.filter { $0.type == .action }.map { $0.text }
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
-                    self?.setChipsButton(actionList: actionList, normalList: normalList)
+                    self.setChipsButton(actionList: actionList, normalList: normalList)
                 }
-                
-                self?.nuguVoiceChrome.changeState(state: .speaking)
+                self.nuguVoiceChrome.changeState(state: .speaking)
             }
         case .listening:
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
-                let showVoiceChromeAnimation = {
-                    UIView.animate(withDuration: 0.3) { [weak self] in
-                        guard let self = self else { return }
-                        self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
-                    }
-                }
                 if self.view.subviews.contains(self.nuguVoiceChrome) == false {
                     self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
                     self.view.addSubview(self.nuguVoiceChrome)
-                    showVoiceChromeAnimation()
+                    self.showVoiceChrome()
                 } else {
                     if self.nuguVoiceChrome.frame.origin.y != self.view.frame.size.height - self.nuguVoiceChrome.bounds.height {
-                        showVoiceChromeAnimation()
+                        self.showVoiceChrome()
                     }
                 }
                 self.addTapGestureRecognizerForDismissVoiceChrome()
