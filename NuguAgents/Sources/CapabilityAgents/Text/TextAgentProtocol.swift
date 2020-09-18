@@ -64,7 +64,7 @@ public extension TextAgentProtocol {
         return requestTextInput(
             text: text,
             token: nil,
-            requestType: .dialog,
+            requestType: requestType,
             completion: completion
         )
     }
