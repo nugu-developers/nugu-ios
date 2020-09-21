@@ -28,7 +28,7 @@ extension ASRAgent {
         let dialogAttributes: [String: AnyHashable]?
         
         public enum TypeInfo {
-            case recognize(options: ASROptions)
+            case recognize(initiator: ASRInitiator, options: ASROptions)
             case responseTimeout
             case listenTimeout
             case stopRecognize
@@ -43,7 +43,7 @@ extension ASRAgent.Event: Eventable {
     public var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable?]
         switch typeInfo {
-        case .recognize(let options):
+        case .recognize(let initiator, let options):
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
@@ -59,7 +59,7 @@ extension ASRAgent.Event: Eventable {
                 ]
             ]
             
-            if case let .wakeUpKeyword(keyword, _, start, end, detection) = options.initiator {
+            if case let .wakeUpKeyword(keyword, _, start, end, detection) = initiator {
                 var wakeup: [String: AnyHashable?] = ["word": keyword]
                 if options.endPointing == .server {
                     /**
