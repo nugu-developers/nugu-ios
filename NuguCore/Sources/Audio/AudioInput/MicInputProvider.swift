@@ -60,7 +60,7 @@ public class MicInputProvider {
     public func stop() {
         log.debug("try to stop")
         
-        if let error = ObjcExceptionCatcher.objcTry({
+        if let error = NCObjcExceptionCatcher.objcTry({
             audioEngine.inputNode.removeTap(onBus: audioBus)
             audioEngine.stop()
         }) {
