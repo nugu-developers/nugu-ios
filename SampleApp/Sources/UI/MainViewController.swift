@@ -242,7 +242,7 @@ private extension MainViewController {
 // MARK: - Private (Voice Chrome)
 
 private extension MainViewController {
-    func presentVoiceChrome(initiator: ASROptions.Initiator) {
+    func presentVoiceChrome(initiator: ASRInitiator) {
         voiceChromeDismissWorkItem?.cancel()
         nuguVoiceChrome.removeFromSuperview()
         nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
@@ -271,14 +271,7 @@ private extension MainViewController {
                 return
             }
             
-            NuguCentralManager.shared.startRecognition(initiator: initiator) { [weak self] success in
-                guard success == true else {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.dismissVoiceChrome()
-                    }
-                    return
-                }
-            }
+            NuguCentralManager.shared.startRecognition(initiator: initiator)
         }
     }
     

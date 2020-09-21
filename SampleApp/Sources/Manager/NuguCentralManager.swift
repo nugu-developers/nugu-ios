@@ -40,6 +40,12 @@ final class NuguCentralManager {
         client.systemAgent.add(systemAgentDelegate: self)
         client.soundAgent.dataSource = self
         
+        if let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") {
+            client.asrAgent.options = ASROptions(endPointing: .client(epdFile: epdFile))
+        } else {
+            log.error("EPD model file not exist")
+        }
+        
         return client
     }()
     
@@ -479,16 +485,8 @@ extension NuguCentralManager {
 // MARK: - Internal (ASR)
 
 extension NuguCentralManager {
-    func startRecognition(initiator: ASROptions.Initiator, completion: (Bool) -> Void) {
-        guard let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") else {
-            log.error("EPD model file not exist")
-            completion(false)
-            return
-        }
-        
-        let options = ASROptions(initiator: initiator, endPointing: .client(epdFile: epdFile))
-        client.asrAgent.startRecognition(options: options)
-        completion(true)
+    func startRecognition(initiator: ASRInitiator) {
+        client.asrAgent.startRecognition(initiator: initiator)
     }
     
     func stopRecognition() {

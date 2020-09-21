@@ -1,8 +1,8 @@
 //
-//  ASRRequest.swift
+//  ASRInitiator.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 13/05/2019.
+//  Created by MinChul Lee on 2020/09/21.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,9 @@
 
 import Foundation
 
-import NuguCore
 
-struct ASRRequest {
-    let contextPayload: [ContextInfo]
-    let eventIdentifier: EventIdentifier
-    let initiator: ASRInitiator
-    let options: ASROptions
-    let referrerDialogRequestId: String?
-    let completion: ((StreamDataState) -> Void)?
+public enum ASRInitiator: Equatable {
+    case wakeUpKeyword(keyword: String?, data: Data, start: Int, end: Int, detection: Int)
+    case user
+    case scenario
 }

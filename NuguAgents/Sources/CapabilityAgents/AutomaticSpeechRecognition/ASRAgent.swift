@@ -50,13 +50,13 @@ public final class ASRAgent: ASRAgentProtocol {
         return dateFormatter
     }()
     
-    private var options: ASROptions = ASROptions(endPointing: .server)
     private var endPointDetector: EndPointDetectable?
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
     private let asrDelegates = DelegateSet<ASRAgentDelegate>()
     
+    public var options: ASROptions = ASROptions(endPointing: .server)
     private(set) public var asrState: ASRState = .idle {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
@@ -221,11 +221,10 @@ public extension ASRAgent {
     }
     
     @discardableResult func startRecognition(
-        options: ASROptions,
+        initiator: ASRInitiator,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
-        self.options = options
-        return startRecognition(options: options, by: nil, completion: completion)
+        return startRecognition(initiator: initiator, by: nil, completion: completion)
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -266,7 +265,7 @@ public extension ASRAgent {
 
 extension ASRAgent: FocusChannelDelegate {
     public func focusChannelPriority() -> FocusChannelPriority {
-        switch asrRequest?.options.initiator {
+        switch asrRequest?.initiator {
         case .scenario: return .dmRecognition
         default: return .userRecognition
         }
@@ -436,8 +435,7 @@ private extension ASRAgent {
                     })
                 self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
 
-                self.options.initiator = .scenario
-                self.startRecognition(options: self.options, by: directive)
+                self.startRecognition(initiator: .scenario, by: directive)
             }
         }
     }
@@ -538,7 +536,7 @@ private extension ASRAgent {
         }
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(options: asrRequest.options),
+                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options),
                 dialogAttributes: dialogAttributeStore.attributes
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,
@@ -614,11 +612,11 @@ private extension ASRAgent {
     }
     
     @discardableResult func startRecognition(
-        options: ASROptions,
+        initiator: ASRInitiator,
         by directive: Downstream.Directive?,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
-        log.debug("startRecognition, initiator: \(options.initiator)")
+        log.debug("startRecognition, initiator: \(initiator)")
         let eventIdentifier = EventIdentifier()
         if options.endPointing == .server {
             log.warning("Server side end point detector does not support yet.")
@@ -645,7 +643,8 @@ private extension ASRAgent {
                 self.asrRequest = ASRRequest(
                     contextPayload: contextPayload,
                     eventIdentifier: eventIdentifier,
-                    options: options,
+                    initiator: initiator,
+                    options: self.options,
                     referrerDialogRequestId: directive?.header.dialogRequestId,
                     completion: completion
                 )

@@ -30,7 +30,6 @@ public struct ASROptions {
     /// The engine waits this time then consider speech end.
     public let pauseLength: TimeIntervallic
     public let sampleRate = 16000.0
-    public var initiator: Initiator
     public let encoding: Encoding
     public let endPointing: EndPointing
     
@@ -42,22 +41,14 @@ public struct ASROptions {
         maxDuration: TimeIntervallic = NuguTimeInterval(seconds: 10),
         timeout: TimeIntervallic = NuguTimeInterval(seconds: 7),
         pauseLength: TimeIntervallic = NuguTimeInterval(milliseconds: 700),
-        initiator: Initiator = .user,
         encoding: Encoding = .partial,
         endPointing: EndPointing
     ) {
         self.maxDuration = maxDuration
         self.timeout = timeout
         self.pauseLength = pauseLength
-        self.initiator = initiator
         self.encoding = encoding
         self.endPointing = endPointing
-    }
-
-    public enum Initiator: Equatable {
-        case wakeUpKeyword(keyword: String?, data: Data, start: Int, end: Int, detection: Int)
-        case user
-        case scenario
     }
 
     public enum Encoding {
