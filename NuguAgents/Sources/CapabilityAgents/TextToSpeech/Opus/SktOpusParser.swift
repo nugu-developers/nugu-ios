@@ -45,9 +45,9 @@ class SktOpusParser {
             let contentSize = Int(contentSizeData[3]) | (Int(contentSizeData[2]) << 8) | (Int(contentSizeData[1]) << 16) | (Int(contentSizeData[0]) << 24)
             
             // garbage from server. (we don't know the reason why this useless byte is sent by server)
-            let rangeData = packetizedDataStream.subdata(in: Self.contentSizeIndicatorByteCount..<Self.headerSize)
-            let range = Int(rangeData[3]) | (Int(rangeData[2]) << 8) | (Int(rangeData[1]) << 16) | (Int(rangeData[0]) << 24)
-            log.debug("contentSize: \(contentSize), range: \(range), remainedData: \(packetizedDataStream.count)")
+//            let rangeData = packetizedDataStream.subdata(in: Self.contentSizeIndicatorByteCount..<Self.headerSize)
+//            let range = Int(rangeData[3]) | (Int(rangeData[2]) << 8) | (Int(rangeData[1]) << 16) | (Int(rangeData[0]) << 24)
+//            log.debug("contentSize: \(contentSize), range: \(range), remainedData: \(packetizedDataStream.count)")
             packetizedDataStream = packetizedDataStream.subdata(in: Self.headerSize..<packetizedDataStream.count)
             
             // extract payload.
