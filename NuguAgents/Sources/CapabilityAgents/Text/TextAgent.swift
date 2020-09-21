@@ -68,10 +68,11 @@ public final class TextAgent: TextAgentProtocol {
 extension TextAgent {
     @discardableResult public func requestTextInput(
         text: String,
+        token: String?,
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
-        return sendTextInput(text: text, token: nil, requestType: requestType, completion: completion)
+        return sendTextInput(text: text, token: token, requestType: requestType, completion: completion)
     }
 }
 

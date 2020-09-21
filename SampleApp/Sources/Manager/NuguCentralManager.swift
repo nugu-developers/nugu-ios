@@ -501,8 +501,10 @@ extension NuguCentralManager {
         client.dialogStateAggregator.isChipsRequestInProgress = true
         client.asrAgent.stopRecognition()
 
+        // TODO: - Pass token
         client.textAgent.requestTextInput(
             text: text,
+            token: nil,
             requestType: requestType
         ) { state in
             switch state {

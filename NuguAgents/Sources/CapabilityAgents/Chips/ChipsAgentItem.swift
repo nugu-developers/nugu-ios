@@ -32,6 +32,7 @@ public struct ChipsAgentItem {
     public struct Chip {
         public let type: ItemType?
         public let text: String
+        public let token: String?
         
         public enum ItemType: String, Decodable {
             case action = "ACTION"
@@ -62,6 +63,7 @@ extension ChipsAgentItem.Chip: Decodable {
     enum CodingKeys: String, CodingKey {
         case type
         case text
+        case token
     }
     
     public init(from decoder: Decoder) throws {
@@ -69,6 +71,7 @@ extension ChipsAgentItem.Chip: Decodable {
         
         type = try? container.decode(ItemType.self, forKey: .type)
         text = try container.decode(String.self, forKey: .text)
+        token = try? container.decode(String.self, forKey: .token)
     }
 }
 
