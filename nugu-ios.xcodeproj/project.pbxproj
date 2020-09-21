@@ -112,8 +112,6 @@
 		1FFFF3C72375707100C9A177 /* FocusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF36F2375707000C9A177 /* FocusManager.swift */; };
 		1FFFF3C82375707100C9A177 /* FocusConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3702375707000C9A177 /* FocusConst.swift */; };
 		1FFFF3CB2375707100C9A177 /* DirectiveSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3752375707000C9A177 /* DirectiveSequencer.swift */; };
-		1FFFF3D4237570C900C9A177 /* ObjcExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3D2237570C900C9A177 /* ObjcExceptionCatcher.m */; };
-		1FFFF3D5237570C900C9A177 /* ObjcExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF3D3237570C900C9A177 /* ObjcExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF3D62375729500C9A177 /* NuguCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFEFFF23753F1800C9A177 /* NuguCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3D92375735E00C9A177 /* NuguClient.swift */; };
 		1FFFF3FD2375740600C9A177 /* libSpeexApi.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF3EF2375740600C9A177 /* libSpeexApi.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -477,6 +475,8 @@
 		7E3C5707244FC62300FF36DF /* AtomicDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3C5706244FC62300FF36DF /* AtomicDictionary.swift */; };
 		7E3C570F2450049C00FF36DF /* Keyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3C570E2450049C00FF36DF /* Keyword.swift */; };
 		7E4382542418DAB200053A0D /* PlayStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4382532418DAB200053A0D /* PlayStack.swift */; };
+		7E553C7A25132E66008E4D89 /* NCObjcExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E553C7825132E66008E4D89 /* NCObjcExceptionCatcher.m */; };
+		7E553C7B25132E66008E4D89 /* NCObjcExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7E5F4896243C3C8A00118054 /* SoundAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5F4895243C3C8A00118054 /* SoundAgent.swift */; };
 		7E5F4898243C40EB00118054 /* SoundMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5F4897243C40EB00118054 /* SoundMedia.swift */; };
 		7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5F4899243C44AF00118054 /* SoundAgent+Event.swift */; };
@@ -840,8 +840,6 @@
 		1FFFF3702375707000C9A177 /* FocusConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusConst.swift; sourceTree = "<group>"; };
 		1FFFF3722375707000C9A177 /* DialogStateAggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogStateAggregator.swift; sourceTree = "<group>"; };
 		1FFFF3752375707000C9A177 /* DirectiveSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectiveSequencer.swift; sourceTree = "<group>"; };
-		1FFFF3D2237570C900C9A177 /* ObjcExceptionCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjcExceptionCatcher.m; sourceTree = "<group>"; };
-		1FFFF3D3237570C900C9A177 /* ObjcExceptionCatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcExceptionCatcher.h; sourceTree = "<group>"; };
 		1FFFF3D92375735E00C9A177 /* NuguClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClient.swift; sourceTree = "<group>"; };
 		1FFFF3EF2375740600C9A177 /* libSpeexApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libSpeexApi.h; sourceTree = "<group>"; };
 		1FFFF3F02375740600C9A177 /* debugLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debugLog.h; sourceTree = "<group>"; };
@@ -1172,6 +1170,8 @@
 		7E3C570E2450049C00FF36DF /* Keyword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyword.swift; sourceTree = "<group>"; };
 		7E4382532418DAB200053A0D /* PlayStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStack.swift; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
+		7E553C7825132E66008E4D89 /* NCObjcExceptionCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCObjcExceptionCatcher.m; sourceTree = "<group>"; };
+		7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCObjcExceptionCatcher.h; sourceTree = "<group>"; };
 		7E5F4895243C3C8A00118054 /* SoundAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundAgent.swift; sourceTree = "<group>"; };
 		7E5F4897243C40EB00118054 /* SoundMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMedia.swift; sourceTree = "<group>"; };
 		7E5F4899243C44AF00118054 /* SoundAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SoundAgent+Event.swift"; sourceTree = "<group>"; };
@@ -1975,8 +1975,8 @@
 		1FFFF3D1237570C900C9A177 /* Sources-ObjC */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF3D3237570C900C9A177 /* ObjcExceptionCatcher.h */,
-				1FFFF3D2237570C900C9A177 /* ObjcExceptionCatcher.m */,
+				7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */,
+				7E553C7825132E66008E4D89 /* NCObjcExceptionCatcher.m */,
 			);
 			path = "Sources-ObjC";
 			sourceTree = "<group>";
@@ -2916,8 +2916,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E553C7B25132E66008E4D89 /* NCObjcExceptionCatcher.h in Headers */,
 				1FFFF3D62375729500C9A177 /* NuguCore.h in Headers */,
-				1FFFF3D5237570C900C9A177 /* ObjcExceptionCatcher.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3217,6 +3217,7 @@
 				TargetAttributes = {
 					1FFFEFFC23753F1800C9A177 = {
 						CreatedOnToolsVersion = 11.0;
+						LastSwiftMigration = 1170;
 					};
 					1FFFF00923753F3100C9A177 = {
 						CreatedOnToolsVersion = 11.0;
@@ -3530,6 +3531,7 @@
 				1FFFF3C82375707100C9A177 /* FocusConst.swift in Sources */,
 				7373895924A473A60018DDD2 /* FocusManageable.swift in Sources */,
 				7373892C24A46D430018DDD2 /* StreamDataState.swift in Sources */,
+				7E553C7A25132E66008E4D89 /* NCObjcExceptionCatcher.m in Sources */,
 				7373894224A46E5F0018DDD2 /* ContextInfo.swift in Sources */,
 				73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */,
 				735A4CE2241173F4004E7A41 /* EventSenderError.swift in Sources */,
@@ -3548,7 +3550,6 @@
 				7373893824A46D6C0018DDD2 /* AuthorizationStoreDelegate.swift in Sources */,
 				735A4CC624117339004E7A41 /* MultiPartParserError.swift in Sources */,
 				7E35D79A24623B53003289A2 /* MicInputError.swift in Sources */,
-				1FFFF3D4237570C900C9A177 /* ObjcExceptionCatcher.m in Sources */,
 				73454FBD2382C1E50073AF48 /* Publish.swift in Sources */,
 				1FFFF3CB2375707100C9A177 /* DirectiveSequencer.swift in Sources */,
 				1FFFF3892375707000C9A177 /* SharedBufferError.swift in Sources */,
@@ -4092,7 +4093,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 0.18.0;
-				MODULEMAP_FILE = "$(SRCROOT)/NuguCore/NuguCore.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4130,7 +4130,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 0.18.0;
-				MODULEMAP_FILE = "$(SRCROOT)/NuguCore/NuguCore.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
