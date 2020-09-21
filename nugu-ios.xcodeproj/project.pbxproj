@@ -482,6 +482,7 @@
 		7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5F4899243C44AF00118054 /* SoundAgent+Event.swift */; };
 		7E6D1180249C6E8100E3580C /* SessionConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D117E249C6E8100E3580C /* SessionConst.swift */; };
 		7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D117F249C6E8100E3580C /* SessionManager.swift */; };
+		7E8050AA2518A69300994786 /* ASRInitiator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E8050A92518A69300994786 /* ASRInitiator.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
 		7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFA247F3B5A008731CD /* SessionAgent.swift */; };
 		7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */; };
@@ -1177,6 +1178,7 @@
 		7E5F4899243C44AF00118054 /* SoundAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SoundAgent+Event.swift"; sourceTree = "<group>"; };
 		7E6D117E249C6E8100E3580C /* SessionConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionConst.swift; sourceTree = "<group>"; };
 		7E6D117F249C6E8100E3580C /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		7E8050A92518A69300994786 /* ASRInitiator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRInitiator.swift; sourceTree = "<group>"; };
 		7EA53EFA247F3B5A008731CD /* SessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgent.swift; sourceTree = "<group>"; };
 		7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgentItem.swift; sourceTree = "<group>"; };
 		7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogAttributeStore.swift; sourceTree = "<group>"; };
@@ -1823,6 +1825,7 @@
 		1FFFF3422375707000C9A177 /* AutomaticSpeechRecognition */ = {
 			isa = PBXGroup;
 			children = (
+				7E8050A92518A69300994786 /* ASRInitiator.swift */,
 				7303C68223C5BF5E00610343 /* EndPointDetector */,
 				1FFFF3432375707000C9A177 /* ASRAgent.swift */,
 				1FFFF3482375707000C9A177 /* ASRAgent+Event.swift */,
@@ -2421,17 +2424,9 @@
 				7E2DFE9C24B850F900792529 /* Directive */,
 				1FFFF2A32375703000C9A177 /* Event */,
 				73152FE123E047F200F843C3 /* Extension */,
-				73152FDD23E045AB00F843C3 /* Util */,
 				73152FDB23E0451900F843C3 /* NuguAgents.swift */,
 			);
 			path = Sources;
-			sourceTree = "<group>";
-		};
-		73152FDD23E045AB00F843C3 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Util;
 			sourceTree = "<group>";
 		};
 		73152FE123E047F200F843C3 /* Extension */ = {
@@ -3903,6 +3898,7 @@
 				737388E624A46C5D0018DDD2 /* AudioPlayerAgentProtocol.swift in Sources */,
 				7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */,
 				73152FC323E0414F00F843C3 /* SystemAgent+Event.swift in Sources */,
+				7E8050AA2518A69300994786 /* ASRInitiator.swift in Sources */,
 				7E5F4896243C3C8A00118054 /* SoundAgent.swift in Sources */,
 				737388FE24A46C930018DDD2 /* SystemAgentProtocol.swift in Sources */,
 				7373890724A46CA10018DDD2 /* TTSState.swift in Sources */,
