@@ -102,9 +102,15 @@ final public class NuguVoiceChrome: UIView {
         // swiftlint:enable force_cast
         view.frame = bounds
         addSubview(view)
-        backgroundView.layer.cornerRadius = 12.0
-        backgroundView.layer.borderColor = UIColor.black.withAlphaComponent(0.1).cgColor
-        backgroundView.layer.borderWidth = 0.5
+        
+        let path = UIBezierPath(
+            roundedRect: bounds,
+            byRoundingCorners: [.topLeft, .topRight],
+            cornerRadii: CGSize(width: 12.0, height: 12.0)
+        )
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        backgroundView.layer.mask = mask
         backgroundView.clipsToBounds = true
         
         layer.shadowColor = UIColor.black.cgColor
