@@ -250,8 +250,8 @@ private extension MainViewController {
         showVoiceChrome()
         
         setChipsButton(
-            actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
-            normalList: ["라디오 목록 알려줘", "템플릿 열어줘", "템플릿에서 도움말1", "주말 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
+            actionList: [("오늘 날씨 알려줘", nil), ("습도 알려줘", nil)],
+            normalList: [("라디오 목록 알려줘", nil), ("템플릿 열어줘", nil), ("템플릿에서 도움말1", nil), ("주말 날씨 알려줘", nil), ("오존 농도 알려줘", nil), ("멜론 틀어줘", nil), ("NUGU 토픽 알려줘", nil)]
         )
         nuguButton.isActivated = false
         
@@ -304,16 +304,16 @@ private extension MainViewController {
         })
     }
     
-    func setChipsButton(actionList: [String], normalList: [String]) {
+    func setChipsButton(actionList: [(text: String, token: String?)], normalList: [(text: String, token: String?)]) {
         var chipsButtonList = [NuguChipsButton.NuguChipsButtonType]()
-        let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
+        let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0.text, token: $0.token) }
         chipsButtonList.append(contentsOf: actionButtonList)
-        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0) }
+        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0.text, token: $0.token) }
         chipsButtonList.append(contentsOf: normalButtonList)
         nuguVoiceChrome.setChipsData(
             chipsData: chipsButtonList,
-            onChipsSelect: { [weak self] selectedChipsText in
-                self?.chipsDidSelect(selectedChipsText: selectedChipsText)
+            onChipsSelect: { [weak self] selectedChips in
+                self?.chipsDidSelect(selectedChips: selectedChips)
             }
         )
     }
@@ -328,8 +328,8 @@ private extension MainViewController {
 // MARK: - Private (Chips Selection)
 
 private extension MainViewController {
-    func chipsDidSelect(selectedChipsText: String?) {
-        guard let selectedChipsText = selectedChipsText,
+    func chipsDidSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
+        guard let selectedChips = selectedChips,
             let window = UIApplication.shared.keyWindow else { return }
         
         let indicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -339,7 +339,7 @@ private extension MainViewController {
         indicator.startAnimating()
         window.addSubview(indicator)
         
-        NuguCentralManager.shared.requestTextInput(text: selectedChipsText, requestType: .dialog) {
+        NuguCentralManager.shared.requestTextInput(text: selectedChips.text, token: selectedChips.token, requestType: .dialog) {
             DispatchQueue.main.async {
                 indicator.removeFromSuperview()
             }
@@ -439,8 +439,8 @@ private extension MainViewController {
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
         }
-        displayView.onChipsSelect = { [weak self] (selectedChipsText) in
-            self?.chipsDidSelect(selectedChipsText: selectedChipsText)
+        displayView.onChipsSelect = { [weak self] (selectedChips) in
+            self?.chipsDidSelect(selectedChips: selectedChips)
         }
         displayView.onNuguButtonClick = { [weak self] in
             self?.presentVoiceChrome(initiator: .user)
@@ -512,8 +512,8 @@ private extension MainViewController {
         audioPlayerView.onUserInteraction = {
             NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
         }
-        audioPlayerView.onChipsSelect = { [weak self] selectedChipsText in
-            self?.chipsDidSelect(selectedChipsText: selectedChipsText)
+        audioPlayerView.onChipsSelect = { [weak self] selectedChips in
+            self?.chipsDidSelect(selectedChips: selectedChips)
         }
         audioPlayerView.onNuguButtonClick = { [weak self] in
             self?.presentVoiceChrome(initiator: .user)
@@ -599,8 +599,8 @@ extension MainViewController: DialogStateDelegate {
                 // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
                 self.showVoiceChrome()
                 if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { $0.text }
-                    let normalList = chips.filter { $0.type == .general }.map { $0.text }
+                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
+                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                     self.setChipsButton(actionList: actionList, normalList: normalList)
                 }
                 self.nuguVoiceChrome.changeState(state: .speaking)
@@ -612,8 +612,8 @@ extension MainViewController: DialogStateDelegate {
                 // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
                 self.showVoiceChrome()
                 if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { $0.text }
-                    let normalList = chips.filter { $0.type == .general }.map { $0.text }
+                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
+                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                     self.setChipsButton(actionList: actionList, normalList: normalList)
                 }
                 if isMultiturn || sessionActivated {

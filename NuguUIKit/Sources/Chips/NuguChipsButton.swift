@@ -46,15 +46,24 @@ final public class NuguChipsButton: UIButton {
     // MARK: - NuguChipsButton.NuguChipsButtonType
     
     public enum NuguChipsButtonType {
-        case action(text: String)
-        case normal(text: String)
+        case action(text: String, token: String? = nil)
+        case normal(text: String, token: String? = nil)
         
-        var text: String {
+        public var text: String {
             switch self {
-            case .action(let text):
+            case .action(let text, _):
                 return text
-            case .normal(let text):
+            case .normal(let text, _):
                 return text
+            }
+        }
+        
+        public var token: String? {
+            switch self {
+            case .action(_, let token):
+                return token
+            case .normal(_, let token):
+                return token
             }
         }
         

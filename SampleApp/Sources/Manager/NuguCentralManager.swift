@@ -497,14 +497,13 @@ extension NuguCentralManager {
 // MARK: - Internal (Text)
 
 extension NuguCentralManager {
-    func requestTextInput(text: String, requestType: TextAgentRequestType, completion: (() -> Void)? = nil) {
+    func requestTextInput(text: String, token: String? = nil, requestType: TextAgentRequestType, completion: (() -> Void)? = nil) {
         client.dialogStateAggregator.isChipsRequestInProgress = true
         client.asrAgent.stopRecognition()
 
-        // TODO: - Pass token
         client.textAgent.requestTextInput(
             text: text,
-            token: nil,
+            token: token,
             requestType: requestType
         ) { state in
             switch state {
