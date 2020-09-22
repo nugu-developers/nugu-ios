@@ -246,20 +246,14 @@ private extension MainViewController {
         voiceChromeDismissWorkItem?.cancel()
         nuguVoiceChrome.removeFromSuperview()
         nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
+        view.addSubview(self.nuguVoiceChrome)
+        showVoiceChrome()
         
         setChipsButton(
             actionList: ["오늘 날씨 알려줘", "습도 알려줘"],
             normalList: ["라디오 목록 알려줘", "템플릿 열어줘", "템플릿에서 도움말1", "주말 날씨 알려줘", "오존 농도 알려줘", "멜론 틀어줘", "NUGU 토픽 알려줘"]
         )
-        
-        view.addSubview(self.nuguVoiceChrome)
-        
         nuguButton.isActivated = false
-        
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
-        }
         
         NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { [weak self] success in
             guard let self = self else { return }
@@ -273,6 +267,26 @@ private extension MainViewController {
             
             NuguCentralManager.shared.startRecognition(initiator: initiator)
         }
+    }
+    
+    func showVoiceChrome() {
+        let showAnimation = {
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                guard let self = self else { return }
+                self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
+            }
+        }
+        
+        if view.subviews.contains(nuguVoiceChrome) == false {
+            nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
+            view.addSubview(nuguVoiceChrome)
+            showAnimation()
+        } else {
+            if nuguVoiceChrome.frame.origin.y != view.frame.size.height - nuguVoiceChrome.bounds.height {
+                showAnimation()
+            }
+        }
+        addTapGestureRecognizerForDismissVoiceChrome()
     }
     
     func dismissVoiceChrome() {
@@ -294,7 +308,7 @@ private extension MainViewController {
         var chipsButtonList = [NuguChipsButton.NuguChipsButtonType]()
         let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
         chipsButtonList.append(contentsOf: actionButtonList)
-        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0) }
+        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0) }
         chipsButtonList.append(contentsOf: normalButtonList)
         nuguVoiceChrome.setChipsData(
             chipsData: chipsButtonList,
@@ -573,43 +587,30 @@ extension MainViewController: DialogStateDelegate {
                 self?.dismissVoiceChrome()
             })
             guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: voiceChromeDismissWorkItem)
+            DispatchQueue.main.async(execute: voiceChromeDismissWorkItem)
         case .speaking:
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
-                guard isMultiturn else {
-                    self?.dismissVoiceChrome()
+                guard let self = self else { return }
+                guard isMultiturn == true else {
+                    self.dismissVoiceChrome()
                     return
                 }
+                // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
+                self.showVoiceChrome()
                 if let chips = chips {
                     let actionList = chips.filter { $0.type == .action }.map { $0.text }
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
-                    self?.setChipsButton(actionList: actionList, normalList: normalList)
+                    self.setChipsButton(actionList: actionList, normalList: normalList)
                 }
-                
-                self?.nuguVoiceChrome.changeState(state: .speaking)
+                self.nuguVoiceChrome.changeState(state: .speaking)
             }
         case .listening:
             voiceChromeDismissWorkItem?.cancel()
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
-                let showVoiceChromeAnimation = {
-                    UIView.animate(withDuration: 0.3) { [weak self] in
-                        guard let self = self else { return }
-                        self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
-                    }
-                }
-                if self.view.subviews.contains(self.nuguVoiceChrome) == false {
-                    self.nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
-                    self.view.addSubview(self.nuguVoiceChrome)
-                    showVoiceChromeAnimation()
-                } else {
-                    if self.nuguVoiceChrome.frame.origin.y != self.view.frame.size.height - self.nuguVoiceChrome.bounds.height {
-                        showVoiceChromeAnimation()
-                    }
-                }
-                self.addTapGestureRecognizerForDismissVoiceChrome()
+                self.showVoiceChrome()
                 if let chips = chips {
                     let actionList = chips.filter { $0.type == .action }.map { $0.text }
                     let normalList = chips.filter { $0.type == .general }.map { $0.text }
