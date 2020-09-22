@@ -426,12 +426,12 @@ private extension MainViewController {
             case .elementSelected(let token, let postback):
                 guard let token = token else { return }
                 NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
-            case .textInput(let textInput):
+            case .textInput(let token, let textInput):
                 guard let textInput = textInput  else { return }
                 if let playServiceId = textInput.playServiceId {
-                    NuguCentralManager.shared.requestTextInput(text: textInput.text, requestType: .specific(playServiceId: playServiceId))
+                    NuguCentralManager.shared.requestTextInput(text: textInput.text, token: token, requestType: .specific(playServiceId: playServiceId))
                 } else {
-                    NuguCentralManager.shared.requestTextInput(text: textInput.text, requestType: .normal)
+                    NuguCentralManager.shared.requestTextInput(text: textInput.text, token: token, requestType: .normal)
                 }
             }
         }

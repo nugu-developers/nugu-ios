@@ -114,7 +114,7 @@ extension TextList4View: UITableViewDelegate {
         case .elementSelected:
             onItemSelect?(DisplayItemEventType.elementSelected(token: textList4Items?[indexPath.row].token, postback: nil))
         case .textInput:
-            onItemSelect?(DisplayItemEventType.textInput(textInput: textList4Items?[indexPath.row].textInput))
+            onItemSelect?(DisplayItemEventType.textInput(token: textList4Items?[indexPath.row].token, textInput: textList4Items?[indexPath.row].textInput))
         default:
             break
         }

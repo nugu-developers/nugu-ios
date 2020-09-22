@@ -119,7 +119,7 @@ extension ImageList2View: UITableViewDelegate {
         case .elementSelected:
             onItemSelect?(DisplayItemEventType.elementSelected(token: imageList2Items?[indexPath.row].token, postback: nil))
         case .textInput:
-            onItemSelect?(DisplayItemEventType.textInput(textInput: imageList2Items?[indexPath.row].textInput))
+            onItemSelect?(DisplayItemEventType.textInput(token: imageList2Items?[indexPath.row].token, textInput: imageList2Items?[indexPath.row].textInput))
         default:
             break
         }
