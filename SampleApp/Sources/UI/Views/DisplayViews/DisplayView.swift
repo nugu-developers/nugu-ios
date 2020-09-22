@@ -46,7 +46,7 @@ class DisplayView: UIView {
         }
     }
     
-    var onChipsSelect: ((_ text: String?) -> Void)? {
+    var onChipsSelect: ((_ selectedChips: NuguChipsButton.NuguChipsButtonType) -> Void)? {
         didSet {
             idleBar.onChipsSelect = onChipsSelect
         }

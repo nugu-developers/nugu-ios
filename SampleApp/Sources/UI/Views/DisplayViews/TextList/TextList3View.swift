@@ -137,7 +137,7 @@ extension TextList3View: UITableViewDelegate {
         case .elementSelected:
             onItemSelect?(DisplayItemEventType.elementSelected(token: textList3Items?[indexPath.row].token, postback: nil))
         case .textInput:
-            onItemSelect?(DisplayItemEventType.textInput(textInput: textList3Items?[indexPath.row].textInput))
+            onItemSelect?(DisplayItemEventType.textInput(token: textList3Items?[indexPath.row].token, textInput: textList3Items?[indexPath.row].textInput))
         default:
             break
         }

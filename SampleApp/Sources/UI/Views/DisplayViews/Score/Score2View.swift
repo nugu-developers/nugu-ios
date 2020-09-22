@@ -112,7 +112,7 @@ extension Score2View: UITableViewDelegate {
         case .elementSelected:
             onItemSelect?(DisplayItemEventType.elementSelected(token: scoreItems?[indexPath.row].token, postback: nil))
         case .textInput:
-            onItemSelect?(DisplayItemEventType.textInput(textInput: scoreItems?[indexPath.row].textInput))
+            onItemSelect?(DisplayItemEventType.textInput(token: scoreItems?[indexPath.row].token, textInput: scoreItems?[indexPath.row].textInput))
         default:
             break
         }

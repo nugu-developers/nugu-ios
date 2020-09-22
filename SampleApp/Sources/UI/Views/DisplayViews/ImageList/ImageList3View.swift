@@ -111,7 +111,7 @@ extension ImageList3View: UITableViewDelegate {
         case .elementSelected:
             onItemSelect?(DisplayItemEventType.elementSelected(token: imageList3Items?[indexPath.row].token, postback: nil))
         case .textInput:
-            onItemSelect?(DisplayItemEventType.textInput(textInput: imageList3Items?[indexPath.row].textInput))
+            onItemSelect?(DisplayItemEventType.textInput(token: imageList3Items?[indexPath.row].token, textInput: imageList3Items?[indexPath.row].textInput))
         default:
             break
         }

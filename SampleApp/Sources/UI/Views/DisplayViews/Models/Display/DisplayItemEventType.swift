@@ -8,5 +8,5 @@
 
 enum DisplayItemEventType {
     case elementSelected(token: String?, postback: [String: AnyHashable]?)
-    case textInput(textInput: DisplayCommonTemplate.Common.TextInput?)
+    case textInput(token: String? = nil, textInput: DisplayCommonTemplate.Common.TextInput?)
 }

@@ -123,7 +123,7 @@ extension TextList1View: UITableViewDelegate {
         case .elementSelected:
             onItemSelect?(DisplayItemEventType.elementSelected(token: textList1Items?[indexPath.row].token, postback: nil))
         case .textInput:
-            onItemSelect?(DisplayItemEventType.textInput(textInput: textList1Items?[indexPath.row].textInput))
+            onItemSelect?(DisplayItemEventType.textInput(token: textList1Items?[indexPath.row].token, textInput: textList1Items?[indexPath.row].textInput))
         default:
             break
         }

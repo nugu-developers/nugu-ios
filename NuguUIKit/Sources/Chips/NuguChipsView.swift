@@ -41,7 +41,7 @@ final public class NuguChipsView: UIView {
     
     // MARK: - Public Properties (configurable variables)
     
-    public var onChipsSelect: ((_ text: String?) -> Void)?
+    public var onChipsSelect: ((_ selectedChips: NuguChipsButton.NuguChipsButtonType) -> Void)?
     
     public var willStartScrolling: (() -> Void)?
     
@@ -101,6 +101,10 @@ extension NuguChipsView: UIScrollViewDelegate {
 
 @objc extension NuguChipsView {
     func chipsDidSelect(button: NuguChipsButton) {
-        onChipsSelect?(button.titleLabel?.text)
+        guard let text = button.titleLabel?.text,
+              let selectedChips = chipsData.first(where: { (chips) -> Bool in
+                return chips.text == text
+              }) else { return }
+        onChipsSelect?(selectedChips)
     }
 }
