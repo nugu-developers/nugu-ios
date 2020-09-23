@@ -3,6 +3,52 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.19.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.0)
+Released on 2020-09-23
+### Sample Application
+#### Fixed
+- Fix sample application display issues (#480)
+- Fix sample app (#510)
+
+#### Update
+- Change NuguVoiceChrome's UI (#484)
+- Add `sessionActivated` parameter to `DialogStateDelegate.dialogStateDidChange` (#481)
+- Update `SystemAgentExceptionCode` in `SystemAgent` (#488) (#492)
+- Change voice chrome dismiss and show logic (#493) (#517)
+- Apply text agent change to Sample app (#499)
+- Remove unnecessary UI changing codes (#500) 
+- Update `NuguUserInfo` due to API changes (#501)
+- Update `showTidInfo` function in `NuguLoginKit` (#507)
+- Apply detail error description (#506)
+- Add `dialogRequestId` parameter to Agent's delegate. (#504)
+- Replace supportServerInitiatedDirective with scopes (#513)
+- Pass `ASRInitiator` instead of `ASROption` to start recognition. (#520)
+- `ChipsAgent` 1.1 (upgrade capability-agent)
+- Pass token of chips and listitems (#522)
+- Stop recognition after `Text.TextInput` event sent.  (#524)
+
+### SDK
+#### Fixed
+- Send end_stream after receiving end_stream from server. (#476)
+- Fixes a crash when encoding json string. (#489)
+- Use `Single.timer` instead of `Completable.delaySubscription` to prevent crash. (#490) 
+- Remove custom module map for `NuguCore` (#515)
+- Fix crash in `MicInputProvider.stop()`. (#519)
+
+#### Update
+- Call `FocusManagerDelegate.focusShouldRelease` minimally. (#475)
+- Add "audio/mp3" and "audio/x-m4a" to supportedMimeTypeForCaching (#479)
+- Change NuguVoiceChrome's UI (#523)  (#477)  (#484) (#523)
+- Add `sessionActivated` parameter to `DialogStateDelegate.dialogStateDidChange` (#481)
+- `PhoneCallAgent` 1.1 (upgrade capability-agent) (#486) 
+- Update `SystemAgentExceptionCode` in `SystemAgent` (#488) 
+- `TextAgent` 1.3 (upgrade capability-agent)  (#487)
+- Update `NuguUserInfo` due to API changes (#501)
+- Update `showTidInfo` function in `NuguLoginKit` (#507)
+- Add `dialogRequestId` parameter to Agent's delegate. (#504)
+- Pass `ASRInitiator` instead of `ASROption` to start recognition. (#520)
+- `ChipsAgent` 1.1 (upgrade capability-agent)
+
 ## [0.18.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.18.0)
 Released on 2020-08-26
 #### Fixed

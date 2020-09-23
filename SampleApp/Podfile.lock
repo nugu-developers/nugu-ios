@@ -4,7 +4,7 @@ PODS:
   - KeenSense (0.18.0):
     - NattyLog (~> 1)
   - lottie-ios (3.1.8)
-  - NattyLog (1.2.0)
+  - NattyLog (1.2.1)
   - NuguAgents (0.18.0):
     - JadeMarble (~> 0)
     - NattyLog (~> 1)
@@ -65,7 +65,7 @@ SPEC CHECKSUMS:
   JadeMarble: f7566a4e64014a0620a757d9648e9a40c06195f4
   KeenSense: 7af60124df47813d161b9e45530d06f0c02aa73e
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
-  NattyLog: c7715745466791306a6c83bb68524d2d1b1b350d
+  NattyLog: f9ece0db2fb62178d8246f0ae033a9b64f2d7f30
   NuguAgents: 5ee1aed3346416624c5b135a34c8115bfeddf75d
   NuguClientKit: 713f9f3de5f4c6b06aad8a591cb1049b0fede97d
   NuguCore: e8f3302fd3aad330b5b7e3d6d7bf7805270128ee
