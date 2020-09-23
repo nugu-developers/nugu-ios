@@ -53,7 +53,8 @@ public class NuguClient {
         playSyncManager: playSyncManager,
         contextManager: contextManager,
         directiveSequencer: directiveSequencer,
-        sessionManager: sessionManager
+        sessionManager: sessionManager,
+        focusManager: focusManager
     )
     
     public lazy var extensionAgent: ExtensionAgentProtocol = ExtensionAgent(
