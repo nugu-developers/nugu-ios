@@ -13,6 +13,10 @@ Framework for login using OAuth 2.0
   s.documentation_url = 'https://developers.nugu.co.kr'
 
   s.ios.deployment_target = '10.0'
+
+  # Nugu does not yet support Apple Silicon
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   
   s.swift_version = '5.1'
 

@@ -1,27 +1,27 @@
 PODS:
-  - JadeMarble (0.18.0):
+  - JadeMarble (0.19.0):
     - NattyLog (~> 1)
-  - KeenSense (0.18.0):
+  - KeenSense (0.19.0):
     - NattyLog (~> 1)
   - lottie-ios (3.1.8)
   - NattyLog (1.2.1)
-  - NuguAgents (0.18.0):
+  - NuguAgents (0.19.0):
     - JadeMarble (~> 0)
     - NattyLog (~> 1)
     - NuguCore (~> 0)
     - SilverTray (~> 1)
-  - NuguClientKit (0.18.0):
+  - NuguClientKit (0.19.0):
     - KeenSense (~> 0)
     - NattyLog (~> 1)
     - NuguAgents (~> 0)
     - NuguCore (~> 0)
-  - NuguCore (0.18.0):
+  - NuguCore (0.19.0):
     - NattyLog (~> 1.0)
     - RxSwift (~> 5)
-  - NuguLoginKit (0.18.0)
-  - NuguServiceKit (0.18.0):
+  - NuguLoginKit (0.19.0)
+  - NuguServiceKit (0.19.0):
     - NattyLog (~> 1)
-  - NuguUIKit (0.18.0):
+  - NuguUIKit (0.19.0):
     - lottie-ios (~> 3)
   - RxSwift (5.1.1)
   - SilverTray (1.1.1)
@@ -62,16 +62,16 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  JadeMarble: f7566a4e64014a0620a757d9648e9a40c06195f4
-  KeenSense: 7af60124df47813d161b9e45530d06f0c02aa73e
+  JadeMarble: 127a1a2ffce933ba95e2bcef84f62da5ed343ce3
+  KeenSense: 57c883faf4ba61e659800541882ddc6692997545
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
   NattyLog: f9ece0db2fb62178d8246f0ae033a9b64f2d7f30
-  NuguAgents: 5ee1aed3346416624c5b135a34c8115bfeddf75d
-  NuguClientKit: 713f9f3de5f4c6b06aad8a591cb1049b0fede97d
-  NuguCore: e8f3302fd3aad330b5b7e3d6d7bf7805270128ee
-  NuguLoginKit: 94c61a1fbbd3c2baafd6b041d1cf05215e5c79d2
-  NuguServiceKit: bdd29cfb9eb1454e391ad953d4e80e3f24b2a99d
-  NuguUIKit: eb0b4111422d5ccc8bdf7497fc6f4f949aed13e0
+  NuguAgents: 3e2fed50ecb74d69954f97d8e304d3444b43fbed
+  NuguClientKit: b43c059e1ea44eb905916772a34c05d4c921e110
+  NuguCore: e23ac41972b7668cdd73f3a1f37105aaa6925dd7
+  NuguLoginKit: 7d54993350fe8dac3b2753bc1f764b1adee36f37
+  NuguServiceKit: 75bf7ae08ff88c4ba9c233b86977aa899e7fcf88
+  NuguUIKit: f6b97ea021edeb354f67b054a982c8ed27082ec7
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SilverTray: 293595e8d7314a1d4cbde932ce171cfb21aa7084
 

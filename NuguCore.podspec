@@ -17,6 +17,10 @@ Nugu framework for AI Service
   # s.watchos.deployment_target = '6.0'
   # s.macos.deployment_target = '10.15.0'
 
+  # Nugu does not yet support Apple Silicon
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+
   s.swift_version = '5.1'
 
   s.source_files = 'NuguCore/Interface/**/*', 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/*.{h,m}', 'NuguCore/NuguCore.h'
