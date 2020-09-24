@@ -130,3 +130,11 @@ extension Upstream.Event {
         return contextString
     }
 }
+
+// MARK: - Upstream.Attachment + CustomStringConvertible
+
+extension Upstream.Attachment: CustomStringConvertible {
+    public var description: String {
+        return "\(header))"
+    }
+}

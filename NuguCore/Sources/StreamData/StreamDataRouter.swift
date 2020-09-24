@@ -162,7 +162,7 @@ public extension StreamDataRouter {
             return
         }
 
-        log.debug("Attachment: \(attachment.header.seq), \(attachment.header.type)")
+        log.debug("Attachment: \(attachment)")
         eventSender.send(attachment)
             .subscribe(onCompleted: { [weak self] in
                 if attachment.header.isEnd {

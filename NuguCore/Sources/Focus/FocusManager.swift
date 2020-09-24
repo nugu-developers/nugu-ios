@@ -74,6 +74,7 @@ extension FocusManager {
             }
 
             if let backgroundChannelDelegate = self.backgroundChannelDelegate,
+               backgroundChannelDelegate !== channelDelegate,
                 channelDelegate.focusChannelPriority().requestPriority < backgroundChannelDelegate.focusChannelPriority().maintainPriority {
                 // Assign a higher background channel to the foreground in the future.
                 self.update(channelDelegate: channelDelegate, focusState: .background)
