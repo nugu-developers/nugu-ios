@@ -45,7 +45,7 @@ extension SampleAppError: LocalizedError {
         case .loginFailed(let error):
             return "login has failed (reason: \(error))"
         case .loginUnauthorized(let reason):
-            if reason.statusCode == 401 {
+            if reason.statusCode == 401 || reason.statusCode == 400 {
                 switch (reason.errorCode, reason.error) {
                 case ("user_account_closed", _):
                     return "탈퇴한 사용자입니다."
