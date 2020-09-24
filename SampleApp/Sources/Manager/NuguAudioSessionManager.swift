@@ -154,6 +154,8 @@ private extension NuguAudioSessionManager {
                 }
             }
             NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: false)
+            NuguCentralManager.shared.client.asrAgent.stopRecognition()
+            NuguCentralManager.shared.stopMicInputProvider()
         case .ended:
             log.debug("Interruption ended")
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
