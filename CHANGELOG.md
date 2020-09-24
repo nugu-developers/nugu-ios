@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.19.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.1)
+Released on 2020-09-24
+### Sample Application
+#### Fixed
+- Stop recognition and mic when interruption has begun (#528)
+
+#### Update
+- Include 400 error as autherror also (#528)
+
+### SDK
+#### Fixed
+- Fix a bug that incorrectly assigns focus. (#526)
+
 ## [0.19.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.0)
 Released on 2020-09-23
 ### Sample Application
