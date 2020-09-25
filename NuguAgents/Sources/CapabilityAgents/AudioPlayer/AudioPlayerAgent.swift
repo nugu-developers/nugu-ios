@@ -868,9 +868,10 @@ private extension AudioPlayerAgent {
         
         log.debug("delayReportTime: \(delayReportTime) intervalReportTime: \(intervalReportTime)")
         intervalReporter = Observable<Int>
-            .interval(.seconds(1), scheduler: audioPlayerScheduler)
+            .interval(.milliseconds(100), scheduler: audioPlayerScheduler)
             .map({ [weak self] (_) -> Int in
-                Int(self?.currentPlayer?.offset.seconds.rounded() ?? 0.0)
+                let offset = self?.currentPlayer?.offset.seconds ?? 0.0
+                return Int(ceil(offset))
             })
             .filter { $0 > 0 }
             .filter { [weak self] in
@@ -881,12 +882,15 @@ private extension AudioPlayerAgent {
             .subscribe(onNext: { [weak self] (offset) in
                 guard let self = self else { return }
                 
-                let offsetRange = (self.lastReportedOffset + 1...offset)
-                if delayReportTime > 0, offsetRange.contains(delayReportTime) {
-                    self.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
-                }
-                if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {
-                    self.sendPlayEvent(media: media, typeInfo: .progressReportIntervalElapsed)
+                if offset > self.lastReportedOffset {
+                    // Check if there is any report target between last offset and current offset.
+                    let offsetRange = (self.lastReportedOffset + 1...offset)
+                    if delayReportTime > 0, offsetRange.contains(delayReportTime) {
+                        self.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
+                    }
+                    if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {
+                        self.sendPlayEvent(media: media, typeInfo: .progressReportIntervalElapsed)
+                    }
                 }
                 self.lastReportedOffset = offset
             })
