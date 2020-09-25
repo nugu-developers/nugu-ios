@@ -3,11 +3,22 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
-## [0.19.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.1)
+## [0.19.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.3)
+Released on 2020-09-25
+### Sample Application
+#### Fixed
+- Modify `ASRBeepPlayer` to make it thread safe. (#532)
+
+### SDK
+#### Fixed
+- Fixes a bug where the progress report event does not send. (#529) 
+- Modify `FocusManager.channelInfos` to make it thread safe. (#530)
+
+## [0.19.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.2)
 Released on 2020-09-25
 ### SDK
 #### Fixed
-Remove `EXCLUDED_ARCHS` build setting for `JadeMarble`
+- Remove `EXCLUDED_ARCHS` build setting for `JadeMarble`
 
 ## [0.19.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.1)
 Released on 2020-09-24
