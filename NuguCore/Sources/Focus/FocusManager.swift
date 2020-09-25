@@ -26,7 +26,7 @@ public class FocusManager: FocusManageable {
     
     private let focusDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.focus_manager", qos: .userInitiated)
     
-    private var channelInfos = [FocusChannelInfo]()
+    @Atomic private var channelInfos = [FocusChannelInfo]()
     
     private var releaseFocusWorkItem: DispatchWorkItem?
     
