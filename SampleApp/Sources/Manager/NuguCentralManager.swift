@@ -438,6 +438,10 @@ extension NuguCentralManager {
                         NuguAudioSessionManager.shared.addEngineConfigurationChangeNotification()
                     }
                     self.micInputProvider.stop()
+                    
+                    // Control center does not work properly when mixWithOthers option has been included.
+                    // To avoid adding mixWithOthers option when audio player is in paused state,
+                    // update audioSession should be done only when requesting focus
                     if requestingFocus {
                         NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
                     }
