@@ -123,6 +123,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
 
     // ProgressReporter
     private var intervalReporter: Disposable?
+    private var lastReportedOffset: Int = 0
     
     private lazy var disposeBag = DisposeBag()
     
@@ -454,6 +455,7 @@ private extension AudioPlayerAgent {
                     player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
                 } else {
                     self.stopSilently()
+                    self.lastReportedOffset = 0
                     self.setMediaPlayer(
                         dialogRequestId: directive.header.dialogRequestId,
                         messageId: directive.header.messageId,
@@ -864,23 +866,36 @@ private extension AudioPlayerAgent {
         let intervalReportTime = media.payload.audioItem.stream.intervalReportTime ?? -1
         guard delayReportTime > 0 || intervalReportTime > 0 else { return }
         
-        var lastOffset: Int = 0
-        
+        log.debug("delayReportTime: \(delayReportTime) intervalReportTime: \(intervalReportTime)")
         intervalReporter = Observable<Int>
-            .interval(.seconds(1), scheduler: audioPlayerScheduler)
+            .interval(.milliseconds(100), scheduler: audioPlayerScheduler)
             .map({ [weak self] (_) -> Int in
-                return self?.currentPlayer?.offset.truncatedSeconds ?? -1
+                let offset = self?.currentPlayer?.offset.seconds ?? 0.0
+                return Int(ceil(offset))
             })
-            .filter { $0 > 0 }
-            .filter { $0 != lastOffset}
+            .filter { [weak self] offset in
+                guard let self = self else { return false }
+                guard offset > 0 else { return false }
+                // Current offset can be smaller than the last offset after seeking.
+                guard offset > self.lastReportedOffset else {
+                    self.lastReportedOffset = offset
+                    return false
+                }
+
+                return true
+            }
             .subscribe(onNext: { [weak self] (offset) in
-                if delayReportTime > 0, offset == delayReportTime {
-                    self?.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
+                guard let self = self else { return }
+                
+                // Check if there is any report target between last offset and current offset.
+                let offsetRange = (self.lastReportedOffset + 1...offset)
+                if delayReportTime > 0, offsetRange.contains(delayReportTime) {
+                    self.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
                 }
-                if intervalReportTime > 0, offset % intervalReportTime == 0 {
-                    self?.sendPlayEvent(media: media, typeInfo: .progressReportIntervalElapsed)
+                if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {
+                    self.sendPlayEvent(media: media, typeInfo: .progressReportIntervalElapsed)
                 }
-                lastOffset = offset
+                self.lastReportedOffset = offset
             })
         
         intervalReporter?.disposed(by: disposeBag)
