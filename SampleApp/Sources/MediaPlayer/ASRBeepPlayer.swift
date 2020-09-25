@@ -23,6 +23,14 @@ import AVFoundation
 import NuguCore
 
 final class ASRBeepPlayer {
+    private let beepQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_beep_player")
+    
+    // MARK: ASRBeepPlayer
+    
+    private lazy var startBeepPlayer = BeepType.start.makeAudioPlayer()
+    private lazy var successBeepPlayer = BeepType.success.makeAudioPlayer()
+    private lazy var failBeepPlayer = BeepType.fail.makeAudioPlayer()
+    
     private let focusManager: FocusManageable
     
     init(focusManager: FocusManageable) {
@@ -31,43 +39,12 @@ final class ASRBeepPlayer {
         focusManager.add(channelDelegate: self)
     }
     
-    // MARK: ASRBeepPlayer
-    
-    private var player: AVAudioPlayer?
-    
     // MARK: BeepType
     
     enum BeepType: String {
         case start
         case success
         case fail
-        
-        fileprivate var isEnabled: Bool {
-            switch self {
-            case .start: return UserDefaults.Standard.useAsrStartSound
-            case .success: return UserDefaults.Standard.useAsrSuccessSound
-            case .fail: return UserDefaults.Standard.useAsrFailSound
-            }
-        }
-        
-        fileprivate var fileName: String {
-            switch self {
-            case .start:
-                return "listening_start"
-            case .success:
-                return "listening_end"
-            case .fail:
-                return "responsefail"
-            }
-        }
-            
-        fileprivate var extention: String {
-            return "wav"
-        }
-        
-        fileprivate var fileTypeHint: String {
-            return AVFileType.wav.rawValue
-        }
     }
     
     // MARK: Internal (beep)
@@ -83,24 +60,62 @@ final class ASRBeepPlayer {
     }
 }
 
-// MARK: Private (play / stop)
+// MARK: - Private(AVAudioPlayer)
+
+private extension ASRBeepPlayer.BeepType {
+    var isEnabled: Bool {
+        switch self {
+        case .start: return UserDefaults.Standard.useAsrStartSound
+        case .success: return UserDefaults.Standard.useAsrSuccessSound
+        case .fail: return UserDefaults.Standard.useAsrFailSound
+        }
+    }
+    
+    var fileName: String {
+        switch self {
+        case .start:
+            return "listening_start"
+        case .success:
+            return "listening_end"
+        case .fail:
+            return "responsefail"
+        }
+    }
+        
+    var extention: String {
+        return "wav"
+    }
+    
+    var fileTypeHint: String {
+        return AVFileType.wav.rawValue
+    }
+    
+    func makeAudioPlayer() -> AVAudioPlayer? {
+        guard let failBeepUrl = Bundle.main.url(forResource: fileName, withExtension: extention) else { return nil }
+        return try? AVAudioPlayer(contentsOf: failBeepUrl, fileTypeHint: fileTypeHint)
+    }
+}
+
+// MARK: - Private (play / stop)
 
 private extension ASRBeepPlayer {
     func play(type: BeepType) {
-        guard let url = Bundle.main.url(forResource: type.fileName, withExtension: type.extention) else {
-            log.error("Can't find sound file")
-            return
-        }
-        do {
-            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: type.fileTypeHint)
-            player?.play()
-        } catch {
-            log.error("Failed to play local beep file : \(error.localizedDescription)")
+        beepQueue.async { [weak self] in
+            let player: AVAudioPlayer?
+            switch type {
+            case .fail: player = self?.failBeepPlayer
+            case .start: player = self?.startBeepPlayer
+            case .success: player = self?.successBeepPlayer
+            }
+            
+            if player?.isPlaying == false {
+                player?.play()
+            }
         }
     }
 }
 
-// MARK: FocusChannelDelegate
+// MARK: - FocusChannelDelegate
 
 extension ASRBeepPlayer: FocusChannelDelegate {
     func focusChannelPriority() -> FocusChannelPriority {
