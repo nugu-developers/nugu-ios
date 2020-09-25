@@ -873,24 +873,27 @@ private extension AudioPlayerAgent {
                 let offset = self?.currentPlayer?.offset.seconds ?? 0.0
                 return Int(ceil(offset))
             })
-            .filter { $0 > 0 }
-            .filter { [weak self] in
+            .filter { [weak self] offset in
                 guard let self = self else { return false }
+                guard offset > 0 else { return false }
+                // Current offset can be smaller than the last offset after seeking.
+                guard offset > self.lastReportedOffset else {
+                    self.lastReportedOffset = offset
+                    return false
+                }
 
-                return $0 != self.lastReportedOffset
+                return true
             }
             .subscribe(onNext: { [weak self] (offset) in
                 guard let self = self else { return }
                 
-                if offset > self.lastReportedOffset {
-                    // Check if there is any report target between last offset and current offset.
-                    let offsetRange = (self.lastReportedOffset + 1...offset)
-                    if delayReportTime > 0, offsetRange.contains(delayReportTime) {
-                        self.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
-                    }
-                    if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {
-                        self.sendPlayEvent(media: media, typeInfo: .progressReportIntervalElapsed)
-                    }
+                // Check if there is any report target between last offset and current offset.
+                let offsetRange = (self.lastReportedOffset + 1...offset)
+                if delayReportTime > 0, offsetRange.contains(delayReportTime) {
+                    self.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
+                }
+                if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {
+                    self.sendPlayEvent(media: media, typeInfo: .progressReportIntervalElapsed)
                 }
                 self.lastReportedOffset = offset
             })
