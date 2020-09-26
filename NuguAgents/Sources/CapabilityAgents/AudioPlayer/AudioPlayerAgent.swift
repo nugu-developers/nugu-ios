@@ -474,6 +474,10 @@ private extension AudioPlayerAgent {
                         )
                     )
                     
+                    self.delegates.notify { (delegate) in
+                        delegate.audioPlayerAgentWillPlay(dialogRequestId: directive.header.dialogRequestId)
+                    }
+                    
                     self.audioPlayerDisplayManager.display(
                         payload: payload,
                         messageId: directive.header.messageId,

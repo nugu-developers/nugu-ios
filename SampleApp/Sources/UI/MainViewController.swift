@@ -818,6 +818,8 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 // MARK: - AudioPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerAgentDelegate {
+    func audioPlayerAgentWillPlay(dialogRequestId: String) {}
+    
     func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
         log.debug("audioPlayerAgentDidChange : \(state)")
         NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(state: state)

@@ -22,8 +22,14 @@ import Foundation
 
 /// An delegate that appllication can extend to register to observe `AudioPlayerState` changes.
 public protocol AudioPlayerAgentDelegate: class {
+    /// Tells the delegate that `AudioPlayerAgent` received `Play` directive.
+    ///
+    /// - Parameter dialogRequestId: The dialog request ID of the media.
+    func audioPlayerAgentWillPlay(dialogRequestId: String)
+    
     ///  Used to notify the observer of state changes.
+    ///
     /// - Parameter state: The new AudioPlayerState of the `AudioPlayerAgent`
-    /// - Parameter dialogRequestId: The `dialogRequestId` for state.
+    /// - Parameter dialogRequestId: The dialog request ID of the media.
     func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String)
 }

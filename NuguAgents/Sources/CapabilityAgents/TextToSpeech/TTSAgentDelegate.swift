@@ -20,17 +20,17 @@
 
 import Foundation
 
-/// An delegate that appllication can extend to register to observe TTSAgent state changes.
+/// An delegate that appllication can extend to register to observe `TTSAgent` state changes.
 public protocol TTSAgentDelegate: class {
-    /// Used to notify the observer of TTSState changes.
+    /// Used to notify the observer of `TTSState` changes.
     ///
     /// - Parameter state: The new `TTSState` of the `TTSAgent`
-    /// - Parameter dialogRequestId: <#dialogRequestId description#>
+    /// - Parameter dialogRequestId: The dialog request ID of the TTS.
     func ttsAgentDidChange(state: TTSState, dialogRequestId: String)
     
-    /// Tells the delegate that `TTSAgent` received TTS directive
+    /// Tells the delegate that `TTSAgent` received `Speak` directive
     ///
     /// - Parameter text: The text to play.
-    /// - Parameter dialogRequestId: <#dialogRequestId description#>
+    /// - Parameter dialogRequestId: The dialog request ID of the TTS.
     func ttsAgentDidReceive(text: String, dialogRequestId: String)
 }
