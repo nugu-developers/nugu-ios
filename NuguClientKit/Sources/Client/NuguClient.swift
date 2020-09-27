@@ -80,6 +80,8 @@ public class NuguClient {
         return keywordDetector
     }()
     
+    private let dummyFocusRequester: DummyFocusRequester
+    
     public init(delegate: NuguClientDelegate) {
         self.delegate = delegate
         
@@ -159,6 +161,8 @@ public class NuguClient {
             directiveSequencer: directiveSequencer,
             sessionManager: sessionManager
         )
+        
+        dummyFocusRequester = DummyFocusRequester(focusManager: focusManager, directiveSequener: directiveSequencer, streamDataRouter: streamDataRouter)
 
         // setup additional roles
         setupAuthorizationStore()
@@ -231,7 +235,7 @@ extension NuguClient: DialogStateDelegate {
 
 extension NuguClient: StreamDataDelegate {
     private func setupStreamDataRouter() {
-        streamDataRouter.delegate = self
+        streamDataRouter.add(delegate: self)
     }
     
     public func streamDataDidReceive(direcive: Downstream.Directive) {
