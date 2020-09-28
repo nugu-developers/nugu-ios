@@ -38,11 +38,19 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     }
     
     public var offset: Int? {
-        return currentPlayer?.offset.truncatedSeconds
+        currentPlayer?.offset.truncatedSeconds
     }
     
     public var duration: Int? {
-        return currentPlayer?.duration.truncatedSeconds
+        currentPlayer?.duration.truncatedSeconds
+    }
+    
+    private var lastOffset: TimeIntervallic? {
+        currentPlayer?.offset ?? currentMedia?.offset
+    }
+    
+    private var lastDuration: TimeIntervallic? {
+        currentPlayer?.duration ?? currentMedia?.duration
     }
     
     public var volume: Float = 1.0 {
@@ -346,6 +354,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                     self.sendPlayEvent(media: media, typeInfo: .playbackResumed)
                 }
             case .finish:
+                self.saveCurrentPlayerState()
                 self.audioPlayerState = .finished
                 self.sendPlayEvent(media: media, typeInfo: .playbackFinished) { [weak self] state in
                     // Release focus when stream finished.
@@ -394,13 +403,11 @@ extension AudioPlayerAgent: ContextInfoDelegate {
             "playServiceId": currentMedia?.payload.playServiceId,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
-            "offsetInMilliseconds": (offset ?? currentMedia?.offset ?? 0) * 1000,
+            "offsetInMilliseconds": lastOffset?.truncatedMilliSeconds,
             "token": currentMedia?.payload.audioItem.stream.token,
             "lyricsVisible": false
         ]
-        if let duration = duration ?? currentMedia?.duration {
-            payload["durationInMilliseconds"] = duration * 1000
-        }
+        payload["durationInMilliseconds"] = lastDuration?.truncatedMilliSeconds
         
         if let playServiceId = currentMedia?.payload.playServiceId {
             let semaphore = DispatchSemaphore(value: 0)
@@ -700,9 +707,7 @@ private extension AudioPlayerAgent {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self, let player = self.currentPlayer else { return }
             
-            // Keep the offset and duration to be sent with the `AudioPlayer.PlaybackStopped` event.
-            self.currentMedia?.offset = self.offset
-            self.currentMedia?.duration = self.duration
+            self.saveCurrentPlayerState()
             self.currentMedia?.cancelAssociation = cancelAssociation
             player.stop()
         }
@@ -712,9 +717,7 @@ private extension AudioPlayerAgent {
     func stopSilently() {
         guard let media = currentMedia, let player = currentPlayer else { return }
             
-        // Keep the offset and duration to be sent with the `AudioPlayer.PlaybackStopped` event.
-        currentMedia?.offset = offset
-        currentMedia?.duration = duration
+        saveCurrentPlayerState()
         currentMedia?.cancelAssociation = false
         // `AudioPlayerState` -> Event
         player.delegate = nil
@@ -733,13 +736,14 @@ private extension AudioPlayerAgent {
         eventIdentifier: EventIdentifier = EventIdentifier(),
         completion: ((StreamDataState) -> Void)? = nil
     ) {
+        let offset = lastOffset?.truncatedMilliSeconds
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
             self.upstreamDataSender.sendEvent(
                 PlayEvent(
                     token: media.payload.audioItem.stream.token,
-                    offsetInMilliseconds: (self.offset ?? self.currentMedia?.offset ?? 0) * 1000, // This is a mandatory in Play kit.
+                    offsetInMilliseconds: offset ?? 0, // This is a mandatory in Play kit.
                     playServiceId: media.payload.playServiceId,
                     typeInfo: typeInfo
                 ).makeEventMessage(
@@ -947,5 +951,11 @@ private extension AudioPlayerAgent {
 
         currentPlayer?.delegate = self
         currentPlayer?.volume = volume
+    }
+    
+    // Keep the offset and duration to be sent with playback events.
+    func saveCurrentPlayerState() {
+        currentMedia?.offset = currentPlayer?.offset
+        currentMedia?.duration = currentPlayer?.duration
     }
 }
