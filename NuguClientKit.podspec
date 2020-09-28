@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguClientKit'
-  s.version = '0.19.3'
+  s.version = '0.19.4'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Client Kit'
   s.description = <<-DESC

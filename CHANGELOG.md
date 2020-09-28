@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.19.4](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.4)
+Released on 2020-09-28
+### Sample Application
+#### Fixed
+- Revert 'updating control center even if playerItem is nil' (https://github.com/nugu-developers/nugu-ios/pull/442) because of unexpected side effects (#534)
+- Modify `DisplayView` and `AudioDisplayView` to make them weak references. (#533)
+
+### SDK
+#### Fixed
+- Update logic related authorization (showTidInfo, authorize) (#536)
+
 ## [0.19.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.19.3)
 Released on 2020-09-25
 ### Sample Application
