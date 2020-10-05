@@ -1,0 +1,75 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Business/NuguOAuthClient.swift",
+      "line": 24,
+      "symbol": "NuguOAuthClient",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Business/NuguOAuthClient.swift",
+      "line": 84,
+      "symbol": "NuguOAuthClient",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Business/NuguOAuthClient.swift",
+      "line": 156,
+      "symbol": "NuguOAuthClient",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Business/NuguOAuthClient.swift",
+      "line": 184,
+      "symbol": "NuguOAuthClient",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Business/NuguOAuthClient.swift",
+      "line": 212,
+      "symbol": "NuguOAuthClient",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Grant/AuthorizationCodeGrant.swift",
+      "line": 23,
+      "symbol": "AuthorizationCodeGrant",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Grant/ClientCredentialsGrant.swift",
+      "line": 23,
+      "symbol": "ClientCredentialsGrant",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Grant/RefreshTokenGrant.swift",
+      "line": 23,
+      "symbol": "RefreshTokenGrant",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Network/NuguOAuthServerInfo.swift",
+      "line": 23,
+      "symbol": "NuguOAuthServerInfo",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Network/NuguOAuthServerInfo.swift",
+      "line": 24,
+      "symbol": "NuguOAuthServerInfo.serverBaseUrl",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
+}

@@ -1,0 +1,3771 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 28,
+      "symbol": "AudioPlayerAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 62,
+      "symbol": "AudioPlayerAgent.isPlaying",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 155,
+      "symbol": "AudioPlayerAgent.init(focusManager:upstreamDataSender:playSyncManager:contextManager:directiveSequencer:audioPlayerPauseTimeout:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 184,
+      "symbol": "AudioPlayerAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 302,
+      "symbol": "AudioPlayerAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 303,
+      "symbol": "AudioPlayerAgent.focusChannelPriority()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 339,
+      "symbol": "AudioPlayerAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 399,
+      "symbol": "AudioPlayerAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 429,
+      "symbol": "AudioPlayerAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgent.swift",
+      "line": 430,
+      "symbol": "AudioPlayerAgent.playSyncDidRelease(property:messageId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgentProtocol.swift",
+      "line": 27,
+      "symbol": "AudioPlayerAgentProtocol.isPlaying",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/AudioPlayerAgentProtocol.swift",
+      "line": 97,
+      "symbol": "AudioPlayerAgentProtocol.next()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayControlPayload.swift",
+      "line": 23,
+      "symbol": "AudioPlayerDisplayControlPayload",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayControlPayload.swift",
+      "line": 27,
+      "symbol": "AudioPlayerDisplayControlPayload.Direction",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayControlPayload.swift",
+      "line": 28,
+      "symbol": "AudioPlayerDisplayControlPayload.Direction.previous",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayControlPayload.swift",
+      "line": 29,
+      "symbol": "AudioPlayerDisplayControlPayload.Direction.next",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayControlPayload.swift",
+      "line": 35,
+      "symbol": "AudioPlayerDisplayControlPayload",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayDelegate.swift",
+      "line": 54,
+      "symbol": "AudioPlayerDisplayDelegate.audioPlayerIsLyricsVisible(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayManager.swift",
+      "line": 216,
+      "symbol": "AudioPlayerDisplayManager.playSyncDidRelease(property:messageId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayRepeat.swift",
+      "line": 21,
+      "symbol": "AudioPlayerDisplayRepeat",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayRepeat.swift",
+      "line": 22,
+      "symbol": "AudioPlayerDisplayRepeat.all",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayRepeat.swift",
+      "line": 23,
+      "symbol": "AudioPlayerDisplayRepeat.one",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayRepeat.swift",
+      "line": 24,
+      "symbol": "AudioPlayerDisplayRepeat.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 23,
+      "symbol": "AudioPlayerDisplayTemplate",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 24,
+      "symbol": "AudioPlayerDisplayTemplate.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 25,
+      "symbol": "AudioPlayerDisplayTemplate.payload",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 26,
+      "symbol": "AudioPlayerDisplayTemplate.templateId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 27,
+      "symbol": "AudioPlayerDisplayTemplate.dialogRequestId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 28,
+      "symbol": "AudioPlayerDisplayTemplate.mediaPayload",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 29,
+      "symbol": "AudioPlayerDisplayTemplate.isSeekable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 40,
+      "symbol": "AudioPlayerDisplayTemplate.MediaPayload",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 41,
+      "symbol": "AudioPlayerDisplayTemplate.MediaPayload.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 42,
+      "symbol": "AudioPlayerDisplayTemplate.MediaPayload.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AudioPlayer/Display/AudioPlayerDisplayTemplate.swift",
+      "line": 43,
+      "symbol": "AudioPlayerDisplayTemplate.MediaPayload.playStackControl",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 26,
+      "symbol": "ASRAgent.Event",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 30,
+      "symbol": "ASRAgent.Event.TypeInfo",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 31,
+      "symbol": "ASRAgent.Event.TypeInfo.recognize(initiator:options:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 32,
+      "symbol": "ASRAgent.Event.TypeInfo.responseTimeout",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 33,
+      "symbol": "ASRAgent.Event.TypeInfo.listenTimeout",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 34,
+      "symbol": "ASRAgent.Event.TypeInfo.stopRecognize",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 35,
+      "symbol": "ASRAgent.Event.TypeInfo.listenFailed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 42,
+      "symbol": "ASRAgent.Event",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 43,
+      "symbol": "ASRAgent.Event.payload",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent+Event.swift",
+      "line": 90,
+      "symbol": "ASRAgent.Event.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 25,
+      "symbol": "ASRAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 29,
+      "symbol": "ASRAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 59,
+      "symbol": "ASRAgent.options",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 60,
+      "symbol": "ASRAgent.asrState",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 182,
+      "symbol": "ASRAgent.init(focusManager:upstreamDataSender:contextManager:directiveSequencer:dialogAttributeStore:sessionManager:playSyncManager:interactionControlManager:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 214,
+      "symbol": "ASRAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 266,
+      "symbol": "ASRAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 267,
+      "symbol": "ASRAgent.focusChannelPriority()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 297,
+      "symbol": "ASRAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 370,
+      "symbol": "ASRAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgent.swift",
+      "line": 371,
+      "symbol": "ASRAgent.playSyncDidRelease(property:messageId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgentProtocol.swift",
+      "line": 28,
+      "symbol": "ASRAgentProtocol.options",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgentProtocol.swift",
+      "line": 29,
+      "symbol": "ASRAgentProtocol.asrState",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRAgentProtocol.swift",
+      "line": 63,
+      "symbol": "ASRAgentProtocol.startRecognition(initiator:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRInitiator.swift",
+      "line": 24,
+      "symbol": "ASRInitiator",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRInitiator.swift",
+      "line": 25,
+      "symbol": "ASRInitiator.wakeUpKeyword(keyword:data:start:end:detection:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRInitiator.swift",
+      "line": 26,
+      "symbol": "ASRInitiator.user",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASRInitiator.swift",
+      "line": 27,
+      "symbol": "ASRInitiator.scenario",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 25,
+      "symbol": "ASROptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 32,
+      "symbol": "ASROptions.sampleRate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 33,
+      "symbol": "ASROptions.encoding",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 34,
+      "symbol": "ASROptions.endPointing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 54,
+      "symbol": "ASROptions.Encoding",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 55,
+      "symbol": "ASROptions.Encoding.partial",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 56,
+      "symbol": "ASROptions.Encoding.complete",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 59,
+      "symbol": "ASROptions.EndPointing",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/AutomaticSpeechRecognition/ASROptions.swift",
+      "line": 60,
+      "symbol": "ASROptions.EndPointing.client(epdFile:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 23,
+      "symbol": "CapabilityAgentCategory",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 24,
+      "symbol": "CapabilityAgentCategory.audioPlayer",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 25,
+      "symbol": "CapabilityAgentCategory.automaticSpeechRecognition",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 26,
+      "symbol": "CapabilityAgentCategory.textToSpeech",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 27,
+      "symbol": "CapabilityAgentCategory.display",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 28,
+      "symbol": "CapabilityAgentCategory.system",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 29,
+      "symbol": "CapabilityAgentCategory.text",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 30,
+      "symbol": "CapabilityAgentCategory.extension",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 31,
+      "symbol": "CapabilityAgentCategory.location",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 32,
+      "symbol": "CapabilityAgentCategory.sound",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 33,
+      "symbol": "CapabilityAgentCategory.phoneCall",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 34,
+      "symbol": "CapabilityAgentCategory.chips",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 35,
+      "symbol": "CapabilityAgentCategory.session",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 36,
+      "symbol": "CapabilityAgentCategory.mediaPlayer",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 39,
+      "symbol": "CapabilityAgentCategory",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/CapabilityAgentCategory.swift",
+      "line": 40,
+      "symbol": "CapabilityAgentCategory.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgent.swift",
+      "line": 25,
+      "symbol": "ChipsAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgent.swift",
+      "line": 39,
+      "symbol": "ChipsAgent.init(contextManager:directiveSequencer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgent.swift",
+      "line": 57,
+      "symbol": "ChipsAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgent.swift",
+      "line": 69,
+      "symbol": "ChipsAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentDelegate.swift",
+      "line": 25,
+      "symbol": "ChipsAgentDelegate.chipsAgentDidReceive(item:dialogRequestId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 23,
+      "symbol": "ChipsAgentItem",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 24,
+      "symbol": "ChipsAgentItem.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 25,
+      "symbol": "ChipsAgentItem.target",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 26,
+      "symbol": "ChipsAgentItem.chips",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 28,
+      "symbol": "ChipsAgentItem.Target",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 29,
+      "symbol": "ChipsAgentItem.Target.dialog",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 32,
+      "symbol": "ChipsAgentItem.Chip",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 33,
+      "symbol": "ChipsAgentItem.Chip.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 34,
+      "symbol": "ChipsAgentItem.Chip.text",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 35,
+      "symbol": "ChipsAgentItem.Chip.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 37,
+      "symbol": "ChipsAgentItem.Chip.ItemType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 38,
+      "symbol": "ChipsAgentItem.Chip.ItemType.action",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 39,
+      "symbol": "ChipsAgentItem.Chip.ItemType.general",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 46,
+      "symbol": "ChipsAgentItem",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 62,
+      "symbol": "ChipsAgentItem.Chip",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Chips/ChipsAgentItem.swift",
+      "line": 80,
+      "symbol": "ChipsAgentItem.Chip",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
+      "line": 27,
+      "symbol": "DisplayAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
+      "line": 96,
+      "symbol": "DisplayAgent.init(upstreamDataSender:playSyncManager:contextManager:directiveSequencer:sessionManager:focusManager:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
+      "line": 124,
+      "symbol": "DisplayAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
+      "line": 167,
+      "symbol": "DisplayAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
+      "line": 196,
+      "symbol": "DisplayAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
+      "line": 197,
+      "symbol": "DisplayAgent.playSyncDidRelease(property:messageId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
+      "line": 214,
+      "symbol": "DisplayAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
+      "line": 215,
+      "symbol": "DisplayAgent.focusChannelPriority()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgentProtocol.swift",
+      "line": 50,
+      "symbol": "DisplayAgentProtocol.elementDidSelect(templateId:token:postback:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayContext.swift",
+      "line": 23,
+      "symbol": "DisplayContext",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayContext.swift",
+      "line": 24,
+      "symbol": "DisplayContext.focusedItemToken",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayContext.swift",
+      "line": 25,
+      "symbol": "DisplayContext.visibleTokenList",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayContext.swift",
+      "line": 27,
+      "symbol": "DisplayContext.init(focusedItemToken:visibleTokenList:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayControlPayload.swift",
+      "line": 23,
+      "symbol": "DisplayControlPayload",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayControlPayload.swift",
+      "line": 27,
+      "symbol": "DisplayControlPayload.Direction",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayControlPayload.swift",
+      "line": 28,
+      "symbol": "DisplayControlPayload.Direction.previous",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayControlPayload.swift",
+      "line": 29,
+      "symbol": "DisplayControlPayload.Direction.next",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayControlPayload.swift",
+      "line": 35,
+      "symbol": "DisplayControlPayload",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 25,
+      "symbol": "DisplayTemplate",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 26,
+      "symbol": "DisplayTemplate.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 27,
+      "symbol": "DisplayTemplate.payload",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 28,
+      "symbol": "DisplayTemplate.templateId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 29,
+      "symbol": "DisplayTemplate.dialogRequestId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 30,
+      "symbol": "DisplayTemplate.template",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 46,
+      "symbol": "DisplayTemplate.Payload",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 47,
+      "symbol": "DisplayTemplate.Payload.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 48,
+      "symbol": "DisplayTemplate.Payload.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 49,
+      "symbol": "DisplayTemplate.Payload.playStackControl",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 50,
+      "symbol": "DisplayTemplate.Payload.duration",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 51,
+      "symbol": "DisplayTemplate.Payload.focusable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 52,
+      "symbol": "DisplayTemplate.Payload.contextLayer",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 53,
+      "symbol": "DisplayTemplate.Payload.playSyncProperty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 57,
+      "symbol": "DisplayTemplate.Payload.Duration",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 58,
+      "symbol": "DisplayTemplate.Payload.Duration.short",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 59,
+      "symbol": "DisplayTemplate.Payload.Duration.mid",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 60,
+      "symbol": "DisplayTemplate.Payload.Duration.long",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 61,
+      "symbol": "DisplayTemplate.Payload.Duration.longest",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 68,
+      "symbol": "DisplayTemplate.Payload",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 90,
+      "symbol": "DisplayTemplate.Payload.Duration",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplate.swift",
+      "line": 91,
+      "symbol": "DisplayTemplate.Payload.Duration.time",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplateDuration.swift",
+      "line": 27,
+      "symbol": "DisplayTemplateDuration.veryShort",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplateDuration.swift",
+      "line": 28,
+      "symbol": "DisplayTemplateDuration.short",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayTemplateDuration.swift",
+      "line": 32,
+      "symbol": "DisplayTemplateDuration.time",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Extension/ExtensionAgent.swift",
+      "line": 25,
+      "symbol": "ExtensionAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Extension/ExtensionAgent.swift",
+      "line": 42,
+      "symbol": "ExtensionAgent.init(upstreamDataSender:contextManager:directiveSequencer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Extension/ExtensionAgent.swift",
+      "line": 62,
+      "symbol": "ExtensionAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Extension/ExtensionAgent.swift",
+      "line": 74,
+      "symbol": "ExtensionAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Extension/ExtensionAgentProtocol.swift",
+      "line": 45,
+      "symbol": "ExtensionAgentProtocol.requestCommand(data:playServiceId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControl.swift",
+      "line": 23,
+      "symbol": "InteractionControl",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControl.swift",
+      "line": 24,
+      "symbol": "InteractionControl.mode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControl.swift",
+      "line": 26,
+      "symbol": "InteractionControl.Mode",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControl.swift",
+      "line": 27,
+      "symbol": "InteractionControl.Mode.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControl.swift",
+      "line": 28,
+      "symbol": "InteractionControl.Mode.multiTurn",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlDelegate.swift",
+      "line": 23,
+      "symbol": "InteractionControlDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlDelegate.swift",
+      "line": 24,
+      "symbol": "InteractionControlDelegate.interactionControlDidChange(isMultiturn:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManageable.swift",
+      "line": 23,
+      "symbol": "InteractionControlManageable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManageable.swift",
+      "line": 24,
+      "symbol": "InteractionControlManageable.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManageable.swift",
+      "line": 26,
+      "symbol": "InteractionControlManageable.start(mode:category:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManageable.swift",
+      "line": 27,
+      "symbol": "InteractionControlManageable.finish(mode:category:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManager.swift",
+      "line": 25,
+      "symbol": "InteractionControlManager",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManager.swift",
+      "line": 32,
+      "symbol": "InteractionControlManager.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManager.swift",
+      "line": 37,
+      "symbol": "InteractionControlManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManager.swift",
+      "line": 39,
+      "symbol": "InteractionControlManager.start(mode:category:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Interaction/InteractionControlManager.swift",
+      "line": 52,
+      "symbol": "InteractionControlManager.finish(mode:category:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Location/LocationAgent.swift",
+      "line": 25,
+      "symbol": "LocationAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Location/LocationAgent.swift",
+      "line": 32,
+      "symbol": "LocationAgent.init(contextManager:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Location/LocationAgent.swift",
+      "line": 39,
+      "symbol": "LocationAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgent.swift",
+      "line": 25,
+      "symbol": "MediaPlayerAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgent.swift",
+      "line": 50,
+      "symbol": "MediaPlayerAgent.init(directiveSequencer:contextManager:upstreamDataSender:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgent.swift",
+      "line": 66,
+      "symbol": "MediaPlayerAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 23,
+      "symbol": "MediaPlayerAgentContext",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 27,
+      "symbol": "MediaPlayerAgentContext.User",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 28,
+      "symbol": "MediaPlayerAgentContext.User.isLogin",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 29,
+      "symbol": "MediaPlayerAgentContext.User.hasVoucher",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 31,
+      "symbol": "MediaPlayerAgentContext.User.init(isLogin:hasVoucher:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 39,
+      "symbol": "MediaPlayerAgentContext.Playlist",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 40,
+      "symbol": "MediaPlayerAgentContext.Playlist.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 41,
+      "symbol": "MediaPlayerAgentContext.Playlist.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 42,
+      "symbol": "MediaPlayerAgentContext.Playlist.number",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 43,
+      "symbol": "MediaPlayerAgentContext.Playlist.length",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 44,
+      "symbol": "MediaPlayerAgentContext.Playlist.currentSongOrder",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 46,
+      "symbol": "MediaPlayerAgentContext.Playlist.init(type:name:number:length:currentSongOrder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 63,
+      "symbol": "MediaPlayerAgentContext.Toggle",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 64,
+      "symbol": "MediaPlayerAgentContext.Toggle.repeat",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 65,
+      "symbol": "MediaPlayerAgentContext.Toggle.shuffle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 67,
+      "symbol": "MediaPlayerAgentContext.Toggle.init(repeat:shuffle:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 76,
+      "symbol": "MediaPlayerAgentContext.appStatus",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 77,
+      "symbol": "MediaPlayerAgentContext.playerActivity",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 78,
+      "symbol": "MediaPlayerAgentContext.user",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 79,
+      "symbol": "MediaPlayerAgentContext.currentSong",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 80,
+      "symbol": "MediaPlayerAgentContext.playlist",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 81,
+      "symbol": "MediaPlayerAgentContext.toggle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentContext.swift",
+      "line": 83,
+      "symbol": "MediaPlayerAgentContext.init(appStatus:playerActivity:user:currentSong:playlist:toggle:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 23,
+      "symbol": "MediaPlayerAgentDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 24,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentRequestContext()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 26,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceivePlay(payload:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 27,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceiveStop(playServiceId:token:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 28,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceiveSearch(payload:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 29,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceivePrevious(payload:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 30,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceiveNext(payload:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 31,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceiveMove(payload:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 32,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceivePause(playServiceId:token:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 33,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceiveResume(playServiceId:token:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 34,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceiveRewind(playServiceId:token:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 35,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceiveToggle(payload:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDelegate.swift",
+      "line": 36,
+      "symbol": "MediaPlayerAgentDelegate.mediaPlayerAgentReceiveGetInfo(playServiceId:token:dialogRequestId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 23,
+      "symbol": "MediaPlayerAgentDirectivePayload",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 27,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 28,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.Toggle",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 29,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.Toggle.repeat",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 30,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.Toggle.shuffle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 33,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 34,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 35,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.action",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 36,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.asrText",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 37,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.song",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 38,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.toggle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 39,
+      "symbol": "MediaPlayerAgentDirectivePayload.Play.data",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 66,
+      "symbol": "MediaPlayerAgentDirectivePayload.Search",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 67,
+      "symbol": "MediaPlayerAgentDirectivePayload.Search.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 68,
+      "symbol": "MediaPlayerAgentDirectivePayload.Search.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 69,
+      "symbol": "MediaPlayerAgentDirectivePayload.Search.asrText",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 70,
+      "symbol": "MediaPlayerAgentDirectivePayload.Search.song",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 75,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 76,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.CodingKeys",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 77,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.CodingKeys.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 78,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.CodingKeys.token",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 79,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.CodingKeys.action",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 80,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.CodingKeys.target",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 81,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.CodingKeys.data",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 84,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 85,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 86,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.action",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 87,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.target",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 88,
+      "symbol": "MediaPlayerAgentDirectivePayload.Previous.data",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 103,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 104,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.CodingKeys",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 105,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.CodingKeys.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 106,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.CodingKeys.token",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 107,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.CodingKeys.action",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 108,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.CodingKeys.target",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 109,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.CodingKeys.data",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 112,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 113,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 114,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.action",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 115,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.target",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 116,
+      "symbol": "MediaPlayerAgentDirectivePayload.Next.data",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 131,
+      "symbol": "MediaPlayerAgentDirectivePayload.Move",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 132,
+      "symbol": "MediaPlayerAgentDirectivePayload.Move.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 133,
+      "symbol": "MediaPlayerAgentDirectivePayload.Move.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 134,
+      "symbol": "MediaPlayerAgentDirectivePayload.Move.direction",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 135,
+      "symbol": "MediaPlayerAgentDirectivePayload.Move.sec",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 140,
+      "symbol": "MediaPlayerAgentDirectivePayload.Toggle",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 141,
+      "symbol": "MediaPlayerAgentDirectivePayload.Toggle.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 142,
+      "symbol": "MediaPlayerAgentDirectivePayload.Toggle.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 143,
+      "symbol": "MediaPlayerAgentDirectivePayload.Toggle.repeat",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 144,
+      "symbol": "MediaPlayerAgentDirectivePayload.Toggle.like",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentDirectivePayload.swift",
+      "line": 145,
+      "symbol": "MediaPlayerAgentDirectivePayload.Toggle.shuffle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentPlaylist.swift",
+      "line": 23,
+      "symbol": "MediaPlayerAgentPlaylist",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentPlaylist.swift",
+      "line": 24,
+      "symbol": "MediaPlayerAgentPlaylist.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentPlaylist.swift",
+      "line": 25,
+      "symbol": "MediaPlayerAgentPlaylist.number",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 23,
+      "symbol": "MediaPlayerAgentProcessResult",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 27,
+      "symbol": "MediaPlayerAgentProcessResult.Play",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 28,
+      "symbol": "MediaPlayerAgentProcessResult.Play.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 29,
+      "symbol": "MediaPlayerAgentProcessResult.Play.suspended(song:playlist:issueCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 30,
+      "symbol": "MediaPlayerAgentProcessResult.Play.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 35,
+      "symbol": "MediaPlayerAgentProcessResult.Stop",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 36,
+      "symbol": "MediaPlayerAgentProcessResult.Stop.succeeded",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 37,
+      "symbol": "MediaPlayerAgentProcessResult.Stop.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 42,
+      "symbol": "MediaPlayerAgentProcessResult.Search",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 43,
+      "symbol": "MediaPlayerAgentProcessResult.Search.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 44,
+      "symbol": "MediaPlayerAgentProcessResult.Search.failed(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 49,
+      "symbol": "MediaPlayerAgentProcessResult.Previous",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 50,
+      "symbol": "MediaPlayerAgentProcessResult.Previous.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 51,
+      "symbol": "MediaPlayerAgentProcessResult.Previous.suspended(song:playlist:target:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 52,
+      "symbol": "MediaPlayerAgentProcessResult.Previous.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 57,
+      "symbol": "MediaPlayerAgentProcessResult.Next",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 58,
+      "symbol": "MediaPlayerAgentProcessResult.Next.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 59,
+      "symbol": "MediaPlayerAgentProcessResult.Next.suspended(song:playlist:target:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 60,
+      "symbol": "MediaPlayerAgentProcessResult.Next.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 65,
+      "symbol": "MediaPlayerAgentProcessResult.Move",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 66,
+      "symbol": "MediaPlayerAgentProcessResult.Move.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 67,
+      "symbol": "MediaPlayerAgentProcessResult.Move.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 72,
+      "symbol": "MediaPlayerAgentProcessResult.Pause",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 73,
+      "symbol": "MediaPlayerAgentProcessResult.Pause.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 74,
+      "symbol": "MediaPlayerAgentProcessResult.Pause.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 79,
+      "symbol": "MediaPlayerAgentProcessResult.Resume",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 80,
+      "symbol": "MediaPlayerAgentProcessResult.Resume.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 81,
+      "symbol": "MediaPlayerAgentProcessResult.Resume.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 86,
+      "symbol": "MediaPlayerAgentProcessResult.Rewind",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 87,
+      "symbol": "MediaPlayerAgentProcessResult.Rewind.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 88,
+      "symbol": "MediaPlayerAgentProcessResult.Rewind.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 93,
+      "symbol": "MediaPlayerAgentProcessResult.Toggle",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 94,
+      "symbol": "MediaPlayerAgentProcessResult.Toggle.succeeded(message:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 95,
+      "symbol": "MediaPlayerAgentProcessResult.Toggle.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 98,
+      "symbol": "MediaPlayerAgentProcessResult.GetInfo",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 99,
+      "symbol": "MediaPlayerAgentProcessResult.GetInfo.succeeded(song:issueDate:playTime:playListName:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentResult.swift",
+      "line": 100,
+      "symbol": "MediaPlayerAgentProcessResult.GetInfo.failed(errorCode:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 23,
+      "symbol": "MediaPlayerAgentSong",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 27,
+      "symbol": "MediaPlayerAgentSong.Category",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 28,
+      "symbol": "MediaPlayerAgentSong.Category.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 29,
+      "symbol": "MediaPlayerAgentSong.Category.recommend",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 30,
+      "symbol": "MediaPlayerAgentSong.Category.popular",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 31,
+      "symbol": "MediaPlayerAgentSong.Category.new",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 32,
+      "symbol": "MediaPlayerAgentSong.Category.chart",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 33,
+      "symbol": "MediaPlayerAgentSong.Category.recentPlayed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 34,
+      "symbol": "MediaPlayerAgentSong.Category.favorite",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 35,
+      "symbol": "MediaPlayerAgentSong.Category.likeSong",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 36,
+      "symbol": "MediaPlayerAgentSong.Category.likeAlbum",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 37,
+      "symbol": "MediaPlayerAgentSong.Category.likeArtist",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 38,
+      "symbol": "MediaPlayerAgentSong.Category.likeTheme",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 39,
+      "symbol": "MediaPlayerAgentSong.Category.playlist",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 40,
+      "symbol": "MediaPlayerAgentSong.Category.nowplaying",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 43,
+      "symbol": "MediaPlayerAgentSong.category",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 44,
+      "symbol": "MediaPlayerAgentSong.theme",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 45,
+      "symbol": "MediaPlayerAgentSong.genre",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 46,
+      "symbol": "MediaPlayerAgentSong.artist",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 47,
+      "symbol": "MediaPlayerAgentSong.album",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 48,
+      "symbol": "MediaPlayerAgentSong.title",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 49,
+      "symbol": "MediaPlayerAgentSong.duration",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 50,
+      "symbol": "MediaPlayerAgentSong.issueDate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 51,
+      "symbol": "MediaPlayerAgentSong.etc",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/MediaPlayer/MediaPlayerAgentSong.swift",
+      "line": 79,
+      "symbol": "MediaPlayerAgentSong.init(category:theme:genre:artist:album:title:duration:issueDate:etc:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent+Event.swift",
+      "line": 26,
+      "symbol": "PhoneCallAgent.Event",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent+Event.swift",
+      "line": 30,
+      "symbol": "PhoneCallAgent.Event.TypeInfo",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent+Event.swift",
+      "line": 31,
+      "symbol": "PhoneCallAgent.Event.TypeInfo.candidatesListed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent+Event.swift",
+      "line": 32,
+      "symbol": "PhoneCallAgent.Event.TypeInfo.makeCallFailed(errorCode:callType:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent+Event.swift",
+      "line": 39,
+      "symbol": "PhoneCallAgent.Event",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent+Event.swift",
+      "line": 40,
+      "symbol": "PhoneCallAgent.Event.payload",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent+Event.swift",
+      "line": 56,
+      "symbol": "PhoneCallAgent.Event.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent.swift",
+      "line": 25,
+      "symbol": "PhoneCallAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent.swift",
+      "line": 25,
+      "symbol": "PhoneCallAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent.swift",
+      "line": 29,
+      "symbol": "PhoneCallAgent.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent.swift",
+      "line": 48,
+      "symbol": "PhoneCallAgent.init(directiveSequencer:contextManager:upstreamDataSender:interactionControlManager:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent.swift",
+      "line": 66,
+      "symbol": "PhoneCallAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent.swift",
+      "line": 67,
+      "symbol": "PhoneCallAgent.requestSendCandidates(playServiceId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgent.swift",
+      "line": 98,
+      "symbol": "PhoneCallAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentDelegate.swift",
+      "line": 23,
+      "symbol": "PhoneCallAgentDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentDelegate.swift",
+      "line": 24,
+      "symbol": "PhoneCallAgentDelegate.phoneCallAgentRequestState()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentDelegate.swift",
+      "line": 25,
+      "symbol": "PhoneCallAgentDelegate.phoneCallAgentRequestTemplate()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentDelegate.swift",
+      "line": 27,
+      "symbol": "PhoneCallAgentDelegate.phoneCallAgentDidReceiveSendCandidates(item:dialogRequestId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentDelegate.swift",
+      "line": 28,
+      "symbol": "PhoneCallAgentDelegate.phoneCallAgentDidReceiveMakeCall(callType:recipient:dialogRequestId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentProtocol.swift",
+      "line": 25,
+      "symbol": "PhoneCallAgentProtocol",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentProtocol.swift",
+      "line": 27,
+      "symbol": "PhoneCallAgentProtocol.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentProtocol.swift",
+      "line": 29,
+      "symbol": "PhoneCallAgentProtocol.requestSendCandidates(playServiceId:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 23,
+      "symbol": "PhoneCallCandidatesItem",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 27,
+      "symbol": "PhoneCallCandidatesItem.SearchTarget",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 28,
+      "symbol": "PhoneCallCandidatesItem.SearchTarget.contact",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 29,
+      "symbol": "PhoneCallCandidatesItem.SearchTarget.exchange",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 30,
+      "symbol": "PhoneCallCandidatesItem.SearchTarget.t114",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 31,
+      "symbol": "PhoneCallCandidatesItem.SearchTarget.unknown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 46,
+      "symbol": "PhoneCallCandidatesItem.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 47,
+      "symbol": "PhoneCallCandidatesItem.intent",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 48,
+      "symbol": "PhoneCallCandidatesItem.callType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 49,
+      "symbol": "PhoneCallCandidatesItem.searchTargetList",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 50,
+      "symbol": "PhoneCallCandidatesItem.recipientIntended",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 51,
+      "symbol": "PhoneCallCandidatesItem.candidates",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallCandidatesItem.swift",
+      "line": 53,
+      "symbol": "PhoneCallCandidatesItem.init(playServiceId:intent:callType:searchTargetList:recipientIntended:candidates:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallErrorCode.swift",
+      "line": 23,
+      "symbol": "PhoneCallErrorCode",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallErrorCode.swift",
+      "line": 24,
+      "symbol": "PhoneCallErrorCode.noSystemPermission",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallErrorCode.swift",
+      "line": 25,
+      "symbol": "PhoneCallErrorCode.callTypeNotSupported",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallIntent.swift",
+      "line": 23,
+      "symbol": "PhoneCallIntent",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallIntent.swift",
+      "line": 24,
+      "symbol": "PhoneCallIntent.call",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallIntent.swift",
+      "line": 25,
+      "symbol": "PhoneCallIntent.search",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallIntent.swift",
+      "line": 26,
+      "symbol": "PhoneCallIntent.history",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallIntent.swift",
+      "line": 27,
+      "symbol": "PhoneCallIntent.redial",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallIntent.swift",
+      "line": 28,
+      "symbol": "PhoneCallIntent.missed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallIntent.swift",
+      "line": 29,
+      "symbol": "PhoneCallIntent.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 23,
+      "symbol": "PhoneCallPerson",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 27,
+      "symbol": "PhoneCallPerson.PersonType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 28,
+      "symbol": "PhoneCallPerson.PersonType.contact",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 29,
+      "symbol": "PhoneCallPerson.PersonType.exchange",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 30,
+      "symbol": "PhoneCallPerson.PersonType.t114",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 31,
+      "symbol": "PhoneCallPerson.PersonType.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 36,
+      "symbol": "PhoneCallPerson.Address",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 37,
+      "symbol": "PhoneCallPerson.Address.road",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 38,
+      "symbol": "PhoneCallPerson.Address.jibun",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 40,
+      "symbol": "PhoneCallPerson.Address.init(road:jibun:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 48,
+      "symbol": "PhoneCallPerson.BusinessHours",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 49,
+      "symbol": "PhoneCallPerson.BusinessHours.open",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 50,
+      "symbol": "PhoneCallPerson.BusinessHours.close",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 51,
+      "symbol": "PhoneCallPerson.BusinessHours.info",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 53,
+      "symbol": "PhoneCallPerson.BusinessHours.init(open:close:info:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 62,
+      "symbol": "PhoneCallPerson.History",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 64,
+      "symbol": "PhoneCallPerson.History.HistoryType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 65,
+      "symbol": "PhoneCallPerson.History.HistoryType.out",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 66,
+      "symbol": "PhoneCallPerson.History.HistoryType.outCanceled",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 67,
+      "symbol": "PhoneCallPerson.History.HistoryType.incoming",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 68,
+      "symbol": "PhoneCallPerson.History.HistoryType.rejected",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 69,
+      "symbol": "PhoneCallPerson.History.HistoryType.missed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 70,
+      "symbol": "PhoneCallPerson.History.HistoryType.blocked",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 73,
+      "symbol": "PhoneCallPerson.History.CallType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 74,
+      "symbol": "PhoneCallPerson.History.CallType.normal",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 75,
+      "symbol": "PhoneCallPerson.History.CallType.video",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 76,
+      "symbol": "PhoneCallPerson.History.CallType.callar",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 77,
+      "symbol": "PhoneCallPerson.History.CallType.group",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 78,
+      "symbol": "PhoneCallPerson.History.CallType.voiceMessage",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 81,
+      "symbol": "PhoneCallPerson.History.time",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 82,
+      "symbol": "PhoneCallPerson.History.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 83,
+      "symbol": "PhoneCallPerson.History.callType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 85,
+      "symbol": "PhoneCallPerson.History.init(time:type:callType:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 94,
+      "symbol": "PhoneCallPerson.Contact",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 96,
+      "symbol": "PhoneCallPerson.Contact.Label",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 97,
+      "symbol": "PhoneCallPerson.Contact.Label.mobile",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 98,
+      "symbol": "PhoneCallPerson.Contact.Label.company",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 99,
+      "symbol": "PhoneCallPerson.Contact.Label.home",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 100,
+      "symbol": "PhoneCallPerson.Contact.Label.userDefined",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 103,
+      "symbol": "PhoneCallPerson.Contact.label",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 104,
+      "symbol": "PhoneCallPerson.Contact.number",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 106,
+      "symbol": "PhoneCallPerson.Contact.init(label:number:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 112,
+      "symbol": "PhoneCallPerson.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 113,
+      "symbol": "PhoneCallPerson.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 114,
+      "symbol": "PhoneCallPerson.profileImgUrl",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 115,
+      "symbol": "PhoneCallPerson.category",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 116,
+      "symbol": "PhoneCallPerson.address",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 117,
+      "symbol": "PhoneCallPerson.businessHours",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 118,
+      "symbol": "PhoneCallPerson.history",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 119,
+      "symbol": "PhoneCallPerson.numInCallHistory",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 120,
+      "symbol": "PhoneCallPerson.token",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 121,
+      "symbol": "PhoneCallPerson.score",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 122,
+      "symbol": "PhoneCallPerson.contacts",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallPerson.swift",
+      "line": 124,
+      "symbol": "PhoneCallPerson.init(name:type:profileImgUrl:category:address:businessHours:history:numInCallHistory:token:score:contacts:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallRecipient.swift",
+      "line": 23,
+      "symbol": "PhoneCallRecipient",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallRecipient.swift",
+      "line": 24,
+      "symbol": "PhoneCallRecipient.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallRecipient.swift",
+      "line": 25,
+      "symbol": "PhoneCallRecipient.label",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallRecipient.swift",
+      "line": 27,
+      "symbol": "PhoneCallRecipient.init(name:label:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallState.swift",
+      "line": 23,
+      "symbol": "PhoneCallState",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallState.swift",
+      "line": 24,
+      "symbol": "PhoneCallState.idle",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallState.swift",
+      "line": 25,
+      "symbol": "PhoneCallState.outgoing",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallState.swift",
+      "line": 26,
+      "symbol": "PhoneCallState.incoming",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallState.swift",
+      "line": 27,
+      "symbol": "PhoneCallState.established",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallTemplate.swift",
+      "line": 23,
+      "symbol": "PhoneCallTemplate",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallTemplate.swift",
+      "line": 24,
+      "symbol": "PhoneCallTemplate.intent",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallTemplate.swift",
+      "line": 25,
+      "symbol": "PhoneCallTemplate.callType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallTemplate.swift",
+      "line": 26,
+      "symbol": "PhoneCallTemplate.recipientIntended",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallTemplate.swift",
+      "line": 27,
+      "symbol": "PhoneCallTemplate.candidates",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallTemplate.swift",
+      "line": 29,
+      "symbol": "PhoneCallTemplate.init(intent:callType:recipientIntended:candidates:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallType.swift",
+      "line": 23,
+      "symbol": "PhoneCallType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallType.swift",
+      "line": 24,
+      "symbol": "PhoneCallType.normal",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallType.swift",
+      "line": 25,
+      "symbol": "PhoneCallType.speaker",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallType.swift",
+      "line": 26,
+      "symbol": "PhoneCallType.video",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallType.swift",
+      "line": 27,
+      "symbol": "PhoneCallType.callar",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/Session.swift",
+      "line": 23,
+      "symbol": "Session",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/Session.swift",
+      "line": 24,
+      "symbol": "Session.sessionId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/Session.swift",
+      "line": 25,
+      "symbol": "Session.dialogRequestId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/Session.swift",
+      "line": 26,
+      "symbol": "Session.playServiceId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/Session.swift",
+      "line": 28,
+      "symbol": "Session.init(sessionId:dialogRequestId:playServiceId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/Session.swift",
+      "line": 37,
+      "symbol": "Session",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionAgent.swift",
+      "line": 25,
+      "symbol": "SessionAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionAgent.swift",
+      "line": 39,
+      "symbol": "SessionAgent.init(contextManager:directiveSequencer:sessionManager:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionAgent.swift",
+      "line": 59,
+      "symbol": "SessionAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionDelegate.swift",
+      "line": 23,
+      "symbol": "SessionDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionDelegate.swift",
+      "line": 24,
+      "symbol": "SessionDelegate.sessionDidSet(session:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionDelegate.swift",
+      "line": 25,
+      "symbol": "SessionDelegate.sessionDidUnset(session:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManageable.swift",
+      "line": 23,
+      "symbol": "SessionManageable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManageable.swift",
+      "line": 32,
+      "symbol": "SessionManageable.activeSessions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManageable.swift",
+      "line": 34,
+      "symbol": "SessionManageable.set(session:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManageable.swift",
+      "line": 35,
+      "symbol": "SessionManageable.activate(dialogRequestId:category:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManageable.swift",
+      "line": 36,
+      "symbol": "SessionManageable.deactivate(dialogRequestId:category:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManager.swift",
+      "line": 27,
+      "symbol": "SessionManager",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManager.swift",
+      "line": 58,
+      "symbol": "SessionManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManager.swift",
+      "line": 68,
+      "symbol": "SessionManager.set(session:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManager.swift",
+      "line": 82,
+      "symbol": "SessionManager.activate(dialogRequestId:category:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Session/SessionManager.swift",
+      "line": 96,
+      "symbol": "SessionManager.deactivate(dialogRequestId:category:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Sound/SoundAgent.swift",
+      "line": 25,
+      "symbol": "SoundAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Sound/SoundAgent.swift",
+      "line": 76,
+      "symbol": "SoundAgent.init(focusManager:upstreamDataSender:contextManager:directiveSequencer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Sound/SoundAgent.swift",
+      "line": 100,
+      "symbol": "SoundAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Sound/SoundAgent.swift",
+      "line": 101,
+      "symbol": "SoundAgent.focusChannelPriority()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Sound/SoundAgent.swift",
+      "line": 133,
+      "symbol": "SoundAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Sound/SoundAgent.swift",
+      "line": 142,
+      "symbol": "SoundAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Sound/SoundBeepName.swift",
+      "line": 25,
+      "symbol": "SoundBeepName.responseFail",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgent.swift",
+      "line": 25,
+      "symbol": "SystemAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgent.swift",
+      "line": 48,
+      "symbol": "SystemAgent.init(contextManager:streamDataRouter:directiveSequencer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgent.swift",
+      "line": 68,
+      "symbol": "SystemAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgent.swift",
+      "line": 69,
+      "symbol": "SystemAgent.add(systemAgentDelegate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgent.swift",
+      "line": 73,
+      "symbol": "SystemAgent.remove(systemAgentDelegate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgent.swift",
+      "line": 80,
+      "symbol": "SystemAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentDelegate.swift",
+      "line": 25,
+      "symbol": "SystemAgentDelegate.systemAgentDidReceiveExceptionFail(code:dialogRequestId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentDelegate.swift",
+      "line": 26,
+      "symbol": "SystemAgentDelegate.systemAgentDidReceiveRevokeDevice(reason:dialogRequestId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentExceptionCode.swift",
+      "line": 27,
+      "symbol": "SystemAgentExceptionCode.Fail.unauthorizedRequestException",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentExceptionCode.swift",
+      "line": 28,
+      "symbol": "SystemAgentExceptionCode.Fail.playRouterProcessingException",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentExceptionCode.swift",
+      "line": 29,
+      "symbol": "SystemAgentExceptionCode.Fail.ttsSpeakingException",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentExceptionCode.swift",
+      "line": 30,
+      "symbol": "SystemAgentExceptionCode.Fail.internalServiceException",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentExceptionCode.swift",
+      "line": 35,
+      "symbol": "SystemAgentExceptionCode.Warning.asrRecognizingException",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentExceptionCode.swift",
+      "line": 38,
+      "symbol": "SystemAgentExceptionCode.fail(code:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentExceptionCode.swift",
+      "line": 39,
+      "symbol": "SystemAgentExceptionCode.warning(code:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentProtocol.swift",
+      "line": 26,
+      "symbol": "SystemAgentProtocol.add(systemAgentDelegate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentProtocol.swift",
+      "line": 27,
+      "symbol": "SystemAgentProtocol.remove(systemAgentDelegate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentRevokeReason.swift",
+      "line": 23,
+      "symbol": "SystemAgentRevokeReason",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentRevokeReason.swift",
+      "line": 24,
+      "symbol": "SystemAgentRevokeReason.revokeDevice",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentRevokeReason.swift",
+      "line": 25,
+      "symbol": "SystemAgentRevokeReason.withdrawnUser",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/System/SystemAgentRevokeReason.swift",
+      "line": 26,
+      "symbol": "SystemAgentRevokeReason.unknown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgent.swift",
+      "line": 27,
+      "symbol": "TextAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgent.swift",
+      "line": 46,
+      "symbol": "TextAgent.init(contextManager:upstreamDataSender:directiveSequencer:dialogAttributeStore:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgent.swift",
+      "line": 68,
+      "symbol": "TextAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgent.swift",
+      "line": 81,
+      "symbol": "TextAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgentProtocol.swift",
+      "line": 46,
+      "symbol": "TextAgentProtocol.requestTextInput(text:token:requestType:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgentProtocol.swift",
+      "line": 59,
+      "symbol": "TextAgentProtocol.requestTextInput(text:requestType:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgentRequestType.swift",
+      "line": 23,
+      "symbol": "TextAgentRequestType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgentRequestType.swift",
+      "line": 24,
+      "symbol": "TextAgentRequestType.specific(playServiceId:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgentRequestType.swift",
+      "line": 25,
+      "symbol": "TextAgentRequestType.dialog",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Text/TextAgentRequestType.swift",
+      "line": 26,
+      "symbol": "TextAgentRequestType.normal",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 27,
+      "symbol": "TTSAgent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 116,
+      "symbol": "TTSAgent.init(focusManager:upstreamDataSender:playSyncManager:contextManager:directiveSequencer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 143,
+      "symbol": "TTSAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 191,
+      "symbol": "TTSAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 192,
+      "symbol": "TTSAgent.focusChannelPriority()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 224,
+      "symbol": "TTSAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 238,
+      "symbol": "TTSAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 293,
+      "symbol": "TTSAgent",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgent.swift",
+      "line": 294,
+      "symbol": "TTSAgent.playSyncDidRelease(property:messageId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgentProtocol.swift",
+      "line": 80,
+      "symbol": "TTSAgentProtocol.requestTTS(text:playServiceId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSAgentProtocol.swift",
+      "line": 84,
+      "symbol": "TTSAgentProtocol.requestTTS(text:handler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSError.swift",
+      "line": 23,
+      "symbol": "TTSError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSError.swift",
+      "line": 24,
+      "symbol": "TTSError.notSupportedSourceType",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/TextToSpeech/TTSState.swift",
+      "line": 36,
+      "symbol": "TTSState.value",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStore.swift",
+      "line": 23,
+      "symbol": "DialogAttributeStore",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStore.swift",
+      "line": 24,
+      "symbol": "DialogAttributeStore.attributes",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStore.swift",
+      "line": 26,
+      "symbol": "DialogAttributeStore.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStore.swift",
+      "line": 28,
+      "symbol": "DialogAttributeStore.setAttributes(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStore.swift",
+      "line": 32,
+      "symbol": "DialogAttributeStore.removeAttributes()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStoreable.swift",
+      "line": 23,
+      "symbol": "DialogAttributeStoreable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStoreable.swift",
+      "line": 24,
+      "symbol": "DialogAttributeStoreable.attributes",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStoreable.swift",
+      "line": 26,
+      "symbol": "DialogAttributeStoreable.setAttributes(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Dialog/DialogAttributeStoreable.swift",
+      "line": 27,
+      "symbol": "DialogAttributeStoreable.removeAttributes()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Directive/PlayStackControl.swift",
+      "line": 23,
+      "symbol": "PlayStackControl",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Directive/PlayStackControl.swift",
+      "line": 29,
+      "symbol": "PlayStackControl",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Event/Eventable.swift",
+      "line": 23,
+      "symbol": "Eventable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Event/Eventable.swift",
+      "line": 24,
+      "symbol": "Eventable.payload",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/Event/Eventable.swift",
+      "line": 25,
+      "symbol": "Eventable.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
+}
