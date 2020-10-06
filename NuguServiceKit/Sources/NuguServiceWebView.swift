@@ -23,10 +23,14 @@ import WebKit
 
 final public class NuguServiceWebView: WKWebView {
     
-    public static let serviceSettingUrl = "https://webview.sktnugu.com/3pp/main.html?screenCode=setting_webview"
-    public static let agreementUrl = "https://webview.sktnugu.com/3pp/agreement/list.html"
+    public static var serviceSettingUrl: String {
+        return domain + "/3pp/main.html?screenCode=setting_webview"
+    }
+    public static var agreementUrl: String {
+        return domain + "/3pp/agreement/list.html"
+    }
     
-    private static let domain = "https://webview.sktnugu.com"
+    public static var domain = "https://webview.sktnugu.com"
     
     private enum MethodType: String, CaseIterable {
         case openExternalApp
