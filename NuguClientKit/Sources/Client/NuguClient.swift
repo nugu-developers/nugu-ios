@@ -72,6 +72,12 @@ public class NuguClient {
         interactionControlManager: interactionControlManager
     )
     
+    public lazy var mediaPlayerAgent: MediaPlayerAgentProtocol = MediaPlayerAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
     // keywordDetector
     public private(set) lazy var keywordDetector: KeywordDetector = {
         let keywordDetector =  KeywordDetector()
