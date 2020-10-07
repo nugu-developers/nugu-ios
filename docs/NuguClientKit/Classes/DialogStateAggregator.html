@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DialogStateAggregator Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/DialogStateAggregator" class="dashAnchor"></a>
+    <a title="DialogStateAggregator Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">NUGU SDK 0.19.4 Docs</a> (32% documented)</p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        DialogStateAggregator Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/DialogStateAggregator.html">DialogStateAggregator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeywordDetector.html">KeywordDetector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NuguClient.html">NuguClient</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:13NuguClientKit10logEnabledSbvp">logEnabled</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:13NuguClientKit8logLevel8NattyLog0gE0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/DialogState.html">DialogState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeywordDetectorState.html">KeywordDetectorState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/DialogStateDelegate.html">DialogStateDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeywordDetectorDelegate.html">KeywordDetectorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NuguClientDelegate.html">NuguClientDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/KeywordSource.html">KeywordSource</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>DialogStateAggregator</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">DialogStateAggregator</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">DialogStateAggregator</span><span class="p">:</span> <span class="kt">ASRAgentDelegate</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">DialogStateAggregator</span><span class="p">:</span> <span class="kt">TTSAgentDelegate</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">DialogStateAggregator</span><span class="p">:</span> <span class="kt">InteractionControlDelegate</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">DialogStateAggregator</span><span class="p">:</span> <span class="kt">FocusChannelDelegate</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">DialogStateAggregator</span><span class="p">:</span> <span class="kt">ChipsAgentDelegate</span></code></pre>
+
+                </div>
+              </div>
+            <p>DialogStateAggregator aggregate several components state into one.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit21DialogStateAggregatorC16sessionActivatedSbvp"></a>
+                    <a name="//apple_ref/swift/Property/sessionActivated" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit21DialogStateAggregatorC16sessionActivatedSbvp">sessionActivated</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">sessionActivated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit21DialogStateAggregatorC11isMultiturnSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isMultiturn" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit21DialogStateAggregatorC11isMultiturnSbvp">isMultiturn</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isMultiturn</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit21DialogStateAggregatorC24isChipsRequestInProgressSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isChipsRequestInProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit21DialogStateAggregatorC24isChipsRequestInProgressSbvp">isChipsRequestInProgress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isChipsRequestInProgress</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/DialogStateAggregatable"></a>
+                <a name="//apple_ref/swift/Section/DialogStateAggregatable" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/DialogStateAggregatable"></a>
+                  <h3 class="section-name"><p>DialogStateAggregatable</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit21DialogStateAggregatorC3add8delegateyAA0dE8Delegate_p_tF"></a>
+                    <a name="//apple_ref/swift/Method/add(delegate:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit21DialogStateAggregatorC3add8delegateyAA0dE8Delegate_p_tF">add(delegate:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Adds a delegate to be notified of DialogStateAggregator state changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">add</span><span class="p">(</span><span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DialogStateDelegate.html">DialogStateDelegate</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>delegate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The object to add.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit21DialogStateAggregatorC6remove8delegateyAA0dE8Delegate_p_tF"></a>
+                    <a name="//apple_ref/swift/Method/remove(delegate:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit21DialogStateAggregatorC6remove8delegateyAA0dE8Delegate_p_tF">remove(delegate:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Removes a delegate from DialogStateAggregator.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">remove</span><span class="p">(</span><span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DialogStateDelegate.html">DialogStateDelegate</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>delegate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The object to remove.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ASRAgentDelegate"></a>
+                <a name="//apple_ref/swift/Section/ASRAgentDelegate" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ASRAgentDelegate"></a>
+                  <h3 class="section-name"><p>ASRAgentDelegate</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents16ASRAgentDelegateP17asrAgentDidChange5stateyAA8ASRStateO_tF"></a>
+                    <a name="//apple_ref/swift/Method/asrAgentDidChange(state:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents16ASRAgentDelegateP17asrAgentDidChange5stateyAA8ASRStateO_tF">asrAgentDidChange(state:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">asrAgentDidChange</span><span class="p">(</span><span class="nv">state</span><span class="p">:</span> <span class="kt">ASRState</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents16ASRAgentDelegateP18asrAgentDidReceive6result15dialogRequestIdyAA9ASRResultO_SStF"></a>
+                    <a name="//apple_ref/swift/Method/asrAgentDidReceive(result:dialogRequestId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents16ASRAgentDelegateP18asrAgentDidReceive6result15dialogRequestIdyAA9ASRResultO_SStF">asrAgentDidReceive(result:<wbr>dialogRequestId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">asrAgentDidReceive</span><span class="p">(</span><span class="nv">result</span><span class="p">:</span> <span class="kt">ASRResult</span><span class="p">,</span> <span class="nv">dialogRequestId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TTSAgentDelegate"></a>
+                <a name="//apple_ref/swift/Section/TTSAgentDelegate" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/TTSAgentDelegate"></a>
+                  <h3 class="section-name"><p>TTSAgentDelegate</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents16TTSAgentDelegateP18ttsAgentDidReceive4text15dialogRequestIdySS_SStF"></a>
+                    <a name="//apple_ref/swift/Method/ttsAgentDidReceive(text:dialogRequestId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents16TTSAgentDelegateP18ttsAgentDidReceive4text15dialogRequestIdySS_SStF">ttsAgentDidReceive(text:<wbr>dialogRequestId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">ttsAgentDidReceive</span><span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">dialogRequestId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents16TTSAgentDelegateP17ttsAgentDidChange5state15dialogRequestIdyAA8TTSStateO_SStF"></a>
+                    <a name="//apple_ref/swift/Method/ttsAgentDidChange(state:dialogRequestId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents16TTSAgentDelegateP17ttsAgentDidChange5state15dialogRequestIdyAA8TTSStateO_SStF">ttsAgentDidChange(state:<wbr>dialogRequestId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">ttsAgentDidChange</span><span class="p">(</span><span class="nv">state</span><span class="p">:</span> <span class="kt">TTSState</span><span class="p">,</span> <span class="nv">dialogRequestId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/InteractionControlDelegate"></a>
+                <a name="//apple_ref/swift/Section/InteractionControlDelegate" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/InteractionControlDelegate"></a>
+                  <h3 class="section-name"><p>InteractionControlDelegate</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit21DialogStateAggregatorC27interactionControlDidChange11isMultiturnySb_tF"></a>
+                    <a name="//apple_ref/swift/Method/interactionControlDidChange(isMultiturn:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit21DialogStateAggregatorC27interactionControlDidChange11isMultiturnySb_tF">interactionControlDidChange(isMultiturn:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">interactionControlDidChange</span><span class="p">(</span><span class="nv">isMultiturn</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/FocusChannelDelegate"></a>
+                <a name="//apple_ref/swift/Section/FocusChannelDelegate" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/FocusChannelDelegate"></a>
+                  <h3 class="section-name"><p>FocusChannelDelegate</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit21DialogStateAggregatorC20focusChannelPriority0A4Core05FocushI0VyF"></a>
+                    <a name="//apple_ref/swift/Method/focusChannelPriority()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit21DialogStateAggregatorC20focusChannelPriority0A4Core05FocushI0VyF">focusChannelPriority()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">focusChannelPriority</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">FocusChannelPriority</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore20FocusChannelDelegateP05focusD9DidChange0F5StateyAA0cI0O_tF"></a>
+                    <a name="//apple_ref/swift/Method/focusChannelDidChange(focusState:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore20FocusChannelDelegateP05focusD9DidChange0F5StateyAA0cI0O_tF">focusChannelDidChange(focusState:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">focusChannelDidChange</span><span class="p">(</span><span class="nv">focusState</span><span class="p">:</span> <span class="kt">FocusState</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ChipsAgentDelegate"></a>
+                <a name="//apple_ref/swift/Section/ChipsAgentDelegate" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ChipsAgentDelegate"></a>
+                  <h3 class="section-name"><p>ChipsAgentDelegate</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit21DialogStateAggregatorC20chipsAgentDidReceive4item15dialogRequestIdy0A6Agents05ChipsH4ItemV_SStF"></a>
+                    <a name="//apple_ref/swift/Method/chipsAgentDidReceive(item:dialogRequestId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit21DialogStateAggregatorC20chipsAgentDidReceive4item15dialogRequestIdy0A6Agents05ChipsH4ItemV_SStF">chipsAgentDidReceive(item:<wbr>dialogRequestId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">chipsAgentDidReceive</span><span class="p">(</span><span class="nv">item</span><span class="p">:</span> <span class="kt">ChipsAgentItem</span><span class="p">,</span> <span class="nv">dialogRequestId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="https://github.com/nugu-developers/nugu-ios" target="_blank" rel="external">SK Telecom Co., Ltd.</a>. All rights reserved. (Last updated: 2020-10-05)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

@@ -1,0 +1,152 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 79,
+      "symbol": "EndPointDetectorConst",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 86,
+      "symbol": "StreamType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 87,
+      "symbol": "StreamType.linearPcm16",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 88,
+      "symbol": "StreamType.linearPcm8",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 89,
+      "symbol": "StreamType.speex",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 90,
+      "symbol": "StreamType.feature",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 95,
+      "symbol": "EndPointDetectorError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 96,
+      "symbol": "EndPointDetectorError.initFailed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/JadeMarble.swift",
+      "line": 97,
+      "symbol": "EndPointDetectorError.alreadyRunning",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/SpeexCodec.swift",
+      "line": 23,
+      "symbol": "SpeexEncoder",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/SpeexCodec.swift",
+      "line": 26,
+      "symbol": "SpeexEncoder.init(sampleRate:inputType:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/SpeexCodec.swift",
+      "line": 34,
+      "symbol": "SpeexEncoder.encode(data:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndPointDetectorEngine.swift",
+      "line": 23,
+      "symbol": "TycheEndPointDetectorEngine",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndPointDetectorEngine.swift",
+      "line": 24,
+      "symbol": "TycheEndPointDetectorEngine",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndPointDetectorEngine.swift",
+      "line": 30,
+      "symbol": "TycheEndPointDetectorEngine.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndPointDetectorEngine.swift",
+      "line": 40,
+      "symbol": "TycheEndPointDetectorEngine.state",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndPointDetectorEngine.swift",
+      "line": 49,
+      "symbol": "TycheEndPointDetectorEngine.init(epdFile:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndPointDetectorEngine.swift",
+      "line": 57,
+      "symbol": "TycheEndPointDetectorEngine.start(sampleRate:timeout:maxDuration:pauseLength:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndPointDetectorEngine.swift",
+      "line": 92,
+      "symbol": "TycheEndPointDetectorEngine.putAudioBuffer(buffer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndPointDetectorEngine.swift",
+      "line": 170,
+      "symbol": "TycheEndPointDetectorEngine.stop()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/JadeMarble/Sources/TycheEndpointDetectorEngine+State.swift",
+      "line": 24,
+      "symbol": "TycheEndPointDetectorEngine.State",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
+}
