@@ -25,11 +25,11 @@ public struct MediaPlayerAgentContext: Encodable {
     // MARK: User
     
     public struct User: Encodable {
-        public let isLogin: String
+        public let isLogIn: String
         public let hasVoucher: String
         
-        public init(isLogin: String, hasVoucher: String) {
-            self.isLogin = isLogin
+        public init(isLogIn: String, hasVoucher: String) {
+            self.isLogIn = isLogIn
             self.hasVoucher = hasVoucher
         }
     }

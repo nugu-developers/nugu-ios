@@ -48,7 +48,7 @@ public struct MediaPlayerAgentSong: Codable {
     public let title: String?
     public let duration: String?
     public let issueDate: String?
-    public let etc: [String: String]?
+    public let etc: [String: AnyHashable]?
     
     enum CodingKeys: String, CodingKey {
         case category
@@ -73,7 +73,7 @@ public struct MediaPlayerAgentSong: Codable {
         title = try container.decodeIfPresent(String.self, forKey: .title)
         duration = try container.decodeIfPresent(String.self, forKey: .duration)
         issueDate = try container.decodeIfPresent(String.self, forKey: .issueDate)
-        etc = try container.decode([String: String].self, forKey: .etc)
+        etc = try container.decode([String: AnyHashable].self, forKey: .etc)
     }
     
     public init(
@@ -85,7 +85,7 @@ public struct MediaPlayerAgentSong: Codable {
         title: String?,
         duration: String?,
         issueDate: String?,
-        etc: [String: String]?
+        etc: [String: AnyHashable]?
     ) {
         self.category = category
         self.theme = theme
@@ -96,5 +96,20 @@ public struct MediaPlayerAgentSong: Codable {
         self.duration = duration
         self.issueDate = issueDate
         self.etc = etc
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(category, forKey: .category)
+        try container.encode(theme, forKey: .theme)
+        try container.encode(genre, forKey: .genre)
+        try container.encode(artist, forKey: .artist)
+        try container.encode(album, forKey: .album)
+        try container.encode(title, forKey: .title)
+        try container.encode(theme, forKey: .theme)
+        try container.encode(duration, forKey: .duration)
+        try container.encode(issueDate, forKey: .issueDate)
+        try container.encodeIfPresent(etc, forKey: .etc)
     }
 }
