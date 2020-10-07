@@ -73,7 +73,7 @@ public struct MediaPlayerAgentSong: Codable {
         title = try container.decodeIfPresent(String.self, forKey: .title)
         duration = try container.decodeIfPresent(String.self, forKey: .duration)
         issueDate = try container.decodeIfPresent(String.self, forKey: .issueDate)
-        etc = try container.decode([String: String].self, forKey: .etc)
+        etc = try container.decodeIfPresent([String: String].self, forKey: .etc)
     }
     
     public init(
