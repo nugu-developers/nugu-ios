@@ -24,17 +24,20 @@ import AVFoundation
 import NuguCore
 import KeenSense
 
+/// <#Description#>
 public class KeywordDetector {
     private let engine = TycheKeywordDetectorEngine()
+    /// <#Description#>
     public weak var delegate: KeywordDetectorDelegate?
     
+    /// <#Description#>
     public var state: KeywordDetectorState = .inactive {
         didSet {
             delegate?.keywordDetectorStateDidChange(state)
         }
     }
     
-    // Must set `keywordSource` for using `KeywordDetector`
+    /// Must set `keywordSource` for using `KeywordDetector`
     public var keywordSource: KeywordSource? {
         didSet {
             engine.netFile = keywordSource?.netFileUrl
@@ -42,19 +45,24 @@ public class KeywordDetector {
         }
     }
     
+    /// <#Description#>
     public init() {
         engine.delegate = self
     }
     
+    /// <#Description#>
     public func start() {
         log.debug("start")
         engine.start()
     }
     
+    /// <#Description#>
+    /// - Parameter buffer: <#buffer description#>
     public func putAudioBuffer(buffer: AVAudioPCMBuffer) {
         engine.putAudioBuffer(buffer: buffer)
     }
     
+    /// <#Description#>
     public func stop() {
         engine.stop()
     }

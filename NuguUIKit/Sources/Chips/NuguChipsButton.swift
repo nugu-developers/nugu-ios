@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// <#Description#>
 final public class NuguChipsButton: UIButton {
     
     // MARK: - NuguChipsButton.Const
@@ -20,6 +21,7 @@ final public class NuguChipsButton: UIButton {
     
     // MARK: - NuguChipsButton.NuguChipsButtonTheme
     
+    /// <#Description#>
     public enum NuguChipsButtonTheme {
         case light
         case dark
@@ -45,10 +47,12 @@ final public class NuguChipsButton: UIButton {
     
     // MARK: - NuguChipsButton.NuguChipsButtonType
     
+    /// <#Description#>
     public enum NuguChipsButtonType {
         case action(text: String, token: String? = nil)
         case normal(text: String, token: String? = nil)
         
+        /// <#Description#>
         public var text: String {
             switch self {
             case .action(let text, _):
@@ -58,6 +62,7 @@ final public class NuguChipsButton: UIButton {
             }
         }
         
+        /// <#Description#>
         public var token: String? {
             switch self {
             case .action(_, let token):
@@ -67,6 +72,9 @@ final public class NuguChipsButton: UIButton {
             }
         }
         
+        /// <#Description#>
+        /// - Parameter theme: <#theme description#>
+        /// - Returns: <#description#>
         func textColor(theme: NuguChipsButtonTheme) -> UIColor {
             switch (self, theme) {
             case (.action, .light):

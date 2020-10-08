@@ -42,6 +42,11 @@ public protocol ExtensionAgentProtocol: CapabilityAgentable {
 // MARK: - Default
 
 public extension ExtensionAgentProtocol {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - data: <#data description#>
+    ///   - playServiceId: <#playServiceId description#>
+    /// - Returns: <#description#>
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String) -> String {
         return requestCommand(data: data, playServiceId: playServiceId, completion: nil)
     }

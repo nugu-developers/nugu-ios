@@ -76,11 +76,21 @@ public extension TTSAgentProtocol {
     @discardableResult func requestTTS(text: String) -> String {
         return requestTTS(text: text, playServiceId: nil, handler: nil)
     }
-
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - text: <#text description#>
+    ///   - playServiceId: <#playServiceId description#>
+    /// - Returns: <#description#>
     @discardableResult func requestTTS(text: String, playServiceId: String?) -> String {
         return requestTTS(text: text, playServiceId: playServiceId, handler: nil)
     }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - text: <#text description#>
+    ///   - handler: <#handler description#>
+    /// - Returns: <#description#>
     @discardableResult func requestTTS(text: String, handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)? = nil) -> String {
         return requestTTS(text: text, playServiceId: nil, handler: handler)
     }

@@ -20,25 +20,48 @@
 
 import Foundation
 
+/// <#Description#>
 public typealias DirectiveHandleInfos = [String: DirectiveHandleInfo]
+/// <#Description#>
 public typealias PrefetchDirective = (_ directive: Downstream.Directive) throws -> Void
+/// <#Description#>
 public typealias HandleDirective = (_ directive: Downstream.Directive, _ completion: @escaping (DirectiveHandleResult) -> Void) -> Void
+/// <#Description#>
 public typealias CancelDirective = (_ directive: Downstream.Directive) -> Void
+/// <#Description#>
 public typealias HandleAttachment = (_ attachment: Downstream.Attachment) -> Void
 
+/// <#Description#>
 public struct DirectiveHandleInfo: Hashable {
+    /// <#Description#>
     public let namespace: String
+    /// <#Description#>
     public let name: String
+    /// <#Description#>
     public let blockingPolicy: BlockingPolicy
+    /// <#Description#>
     public let directiveHandler: HandleDirective
+    /// <#Description#>
     public let cancelDirective: CancelDirective?
+    /// <#Description#>
     public let preFetch: PrefetchDirective?
+    /// <#Description#>
     public let attachmentHandler: HandleAttachment?
     
+    /// <#Description#>
     public var type: String {
         return "\(namespace).\(name)"
     }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - namespace: <#namespace description#>
+    ///   - name: <#name description#>
+    ///   - blockingPolicy: <#blockingPolicy description#>
+    ///   - preFetch: <#preFetch description#>
+    ///   - directiveHandler: <#directiveHandler description#>
+    ///   - cancelDirective: <#cancelDirective description#>
+    ///   - attachmentHandler: <#attachmentHandler description#>
     public init(
         namespace: String,
         name: String,
@@ -71,6 +94,7 @@ public struct DirectiveHandleInfo: Hashable {
 // MARK: - Array + DirectiveTypeInforable
 
 public extension Array where Element == DirectiveHandleInfo {
+    /// <#Description#>
     var asDictionary: DirectiveHandleInfos {
         return self.reduce(into: [String: DirectiveHandleInfo]()) { result, directiveTypeInfo in
             result[directiveTypeInfo.type] = directiveTypeInfo

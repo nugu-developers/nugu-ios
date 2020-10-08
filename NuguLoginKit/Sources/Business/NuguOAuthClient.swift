@@ -21,6 +21,7 @@
 import UIKit
 import SafariServices
 
+/// <#Description#>
 public class NuguOAuthClient {
     /// The `deviceUniqueId` is unique identifier each device.
     private(set) public var deviceUniqueId: String

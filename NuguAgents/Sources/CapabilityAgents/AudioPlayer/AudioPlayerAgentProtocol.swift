@@ -94,6 +94,8 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
 // MARK: - Default
 
 public extension AudioPlayerAgentProtocol {
+    /// <#Description#>
+    /// - Returns: <#description#>
     @discardableResult func next() -> String {
         return next(completion: nil)
     }

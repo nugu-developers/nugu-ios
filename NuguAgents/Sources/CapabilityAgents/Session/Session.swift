@@ -20,11 +20,20 @@
 
 import Foundation
 
+/// <#Description#>
 public struct Session: Equatable {
+    /// <#Description#>
     public let sessionId: String
+    /// <#Description#>
     public let dialogRequestId: String
+    /// <#Description#>
     public let playServiceId: String
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - sessionId: <#sessionId description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - playServiceId: <#playServiceId description#>
     public init(sessionId: String, dialogRequestId: String, playServiceId: String) {
         self.sessionId = sessionId
         self.dialogRequestId = dialogRequestId

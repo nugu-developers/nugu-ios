@@ -22,11 +22,20 @@ import Foundation
 
 import KeenSense
 
+/// <#Description#>
 public struct KeywordSource {
+    /// <#Description#>
     public let keyword: String
+    /// <#Description#>
     public let netFileUrl: URL
+    /// <#Description#>
     public let searchFileUrl: URL
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - keyword: <#keyword description#>
+    ///   - netFileUrl: <#netFileUrl description#>
+    ///   - searchFileUrl: <#searchFileUrl description#>
     public init(keyword: String, netFileUrl: URL, searchFileUrl: URL) {
         self.keyword = keyword
         self.netFileUrl = netFileUrl

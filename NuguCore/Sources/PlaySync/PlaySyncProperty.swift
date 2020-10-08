@@ -20,15 +20,23 @@
 
 import Foundation
 
+/// <#Description#>
 public struct PlaySyncProperty {
+    /// <#Description#>
     public let layerType: LayerType
+    /// <#Description#>
     public let contextType: ContextType
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - layerType: <#layerType description#>
+    ///   - contextType: <#contextType description#>
     public init(layerType: LayerType, contextType: ContextType) {
         self.layerType = layerType
         self.contextType = contextType
     }
     
+    /// <#Description#>
     public enum LayerType: String, Decodable {
         case info = "INFO"
         case media = "MEDIA"
@@ -37,7 +45,8 @@ public struct PlaySyncProperty {
         case overlay = "OVERLAY"
         case asr = "ASR"
     }
-
+    
+    /// <#Description#>
     public enum ContextType: String {
         case sound
         case display

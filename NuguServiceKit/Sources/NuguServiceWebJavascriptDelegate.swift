@@ -20,8 +20,15 @@
 
 // MARK: - NuguServiceWebJavascriptDelegate
 
+/// <#Description#>
 public protocol NuguServiceWebJavascriptDelegate: class {
+    /// <#Description#>
+    /// - Parameter openExternalAppItem: <#openExternalAppItem description#>
     func openExternalApp(openExternalAppItem: WebOpenExternalApp)
+    /// <#Description#>
+    /// - Parameter url: <#url description#>
     func openInAppBrowser(url: String)
+    /// <#Description#>
+    /// - Parameter reason: <#reason description#>
     func closeWindow(reason: String)
 }

@@ -1,535 +1,80 @@
 {
   "warnings": [
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 27,
-      "symbol": "KeywordDetector",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 29,
-      "symbol": "KeywordDetector.delegate",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 31,
-      "symbol": "KeywordDetector.state",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 38,
-      "symbol": "KeywordDetector.keywordSource",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 45,
-      "symbol": "KeywordDetector.init()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 49,
-      "symbol": "KeywordDetector.start()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 54,
-      "symbol": "KeywordDetector.putAudioBuffer(buffer:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 58,
-      "symbol": "KeywordDetector.stop()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 65,
-      "symbol": "KeywordDetector",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 88,
-      "symbol": "KeywordDetector",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetectorDelegate.swift",
-      "line": 23,
-      "symbol": "KeywordDetectorDelegate",
-      "symbol_kind": "source.lang.swift.decl.protocol",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetectorDelegate.swift",
-      "line": 24,
-      "symbol": "KeywordDetectorDelegate.keywordDetectorDidDetect(keyword:data:start:end:detection:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetectorDelegate.swift",
-      "line": 25,
-      "symbol": "KeywordDetectorDelegate.keywordDetectorDidError(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetectorDelegate.swift",
-      "line": 26,
-      "symbol": "KeywordDetectorDelegate.keywordDetectorStateDidChange(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordSource.swift",
-      "line": 25,
-      "symbol": "KeywordSource",
-      "symbol_kind": "source.lang.swift.decl.struct",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordSource.swift",
-      "line": 26,
-      "symbol": "KeywordSource.keyword",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordSource.swift",
-      "line": 27,
-      "symbol": "KeywordSource.netFileUrl",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordSource.swift",
-      "line": 28,
-      "symbol": "KeywordSource.searchFileUrl",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordSource.swift",
-      "line": 30,
-      "symbol": "KeywordSource.init(keyword:netFileUrl:searchFileUrl:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Business/DialogStateAggregator.swift",
-      "line": 66,
-      "symbol": "DialogStateAggregator.sessionActivated",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Business/DialogStateAggregator.swift",
-      "line": 69,
-      "symbol": "DialogStateAggregator.isMultiturn",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Business/DialogStateAggregator.swift",
-      "line": 71,
-      "symbol": "DialogStateAggregator.isChipsRequestInProgress",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Business/DialogStateAggregator.swift",
-      "line": 169,
+      "line": 172,
       "symbol": "DialogStateAggregator.interactionControlDidChange(isMultiturn:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Business/DialogStateAggregator.swift",
-      "line": 183,
+      "line": 186,
       "symbol": "DialogStateAggregator.focusChannelPriority()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Business/DialogStateAggregator.swift",
-      "line": 219,
+      "line": 222,
       "symbol": "DialogStateAggregator.chipsAgentDidReceive(item:dialogRequestId:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 26,
-      "symbol": "NuguClient",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 30,
-      "symbol": "NuguClient.contextManager",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 31,
-      "symbol": "NuguClient.focusManager",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 32,
-      "symbol": "NuguClient.streamDataRouter",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 33,
-      "symbol": "NuguClient.directiveSequencer",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 34,
-      "symbol": "NuguClient.playSyncManager",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 35,
-      "symbol": "NuguClient.dialogAttributeStore",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 36,
-      "symbol": "NuguClient.sessionManager",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 37,
-      "symbol": "NuguClient.systemAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 38,
-      "symbol": "NuguClient.interactionControlManager",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 41,
-      "symbol": "NuguClient.dialogStateAggregator",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 42,
-      "symbol": "NuguClient.asrAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 43,
-      "symbol": "NuguClient.ttsAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 44,
-      "symbol": "NuguClient.textAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 45,
-      "symbol": "NuguClient.audioPlayerAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 46,
-      "symbol": "NuguClient.soundAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 47,
-      "symbol": "NuguClient.sessionAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 48,
-      "symbol": "NuguClient.chipsAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 51,
-      "symbol": "NuguClient.displayAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 60,
-      "symbol": "NuguClient.extensionAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 66,
-      "symbol": "NuguClient.locationAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 68,
-      "symbol": "NuguClient.phoneCallAgent",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 76,
-      "symbol": "NuguClient.keywordDetector",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 83,
-      "symbol": "NuguClient.init(delegate:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 173,
-      "symbol": "NuguClient",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 174,
+      "line": 198,
       "symbol": "NuguClient.startReceiveServerInitiatedDirective(completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 178,
+      "line": 202,
       "symbol": "NuguClient.stopReceiveServerInitiatedDirective()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 185,
-      "symbol": "NuguClient",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 197,
-      "symbol": "NuguClient",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 213,
-      "symbol": "NuguClient",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 232,
-      "symbol": "NuguClient",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 237,
+      "line": 261,
       "symbol": "NuguClient.streamDataDidReceive(direcive:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 241,
+      "line": 265,
       "symbol": "NuguClient.streamDataDidReceive(attachment:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 245,
+      "line": 269,
       "symbol": "NuguClient.streamDataWillSend(event:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 249,
+      "line": 273,
       "symbol": "NuguClient.streamDataDidSend(event:error:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 253,
+      "line": 277,
       "symbol": "NuguClient.streamDataDidSend(attachment:error:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 25,
-      "symbol": "NuguClientDelegate",
-      "symbol_kind": "source.lang.swift.decl.protocol",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 27,
-      "symbol": "NuguClientDelegate.nuguClientWillRequireAudioSession()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 28,
-      "symbol": "NuguClientDelegate.nuguClientDidReleaseAudioSession()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 31,
-      "symbol": "NuguClientDelegate.nuguClientDidReceive(direcive:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 32,
-      "symbol": "NuguClientDelegate.nuguClientDidReceive(attachment:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 33,
-      "symbol": "NuguClientDelegate.nuguClientWillSend(event:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 34,
-      "symbol": "NuguClientDelegate.nuguClientDidSend(event:error:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 35,
-      "symbol": "NuguClientDelegate.nuguClientDidSend(attachment:error:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 38,
-      "symbol": "NuguClientDelegate.nuguClientRequestAccessToken()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 43,
-      "symbol": "NuguClientDelegate",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 45,
-      "symbol": "NuguClientDelegate.nuguClientDidReleaseAudioSession()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 48,
-      "symbol": "NuguClientDelegate.nuguClientDidReceive(direcive:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 49,
-      "symbol": "NuguClientDelegate.nuguClientDidReceive(attachment:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 50,
-      "symbol": "NuguClientDelegate.nuguClientDidSend(event:error:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClientDelegate.swift",
-      "line": 51,
-      "symbol": "NuguClientDelegate.nuguClientDidSend(attachment:error:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/NuguClientKit.swift",
+      "line": 47,
+      "symbol": "logEnabled",
+      "symbol_kind": "source.lang.swift.decl.var.global",
       "warning": "undocumented"
     }
   ],

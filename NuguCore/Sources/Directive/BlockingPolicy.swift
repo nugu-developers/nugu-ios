@@ -20,15 +20,23 @@
 
 import Foundation
 
+/// <#Description#>
 public struct BlockingPolicy {
+    /// <#Description#>
     public let medium: Medium
+    /// <#Description#>
     public let isBlocking: Bool
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - medium: <#medium description#>
+    ///   - isBlocking: <#isBlocking description#>
     public init(medium: Medium, isBlocking: Bool) {
         self.medium = medium
         self.isBlocking = isBlocking
     }
     
+    /// <#Description#>
     public enum Medium: CaseIterable {
         case none
         case audio

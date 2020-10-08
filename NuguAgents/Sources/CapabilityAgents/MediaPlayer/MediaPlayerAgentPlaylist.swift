@@ -20,10 +20,17 @@
 
 import Foundation
 
+/// <#Description#>
 public struct MediaPlayerAgentPlaylist: Encodable {
+    /// <#Description#>
     public let name: String?
+    /// <#Description#>
     public let number: String
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - name: <#name description#>
+    ///   - number: <#number description#>
     init(name: String?, number: String) {
         self.name = name
         self.number = number

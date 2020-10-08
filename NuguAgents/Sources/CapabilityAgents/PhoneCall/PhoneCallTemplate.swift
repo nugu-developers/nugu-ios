@@ -20,12 +20,23 @@
 
 import Foundation
 
+/// <#Description#>
 public struct PhoneCallTemplate: Encodable {
+    /// <#Description#>
     public let intent: PhoneCallIntent?
+    /// <#Description#>
     public let callType: PhoneCallType?
+    /// <#Description#>
     public let recipientIntended: PhoneCallRecipient?
+    /// <#Description#>
     public let candidates: [PhoneCallPerson]?
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - intent: <#intent description#>
+    ///   - callType: <#callType description#>
+    ///   - recipientIntended: <#recipientIntended description#>
+    ///   - candidates: <#candidates description#>
     public init(
         intent: PhoneCallIntent?,
         callType: PhoneCallType?,

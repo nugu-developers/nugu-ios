@@ -20,7 +20,13 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol SessionDelegate: class {
+    /// <#Description#>
+    /// - Parameter session: <#session description#>
     func sessionDidSet(session: Session)
+    
+    /// <#Description#>
+    /// - Parameter session: <#session description#>
     func sessionDidUnset(session: Session)
 }

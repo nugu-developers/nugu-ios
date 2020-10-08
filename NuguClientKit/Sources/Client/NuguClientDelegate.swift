@@ -22,19 +22,42 @@ import Foundation
 
 import NuguCore
 
+/// <#Description#>
 public protocol NuguClientDelegate: class {
     // audio session related
+    /// <#Description#>
     func nuguClientWillRequireAudioSession() -> Bool
+    
+    /// <#Description#>
     func nuguClientDidReleaseAudioSession()
     
     // nugu server related
+    /// <#Description#>
+    /// - Parameter direcive: <#direcive description#>
     func nuguClientDidReceive(direcive: Downstream.Directive)
+    
+    /// <#Description#>
+    /// - Parameter attachment: <#attachment description#>
     func nuguClientDidReceive(attachment: Downstream.Attachment)
+    
+    /// <#Description#>
+    /// - Parameter event: <#event description#>
     func nuguClientWillSend(event: Upstream.Event)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - event: <#event description#>
+    ///   - error: <#error description#>
     func nuguClientDidSend(event: Upstream.Event, error: Error?)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - attachment: <#attachment description#>
+    ///   - error: <#error description#>
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?)
     
     // authorization related
+    /// <#Description#>
     func nuguClientRequestAccessToken() -> String?
 }
 

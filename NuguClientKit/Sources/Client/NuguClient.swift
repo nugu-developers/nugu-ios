@@ -23,31 +23,50 @@ import Foundation
 import NuguCore
 import NuguAgents
 
+/// <#Description#>
 public class NuguClient {
     private weak var delegate: NuguClientDelegate?
     
     // core
+    /// <#Description#>
     public let contextManager: ContextManageable
+    /// <#Description#>
     public let focusManager: FocusManageable
+    /// <#Description#>
     public let streamDataRouter: StreamDataRoutable
+    /// <#Description#>
     public let directiveSequencer: DirectiveSequenceable
+    /// <#Description#>
     public let playSyncManager: PlaySyncManageable
+    /// <#Description#>
     public let dialogAttributeStore: DialogAttributeStoreable
+    /// <#Description#>
     public let sessionManager: SessionManageable
+    /// <#Description#>
     public let systemAgent: SystemAgentProtocol
+    /// <#Description#>
     public let interactionControlManager: InteractionControlManageable
     
     // default agents
+    /// <#Description#>
     public let dialogStateAggregator: DialogStateAggregator
+    /// <#Description#>
     public let asrAgent: ASRAgentProtocol
+    /// <#Description#>
     public let ttsAgent: TTSAgentProtocol
+    /// <#Description#>
     public let textAgent: TextAgentProtocol
+    /// <#Description#>
     public let audioPlayerAgent: AudioPlayerAgentProtocol
+    /// <#Description#>
     public let soundAgent: SoundAgentProtocol
+    /// <#Description#>
     public let sessionAgent: SessionAgentProtocol
+    /// <#Description#>
     public let chipsAgent: ChipsAgentProtocol
 
     // additional agents
+    /// <#Description#>
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
         upstreamDataSender: streamDataRouter,
         playSyncManager: playSyncManager,
@@ -57,14 +76,17 @@ public class NuguClient {
         focusManager: focusManager
     )
     
+    /// <#Description#>
     public lazy var extensionAgent: ExtensionAgentProtocol = ExtensionAgent(
         upstreamDataSender: streamDataRouter,
         contextManager: contextManager,
         directiveSequencer: directiveSequencer
     )
     
+    /// <#Description#>
     public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
     
+    /// <#Description#>
     public lazy var phoneCallAgent: PhoneCallAgentProtocol = PhoneCallAgent(
         directiveSequencer: directiveSequencer,
         contextManager: contextManager,
@@ -72,13 +94,14 @@ public class NuguClient {
         interactionControlManager: interactionControlManager
     )
     
+    /// <#Description#>
     public lazy var mediaPlayerAgent: MediaPlayerAgentProtocol = MediaPlayerAgent(
         directiveSequencer: directiveSequencer,
         contextManager: contextManager,
         upstreamDataSender: streamDataRouter
     )
     
-    // keywordDetector
+    /// <#Description#>
     public private(set) lazy var keywordDetector: KeywordDetector = {
         let keywordDetector =  KeywordDetector()
         contextManager.add(delegate: keywordDetector)
@@ -86,6 +109,8 @@ public class NuguClient {
         return keywordDetector
     }()
     
+    /// <#Description#>
+    /// - Parameter delegate: <#delegate description#>
     public init(delegate: NuguClientDelegate) {
         self.delegate = delegate
         

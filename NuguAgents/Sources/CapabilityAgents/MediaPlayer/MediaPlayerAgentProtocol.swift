@@ -20,8 +20,8 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol MediaPlayerAgentProtocol: CapabilityAgentable {
     /// <#Description#>
     var delegate: MediaPlayerAgentDelegate? { get set }
-    
 }

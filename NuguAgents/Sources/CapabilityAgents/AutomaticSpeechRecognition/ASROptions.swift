@@ -22,6 +22,7 @@ import Foundation
 
 import NuguCore
 
+/// <#Description#>
 public struct ASROptions {
     /// Max duration from speech start to end.
     public let maxDuration: TimeIntervallic
@@ -29,8 +30,11 @@ public struct ASROptions {
     public let timeout: TimeIntervallic
     /// The engine waits this time then consider speech end.
     public let pauseLength: TimeIntervallic
+    /// <#Description#>
     public let sampleRate = 16000.0
+    /// <#Description#>
     public let encoding: Encoding
+    /// <#Description#>
     public let endPointing: EndPointing
     
     /// - Parameters:
@@ -50,12 +54,14 @@ public struct ASROptions {
         self.encoding = encoding
         self.endPointing = endPointing
     }
-
+    
+    /// <#Description#>
     public enum Encoding {
         case partial
         case complete
     }
     
+    /// <#Description#>
     public enum EndPointing: Equatable {
         case client(epdFile: URL)
         /// Server side end point detector does not support yet.

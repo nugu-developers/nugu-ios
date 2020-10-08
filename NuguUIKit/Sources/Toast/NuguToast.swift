@@ -20,6 +20,7 @@
 
 import UIKit
 
+/// <#Description#>
 final public class NuguToast {
     
     // MARK: - NuguToast.Const
@@ -40,6 +41,7 @@ final public class NuguToast {
     
     // MARK: - Singleton
     
+    /// <#Description#>
     public static let shared = NuguToast()
     
     // MARK: - Private Properties
@@ -62,6 +64,10 @@ final public class NuguToast {
 // MARK: - Public
 
 public extension NuguToast {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - message: <#message description#>
+    ///   - bottomMargin: <#bottomMargin description#>
     func showToast(message: String?, bottomMargin: CGFloat? = nil) {
         guard let window = UIApplication.shared.keyWindow else { return }
         guard let toastMessage = message, toastMessage.count > 0 else { return }
@@ -119,6 +125,7 @@ public extension NuguToast {
         })
     }
     
+    /// <#Description#>
     func hideToastIfNeeded() {
         if let hideAnimationWorkItem = self.hideAnimationWorkItem {
             hideAnimationWorkItem.cancel()

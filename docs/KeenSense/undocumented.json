@@ -9,72 +9,9 @@
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 80,
-      "symbol": "StreamType.linearPcm16",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 81,
-      "symbol": "StreamType.linearPcm8",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 82,
-      "symbol": "StreamType.speex",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 83,
-      "symbol": "StreamType.feature",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
       "line": 95,
       "symbol": "KeywordDetectorError",
       "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 96,
-      "symbol": "KeywordDetectorError.initEngineFailed",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 97,
-      "symbol": "KeywordDetectorError.initBufferFailed",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 98,
-      "symbol": "KeywordDetectorError.unsupportedAudioFormat",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 99,
-      "symbol": "KeywordDetectorError.noDataAvailable",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/KeenSense/Sources/KeenSense.swift",
-      "line": 100,
-      "symbol": "KeywordDetectorError.alreadyActivated",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
