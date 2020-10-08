@@ -91,15 +91,16 @@ extension NuguCentralManager {
         if UserDefaults.Standard.useWakeUpDetector,
             let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
             client.keywordDetector.keywordSource = keyword.keywordSource
+            startWakeUpDetector()
+            
             startMicWorkItem?.cancel()
             startMicWorkItem = DispatchWorkItem(block: { [weak self] in
                 log.debug("startMicWorkItem start")
-                self?.startMicInputProvider(requestingFocus: false) { [weak self] (success) in
+                self?.startMicInputProvider(requestingFocus: false) { (success) in
                     guard success else {
                         log.debug("startMicWorkItem failed!")
                         return
                     }
-                    self?.startWakeUpDetector()
                 }
             })
             guard let startMicWorkItem = startMicWorkItem else { return }
