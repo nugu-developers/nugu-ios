@@ -37,7 +37,7 @@ class ClientEndPointDetector: EndPointDetectable {
     
     public init(asrOptions: ASROptions, epdFile: URL) {
         self.asrOptions = asrOptions
-        engine = TycheEndPointDetectorEngine(epdFile: epdFile)
+        engine = TycheEndPointDetectorEngine(epdFilePath: epdFile.path)
         engine.delegate = self
     }
     
