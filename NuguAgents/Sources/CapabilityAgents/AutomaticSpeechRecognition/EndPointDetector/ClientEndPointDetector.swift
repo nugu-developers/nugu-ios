@@ -55,7 +55,12 @@ class ClientEndPointDetector: EndPointDetectable {
     }
     
     func putAudioBuffer(buffer: AVAudioPCMBuffer) {
-        engine.putAudioBuffer(buffer: buffer)
+        guard let pcmBuffer: AVAudioPCMBuffer = buffer.copy() as? AVAudioPCMBuffer else {
+            log.warning("copy buffer failed")
+            return
+        }
+        
+        engine.putAudioBuffer(buffer: pcmBuffer)
     }
     
     public func stop() {
