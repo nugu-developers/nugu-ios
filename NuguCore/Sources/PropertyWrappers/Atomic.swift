@@ -21,7 +21,7 @@
 import Foundation
 
 @propertyWrapper
-struct Atomic<Value> {
+final class Atomic<Value> {
     private var value: Value
     private let queue = DispatchQueue(label: "com.sktelecom.romaine.atomic.queue")
 
@@ -40,9 +40,15 @@ struct Atomic<Value> {
         }
     }
 
-    mutating func store(value: Value) {
+    func store(value: Value) {
         queue.sync {
             self.value = value
+        }
+    }
+    
+    func mutate(_ transform: (inout Value) -> Void) {
+        queue.sync {
+            transform(&value)
         }
     }
 }

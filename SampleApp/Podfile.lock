@@ -1,30 +1,30 @@
 PODS:
-  - JadeMarble (0.19.4):
+  - JadeMarble (0.20.0):
     - NattyLog (~> 1)
-  - KeenSense (0.19.4):
+  - KeenSense (0.20.0):
     - NattyLog (~> 1)
   - lottie-ios (3.1.8)
   - NattyLog (1.2.1)
-  - NuguAgents (0.19.4):
+  - NuguAgents (0.20.0):
     - JadeMarble (~> 0)
     - NattyLog (~> 1)
     - NuguCore (~> 0)
     - SilverTray (~> 1)
-  - NuguClientKit (0.19.4):
+  - NuguClientKit (0.20.0):
     - KeenSense (~> 0)
     - NattyLog (~> 1)
     - NuguAgents (~> 0)
     - NuguCore (~> 0)
-  - NuguCore (0.19.4):
+  - NuguCore (0.20.0):
     - NattyLog (~> 1.0)
     - RxSwift (~> 5)
-  - NuguLoginKit (0.19.4)
-  - NuguServiceKit (0.19.4):
+  - NuguLoginKit (0.20.0)
+  - NuguServiceKit (0.20.0):
     - NattyLog (~> 1)
-  - NuguUIKit (0.19.4):
+  - NuguUIKit (0.20.0):
     - lottie-ios (~> 3)
   - RxSwift (5.1.1)
-  - SilverTray (1.2.3)
+  - SilverTray (1.2.4)
 
 DEPENDENCIES:
   - JadeMarble (from `../`)
@@ -62,18 +62,18 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  JadeMarble: 2562352e2e3a7e3828d91eed6e81f982e7cf5f92
-  KeenSense: c48d7a1e4d0583ee3fba2c6b9cc862bc0bb9ea44
+  JadeMarble: 1109e74a74355ec8f7c332650aa7fb817b933c68
+  KeenSense: 2ae3e8ac18cccf4ab53751ef3442aa54b6656b4d
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
   NattyLog: f9ece0db2fb62178d8246f0ae033a9b64f2d7f30
-  NuguAgents: e1b260a10db18b65368da3a2a4fd279fc647440e
-  NuguClientKit: 5a9249be6d39bdd713857762a3cd502519015530
-  NuguCore: 078875ffb0c52442e78e05905ec90dffd29fa580
-  NuguLoginKit: 63d5827c783ea0648114c29969e84c8829079fcf
-  NuguServiceKit: 1106a07498724ac70c68c062a3aa661c66c647fc
-  NuguUIKit: 3755b87ee4bc966e27837ab4151460bc625ea649
+  NuguAgents: af4ea57d1139bacecb9f106d5791030a24fb2703
+  NuguClientKit: b106515d4abe68dec70354f67633ea9e9e34c63b
+  NuguCore: 368108b28e5ab9be8469f8d81622987b54ed67bd
+  NuguLoginKit: 0049dedd24071db0f55e911d079e7fee1456986c
+  NuguServiceKit: dd9c09cf461faebb0c65e1062191803534f48723
+  NuguUIKit: fd7fc7bab5d3e13f282dbd301844d3b22ce5e03a
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
-  SilverTray: e5de4ede6993a0f1f1b518a482c14f75b4641bc3
+  SilverTray: 3327f40af59e337611a0461aeb4e280893b107a6
 
 PODFILE CHECKSUM: fed1a1aa73e7405ed59ad9f1441a792ea394d47a
 
