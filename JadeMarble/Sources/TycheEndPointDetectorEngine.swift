@@ -23,7 +23,7 @@ import AVFoundation
 
 public class TycheEndPointDetectorEngine {
     private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.jademarble.tyche_end_point_detector")
-    private let epdFile: URL
+    private let epdFilePath: String
     private var flushedLength: Int = 0
     private var flushLength: Int = 0
     private var engineHandle: EpdHandle?
@@ -46,8 +46,8 @@ public class TycheEndPointDetectorEngine {
         }
     }
     
-    public init(epdFile: URL) {
-        self.epdFile = epdFile
+    public init(epdFilePath: String) {
+        self.epdFilePath = epdFilePath
     }
     
     deinit {
@@ -195,7 +195,7 @@ public class TycheEndPointDetectorEngine {
             epdClientChannelRELEASE(engineHandle)
         }
         
-        try epdFile.path.withCString { [weak self] (cstringEpdFile) -> Void in
+        try epdFilePath.withCString { [weak self] (cstringEpdFile) -> Void in
             guard let self = self else { return }
             
             guard let epdHandle = epdClientChannelSTART(

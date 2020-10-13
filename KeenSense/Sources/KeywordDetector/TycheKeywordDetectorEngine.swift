@@ -34,8 +34,8 @@ public class TycheKeywordDetectorEngine {
     /// Window buffer for user's voice. This will help extract certain section of speaking keyword
     private var detectingData = ShiftingData(capacity: Int(KeywordDetectorConst.sampleRate*5*2))
     
-    public var netFile: URL?
-    public var searchFile: URL?
+    public var netFilePath: String?
+    public var searchFilePath: String?
     public weak var delegate: TycheKeywordDetectorEngineDelegate?
     public var state: TycheKeywordDetectorEngine.State = .inactive {
         didSet {
@@ -127,7 +127,7 @@ public class TycheKeywordDetectorEngine {
 extension TycheKeywordDetectorEngine {
     
     /**
-     Initialize Key Word Detec engine.
+     Initialize Key Word Detector engine.
      It needs certain files of Voice Recognition. But we wrap this and offer the simple API.
      Then only you have to do is making decision which key word you use.
      */
@@ -136,13 +136,13 @@ extension TycheKeywordDetectorEngine {
             Wakeup_Destroy(engineHandle)
         }
         
-        guard let netFile = netFile,
-            let searchFile = searchFile else {
+        guard let netFilePath = netFilePath,
+            let searchFilePath = searchFilePath else {
                 throw KeywordDetectorError.initEngineFailed
         }
         
-        try netFile.path.withCString { cstringNetFile -> Void in
-            try searchFile.path.withCString({ cstringSearchFile -> Void in
+        try netFilePath.withCString { cstringNetFile -> Void in
+            try searchFilePath.withCString({ cstringSearchFile -> Void in
                 guard let wakeUpHandle = Wakeup_Create(cstringNetFile, cstringSearchFile, 0) else {
                     throw KeywordDetectorError.initEngineFailed
                 }

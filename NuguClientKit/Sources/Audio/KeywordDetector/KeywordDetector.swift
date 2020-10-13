@@ -37,8 +37,8 @@ public class KeywordDetector {
     // Must set `keywordSource` for using `KeywordDetector`
     public var keywordSource: KeywordSource? {
         didSet {
-            engine.netFile = keywordSource?.netFileUrl
-            engine.searchFile = keywordSource?.searchFileUrl
+            engine.netFilePath = keywordSource?.netFileUrl.path
+            engine.searchFilePath = keywordSource?.searchFileUrl.path
         }
     }
     
