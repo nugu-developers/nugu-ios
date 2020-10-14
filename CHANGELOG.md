@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.21.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.21.0)
+Released on 2020-10-14
+### SDK
+#### Fixed
+- Fix crash issues. (#543) (#544) (#553)
+
 ## [0.20.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.20.0)
 Released on 2020-10-07
 ### SDK
