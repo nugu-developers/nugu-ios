@@ -20,10 +20,12 @@
 
 import Foundation
 
+/// <#Description#>
 public struct PhoneCallPerson: Codable {
 
     // MARK: PersonType
     
+    /// <#Description#>
     public enum PersonType: String, Codable {
         case contact = "CONTACT"
         case exchange = "EXCHANGE"
@@ -33,10 +35,17 @@ public struct PhoneCallPerson: Codable {
     
     // MARK: Address
     
+    /// <#Description#>
     public struct Address: Codable {
+        /// <#Description#>
         public let road: String?
+        /// <#Description#>
         public let jibun: String?
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - road: <#road description#>
+        ///   - jibun: <#jibun description#>
         public init(road: String?, jibun: String?) {
             self.road = road
             self.jibun = jibun
@@ -45,11 +54,20 @@ public struct PhoneCallPerson: Codable {
     
     // MARK: BusinessHours
     
+    /// <#Description#>
     public struct BusinessHours: Codable {
+        /// <#Description#>
         public let open: String?
+        /// <#Description#>
         public let close: String?
+        /// <#Description#>
         public let info: String?
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - open: <#open description#>
+        ///   - close: <#close description#>
+        ///   - info: <#info description#>
         public init(open: String?, close: String?, info: String?) {
             self.open = open
             self.close = close
@@ -59,8 +77,10 @@ public struct PhoneCallPerson: Codable {
     
     // MARK: History
     
+    /// <#Description#>
     public struct History: Codable {
         
+        /// <#Description#>
         public enum HistoryType: String, Codable {
             case out = "OUT"
             case outCanceled = "OUT_CANCELED"
@@ -70,6 +90,7 @@ public struct PhoneCallPerson: Codable {
             case blocked = "BLOCKED"
         }
         
+        /// <#Description#>
         public enum CallType: String, Codable {
             case normal = "NORMAL"
             case video = "VIDEO"
@@ -78,10 +99,18 @@ public struct PhoneCallPerson: Codable {
             case voiceMessage = "VOICE_MESSAGE"
         }
         
+        /// <#Description#>
         public let time: String?
+        /// <#Description#>
         public let type: HistoryType?
+        /// <#Description#>
         public let callType: CallType?
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - time: <#time description#>
+        ///   - type: <#type description#>
+        ///   - callType: <#callType description#>
         public init(time: String?, type: HistoryType?, callType: CallType?) {
             self.time = time
             self.type = type
@@ -91,8 +120,10 @@ public struct PhoneCallPerson: Codable {
     
     // MARK: Contact
     
+    /// <#Description#>
     public struct Contact: Codable {
         
+        /// <#Description#>
         public enum Label: String, Codable {
             case mobile = "MOBILE"
             case company = "COMPANY"
@@ -100,27 +131,57 @@ public struct PhoneCallPerson: Codable {
             case userDefined = "USER_DEFINED"
         }
         
+        /// <#Description#>
         public let label: Label?
+        /// <#Description#>
         public let number: String?
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - label: <#label description#>
+        ///   - number: <#number description#>
         public init(label: Label?, number: String?) {
             self.label = label
             self.number = number
         }
     }
     
+    /// <#Description#>
     public let name: String
+    /// <#Description#>
     public let type: PersonType
+    /// <#Description#>
     public let profileImgUrl: String?
+    /// <#Description#>
     public let category: String?
+    /// <#Description#>
     public let address: Address?
+    /// <#Description#>
     public let businessHours: BusinessHours?
+    /// <#Description#>
     public let history: History?
+    /// <#Description#>
     public let numInCallHistory: String?
+    /// <#Description#>
     public let token: String?
+    /// <#Description#>
     public let score: String?
+    /// <#Description#>
     public let contacts: [Contact]?
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - name: <#name description#>
+    ///   - type: <#type description#>
+    ///   - profileImgUrl: <#profileImgUrl description#>
+    ///   - category: <#category description#>
+    ///   - address: <#address description#>
+    ///   - businessHours: <#businessHours description#>
+    ///   - history: <#history description#>
+    ///   - numInCallHistory: <#numInCallHistory description#>
+    ///   - token: <#token description#>
+    ///   - score: <#score description#>
+    ///   - contacts: <#contacts description#>
     public init(
         name: String,
         type: PersonType,

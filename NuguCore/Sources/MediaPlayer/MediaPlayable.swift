@@ -22,6 +22,7 @@ import Foundation
 
 /// <#Description#>
 public protocol MediaPlayable: class {
+    /// <#Description#>
     var delegate: MediaPlayerDelegate? { get set }
     
     /// Returns the current time of the current player item.

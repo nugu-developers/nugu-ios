@@ -20,10 +20,17 @@
 
 import Foundation
 
+/// <#Description#>
 public struct DisplayContext {
+    /// <#Description#>
     public var focusedItemToken: String?
+    /// <#Description#>
     public var visibleTokenList: [String]?
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - focusedItemToken: <#focusedItemToken description#>
+    ///   - visibleTokenList: <#visibleTokenList description#>
     public init(focusedItemToken: String?, visibleTokenList: [String]?) {
         self.focusedItemToken = focusedItemToken
         self.visibleTokenList = visibleTokenList

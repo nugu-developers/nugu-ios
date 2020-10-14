@@ -22,6 +22,15 @@ import Foundation
 
 /// The `SystemAgentDelegate` protocol defines methods that action when `SystemAgent` receives a directive.
 public protocol SystemAgentDelegate: class {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - code: <#code description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
     func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail, dialogRequestId: String)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - reason: <#reason description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
     func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason, dialogRequestId: String)
 }

@@ -20,24 +20,37 @@
 
 import Foundation
 
+/// <#Description#>
 public struct MediaPlayerAgentDirectivePayload {
     
     // MARK: Play
     
+    /// <#Description#>
     public struct Play: Decodable {
+        /// <#Description#>
         public struct Toggle: Decodable {
+            /// <#Description#>
             public let `repeat`: String?
+            /// <#Description#>
             public let shuffle: String?
         }
         
+        /// <#Description#>
         public let playServiceId: String
+        /// <#Description#>
         public let token: String
+        /// <#Description#>
         public let action: String
+        /// <#Description#>
         public let asrText: String?
+        /// <#Description#>
         public let song: MediaPlayerAgentSong?
+        /// <#Description#>
         public let toggle: Toggle?
+        /// <#Description#>
         public let data: [String: AnyHashable]?
         
+        /// <#Description#>
         enum CodingKeys: String, CodingKey {
             case playServiceId
             case token
@@ -63,16 +76,23 @@ public struct MediaPlayerAgentDirectivePayload {
     
     // MARK: Search
     
+    /// <#Description#>
     public struct Search: Decodable {
+        /// <#Description#>
         public let playServiceId: String
+        /// <#Description#>
         public let token: String
+        /// <#Description#>
         public let asrText: String?
+        /// <#Description#>
         public let song: MediaPlayerAgentSong?
     }
     
     // MARK: Previous
     
+    /// <#Description#>
     public struct Previous: Decodable {
+        /// <#Description#>
         public enum CodingKeys: String, CodingKey {
             case playServiceId
             case token
@@ -100,6 +120,7 @@ public struct MediaPlayerAgentDirectivePayload {
     
     // MARK: Next
     
+    /// <#Description#>
     public struct Next: Decodable {
         public enum CodingKeys: String, CodingKey {
             case playServiceId
@@ -109,10 +130,15 @@ public struct MediaPlayerAgentDirectivePayload {
             case data
         }
         
+        /// <#Description#>
         public let playServiceId: String
+        /// <#Description#>
         public let token: String
+        /// <#Description#>
         public let action: String
+        /// <#Description#>
         public let target: String
+        /// <#Description#>
         public let data: [String: AnyHashable]?
         
         public init(from decoder: Decoder) throws {
@@ -128,15 +154,21 @@ public struct MediaPlayerAgentDirectivePayload {
     
     // MARK: Move
     
+    /// <#Description#>
     public struct Move: Decodable {
+        /// <#Description#>
         public let playServiceId: String
+        /// <#Description#>
         public let token: String
+        /// <#Description#>
         public let direction: String
+        /// <#Description#>
         public let sec: String
     }
     
     // MARK: Toggle
     
+    /// <#Description#>
     public struct Toggle: Decodable {
         public let playServiceId: String
         public let token: String

@@ -20,14 +20,17 @@
 
 import UIKit
 
+/// <#Description#>
 final public class NuguButton: UIButton {
     
     // MARK: - NuguButton.NuguButtonType
     
+    /// <#Description#>
     public enum NuguButtonType {
         case fab(color: NuguButtonColor)
         case button(color: NuguButtonColor)
         
+        /// <#Description#>
         public enum NuguButtonColor: String {
             case blue
             case white
@@ -88,6 +91,7 @@ final public class NuguButton: UIButton {
     
     // MARK: - Public Properties (configurable variables)
     
+    /// <#Description#>
     public var nuguButtonType: NuguButtonType = .fab(color: .blue) {
         didSet {
             addImageViews()
@@ -95,6 +99,7 @@ final public class NuguButton: UIButton {
         }
     }
     
+    /// <#Description#>
     public var isActivated: Bool = true {
         didSet {
             updateActivationState()
@@ -131,6 +136,7 @@ final public class NuguButton: UIButton {
         }
     }
     
+    /// <#Description#>
     public override var isEnabled: Bool {
         didSet {
             if self.isEnabled {
@@ -155,6 +161,8 @@ final public class NuguButton: UIButton {
         }
     }
     
+    /// <#Description#>
+    /// - Parameter frame: <#frame description#>
     public override init(frame: CGRect) {
         super.init(frame: frame)
         addImageViews()
@@ -171,6 +179,7 @@ final public class NuguButton: UIButton {
     
     // MARK: - Public Methods (Flip Animation)
     
+    /// <#Description#>
     public func startFlipAnimation() {
         guard micImageView.layer.animationKeys() == nil else {
             return
@@ -188,6 +197,7 @@ final public class NuguButton: UIButton {
         micFlipAnimationTimer?.resume()
     }
     
+    /// <#Description#>
     public func stopFlipAnimation() {
         flipped = false
         micImageView.layer.transform = CATransform3DIdentity
@@ -196,6 +206,7 @@ final public class NuguButton: UIButton {
         micFlipAnimationTimer = nil
     }
     
+    /// <#Description#>
     public func pauseDeactivateAnimation() {
         animationTimer?.cancel()
     }

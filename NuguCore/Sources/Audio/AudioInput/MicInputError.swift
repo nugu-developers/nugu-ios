@@ -21,6 +21,7 @@
 import Foundation
 import AVFoundation
 
+/// <#Description#>
 public enum MicInputError: Error {
     case audioFormatError
     case resamplerError(source: AVAudioFormat, dest: AVAudioFormat)

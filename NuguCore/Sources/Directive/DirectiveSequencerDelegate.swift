@@ -20,7 +20,17 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol DirectiveSequencerDelegate: class {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - directive: <#directive description#>
+    ///   - blockingPolicy: <#blockingPolicy description#>
     func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - directive: <#directive description#>
+    ///   - result: <#result description#>
     func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult)
 }

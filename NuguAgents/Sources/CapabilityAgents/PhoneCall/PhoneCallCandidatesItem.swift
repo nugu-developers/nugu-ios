@@ -20,10 +20,12 @@
 
 import Foundation
 
+/// <#Description#>
 public struct PhoneCallCandidatesItem: Decodable {
     
     // MARK: SearchTarget
     
+    /// <#Description#>
     public enum SearchTarget: Decodable {
         case contact
         case exchange
@@ -43,13 +45,27 @@ public struct PhoneCallCandidatesItem: Decodable {
         }
     }
     
+    /// <#Description#>
     public let playServiceId: String
+    /// <#Description#>
     public let intent: PhoneCallIntent
+    /// <#Description#>
     public let callType: PhoneCallType?
+    /// <#Description#>
     public let searchTargetList: [SearchTarget]?
+    /// <#Description#>
     public let recipientIntended: PhoneCallRecipient?
+    /// <#Description#>
     public let candidates: [PhoneCallPerson]?
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - playServiceId: <#playServiceId description#>
+    ///   - intent: <#intent description#>
+    ///   - callType: <#callType description#>
+    ///   - searchTargetList: <#searchTargetList description#>
+    ///   - recipientIntended: <#recipientIntended description#>
+    ///   - candidates: <#candidates description#>
     public init(
         playServiceId: String,
         intent: PhoneCallIntent,

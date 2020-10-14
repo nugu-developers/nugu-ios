@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+/// <#Description#>
 public enum AudioPlayerDisplayRepeat: String, Decodable, CodingKey {
     case all = "ALL"
     case one = "ONE"

@@ -50,6 +50,8 @@ public protocol AudioPlayerDisplayDelegate: class {
     /// - Parameter direction: Direction to scroll.
     /// - Parameter completion: Whether succeeded or not
     func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
-
+    
+    /// <#Description#>
+    /// - Parameter completion: <#completion description#>
     func audioPlayerIsLyricsVisible(completion: @escaping (Bool) -> Void)
 }

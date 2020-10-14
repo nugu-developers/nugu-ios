@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public enum TextAgentRequestType {
     case specific(playServiceId: String)
     case dialog

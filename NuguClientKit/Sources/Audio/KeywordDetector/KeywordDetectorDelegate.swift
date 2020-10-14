@@ -20,8 +20,22 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol KeywordDetectorDelegate: class {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - keyword: <#keyword description#>
+    ///   - data: <#data description#>
+    ///   - start: <#start description#>
+    ///   - end: <#end description#>
+    ///   - detection: <#detection description#>
     func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int)
+    
+    /// <#Description#>
+    /// - Parameter error: <#error description#>
     func keywordDetectorDidError(_ error: Error)
+    
+    /// <#Description#>
+    /// - Parameter state: <#state description#>
     func keywordDetectorStateDidChange(_ state: KeywordDetectorState)
 }

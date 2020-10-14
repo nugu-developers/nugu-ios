@@ -22,10 +22,20 @@ import Foundation
 
 /// <#Description#>
 public protocol StreamDataRoutable: class, UpstreamDataSendable {
+    /// <#Description#>
     var delegate: StreamDataDelegate? { get set }
     
+    /// <#Description#>
+    /// - Parameter completion: <#completion description#>
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?)
+    
+    /// <#Description#>
+    /// - Parameter serverPolicy: <#serverPolicy description#>
     func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy)
+    
+    /// <#Description#>
     func restartReceiveServerInitiatedDirective()
+    
+    /// <#Description#>
     func stopReceiveServerInitiatedDirective()
 }

@@ -29,6 +29,7 @@ public enum DisplayTemplateDuration {
 }
 
 extension DisplayTemplateDuration {
+    /// <#Description#>
     public var time: TimeIntervallic {
         switch self {
         case .veryShort: return NuguTimeInterval(seconds: 3)

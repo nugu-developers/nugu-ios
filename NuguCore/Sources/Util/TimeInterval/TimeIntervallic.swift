@@ -23,6 +23,7 @@ import AVFoundation
 
 // MARK: - TimeIntervallic
 
+/// <#Description#>
 public protocol TimeIntervallic {
     
     /// <#Description#>
@@ -77,6 +78,7 @@ extension TimeIntervallic {
 // MARK: - DispatchTimeInterval + TimeIntervallic
 
 extension DispatchTimeInterval: TimeIntervallic {
+    /// <#Description#>
     public var seconds: Double {
         switch self {
         case .seconds(let seconds):
