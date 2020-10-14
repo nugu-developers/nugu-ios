@@ -20,10 +20,14 @@
 
 import Foundation
 
+/// <#Description#>
 public struct DisplayControlPayload {
+    /// <#Description#>
     let playServiceId: String
+    /// <#Description#>
     let direction: Direction
     
+    /// <#Description#>
     public enum Direction: String, Decodable {
         case previous = "PREVIOUS"
         case next = "NEXT"

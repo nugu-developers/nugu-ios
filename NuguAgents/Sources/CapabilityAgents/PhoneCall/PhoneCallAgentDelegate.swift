@@ -20,10 +20,24 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol PhoneCallAgentDelegate: class {
+    /// <#Description#>
     func phoneCallAgentRequestState() -> PhoneCallState
+    
+    /// <#Description#>
     func phoneCallAgentRequestTemplate() -> PhoneCallTemplate?
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - item: <#item description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
     func phoneCallAgentDidReceiveSendCandidates(item: PhoneCallCandidatesItem, dialogRequestId: String)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - callType: <#callType description#>
+    ///   - recipient: <#recipient description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
     func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson, dialogRequestId: String) -> PhoneCallErrorCode?
 }

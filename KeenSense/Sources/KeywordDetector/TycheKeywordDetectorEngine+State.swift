@@ -22,9 +22,7 @@ import Foundation
 
 public extension TycheKeywordDetectorEngine {
     enum State {
-        /// <#Description#>
         case active
-        /// <#Description#>
         case inactive
     }
 }

@@ -20,10 +20,12 @@
 
 import Foundation
 
+/// <#Description#>
 public struct MediaPlayerAgentSong: Codable {
     
     // MARK: Category
     
+    /// <#Description#>
     public enum Category: String, Codable {
         case none = "NONE"
         case recommend = "RECOMMEND"
@@ -40,14 +42,23 @@ public struct MediaPlayerAgentSong: Codable {
         case nowplaying = "NOWPLAYING"
     }
     
+    /// <#Description#>
     public let category: Category
+    /// <#Description#>
     public let theme: String?
+    /// <#Description#>
     public let genre: [String]?
+    /// <#Description#>
     public let artist: [String]?
+    /// <#Description#>
     public let album: String?
+    /// <#Description#>
     public let title: String?
+    /// <#Description#>
     public let duration: String?
+    /// <#Description#>
     public let issueDate: String?
+    /// <#Description#>
     public let etc: [String: AnyHashable]?
     
     enum CodingKeys: String, CodingKey {
@@ -76,6 +87,17 @@ public struct MediaPlayerAgentSong: Codable {
         etc = try container.decode([String: AnyHashable].self, forKey: .etc)
     }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - category: <#category description#>
+    ///   - theme: <#theme description#>
+    ///   - genre: <#genre description#>
+    ///   - artist: <#artist description#>
+    ///   - album: <#album description#>
+    ///   - title: <#title description#>
+    ///   - duration: <#duration description#>
+    ///   - issueDate: <#issueDate description#>
+    ///   - etc: <#etc description#>
     public init(
         category: Category,
         theme: String?,

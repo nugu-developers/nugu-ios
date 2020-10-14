@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public enum MediaPlayableError: Error {
     case unsupportedOperation
     case invalidURL

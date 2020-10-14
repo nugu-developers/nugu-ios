@@ -20,15 +20,24 @@
 
 import Foundation
 
+/// <#Description#>
 public struct DirectiveCancelPolicy {
+    /// <#Description#>
     public let cancelAll: Bool
+    /// <#Description#>
     public let cancelTargets: [String]
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - cancelAll: <#cancelAll description#>
+    ///   - cancelTargets: <#cancelTargets description#>
     public init(cancelAll: Bool, cancelTargets: [String]) {
         self.cancelAll = cancelAll
         self.cancelTargets = cancelTargets
     }
     
+    /// <#Description#>
     public static let cancelAll = DirectiveCancelPolicy(cancelAll: true, cancelTargets: [])
+    /// <#Description#>
     public static let cancelNone = DirectiveCancelPolicy(cancelAll: false, cancelTargets: [])
 }

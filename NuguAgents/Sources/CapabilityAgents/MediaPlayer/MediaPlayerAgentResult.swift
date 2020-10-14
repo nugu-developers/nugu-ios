@@ -20,10 +20,12 @@
 
 import Foundation
 
+/// <#Description#>
 public enum MediaPlayerAgentProcessResult {
     
     // MARK: Play
     
+    /// <#Description#>
     public enum Play {
         case succeeded(message: String?)
         case suspended(song: MediaPlayerAgentSong?, playlist: MediaPlayerAgentPlaylist?, issueCode: String?)
@@ -32,6 +34,7 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Stop
     
+    /// <#Description#>
     public enum Stop {
         case succeeded
         case failed(errorCode: String)
@@ -39,6 +42,7 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Search
     
+    /// <#Description#>
     public enum Search {
         case succeeded(message: String?)
         case failed(message: String)
@@ -46,6 +50,7 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Previous
     
+    /// <#Description#>
     public enum Previous {
         case succeeded(message: String?)
         case suspended(song: MediaPlayerAgentSong?, playlist: MediaPlayerAgentPlaylist?, target: String)
@@ -54,6 +59,7 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Next
     
+    /// <#Description#>
     public enum Next {
         case succeeded(message: String?)
         case suspended(song: MediaPlayerAgentSong?, playlist: MediaPlayerAgentPlaylist?, target: String)
@@ -62,6 +68,7 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Move
     
+    /// <#Description#>
     public enum Move {
         case succeeded(message: String?)
         case failed(errorCode: String)
@@ -69,6 +76,7 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Pause
     
+    /// <#Description#>
     public enum Pause {
         case succeeded(message: String?)
         case failed(errorCode: String)
@@ -76,6 +84,7 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Resume
     
+    /// <#Description#>
     public enum Resume {
         case succeeded(message: String?)
         case failed(errorCode: String?)
@@ -83,6 +92,7 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Rewind
     
+    /// <#Description#>
     public enum Rewind {
         case succeeded(message: String?)
         case failed(errorCode: String)
@@ -90,11 +100,13 @@ public enum MediaPlayerAgentProcessResult {
     
     // MARK: Toggle
     
+    /// <#Description#>
     public enum Toggle {
         case succeeded(message: String)
         case failed(errorCode: String)
     }
     
+    /// <#Description#>
     public enum GetInfo {
         case succeeded(song: MediaPlayerAgentSong?, issueDate: String?, playTime: String?, playListName: String?)
         case failed(errorCode: String?)

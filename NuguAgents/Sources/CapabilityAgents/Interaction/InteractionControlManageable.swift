@@ -20,9 +20,20 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol InteractionControlManageable: class {
+    /// <#Description#>
     var delegate: InteractionControlDelegate? { get set }
-
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - mode: <#mode description#>
+    ///   - category: <#category description#>
     func start(mode: InteractionControl.Mode, category: CapabilityAgentCategory)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - mode: <#mode description#>
+    ///   - category: <#category description#>
     func finish(mode: InteractionControl.Mode, category: CapabilityAgentCategory)
 }

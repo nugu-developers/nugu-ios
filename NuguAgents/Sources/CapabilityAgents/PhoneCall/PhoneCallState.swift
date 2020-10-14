@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public enum PhoneCallState: String, Encodable {
     case idle = "IDLE"
     case outgoing = "OUTGOING"

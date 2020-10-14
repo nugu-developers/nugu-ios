@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol DirectiveSequenceable {
     /// Adds a delegate to be notified of `Directive` handling states.
     /// - Parameter delegate: The object to add.

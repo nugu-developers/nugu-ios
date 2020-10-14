@@ -21,13 +21,15 @@
 import Foundation
 import CommonCrypto
 
+/// <#Description#>
 public struct TimeUUID {
     // seconds
     private static let baseTime = 1546300800000.0
     
-    // 32 * 4(hex string) = 128bit
+    /// 32 * 4(hex string) = 128bit
     public let hexString: String
     
+    /// <#Description#>
     public init() {
         var hexString = String()
         

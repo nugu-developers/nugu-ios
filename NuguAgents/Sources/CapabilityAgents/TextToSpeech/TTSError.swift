@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public enum TTSError: Error {
     case notSupportedSourceType
 }

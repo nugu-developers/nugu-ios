@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol SessionManageable: class {
     /// Adds a delegate to be notified of `Session` changes.
     /// - Parameter delegate: The object to add.
@@ -29,9 +30,20 @@ public protocol SessionManageable: class {
     /// - Parameter delegate: The object to remove.
     func remove(delegate: SessionDelegate)
     
+    /// <#Description#>
     var activeSessions: [Session] { get }
     
+    /// <#Description#>
+    /// - Parameter session: <#session description#>
     func set(session: Session)
+    /// <#Description#>
+    /// - Parameters:
+    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - category: <#category description#>
     func activate(dialogRequestId: String, category: CapabilityAgentCategory)
+    /// <#Description#>
+    /// - Parameters:
+    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - category: <#category description#>
     func deactivate(dialogRequestId: String, category: CapabilityAgentCategory)
 }

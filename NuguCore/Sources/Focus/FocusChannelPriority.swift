@@ -28,6 +28,10 @@ public struct FocusChannelPriority {
     public let requestPriority: Int
     public let maintainPriority: Int
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - requestPriority: <#requestPriority description#>
+    ///   - maintainPriority: <#maintainPriority description#>
     public init(requestPriority: Int, maintainPriority: Int) {
         self.requestPriority = requestPriority
         self.maintainPriority = maintainPriority

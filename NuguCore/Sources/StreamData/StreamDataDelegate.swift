@@ -20,10 +20,29 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol StreamDataDelegate: class {
+    /// <#Description#>
+    /// - Parameter direcive: <#direcive description#>
     func streamDataDidReceive(direcive: Downstream.Directive)
+    
+    /// <#Description#>
+    /// - Parameter attachment: <#attachment description#>
     func streamDataDidReceive(attachment: Downstream.Attachment)
+    
+    /// <#Description#>
+    /// - Parameter event: <#event description#>
     func streamDataWillSend(event: Upstream.Event)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - event: <#event description#>
+    ///   - error: <#error description#>
     func streamDataDidSend(event: Upstream.Event, error: Error?)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - attachment: <#attachment description#>
+    ///   - error: <#error description#>
     func streamDataDidSend(attachment: Upstream.Attachment, error: Error?)
 }

@@ -20,10 +20,17 @@
 
 import Foundation
 
+/// <#Description#>
 public struct PhoneCallRecipient: Codable {
+    /// <#Description#>
     public let name: String?
+    /// <#Description#>
     public let label: String?
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - name: <#name description#>
+    ///   - label: <#label description#>
     public init(name: String?, label: String?) {
         self.name = name
         self.label = label

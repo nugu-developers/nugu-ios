@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public struct ClientCredentialsGrant {
     /// The `clientId` for OAuth authentication.
     public let clientId: String

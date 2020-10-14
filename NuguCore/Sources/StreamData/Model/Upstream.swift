@@ -20,19 +20,36 @@
 
 import Foundation
 
+/// <#Description#>
 public enum Upstream {
     
     // MARK: Event
     
+    /// <#Description#>
     public struct Event {
+        /// <#Description#>
         public struct Header: Encodable {
+            /// <#Description#>
             public let namespace: String
+            /// <#Description#>
             public let name: String
+            /// <#Description#>
             public let version: String
+            /// <#Description#>
             public let dialogRequestId: String
+            /// <#Description#>
             public let messageId: String
+            /// <#Description#>
             public let referrerDialogRequestId: String?
             
+            /// <#Description#>
+            /// - Parameters:
+            ///   - namespace: <#namespace description#>
+            ///   - name: <#name description#>
+            ///   - version: <#version description#>
+            ///   - dialogRequestId: <#dialogRequestId description#>
+            ///   - messageId: <#messageId description#>
+            ///   - referrerDialogRequestId: <#referrerDialogRequestId description#>
             public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String, referrerDialogRequestId: String? = nil) {
                 self.namespace = namespace
                 self.name = name
@@ -43,11 +60,21 @@ public enum Upstream {
             }
         }
         
+        /// <#Description#>
         public let payload: [String: AnyHashable]
+        /// <#Description#>
         public let header: Header
+        /// <#Description#>
         public let httpHeaderFields: [String: String]?
+        /// <#Description#>
         public let contextPayload: [ContextInfo]
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - payload: <#payload description#>
+        ///   - header: <#header description#>
+        ///   - httpHeaderFields: <#httpHeaderFields description#>
+        ///   - contextPayload: <#contextPayload description#>
         public init(payload: [String: AnyHashable], header: Header, httpHeaderFields: [String: String]? = nil, contextPayload: [ContextInfo]) {
             self.payload = payload
             self.header = header
@@ -58,13 +85,25 @@ public enum Upstream {
     
     // MARK: Attachment
     
+    /// <#Description#>
     public struct Attachment {
+        /// <#Description#>
         public struct Header {
+            /// <#Description#>
             public let seq: Int32
+            /// <#Description#>
             public let isEnd: Bool
+            /// <#Description#>
             public let type: String
+            /// <#Description#>
             public let messageId: String
             
+            /// <#Description#>
+            /// - Parameters:
+            ///   - seq: <#seq description#>
+            ///   - isEnd: <#isEnd description#>
+            ///   - type: <#type description#>
+            ///   - messageId: <#messageId description#>
             public init(seq: Int32, isEnd: Bool, type: String, messageId: String) {
                 self.seq = seq
                 self.isEnd = isEnd
@@ -73,9 +112,15 @@ public enum Upstream {
             }
         }
         
+        /// <#Description#>
         public let content: Data
+        /// <#Description#>
         public let header: Header
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - content: <#content description#>
+        ///   - header: <#header description#>
         public init(content: Data, header: Header) {
             self.content = content
             self.header = header

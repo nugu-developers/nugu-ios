@@ -47,6 +47,12 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
 // MARK: - Default
 
 public extension DisplayAgentProtocol {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - templateId: <#templateId description#>
+    ///   - token: <#token description#>
+    ///   - postback: <#postback description#>
+    /// - Returns: <#description#>
     @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?) -> String {
         return elementDidSelect(templateId: templateId, token: token, postback: postback, completion: nil)
     }

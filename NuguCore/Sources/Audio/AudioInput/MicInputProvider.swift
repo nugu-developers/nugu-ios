@@ -21,16 +21,21 @@
 import Foundation
 import AVFoundation
 
+/// <#Description#>
 public class MicInputProvider {
+    /// <#Description#>
     public var isRunning: Bool {
         return audioEngine.isRunning
     }
     
+    /// <#Description#>
     public var audioFormat: AVAudioFormat?
     private let audioBus = 0
     private let audioEngine = AVAudioEngine()
     private let audioQueue = DispatchQueue(label: "romain_mic_input_audio_queue")
     
+    /// <#Description#>
+    /// - Parameter inputFormat: <#inputFormat description#>
     public init(inputFormat: AVAudioFormat? = nil) {
         guard inputFormat != nil else {
             self.audioFormat = AVAudioFormat(commonFormat: MicInputConst.defaultFormat,
@@ -43,6 +48,9 @@ public class MicInputProvider {
         self.audioFormat = inputFormat
     }
     
+    /// <#Description#>
+    /// - Parameter tapBlock: <#tapBlock description#>
+    /// - Throws: <#description#>
     public func start(tapBlock: @escaping AVAudioNodeTapBlock) throws {
         guard audioEngine.isRunning == false else {
             log.warning("audio engine is already running")
@@ -57,6 +65,7 @@ public class MicInputProvider {
         }
     }
     
+    /// <#Description#>
     public func stop() {
         log.debug("try to stop")
         

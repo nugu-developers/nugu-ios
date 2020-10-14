@@ -22,11 +22,17 @@ import Foundation
 
 import NuguCore
 
+/// <#Description#>
 public struct DisplayTemplate {
+    /// <#Description#>
     public let type: String
+    /// <#Description#>
     public let payload: Data
+    /// <#Description#>
     public let templateId: String
+    /// <#Description#>
     public let dialogRequestId: String
+    /// <#Description#>
     public let template: Payload
     
     init(

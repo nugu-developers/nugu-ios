@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public enum EventSenderError: Error, CustomStringConvertible {
     case requestMultipleEvents
     case noEventRequested
