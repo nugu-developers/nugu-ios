@@ -39,14 +39,18 @@ public class FocusManager: FocusManageable {
 
 extension FocusManager {
     public func add(channelDelegate: FocusChannelDelegate) {
-        channelInfos.remove(delegate: channelDelegate)
-        
-        let info = FocusChannelInfo(delegate: channelDelegate, focusState: .nothing)
-        channelInfos.append(info)
+        _channelInfos.mutate {
+            $0.remove(delegate: channelDelegate)
+            
+            let info = FocusChannelInfo(delegate: channelDelegate, focusState: .nothing)
+            $0.append(info)
+        }
     }
     
     public func remove(channelDelegate: FocusChannelDelegate) {
-        channelInfos.remove(delegate: channelDelegate)
+        _channelInfos.mutate {
+            $0.remove(delegate: channelDelegate)
+        }
     }
     
     public func requestFocus(channelDelegate: FocusChannelDelegate) {

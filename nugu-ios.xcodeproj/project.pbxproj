@@ -486,6 +486,7 @@
 		7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D117F249C6E8100E3580C /* SessionManager.swift */; };
 		7E8050AA2518A69300994786 /* ASRInitiator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E8050A92518A69300994786 /* ASRInitiator.swift */; };
 		7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */; };
+		7EA073E6253569EC000D923A /* XDirectiveSequencerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA073E5253569EC000D923A /* XDirectiveSequencerTest.swift */; };
 		7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFA247F3B5A008731CD /* SessionAgent.swift */; };
 		7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */; };
 		7EA53F0D247F5685008731CD /* SessionManagerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */; };
@@ -1183,6 +1184,7 @@
 		7E6D117E249C6E8100E3580C /* SessionConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionConst.swift; sourceTree = "<group>"; };
 		7E6D117F249C6E8100E3580C /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		7E8050A92518A69300994786 /* ASRInitiator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRInitiator.swift; sourceTree = "<group>"; };
+		7EA073E5253569EC000D923A /* XDirectiveSequencerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XDirectiveSequencerTest.swift; sourceTree = "<group>"; };
 		7EA53EFA247F3B5A008731CD /* SessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgent.swift; sourceTree = "<group>"; };
 		7EA53EFC247F3C2D008731CD /* SessionAgentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgentItem.swift; sourceTree = "<group>"; };
 		7EA53F0A247F3F53008731CD /* DialogAttributeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogAttributeStore.swift; sourceTree = "<group>"; };
@@ -1491,6 +1493,7 @@
 				7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */,
 				7EA53F0C247F5685008731CD /* SessionManagerSpec.swift */,
 				7EE6233024D2B7F5004B89D7 /* FocusManagerSpec.swift */,
+				7EA073E5253569EC000D923A /* XDirectiveSequencerTest.swift */,
 			);
 			path = NuguCore;
 			sourceTree = "<group>";
@@ -3777,6 +3780,7 @@
 				7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */,
 				7EA53F11247F5904008731CD /* MockDialogAttributeStore.swift in Sources */,
 				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,
+				7EA073E6253569EC000D923A /* XDirectiveSequencerTest.swift in Sources */,
 				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
 				7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
