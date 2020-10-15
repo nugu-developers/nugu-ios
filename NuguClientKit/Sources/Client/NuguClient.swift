@@ -72,8 +72,7 @@ public class NuguClient {
         playSyncManager: playSyncManager,
         contextManager: contextManager,
         directiveSequencer: directiveSequencer,
-        sessionManager: sessionManager,
-        focusManager: focusManager
+        sessionManager: sessionManager
     )
     
     /// <#Description#>
@@ -119,7 +118,7 @@ public class NuguClient {
         // core
         contextManager = ContextManager()
         directiveSequencer = DirectiveSequencer()
-        focusManager = FocusManager(directiveSequencer: directiveSequencer)
+        focusManager = FocusManager()
         streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
         dialogAttributeStore = DialogAttributeStore()
@@ -193,7 +192,12 @@ public class NuguClient {
             sessionManager: sessionManager
         )
         
-        dummyFocusRequester = DummyFocusRequester(focusManager: focusManager, directiveSequener: directiveSequencer, streamDataRouter: streamDataRouter)
+        dummyFocusRequester = DummyFocusRequester(
+            focusManager: focusManager,
+            directiveSequener: directiveSequencer,
+            streamDataRouter: streamDataRouter,
+            dialogStateAggregator: dialogStateAggregator
+        )
 
         // setup additional roles
         setupAuthorizationStore()

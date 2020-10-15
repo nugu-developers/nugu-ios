@@ -356,21 +356,8 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             case .finish:
                 self.saveCurrentPlayerState()
                 self.audioPlayerState = .finished
-                self.sendPlayEvent(media: media, typeInfo: .playbackFinished) { [weak self] state in
-                    // Release focus when stream finished.
-                    self?.audioPlayerDispatchQueue.async { [weak self] in
-                        guard let self = self else { return }
-                        
-                        switch state {
-                        case .finished where self.currentPlayer == nil:
-                            self.releaseFocusIfNeeded()
-                        case .error:
-                            self.releaseFocusIfNeeded()
-                        default:
-                            break
-                        }
-                    }
-                }
+                self.sendPlayEvent(media: media, typeInfo: .playbackFinished)
+                self.releaseFocusIfNeeded()
             case .pause:
                 if media.pauseReason != .focus {
                     self.audioPlayerState = .paused(temporary: false)

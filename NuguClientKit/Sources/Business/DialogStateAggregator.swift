@@ -40,12 +40,6 @@ public class DialogStateAggregator {
         didSet {
             log.info("from \(oldValue) to \(dialogState) isMultiturn \(isMultiturn)")
 
-            if dialogState == .idle {
-                focusManager.releaseFocus(channelDelegate: self)
-            } else {
-                focusManager.requestFocus(channelDelegate: self)
-            }
-            
             multiturnSpeakingToListeningTimer?.cancel()
             
             var chipsItem: ChipsAgentItem?
@@ -93,7 +87,6 @@ public class DialogStateAggregator {
         self.focusManager = focusManager
         
         interactionControlManager.delegate = self
-        focusManager.add(channelDelegate: self)
     }
 }
 
@@ -173,18 +166,6 @@ extension DialogStateAggregator: InteractionControlDelegate {
                 self?.tryEnterIdleState()
             }
         }
-    }
-}
-
-// MARK: - FocusChannelDelegate
-
-extension DialogStateAggregator: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return .background
-    }
-    
-    public func focusChannelDidChange(focusState: FocusState) {
-        log.info(focusState)
     }
 }
 

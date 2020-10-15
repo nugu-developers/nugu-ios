@@ -19,23 +19,36 @@
 //
 
 import Foundation
+
 import NuguCore
+import NuguAgents
 
 class DummyFocusRequester {
     private let focusManager: FocusManageable
-    private let directiveSequener: DirectiveSequenceable
-    private let streamDataRouter: StreamDataRoutable
     
-    init(focusManager: FocusManageable, directiveSequener: DirectiveSequenceable, streamDataRouter: StreamDataRoutable) {
+    private let queue = DispatchQueue(label: "com.sktelecom.romaine.dummy_focus_requester")
+    private let focusTargets = ["Text.TextInput", "TTS.SpeechFinished", "AudioPlayer.PlaybackFinished"]
+    
+    private var handlingEvents = Set<String>()
+    private var handlingSoundDirectives = Set<String>()
+    private var dialogState: DialogState = .idle
+    
+    init(
+        focusManager: FocusManageable,
+        directiveSequener: DirectiveSequenceable,
+        streamDataRouter: StreamDataRoutable,
+        dialogStateAggregator: DialogStateAggregator
+    ) {
         self.focusManager = focusManager
-        self.directiveSequener = directiveSequener
-        self.streamDataRouter = streamDataRouter
         
         focusManager.add(channelDelegate: self)
         directiveSequener.add(delegate: self)
         streamDataRouter.add(delegate: self)
+        dialogStateAggregator.add(delegate: self)
     }
 }
+
+// MARK: - FocusChannelDelegate
 
 extension DummyFocusRequester: FocusChannelDelegate {
     func focusChannelPriority() -> FocusChannelPriority {
@@ -45,28 +58,89 @@ extension DummyFocusRequester: FocusChannelDelegate {
     func focusChannelDidChange(focusState: FocusState) {}
 }
 
+// MARK: - DirectiveSequencerDelegate
+
 extension DummyFocusRequester: DirectiveSequencerDelegate {
     func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
+            if blockingPolicy.medium == .audio {
+                self.handlingSoundDirectives.insert(directive.header.messageId)
+                self.requestFocus()
+            }
+        }
     }
     
     func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult) {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
+            if self.handlingSoundDirectives.remove(directive.header.messageId) != nil {
+                self.tryReleaseFocus()
+            }
+        }
     }
 }
 
+// MARK: - StreamDataDelegate
+
 extension DummyFocusRequester: StreamDataDelegate {
-    func streamDataDidReceive(direcive: Downstream.Directive) {
-    }
+    func streamDataDidReceive(direcive: Downstream.Directive) {}
     
-    func streamDataDidReceive(attachment: Downstream.Attachment) {
-    }
+    func streamDataDidReceive(attachment: Downstream.Attachment) {}
     
     func streamDataWillSend(event: Upstream.Event) {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
+            if self.focusTargets.contains(event.header.type) {
+                self.handlingEvents.insert(event.header.messageId)
+                self.requestFocus()
+            }
+        }
     }
     
     func streamDataDidSend(event: Upstream.Event, error: Error?) {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
+            if self.handlingEvents.remove(event.header.messageId) != nil {
+                self.tryReleaseFocus()
+            }
+        }
     }
     
-    func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {
+    func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {}
+}
+
+extension DummyFocusRequester: DialogStateDelegate {
+    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.dialogState = state
+            if state == .idle {
+                self.tryReleaseFocus()
+            } else {
+                self.requestFocus()
+            }
+        }
+    }
+}
+
+// MARK: - Private
+
+private extension DummyFocusRequester {
+    func requestFocus() {
+        focusManager.requestFocus(channelDelegate: self)
     }
     
+    func tryReleaseFocus() {
+        guard handlingEvents.isEmpty,
+              handlingSoundDirectives.isEmpty,
+              dialogState == .idle else { return }
+        
+        focusManager.releaseFocus(channelDelegate: self)
+    }
 }
