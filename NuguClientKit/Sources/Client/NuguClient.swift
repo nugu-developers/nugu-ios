@@ -108,7 +108,7 @@ public class NuguClient {
         return keywordDetector
     }()
     
-    private let dummyFocusRequester: DummyFocusRequester
+    private let backgroundFocusHolder: BackgroundFocusHolder
     
     /// <#Description#>
     /// - Parameter delegate: <#delegate description#>
@@ -192,7 +192,7 @@ public class NuguClient {
             sessionManager: sessionManager
         )
         
-        dummyFocusRequester = DummyFocusRequester(
+        backgroundFocusHolder = BackgroundFocusHolder(
             focusManager: focusManager,
             directiveSequener: directiveSequencer,
             streamDataRouter: streamDataRouter,

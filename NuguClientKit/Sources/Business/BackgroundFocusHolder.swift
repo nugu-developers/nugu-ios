@@ -1,5 +1,5 @@
 //
-//  DummyFocusRequester.swift
+//  BackgroundFocusHolder.swift
 //  NuguClientKit
 //
 //  Created by MinChul Lee on 2020/09/27.
@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 import NuguAgents
 
-class DummyFocusRequester {
+class BackgroundFocusHolder {
     private let focusManager: FocusManageable
     
     private let queue = DispatchQueue(label: "com.sktelecom.romaine.dummy_focus_requester")
@@ -50,7 +50,7 @@ class DummyFocusRequester {
 
 // MARK: - FocusChannelDelegate
 
-extension DummyFocusRequester: FocusChannelDelegate {
+extension BackgroundFocusHolder: FocusChannelDelegate {
     func focusChannelPriority() -> FocusChannelPriority {
         .background
     }
@@ -60,7 +60,7 @@ extension DummyFocusRequester: FocusChannelDelegate {
 
 // MARK: - DirectiveSequencerDelegate
 
-extension DummyFocusRequester: DirectiveSequencerDelegate {
+extension BackgroundFocusHolder: DirectiveSequencerDelegate {
     func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {
         queue.async { [weak self] in
             guard let self = self else { return }
@@ -85,7 +85,7 @@ extension DummyFocusRequester: DirectiveSequencerDelegate {
 
 // MARK: - StreamDataDelegate
 
-extension DummyFocusRequester: StreamDataDelegate {
+extension BackgroundFocusHolder: StreamDataDelegate {
     func streamDataDidReceive(direcive: Downstream.Directive) {}
     
     func streamDataDidReceive(attachment: Downstream.Attachment) {}
@@ -114,7 +114,7 @@ extension DummyFocusRequester: StreamDataDelegate {
     func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {}
 }
 
-extension DummyFocusRequester: DialogStateDelegate {
+extension BackgroundFocusHolder: DialogStateDelegate {
     func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
         queue.async { [weak self] in
             guard let self = self else { return }
@@ -131,7 +131,7 @@ extension DummyFocusRequester: DialogStateDelegate {
 
 // MARK: - Private
 
-private extension DummyFocusRequester {
+private extension BackgroundFocusHolder {
     func requestFocus() {
         focusManager.requestFocus(channelDelegate: self)
     }
