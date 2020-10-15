@@ -63,11 +63,14 @@ public class DialogStateAggregator {
     private var asrState: ASRState = .idle
     private var ttsState: TTSState = .finished
     
+    /// <#Description#>
     public var sessionActivated: Bool {
         sessionManager.activeSessions.isEmpty == false
     }
+    /// <#Description#>
     public var isMultiturn: Bool = false
     // TODO: Refactor
+    /// <#Description#>
     public var isChipsRequestInProgress: Bool = false {
         didSet {
             log.debug(isChipsRequestInProgress)

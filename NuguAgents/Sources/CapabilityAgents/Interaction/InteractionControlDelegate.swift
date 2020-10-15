@@ -20,6 +20,9 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol InteractionControlDelegate: class {
+    /// <#Description#>
+    /// - Parameter isMultiturn: <#isMultiturn description#>
     func interactionControlDidChange(isMultiturn: Bool)
 }

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>NuguOAuthClient Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/NuguOAuthClient" class="dashAnchor"></a>
+    <a title="NuguOAuthClient Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">NUGU SDK 0.19.4 Docs</a> (95% documented)</p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        NuguOAuthClient Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/NuguOAuthClient.html">NuguOAuthClient</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/NuguLoginKitError.html">NuguLoginKitError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/NuguLoginKitError/APIError.html">– APIError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/NuguOAuthServerInfo.html">NuguOAuthServerInfo</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/APIErrorReason.html">APIErrorReason</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AuthorizationCodeGrant.html">AuthorizationCodeGrant</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AuthorizationInfo.html">AuthorizationInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ClientCredentialsGrant.html">ClientCredentialsGrant</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NuguUserInfo.html">NuguUserInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/RefreshTokenGrant.html">RefreshTokenGrant</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>NuguOAuthClient</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">NuguOAuthClient</span></code></pre>
+
+                </div>
+              </div>
+            <p>&lt;#Description#&gt;</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp"></a>
+                    <a name="//apple_ref/swift/Property/deviceUniqueId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The <code>deviceUniqueId</code> is unique identifier each device.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">deviceUniqueId</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC11serviceNameACSS_tKcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(serviceName:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC11serviceNameACSS_tKcfc">init(serviceName:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The initializer for <code>NuguOAuthClient</code>.
+Create a <code><a href="../Classes/NuguOAuthClient.html#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a></code> once for each <code>serviceName</code> and device, store <code><a href="../Classes/NuguOAuthClient.html#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a></code> in keychain.
+If there is a <code><a href="../Classes/NuguOAuthClient.html#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a></code> stored in the keychain, it is used.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">serviceName</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>serviceName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>serviceName</code> is unique identifier each service (eg. bundle identifier).</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdACSS_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(deviceUniqueId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdACSS_tcfc">init(deviceUniqueId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The initializer for <code>NuguOAuthClient</code>.
+Should be use <code>init(serviceName: String)</code> instead of <code>init(deviceUniqueId: String)</code>.
+Only use <code>init(deviceUniqueId: String)</code> when it must explicitly used <code><a href="../Classes/NuguOAuthClient.html#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a></code>.
+It cannot store and validate <code><a href="../Classes/NuguOAuthClient.html#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">deviceUniqueId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>deviceUniqueId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/NuguOAuthClient.html#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a></code> is unique identifier each device.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC6update14deviceUniqueIdySS_tF"></a>
+                    <a name="//apple_ref/swift/Method/update(deviceUniqueId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC6update14deviceUniqueIdySS_tF">update(deviceUniqueId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Use to change the <code><a href="../Classes/NuguOAuthClient.html#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">update</span><span class="p">(</span><span class="nv">deviceUniqueId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>deviceUniqueId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/NuguOAuthClient.html#/s:12NuguLoginKit0A11OAuthClientC14deviceUniqueIdSSvp">deviceUniqueId</a></code> is unique identifier each device.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/AuthorizationCodeGrant"></a>
+                <a name="//apple_ref/swift/Section/AuthorizationCodeGrant" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/AuthorizationCodeGrant"></a>
+                  <h3 class="section-name"><p>AuthorizationCodeGrant</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC6handle3urly10Foundation3URLV_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/handle(url:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC6handle3urly10Foundation3URLV_tFZ">handle(url:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Call this method from the <code>UIApplicationDelegate.application(app:url:options:)</code> method of the AppDelegate for your app.</p>
+
+<p>It should be implemeted to receive authorization-code by <code>SFSafariViewController</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">handle</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>url</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL as passed to <code>UIApplicationDelegate.application(app:url:options:)</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC9authorize5grant20parentViewController10completionyAA22AuthorizationCodeGrantV_So06UIViewJ0Cys6ResultOyAA0L4InfoVAA0abC5ErrorOGcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/authorize(grant:parentViewController:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC9authorize5grant20parentViewController10completionyAA22AuthorizationCodeGrantV_So06UIViewJ0Cys6ResultOyAA0L4InfoVAA0abC5ErrorOGcSgtF">authorize(grant:<wbr>parentViewController:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Authorize with <code>AuthorizationCode</code> grant type.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">authorize</span><span class="p">(</span>
+    <span class="nv">grant</span><span class="p">:</span> <span class="kt"><a href="../Structs/AuthorizationCodeGrant.html">AuthorizationCodeGrant</a></span><span class="p">,</span>
+    <span class="nv">parentViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/AuthorizationInfo.html">AuthorizationInfo</a></span><span class="p">,</span> <span class="kt"><a href="../Enums/NuguLoginKitError.html">NuguLoginKitError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>grant</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>grant</code> information that <code><a href="../Structs/AuthorizationCodeGrant.html">AuthorizationCodeGrant</a></code></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>parentViewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>parentViewController</code> will present a safariViewController.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The closure to receive result for authorization.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC11showTidInfo5grant5token20parentViewController10completionyAA22AuthorizationCodeGrantV_SSSo06UIViewM0Cys6ResultOyAA0oH0VAA0abC5ErrorOGcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/showTidInfo(grant:token:parentViewController:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC11showTidInfo5grant5token20parentViewController10completionyAA22AuthorizationCodeGrantV_SSSo06UIViewM0Cys6ResultOyAA0oH0VAA0abC5ErrorOGcSgtF">showTidInfo(grant:<wbr>token:<wbr>parentViewController:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Shows web-page where TID information can be modified with <code>AuthorizationCode</code> grant type.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">showTidInfo</span><span class="p">(</span>
+    <span class="nv">grant</span><span class="p">:</span> <span class="kt"><a href="../Structs/AuthorizationCodeGrant.html">AuthorizationCodeGrant</a></span><span class="p">,</span>
+    <span class="nv">token</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">parentViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/AuthorizationInfo.html">AuthorizationInfo</a></span><span class="p">,</span> <span class="kt"><a href="../Enums/NuguLoginKitError.html">NuguLoginKitError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>grant</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>grant</code> information that <code><a href="../Structs/AuthorizationCodeGrant.html">AuthorizationCodeGrant</a></code></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>token</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>token</code> is access-token currently being used.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>parentViewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>parentViewController</code> will present a safariViewController.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The closure to receive result for authorization.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC11getUserInfo8clientId0I6Secret5token10completionySS_S2Sys6ResultOyAA0agH0VAA0abC5ErrorOGcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/getUserInfo(clientId:clientSecret:token:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC11getUserInfo8clientId0I6Secret5token10completionySS_S2Sys6ResultOyAA0agH0VAA0abC5ErrorOGcSgtF">getUserInfo(clientId:<wbr>clientSecret:<wbr>token:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get some NUGU member information.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getUserInfo</span><span class="p">(</span><span class="nv">clientId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">token</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/NuguUserInfo.html">NuguUserInfo</a></span><span class="p">,</span> <span class="kt"><a href="../Enums/NuguLoginKitError.html">NuguLoginKitError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>clientId</code> for OAuth authentication.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientSecret</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>clientSecret</code> for OAuth authentication.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>token</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>token</code> is access-token currently being used.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The closure to receive result for getting NUGU member information.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/RefreshTokenGrant"></a>
+                <a name="//apple_ref/swift/Section/RefreshTokenGrant" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/RefreshTokenGrant"></a>
+                  <h3 class="section-name"><p>RefreshTokenGrant</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC9authorize5grant10completionyAA17RefreshTokenGrantV_ys6ResultOyAA17AuthorizationInfoVAA0abC5ErrorOGcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/authorize(grant:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC9authorize5grant10completionyAA17RefreshTokenGrantV_ys6ResultOyAA17AuthorizationInfoVAA0abC5ErrorOGcSgtF">authorize(grant:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Authorize with <code>RefreshToken</code> grant type.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">authorize</span><span class="p">(</span><span class="nv">grant</span><span class="p">:</span> <span class="kt"><a href="../Structs/RefreshTokenGrant.html">RefreshTokenGrant</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/AuthorizationInfo.html">AuthorizationInfo</a></span><span class="p">,</span> <span class="kt"><a href="../Enums/NuguLoginKitError.html">NuguLoginKitError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>grant</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>grant</code> information that <code><a href="../Structs/RefreshTokenGrant.html">RefreshTokenGrant</a></code></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The closure to receive result for authorization.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ClientCredentialsGrant"></a>
+                <a name="//apple_ref/swift/Section/ClientCredentialsGrant" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ClientCredentialsGrant"></a>
+                  <h3 class="section-name"><p>ClientCredentialsGrant</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC9authorize5grant10completionyAA0E16CredentialsGrantV_ys6ResultOyAA17AuthorizationInfoVAA0abC5ErrorOGcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/authorize(grant:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC9authorize5grant10completionyAA0E16CredentialsGrantV_ys6ResultOyAA17AuthorizationInfoVAA0abC5ErrorOGcSgtF">authorize(grant:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Authorize with <code>ClientCredentials</code> grant type.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">authorize</span><span class="p">(</span><span class="nv">grant</span><span class="p">:</span> <span class="kt"><a href="../Structs/ClientCredentialsGrant.html">ClientCredentialsGrant</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/AuthorizationInfo.html">AuthorizationInfo</a></span><span class="p">,</span> <span class="kt"><a href="../Enums/NuguLoginKitError.html">NuguLoginKitError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>grant</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>grant</code> information that <code><a href="../Structs/ClientCredentialsGrant.html">ClientCredentialsGrant</a></code></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The closure to receive result for authorization.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Util%20API"></a>
+                <a name="//apple_ref/swift/Section/Util API" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Util%20API"></a>
+                  <h3 class="section-name"><p>Util API</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12NuguLoginKit0A11OAuthClientC6revoke8clientId0G6Secret5token10completionySS_S2Sys6ResultOyytAA0abC5ErrorOGcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/revoke(clientId:clientSecret:token:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12NuguLoginKit0A11OAuthClientC6revoke8clientId0G6Secret5token10completionySS_S2Sys6ResultOyytAA0abC5ErrorOGcSgtF">revoke(clientId:<wbr>clientSecret:<wbr>token:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Revoke completly with NUGU</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">revoke</span><span class="p">(</span><span class="nv">clientId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">token</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Void</span><span class="p">,</span> <span class="kt"><a href="../Enums/NuguLoginKitError.html">NuguLoginKitError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>clientId</code> for OAuth authentication.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientSecret</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>clientSecret</code> for OAuth authentication.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>token</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>token</code> is access-token currently being used.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The closure to receive result for <code>revoke</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="https://github.com/nugu-developers/nugu-ios" target="_blank" rel="external">SK Telecom Co., Ltd.</a>. All rights reserved. (Last updated: 2020-10-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

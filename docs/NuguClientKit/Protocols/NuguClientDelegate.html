@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>NuguClientDelegate Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Protocol/NuguClientDelegate" class="dashAnchor"></a>
+    <a title="NuguClientDelegate Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">NUGU SDK 0.19.4 Docs</a> (90% documented)</p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        NuguClientDelegate Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/DialogStateAggregator.html">DialogStateAggregator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeywordDetector.html">KeywordDetector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NuguClient.html">NuguClient</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:13NuguClientKit8logLevel8NattyLog0gE0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/DialogState.html">DialogState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeywordDetectorState.html">KeywordDetectorState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/DialogStateDelegate.html">DialogStateDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeywordDetectorDelegate.html">KeywordDetectorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NuguClientDelegate.html">NuguClientDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/KeywordSource.html">KeywordSource</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>NuguClientDelegate</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">NuguClientDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>&lt;#Description#&gt;</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit0aB8DelegateP04nuguB23WillRequireAudioSessionSbyF"></a>
+                    <a name="//apple_ref/swift/Method/nuguClientWillRequireAudioSession()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit0aB8DelegateP04nuguB23WillRequireAudioSessionSbyF">nuguClientWillRequireAudioSession()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nuguClientWillRequireAudioSession</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit0aB8DelegateP04nuguB22DidReleaseAudioSessionyyF"></a>
+                    <a name="//apple_ref/swift/Method/nuguClientDidReleaseAudioSession()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit0aB8DelegateP04nuguB22DidReleaseAudioSessionyyF">nuguClientDidReleaseAudioSession()</a>
+                    </code>
+                      <span class="declaration-note">
+                        Default implementation
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <h4>Default Implementation</h4>
+                      <div class="default_impl abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nuguClientDidReleaseAudioSession</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit0aB8DelegateP04nuguB10DidReceive8direcivey0A4Core10DownstreamO9DirectiveV_tF"></a>
+                    <a name="//apple_ref/swift/Method/nuguClientDidReceive(direcive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit0aB8DelegateP04nuguB10DidReceive8direcivey0A4Core10DownstreamO9DirectiveV_tF">nuguClientDidReceive(direcive:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Default implementation
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <h4>Default Implementation</h4>
+                      <div class="default_impl abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nuguClientDidReceive</span><span class="p">(</span><span class="nv">direcive</span><span class="p">:</span> <span class="kt">Downstream</span><span class="o">.</span><span class="kt">Directive</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>direcive</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#direcive description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit0aB8DelegateP04nuguB10DidReceive10attachmenty0A4Core10DownstreamO10AttachmentV_tF"></a>
+                    <a name="//apple_ref/swift/Method/nuguClientDidReceive(attachment:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit0aB8DelegateP04nuguB10DidReceive10attachmenty0A4Core10DownstreamO10AttachmentV_tF">nuguClientDidReceive(attachment:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Default implementation
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <h4>Default Implementation</h4>
+                      <div class="default_impl abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nuguClientDidReceive</span><span class="p">(</span><span class="nv">attachment</span><span class="p">:</span> <span class="kt">Downstream</span><span class="o">.</span><span class="kt">Attachment</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attachment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#attachment description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit0aB8DelegateP04nuguB8WillSend5eventy0A4Core8UpstreamO5EventV_tF"></a>
+                    <a name="//apple_ref/swift/Method/nuguClientWillSend(event:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit0aB8DelegateP04nuguB8WillSend5eventy0A4Core8UpstreamO5EventV_tF">nuguClientWillSend(event:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nuguClientWillSend</span><span class="p">(</span><span class="nv">event</span><span class="p">:</span> <span class="kt">Upstream</span><span class="o">.</span><span class="kt">Event</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>event</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#event description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit0aB8DelegateP04nuguB7DidSend5event5errory0A4Core8UpstreamO5EventV_s5Error_pSgtF"></a>
+                    <a name="//apple_ref/swift/Method/nuguClientDidSend(event:error:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit0aB8DelegateP04nuguB7DidSend5event5errory0A4Core8UpstreamO5EventV_s5Error_pSgtF">nuguClientDidSend(event:<wbr>error:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Default implementation
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <h4>Default Implementation</h4>
+                      <div class="default_impl abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nuguClientDidSend</span><span class="p">(</span><span class="nv">event</span><span class="p">:</span> <span class="kt">Upstream</span><span class="o">.</span><span class="kt">Event</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>event</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#event description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>error</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#error description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit0aB8DelegateP04nuguB7DidSend10attachment5errory0A4Core8UpstreamO10AttachmentV_s5Error_pSgtF"></a>
+                    <a name="//apple_ref/swift/Method/nuguClientDidSend(attachment:error:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit0aB8DelegateP04nuguB7DidSend10attachment5errory0A4Core8UpstreamO10AttachmentV_s5Error_pSgtF">nuguClientDidSend(attachment:<wbr>error:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Default implementation
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <h4>Default Implementation</h4>
+                      <div class="default_impl abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nuguClientDidSend</span><span class="p">(</span><span class="nv">attachment</span><span class="p">:</span> <span class="kt">Upstream</span><span class="o">.</span><span class="kt">Attachment</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attachment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#attachment description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>error</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#error description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit0aB8DelegateP04nuguB18RequestAccessTokenSSSgyF"></a>
+                    <a name="//apple_ref/swift/Method/nuguClientRequestAccessToken()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit0aB8DelegateP04nuguB18RequestAccessTokenSSSgyF">nuguClientRequestAccessToken()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nuguClientRequestAccessToken</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="https://github.com/nugu-developers/nugu-ios" target="_blank" rel="external">SK Telecom Co., Ltd.</a>. All rights reserved. (Last updated: 2020-10-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

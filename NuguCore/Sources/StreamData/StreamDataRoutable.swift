@@ -32,8 +32,17 @@ public protocol StreamDataRoutable: class, UpstreamDataSendable {
     /// - Parameter delegate: The object to remove.
     func remove(delegate: StreamDataDelegate)
     
+    /// <#Description#>
+    /// - Parameter completion: <#completion description#>
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?)
+    
+    /// <#Description#>
+    /// - Parameter serverPolicy: <#serverPolicy description#>
     func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy)
+    
+    /// <#Description#>
     func restartReceiveServerInitiatedDirective()
+    
+    /// <#Description#>
     func stopReceiveServerInitiatedDirective()
 }

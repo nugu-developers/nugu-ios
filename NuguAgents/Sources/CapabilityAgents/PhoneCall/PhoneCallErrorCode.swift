@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public enum PhoneCallErrorCode: String {
     case noSystemPermission = "NO_SYSTEM_PERMISSION"
     case callTypeNotSupported = "CALL_TYPE_NOT_SUPPORTED"

@@ -42,8 +42,8 @@ private var nattyConfiguration: NattyConfiguration {
     #endif
 }
 
-/// Turn the log enable and disable in `NuguCore`.
 @available(*, deprecated, message: "Replace to `logLevel`")
+/// Turn the log enable and disable in `NuguCore`.
 public var logEnabled: Bool {
     set {
         guard newValue == true else {

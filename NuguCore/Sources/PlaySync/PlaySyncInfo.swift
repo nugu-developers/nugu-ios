@@ -20,12 +20,23 @@
 
 import Foundation
 
+/// <#Description#>
 public struct PlaySyncInfo {
+    /// <#Description#>
     public let playStackServiceId: String?
+    /// <#Description#>
     public let dialogRequestId: String
+    /// <#Description#>
     public let messageId: String
+    /// <#Description#>
     public let duration: TimeIntervallic
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - playStackServiceId: <#playStackServiceId description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - messageId: <#messageId description#>
+    ///   - duration: <#duration description#>
     public init(
         playStackServiceId: String?,
         dialogRequestId: String,

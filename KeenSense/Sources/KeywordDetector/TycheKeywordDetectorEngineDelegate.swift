@@ -21,12 +21,7 @@
 import Foundation
 
 public protocol TycheKeywordDetectorEngineDelegate: class {
-    /// <#Description#>
     func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int)
-    /// <#Description#>
-    /// - Parameter error: <#error description#>
     func tycheKeywordDetectorEngineDidError(_ error: Error)
-    /// <#Description#>
-    /// - Parameter state: <#state description#>
     func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State)
 }

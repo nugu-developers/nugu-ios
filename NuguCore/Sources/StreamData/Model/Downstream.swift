@@ -20,25 +20,48 @@
 
 import Foundation
 
+/// <#Description#>
 public enum Downstream {
+    /// <#Description#>
     public struct Directive: Decodable {
+        /// <#Description#>
         public let header: Header
+        /// <#Description#>
         public let payload: Data
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - header: <#header description#>
+        ///   - payload: <#payload description#>
         public init(header: Header, payload: Data) {
             self.header = header
             self.payload = payload
         }
     }
     
+    /// <#Description#>
     public struct Attachment: Decodable {
+        /// <#Description#>
         public let header: Header
+        /// <#Description#>
         public let seq: Int
+        /// <#Description#>
         public let content: Data
+        /// <#Description#>
         public let isEnd: Bool
+        /// <#Description#>
         public let parentMessageId: String
+        /// <#Description#>
         public let mediaType: String
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - header: <#header description#>
+        ///   - seq: <#seq description#>
+        ///   - content: <#content description#>
+        ///   - isEnd: <#isEnd description#>
+        ///   - parentMessageId: <#parentMessageId description#>
+        ///   - mediaType: <#mediaType description#>
         public init(header: Header, seq: Int, content: Data, isEnd: Bool, parentMessageId: String, mediaType: String) {
             self.header = header
             self.seq = seq
@@ -49,13 +72,26 @@ public enum Downstream {
         }
     }
     
+    /// <#Description#>
     public struct Header: Decodable {
+        /// <#Description#>
         public let namespace: String
+        /// <#Description#>
         public let name: String
+        /// <#Description#>
         public let dialogRequestId: String
+        /// <#Description#>
         public let messageId: String
+        /// <#Description#>
         public let version: String
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - namespace: <#namespace description#>
+        ///   - name: <#name description#>
+        ///   - dialogRequestId: <#dialogRequestId description#>
+        ///   - messageId: <#messageId description#>
+        ///   - version: <#version description#>
         public init(namespace: String, name: String, dialogRequestId: String, messageId: String, version: String) {
             self.namespace = namespace
             self.name = name
@@ -69,6 +105,7 @@ public enum Downstream {
 // MARK: - Downstream.Header
 
 extension Downstream.Header {
+    /// <#Description#>
     public var type: String { "\(namespace).\(name)" }
     
 }
@@ -92,6 +129,7 @@ extension Downstream.Attachment: CustomStringConvertible {
 // MARK: - Downstream.Directive
 
 extension Downstream.Directive {
+    /// <#Description#>
     public var payloadDictionary: [String: AnyHashable]? {
         try? JSONSerialization.jsonObject(with: payload, options: []) as? [String: AnyHashable]
     }

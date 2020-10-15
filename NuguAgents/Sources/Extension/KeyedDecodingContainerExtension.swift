@@ -20,23 +20,9 @@
 
 import Foundation
 
-private struct JSONCodingKeys: CodingKey {
-    var stringValue: String
-    var intValue: Int?
-    
-    init?(stringValue: String) {
-        self.stringValue = stringValue
-    }
-    
-    init?(intValue: Int) {
-        self.init(stringValue: "\(intValue)")
-        self.intValue = intValue
-    }
-}
-
 extension KeyedDecodingContainer {
     func decode(_ type: [String: AnyHashable].Type, forKey key: K) throws -> [String: AnyHashable] {
-        let container = try nestedContainer(keyedBy: JSONCodingKeys.self, forKey: key)
+        let container = try nestedContainer(keyedBy: JSONCodingKey.self, forKey: key)
         return try container.decode(type)
     }
     
@@ -94,7 +80,7 @@ extension UnkeyedDecodingContainer {
     }
 
     mutating func decode(_ type: [String: AnyHashable].Type) throws -> [String: AnyHashable] {
-        let nestedContainer = try self.nestedContainer(keyedBy: JSONCodingKeys.self)
+        let nestedContainer = try self.nestedContainer(keyedBy: JSONCodingKey.self)
         return try nestedContainer.decode(type)
     }
 }

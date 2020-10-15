@@ -21,10 +21,6 @@
 import Foundation
 
 public protocol MediaOpusStreamDataSource {
-    /// For data stream source
-    /// - Parameter data: <#data description#>
     func appendData(_ data: Data) throws
-    
-    /// For notify data stream ended
     func lastDataAppended() throws
 }

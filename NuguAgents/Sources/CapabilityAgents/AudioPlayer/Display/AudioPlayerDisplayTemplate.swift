@@ -20,14 +20,29 @@
 
 import Foundation
 
+/// <#Description#>
 public struct AudioPlayerDisplayTemplate {
+    /// <#Description#>
     public let type: String
+    /// <#Description#>
     public let payload: [String: AnyHashable]
+    /// <#Description#>
     public let templateId: String
+    /// <#Description#>
     public let dialogRequestId: String
+    /// <#Description#>
     public let mediaPayload: MediaPayload
+    /// <#Description#>
     public let isSeekable: Bool
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - type: <#type description#>
+    ///   - payload: <#payload description#>
+    ///   - templateId: <#templateId description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - mediaPayload: <#mediaPayload description#>
+    ///   - isSeekable: <#isSeekable description#>
     init(type: String, payload: [String: AnyHashable], templateId: String, dialogRequestId: String, mediaPayload: MediaPayload, isSeekable: Bool) {
         self.type = type
         self.payload = payload
@@ -37,9 +52,13 @@ public struct AudioPlayerDisplayTemplate {
         self.isSeekable = isSeekable
     }
     
+    /// <#Description#>
     public struct MediaPayload {
+        /// <#Description#>
         public let token: String
+        /// <#Description#>
         public let playServiceId: String
+        /// <#Description#>
         public let playStackControl: PlayStackControl?
     }
 }

@@ -29,9 +29,9 @@ struct AudioPlayerAgentMedia {
     var pauseReason: PauseReason = .nothing
     var cancelAssociation: Bool = false
     /// Keep the offset before playback stopped.
-    var offset: Int?
+    var offset: TimeIntervallic?
     /// Keep the duration before playback stopped.
-    var duration: Int?
+    var duration: TimeIntervallic?
     
     init(dialogRequestId: String, messageId: String, payload: Payload) {
         self.dialogRequestId = dialogRequestId

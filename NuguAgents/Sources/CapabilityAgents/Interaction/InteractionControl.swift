@@ -20,9 +20,12 @@
 
 import Foundation
 
+/// <#Description#>
 public struct InteractionControl: Decodable {
+    /// <#Description#>
     public let mode: Mode
-
+    
+    /// <#Description#>
     public enum Mode: String, Decodable {
         case none = "NONE"
         case multiTurn = "MULTI_TURN"

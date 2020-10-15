@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol PlaySyncManageable: ContextInfoDelegate {
     /// Register `PlaySyncDelegate` to `PlaySyncManageable`.
     /// - Parameter delegate: The object to register.
@@ -33,7 +34,13 @@ public protocol PlaySyncManageable: ContextInfoDelegate {
         property: PlaySyncProperty,
         info: PlaySyncInfo
     )
+    
+    /// <#Description#>
+    /// - Parameter property: <#property description#>
     func endPlay(property: PlaySyncProperty)
+    
+    /// <#Description#>
+    /// - Parameter dialogRequestId: <#dialogRequestId description#>
     func stopPlay(dialogRequestId: String)
     
     /// Start new timer to release `PlaySyncProperty`.

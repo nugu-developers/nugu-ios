@@ -21,6 +21,7 @@
 import Foundation
 
 
+/// <#Description#>
 public enum ASRInitiator: Equatable {
     case wakeUpKeyword(keyword: String?, data: Data, start: Int, end: Int, detection: Int)
     case user

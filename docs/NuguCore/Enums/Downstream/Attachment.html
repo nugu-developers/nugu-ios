@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Attachment Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+    <script src="../../js/lunr.min.js" defer></script>
+    <script src="../../js/typeahead.jquery.js" defer></script>
+    <script src="../../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Struct/Attachment" class="dashAnchor"></a>
+    <a title="Attachment Structure Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">NuguCore 0.19.4 Docs</a> (80% documented)</p>
+        <p class="header-right">
+          <form role="search" action="../../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">NuguCore Reference</a>
+        <img id="carat" src="../../img/carat.png" />
+        Attachment Structure Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/MicInputProvider.html">MicInputProvider</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Global%20Variables.html#/s:8NuguCore8logLevel8NattyLog0fD0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Enums.html#/s:8NuguCore11ContextTypeO">ContextType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums.html#/s:8NuguCore21DirectiveHandleResultO">DirectiveHandleResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/Downstream.html">Downstream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/Downstream/Directive.html">– Directive</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/Downstream/Attachment.html">– Attachment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/Downstream/Header.html">– Header</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/EventSenderError.html">EventSenderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/FocusState.html">FocusState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/MediaPlayableError.html">MediaPlayableError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/MediaPlayerState.html">MediaPlayerState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/MicInputError.html">MicInputError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/NuguServerInfo.html">NuguServerInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/StreamDataState.html">StreamDataState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/Upstream.html">Upstream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/Upstream/Event.html">– Event</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/Upstream/Attachment.html">– Attachment</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions.html#/c:@SA@CMTime">CMTime</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/DispatchTimeInterval.html">DispatchTimeInterval</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Protocols/AuthorizationStoreDelegate.html">AuthorizationStoreDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/AuthorizationStoreable.html">AuthorizationStoreable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/ContextInfoDelegate.html">ContextInfoDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/ContextManageable.html">ContextManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/DirectiveSequenceable.html">DirectiveSequenceable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/DirectiveSequencerDelegate.html">DirectiveSequencerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/FocusChannelDelegate.html">FocusChannelDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/FocusDelegate.html">FocusDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/FocusManageable.html">FocusManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/MediaPlayable.html">MediaPlayable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/MediaPlayerDelegate.html">MediaPlayerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/PlaySyncDelegate.html">PlaySyncDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/PlaySyncManageable.html">PlaySyncManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/StreamDataDelegate.html">StreamDataDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/StreamDataRoutable.html">StreamDataRoutable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/TimeIntervallic.html">TimeIntervallic</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/UpstreamDataSendable.html">UpstreamDataSendable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Structs/BlockingPolicy.html">BlockingPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/BlockingPolicy.html#/s:8NuguCore14BlockingPolicyV6MediumO">– Medium</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/ContextInfo.html">ContextInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/DirectiveCancelPolicy.html">DirectiveCancelPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/DirectiveHandleInfo.html">DirectiveHandleInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/FocusChannelPriority.html">FocusChannelPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/NuguTimeInterval.html">NuguTimeInterval</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/PlaySyncInfo.html">PlaySyncInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/PlaySyncProperty.html">PlaySyncProperty</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/PlaySyncProperty/LayerType.html">– LayerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/PlaySyncProperty/ContextType.html">– ContextType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/TimeUUID.html">TimeUUID</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/s:8NuguCore15CancelDirectivea">CancelDirective</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/s:8NuguCore20DirectiveHandleInfosa">DirectiveHandleInfos</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/s:8NuguCore16HandleAttachmenta">HandleAttachment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/s:8NuguCore15HandleDirectivea">HandleDirective</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/s:8NuguCore17PrefetchDirectivea">PrefetchDirective</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Attachment</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Attachment</span> <span class="p">:</span> <span class="kt">Decodable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Enums/Downstream.html">Downstream</a></span><span class="o">.</span><span class="kt">Attachment</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                </div>
+              </div>
+            <p>&lt;#Description#&gt;</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore10DownstreamO10AttachmentV6headerAC6HeaderVvp"></a>
+                    <a name="//apple_ref/swift/Property/header" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore10DownstreamO10AttachmentV6headerAC6HeaderVvp">header</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">header</span><span class="p">:</span> <span class="kt"><a href="../../Enums/Downstream/Header.html">Header</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore10DownstreamO10AttachmentV3seqSivp"></a>
+                    <a name="//apple_ref/swift/Property/seq" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore10DownstreamO10AttachmentV3seqSivp">seq</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">seq</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore10DownstreamO10AttachmentV7content10Foundation4DataVvp"></a>
+                    <a name="//apple_ref/swift/Property/content" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore10DownstreamO10AttachmentV7content10Foundation4DataVvp">content</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">content</span><span class="p">:</span> <span class="kt">Data</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore10DownstreamO10AttachmentV5isEndSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isEnd" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore10DownstreamO10AttachmentV5isEndSbvp">isEnd</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">isEnd</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore10DownstreamO10AttachmentV15parentMessageIdSSvp"></a>
+                    <a name="//apple_ref/swift/Property/parentMessageId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore10DownstreamO10AttachmentV15parentMessageIdSSvp">parentMessageId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">parentMessageId</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore10DownstreamO10AttachmentV9mediaTypeSSvp"></a>
+                    <a name="//apple_ref/swift/Property/mediaType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore10DownstreamO10AttachmentV9mediaTypeSSvp">mediaType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">mediaType</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore10DownstreamO10AttachmentV6header3seq7content5isEnd15parentMessageId9mediaTypeAeC6HeaderV_Si10Foundation4DataVSbS2Stcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(header:seq:content:isEnd:parentMessageId:mediaType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore10DownstreamO10AttachmentV6header3seq7content5isEnd15parentMessageId9mediaTypeAeC6HeaderV_Si10Foundation4DataVSbS2Stcfc">init(header:<wbr>seq:<wbr>content:<wbr>isEnd:<wbr>parentMessageId:<wbr>mediaType:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">header</span><span class="p">:</span> <span class="kt"><a href="../../Enums/Downstream/Header.html">Header</a></span><span class="p">,</span> <span class="nv">seq</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">content</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">isEnd</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">parentMessageId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">mediaType</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>header</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#header description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>seq</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#seq description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>content</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#content description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isEnd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#isEnd description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>parentMessageId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#parentMessageId description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mediaType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#mediaType description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Downstream.Attachment%20%2B%20CustomStringConvertible"></a>
+                <a name="//apple_ref/swift/Section/Downstream.Attachment + CustomStringConvertible" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Downstream.Attachment%20%2B%20CustomStringConvertible"></a>
+                  <h3 class="section-name"><p>Downstream.Attachment + CustomStringConvertible</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:s23CustomStringConvertibleP11descriptionSSvp"></a>
+                    <a name="//apple_ref/swift/Property/description" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s23CustomStringConvertibleP11descriptionSSvp">description</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="https://github.com/nugu-developers/nugu-ios" target="_blank" rel="external">SK Telecom Co., Ltd.</a>. All rights reserved. (Last updated: 2020-10-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

@@ -22,6 +22,7 @@ import Foundation
 
 /// The context of the ContextInfoDelegate
 public struct ContextInfo {
+    /// <#Description#>
     public let contextType: ContextType
     
     /// The name of the ProvideContextDelegate.
@@ -30,6 +31,11 @@ public struct ContextInfo {
     /// The state of the ProvideContextDelegate.
     public let payload: AnyHashable
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - contextType: <#contextType description#>
+    ///   - name: <#name description#>
+    ///   - payload: <#payload description#>
     public init(contextType: ContextType, name: String, payload: AnyHashable) {
         self.contextType = contextType
         self.name = name

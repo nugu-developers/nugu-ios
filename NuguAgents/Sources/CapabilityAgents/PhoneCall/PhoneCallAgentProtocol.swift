@@ -22,9 +22,14 @@ import Foundation
 
 import NuguCore
 
+/// <#Description#>
 public protocol PhoneCallAgentProtocol: CapabilityAgentable {
-    
+    /// <#Description#>
     var delegate: PhoneCallAgentDelegate? { get set }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - playServiceId: <#playServiceId description#>
+    ///   - completion: <#completion description#>
     @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
 }

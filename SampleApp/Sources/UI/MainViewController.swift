@@ -37,8 +37,8 @@ final class MainViewController: UIViewController {
     
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
-    private var displayView: DisplayView?
-    private var displayAudioPlayerView: AudioDisplayView?
+    private weak var displayView: DisplayView?
+    private weak var displayAudioPlayerView: AudioDisplayView?
     
     private var nuguVoiceChrome = NuguVoiceChrome()
     
@@ -359,10 +359,9 @@ extension MainViewController: UIGestureRecognizerDelegate {
 // MARK: - Private (DisplayView)
 
 private extension MainViewController {
-    func addDisplayView(displayTemplate: DisplayTemplate) -> UIView? {
-        
-        displayView?.removeFromSuperview()
-        
+    func makeDisplayView(displayTemplate: DisplayTemplate) -> DisplayView? {
+        let displayView: DisplayView?
+
         switch displayTemplate.type {
         case "Display.FullText1":
             displayView = FullText1View(frame: view.frame)
@@ -410,10 +409,18 @@ private extension MainViewController {
             displayView = Weather5View(frame: view.frame)
         default:
             // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
-            break
+            displayView = nil
         }
+        return displayView
+    }
+    
+    func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
+        displayView?.removeFromSuperview()
         
-        guard let displayView = displayView else { return nil }
+        guard let displayView = makeDisplayView(displayTemplate: displayTemplate) else {
+            completion(nil)
+            return
+        }
         
         displayView.displayPayload = displayTemplate.payload
         displayView.onCloseButtonClick = { [weak self] in
@@ -448,18 +455,17 @@ private extension MainViewController {
         
         displayView.alpha = 0
         view.insertSubview(displayView, belowSubview: nuguVoiceChrome)
-        UIView.animate(withDuration: 0.3) {
-            displayView.alpha = 1.0
-        }
         
-        return displayView
+        UIView.animate(withDuration: 0.3, animations: {
+            displayView.alpha = 1.0
+        }, completion: { [weak self] (_) in
+            completion(displayView)
+            self?.displayView = displayView
+        })
     }
     
     func updateDisplayView(displayTemplate: DisplayTemplate) {
-        guard let currentDisplayView = displayView else {
-            return
-        }
-        currentDisplayView.update(updatePayload: displayTemplate.payload)
+        displayView?.update(updatePayload: displayTemplate.payload)
     }
     
     func dismissDisplayView() {
@@ -471,21 +477,16 @@ private extension MainViewController {
             },
             completion: { _ in
                 view.removeFromSuperview()
-        })
-        displayView = nil
+            }
+        )
     }
 }
 
 // MARK: - Private (DisplayAudioPlayerView)
 
 private extension MainViewController {
-    func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> UIView? {
-        var wasPlayerBarMode = false
-        if let isBarMode = displayAudioPlayerView?.isBarMode,
-            isBarMode == true {
-            wasPlayerBarMode = true
-        }
-        displayAudioPlayerView?.removeFromSuperview()
+    func makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> AudioDisplayView? {
+        let displayAudioPlayerView: AudioDisplayView?
         
         switch audioPlayerDisplayTemplate.type {
         case "AudioPlayer.Template1":
@@ -494,14 +495,25 @@ private extension MainViewController {
             displayAudioPlayerView = AudioPlayer2View(frame: view.frame)
         default:
             // Draw your own AudioPlayerView with AudioPlayerDisplayTemplate.payload and set as self.displayAudioPlayerView
-            break
+            displayAudioPlayerView = nil
+        }
+        
+        return displayAudioPlayerView
+    }
+    
+    func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
+        let wasPlayerBarMode = displayAudioPlayerView?.isBarMode == true
+        displayAudioPlayerView?.removeFromSuperview()
+        
+        guard let audioPlayerView = makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: audioPlayerDisplayTemplate) else {
+            completion(nil)
+            return
         }
 
         if wasPlayerBarMode == true {
-            displayAudioPlayerView?.setBarMode()
+            audioPlayerView.setBarMode()
         }
         
-        guard let audioPlayerView = displayAudioPlayerView else { return nil }
         audioPlayerView.isSeekable = audioPlayerDisplayTemplate.isSeekable
         audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         audioPlayerView.onCloseButtonClick = { [weak self] in
@@ -525,7 +537,12 @@ private extension MainViewController {
             audioPlayerView.alpha = 1.0
         }
         
-        return audioPlayerView
+        UIView.animate(withDuration: 0.3, animations: {
+            audioPlayerView.alpha = 1.0
+        }, completion: { [weak self] (_) in
+            completion(audioPlayerView)
+            self?.displayAudioPlayerView = audioPlayerView
+        })
     }
     
     func dismissDisplayAudioPlayerView() {
@@ -537,8 +554,8 @@ private extension MainViewController {
             },
             completion: { _ in
                 view.removeFromSuperview()
-        })
-        displayAudioPlayerView = nil
+            }
+        )
     }
 }
 
@@ -745,8 +762,8 @@ extension MainViewController: DisplayAgentDelegate {
     
     func displayAgentShouldRender(template: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         log.debug("templateId: \(template.templateId)")
-        DispatchQueue.main.async { [weak self] in
-            completion(self?.addDisplayView(displayTemplate: template))
+        DispatchQueue.main.async {  [weak self] in
+            self?.addDisplayView(displayTemplate: template, completion: completion)
         }
     }
     
@@ -796,7 +813,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
         log.debug("")
         DispatchQueue.main.async { [weak self] in
             NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerDisplayDidRender(template: template)
-            completion(self?.addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template))
+            self?.addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template, completion: completion)
         }
     }
     

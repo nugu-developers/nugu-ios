@@ -22,16 +22,19 @@ import UIKit
 
 import Lottie
 
+/// <#Description#>
 final public class NuguVoiceChrome: UIView {
 
     // MARK: - RecommendedHeight for NuguVoiceChrome
     // NuguVoiceChrome is designed in accordance with recommendedHeight
     // Note that NuguVoiceChrome can be looked awkward in different height
     
+    /// <#Description#>
     public static let recommendedHeight: CGFloat = 68.0
     
     // MARK: - NuguVoiceChrome.NuguVoiceChromeTheme
     
+    /// <#Description#>
     public enum NuguVoiceChromeTheme {
         case light
         case dark
@@ -57,6 +60,7 @@ final public class NuguVoiceChrome: UIView {
     
     // MARK: - Public Properties (configurable variables)
     
+    /// <#Description#>
     public var theme: NuguVoiceChromeTheme = .light {
         didSet {
             backgroundView.backgroundColor = theme.backgroundColor
@@ -86,6 +90,8 @@ final public class NuguVoiceChrome: UIView {
     
     // MARK: - Override
     
+    /// <#Description#>
+    /// - Parameter frame: <#frame description#>
     public override init(frame: CGRect) {
         super.init(frame: frame)
         loadFromXib()
@@ -137,6 +143,7 @@ final public class NuguVoiceChrome: UIView {
 // MARK: - NuguVoiceChrome.State
 
 public extension NuguVoiceChrome {
+    /// <#Description#>
     enum State {
         case listeningPassive
         case listeningActive
@@ -175,6 +182,8 @@ public extension NuguVoiceChrome {
 // MARK: - Public
 
 public extension NuguVoiceChrome {
+    /// <#Description#>
+    /// - Parameter state: <#state description#>
     func changeState(state: NuguVoiceChrome.State) {
         currentState = state
         playAnimationByState()
@@ -187,6 +196,10 @@ public extension NuguVoiceChrome {
         }
     }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - chipsData: <#chipsData description#>
+    ///   - onChipsSelect: <#onChipsSelect description#>
     func setChipsData(chipsData: [NuguChipsButton.NuguChipsButtonType], onChipsSelect: @escaping ((_ selectedChips: NuguChipsButton.NuguChipsButtonType) -> Void)) {
         recognizedTextLabel.text = nil
         chipsView.chipsData = chipsData
@@ -198,6 +211,8 @@ public extension NuguVoiceChrome {
         }
     }
     
+    /// <#Description#>
+    /// - Parameter text: <#text description#>
     func setRecognizedText(text: String?) {
         recognizedTextLabel.text = text
         guideTextLabel.text = nil

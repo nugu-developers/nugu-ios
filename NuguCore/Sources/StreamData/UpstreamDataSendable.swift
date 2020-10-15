@@ -47,10 +47,16 @@ public protocol UpstreamDataSendable {
 }
 
 public extension UpstreamDataSendable {
+    /// <#Description#>
+    /// - Parameter event: <#event description#>
     func sendEvent(_ event: Upstream.Event) {
         sendEvent(event, completion: nil)
     }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - attachment: <#attachment description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
     func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String) {
         sendStream(attachment, dialogRequestId: dialogRequestId, completion: nil)
     }

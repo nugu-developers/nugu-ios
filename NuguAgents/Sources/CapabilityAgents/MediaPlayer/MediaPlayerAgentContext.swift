@@ -20,29 +20,50 @@
 
 import Foundation
 
+/// <#Description#>
 public struct MediaPlayerAgentContext: Encodable {
     
     // MARK: User
     
+    /// <#Description#>
     public struct User: Encodable {
-        public let isLogin: String
+        /// <#Description#>
+        public let isLogIn: String
+        /// <#Description#>
         public let hasVoucher: String
         
-        public init(isLogin: String, hasVoucher: String) {
-            self.isLogin = isLogin
+        /// <#Description#>
+        /// - Parameters:
+        ///   - isLogIn: <#isLogIn description#>
+        ///   - hasVoucher: <#hasVoucher description#>
+        public init(isLogIn: String, hasVoucher: String) {
+            self.isLogIn = isLogIn
             self.hasVoucher = hasVoucher
         }
     }
     
     // MARK: Playlist
     
+    /// <#Description#>
     public struct Playlist: Encodable {
+        /// <#Description#>
         public let type: String
+        /// <#Description#>
         public let name: String
+        /// <#Description#>
         public let number: String
+        /// <#Description#>
         public let length: String
+        /// <#Description#>
         public let currentSongOrder: String
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - type: <#type description#>
+        ///   - name: <#name description#>
+        ///   - number: <#number description#>
+        ///   - length: <#length description#>
+        ///   - currentSongOrder: <#currentSongOrder description#>
         public init(
             type: String,
             name: String,
@@ -60,10 +81,17 @@ public struct MediaPlayerAgentContext: Encodable {
     
     // MARK: Toggle
     
+    /// <#Description#>
     public struct Toggle: Encodable {
+        /// <#Description#>
         public let `repeat`: String?
+        /// <#Description#>
         public let shuffle: String?
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - repeat: <#repeat description#>
+        ///   - shuffle: <#shuffle description#>
         public init(
             `repeat`: String?,
             shuffle: String?
@@ -73,13 +101,27 @@ public struct MediaPlayerAgentContext: Encodable {
         }
     }
     
+    /// <#Description#>
     public let appStatus: String
+    /// <#Description#>
     public let playerActivity: String
+    /// <#Description#>
     public let user: User?
+    /// <#Description#>
     public let currentSong: MediaPlayerAgentSong?
+    /// <#Description#>
     public let playlist: Playlist?
+    /// <#Description#>
     public let toggle: Toggle?
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - appStatus: <#appStatus description#>
+    ///   - playerActivity: <#playerActivity description#>
+    ///   - user: <#user description#>
+    ///   - currentSong: <#currentSong description#>
+    ///   - playlist: <#playlist description#>
+    ///   - toggle: <#toggle description#>
     public init(
         appStatus: String,
         playerActivity: String,

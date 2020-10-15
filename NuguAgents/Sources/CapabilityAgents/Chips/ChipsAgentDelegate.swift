@@ -22,5 +22,9 @@ import Foundation
 
 /// An delegate that appllication can extend to observe chips changes.
 public protocol ChipsAgentDelegate: class {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - item: <#item description#>
+    ///   - dialogRequestId: <#dialogRequestId description#>
     func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String)
 }

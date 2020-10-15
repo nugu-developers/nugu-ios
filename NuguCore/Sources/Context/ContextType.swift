@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public enum ContextType {
     case capability
     case client

@@ -37,7 +37,7 @@ class ClientEndPointDetector: EndPointDetectable {
     
     public init(asrOptions: ASROptions, epdFile: URL) {
         self.asrOptions = asrOptions
-        engine = TycheEndPointDetectorEngine(epdFile: epdFile)
+        engine = TycheEndPointDetectorEngine(epdFilePath: epdFile.path)
         engine.delegate = self
     }
     
@@ -55,7 +55,12 @@ class ClientEndPointDetector: EndPointDetectable {
     }
     
     func putAudioBuffer(buffer: AVAudioPCMBuffer) {
-        engine.putAudioBuffer(buffer: buffer)
+        guard let pcmBuffer: AVAudioPCMBuffer = buffer.copy() as? AVAudioPCMBuffer else {
+            log.warning("copy buffer failed")
+            return
+        }
+        
+        engine.putAudioBuffer(buffer: pcmBuffer)
     }
     
     public func stop() {

@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public enum DirectiveHandleResult {
     case failed(_ description: String)
     case canceled

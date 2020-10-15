@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Protocols  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/Protocols" class="dashAnchor"></a>
+    <a title="Protocols  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">NUGU SDK 0.19.4 Docs</a> (80% documented)</p>
+        <p class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="img/carat.png" />
+        Protocols  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/MicInputProvider.html">MicInputProvider</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Global%20Variables.html#/s:8NuguCore8logLevel8NattyLog0fD0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums.html#/s:8NuguCore11ContextTypeO">ContextType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums.html#/s:8NuguCore21DirectiveHandleResultO">DirectiveHandleResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Downstream.html">Downstream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Downstream/Directive.html">– Directive</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Downstream/Attachment.html">– Attachment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Downstream/Header.html">– Header</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/EventSenderError.html">EventSenderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/FocusState.html">FocusState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/MediaPlayableError.html">MediaPlayableError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/MediaPlayerState.html">MediaPlayerState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/MicInputError.html">MicInputError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/NuguServerInfo.html">NuguServerInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/StreamDataState.html">StreamDataState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Upstream.html">Upstream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Upstream/Event.html">– Event</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Upstream/Attachment.html">– Attachment</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/c:@SA@CMTime">CMTime</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/DispatchTimeInterval.html">DispatchTimeInterval</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/AuthorizationStoreDelegate.html">AuthorizationStoreDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/AuthorizationStoreable.html">AuthorizationStoreable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/ContextInfoDelegate.html">ContextInfoDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/ContextManageable.html">ContextManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/DirectiveSequenceable.html">DirectiveSequenceable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/DirectiveSequencerDelegate.html">DirectiveSequencerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FocusChannelDelegate.html">FocusChannelDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FocusDelegate.html">FocusDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FocusManageable.html">FocusManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/MediaPlayable.html">MediaPlayable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/MediaPlayerDelegate.html">MediaPlayerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/PlaySyncDelegate.html">PlaySyncDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/PlaySyncManageable.html">PlaySyncManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/StreamDataDelegate.html">StreamDataDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/StreamDataRoutable.html">StreamDataRoutable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TimeIntervallic.html">TimeIntervallic</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/UpstreamDataSendable.html">UpstreamDataSendable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/BlockingPolicy.html">BlockingPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/BlockingPolicy.html#/s:8NuguCore14BlockingPolicyV6MediumO">– Medium</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/ContextInfo.html">ContextInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/DirectiveCancelPolicy.html">DirectiveCancelPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/DirectiveHandleInfo.html">DirectiveHandleInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/FocusChannelPriority.html">FocusChannelPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/NuguTimeInterval.html">NuguTimeInterval</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/PlaySyncInfo.html">PlaySyncInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/PlaySyncProperty.html">PlaySyncProperty</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/PlaySyncProperty/LayerType.html">– LayerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/PlaySyncProperty/ContextType.html">– ContextType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/TimeUUID.html">TimeUUID</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:8NuguCore15CancelDirectivea">CancelDirective</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:8NuguCore20DirectiveHandleInfosa">DirectiveHandleInfos</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:8NuguCore16HandleAttachmenta">HandleAttachment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:8NuguCore15HandleDirectivea">HandleDirective</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:8NuguCore17PrefetchDirectivea">PrefetchDirective</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Protocols</h1>
+            <p>The following protocols are available globally.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore26AuthorizationStoreDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/AuthorizationStoreDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore26AuthorizationStoreDelegateP">AuthorizationStoreDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An delegate that application should extend to provide access token.</p>
+
+                        <a href="Protocols/AuthorizationStoreDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AuthorizationStoreDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore22AuthorizationStoreableP"></a>
+                    <a name="//apple_ref/swift/Protocol/AuthorizationStoreable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore22AuthorizationStoreableP">AuthorizationStoreable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The <code>AuthorizationStoreable</code> is used to provide authorization token.
+Provide authorization token</p>
+
+                        <a href="Protocols/AuthorizationStoreable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AuthorizationStoreable</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore19ContextInfoDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/ContextInfoDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore19ContextInfoDelegateP">ContextInfoDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>ContextInfoDelegate may be capability agent whose context needs to be sent to the server.</p>
+
+                        <a href="Protocols/ContextInfoDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ContextInfoDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore17ContextManageableP"></a>
+                    <a name="//apple_ref/swift/Protocol/ContextManageable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore17ContextManageableP">ContextManageable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Manage capability agent&rsquo;s context.
+Context is a container used to communicate the state of the capability agents to server.</p>
+
+                        <a href="Protocols/ContextManageable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ContextManageable</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore21DirectiveSequenceableP"></a>
+                    <a name="//apple_ref/swift/Protocol/DirectiveSequenceable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore21DirectiveSequenceableP">DirectiveSequenceable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/DirectiveSequenceable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DirectiveSequenceable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore26DirectiveSequencerDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/DirectiveSequencerDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore26DirectiveSequencerDelegateP">DirectiveSequencerDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/DirectiveSequencerDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DirectiveSequencerDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore20FocusChannelDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/FocusChannelDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore20FocusChannelDelegateP">FocusChannelDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>FocusChannelDelegate may be capability agent whose needs to be registered with the ContextManager.</p>
+
+                        <a href="Protocols/FocusChannelDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">FocusChannelDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore13FocusDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/FocusDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore13FocusDelegateP">FocusDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An delegate that appllication can extend to register to observe focus changes.</p>
+
+                        <a href="Protocols/FocusDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">FocusDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore15FocusManageableP"></a>
+                    <a name="//apple_ref/swift/Protocol/FocusManageable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore15FocusManageableP">FocusManageable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A FocusManager takes requests to acquire and release Channels and updates the focuses of other Channels based on
+their priorities so that the invariant that there can only be one Foreground Channel is held.</p>
+
+                        <a href="Protocols/FocusManageable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">FocusManageable</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore13MediaPlayableP"></a>
+                    <a name="//apple_ref/swift/Protocol/MediaPlayable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore13MediaPlayableP">MediaPlayable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/MediaPlayable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">MediaPlayable</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore19MediaPlayerDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/MediaPlayerDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore19MediaPlayerDelegateP">MediaPlayerDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/MediaPlayerDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">MediaPlayerDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore16PlaySyncDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/PlaySyncDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore16PlaySyncDelegateP">PlaySyncDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/PlaySyncDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PlaySyncDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore18PlaySyncManageableP"></a>
+                    <a name="//apple_ref/swift/Protocol/PlaySyncManageable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore18PlaySyncManageableP">PlaySyncManageable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/PlaySyncManageable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PlaySyncManageable</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ContextInfoDelegate.html">ContextInfoDelegate</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore18StreamDataDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/StreamDataDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore18StreamDataDelegateP">StreamDataDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/StreamDataDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">StreamDataDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore18StreamDataRoutableP"></a>
+                    <a name="//apple_ref/swift/Protocol/StreamDataRoutable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore18StreamDataRoutableP">StreamDataRoutable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/StreamDataRoutable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">StreamDataRoutable</span> <span class="p">:</span> <span class="kt">AnyObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/UpstreamDataSendable.html">UpstreamDataSendable</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore20UpstreamDataSendableP"></a>
+                    <a name="//apple_ref/swift/Protocol/UpstreamDataSendable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore20UpstreamDataSendableP">UpstreamDataSendable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/UpstreamDataSendable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">UpstreamDataSendable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TimeIntervallic"></a>
+                <a name="//apple_ref/swift/Section/TimeIntervallic" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/TimeIntervallic"></a>
+                  <h3 class="section-name"><p>TimeIntervallic</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore15TimeIntervallicP"></a>
+                    <a name="//apple_ref/swift/Protocol/TimeIntervallic" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore15TimeIntervallicP">TimeIntervallic</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/TimeIntervallic.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TimeIntervallic</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="https://github.com/nugu-developers/nugu-ios" target="_blank" rel="external">SK Telecom Co., Ltd.</a>. All rights reserved. (Last updated: 2020-10-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

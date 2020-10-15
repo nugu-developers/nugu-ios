@@ -21,12 +21,20 @@
 import UIKit
 import WebKit
 
+/// <#Description#>
 final public class NuguServiceWebView: WKWebView {
     
-    public static let serviceSettingUrl = "https://webview.sktnugu.com/3pp/main.html?screenCode=setting_webview"
-    public static let agreementUrl = "https://webview.sktnugu.com/3pp/agreement/list.html"
+    /// <#Description#>
+    public static var serviceSettingUrl: String {
+        return domain + "/3pp/main.html?screenCode=setting_webview"
+    }
+    /// <#Description#>
+    public static var agreementUrl: String {
+        return domain + "/3pp/agreement/list.html"
+    }
     
-    private static let domain = "https://webview.sktnugu.com"
+    /// <#Description#>
+    public static var domain = "https://webview.sktnugu.com"
     
     private enum MethodType: String, CaseIterable {
         case openExternalApp
@@ -36,6 +44,7 @@ final public class NuguServiceWebView: WKWebView {
     
     // MARK: Member Variables
     
+    /// <#Description#>
     public weak var javascriptDelegate: NuguServiceWebJavascriptDelegate?
     private let scriptMessageName = "NuguWebCommonHandler"
     
@@ -101,6 +110,8 @@ extension NuguServiceWebView: WKScriptMessageHandler {
 // MARK: - Cookie Setting
 
 public extension NuguServiceWebView {
+    /// <#Description#>
+    /// - Parameter nuguServiceCookie: <#nuguServiceCookie description#>
     func setNuguServiceCookie(nuguServiceCookie: NuguServiceCookie) {
         guard let encodedCookie = try? JSONEncoder().encode(nuguServiceCookie),
             let cookieAsDictionary = (try? JSONSerialization.jsonObject(with: encodedCookie, options: [])) as? [String: Any] else { return }

@@ -20,6 +20,11 @@
 
 import Foundation
 
+/// <#Description#>
 public protocol PlaySyncDelegate: class {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - property: <#property description#>
+    ///   - messageId: <#messageId description#>
     func playSyncDidRelease(property: PlaySyncProperty, messageId: String)
 }

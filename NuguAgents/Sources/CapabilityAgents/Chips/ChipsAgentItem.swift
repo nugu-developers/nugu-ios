@@ -20,20 +20,30 @@
 
 import Foundation
 
+/// <#Description#>
 public struct ChipsAgentItem {
+    /// <#Description#>
     public let playServiceId: String
+    /// <#Description#>
     public let target: Target
+    /// <#Description#>
     public let chips: [Chip]
     
+    /// <#Description#>
     public enum Target: String, Decodable {
         case dialog = "DM"
     }
     
+    /// <#Description#>
     public struct Chip {
+        /// <#Description#>
         public let type: ItemType?
+        /// <#Description#>
         public let text: String
+        /// <#Description#>
         public let token: String?
         
+        /// <#Description#>
         public enum ItemType: String, Decodable {
             case action = "ACTION"
             case general = "GENERAL"

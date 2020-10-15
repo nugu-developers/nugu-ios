@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public struct NuguTimeInterval {
     /// <#Description#>
     public let seconds: Double

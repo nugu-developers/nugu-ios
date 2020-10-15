@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ExtensionAgentDelegate Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Protocol/ExtensionAgentDelegate" class="dashAnchor"></a>
+    <a title="ExtensionAgentDelegate Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">NUGU SDK 0.19.4 Docs</a> (65% documented)</p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        ExtensionAgentDelegate Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:10NuguAgents8logLevel8NattyLog0fD0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/ASRError.html">ASRError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents12ASRInitiatorO">ASRInitiator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ASRResult.html">ASRResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ASRState.html">ASRState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents24AudioPlayerDisplayRepeatO">AudioPlayerDisplayRepeat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AudioPlayerState.html">AudioPlayerState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DisplayTemplateDuration.html">DisplayTemplateDuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html">MediaPlayerAgentProcessResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO4PlayO">– Play</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO4StopO">– Stop</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO6SearchO">– Search</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO8PreviousO">– Previous</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO4NextO">– Next</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO4MoveO">– Move</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO5PauseO">– Pause</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO6ResumeO">– Resume</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO6RewindO">– Rewind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO6ToggleO">– Toggle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaPlayerAgentProcessResult.html#/s:10NuguAgents29MediaPlayerAgentProcessResultO7GetInfoO">– GetInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents18PhoneCallErrorCodeO">PhoneCallErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents15PhoneCallIntentO">PhoneCallIntent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents14PhoneCallStateO">PhoneCallState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents13PhoneCallTypeO">PhoneCallType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents13SoundBeepNameO">SoundBeepName</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SoundState.html">SoundState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SystemAgentExceptionCode.html">SystemAgentExceptionCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SystemAgentExceptionCode.html#/s:10NuguAgents24SystemAgentExceptionCodeO4FailO">– Fail</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SystemAgentExceptionCode.html#/s:10NuguAgents24SystemAgentExceptionCodeO7WarningO">– Warning</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents23SystemAgentRevokeReasonO">SystemAgentRevokeReason</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents8TTSErrorO">TTSError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TTSResult.html">TTSResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TTSState.html">TTSState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/s:10NuguAgents20TextAgentRequestTypeO">TextAgentRequestType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/ASRAgentDelegate.html">ASRAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ASRAgentProtocol.html">ASRAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioPlayerAgentDelegate.html">AudioPlayerAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioPlayerAgentProtocol.html">AudioPlayerAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioPlayerDisplayDelegate.html">AudioPlayerDisplayDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CapabilityAgentable.html">CapabilityAgentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ChipsAgentDelegate.html">ChipsAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ChipsAgentProtocol.html">ChipsAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DisplayAgentDelegate.html">DisplayAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DisplayAgentProtocol.html">DisplayAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ExtensionAgentDelegate.html">ExtensionAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ExtensionAgentProtocol.html">ExtensionAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/InteractionControlDelegate.html">InteractionControlDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/InteractionControlManageable.html">InteractionControlManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LocationAgentDelegate.html">LocationAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LocationAgentProtocol.html">LocationAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MediaPlayerAgentDelegate.html">MediaPlayerAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PhoneCallAgentDelegate.html">PhoneCallAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PhoneCallAgentProtocol.html">PhoneCallAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:10NuguAgents20SessionAgentProtocolP">SessionAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SessionDelegate.html">SessionDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SessionManageable.html">SessionManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SoundAgentDataSource.html">SoundAgentDataSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SoundAgentDelegate.html">SoundAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SoundAgentProtocol.html">SoundAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SystemAgentDelegate.html">SystemAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SystemAgentProtocol.html">SystemAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTSAgentDelegate.html">TTSAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTSAgentProtocol.html">TTSAgentProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TextAgentDelegate.html">TextAgentDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TextAgentProtocol.html">TextAgentProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/ASROptions.html">ASROptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ASROptions.html#/s:10NuguAgents10ASROptionsV8EncodingO">– Encoding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ASROptions/EndPointing.html">– EndPointing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AudioPlayerDisplayControlPayload.html">AudioPlayerDisplayControlPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AudioPlayerDisplayControlPayload.html#/s:10NuguAgents32AudioPlayerDisplayControlPayloadV9DirectionO">– Direction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AudioPlayerDisplayTemplate.html">AudioPlayerDisplayTemplate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AudioPlayerDisplayTemplate/MediaPayload.html">– MediaPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CapabilityAgentProperty.html">CapabilityAgentProperty</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ChipsAgentItem.html">ChipsAgentItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ChipsAgentItem.html#/s:10NuguAgents14ChipsAgentItemV6TargetO">– Target</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ChipsAgentItem/Chip.html">– Chip</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DisplayContext.html">DisplayContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DisplayControlPayload.html">DisplayControlPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DisplayControlPayload.html#/s:10NuguAgents21DisplayControlPayloadV9DirectionO">– Direction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DisplayTemplate.html">DisplayTemplate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/InteractionControl.html">InteractionControl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/InteractionControl.html#/s:10NuguAgents18InteractionControlV4ModeO">– Mode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LocationInfo.html">LocationInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentContext.html">MediaPlayerAgentContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentContext/User.html">– User</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentContext/Playlist.html">– Playlist</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentContext/Toggle.html">– Toggle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentDirectivePayload.html">MediaPlayerAgentDirectivePayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentDirectivePayload/Play.html">– Play</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentDirectivePayload/Search.html">– Search</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentDirectivePayload/Previous.html">– Previous</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentDirectivePayload/Next.html">– Next</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentDirectivePayload/Move.html">– Move</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentDirectivePayload.html#/s:10NuguAgents32MediaPlayerAgentDirectivePayloadV6ToggleV">– Toggle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentPlaylist.html">MediaPlayerAgentPlaylist</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentSong.html">MediaPlayerAgentSong</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaPlayerAgentSong.html#/s:10NuguAgents20MediaPlayerAgentSongV8CategoryO">– Category</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallCandidatesItem.html">PhoneCallCandidatesItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallCandidatesItem/SearchTarget.html">– SearchTarget</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallPerson.html">PhoneCallPerson</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallPerson.html#/s:10NuguAgents15PhoneCallPersonV0E4TypeO">– PersonType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallPerson/Address.html">– Address</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallPerson/BusinessHours.html">– BusinessHours</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallPerson/History.html">– History</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallPerson/Contact.html">– Contact</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallRecipient.html">PhoneCallRecipient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallTemplate.html">PhoneCallTemplate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Session.html">Session</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>ExtensionAgentDelegate</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ExtensionAgentDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>The <code>ExtensionAgentDelegate</code> protocol defines methods that action when <code>ExtensionAgent</code> receives a directive.</p>
+
+<p>The methods of this protocol are all mandatory.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents22ExtensionAgentDelegateP09extensionD14RequestContextSDySSs11AnyHashableVGSgyF"></a>
+                    <a name="//apple_ref/swift/Method/extensionAgentRequestContext()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents22ExtensionAgentDelegateP09extensionD14RequestContextSDySSs11AnyHashableVGSgyF">extensionAgentRequestContext()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provide a context of <code>ExtensionAgent</code>.
+This function should return as soon as possible to reduce request delay.</p>
+
+<p>This context is used by the backend proxy server.</p>
+
+<p>For more information, see <a href="https://developers-doc.nugu.co.kr/nugu-play/create-plays-with-play-builder/use-backend-proxy/backend-proxy-api-reference">Backend proxy API Reference</a>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">extensionAgentRequestContext</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">AnyHashable</span><span class="p">]?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents22ExtensionAgentDelegateP09extensionD16DidReceiveAction4data13playServiceId013dialogRequestM010completionySDySSs11AnyHashableVG_S2SySbctF"></a>
+                    <a name="//apple_ref/swift/Method/extensionAgentDidReceiveAction(data:playServiceId:dialogRequestId:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents22ExtensionAgentDelegateP09extensionD16DidReceiveAction4data13playServiceId013dialogRequestM010completionySDySSs11AnyHashableVG_S2SySbctF">extensionAgentDidReceiveAction(data:<wbr>playServiceId:<wbr>dialogRequestId:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Tells the delegate that <code>ExtensionAgent</code> received <code>action</code> directive</p>
+
+<p>When received any data, must call completion block to send an event.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">extensionAgentDidReceiveAction</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">AnyHashable</span><span class="p">],</span> <span class="nv">playServiceId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">dialogRequestId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The message decoded from json to dictionary received by <code>action</code> directive.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>playServiceId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The unique identifier to specify play service.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dialogRequestId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>dialogRequestId</code> for action.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A block to call when you are finished performing the action.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="https://github.com/nugu-developers/nugu-ios" target="_blank" rel="external">SK Telecom Co., Ltd.</a>. All rights reserved. (Last updated: 2020-10-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
