@@ -41,8 +41,7 @@ class DisplayAgentSpec: QuickSpec {
                 playSyncManager: playSyncManager,
                 contextManager: contextManager,
                 directiveSequencer: directiveSequencer,
-                sessionManager: sessionManager,
-                focusManager: focusManager
+                sessionManager: sessionManager
             )
             
             describe("context") {
