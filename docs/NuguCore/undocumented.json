@@ -163,7 +163,7 @@
     },
     {
       "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Focus/FocusManager.swift",
-      "line": 104,
+      "line": 108,
       "symbol": "FocusManager",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"

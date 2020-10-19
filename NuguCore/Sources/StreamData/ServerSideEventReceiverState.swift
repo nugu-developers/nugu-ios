@@ -20,7 +20,6 @@
 
 import Foundation
 
-/// <#Description#>
 enum ServerSideEventReceiverState: Equatable {
     case connected
     /// Connection closed.

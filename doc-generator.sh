@@ -8,7 +8,7 @@
 #sourcekitten doc -- -project nugu-ios.xcodeproj -scheme NuguUIKit > NuguUIKit.json
 #sourcekitten doc -- -project nugu-ios.xcodeproj -scheme KeenSense > KeenSense.json
 #jazzy --sourcekitten-sourcefile NuguCore.json,NuguAgents.json,NuguClientKit.json,NuguLoginKit.json,NuguServiceKit.json,NuguUIKit.json,KeenSense.json
-jazzy --podspec NuguCore.podspec --skip-undocumented -o docs/NuguCore
+jazzy --config NuguCore/.jazzy.yaml
 find ./docs/NuguCore -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"index.html\">NuguCore/<a href=\"..\/index.html\">NUGU SDK/'
 find ./docs/NuguCore -name '*.html' -type f -print0 | xargs -0 \

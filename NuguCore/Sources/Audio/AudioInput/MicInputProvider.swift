@@ -21,21 +21,21 @@
 import Foundation
 import AVFoundation
 
-/// <#Description#>
+/// Record audio input from a microphone.
 public class MicInputProvider {
-    /// <#Description#>
+    /// Whether the microphone is currently running.
     public var isRunning: Bool {
         return audioEngine.isRunning
     }
     
-    /// <#Description#>
+    /// The format of the PCM audio to be contained in the buffer.
     public var audioFormat: AVAudioFormat?
     private let audioBus = 0
     private let audioEngine = AVAudioEngine()
     private let audioQueue = DispatchQueue(label: "romain_mic_input_audio_queue")
     
-    /// <#Description#>
-    /// - Parameter inputFormat: <#inputFormat description#>
+    /// Creates an instance of an MicInputProvider.
+    /// - Parameter inputFormat: The format of the PCM audio to be contained in the buffer.
     public init(inputFormat: AVAudioFormat? = nil) {
         guard inputFormat != nil else {
             self.audioFormat = AVAudioFormat(commonFormat: MicInputConst.defaultFormat,
@@ -48,9 +48,9 @@ public class MicInputProvider {
         self.audioFormat = inputFormat
     }
     
-    /// <#Description#>
-    /// - Parameter tapBlock: <#tapBlock description#>
-    /// - Throws: <#description#>
+    /// Starts recording from the microphone.
+    /// - Parameter tapBlock: a block to be called with audio buffers
+    /// - throws: An error of type `MicInputError`
     public func start(tapBlock: @escaping AVAudioNodeTapBlock) throws {
         guard audioEngine.isRunning == false else {
             log.warning("audio engine is already running")
@@ -65,7 +65,7 @@ public class MicInputProvider {
         }
     }
     
-    /// <#Description#>
+    /// Stops recording from the microphone.
     public func stop() {
         log.debug("try to stop")
         
