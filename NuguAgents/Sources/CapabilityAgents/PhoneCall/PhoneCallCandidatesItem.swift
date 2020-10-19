@@ -54,7 +54,7 @@ public struct PhoneCallCandidatesItem: Decodable {
     /// <#Description#>
     public let searchTargetList: [SearchTarget]?
     /// <#Description#>
-    public let recipientIntended: PhoneCallRecipient?
+    public let recipientIntended: PhoneCallRecipientIntended?
     /// <#Description#>
     public let candidates: [PhoneCallPerson]?
     
@@ -71,7 +71,7 @@ public struct PhoneCallCandidatesItem: Decodable {
         intent: PhoneCallIntent,
         callType: PhoneCallType?,
         searchTargetList: [SearchTarget]?,
-        recipientIntended: PhoneCallRecipient?,
+        recipientIntended: PhoneCallRecipientIntended?,
         candidates: [PhoneCallPerson]?
     ) {
         self.playServiceId = playServiceId

@@ -97,19 +97,15 @@ public extension PhoneCallAgent {
 
 extension PhoneCallAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        let state = delegate?.phoneCallAgentRequestState()
-        let template = delegate?.phoneCallAgentRequestTemplate()
+        var payload = [String: AnyHashable?]()
         
-        var payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version,
-            "state": state?.rawValue ?? PhoneCallState.idle.rawValue
-        ]
-        
-        if let templateItem = template,
-            let templateData = try? JSONEncoder().encode(templateItem),
-            let templateDictionary = try? JSONSerialization.jsonObject(with: templateData, options: []) as? [String: AnyHashable] {
-            payload["template"] = templateDictionary
+        if let context = delegate?.phoneCallAgentRequestContext(),
+            let contextData = try? JSONEncoder().encode(context),
+            let contextDictionary = try? JSONSerialization.jsonObject(with: contextData, options: []) as? [String: AnyHashable] {
+            payload = contextDictionary
         }
+        
+        payload["version"] = capabilityAgentProperty.version
         
         completion(
             ContextInfo(
