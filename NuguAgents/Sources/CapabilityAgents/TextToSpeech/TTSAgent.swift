@@ -58,34 +58,34 @@ public final class TTSAgent: TTSAgentProtocol {
     private var ttsState: TTSState = .idle {
         didSet {
             log.info("state changed from: \(oldValue) to: \(ttsState)")
-            guard let media = currentMedia else {
+            guard let player = currentPlayer else {
                 log.error("TTSMedia is nil")
                 return
             }
             
-            // `PlaySyncState` -> `TTSMedia` -> `TTSAgentDelegate`
+            // `FocusState` -> `PlaySyncState` -> `TTSAgentDelegate`
             switch ttsState {
             case .playing:
-                if media.payload.playServiceId != nil {
+                if player.payload.playServiceId != nil {
                     playSyncManager.startPlay(
                         property: playSyncProperty,
                         info: PlaySyncInfo(
-                            playStackServiceId: media.payload.playStackControl?.playServiceId,
-                            dialogRequestId: media.dialogRequestId,
-                            messageId: media.messageId,
+                            playStackServiceId: player.payload.playStackControl?.playServiceId,
+                            dialogRequestId: player.dialogRequestId,
+                            messageId: player.messageId,
                             duration: NuguTimeInterval(seconds: 7)
                         )
                     )
                 }
             case .finished, .stopped:
-                if media.payload.playServiceId != nil {
-                    if media.cancelAssociation {
-                        playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
+                self.releaseFocusIfNeeded()
+                if player.payload.playServiceId != nil {
+                    if player.cancelAssociation {
+                        playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
                     } else {
                         playSyncManager.endPlay(property: playSyncProperty)
                     }
                 }
-                currentPlayer = nil
             default:
                 break
             }
@@ -93,7 +93,7 @@ public final class TTSAgent: TTSAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != ttsState {
                 delegates.notify { delegate in
-                    delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: media.dialogRequestId)
+                    delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: player.dialogRequestId)
                 }
             }
         }
@@ -102,8 +102,8 @@ public final class TTSAgent: TTSAgentProtocol {
     private let ttsResultSubject = PublishSubject<(dialogRequestId: String, result: TTSResult)>()
     
     // Current play Info
-    private var currentMedia: TTSMedia?
-    private var currentPlayer: MediaPlayable?
+    private var currentPlayer: TTSPlayer?
+    private var prefetchPlayer: TTSPlayer?
 
     private let disposeBag = DisposeBag()
     
@@ -182,7 +182,9 @@ public extension TTSAgent {
     }
     
     func stopTTS(cancelAssociation: Bool) {
-        stop(cancelAssociation: cancelAssociation)
+        ttsDispatchQueue.async { [weak self] in
+            self?.stop(cancelAssociation: cancelAssociation)
+        }
     }
 }
 
@@ -200,20 +202,19 @@ extension TTSAgent: FocusChannelDelegate {
             log.info("\(focusState) \(self.ttsState)")
             switch (focusState, self.ttsState) {
             case (.foreground, let ttsState) where [.idle, .stopped, .finished].contains(ttsState):
-                self.currentPlayer?.play()
+                if let player = self.currentPlayer {
+                    player.play()
+                } else {
+                    log.error("currentPlayer is nil")
+                    releaseFocusIfNeeded()
+                }
             // Foreground. playing 무시
             case (.foreground, _):
                 break
-            case (.background, .playing):
-                self.stop(cancelAssociation: false)
-            // background. idle, stopped, finished 무시
             case (.background, _):
-                break
-            case (.nothing, .playing):
                 self.stop(cancelAssociation: false)
-            // none. idle/stopped/finished 무시
             case (.nothing, _):
-                break
+                self.stop(cancelAssociation: false)
             }
         }
     }
@@ -227,7 +228,7 @@ extension TTSAgent: ContextInfoDelegate {
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
             "engine": "skt",
-            "token": currentMedia?.payload.token
+            "token": currentPlayer?.payload.token
         ]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
@@ -236,53 +237,50 @@ extension TTSAgent: ContextInfoDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension TTSAgent: MediaPlayerDelegate {
-    public func mediaPlayerDidChange(state: MediaPlayerState) {
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChangeState state: MediaPlayerState) {
+        guard let player = mediaPlayer as? TTSPlayer else { return }
         log.info("media state: \(state)")
         
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let media = self.currentMedia else { return }
             
-            // `TTSResult` -> `TTSState` -> Event -> `FocusState`
+            var ttsResult: (dialogRequestId: String, result: TTSResult)?
+            var ttsState: TTSState?
+            var eventTypeInfo: Event.TypeInfo?
+            
             switch state {
             case .start:
-                self.ttsState = .playing
-                self.sendEvent(media: media, info: .speechStarted)
+                ttsState = .playing
+                eventTypeInfo = .speechStarted
             case .resume, .bufferRefilled:
-                self.ttsState = .playing
+                ttsState = .playing
             case .finish:
-                self.ttsState = .finished
-                self.sendEvent(media: media, info: .speechFinished) { [weak self] state in
-                    self?.ttsDispatchQueue.async { [weak self] in
-                        guard let self = self else { return }
-                        
-                        switch state {
-                        case .finished, .error:
-                            if self.currentPlayer == nil {
-                                self.releaseFocusIfNeeded()
-                            }
-                            self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .finished))
-                        default:
-                            break
-                        }
-                    }
-                }
+                ttsResult = (dialogRequestId: player.dialogRequestId, result: .finished)
+                ttsState = .finished
+                eventTypeInfo = .speechFinished
             case .pause:
                 self.stop(cancelAssociation: false)
             case .stop:
-                self.ttsResultSubject.onNext(
-                    (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
-                )
-                self.ttsState = .stopped
-                self.sendEvent(media: media, info: .speechStopped)
-                self.releaseFocusIfNeeded()
+                ttsResult = (dialogRequestId: player.dialogRequestId, result: .stopped(cancelAssociation: player.cancelAssociation))
+                ttsState = .stopped
+                eventTypeInfo = .speechStopped
+            case .error(let error):
+                ttsResult = (dialogRequestId: player.dialogRequestId, result: .error(error))
+                ttsState = .stopped
+                eventTypeInfo = .speechStopped
             case .bufferUnderrun:
                 break
-            case .error(let error):
-                self.ttsResultSubject.onNext((dialogRequestId: media.dialogRequestId, result: .error(error)))
-                self.ttsState = .stopped
-                self.sendEvent(media: media, info: .speechStopped)
-                self.releaseFocusIfNeeded()
+            }
+            
+            // `TTSResult` -> `TTSState` -> Event
+            if let ttsResult = ttsResult {
+                self.ttsResultSubject.onNext(ttsResult)
+            }
+            if let ttsState = ttsState, self.currentPlayer === player {
+                self.ttsState = ttsState
+            }
+            if let eventTypeInfo = eventTypeInfo {
+                self.sendEvent(player: player, info: eventTypeInfo)
             }
         }
     }
@@ -294,7 +292,7 @@ extension TTSAgent: PlaySyncDelegate {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.currentMedia?.messageId == messageId else { return }
+            guard property == self.playSyncProperty, self.currentPlayer?.messageId == messageId else { return }
             
             self.stop(cancelAssociation: true)
         }
@@ -306,30 +304,18 @@ extension TTSAgent: PlaySyncDelegate {
 private extension TTSAgent {
     func prefetchPlay() -> PrefetchDirective {
         return { [weak self] directive in
-            let payload = try JSONDecoder().decode(TTSMedia.Payload.self, from: directive.payload)
-            guard case .attachment = payload.sourceType else {
-                throw TTSError.notSupportedSourceType
-            }
-            
             self?.ttsDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
                 
-                self.stopSilently()
+                self.prefetchPlayer?.stop(reason: .playAnother)
+                self.currentPlayer?.stop(reason: .playAnother)
                 
                 do {
-                    let mediaPlayer = try OpusPlayer()
-                    mediaPlayer.delegate = self
-                    mediaPlayer.volume = self.volume
-
-                    self.currentPlayer = mediaPlayer
-                    self.currentMedia = TTSMedia(
-                        payload: payload,
-                        dialogRequestId: directive.header.dialogRequestId,
-                        messageId: directive.header.messageId
-                    )
+                    self.prefetchPlayer = try TTSPlayer(directive: directive)
+                    self.prefetchPlayer?.delegate = self
+                    self.prefetchPlayer?.volume = self.volume
                 } catch {
-                    // TODO: 실패시 예외처리 필요한지 확인
-                    log.error("Opus player initiation error: \(error)")
+                    log.error(error)
                 }
             }
         }
@@ -342,24 +328,26 @@ private extension TTSAgent {
                 return
             }
             log.debug("")
-            self.focusManager.requestFocus(channelDelegate: self)
             self.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else {
                     completion(.canceled)
                     return
                 }
-                guard let media = self.currentMedia, media.messageId == directive.header.messageId else {
+                guard let player = self.prefetchPlayer, player.messageId == directive.header.messageId else {
                     completion(.canceled)
                     log.info("Message id does not match")
                     return
                 }
                 
+                self.focusManager.requestFocus(channelDelegate: self)
+                self.currentPlayer = self.prefetchPlayer
+                self.prefetchPlayer = nil
                 self.delegates.notify { delegate in
-                    delegate.ttsAgentDidReceive(text: media.payload.text, dialogRequestId: media.dialogRequestId)
+                    delegate.ttsAgentDidReceive(text: player.payload.text, dialogRequestId: player.dialogRequestId)
                 }
                 
                 self.ttsResultSubject
-                    .filter { $0.dialogRequestId == media.dialogRequestId }
+                    .filter { $0.dialogRequestId == player.dialogRequestId }
                     .take(1)
                     .subscribe(onNext: { [weak self] (_, result) in
                         guard let self = self else {
@@ -388,41 +376,26 @@ private extension TTSAgent {
         return { [weak self] _, completion in
             defer { completion(.finished) }
             
-            guard let self = self, let media = self.currentMedia else { return }
-            guard self.currentPlayer != nil else {
-                // Release synchronized layer after playback finished.
-                if media.payload.playServiceId != nil {
-                    self.playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
+            self?.ttsDispatchQueue.async { [weak self] in
+                guard let self = self, let player = self.currentPlayer else { return }
+                guard player.internalPlayer != nil else {
+                    // Release synchronized layer after playback finished.
+                    if player.payload.playServiceId != nil {
+                        self.playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
+                    }
+                    return
                 }
-                return
+                
+                self.stop(cancelAssociation: true)
             }
-            
-            self.stop(cancelAssociation: true)
         }
     }
     
     func stop(cancelAssociation: Bool) {
-        ttsDispatchQueue.async { [weak self] in
-            guard let self = self, let player = self.currentPlayer else { return }
-            
-            self.currentMedia?.cancelAssociation = cancelAssociation
-            player.stop()
-        }
-    }
-    
-    /// Synchronously stop previously playing TTS
-    func stopSilently() {
-        guard let media = currentMedia, let player = currentPlayer else { return }
-
-        currentMedia?.cancelAssociation = false
-        // `TTSResult` -> `TTSState` -> Event
-        player.delegate = nil
+        guard let player = currentPlayer else { return }
+        
+        player.cancelAssociation = cancelAssociation
         player.stop()
-        ttsResultSubject.onNext(
-            (dialogRequestId: media.dialogRequestId, result: .stopped(cancelAssociation: media.cancelAssociation))
-        )
-        ttsState = .stopped
-        sendEvent(media: media, info: .speechStopped)
     }
     
     func handleAttachment() -> HandleAttachment {
@@ -431,36 +404,25 @@ private extension TTSAgent {
         #endif
         
         return { [weak self] attachment in
-            #if DEBUG
-            totalAttachmentData.append(attachment.content)
-            #endif
-            
             self?.ttsDispatchQueue.async { [weak self] in
                 log.info("\(attachment)")
                 guard let self = self else { return }
-                guard let dataSource = self.currentPlayer as? MediaOpusStreamDataSource,
-                    self.currentMedia?.dialogRequestId == attachment.header.dialogRequestId else {
+                guard self.prefetchPlayer?.handleAttachment(attachment: attachment) == true ||
+                        self.currentPlayer?.handleAttachment(attachment: attachment) == true else {
                     log.warning("MediaOpusStreamDataSource not exist or dialogRequesetId not valid")
                     return
                 }
-                
-                do {
-                    try dataSource.appendData(attachment.content)
-                    
-                    if attachment.isEnd {
-                        try dataSource.lastDataAppended()
-                        
-                        #if DEBUG
-                        let attachmentFileName = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                            .appendingPathComponent("attachment.data")
-                        try totalAttachmentData.write(to: attachmentFileName)
-                        log.debug("attachment to file :\(attachmentFileName)")
-                        #endif
-                    }
-                } catch {
-                    log.error(error)
-                }
             }
+            
+            #if DEBUG
+            totalAttachmentData.append(attachment.content)
+            if attachment.isEnd {
+                let attachmentFileName = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    .appendingPathComponent("attachment.data")
+                try? totalAttachmentData.write(to: attachmentFileName)
+                log.debug("attachment to file :\(attachmentFileName)")
+            }
+            #endif
         }
     }
 }
@@ -469,11 +431,11 @@ private extension TTSAgent {
 
 private extension TTSAgent {
     func sendEvent(
-        media: TTSMedia,
+        player: TTSPlayer,
         info: Event.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
-        guard let playServiceId = media.payload.playServiceId else {
+        guard let playServiceId = player.payload.playServiceId else {
             log.debug("TTSMedia does not have playServiceId")
             completion?(.finished)
             return
@@ -485,13 +447,13 @@ private extension TTSAgent {
             
             self.upstreamDataSender.sendEvent(
                 Event(
-                    token: media.payload.token,
+                    token: player.payload.token,
                     playServiceId: playServiceId,
                     typeInfo: info
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: media.dialogRequestId,
+                    referrerDialogRequestId: player.dialogRequestId,
                     contextPayload: contextPayload
                 ),
                 completion: completion

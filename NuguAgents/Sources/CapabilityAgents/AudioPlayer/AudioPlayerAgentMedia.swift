@@ -22,62 +22,38 @@ import Foundation
 
 import NuguCore
 
-struct AudioPlayerAgentMedia {
-    let dialogRequestId: String
-    let messageId: String
-    let payload: Payload
-    var pauseReason: PauseReason = .nothing
-    var cancelAssociation: Bool = false
-    /// Keep the offset before playback stopped.
-    var offset: TimeIntervallic?
-    /// Keep the duration before playback stopped.
-    var duration: TimeIntervallic?
+struct AudioPlayerPlayPayload {
+    let playStackControl: PlayStackControl?
+    let sourceType: SourceType?
+    let cacheKey: String?
+    let audioItem: AudioItem
+    let playServiceId: String
     
-    init(dialogRequestId: String, messageId: String, payload: Payload) {
-        self.dialogRequestId = dialogRequestId
-        self.messageId = messageId
-        self.payload = payload
+    enum SourceType: String, Decodable {
+        case url = "URL"
+        case attachment = "ATTACHMENT"
     }
     
-    struct Payload {
-        let playStackControl: PlayStackControl?
-        let sourceType: SourceType?
-        let cacheKey: String?
-        let audioItem: AudioItem
-        let playServiceId: String
+    struct AudioItem {
+        let stream: Stream
+        let metadata: [String: AnyHashable]?
         
-        enum SourceType: String, Decodable {
-            case url = "URL"
-            case attachment = "ATTACHMENT"
-        }
-        
-        struct AudioItem {
-            let stream: Stream
-            let metadata: [String: AnyHashable]?
+        struct Stream {
+            let url: String?
+            private let offsetInMilliseconds: Int
+            fileprivate let progressReport: ProgressReport?
+            let token: String
+            let expectedPreviousToken: String?
             
-            struct Stream {
-                let url: String?
-                private let offsetInMilliseconds: Int
-                fileprivate let progressReport: ProgressReport?
-                let token: String
-                let expectedPreviousToken: String?
-                
-                fileprivate struct ProgressReport {
-                    let delayInMilliseconds: Int?
-                    let intervalInMilliseconds: Int?
-                }
+            fileprivate struct ProgressReport {
+                let delayInMilliseconds: Int?
+                let intervalInMilliseconds: Int?
             }
         }
     }
-
-    enum PauseReason {
-        case nothing
-        case focus
-        case user
-    }
 }
 
-extension AudioPlayerAgentMedia.Payload.AudioItem.Stream {
+extension AudioPlayerPlayPayload.AudioItem.Stream {
     var offset: Int {
         return offsetInMilliseconds / 1000
     }
@@ -93,9 +69,9 @@ extension AudioPlayerAgentMedia.Payload.AudioItem.Stream {
     }
 }
 
-// MARK: - AudioPlayerMedia.Payload: Decodable
+// MARK: - AudioPlayerPlayPayload: Decodable
 
-extension AudioPlayerAgentMedia.Payload: Decodable {
+extension AudioPlayerPlayPayload: Decodable {
     enum CodingKeys: String, CodingKey {
         case playStackControl
         case sourceType
@@ -119,9 +95,9 @@ extension AudioPlayerAgentMedia.Payload: Decodable {
     }
 }
 
-// MARK: - AudioPlayerMedia.Payload: Decodable
+// MARK: - AudioPlayerPlayPayload.AudioItem: Decodable
 
-extension AudioPlayerAgentMedia.Payload.AudioItem: Decodable {
+extension AudioPlayerPlayPayload.AudioItem: Decodable {
     enum CodingKeys: String, CodingKey {
         case stream
         case metadata
@@ -135,9 +111,9 @@ extension AudioPlayerAgentMedia.Payload.AudioItem: Decodable {
     }
 }
 
-// MARK: - AudioPlayerMedia.Payload.Stream: Decodable
+// MARK: - AudioPlayerPlayPayload.Stream: Decodable
 
-extension AudioPlayerAgentMedia.Payload.AudioItem.Stream: Decodable {
+extension AudioPlayerPlayPayload.AudioItem.Stream: Decodable {
     enum CodingKeys: String, CodingKey {
         case url
         case offsetInMilliseconds
@@ -157,9 +133,9 @@ extension AudioPlayerAgentMedia.Payload.AudioItem.Stream: Decodable {
     }
 }
 
-// MARK: - AudioPlayerMedia.Payload.Stream.ProgressReport: Decodable
+// MARK: - AudioPlayerPlayPayload.Stream.ProgressReport: Decodable
 
-extension AudioPlayerAgentMedia.Payload.AudioItem.Stream.ProgressReport: Decodable {
+extension AudioPlayerPlayPayload.AudioItem.Stream.ProgressReport: Decodable {
     enum CodingKeys: String, CodingKey {
         case progressReportDelayInMilliseconds
         case progressReportIntervalInMilliseconds

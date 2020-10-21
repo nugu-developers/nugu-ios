@@ -140,7 +140,7 @@ extension SoundAgent: ContextInfoDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension SoundAgent: MediaPlayerDelegate {
-    public func mediaPlayerDidChange(state: MediaPlayerState) {
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChangeState state: MediaPlayerState) {
         log.info("media state: \(state)")
         
         soundDispatchQueue.async { [weak self] in
