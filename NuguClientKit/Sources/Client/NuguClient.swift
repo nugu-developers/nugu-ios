@@ -72,8 +72,7 @@ public class NuguClient {
         playSyncManager: playSyncManager,
         contextManager: contextManager,
         directiveSequencer: directiveSequencer,
-        sessionManager: sessionManager,
-        focusManager: focusManager
+        sessionManager: sessionManager
     )
     
     /// <#Description#>
@@ -109,6 +108,8 @@ public class NuguClient {
         return keywordDetector
     }()
     
+    private let backgroundFocusHolder: BackgroundFocusHolder
+    
     /// <#Description#>
     /// - Parameter delegate: <#delegate description#>
     public init(delegate: NuguClientDelegate) {
@@ -117,7 +118,7 @@ public class NuguClient {
         // core
         contextManager = ContextManager()
         directiveSequencer = DirectiveSequencer()
-        focusManager = FocusManager(directiveSequencer: directiveSequencer)
+        focusManager = FocusManager()
         streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
         playSyncManager = PlaySyncManager(contextManager: contextManager)
         dialogAttributeStore = DialogAttributeStore()
@@ -189,6 +190,13 @@ public class NuguClient {
             contextManager: contextManager,
             directiveSequencer: directiveSequencer,
             sessionManager: sessionManager
+        )
+        
+        backgroundFocusHolder = BackgroundFocusHolder(
+            focusManager: focusManager,
+            directiveSequener: directiveSequencer,
+            streamDataRouter: streamDataRouter,
+            dialogStateAggregator: dialogStateAggregator
         )
 
         // setup additional roles
@@ -262,7 +270,7 @@ extension NuguClient: DialogStateDelegate {
 
 extension NuguClient: StreamDataDelegate {
     private func setupStreamDataRouter() {
-        streamDataRouter.delegate = self
+        streamDataRouter.add(delegate: self)
     }
     
     public func streamDataDidReceive(direcive: Downstream.Directive) {

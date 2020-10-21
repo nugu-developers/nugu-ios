@@ -97,7 +97,7 @@ class FocusManagerSpec: QuickSpec, FocusDelegate {
     }
     
     func initializeFocusManager() -> FocusManageable {
-        let focusManager = FocusManager(directiveSequencer: directiveSequencer)
+        let focusManager = FocusManager()
         focusManager.delegate = self
         focusManager.add(channelDelegate: call)
         focusManager.add(channelDelegate: userRecognition)

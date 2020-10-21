@@ -137,18 +137,12 @@ extension TycheKeywordDetectorEngine {
         }
         
         guard let netFilePath = netFilePath,
-            let searchFilePath = searchFilePath else {
+            let searchFilePath = searchFilePath,
+            let wakeUpHandle = Wakeup_Create(netFilePath, searchFilePath, 0) else {
                 throw KeywordDetectorError.initEngineFailed
         }
         
-        try netFilePath.withCString { cstringNetFile -> Void in
-            try searchFilePath.withCString({ cstringSearchFile -> Void in
-                guard let wakeUpHandle = Wakeup_Create(cstringNetFile, cstringSearchFile, 0) else {
-                    throw KeywordDetectorError.initEngineFailed
-                }
-                engineHandle = wakeUpHandle
-            })
-        }
+        engineHandle = wakeUpHandle
     }
 }
 

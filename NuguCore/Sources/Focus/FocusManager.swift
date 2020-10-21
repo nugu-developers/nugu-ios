@@ -22,7 +22,6 @@ import Foundation
 
 public class FocusManager: FocusManageable {
     public weak var delegate: FocusDelegate?
-    private var handlingSoundDirectives = Set<String>()
     
     private let focusDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.focus_manager", qos: .userInitiated)
     
@@ -30,9 +29,7 @@ public class FocusManager: FocusManageable {
     
     private var releaseFocusWorkItem: DispatchWorkItem?
     
-    public init(directiveSequencer: DirectiveSequenceable) {
-        directiveSequencer.add(delegate: self)
-    }
+    public init() {}
 }
 
 // MARK: - FocusManageable
@@ -103,28 +100,6 @@ extension FocusManager {
     }
 }
 
-// MARK: - DirectiveSequencerDelegate
-
-extension FocusManager: DirectiveSequencerDelegate {
-    public func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {
-        focusDispatchQueue.async { [weak self] in
-            if blockingPolicy.medium == .audio {
-                self?.handlingSoundDirectives.insert(directive.header.messageId)
-            }
-        }
-    }
-    
-    public func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult) {
-        focusDispatchQueue.async { [weak self] in
-            guard let self = self, self.handlingSoundDirectives.isEmpty == false else { return }
-            self.handlingSoundDirectives.remove(directive.header.messageId)
-            if self.handlingSoundDirectives.isEmpty == true {
-                self.notifyReleaseFocusIfNeeded()
-            }
-        }
-    }
-}
-
 // MARK: - Private
 
 private extension FocusManager {
@@ -163,7 +138,6 @@ private extension FocusManager {
         releaseFocusWorkItem?.cancel()
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
-            guard self.handlingSoundDirectives.isEmpty else { return }
             
             if self.channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
                 log.debug("")
