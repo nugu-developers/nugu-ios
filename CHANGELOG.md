@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.21.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.21.1)
+Released on 2020-10-21
+### Sample Application
+#### Fixed
+- Set chips after voicechrome state change (#555) 
+
+### SDK
+#### Update
+- Add `BackgroundFocusHolder` (#556) 
+- Remove useless api during passing string to library (#559)
+
 ## [0.21.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.21.0)
 Released on 2020-10-14
 ### SDK
