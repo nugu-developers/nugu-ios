@@ -37,7 +37,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     private let sessionManager: SessionManageable
-    private let focusManager: FocusManageable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -98,20 +97,17 @@ public final class DisplayAgent: DisplayAgentProtocol {
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable,
-        sessionManager: SessionManageable,
-        focusManager: FocusManageable
+        sessionManager: SessionManageable
     ) {
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         self.sessionManager = sessionManager
-        self.focusManager = focusManager
         
         playSyncManager.add(delegate: self)
         contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        focusManager.add(channelDelegate: self)
     }
     
     deinit {
@@ -206,18 +202,6 @@ extension DisplayAgent: PlaySyncDelegate {
                     }
             }
         }
-    }
-}
-
-// MARK: - FocusChannelDelegate
-
-extension DisplayAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return .background
-    }
-    
-    public func focusChannelDidChange(focusState: FocusState) {
-        log.info(focusState)
     }
 }
 
@@ -373,11 +357,9 @@ private extension DisplayAgent {
                     return
                 }
                 defer {
-                    self.focusManager.releaseFocus(channelDelegate: self)
                     completion(.finished)
                 }
                 
-                self.focusManager.requestFocus(channelDelegate: self)
                 self.sessionManager.activate(dialogRequestId: item.dialogRequestId, category: .display)
                 self.playSyncManager.startPlay(
                     property: item.template.playSyncProperty,

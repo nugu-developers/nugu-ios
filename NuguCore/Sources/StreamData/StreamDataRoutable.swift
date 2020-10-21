@@ -22,8 +22,15 @@ import Foundation
 
 /// <#Description#>
 public protocol StreamDataRoutable: class, UpstreamDataSendable {
-    /// <#Description#>
-    var delegate: StreamDataDelegate? { get set }
+    /// Adds a delegate to be notified of stream data handling states.
+    ///
+    /// - Parameter delegate: The object to add.
+    func add(delegate: StreamDataDelegate)
+    
+    /// Removes a delegate from stream-data-router.
+    ///
+    /// - Parameter delegate: The object to remove.
+    func remove(delegate: StreamDataDelegate)
     
     /// <#Description#>
     /// - Parameter completion: <#completion description#>

@@ -176,6 +176,12 @@ extension Upstream.Event {
     }
 }
 
+// MARK: - Upstream.Event.Header
+
+extension Upstream.Event.Header {
+    public var type: String { "\(namespace).\(name)" }
+}
+
 // MARK: - Upstream.Attachment + CustomStringConvertible
 
 extension Upstream.Attachment: CustomStringConvertible {

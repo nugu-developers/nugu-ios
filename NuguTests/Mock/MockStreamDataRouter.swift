@@ -23,7 +23,13 @@ import Foundation
 import NuguCore
 
 class MockStreamDataRouter: StreamDataRoutable {
-    var delegate: StreamDataDelegate?
+    func add(delegate: StreamDataDelegate) {
+        
+    }
+    
+    func remove(delegate: StreamDataDelegate) {
+        
+    }
     
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?) {
         
