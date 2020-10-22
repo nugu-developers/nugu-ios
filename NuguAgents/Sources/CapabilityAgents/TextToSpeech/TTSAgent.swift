@@ -32,16 +32,16 @@ public final class TTSAgent: TTSAgentProtocol {
     // TTSAgentProtocol
     public var directiveCancelPolicy: DirectiveCancelPolicy = .cancelNone
     public var offset: Int? {
-        return currentPlayer?.offset.truncatedSeconds
+        return latesetPlayer?.offset.truncatedSeconds
     }
     
     public var duration: Int? {
-        return currentPlayer?.duration.truncatedSeconds
+        return latesetPlayer?.duration.truncatedSeconds
     }
     
     public var volume: Float = 1.0 {
         didSet {
-            currentPlayer?.volume = volume
+            latesetPlayer?.volume = volume
         }
     }
     
@@ -58,12 +58,12 @@ public final class TTSAgent: TTSAgentProtocol {
     private var ttsState: TTSState = .idle {
         didSet {
             log.info("state changed from: \(oldValue) to: \(ttsState)")
-            guard let player = currentPlayer else {
-                log.error("TTSMedia is nil")
+            guard let player = latesetPlayer else {
+                log.error("TTSPlayer is nil")
                 return
             }
             
-            // `FocusState` -> `PlaySyncState` -> `TTSAgentDelegate`
+            // `PlaySyncState` -> `TTSAgentDelegate`
             switch ttsState {
             case .playing:
                 if player.payload.playServiceId != nil {
@@ -78,7 +78,6 @@ public final class TTSAgent: TTSAgentProtocol {
                     )
                 }
             case .finished, .stopped:
-                self.releaseFocusIfNeeded()
                 if player.payload.playServiceId != nil {
                     if player.cancelAssociation {
                         playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
@@ -101,9 +100,12 @@ public final class TTSAgent: TTSAgentProtocol {
     
     private let ttsResultSubject = PublishSubject<(dialogRequestId: String, result: TTSResult)>()
     
-    // Current play Info
+    // Players
     private var currentPlayer: TTSPlayer?
     private var prefetchPlayer: TTSPlayer?
+    private var latesetPlayer: TTSPlayer? {
+        prefetchPlayer ?? currentPlayer
+    }
 
     private let disposeBag = DisposeBag()
     
@@ -135,6 +137,7 @@ public final class TTSAgent: TTSAgentProtocol {
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         currentPlayer?.stop()
+        prefetchPlayer?.stop()
     }
 }
 
@@ -202,7 +205,7 @@ extension TTSAgent: FocusChannelDelegate {
             log.info("\(focusState) \(self.ttsState)")
             switch (focusState, self.ttsState) {
             case (.foreground, let ttsState) where [.idle, .stopped, .finished].contains(ttsState):
-                if let player = self.currentPlayer {
+                if let player = self.currentPlayer, player.internalPlayer != nil {
                     player.play()
                 } else {
                     log.error("currentPlayer is nil")
@@ -228,7 +231,7 @@ extension TTSAgent: ContextInfoDelegate {
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
             "engine": "skt",
-            "token": currentPlayer?.payload.token
+            "token": latesetPlayer?.payload.token
         ]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
@@ -272,12 +275,18 @@ extension TTSAgent: MediaPlayerDelegate {
                 break
             }
             
-            // `TTSResult` -> `TTSState` -> Event
+            // `TTSResult` -> `TTSState` -> `FocusState` -> Event
             if let ttsResult = ttsResult {
                 self.ttsResultSubject.onNext(ttsResult)
             }
-            if let ttsState = ttsState, self.currentPlayer === player {
+            if let ttsState = ttsState, self.latesetPlayer === player {
                 self.ttsState = ttsState
+                switch ttsState {
+                case .stopped, .finished:
+                    self.releaseFocusIfNeeded()
+                default:
+                    break
+                }
             }
             if let eventTypeInfo = eventTypeInfo {
                 self.sendEvent(player: player, info: eventTypeInfo)
@@ -292,7 +301,7 @@ extension TTSAgent: PlaySyncDelegate {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.currentPlayer?.messageId == messageId else { return }
+            guard property == self.playSyncProperty, self.latesetPlayer?.messageId == messageId else { return }
             
             self.stop(cancelAssociation: true)
         }
@@ -307,6 +316,9 @@ private extension TTSAgent {
             self?.ttsDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
                 
+                if self.ttsState != .idle {
+                    self.ttsState = .stopped
+                }
                 self.prefetchPlayer?.stop(reason: .playAnother)
                 self.currentPlayer?.stop(reason: .playAnother)
                 
@@ -338,10 +350,15 @@ private extension TTSAgent {
                     log.info("Message id does not match")
                     return
                 }
+                guard player.internalPlayer != nil else {
+                    completion(.canceled)
+                    log.info("Internal player is nil")
+                    return
+                }
                 
-                self.focusManager.requestFocus(channelDelegate: self)
-                self.currentPlayer = self.prefetchPlayer
+                self.currentPlayer = player
                 self.prefetchPlayer = nil
+                self.focusManager.requestFocus(channelDelegate: self)
                 self.delegates.notify { delegate in
                     delegate.ttsAgentDidReceive(text: player.payload.text, dialogRequestId: player.dialogRequestId)
                 }
@@ -377,7 +394,7 @@ private extension TTSAgent {
             defer { completion(.finished) }
             
             self?.ttsDispatchQueue.async { [weak self] in
-                guard let self = self, let player = self.currentPlayer else { return }
+                guard let self = self, let player = self.latesetPlayer else { return }
                 guard player.internalPlayer != nil else {
                     // Release synchronized layer after playback finished.
                     if player.payload.playServiceId != nil {
@@ -392,7 +409,7 @@ private extension TTSAgent {
     }
     
     func stop(cancelAssociation: Bool) {
-        guard let player = currentPlayer else { return }
+        guard let player = latesetPlayer else { return }
         
         player.cancelAssociation = cancelAssociation
         player.stop()
@@ -436,7 +453,7 @@ private extension TTSAgent {
         completion: ((StreamDataState) -> Void)? = nil
     ) {
         guard let playServiceId = player.payload.playServiceId else {
-            log.debug("TTSMedia does not have playServiceId")
+            log.debug("TTSPlayer does not have playServiceId")
             completion?(.finished)
             return
         }

@@ -185,7 +185,7 @@
 		73152FB123E0413F00F843C3 /* AudioPlayerDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */; };
 		73152FB323E0413F00F843C3 /* AudioPlayerAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF33F2375707000C9A177 /* AudioPlayerAgent.swift */; };
 		73152FB523E0413F00F843C3 /* AudioPlayerAgent+PlayEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3392375707000C9A177 /* AudioPlayerAgent+PlayEvent.swift */; };
-		73152FB623E0413F00F843C3 /* AudioPlayerAgentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */; };
+		73152FB623E0413F00F843C3 /* AudioPlayerPlayPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3382375707000C9A177 /* AudioPlayerPlayPayload.swift */; };
 		73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68523C5BFD400610343 /* ClientEndPointDetector.swift */; };
 		73152FB823E0414700F843C3 /* EndPointDetectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68323C5BFD400610343 /* EndPointDetectorDelegate.swift */; };
 		73152FB923E0414700F843C3 /* EndPointDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68423C5BFD400610343 /* EndPointDetectorState.swift */; };
@@ -813,7 +813,7 @@
 		1FFFF32D2375707000C9A177 /* ExtensionAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ExtensionAgent+Event.swift"; sourceTree = "<group>"; };
 		1FFFF32E2375707000C9A177 /* ExtensionAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionAgent.swift; sourceTree = "<group>"; };
 		1FFFF32F2375707000C9A177 /* ExtensionAgentItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionAgentItem.swift; sourceTree = "<group>"; };
-		1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentMedia.swift; sourceTree = "<group>"; };
+		1FFFF3382375707000C9A177 /* AudioPlayerPlayPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerPlayPayload.swift; sourceTree = "<group>"; };
 		1FFFF3392375707000C9A177 /* AudioPlayerAgent+PlayEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+PlayEvent.swift"; sourceTree = "<group>"; };
 		1FFFF33B2375707000C9A177 /* AudioPlayerDisplayManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayManager.swift; sourceTree = "<group>"; };
 		1FFFF33C2375707000C9A177 /* AudioPlayerDisplayRenderingInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerDisplayRenderingInfo.swift; sourceTree = "<group>"; };
@@ -1785,7 +1785,7 @@
 				A135E66A241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift */,
 				737388E324A46C5D0018DDD2 /* AudioPlayerAgentProtocol.swift */,
 				737388E224A46C5D0018DDD2 /* AudioPlayerAgentDelegate.swift */,
-				1FFFF3382375707000C9A177 /* AudioPlayerAgentMedia.swift */,
+				1FFFF3382375707000C9A177 /* AudioPlayerPlayPayload.swift */,
 				737388E424A46C5D0018DDD2 /* AudioPlayerState.swift */,
 				06FE5684253EDB64002FAC9B /* AudioPlayer.swift */,
 				06FE568F253FCC1E002FAC9B /* AudioPlayerAgentError.swift */,
@@ -3808,7 +3808,7 @@
 				737388E724A46C5D0018DDD2 /* AudioPlayerState.swift in Sources */,
 				06FE563F253E9EC0002FAC9B /* TTSPlayer.swift in Sources */,
 				73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */,
-				73152FB623E0413F00F843C3 /* AudioPlayerAgentMedia.swift in Sources */,
+				73152FB623E0413F00F843C3 /* AudioPlayerPlayPayload.swift in Sources */,
 				7E284D9924DD2B4A00BF9640 /* InteractionControlManageable.swift in Sources */,
 				737388E024A46C4A0018DDD2 /* ExtensionAgentProtocol.swift in Sources */,
 				1F862EF5252DAB040069C310 /* KeyedEncodingContainerExtension.swift in Sources */,

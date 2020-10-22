@@ -47,7 +47,7 @@ public final class SoundAgent: SoundAgentProtocol {
         didSet {
             log.info("state changed from: \(oldValue) to: \(soundState)")
             guard let media = currentMedia else {
-                log.error("TTSMedia is nil")
+                log.error("SoundMedia is nil")
                 return
             }
             
