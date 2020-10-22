@@ -186,7 +186,9 @@ public extension TTSAgent {
     
     func stopTTS(cancelAssociation: Bool) {
         ttsDispatchQueue.async { [weak self] in
-            self?.stop(cancelAssociation: cancelAssociation)
+            guard let player = self?.latesetPlayer else { return }
+            
+            self?.stop(player: player, cancelAssociation: cancelAssociation)
         }
     }
 }
@@ -214,10 +216,10 @@ extension TTSAgent: FocusChannelDelegate {
             // Foreground. playing 무시
             case (.foreground, _):
                 break
-            case (.background, _):
-                self.stop(cancelAssociation: false)
-            case (.nothing, _):
-                self.stop(cancelAssociation: false)
+            case (.background, _), (.nothing, _):
+                if let player = self.currentPlayer {
+                    self.stop(player: player, cancelAssociation: false)
+                }
             }
         }
     }
@@ -242,7 +244,7 @@ extension TTSAgent: ContextInfoDelegate {
 extension TTSAgent: MediaPlayerDelegate {
     public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChangeState state: MediaPlayerState) {
         guard let player = mediaPlayer as? TTSPlayer else { return }
-        log.info("media state: \(state)")
+        log.info("media \(mediaPlayer) state: \(state)")
         
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -262,7 +264,7 @@ extension TTSAgent: MediaPlayerDelegate {
                 ttsState = .finished
                 eventTypeInfo = .speechFinished
             case .pause:
-                self.stop(cancelAssociation: false)
+                self.stop(player: player, cancelAssociation: false)
             case .stop:
                 ttsResult = (dialogRequestId: player.dialogRequestId, result: .stopped(cancelAssociation: player.cancelAssociation))
                 ttsState = .stopped
@@ -301,9 +303,10 @@ extension TTSAgent: PlaySyncDelegate {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.latesetPlayer?.messageId == messageId else { return }
+            guard property == self.playSyncProperty,
+                  let player = self.latesetPlayer, player.messageId == messageId else { return }
             
-            self.stop(cancelAssociation: true)
+            self.stop(player: player, cancelAssociation: true)
         }
     }
 }
@@ -314,6 +317,7 @@ private extension TTSAgent {
     func prefetchPlay() -> PrefetchDirective {
         return { [weak self] directive in
             self?.ttsDispatchQueue.sync { [weak self] in
+                log.debug("")
                 guard let self = self else { return }
                 
                 if self.ttsState != .idle {
@@ -326,6 +330,7 @@ private extension TTSAgent {
                     self.prefetchPlayer = try TTSPlayer(directive: directive)
                     self.prefetchPlayer?.delegate = self
                     self.prefetchPlayer?.volume = self.volume
+                    log.debug("\(self.prefetchPlayer.debugDescription)")
                 } catch {
                     log.error(error)
                 }
@@ -339,8 +344,8 @@ private extension TTSAgent {
                 completion(.canceled)
                 return
             }
-            log.debug("")
             self.ttsDispatchQueue.async { [weak self] in
+                log.debug("")
                 guard let self = self else {
                     completion(.canceled)
                     return
@@ -403,14 +408,12 @@ private extension TTSAgent {
                     return
                 }
                 
-                self.stop(cancelAssociation: true)
+                self.stop(player: player, cancelAssociation: true)
             }
         }
     }
     
-    func stop(cancelAssociation: Bool) {
-        guard let player = latesetPlayer else { return }
-        
+    func stop(player: TTSPlayer, cancelAssociation: Bool) {
         player.cancelAssociation = cancelAssociation
         player.stop()
     }

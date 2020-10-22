@@ -183,7 +183,11 @@ public extension AudioPlayerAgent {
     }
     
     func stop() {
-        stop(cancelAssociation: true)
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let player = self?.latesetPlayer else { return }
+            
+            self?.stop(player: player, cancelAssociation: true)
+        }
     }
     
     @discardableResult func next(completion: ((StreamDataState) -> Void)?) -> String {
@@ -278,7 +282,9 @@ extension AudioPlayerAgent: FocusChannelDelegate {
                     self.currentPlayer?.pause(reason: .focus)
                 }
             case (.nothing, _):
-                self.stop(cancelAssociation: false)
+                if let player = self.currentPlayer {
+                    self.stop(player: player, cancelAssociation: false)
+                }
             }
         }
     }
@@ -381,9 +387,10 @@ extension AudioPlayerAgent: PlaySyncDelegate {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.latesetPlayer?.messageId == messageId else { return }
+            guard property == self.playSyncProperty,
+                  let player = self.latesetPlayer, player.messageId == messageId else { return }
             
-            self.stop(cancelAssociation: true)
+            self.stop(player: player, cancelAssociation: true)
         }
     }
 }
@@ -487,7 +494,7 @@ private extension AudioPlayerAgent {
                 return
             }
             
-            self.stop(cancelAssociation: true)
+            self.stop(player: player, cancelAssociation: true)
         }
     }
     
@@ -631,13 +638,9 @@ private extension AudioPlayerAgent {
         }
     }
     
-    func stop(cancelAssociation: Bool) {
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self, let player = self.latesetPlayer else { return }
-            
-            player.cancelAssociation = cancelAssociation
-            player.stop()
-        }
+    func stop(player: AudioPlayer, cancelAssociation: Bool) {
+        player.cancelAssociation = cancelAssociation
+        player.stop()
     }
 }
 
