@@ -35,16 +35,16 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     }
     
     public var offset: Int? {
-        latesetPlayer?.offset.truncatedSeconds
+        latestPlayer?.offset.truncatedSeconds
     }
     
     public var duration: Int? {
-        latesetPlayer?.duration.truncatedSeconds
+        latestPlayer?.duration.truncatedSeconds
     }
     
     public var volume: Float = 1.0 {
         didSet {
-            latesetPlayer?.volume = volume
+            latestPlayer?.volume = volume
         }
     }
     
@@ -74,7 +74,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 log.info("AudioPlayerAgent state changed \(oldValue) -> \(audioPlayerState)")
             }
             
-            guard let player = self.latesetPlayer else {
+            guard let player = self.latestPlayer else {
                 log.error("AudioPlayer is nil")
                 return
             }
@@ -109,7 +109,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // Players
     private var currentPlayer: AudioPlayer?
     private var prefetchPlayer: AudioPlayer?
-    private var latesetPlayer: AudioPlayer? {
+    private var latestPlayer: AudioPlayer? {
         prefetchPlayer ?? currentPlayer
     }
     
@@ -172,7 +172,7 @@ public extension AudioPlayerAgent {
     func play() {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let player = self.latesetPlayer else {
+            guard let player = self.latestPlayer else {
                 log.debug("Skip, MediaPlayer not exist.")
                 return
             }
@@ -184,7 +184,7 @@ public extension AudioPlayerAgent {
     
     func stop() {
         audioPlayerDispatchQueue.async { [weak self] in
-            guard let player = self?.latesetPlayer else { return }
+            guard let player = self?.latestPlayer else { return }
             
             self?.stop(player: player, cancelAssociation: true)
         }
@@ -201,7 +201,7 @@ public extension AudioPlayerAgent {
     func pause() {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self,
-                let player = self.latesetPlayer else {
+                let player = self.latestPlayer else {
                     return
             }
             switch self.audioPlayerState {
@@ -231,7 +231,7 @@ public extension AudioPlayerAgent {
     
     func seek(to offset: Int) {
         audioPlayerDispatchQueue.async { [weak self] in
-            self?.latesetPlayer?.seek(to: NuguTimeInterval(seconds: offset))
+            self?.latestPlayer?.seek(to: NuguTimeInterval(seconds: offset))
         }
     }
     
@@ -335,7 +335,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             }
             
             // `AudioPlayerState` -> `FocusState` -> Event
-            if let audioPlayerState = audioPlayerState, self.latesetPlayer === player {
+            if let audioPlayerState = audioPlayerState, self.latestPlayer === player {
                 self.audioPlayerState = audioPlayerState
                 switch audioPlayerState {
                 case .stopped, .finished:
@@ -357,16 +357,16 @@ extension AudioPlayerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "playServiceId": latesetPlayer?.payload.playServiceId,
+            "playServiceId": latestPlayer?.payload.playServiceId,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
-            "offsetInMilliseconds": latesetPlayer?.offset.truncatedMilliSeconds,
-            "token": latesetPlayer?.payload.audioItem.stream.token,
+            "offsetInMilliseconds": latestPlayer?.offset.truncatedMilliSeconds,
+            "token": latestPlayer?.payload.audioItem.stream.token,
             "lyricsVisible": false
         ]
-        payload["durationInMilliseconds"] = latesetPlayer?.duration.truncatedMilliSeconds
+        payload["durationInMilliseconds"] = latestPlayer?.duration.truncatedMilliSeconds
         
-        if let playServiceId = latesetPlayer?.payload.playServiceId {
+        if let playServiceId = latestPlayer?.payload.playServiceId {
             let semaphore = DispatchSemaphore(value: 0)
             audioPlayerDisplayManager.isLyricsVisible(playServiceId: playServiceId) { result in
                 payload["lyricsVisible"] = result
@@ -388,7 +388,7 @@ extension AudioPlayerAgent: PlaySyncDelegate {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard property == self.playSyncProperty,
-                  let player = self.latesetPlayer, player.messageId == messageId else { return }
+                  let player = self.latestPlayer, player.messageId == messageId else { return }
             
             self.stop(player: player, cancelAssociation: true)
         }
@@ -487,7 +487,7 @@ private extension AudioPlayerAgent {
         return { [weak self] _, completion in
             defer { completion(.finished) }
             
-            guard let self = self, let player = self.latesetPlayer else { return }
+            guard let self = self, let player = self.latestPlayer else { return }
             guard player.internalPlayer != nil else {
                 // Release synchronized layer after playback finished.
                 self.playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
@@ -679,7 +679,7 @@ private extension AudioPlayerAgent {
         let eventIdentifier = EventIdentifier()
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let player = self.latesetPlayer else { return }
+            guard let player = self.latestPlayer else { return }
             
             self.sendPlayEvent(player: player, typeInfo: typeInfo, eventIdentifier: eventIdentifier, completion: completion)
         }
@@ -689,7 +689,7 @@ private extension AudioPlayerAgent {
     func sendRequestCommandEvent(directive: Downstream.Directive, typeInfo: PlayEvent.TypeInfo) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let player = self.latesetPlayer else {
+            guard let player = self.latestPlayer else {
                 self.sendRequestCommandFailedEvent(directive: directive)
                 return
             }
@@ -745,7 +745,7 @@ private extension AudioPlayerAgent {
         let eventIdentifier = EventIdentifier()
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let player = self.latesetPlayer else { return }
+            guard let player = self.latestPlayer else { return }
             
             self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
                 guard let self = self else { return }

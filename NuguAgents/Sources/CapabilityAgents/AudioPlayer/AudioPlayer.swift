@@ -29,7 +29,7 @@ protocol AudioPlayerProgressDelegate: class {
     func audioPlayer(_ player: AudioPlayer, didReportInterval progress: TimeIntervallic)
 }
 
-final class AudioPlayer: MediaPlayerDecorator {
+final class AudioPlayer {
     enum PauseReason {
         case nothing
         case focus
@@ -150,17 +150,41 @@ final class AudioPlayer: MediaPlayerDecorator {
 
 // MARK: - MediaPlayable
 
-extension AudioPlayer {
+extension AudioPlayer: MediaPlayable {
     var offset: TimeIntervallic {
         return internalPlayer?.offset ?? lastOffset ?? NuguTimeInterval(seconds: 0)
     }
     var duration: TimeIntervallic {
         return internalPlayer?.duration ?? lastDuration ?? NuguTimeInterval(seconds: 0)
     }
+    var volume: Float {
+        get {
+            internalPlayer?.volume ?? 1.0
+        }
+        set(newValue) {
+            internalPlayer?.volume = newValue
+        }
+    }
+    
+    func play() {
+        internalPlayer?.play()
+    }
     
     func stop() {
         saveCurrentPlayerState()
         internalPlayer?.stop()
+    }
+    
+    func pause() {
+        internalPlayer?.pause()
+    }
+    
+    func resume() {
+        internalPlayer?.resume()
+    }
+    
+    func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
+        internalPlayer?.seek(to: offset, completion: completion)
     }
 }
 

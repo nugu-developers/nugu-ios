@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-final class TTSPlayer: MediaPlayerDecorator {
+final class TTSPlayer {
     enum StopReason: String {
         case stop = "STOP"
         case playAnother = "PLAY_ANOTHER"
@@ -76,6 +76,46 @@ final class TTSPlayer: MediaPlayerDecorator {
             delegate?.mediaPlayer(self, didChangeState: .stop)
         }
         player.stop()
+    }
+}
+
+
+// MARK: - MediaPlayable
+
+extension TTSPlayer: MediaPlayable {
+    var offset: TimeIntervallic {
+        return internalPlayer?.offset ?? NuguTimeInterval(seconds: 0)
+    }
+    var duration: TimeIntervallic {
+        return internalPlayer?.duration ?? NuguTimeInterval(seconds: 0)
+    }
+    var volume: Float {
+        get {
+            internalPlayer?.volume ?? 1.0
+        }
+        set(newValue) {
+            internalPlayer?.volume = newValue
+        }
+    }
+    
+    func play() {
+        internalPlayer?.play()
+    }
+    
+    func stop() {
+        internalPlayer?.stop()
+    }
+    
+    func pause() {
+        internalPlayer?.pause()
+    }
+    
+    func resume() {
+        internalPlayer?.resume()
+    }
+    
+    func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
+        internalPlayer?.seek(to: offset, completion: completion)
     }
 }
 

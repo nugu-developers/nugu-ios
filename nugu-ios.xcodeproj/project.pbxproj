@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		06FE563F253E9EC0002FAC9B /* TTSPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FE563E253E9EC0002FAC9B /* TTSPlayer.swift */; };
-		06FE567A253EDB14002FAC9B /* MediaPlayerDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FE5654253EDAA8002FAC9B /* MediaPlayerDecorator.swift */; };
 		06FE5685253EDB64002FAC9B /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FE5684253EDB64002FAC9B /* AudioPlayer.swift */; };
 		06FE5690253FCC1E002FAC9B /* AudioPlayerAgentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FE568F253FCC1E002FAC9B /* AudioPlayerAgentError.swift */; };
 		1F1008CE2379221500D90FEE /* NuguClientKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF00A23753F3100C9A177 /* NuguClientKit.framework */; };
@@ -690,7 +689,6 @@
 
 /* Begin PBXFileReference section */
 		06FE563E253E9EC0002FAC9B /* TTSPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSPlayer.swift; sourceTree = "<group>"; };
-		06FE5654253EDAA8002FAC9B /* MediaPlayerDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerDecorator.swift; sourceTree = "<group>"; };
 		06FE5684253EDB64002FAC9B /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		06FE568F253FCC1E002FAC9B /* AudioPlayerAgentError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerAgentError.swift; sourceTree = "<group>"; };
 		1F1008BB237688E200D90FEE /* NuguLoginKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguLoginKit.podspec; sourceTree = "<group>"; };
@@ -1692,7 +1690,6 @@
 				1FFFF3102375707000C9A177 /* MediaAVPlayerItem.swift */,
 				1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */,
 				75082BC3243AC5B20027D76D /* MediaCacheManager.swift */,
-				06FE5654253EDAA8002FAC9B /* MediaPlayerDecorator.swift */,
 			);
 			path = MediaPlayer;
 			sourceTree = "<group>";
@@ -3542,7 +3539,6 @@
 				1FFFF3862375707000C9A177 /* MicInputProvider.swift in Sources */,
 				7373893824A46D6C0018DDD2 /* AuthorizationStoreDelegate.swift in Sources */,
 				735A4CC624117339004E7A41 /* MultiPartParserError.swift in Sources */,
-				06FE567A253EDB14002FAC9B /* MediaPlayerDecorator.swift in Sources */,
 				7E35D79A24623B53003289A2 /* MicInputError.swift in Sources */,
 				73454FBD2382C1E50073AF48 /* Publish.swift in Sources */,
 				1FFFF3CB2375707100C9A177 /* DirectiveSequencer.swift in Sources */,
