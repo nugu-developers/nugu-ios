@@ -48,18 +48,18 @@ extension MediaPlayer {
     public func play() {
         guard let mediaPlayer = player,
               mediaPlayer.currentItem != nil else {
-            delegate?.mediaPlayer(self, didChangeState: .error(error: MediaPlayableError.notPrepareSource))
+            delegate?.mediaPlayer(self, didChange: .error(error: MediaPlayableError.notPrepareSource))
             return
         }
         mediaPlayer.play()
-        delegate?.mediaPlayer(self, didChangeState: .start)
+        delegate?.mediaPlayer(self, didChange: .start)
     }
     
     public func stop() {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
-            delegate?.mediaPlayer(self, didChangeState: .error(error: MediaPlayableError.notPrepareSource))
+            delegate?.mediaPlayer(self, didChange: .error(error: MediaPlayableError.notPrepareSource))
             return
         }
         
@@ -69,33 +69,33 @@ extension MediaPlayer {
         playerItem = nil
         player = nil
         
-        delegate?.mediaPlayer(self, didChangeState: .stop)
+        delegate?.mediaPlayer(self, didChange: .stop)
     }
     
     public func pause() {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
-            delegate?.mediaPlayer(self, didChangeState: .error(error: MediaPlayableError.notPrepareSource))
+            delegate?.mediaPlayer(self, didChange: .error(error: MediaPlayableError.notPrepareSource))
             return
         }
         
         mediaPlayer.pause()
         
-        delegate?.mediaPlayer(self, didChangeState: .pause)
+        delegate?.mediaPlayer(self, didChange: .pause)
     }
     
     public func resume() {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
-            delegate?.mediaPlayer(self, didChangeState: .error(error: MediaPlayableError.notPrepareSource))
+            delegate?.mediaPlayer(self, didChange: .error(error: MediaPlayableError.notPrepareSource))
             return
         }
         
         mediaPlayer.play()
         
-        delegate?.mediaPlayer(self, didChangeState: .resume)
+        delegate?.mediaPlayer(self, didChange: .resume)
     }
     
     public func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
@@ -143,7 +143,7 @@ extension MediaPlayer {
 extension MediaPlayer: MediaUrlDataSource {
     public func setSource(url: String, offset: TimeIntervallic, cacheKey: String?) {
         guard let urlItem = URL(string: url) else {
-            delegate?.mediaPlayer(self, didChangeState: .error(error: MediaPlayableError.invalidURL))
+            delegate?.mediaPlayer(self, didChange: .error(error: MediaPlayableError.invalidURL))
             return
         }
         
@@ -408,11 +408,11 @@ extension MediaPlayer: MediaAVPlayerItemDelegate {
         switch status {
         case .failed(let error):
             guard let playerItemError = error else {
-                delegate?.mediaPlayer(self, didChangeState: .error(error: MediaPlayableError.unknown))
+                delegate?.mediaPlayer(self, didChange: .error(error: MediaPlayableError.unknown))
                 break
             }
             
-            delegate?.mediaPlayer(self, didChangeState: .error(error: playerItemError))
+            delegate?.mediaPlayer(self, didChange: .error(error: playerItemError))
         case .readyToPlay:
             if let cacheKey = playerItem.cacheKey {
                 MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
@@ -424,13 +424,13 @@ extension MediaPlayer: MediaAVPlayerItemDelegate {
     
     func mediaAVPlayerItem(_ playerItem: MediaAVPlayerItem,
                            didChangeBufferState status: MediaAVPlayerItem.BufferState) {
-        delegate?.mediaPlayer(self, didChangeState: status.mediaPlayerState)
+        delegate?.mediaPlayer(self, didChange: status.mediaPlayerState)
     }
     
     func mediaAVPlayerItemPlaybackStalled(_ playerItem: MediaAVPlayerItem) {}
     
     func mediaAVPlayerItemDidPlayToEndTime(_ playerItem: MediaAVPlayerItem) {
-        delegate?.mediaPlayer(self, didChangeState: .finish)
+        delegate?.mediaPlayer(self, didChange: .finish)
     }
 }
 

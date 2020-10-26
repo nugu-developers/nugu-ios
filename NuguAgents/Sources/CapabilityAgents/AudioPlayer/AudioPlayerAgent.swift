@@ -293,7 +293,7 @@ extension AudioPlayerAgent: FocusChannelDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension AudioPlayerAgent: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChangeState state: MediaPlayerState) {
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
         guard let player = mediaPlayer as? AudioPlayer else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
@@ -629,8 +629,8 @@ private extension AudioPlayerAgent {
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 log.info("\(attachment.header.messageId)")
                 guard let self = self else { return }
-                guard self.prefetchPlayer?.handleAttachment(attachment: attachment) == true ||
-                        self.currentPlayer?.handleAttachment(attachment: attachment) == true else {
+                guard self.prefetchPlayer?.handleAttachment(attachment) == true ||
+                        self.currentPlayer?.handleAttachment(attachment) == true else {
                     log.warning("MediaOpusStreamDataSource not exist or dialogRequesetId not valid")
                     return
                 }

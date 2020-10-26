@@ -107,7 +107,7 @@ extension OpusPlayer: DataStreamPlayerDelegate {
             }
         }
         
-        delegate?.mediaPlayer(self, didChangeState: state)
+        delegate?.mediaPlayer(self, didChange: state)
     }
 }
 

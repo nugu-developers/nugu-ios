@@ -48,7 +48,7 @@ final class TTSPlayer {
         internalPlayer?.delegate = self
     }
     
-    func handleAttachment(attachment: Downstream.Attachment) -> Bool {
+    func handleAttachment(_ attachment: Downstream.Attachment) -> Bool {
         guard let dataSource = internalPlayer as? MediaOpusStreamDataSource,
               dialogRequestId == attachment.header.dialogRequestId else {
             return false
@@ -73,7 +73,7 @@ final class TTSPlayer {
             cancelAssociation = false
             internalPlayer = nil
             player.delegate = nil
-            delegate?.mediaPlayer(self, didChangeState: .stop)
+            delegate?.mediaPlayer(self, didChange: .stop)
         }
         player.stop()
     }
@@ -122,7 +122,7 @@ extension TTSPlayer: MediaPlayable {
 // MARK: - MediaPlayerDelegate
 
 extension TTSPlayer: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChangeState state: MediaPlayerState) {
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
         log.info("media state: \(state)")
         
         switch state {
@@ -132,7 +132,7 @@ extension TTSPlayer: MediaPlayerDelegate {
             break
         }
         
-        delegate?.mediaPlayer(self, didChangeState: state)
+        delegate?.mediaPlayer(self, didChange: state)
     }
 }
 

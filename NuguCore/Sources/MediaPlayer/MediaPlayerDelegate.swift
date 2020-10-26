@@ -24,5 +24,5 @@ import Foundation
 public protocol MediaPlayerDelegate: class {
     /// <#Description#>
     /// - Parameter state: <#state description#>
-    func mediaPlayer(_ mediaPlayer: MediaPlayable, didChangeState state: MediaPlayerState)
+    func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState)
 }

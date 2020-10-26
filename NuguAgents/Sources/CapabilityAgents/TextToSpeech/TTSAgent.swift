@@ -242,7 +242,7 @@ extension TTSAgent: ContextInfoDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension TTSAgent: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChangeState state: MediaPlayerState) {
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
         guard let player = mediaPlayer as? TTSPlayer else { return }
         log.info("media \(mediaPlayer) state: \(state)")
         
@@ -427,8 +427,8 @@ private extension TTSAgent {
             self?.ttsDispatchQueue.async { [weak self] in
                 log.info("\(attachment)")
                 guard let self = self else { return }
-                guard self.prefetchPlayer?.handleAttachment(attachment: attachment) == true ||
-                        self.currentPlayer?.handleAttachment(attachment: attachment) == true else {
+                guard self.prefetchPlayer?.handleAttachment(attachment) == true ||
+                        self.currentPlayer?.handleAttachment(attachment) == true else {
                     log.warning("MediaOpusStreamDataSource not exist or dialogRequesetId not valid")
                     return
                 }
