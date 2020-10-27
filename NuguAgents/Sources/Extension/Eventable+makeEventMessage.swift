@@ -41,3 +41,23 @@ extension Eventable {
         return Upstream.Event(payload: payload, header: header, httpHeaderFields: httpHeaderFields, contextPayload: contextPayload)
     }
 }
+
+extension ResponseEvent {
+    func makeEventMessage(
+        property: CapabilityAgentProperty,
+        eventIdentifier: EventIdentifier,
+        httpHeaderFields: [String: String]? = nil,
+        contextPayload: [ContextInfo]
+    ) -> Upstream.Event {
+        let header = Upstream.Event.Header(
+            namespace: property.name,
+            name: name,
+            version: property.version,
+            dialogRequestId: eventIdentifier.dialogRequestId,
+            messageId: eventIdentifier.messageId,
+            referrerDialogRequestId: referrerDialogRequestId
+        )
+        
+        return Upstream.Event(payload: payload, header: header, httpHeaderFields: httpHeaderFields, contextPayload: contextPayload)
+    }
+}

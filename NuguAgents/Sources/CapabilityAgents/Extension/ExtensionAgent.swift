@@ -22,6 +22,8 @@ import Foundation
 
 import NuguCore
 
+import RxSwift
+
 public final class ExtensionAgent: ExtensionAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.1")
@@ -38,6 +40,8 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Action", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleAction)
     ]
+    
+    private var disposeBag = DisposeBag()
     
     public init(
         upstreamDataSender: UpstreamDataSendable,
@@ -61,11 +65,10 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 
 public extension ExtensionAgent {
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        return sendEvent(
-            typeInfo: .commandIssued(data: data),
-            playServiceId: playServiceId,
+        return sendCompactContextEvent(
+            event(typeInfo: .commandIssued(data: data), playServiceId: playServiceId),
             completion: completion
-        )
+        ).dialogRequestId
     }
 }
 
@@ -103,42 +106,44 @@ private extension ExtensionAgent {
                     guard let self = self else { return }
                     
                     let typeInfo: Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
-                    self.sendEvent(
-                        typeInfo: typeInfo,
-                        playServiceId: item.playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId
+                    self.sendCompactContextEvent(
+                        self.event(
+                            typeInfo: typeInfo,
+                            playServiceId: item.playServiceId,
+                            referrerDialogRequestId: directive.header.dialogRequestId
+                        )
                     )
             })
         }
     }
 }
 
-// MARK: - Private (Event)
+// MARK: - Private (Send event)
 
 private extension ExtensionAgent {
-    @discardableResult func sendEvent(
-        typeInfo: Event.TypeInfo,
-        playServiceId: String,
-        referrerDialogRequestId: String? = nil,
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<ResponseEvent>,
         completion: ((StreamDataState) -> Void)? = nil
-    ) -> String {
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    playServiceId: playServiceId,
-                    typeInfo: typeInfo
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: referrerDialogRequestId,
-                    contextPayload: contextPayload
-                ),
-                completion: completion
-            )
-        }
-        return eventIdentifier.dialogRequestId
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty, completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
+    }
+}
+
+// MARK: - Private (Send event)
+
+private extension ExtensionAgent {
+    func event(typeInfo: Event.TypeInfo, playServiceId: String, referrerDialogRequestId: String? = nil) -> Single<ResponseEvent> {
+        let event = ResponseEvent(
+            event: Event(playServiceId: playServiceId, typeInfo: typeInfo),
+            referrerDialogRequestId: referrerDialogRequestId
+        )
+        return Single.just(event)
     }
 }
