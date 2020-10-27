@@ -21,9 +21,6 @@
 import Foundation
 
 import NuguCore
-import SilverTray
-
-import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
@@ -38,24 +35,16 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     }
     
     public var offset: Int? {
-        currentPlayer?.offset.truncatedSeconds
+        latestPlayer?.offset.truncatedSeconds
     }
     
     public var duration: Int? {
-        currentPlayer?.duration.truncatedSeconds
-    }
-    
-    private var lastOffset: TimeIntervallic? {
-        currentPlayer?.offset ?? currentMedia?.offset
-    }
-    
-    private var lastDuration: TimeIntervallic? {
-        currentPlayer?.duration ?? currentMedia?.duration
+        latestPlayer?.duration.truncatedSeconds
     }
     
     public var volume: Float = 1.0 {
         didSet {
-            currentPlayer?.volume = volume
+            latestPlayer?.volume = volume
         }
     }
     
@@ -78,10 +67,6 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
-    private lazy var audioPlayerScheduler = SerialDispatchQueueScheduler(
-        queue: audioPlayerDispatchQueue,
-        internalSerialQueueName: "com.sktelecom.romaine.audioplayer_agent_timer"
-    )
     
     private var audioPlayerState: AudioPlayerState = .idle {
         didSet {
@@ -89,26 +74,22 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 log.info("AudioPlayerAgent state changed \(oldValue) -> \(audioPlayerState)")
             }
             
-            guard let media = self.currentMedia else {
-                log.error("AudioPlayerAgentMedia is nil")
+            guard let player = self.latestPlayer else {
+                log.error("AudioPlayer is nil")
                 return
             }
             
-            // progress report -> pause timer -> `PlaySyncState` -> `AudioPlayerAgentMedia` -> `AudioPlayerAgentDelegate`
+            // `PlaySyncState` -> `AudioPlayerAgentDelegate`
             switch audioPlayerState {
             case .playing:
-                startProgressReport()
                 playSyncManager.cancelTimer(property: playSyncProperty)
             case .stopped, .finished:
-                stopProgressReport()
-                if media.cancelAssociation {
-                    playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
+                if player.cancelAssociation {
+                    playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
                 } else {
                     playSyncManager.endPlay(property: playSyncProperty)
                 }
-                currentPlayer = nil
             case .paused(let temporary):
-                stopProgressReport()
                 if temporary == false {
                     playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
                 }
@@ -119,21 +100,18 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != audioPlayerState {
                 delegates.notify { delegate in
-                    delegate.audioPlayerAgentDidChange(state: audioPlayerState, dialogRequestId: media.dialogRequestId)
+                    delegate.audioPlayerAgentDidChange(state: audioPlayerState, dialogRequestId: player.dialogRequestId)
                 }
             }
         }
     }
     
-    // Current play info
-    private var currentMedia: AudioPlayerAgentMedia?
-    private var currentPlayer: MediaPlayable?
-
-    // ProgressReporter
-    private var intervalReporter: Disposable?
-    private var lastReportedOffset: Int = 0
-    
-    private lazy var disposeBag = DisposeBag()
+    // Players
+    private var currentPlayer: AudioPlayer?
+    private var prefetchPlayer: AudioPlayer?
+    private var latestPlayer: AudioPlayer? {
+        prefetchPlayer ?? currentPlayer
+    }
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
@@ -176,6 +154,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         currentPlayer?.stop()
+        prefetchPlayer?.stop()
     }
 }
 
@@ -192,56 +171,46 @@ public extension AudioPlayerAgent {
     
     func play() {
         audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self, self.currentPlayer != nil else {
+            guard let self = self else { return }
+            guard let player = self.latestPlayer else {
                 log.debug("Skip, MediaPlayer not exist.")
                 return
             }
-            self.currentMedia?.pauseReason = .nothing
+            player.pauseReason = .nothing
+            self.currentPlayer = player
             self.focusManager.requestFocus(channelDelegate: self)
         }
     }
     
     func stop() {
-        stop(cancelAssociation: true)
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let player = self?.latestPlayer else { return }
+            
+            self?.stop(player: player, cancelAssociation: true)
+        }
     }
     
     @discardableResult func next(completion: ((StreamDataState) -> Void)?) -> String {
-        let eventIdentifier = EventIdentifier()
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let media = self.currentMedia else { return }
-            
-            self.sendPlayEvent(media: media, typeInfo: .nextCommandIssued, eventIdentifier: eventIdentifier, completion: completion)
-        }
-        return eventIdentifier.dialogRequestId
+        return sendCommandEvent(typeInfo: .nextCommandIssued, completion: completion).dialogRequestId
     }
     
     @discardableResult func prev(completion: ((StreamDataState) -> Void)?) -> String {
-        let eventIdentifier = EventIdentifier()
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let media = self.currentMedia else { return }
-            
-            self.sendPlayEvent(media: media, typeInfo: .previousCommandIssued, eventIdentifier: eventIdentifier, completion: completion)
-        }
-        return eventIdentifier.dialogRequestId
+        return sendCommandEvent(typeInfo: .previousCommandIssued, completion: completion).dialogRequestId
     }
     
     func pause() {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self,
-                let media = self.currentMedia,
-                let player = self.currentPlayer else {
+                let player = self.latestPlayer else {
                     return
             }
             switch self.audioPlayerState {
             case .playing:
-                self.currentMedia?.pauseReason = .user
-                player.pause()
+                player.pause(reason: .user)
             case .paused:
-                self.currentMedia?.pauseReason = .user
+                player.pauseReason = .user
                 self.audioPlayerState = .paused(temporary: false)
-                self.sendPlayEvent(media: media, typeInfo: .playbackPaused)
+                self.sendPlayEvent(player: player, typeInfo: .playbackPaused)
             default:
                 break
             }
@@ -249,36 +218,20 @@ public extension AudioPlayerAgent {
     }
     
     func requestFavoriteCommand(current: Bool) {
-        guard let media = currentMedia else { return }
-        
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.sendSettingsEvent(media: media, typeInfo: .favoriteCommandIssued(current: current))
-        }
+        sendSettingsEvent(typeInfo: .favoriteCommandIssued(current: current))
     }
 
     func requestRepeatCommand(currentMode: AudioPlayerDisplayRepeat) {
-        guard let media = currentMedia else { return }
-        
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.sendSettingsEvent(media: media, typeInfo: .repeatCommandIssued(currentMode: currentMode))
-        }
+        sendSettingsEvent(typeInfo: .repeatCommandIssued(currentMode: currentMode))
     }
     
     func requestShuffleCommand(current: Bool) {
-        guard let media = currentMedia else { return }
-        
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.sendSettingsEvent(media: media, typeInfo: .shuffleCommandIssued(current: current))
-        }
+        sendSettingsEvent(typeInfo: .shuffleCommandIssued(current: current))
     }
     
     func seek(to offset: Int) {
         audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.currentPlayer?.seek(to: NuguTimeInterval(seconds: offset))
+            self?.latestPlayer?.seek(to: NuguTimeInterval(seconds: offset))
         }
     }
     
@@ -312,23 +265,26 @@ extension AudioPlayerAgent: FocusChannelDelegate {
             switch (focusState, self.audioPlayerState) {
             // Directive 에 의한 Pause 인경우 재생하지 않음.
             case (.foreground, .paused):
-                if self.currentMedia?.pauseReason != .user {
+                if self.currentPlayer?.pauseReason != .user {
                     self.currentPlayer?.resume()
                 }
             case (.foreground, _):
-                self.currentPlayer?.play()
+                if let player = self.currentPlayer, player.internalPlayer != nil {
+                    player.play()
+                } else {
+                    log.error("currentPlayer is nil")
+                    releaseFocusIfNeeded()
+                }
             case (.background, .playing):
-                self.currentMedia?.pauseReason = .focus
-                self.currentPlayer?.pause()
-            // background. idle, pause, stopped, finished 무시
+                self.currentPlayer?.pause(reason: .focus)
             case (.background, _):
-                break
-            case (.nothing, .playing),
-                 (.nothing, .paused):
-                self.stop(cancelAssociation: false)
-            // none. idle/stopped/finished 무시
+                if self.currentPlayer?.pauseReason == .nothing {
+                    self.currentPlayer?.pause(reason: .focus)
+                }
             case (.nothing, _):
-                break
+                if let player = self.currentPlayer {
+                    self.stop(player: player, cancelAssociation: false)
+                }
             }
         }
     }
@@ -337,45 +293,59 @@ extension AudioPlayerAgent: FocusChannelDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension AudioPlayerAgent: MediaPlayerDelegate {
-    public func mediaPlayerDidChange(state: MediaPlayerState) {
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
+        guard let player = mediaPlayer as? AudioPlayer else { return }
+        
         audioPlayerDispatchQueue.async { [weak self] in
             log.info("\(state)")
             guard let self = self else { return }
-            guard let media = self.currentMedia else { return }
             
-            // `AudioPlayerState` -> Event -> `FocusState`
+            var audioPlayerState: AudioPlayerState?
+            var eventTypeInfo: PlayEvent.TypeInfo?
+            
             switch state {
             case .start:
-                self.audioPlayerState = .playing
-                self.sendPlayEvent(media: media, typeInfo: .playbackStarted)
+                audioPlayerState = .playing
+                eventTypeInfo = .playbackStarted
             case .resume:
-                self.audioPlayerState = .playing
-                if media.pauseReason != .focus {
-                    self.sendPlayEvent(media: media, typeInfo: .playbackResumed)
+                audioPlayerState = .playing
+                if player.pauseReason != .focus {
+                    eventTypeInfo = .playbackResumed
                 }
             case .finish:
-                self.saveCurrentPlayerState()
-                self.audioPlayerState = .finished
-                self.sendPlayEvent(media: media, typeInfo: .playbackFinished)
-                self.releaseFocusIfNeeded()
+                audioPlayerState = .finished
+                eventTypeInfo = .playbackFinished
             case .pause:
-                if media.pauseReason != .focus {
-                    self.audioPlayerState = .paused(temporary: false)
-                    self.sendPlayEvent(media: media, typeInfo: .playbackPaused)
+                if player.pauseReason != .focus {
+                    audioPlayerState = .paused(temporary: false)
                 } else {
-                    self.audioPlayerState = .paused(temporary: true)
+                    audioPlayerState = .paused(temporary: true)
+                }
+                if player.pauseReason != .focus {
+                    eventTypeInfo = .playbackPaused
                 }
             case .stop:
-                self.audioPlayerState = .stopped
-                self.sendPlayEvent(media: media, typeInfo: .playbackStopped(reason: "STOP"))
-                self.releaseFocusIfNeeded()
+                audioPlayerState = .stopped
+                eventTypeInfo = .playbackStopped(reason: player.stopReason.rawValue)
+            case .error(let error):
+                audioPlayerState = .stopped
+                eventTypeInfo = .playbackFailed(error: error)
             case .bufferUnderrun, .bufferRefilled:
                 break
-            case .error(let error):
-                log.error("\(state) \(error)")
-                self.audioPlayerState = .stopped
-                self.sendPlayEvent(media: media, typeInfo: .playbackFailed(error: error))
-                self.releaseFocusIfNeeded()
+            }
+            
+            // `AudioPlayerState` -> `FocusState` -> Event
+            if let audioPlayerState = audioPlayerState, self.latestPlayer === player {
+                self.audioPlayerState = audioPlayerState
+                switch audioPlayerState {
+                case .stopped, .finished:
+                    self.releaseFocusIfNeeded()
+                default:
+                    break
+                }
+            }
+            if let eventTypeInfo = eventTypeInfo {
+                self.sendPlayEvent(player: player, typeInfo: eventTypeInfo)
             }
         }
     }
@@ -387,16 +357,16 @@ extension AudioPlayerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "playServiceId": currentMedia?.payload.playServiceId,
+            "playServiceId": latestPlayer?.payload.playServiceId,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
-            "offsetInMilliseconds": lastOffset?.truncatedMilliSeconds,
-            "token": currentMedia?.payload.audioItem.stream.token,
+            "offsetInMilliseconds": latestPlayer?.offset.truncatedMilliSeconds,
+            "token": latestPlayer?.payload.audioItem.stream.token,
             "lyricsVisible": false
         ]
-        payload["durationInMilliseconds"] = lastDuration?.truncatedMilliSeconds
+        payload["durationInMilliseconds"] = latestPlayer?.duration.truncatedMilliSeconds
         
-        if let playServiceId = currentMedia?.payload.playServiceId {
+        if let playServiceId = latestPlayer?.payload.playServiceId {
             let semaphore = DispatchSemaphore(value: 0)
             audioPlayerDisplayManager.isLyricsVisible(playServiceId: playServiceId) { result in
                 payload["lyricsVisible"] = result
@@ -417,10 +387,25 @@ extension AudioPlayerAgent: PlaySyncDelegate {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard property == self.playSyncProperty, self.currentMedia?.messageId == messageId else { return }
+            guard property == self.playSyncProperty,
+                  let player = self.latestPlayer, player.messageId == messageId else { return }
             
-            self.stop(cancelAssociation: true)
+            self.stop(player: player, cancelAssociation: true)
         }
+    }
+}
+
+// MARK: - AudioPlayerProgressDelegate
+
+extension AudioPlayerAgent: AudioPlayerProgressDelegate {
+    func audioPlayer(_ player: AudioPlayer, didReportDelay progress: TimeIntervallic) {
+        log.debug(player.offset.truncatedMilliSeconds)
+        sendPlayEvent(player: player, typeInfo: .progressReportDelayElapsed)
+    }
+    
+    func audioPlayer(_ player: AudioPlayer, didReportInterval progress: TimeIntervallic) {
+        log.debug(player.offset.truncatedMilliSeconds)
+        sendPlayEvent(player: player, typeInfo: .progressReportIntervalElapsed)
     }
 }
 
@@ -429,47 +414,40 @@ extension AudioPlayerAgent: PlaySyncDelegate {
 private extension AudioPlayerAgent {
     func prefetchPlay() -> PrefetchDirective {
         return { [weak self] directive in
-            let payload = try JSONDecoder().decode(AudioPlayerAgentMedia.Payload.self, from: directive.payload)
-            
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                if [.playing, .paused(temporary: true), .paused(temporary: false)].contains(self.audioPlayerState),
-                    let media = self.currentMedia, let player = self.currentPlayer,
-                    media.payload.audioItem.stream.token == payload.audioItem.stream.token,
-                    media.payload.playServiceId == payload.playServiceId {
-                    log.debug("Resuming")
-                    // Resume and seek
-                    self.currentMedia = AudioPlayerAgentMedia(
-                        dialogRequestId: directive.header.dialogRequestId,
-                        messageId: directive.header.messageId,
-                        payload: payload
-                    )
-                    
-                    player.seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
-                } else {
-                    self.stopSilently()
-                    self.lastReportedOffset = 0
-                    self.setMediaPlayer(
-                        dialogRequestId: directive.header.dialogRequestId,
-                        messageId: directive.header.messageId,
-                        payload: payload
-                    )
+                if self.audioPlayerState != .idle {
+                    self.audioPlayerState = .stopped
+                }
+                self.prefetchPlayer?.stop(reason: .playAnother)
+                do {
+                    self.prefetchPlayer = try AudioPlayer(directive: directive)
+                    self.prefetchPlayer?.delegate = self
+                    self.prefetchPlayer?.progressDelegate = self
+                    self.prefetchPlayer?.volume = self.volume
+                } catch {
+                    log.error(error)
                 }
                 
-                if let media = self.currentMedia {
+                if let currentPlayer = self.currentPlayer {
+                    self.prefetchPlayer?.tryToResume(player: currentPlayer)
+                }
+                self.currentPlayer?.stop(reason: .playAnother)
+                
+                if let player = self.prefetchPlayer {
                     self.playSyncManager.startPlay(
                         property: self.playSyncProperty,
                         info: PlaySyncInfo(
-                            playStackServiceId: media.payload.playStackControl?.playServiceId,
-                            dialogRequestId: media.dialogRequestId,
-                            messageId: media.messageId,
+                            playStackServiceId: player.payload.playStackControl?.playServiceId,
+                            dialogRequestId: player.dialogRequestId,
+                            messageId: player.messageId,
                             duration: NuguTimeInterval(seconds: 7)
                         )
                     )
                     
                     self.audioPlayerDisplayManager.display(
-                        payload: payload,
+                        payload: player.payload,
                         messageId: directive.header.messageId,
                         dialogRequestId: directive.header.dialogRequestId
                     )
@@ -484,9 +462,24 @@ private extension AudioPlayerAgent {
                 completion(.canceled)
                 return
             }
-            defer { completion(.finished) }
             
-            self.focusManager.requestFocus(channelDelegate: self)
+            self.audioPlayerDispatchQueue.async { [weak self] in
+                defer { completion(.finished) }
+                
+                guard let self = self else { return }
+                guard let player = self.prefetchPlayer, player.messageId == directive.header.messageId else {
+                    log.info("Message id does not match")
+                    return
+                }
+                guard player.internalPlayer != nil else {
+                    log.info("Internal player is nil")
+                    return
+                }
+                
+                self.currentPlayer = player
+                self.prefetchPlayer = nil
+                self.focusManager.requestFocus(channelDelegate: self)
+            }
         }
     }
     
@@ -494,14 +487,14 @@ private extension AudioPlayerAgent {
         return { [weak self] _, completion in
             defer { completion(.finished) }
             
-            guard let self = self, let media = self.currentMedia else { return }
-            guard self.currentPlayer != nil else {
+            guard let self = self, let player = self.latestPlayer else { return }
+            guard player.internalPlayer != nil else {
                 // Release synchronized layer after playback finished.
-                self.playSyncManager.stopPlay(dialogRequestId: media.dialogRequestId)
+                self.playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
                 return
             }
             
-            self.stop(cancelAssociation: true)
+            self.stop(player: player, cancelAssociation: true)
         }
     }
     
@@ -529,14 +522,7 @@ private extension AudioPlayerAgent {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
             
-            self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                guard let media = self.currentMedia else {
-                    self.sendRequestCommandFailedEvent(directive: directive)
-                    return
-                }
-                self.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
-            }
+            self?.sendRequestCommandEvent(directive: directive, typeInfo: .requestResumeCommandIssued)
         }
     }
     
@@ -544,14 +530,7 @@ private extension AudioPlayerAgent {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
             
-            self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                guard let media = self.currentMedia else {
-                    self.sendRequestCommandFailedEvent(directive: directive)
-                    return
-                }
-                self.sendPlayEvent(media: media, typeInfo: .requestResumeCommandIssued)
-            }
+            self?.sendRequestCommandEvent(directive: directive, typeInfo: .requestNextCommandIssued)
         }
     }
     
@@ -559,14 +538,7 @@ private extension AudioPlayerAgent {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
             
-            self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                guard let media = self.currentMedia else {
-                    self.sendRequestCommandFailedEvent(directive: directive)
-                    return
-                }
-                self.sendPlayEvent(media: media, typeInfo: .requestPreviousCommandIssued)
-            }
+            self?.sendRequestCommandEvent(directive: directive, typeInfo: .requestPreviousCommandIssued)
         }
     }
     
@@ -574,14 +546,7 @@ private extension AudioPlayerAgent {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
             
-            self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                guard let media = self.currentMedia else {
-                    self.sendRequestCommandFailedEvent(directive: directive)
-                    return
-                }
-                self.sendPlayEvent(media: media, typeInfo: .requestPauseCommandIssued)
-            }
+            self?.sendRequestCommandEvent(directive: directive, typeInfo: .requestPauseCommandIssued)
         }
     }
     
@@ -589,14 +554,7 @@ private extension AudioPlayerAgent {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
             
-            self?.audioPlayerDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                guard let media = self.currentMedia else {
-                    self.sendRequestCommandFailedEvent(directive: directive)
-                    return
-                }
-                self.sendPlayEvent(media: media, typeInfo: .requestStopCommandIssued)
-            }
+            self?.sendRequestCommandEvent(directive: directive, typeInfo: .requestStopCommandIssued)
         }
     }
     
@@ -671,46 +629,18 @@ private extension AudioPlayerAgent {
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 log.info("\(attachment.header.messageId)")
                 guard let self = self else { return }
-                guard let dataSource = self.currentPlayer as? MediaOpusStreamDataSource,
-                    self.currentMedia?.dialogRequestId == attachment.header.dialogRequestId else {
-                        log.warning("MediaOpusStreamDataSource not exist or dialogRequesetId not valid")
+                guard self.prefetchPlayer?.handleAttachment(attachment) == true ||
+                        self.currentPlayer?.handleAttachment(attachment) == true else {
+                    log.warning("MediaOpusStreamDataSource not exist or dialogRequesetId not valid")
                     return
-                }
-                
-                do {
-                    try dataSource.appendData(attachment.content)
-                    
-                    if attachment.isEnd {
-                        try dataSource.lastDataAppended()
-                    }
-                } catch {
-                    log.error(error)
                 }
             }
         }
     }
     
-    func stop(cancelAssociation: Bool) {
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self, let player = self.currentPlayer else { return }
-            
-            self.saveCurrentPlayerState()
-            self.currentMedia?.cancelAssociation = cancelAssociation
-            player.stop()
-        }
-    }
-    
-    /// Stop mediaplayer
-    func stopSilently() {
-        guard let media = currentMedia, let player = currentPlayer else { return }
-            
-        saveCurrentPlayerState()
-        currentMedia?.cancelAssociation = false
-        // `AudioPlayerState` -> Event
-        player.delegate = nil
+    func stop(player: AudioPlayer, cancelAssociation: Bool) {
+        player.cancelAssociation = cancelAssociation
         player.stop()
-        audioPlayerState = .stopped
-        sendPlayEvent(media: media, typeInfo: .playbackStopped(reason: "PLAY_ANOTHER"))
     }
 }
 
@@ -718,29 +648,52 @@ private extension AudioPlayerAgent {
 
 private extension AudioPlayerAgent {
     func sendPlayEvent(
-        media: AudioPlayerAgentMedia,
+        player: AudioPlayer,
         typeInfo: PlayEvent.TypeInfo,
         eventIdentifier: EventIdentifier = EventIdentifier(),
         completion: ((StreamDataState) -> Void)? = nil
     ) {
-        let offset = lastOffset?.truncatedMilliSeconds
+        let offset = player.offset.truncatedMilliSeconds
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
             
             self.upstreamDataSender.sendEvent(
                 PlayEvent(
-                    token: media.payload.audioItem.stream.token,
-                    offsetInMilliseconds: offset ?? 0, // This is a mandatory in Play kit.
-                    playServiceId: media.payload.playServiceId,
+                    token: player.payload.audioItem.stream.token,
+                    // This is a mandatory in Play kit.
+                    offsetInMilliseconds: offset,
+                    playServiceId: player.payload.playServiceId,
                     typeInfo: typeInfo
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: media.dialogRequestId,
+                    referrerDialogRequestId: player.dialogRequestId,
                     contextPayload: contextPayload
                 ),
                 completion: completion
             )
+        }
+    }
+    
+    func sendCommandEvent(typeInfo: PlayEvent.TypeInfo, completion: ((StreamDataState) -> Void)?) -> EventIdentifier {
+        let eventIdentifier = EventIdentifier()
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard let player = self.latestPlayer else { return }
+            
+            self.sendPlayEvent(player: player, typeInfo: typeInfo, eventIdentifier: eventIdentifier, completion: completion)
+        }
+        return eventIdentifier
+    }
+    
+    func sendRequestCommandEvent(directive: Downstream.Directive, typeInfo: PlayEvent.TypeInfo) {
+        audioPlayerDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard let player = self.latestPlayer else {
+                self.sendRequestCommandFailedEvent(directive: directive)
+                return
+            }
+            self.sendPlayEvent(player: player, typeInfo: typeInfo)
         }
     }
     
@@ -786,26 +739,30 @@ private extension AudioPlayerAgent {
     }
 
     func sendSettingsEvent(
-        media: AudioPlayerAgentMedia,
         typeInfo: SettingsEvent.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
+        audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
+            guard let player = self.latestPlayer else { return }
             
-            self.upstreamDataSender.sendEvent(
-                SettingsEvent(
-                    playServiceId: media.payload.playServiceId,
-                    typeInfo: typeInfo
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: media.dialogRequestId,
-                    contextPayload: contextPayload
-                ),
-                completion: completion
-            )
+            self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
+                guard let self = self else { return }
+                
+                self.upstreamDataSender.sendEvent(
+                    SettingsEvent(
+                        playServiceId: player.payload.playServiceId,
+                        typeInfo: typeInfo
+                    ).makeEventMessage(
+                        property: self.capabilityAgentProperty,
+                        eventIdentifier: eventIdentifier,
+                        referrerDialogRequestId: player.dialogRequestId,
+                        contextPayload: contextPayload
+                    ),
+                    completion: completion
+                )
+            }
         }
     }
     
@@ -844,105 +801,5 @@ private extension AudioPlayerAgent {
             return
         }
         focusManager.releaseFocus(channelDelegate: self)
-    }
-}
-
-// MARK: - Private (Timer)
-
-private extension AudioPlayerAgent {
-    func startProgressReport() {
-        stopProgressReport()
-        guard let media = currentMedia else { return }
-        let delayReportTime = media.payload.audioItem.stream.delayReportTime ?? -1
-        let intervalReportTime = media.payload.audioItem.stream.intervalReportTime ?? -1
-        guard delayReportTime > 0 || intervalReportTime > 0 else { return }
-        
-        log.debug("delayReportTime: \(delayReportTime) intervalReportTime: \(intervalReportTime)")
-        intervalReporter = Observable<Int>
-            .interval(.milliseconds(100), scheduler: audioPlayerScheduler)
-            .map({ [weak self] (_) -> Int in
-                let offset = self?.currentPlayer?.offset.seconds ?? 0.0
-                return Int(ceil(offset))
-            })
-            .filter { [weak self] offset in
-                guard let self = self else { return false }
-                guard offset > 0 else { return false }
-                // Current offset can be smaller than the last offset after seeking.
-                guard offset > self.lastReportedOffset else {
-                    self.lastReportedOffset = offset
-                    return false
-                }
-
-                return true
-            }
-            .subscribe(onNext: { [weak self] (offset) in
-                guard let self = self else { return }
-                
-                // Check if there is any report target between last offset and current offset.
-                let offsetRange = (self.lastReportedOffset + 1...offset)
-                if delayReportTime > 0, offsetRange.contains(delayReportTime) {
-                    self.sendPlayEvent(media: media, typeInfo: .progressReportDelayElapsed)
-                }
-                if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {
-                    self.sendPlayEvent(media: media, typeInfo: .progressReportIntervalElapsed)
-                }
-                self.lastReportedOffset = offset
-            })
-        
-        intervalReporter?.disposed(by: disposeBag)
-    }
-    
-    func stopProgressReport() {
-        intervalReporter?.dispose()
-    }
-}
-
-// MARK: - Private (Media)
-
-private extension AudioPlayerAgent {
-    /// set mediaplayer
-    func setMediaPlayer(dialogRequestId: String, messageId: String, payload: AudioPlayerAgentMedia.Payload) {
-        switch payload.sourceType {
-        case .url:
-            guard let url = payload.audioItem.stream.url else {
-                log.error("Invalid payload")
-                return
-            }
-            let mediaPlayer = MediaPlayer()
-            mediaPlayer.setSource(
-                url: url,
-                offset: NuguTimeInterval(seconds: payload.audioItem.stream.offset),
-                cacheKey: payload.cacheKey
-            )
-            currentPlayer = mediaPlayer
-            currentMedia = AudioPlayerAgentMedia(
-                dialogRequestId: dialogRequestId,
-                messageId: messageId,
-                payload: payload
-            )
-        case .attachment:
-            do {
-                currentPlayer = try OpusPlayer()
-                currentMedia = AudioPlayerAgentMedia(
-                    dialogRequestId: dialogRequestId,
-                    messageId: messageId,
-                    payload: payload
-                )
-            } catch {
-                // TODO: 실패시 예외처리 필요한지 확인
-                log.error("Opus player initiation error: \(error)")
-            }
-        case .none:
-            log.error("Invalid payload")
-        }
-
-        currentPlayer?.delegate = self
-        currentPlayer?.volume = volume
-    }
-    
-    // Keep the offset and duration to be sent with playback events.
-    func saveCurrentPlayerState() {
-        currentMedia?.offset = currentPlayer?.offset
-        currentMedia?.duration = currentPlayer?.duration
     }
 }

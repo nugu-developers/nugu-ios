@@ -76,7 +76,7 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 // MARK: - AudioPlayerDisplayManageable
 
 extension AudioPlayerDisplayManager {
-    func display(payload: AudioPlayerAgentMedia.Payload, messageId: String, dialogRequestId: String) {
+    func display(payload: AudioPlayerPlayPayload, messageId: String, dialogRequestId: String) {
         guard let delegate = delegate else { return }
         guard let metaData = payload.audioItem.metadata,
             ((metaData["disableTemplate"] as? Bool) ?? false) == false else {
