@@ -1,8 +1,8 @@
 //
-//  MediaPlayerDelegate.swift
-//  NuguCore
+//  AudioPlayerAgentError.swift
+//  NuguAgents
 //
-//  Created by MinChul Lee on 24/04/2019.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/10/21.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,6 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol MediaPlayerDelegate: class {
-    /// <#Description#>
-    /// - Parameter state: <#state description#>
-    func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState)
+enum AudioPlayerAgentError: Error {
+    case notSupportedSourceType
 }

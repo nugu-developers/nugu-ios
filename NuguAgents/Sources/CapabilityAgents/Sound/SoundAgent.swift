@@ -47,7 +47,7 @@ public final class SoundAgent: SoundAgentProtocol {
         didSet {
             log.info("state changed from: \(oldValue) to: \(soundState)")
             guard let media = currentMedia else {
-                log.error("TTSMedia is nil")
+                log.error("SoundMedia is nil")
                 return
             }
             
@@ -140,7 +140,7 @@ extension SoundAgent: ContextInfoDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension SoundAgent: MediaPlayerDelegate {
-    public func mediaPlayerDidChange(state: MediaPlayerState) {
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
         log.info("media state: \(state)")
         
         soundDispatchQueue.async { [weak self] in
