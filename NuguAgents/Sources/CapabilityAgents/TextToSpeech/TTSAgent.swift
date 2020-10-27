@@ -320,11 +320,10 @@ private extension TTSAgent {
                 log.debug("")
                 guard let self = self else { return }
                 
-                if self.ttsState != .idle {
+                if self.prefetchPlayer?.stop(reason: .playAnother) == true ||
+                    self.currentPlayer?.stop(reason: .playAnother) == true {
                     self.ttsState = .stopped
                 }
-                self.prefetchPlayer?.stop(reason: .playAnother)
-                self.currentPlayer?.stop(reason: .playAnother)
                 
                 do {
                     self.prefetchPlayer = try TTSPlayer(directive: directive)
