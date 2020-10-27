@@ -37,6 +37,10 @@ final class NuguAudioSessionManager {
 // MARK: - Internal
 
 extension NuguAudioSessionManager {
+    func isCarplayConnected() -> Bool {
+        return AVAudioSession.sharedInstance().currentRoute.outputs.first?.portType == AVAudioSession.Port.carAudio
+    }
+    
     func addAudioInterruptionNotification() {
         removeAudioInterruptionNotification()
         NotificationCenter.default.addObserver(self,
@@ -82,10 +86,62 @@ extension NuguAudioSessionManager {
     func requestRecordPermission(_ response: @escaping (Bool) -> Void) {
         AVAudioSession.sharedInstance().requestRecordPermission(response)
     }
+        
+    @discardableResult func updateAudioSessionToPlaybackIfNeeded(mixWithOthers: Bool = false) -> Bool {
+        var options = AVAudioSession.CategoryOptions(arrayLiteral: [])
+        if mixWithOthers == true {
+            options.insert(.mixWithOthers)
+        }
+        // If audioSession is already has been set properly, resetting audioSession is unnecessary
+        guard isCarplayConnected() == true,
+              AVAudioSession.sharedInstance().category != .playback ||
+              AVAudioSession.sharedInstance().categoryOptions != options else { return true }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                .playback,
+                mode: .default,
+                options: options
+            )
+            try AVAudioSession.sharedInstance().setActive(true)
+            return true
+        } catch {
+            log.debug("updateAudioSessionToPlaybackIfNeeded failed: \(error)")
+            return false
+        }
+    }
+    
+    @discardableResult func updateAudioSessionWhenCarplayConnected(requestingFocus: Bool) -> Bool {
+        if requestingFocus == true {
+            let options = AVAudioSession.CategoryOptions(arrayLiteral: [])
+            // If audioSession is already has been set properly, resetting audioSession is unnecessary
+            guard AVAudioSession.sharedInstance().category != .playAndRecord ||
+                  AVAudioSession.sharedInstance().categoryOptions != options else {
+                return true
+            }
+            do {
+                try AVAudioSession.sharedInstance().setCategory(
+                    .playAndRecord,
+                    mode: .default,
+                    options: []
+                )
+                try AVAudioSession.sharedInstance().setActive(true)
+                return true
+            } catch {
+                log.debug("updateAudioSession when carplay connected has failed: \(error)")
+                return false
+            }
+        } else {
+            return updateAudioSessionToPlaybackIfNeeded(mixWithOthers: true)
+        }
+    }
     
     /// Update AudioSession.Category and AudioSession.CategoryOptions
     /// - Parameter requestingFocus: whether updating AudioSession is for requesting focus or just updating without requesting focus
     @discardableResult func updateAudioSession(requestingFocus: Bool = false) -> Bool {
+        guard isCarplayConnected() == false else {
+            return updateAudioSessionWhenCarplayConnected(requestingFocus: requestingFocus)
+        }
+        
         var options = defaultCategoryOptions
         if requestingFocus == false {
             options.insert(.mixWithOthers)
@@ -186,6 +242,10 @@ private extension NuguAudioSessionManager {
             log.debug("Route changed due to oldDeviceUnavailable")
             if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
                 NuguCentralManager.shared.client.audioPlayerAgent.pause()
+            }
+        case .newDeviceAvailable:
+            if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying {
+                updateAudioSessionToPlaybackIfNeeded()
             }
         default: break
         }
