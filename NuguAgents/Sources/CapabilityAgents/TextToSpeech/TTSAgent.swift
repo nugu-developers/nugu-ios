@@ -26,7 +26,7 @@ import RxSwift
 
 public final class TTSAgent: TTSAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.3")
     private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .sound)
     
     // TTSAgentProtocol
@@ -455,12 +455,6 @@ private extension TTSAgent {
         info: Event.TypeInfo,
         completion: ((StreamDataState) -> Void)? = nil
     ) {
-        guard let playServiceId = player.payload.playServiceId else {
-            log.debug("TTSPlayer does not have playServiceId")
-            completion?(.finished)
-            return
-        }
-        
         let eventIdentifier = EventIdentifier()
         contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
             guard let self = self else { return }
@@ -468,7 +462,7 @@ private extension TTSAgent {
             self.upstreamDataSender.sendEvent(
                 Event(
                     token: player.payload.token,
-                    playServiceId: playServiceId,
+                    playServiceId: player.payload.playServiceId,
                     typeInfo: info
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
