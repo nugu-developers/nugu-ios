@@ -839,6 +839,9 @@ extension MainViewController: AudioPlayerAgentDelegate {
         log.debug("audioPlayerAgentDidChange : \(state)")
         NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(state: state)
         NuguAudioSessionManager.shared.pausedByInterruption = false
+        if state == .playing {
+            NuguAudioSessionManager.shared.updateAudioSessionToPlaybackIfNeeded()
+        }
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }
