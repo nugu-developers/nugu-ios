@@ -116,8 +116,8 @@ final class AudioPlayer {
         pause()
     }
     
-    func stop(reason: StopReason) {
-        guard let player = internalPlayer else { return }
+    func stop(reason: StopReason) -> Bool {
+        guard let player = internalPlayer else { return false }
         
         stopReason = reason
         if reason == .playAnother {
@@ -127,6 +127,8 @@ final class AudioPlayer {
             delegate?.mediaPlayer(self, didChange: .stop)
         }
         player.stop()
+        
+        return true
     }
 
     func tryToResume(player: AudioPlayer) {
