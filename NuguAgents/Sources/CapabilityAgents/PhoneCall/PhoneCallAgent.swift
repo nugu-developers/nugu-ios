@@ -202,16 +202,12 @@ private extension PhoneCallAgent {
                     callType: phoneCallType,
                     recipient: recipientPerson,
                     dialogRequestId: directive.header.dialogRequestId
-                    ) {
-                    let event = Event(
-                        typeInfo: .makeCallFailed(
-                            errorCode: errorCode,
-                            callType: phoneCallType
-                        ),
+                ) {
+                    self.sendCompactContextEvent(Event(
+                        typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType),
                         playServiceId: playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    )
-                    self.sendCompactContextEvent(event.rx)
+                    ).rx)
                 }
             }
         }
