@@ -28,6 +28,10 @@ public protocol Eventable {
     var referrerDialogRequestId: String? { get }
 }
 
+public extension Eventable {
+    var referrerDialogRequestId: String? { nil }
+}
+
 // MARK: - RxSwift
 
 extension Eventable {
