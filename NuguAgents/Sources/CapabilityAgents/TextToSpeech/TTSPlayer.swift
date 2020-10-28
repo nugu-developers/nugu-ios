@@ -67,8 +67,8 @@ final class TTSPlayer {
         return true
     }
     
-    func stop(reason: StopReason) {
-        guard let player = internalPlayer else { return }
+    func stop(reason: StopReason) -> Bool {
+        guard let player = internalPlayer else { return false }
         if reason == .playAnother {
             cancelAssociation = false
             internalPlayer = nil
@@ -76,6 +76,7 @@ final class TTSPlayer {
             delegate?.mediaPlayer(self, didChange: .stop)
         }
         player.stop()
+        return true
     }
 }
 

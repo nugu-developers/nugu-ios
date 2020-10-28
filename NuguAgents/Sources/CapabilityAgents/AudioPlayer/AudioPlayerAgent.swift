@@ -425,10 +425,9 @@ private extension AudioPlayerAgent {
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                if self.audioPlayerState != .idle {
+                if self.prefetchPlayer?.stop(reason: .playAnother) == true {
                     self.audioPlayerState = .stopped
                 }
-                self.prefetchPlayer?.stop(reason: .playAnother)
                 do {
                     self.prefetchPlayer = try AudioPlayer(directive: directive)
                     self.prefetchPlayer?.delegate = self
@@ -441,7 +440,9 @@ private extension AudioPlayerAgent {
                 if let currentPlayer = self.currentPlayer {
                     self.prefetchPlayer?.tryToResume(player: currentPlayer)
                 }
-                self.currentPlayer?.stop(reason: .playAnother)
+                if self.currentPlayer?.stop(reason: .playAnother) == true {
+                    self.audioPlayerState = .stopped
+                }
                 
                 if let player = self.prefetchPlayer {
                     self.playSyncManager.startPlay(

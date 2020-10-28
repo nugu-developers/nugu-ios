@@ -26,7 +26,7 @@ import RxSwift
 
 public final class TTSAgent: TTSAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .textToSpeech, version: "1.3")
     private let playSyncProperty = PlaySyncProperty(layerType: .info, contextType: .sound)
     
     // TTSAgentProtocol
@@ -315,11 +315,10 @@ private extension TTSAgent {
                 log.debug("")
                 guard let self = self else { return }
                 
-                if self.ttsState != .idle {
+                if self.prefetchPlayer?.stop(reason: .playAnother) == true ||
+                    self.currentPlayer?.stop(reason: .playAnother) == true {
                     self.ttsState = .stopped
                 }
-                self.prefetchPlayer?.stop(reason: .playAnother)
-                self.currentPlayer?.stop(reason: .playAnother)
                 
                 do {
                     self.prefetchPlayer = try TTSPlayer(directive: directive)
