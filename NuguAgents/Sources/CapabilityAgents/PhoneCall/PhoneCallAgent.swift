@@ -69,7 +69,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 
 public extension PhoneCallAgent {
     @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        let event = Event(playServiceId: playServiceId, typeInfo: .candidatesListed)
+        let event = Event(typeInfo: .candidatesListed, playServiceId: playServiceId, referrerDialogRequestId: nil)
         return sendFullContextEvent(event.rx) { [weak self] state in
             completion?(state)
             guard let self = self else { return }
@@ -204,12 +204,12 @@ private extension PhoneCallAgent {
                     dialogRequestId: directive.header.dialogRequestId
                     ) {
                     let event = Event(
-                        playServiceId: playServiceId,
                         typeInfo: .makeCallFailed(
                             errorCode: errorCode,
-                            callType: phoneCallType,
-                            referrerDialogRequestId: directive.header.dialogRequestId
-                        )
+                            callType: phoneCallType
+                        ),
+                        playServiceId: playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
                     )
                     self.sendCompactContextEvent(event.rx)
                 }

@@ -413,7 +413,7 @@ extension AudioPlayerAgent: AudioPlayerProgressDelegate {
     
     func audioPlayer(_ player: AudioPlayer, didReportInterval progress: TimeIntervallic) {
         log.debug(player.offset.truncatedMilliSeconds)
-        sendCompactContextEvent(playEvent(typeInfo: .progressReportDelayElapsed, player: player))
+        sendCompactContextEvent(playEvent(typeInfo: .progressReportIntervalElapsed, player: player))
     }
 }
 

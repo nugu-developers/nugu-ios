@@ -24,12 +24,13 @@ import Foundation
 
 extension ExtensionAgent {
     struct Event {
-        let playServiceId: String
         let typeInfo: TypeInfo
+        let playServiceId: String
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
-            case actionSucceeded(referrerDialogRequestId: String)
-            case actionFailed(referrerDialogRequestId: String)
+            case actionSucceeded
+            case actionFailed
             case commandIssued(data: AnyHashable)
         }
     }
@@ -59,17 +60,6 @@ extension ExtensionAgent.Event: Eventable {
             return "ActionFailed"
         case .commandIssued:
             return "CommandIssued"
-        }
-    }
-    
-    var referrerDialogRequestId: String? {
-        switch typeInfo {
-        case .actionSucceeded(let referrerDialogRequestId):
-            return referrerDialogRequestId
-        case .actionFailed(let referrerDialogRequestId):
-            return referrerDialogRequestId
-        case .commandIssued:
-            return nil
         }
     }
 }

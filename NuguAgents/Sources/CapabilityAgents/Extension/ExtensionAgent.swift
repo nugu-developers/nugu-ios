@@ -65,10 +65,11 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 
 public extension ExtensionAgent {
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        return sendCompactContextEvent(
-            Event(playServiceId: playServiceId, typeInfo: .commandIssued(data: data)).rx,
-            completion: completion
-        ).dialogRequestId
+        return sendCompactContextEvent(Event(
+            typeInfo: .commandIssued(data: data),
+            playServiceId: playServiceId,
+            referrerDialogRequestId: nil
+        ).rx, completion: completion).dialogRequestId
     }
 }
 
@@ -105,10 +106,12 @@ private extension ExtensionAgent {
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    let typeInfo: Event.TypeInfo = isSuccess ? .actionSucceeded(referrerDialogRequestId: directive.header.dialogRequestId) : .actionFailed(referrerDialogRequestId: directive.header.dialogRequestId)
-                    self.sendCompactContextEvent(
-                        Event(playServiceId: item.playServiceId, typeInfo: typeInfo).rx
-                    )
+                    let typeInfo: Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
+                    self.sendCompactContextEvent(Event(
+                        typeInfo: typeInfo,
+                        playServiceId: item.playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    ).rx)
             })
         }
     }

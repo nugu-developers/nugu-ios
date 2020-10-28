@@ -28,6 +28,8 @@ public protocol Eventable {
     var referrerDialogRequestId: String? { get }
 }
 
+// MARK: - RxSwift
+
 extension Eventable {
     var rx: Single<Eventable> {
         Single.just(self)
