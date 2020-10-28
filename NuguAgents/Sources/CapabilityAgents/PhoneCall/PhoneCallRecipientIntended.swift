@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct PhoneCallRecipient: Codable {
+public struct PhoneCallRecipientIntended: Codable {
     /// <#Description#>
     public let name: String?
     /// <#Description#>

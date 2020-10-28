@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 public class PhoneCallAgent: PhoneCallAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.1")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.2")
     
     // PhoneCallAgentProtocol
     public weak var delegate: PhoneCallAgentDelegate?
@@ -97,19 +97,15 @@ public extension PhoneCallAgent {
 
 extension PhoneCallAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        let state = delegate?.phoneCallAgentRequestState()
-        let template = delegate?.phoneCallAgentRequestTemplate()
+        var payload = [String: AnyHashable?]()
         
-        var payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version,
-            "state": state?.rawValue ?? PhoneCallState.idle.rawValue
-        ]
-        
-        if let templateItem = template,
-            let templateData = try? JSONEncoder().encode(templateItem),
-            let templateDictionary = try? JSONSerialization.jsonObject(with: templateData, options: []) as? [String: AnyHashable] {
-            payload["template"] = templateDictionary
+        if let context = delegate?.phoneCallAgentRequestContext(),
+            let contextData = try? JSONEncoder().encode(context),
+            let contextDictionary = try? JSONSerialization.jsonObject(with: contextData, options: []) as? [String: AnyHashable] {
+            payload = contextDictionary
         }
+        
+        payload["version"] = capabilityAgentProperty.version
         
         completion(
             ContextInfo(
@@ -214,6 +210,8 @@ private extension PhoneCallAgent {
                     dialogRequestId: directive.header.dialogRequestId
                     ) {
                     self.sendMakeCallFailed(playServiceId: playServiceId, errorCode: errorCode, phoneCallType: phoneCallType)
+                } else {
+                    self.sendMakeCallSucceeded(playServiceId: playServiceId, recipient: recipientPerson)
                 }
             }
         }
@@ -232,6 +230,24 @@ private extension PhoneCallAgent {
                 Event(
                     playServiceId: playServiceId,
                     typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType)
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
+                    contextPayload: contextPayload
+                )
+            )
+        }
+    }
+    
+    func sendMakeCallSucceeded(playServiceId: String, recipient: PhoneCallPerson) {
+        let eventIdentifier = EventIdentifier()
+        self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
+            
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    playServiceId: playServiceId,
+                    typeInfo: .makeCallSucceeded(recipient: recipient)
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     eventIdentifier: eventIdentifier,
