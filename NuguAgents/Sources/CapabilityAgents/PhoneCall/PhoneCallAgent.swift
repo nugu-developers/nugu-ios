@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 public class PhoneCallAgent: PhoneCallAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.1")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.2")
     
     // PhoneCallAgentProtocol
     public weak var delegate: PhoneCallAgentDelegate?
@@ -210,6 +210,8 @@ private extension PhoneCallAgent {
                     dialogRequestId: directive.header.dialogRequestId
                     ) {
                     self.sendMakeCallFailed(playServiceId: playServiceId, errorCode: errorCode, phoneCallType: phoneCallType)
+                } else {
+                    self.sendMakeCallSucceeded(playServiceId: playServiceId, recipient: recipientPerson)
                 }
             }
         }
@@ -228,6 +230,24 @@ private extension PhoneCallAgent {
                 Event(
                     playServiceId: playServiceId,
                     typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType)
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
+                    contextPayload: contextPayload
+                )
+            )
+        }
+    }
+    
+    func sendMakeCallSucceeded(playServiceId: String, recipient: PhoneCallPerson) {
+        let eventIdentifier = EventIdentifier()
+        self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
+            guard let self = self else { return }
+            
+            self.upstreamDataSender.sendEvent(
+                Event(
+                    playServiceId: playServiceId,
+                    typeInfo: .makeCallSucceeded(recipient: recipient)
                 ).makeEventMessage(
                     property: self.capabilityAgentProperty,
                     eventIdentifier: eventIdentifier,

@@ -33,22 +33,27 @@ public struct PhoneCallContext: Encodable {
         /// <#Description#>
         public let candidates: [PhoneCallPerson]?
         
+        public let searchScene: String?
+        
         /// <#Description#>
         /// - Parameters:
         ///   - intent: <#intent description#>
         ///   - callType: <#callType description#>
         ///   - recipientIntended: <#recipientIntended description#>
         ///   - candidates: <#candidates description#>
+        ///   - searchScene: <#searchScene description#>
         public init(
             intent: PhoneCallIntent?,
             callType: PhoneCallType?,
             recipientIntended: PhoneCallRecipientIntended?,
-            candidates: [PhoneCallPerson]?
+            candidates: [PhoneCallPerson]?,
+            searchScene: String?
         ) {
             self.intent = intent
             self.callType = callType
             self.recipientIntended = recipientIntended
             self.candidates = candidates
+            self.searchScene = searchScene
         }
     }
 

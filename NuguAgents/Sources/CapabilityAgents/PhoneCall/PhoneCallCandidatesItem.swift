@@ -52,33 +52,33 @@ public struct PhoneCallCandidatesItem: Decodable {
     /// <#Description#>
     public let callType: PhoneCallType?
     /// <#Description#>
-    public let searchTargetList: [SearchTarget]?
-    /// <#Description#>
     public let recipientIntended: PhoneCallRecipientIntended?
     /// <#Description#>
     public let candidates: [PhoneCallPerson]?
+    /// <#Description#>
+    public let searchScene: String?
     
     /// <#Description#>
     /// - Parameters:
     ///   - playServiceId: <#playServiceId description#>
     ///   - intent: <#intent description#>
     ///   - callType: <#callType description#>
-    ///   - searchTargetList: <#searchTargetList description#>
     ///   - recipientIntended: <#recipientIntended description#>
     ///   - candidates: <#candidates description#>
+    ///   - searchScene: <#searchScene description#>
     public init(
         playServiceId: String,
         intent: PhoneCallIntent,
         callType: PhoneCallType?,
-        searchTargetList: [SearchTarget]?,
         recipientIntended: PhoneCallRecipientIntended?,
-        candidates: [PhoneCallPerson]?
+        candidates: [PhoneCallPerson]?,
+        searchScene: String?
     ) {
         self.playServiceId = playServiceId
         self.intent = intent
         self.callType = callType
-        self.searchTargetList = searchTargetList
         self.recipientIntended = recipientIntended
         self.candidates = candidates
+        self.searchScene = searchScene
     }
 }
