@@ -20,7 +20,6 @@
 
 import Foundation
 
-
 struct NuguOAuthUtilApi {
     let token: String
     let clientId: String

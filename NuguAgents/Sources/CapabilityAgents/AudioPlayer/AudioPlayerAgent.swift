@@ -704,7 +704,6 @@ private extension AudioPlayerAgent {
     }
 }
 
-
 // MARK: - Private (Eventable)
 
 private extension AudioPlayerAgent {
@@ -779,7 +778,6 @@ private extension AudioPlayerAgent {
         }.subscribeOn(audioPlayerScheduler)
     }
 }
-
 
 // MARK: - Private(FocusManager)
 

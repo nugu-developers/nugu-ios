@@ -122,10 +122,12 @@ public extension DisplayAgent {
     @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
         let eventIdentifier = EventIdentifier()
         displayDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self else {
+                completion?(.error(NuguAgentError.requestCanceled))
+                return
+            }
             guard let item = self.templateList.first(where: { $0.templateId == templateId }) else {
-                // TODO error 정의
-                completion?(.finished)
+                completion?(.error(NuguAgentError.invalidState))
                 return
             }
             
