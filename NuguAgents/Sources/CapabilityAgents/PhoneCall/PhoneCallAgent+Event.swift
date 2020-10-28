@@ -30,6 +30,7 @@ extension PhoneCallAgent {
         public enum TypeInfo {
             case candidatesListed
             case makeCallFailed(errorCode: PhoneCallErrorCode, callType: PhoneCallType)
+            case makeCallSucceeded(recipient: PhoneCallPerson)
         }
     }
 }
@@ -48,6 +49,11 @@ extension PhoneCallAgent.Event: Eventable {
         case .makeCallFailed(let errorCode, let callType):
             payload["errorCode"] = errorCode.rawValue
             payload["callType"] = callType.rawValue
+        case .makeCallSucceeded(let recipient):
+            if let recipientData = try? JSONEncoder().encode(recipient),
+                let recipientDictionary = try? JSONSerialization.jsonObject(with: recipientData, options: []) as? [String: AnyHashable] {
+                payload["recipient"] = recipientDictionary
+            }
         }
         
         return payload
@@ -59,6 +65,8 @@ extension PhoneCallAgent.Event: Eventable {
             return "CandidatesListed"
         case .makeCallFailed:
             return "MakeCallFailed"
+        case .makeCallSucceeded:
+            return "MakeCallSucceeded"
         }
     }
 }
