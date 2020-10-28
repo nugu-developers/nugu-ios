@@ -1,8 +1,8 @@
 //
-//  AudioPlayerAgentError.swift
+//  NuguAgentError.swift
 //  NuguAgents
 //
-//  Created by 이민철님/AI Assistant개발Cell on 2020/10/21.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/10/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,8 @@
 
 import Foundation
 
-enum AudioPlayerAgentError: Error {
-    case notSupportedSourceType
+/// <#Description#>
+public enum NuguAgentError: Error {
+    case requestCanceled
+    case invalidState
 }

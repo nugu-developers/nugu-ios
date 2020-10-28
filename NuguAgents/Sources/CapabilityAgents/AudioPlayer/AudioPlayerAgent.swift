@@ -726,7 +726,7 @@ private extension AudioPlayerAgent {
     func playEvent(typeInfo: PlayEvent.TypeInfo) -> Single<Eventable> {
         return Single<AudioPlayer>.create { [weak self] (observer) -> Disposable in
             guard let player = self?.latestPlayer else {
-                observer(.error(AudioPlayerAgentError.playerNotExist))
+                observer(.error(NuguAgentError.invalidState))
                 return Disposables.create()
             }
             
@@ -735,7 +735,7 @@ private extension AudioPlayerAgent {
         }.subscribeOn(audioPlayerScheduler)
         .flatMap { [weak self] in
             guard let self = self else {
-                return Single.error(RxError.noElements)
+                return Single.error(NuguAgentError.requestCanceled)
             }
             
             return self.playEvent(typeInfo: typeInfo, player: $0)
@@ -749,7 +749,7 @@ private extension AudioPlayerAgent {
         }.subscribeOn(audioPlayerScheduler)
         .flatMap { [weak self] player in
             guard let self = self else {
-                return Single.error(RxError.noElements)
+                return Single.error(NuguAgentError.requestCanceled)
             }
             if let player = player {
                 return self.playEvent(typeInfo: typeInfo, player: player, referrerDialogRequestId: directive.header.dialogRequestId)
@@ -765,7 +765,7 @@ private extension AudioPlayerAgent {
     func settingsEvent(typeInfo: SettingsEvent.TypeInfo) -> Single<Eventable> {
         return Single.create { [weak self] (observer) -> Disposable in
             guard let self = self, let player = self.latestPlayer else {
-                observer(.error(AudioPlayerAgentError.playerNotExist))
+                observer(.error(NuguAgentError.invalidState))
                 return Disposables.create()
             }
             
