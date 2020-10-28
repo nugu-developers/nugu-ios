@@ -157,22 +157,12 @@ public extension TTSAgent {
         playServiceId: String?,
         handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)?
     ) -> String {
-        let eventIdentifier = EventIdentifier()
-        contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    token: nil,
-                    playServiceId: playServiceId,
-                    typeInfo: .speechPlay(text: text)
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    contextPayload: contextPayload
-                )
-            )
-        }
+        let eventIdentifier = sendCompactContextEvent(Event(
+            typeInfo: .speechPlay(text: text),
+            token: nil,
+            playServiceId: playServiceId,
+            referrerDialogRequestId: nil
+        ).rx)
         
         ttsResultSubject
             .filter { $0.dialogRequestId == eventIdentifier.dialogRequestId }
@@ -291,7 +281,12 @@ extension TTSAgent: MediaPlayerDelegate {
                 }
             }
             if let eventTypeInfo = eventTypeInfo {
-                self.sendEvent(player: player, info: eventTypeInfo)
+                self.sendCompactContextEvent(Event(
+                    typeInfo: eventTypeInfo,
+                    token: player.payload.token,
+                    playServiceId: nil,
+                    referrerDialogRequestId: player.dialogRequestId
+                ).rx)
             }
         }
     }
@@ -450,35 +445,19 @@ private extension TTSAgent {
 // MARK: - Private (Event)
 
 private extension TTSAgent {
-    func sendEvent(
-        player: TTSPlayer,
-        info: Event.TypeInfo,
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
         completion: ((StreamDataState) -> Void)? = nil
-    ) {
-        guard let playServiceId = player.payload.playServiceId else {
-            log.debug("TTSPlayer does not have playServiceId")
-            completion?(.finished)
-            return
-        }
-        
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    token: player.payload.token,
-                    playServiceId: playServiceId,
-                    typeInfo: info
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: player.dialogRequestId,
-                    contextPayload: contextPayload
-                ),
-                completion: completion
-            )
-        }
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
 }
 

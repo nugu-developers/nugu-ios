@@ -25,6 +25,7 @@ import Foundation
 extension SystemAgent {    
     struct Event {
         let typeInfo: TypeInfo
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case synchronizeState

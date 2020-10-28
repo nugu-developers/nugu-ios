@@ -43,6 +43,8 @@ public final class TextAgent: TextAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextSource", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleTextSource)
     ]
     
+    private var disposeBag = DisposeBag()
+    
     public init(
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
@@ -72,7 +74,12 @@ extension TextAgent {
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
-        return sendTextInput(text: text, token: token, requestType: requestType, completion: completion)
+        
+        return sendFullContextEvent(textInput(
+            text: text,
+            token: token,
+            requestType: requestType
+        ), completion: completion).dialogRequestId
     }
 }
 
@@ -97,6 +104,7 @@ private extension TextAgent {
             defer { completion(.finished) }
             
             self?.textDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
                 
                 let requestType: TextAgentRequestType
                 if let playServiceId = payload.playServiceId {
@@ -105,13 +113,12 @@ private extension TextAgent {
                     requestType = .dialog
                 }
                 
-                self?.sendTextInput(
+                self.sendFullContextEvent(self.textInput(
                     text: payload.text,
                     token: payload.token,
                     requestType: requestType,
-                    referrerDialogRequestId: directive.header.dialogRequestId,
-                    completion: nil
-                )
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ))
             }
         }
     }
@@ -120,42 +127,44 @@ private extension TextAgent {
 // MARK: - Private(Event)
 
 private extension TextAgent {
-    @discardableResult func sendTextInput(
+    @discardableResult func sendFullContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
+        let eventIdentifier = EventIdentifier()
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
+    }
+}
+
+// MARK: - Private(Eventable)
+
+private extension TextAgent {
+    func textInput(
         text: String,
         token: String?,
         requestType: TextAgentRequestType,
-        referrerDialogRequestId: String? = nil,
-        completion: ((StreamDataState) -> Void)?
-    ) -> String {
-        let eventIdentifier = EventIdentifier()
-        contextManager.getContexts { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            let attributes: [String: AnyHashable]?
-            switch requestType {
-            case .specific(let playServiceId):
-                attributes = ["playServiceId": playServiceId]
-            case .dialog:
-                attributes = self.dialogAttributeStore.attributes
-            case .normal:
-                attributes = nil
-            }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    typeInfo: .textInput(
-                        text: text,
-                        token: token,
-                        attributes: attributes
-                    )
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: referrerDialogRequestId,
-                    contextPayload: contextPayload
-                ),
-                completion: completion)
+        referrerDialogRequestId: String? = nil
+    ) -> Single<Eventable> {
+        let attributes: [String: AnyHashable]?
+        switch requestType {
+        case .specific(let playServiceId):
+            attributes = ["playServiceId": playServiceId]
+        case .dialog:
+            attributes = self.dialogAttributeStore.attributes
+        case .normal:
+            attributes = nil
         }
-        return eventIdentifier.dialogRequestId
+        
+        return Event(
+            typeInfo: .textInput(text: text, token: token, attributes: attributes),
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx
     }
 }

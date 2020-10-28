@@ -25,6 +25,7 @@ import Foundation
 extension AudioPlayerAgent {
     struct RequestPlayEvent {
         let typeInfo: TypeInfo
+        let referrerDialogRequestId: String?
         
         public enum TypeInfo {
             case requestPlayCommandIssued(payload: [String: AnyHashable])

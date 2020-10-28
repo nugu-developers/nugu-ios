@@ -20,7 +20,16 @@
 
 import Foundation
 
+import RxSwift
+
 public protocol Eventable {
     var payload: [String: AnyHashable] { get }
     var name: String { get }
+    var referrerDialogRequestId: String? { get }
+}
+
+extension Eventable {
+    var rx: Single<Eventable> {
+        Single.just(self)
+    }
 }

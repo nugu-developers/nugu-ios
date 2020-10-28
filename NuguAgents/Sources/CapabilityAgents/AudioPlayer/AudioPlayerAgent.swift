@@ -218,7 +218,7 @@ public extension AudioPlayerAgent {
             case .paused:
                 player.pauseReason = .user
                 self.audioPlayerState = .paused(temporary: false)
-                self.sendCompactContextEvent(self.playEvent(player: player, typeInfo: .playbackPaused))
+                self.sendCompactContextEvent(self.playEvent(typeInfo: .playbackPaused, player: player))
             default:
                 break
             }
@@ -353,7 +353,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 }
             }
             if let eventTypeInfo = eventTypeInfo {
-                self.sendCompactContextEvent(self.playEvent(player: player, typeInfo: eventTypeInfo))
+                self.sendCompactContextEvent(self.playEvent(typeInfo: eventTypeInfo, player: player))
             }
         }
     }
@@ -408,12 +408,12 @@ extension AudioPlayerAgent: PlaySyncDelegate {
 extension AudioPlayerAgent: AudioPlayerProgressDelegate {
     func audioPlayer(_ player: AudioPlayer, didReportDelay progress: TimeIntervallic) {
         log.debug(player.offset.truncatedMilliSeconds)
-        sendCompactContextEvent(playEvent(player: player, typeInfo: .progressReportDelayElapsed))
+        sendCompactContextEvent(playEvent(typeInfo: .progressReportDelayElapsed, player: player))
     }
     
     func audioPlayer(_ player: AudioPlayer, didReportInterval progress: TimeIntervallic) {
         log.debug(player.offset.truncatedMilliSeconds)
-        sendCompactContextEvent(playEvent(player: player, typeInfo: .progressReportIntervalElapsed))
+        sendCompactContextEvent(playEvent(typeInfo: .progressReportDelayElapsed, player: player))
     }
 }
 
@@ -522,53 +522,56 @@ private extension AudioPlayerAgent {
             }
             defer { completion(.finished) }
             guard let self = self else { return }
-
-            self.sendFullContextEvent(
-                self.requestPlayEvent(
-                    typeInfo: .requestPlayCommandIssued(payload: payloadDictionary),
-                    referrerDialogRequestId: directive.header.dialogRequestId
-                )
-            )
+            
+            self.sendFullContextEvent(RequestPlayEvent(
+                typeInfo: .requestPlayCommandIssued(payload: payloadDictionary),
+                referrerDialogRequestId: directive.header.dialogRequestId
+            ).rx)
         }
     }
     
     func handleRequestResumeCommand() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
+            guard let self = self else { return }
             
-            self?.sendRequestCommandEvent(typeInfo: .requestResumeCommandIssued, directive: directive)
+            self.sendFullContextEvent(self.requestCommandEvent(typeInfo: .requestResumeCommandIssued, directive: directive))
         }
     }
     
     func handleRequestNextCommand() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
+            guard let self = self else { return }
             
-            self?.sendRequestCommandEvent(typeInfo: .requestNextCommandIssued, directive: directive)
+            self.sendFullContextEvent(self.requestCommandEvent(typeInfo: .requestNextCommandIssued, directive: directive))
         }
     }
     
     func handleRequestPreviousCommand() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
+            guard let self = self else { return }
             
-            self?.sendRequestCommandEvent(typeInfo: .requestPreviousCommandIssued, directive: directive)
+            self.sendFullContextEvent(self.requestCommandEvent(typeInfo: .requestPreviousCommandIssued, directive: directive))
         }
     }
     
     func handleRequestPauseCommand() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
+            guard let self = self else { return }
             
-            self?.sendRequestCommandEvent(typeInfo: .requestPauseCommandIssued, directive: directive)
+            self.sendFullContextEvent(self.requestCommandEvent(typeInfo: .requestPauseCommandIssued, directive: directive))
         }
     }
     
     func handleRequestStopCommand() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
+            guard let self = self else { return }
             
-            self?.sendRequestCommandEvent(typeInfo: .requestStopCommandIssued, directive: directive)
+            self.sendFullContextEvent(self.requestCommandEvent(typeInfo: .requestStopCommandIssued, directive: directive))
         }
     }
     
@@ -596,13 +599,11 @@ private extension AudioPlayerAgent {
                 guard let self = self else { return }
                 
                 let typeInfo: LyricsEvent.TypeInfo = isSuccess ? .showLyricsSucceeded : .showLyricsFailed
-                self.sendFullContextEvent(
-                    self.lyricsEvent(
-                        typeInfo: typeInfo,
-                        playServiceId: playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId
-                    )
-                )
+                self.sendCompactContextEvent(LyricsEvent(
+                    typeInfo: typeInfo,
+                    playServiceId: playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
             }
         }
     }
@@ -619,13 +620,11 @@ private extension AudioPlayerAgent {
                 guard let self = self else { return }
                 
                 let typeInfo: LyricsEvent.TypeInfo = isSuccess ? .hideLyricsSucceeded : .hideLyricsFailed
-                self.sendFullContextEvent(
-                    self.lyricsEvent(
-                        typeInfo: typeInfo,
-                        playServiceId: playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId
-                    )
-                )
+                self.sendCompactContextEvent(LyricsEvent(
+                    typeInfo: typeInfo,
+                    playServiceId: playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
             }
         }
     }
@@ -642,13 +641,11 @@ private extension AudioPlayerAgent {
                 guard let self = self else { return }
                 
                 let typeInfo: LyricsEvent.TypeInfo = isSuccess ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)
-                self.sendFullContextEvent(
-                    self.lyricsEvent(
-                        typeInfo: typeInfo,
-                        playServiceId: payload.playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId
-                    )
-                )
+                self.sendCompactContextEvent(LyricsEvent(
+                    typeInfo: typeInfo,
+                    playServiceId: payload.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
             }
         }
     }
@@ -673,11 +670,11 @@ private extension AudioPlayerAgent {
     }
 }
 
-// MARK: - Private (Send event)
+// MARK: - Private (Event)
 
 private extension AudioPlayerAgent {
     @discardableResult func sendCompactContextEvent(
-        _ event: Single<ResponseEvent>,
+        _ event: Single<Eventable>,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
@@ -685,13 +682,14 @@ private extension AudioPlayerAgent {
             event,
             eventIdentifier: eventIdentifier,
             context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
-            property: self.capabilityAgentProperty, completion: completion
+            property: self.capabilityAgentProperty,
+            completion: completion
         ).subscribe().disposed(by: disposeBag)
         return eventIdentifier
     }
     
     @discardableResult func sendFullContextEvent(
-        _ event: Single<ResponseEvent>,
+        _ event: Single<Eventable>,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
@@ -699,44 +697,35 @@ private extension AudioPlayerAgent {
             event,
             eventIdentifier: eventIdentifier,
             context: self.contextManager.rxContexts(),
-            property: self.capabilityAgentProperty, completion: completion
+            property: self.capabilityAgentProperty,
+            completion: completion
         ).subscribe().disposed(by: disposeBag)
         return eventIdentifier
-    }
-    
-    func sendRequestCommandEvent(typeInfo: PlayEvent.TypeInfo, directive: Downstream.Directive) {
-        let event = self.requestCommandEvent(
-            typeInfo: typeInfo,
-            referrerDialogRequestId: directive.header.dialogRequestId
-        ).do(onError: { _ in
-            let failedEvent = self.requestPlayEvent(
-                typeInfo: .requestCommandFailed(state: self.audioPlayerState, directiveType: directive.header.type),
-                referrerDialogRequestId: directive.header.dialogRequestId
-            )
-            self.sendCompactContextEvent(failedEvent)
-        })
-        self.sendFullContextEvent(event)
     }
 }
 
 
-// MARK: - Private (ResponseEvent)
+// MARK: - Private (Eventable)
 
 private extension AudioPlayerAgent {
-    func playEvent(player: AudioPlayer, typeInfo: PlayEvent.TypeInfo) -> Single<ResponseEvent> {
-        let playEvent = PlayEvent(
+    func playEvent(typeInfo: PlayEvent.TypeInfo, player: AudioPlayer) -> Single<Eventable> {
+        return playEvent(typeInfo: typeInfo, player: player, referrerDialogRequestId: player.dialogRequestId)
+    }
+    
+    func playEvent(typeInfo: PlayEvent.TypeInfo, player: AudioPlayer, referrerDialogRequestId: String) -> Single<Eventable> {
+        return PlayEvent(
+            typeInfo: typeInfo,
             token: player.payload.audioItem.stream.token,
             // This is a mandatory in Play kit.
             offsetInMilliseconds: player.offset.truncatedMilliSeconds,
             playServiceId: player.payload.playServiceId,
-            typeInfo: typeInfo
-        )
-        return Single.just(ResponseEvent(event: playEvent, referrerDialogRequestId: player.dialogRequestId))
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx
     }
     
-    func playEvent(typeInfo: PlayEvent.TypeInfo) -> Single<ResponseEvent> {
+    func playEvent(typeInfo: PlayEvent.TypeInfo) -> Single<Eventable> {
         return Single<AudioPlayer>.create { [weak self] (observer) -> Disposable in
-            guard let self = self, let player = self.latestPlayer else {
+            guard let player = self?.latestPlayer else {
                 observer(.error(AudioPlayerAgentError.playerNotExist))
                 return Disposables.create()
             }
@@ -749,36 +738,31 @@ private extension AudioPlayerAgent {
                 return Single.error(RxError.noElements)
             }
             
-            return self.playEvent(player: $0, typeInfo: typeInfo)
+            return self.playEvent(typeInfo: typeInfo, player: $0)
         }
     }
     
-    func requestPlayEvent(typeInfo: RequestPlayEvent.TypeInfo, referrerDialogRequestId: String) -> Single<ResponseEvent> {
-        let requestPlayEvent = RequestPlayEvent(typeInfo: typeInfo)
-        return Single.just(ResponseEvent(event: requestPlayEvent, referrerDialogRequestId: referrerDialogRequestId))
-    }
-    
-    func requestCommandEvent(typeInfo: PlayEvent.TypeInfo, referrerDialogRequestId: String) -> Single<ResponseEvent> {
-        return Single.create { [weak self] (observer) -> Disposable in
-            guard let self = self, let player = self.latestPlayer else {
-                observer(.error(AudioPlayerAgentError.playerNotExist))
-                return Disposables.create()
-            }
-            
-            let playEvent = PlayEvent(
-                token: player.payload.audioItem.stream.token,
-                // This is a mandatory in Play kit.
-                offsetInMilliseconds: player.offset.truncatedMilliSeconds,
-                playServiceId: player.payload.playServiceId,
-                typeInfo: typeInfo
-            )
-            let event = ResponseEvent(event: playEvent, referrerDialogRequestId: referrerDialogRequestId)
-            observer(.success(event))
+    func requestCommandEvent(typeInfo: PlayEvent.TypeInfo, directive: Downstream.Directive) -> Single<Eventable> {
+        return Single<AudioPlayer?>.create { [weak self] (observer) -> Disposable in
+            observer(.success(self?.latestPlayer))
             return Disposables.create()
         }.subscribeOn(audioPlayerScheduler)
+        .flatMap { [weak self] player in
+            guard let self = self else {
+                return Single.error(RxError.noElements)
+            }
+            if let player = player {
+                return self.playEvent(typeInfo: typeInfo, player: player, referrerDialogRequestId: directive.header.dialogRequestId)
+            } else {
+                return RequestPlayEvent(
+                    typeInfo: .requestCommandFailed(state: self.audioPlayerState, directiveType: directive.header.type),
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx
+            }
+        }
     }
 
-    func settingsEvent(typeInfo: SettingsEvent.TypeInfo) -> Single<ResponseEvent> {
+    func settingsEvent(typeInfo: SettingsEvent.TypeInfo) -> Single<Eventable> {
         return Single.create { [weak self] (observer) -> Disposable in
             guard let self = self, let player = self.latestPlayer else {
                 observer(.error(AudioPlayerAgentError.playerNotExist))
@@ -786,25 +770,13 @@ private extension AudioPlayerAgent {
             }
             
             let settingEvent = SettingsEvent(
+                typeInfo: typeInfo,
                 playServiceId: player.payload.playServiceId,
-                typeInfo: typeInfo
+                referrerDialogRequestId: player.dialogRequestId
             )
-            let event = ResponseEvent(event: settingEvent, referrerDialogRequestId: player.dialogRequestId)
-            observer(.success(event))
+            observer(.success(settingEvent))
             return Disposables.create()
         }.subscribeOn(audioPlayerScheduler)
-    }
-    
-    func lyricsEvent(
-        typeInfo: LyricsEvent.TypeInfo,
-        playServiceId: String,
-        referrerDialogRequestId: String
-    ) -> Single<ResponseEvent>{
-        let lyricsEvent = LyricsEvent(
-            playServiceId: playServiceId,
-            typeInfo: typeInfo
-        )
-        return Single.just(ResponseEvent(event: lyricsEvent, referrerDialogRequestId: referrerDialogRequestId))
     }
 }
 

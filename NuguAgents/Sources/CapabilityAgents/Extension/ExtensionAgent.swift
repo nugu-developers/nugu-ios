@@ -66,7 +66,7 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 public extension ExtensionAgent {
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
         return sendCompactContextEvent(
-            event(typeInfo: .commandIssued(data: data), playServiceId: playServiceId),
+            Event(playServiceId: playServiceId, typeInfo: .commandIssued(data: data)).rx,
             completion: completion
         ).dialogRequestId
     }
@@ -105,24 +105,20 @@ private extension ExtensionAgent {
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     
-                    let typeInfo: Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
+                    let typeInfo: Event.TypeInfo = isSuccess ? .actionSucceeded(referrerDialogRequestId: directive.header.dialogRequestId) : .actionFailed(referrerDialogRequestId: directive.header.dialogRequestId)
                     self.sendCompactContextEvent(
-                        self.event(
-                            typeInfo: typeInfo,
-                            playServiceId: item.playServiceId,
-                            referrerDialogRequestId: directive.header.dialogRequestId
-                        )
+                        Event(playServiceId: item.playServiceId, typeInfo: typeInfo).rx
                     )
             })
         }
     }
 }
 
-// MARK: - Private (Send event)
+// MARK: - Private (Event)
 
 private extension ExtensionAgent {
     @discardableResult func sendCompactContextEvent(
-        _ event: Single<ResponseEvent>,
+        _ event: Single<Eventable>,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
@@ -130,20 +126,9 @@ private extension ExtensionAgent {
             event,
             eventIdentifier: eventIdentifier,
             context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
-            property: self.capabilityAgentProperty, completion: completion
+            property: self.capabilityAgentProperty,
+            completion: completion
         ).subscribe().disposed(by: disposeBag)
         return eventIdentifier
-    }
-}
-
-// MARK: - Private (Send event)
-
-private extension ExtensionAgent {
-    func event(typeInfo: Event.TypeInfo, playServiceId: String, referrerDialogRequestId: String? = nil) -> Single<ResponseEvent> {
-        let event = ResponseEvent(
-            event: Event(playServiceId: playServiceId, typeInfo: typeInfo),
-            referrerDialogRequestId: referrerDialogRequestId
-        )
-        return Single.just(event)
     }
 }

@@ -109,31 +109,36 @@ public final class ASRAgent: ASRAgentProtocol {
             case .cancel:
                 asrState = .idle
                 upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
-                sendEvent(
+                
+                sendCompactContextEvent(Event(
                     typeInfo: .stopRecognize,
+                    dialogAttributes: dialogAttributeStore.attributes,
                     referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
-                )
+                ).rx)
                 expectSpeechDirective = nil
             case .error(let error):
                 asrState = .idle
                 switch error {
                 case NetworkError.timeout:
-                    sendEvent(
+                    sendCompactContextEvent(Event(
                         typeInfo: .responseTimeout,
+                        dialogAttributes: dialogAttributeStore.attributes,
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
-                    )
+                    ).rx)
                 case ASRError.listeningTimeout:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
-                    sendEvent(
+                    sendCompactContextEvent(Event(
                         typeInfo: .listenTimeout,
+                        dialogAttributes: dialogAttributeStore.attributes,
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
-                    )
+                    ).rx)
                 case ASRError.listenFailed:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
-                    sendEvent(
+                    sendCompactContextEvent(Event(
                         typeInfo: .listenFailed,
+                        dialogAttributes: dialogAttributeStore.attributes,
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
-                    )
+                    ).rx)
                 case ASRError.recognizeFailed:
                     break
                 default:
@@ -483,26 +488,19 @@ private extension ASRAgent {
 // MARK: - Private (Event)
 
 private extension ASRAgent {
-    func sendEvent(
-        typeInfo: Event.TypeInfo,
-        referrerDialogRequestId: String
-    ) {
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    typeInfo: typeInfo,
-                    dialogAttributes: self.dialogAttributeStore.attributes
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: referrerDialogRequestId,
-                    contextPayload: contextPayload
-                )
-            )
-        }
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
 }
 
@@ -537,7 +535,8 @@ private extension ASRAgent {
         upstreamDataSender.sendStream(
             Event(
                 typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options),
-                dialogAttributes: dialogAttributeStore.attributes
+                dialogAttributes: dialogAttributeStore.attributes,
+                referrerDialogRequestId: asrRequest.referrerDialogRequestId
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,
                 eventIdentifier: asrRequest.eventIdentifier,

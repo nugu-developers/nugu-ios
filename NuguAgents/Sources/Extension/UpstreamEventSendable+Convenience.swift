@@ -14,7 +14,7 @@ import RxSwift
 
 extension UpstreamDataSendable {
     func sendEvent(
-        _ event: Single<ResponseEvent>,
+        _ event: Single<Eventable>,
         eventIdentifier: EventIdentifier,
         context: Single<[ContextInfo]>,
         property: CapabilityAgentProperty,
@@ -30,7 +30,7 @@ extension UpstreamDataSendable {
             }
             .do(
                 onSuccess: { [weak self] in
-                    self?.sendEvent($0)
+                    self?.sendEvent($0, completion: completion)
                 },
                 onError: { completion?(.error($0)) }
             )

@@ -26,10 +26,11 @@ import NuguCore
 
 extension AudioPlayerAgent {
     struct PlayEvent {
+        let typeInfo: TypeInfo
         let token: String
         let offsetInMilliseconds: Int
         let playServiceId: String
-        let typeInfo: TypeInfo
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case playbackStarted

@@ -24,8 +24,9 @@ import Foundation
 
 extension DisplayAgent {
     struct Event {
-        let playServiceId: String
         let typeInfo: TypeInfo
+        let playServiceId: String
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case elementSelected(token: String, postback: [String: AnyHashable]?)

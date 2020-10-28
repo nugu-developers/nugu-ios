@@ -28,8 +28,8 @@ extension ExtensionAgent {
         let typeInfo: TypeInfo
         
         enum TypeInfo {
-            case actionSucceeded
-            case actionFailed
+            case actionSucceeded(referrerDialogRequestId: String)
+            case actionFailed(referrerDialogRequestId: String)
             case commandIssued(data: AnyHashable)
         }
     }
@@ -59,6 +59,17 @@ extension ExtensionAgent.Event: Eventable {
             return "ActionFailed"
         case .commandIssued:
             return "CommandIssued"
+        }
+    }
+    
+    var referrerDialogRequestId: String? {
+        switch typeInfo {
+        case .actionSucceeded(let referrerDialogRequestId):
+            return referrerDialogRequestId
+        case .actionFailed(let referrerDialogRequestId):
+            return referrerDialogRequestId
+        case .commandIssued:
+            return nil
         }
     }
 }

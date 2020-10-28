@@ -22,6 +22,8 @@ import Foundation
 
 import NuguCore
 
+import RxSwift
+
 public final class SystemAgent: SystemAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.3")
@@ -44,6 +46,8 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } }),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ResetConnection", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleResetConnection)
     ]
+    
+    private var disposeBag = DisposeBag()
     
     public init(
         contextManager: ContextManageable,
@@ -108,8 +112,11 @@ private extension SystemAgent {
     func handleUpdateState() -> HandleDirective {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
-        
-            self?.sendSynchronizeStateEvent(referrerDialogRequestId: directive.header.dialogRequestId)
+            
+            self?.sendFullContextEvent(Event(
+                typeInfo: .synchronizeState,
+                referrerDialogRequestId: directive.header.dialogRequestId
+            ).rx)
         }
     }
     
@@ -165,21 +172,17 @@ private extension SystemAgent {
 // MARK: - Private (handle directive)
 
 private extension SystemAgent {
-    func sendSynchronizeStateEvent(referrerDialogRequestId: String? = nil) {
+    @discardableResult func sendFullContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts { [weak self] (contextPayload) in
-            guard let self = self else { return }
-            
-            self.streamDataRouter.sendEvent(
-                Event(
-                    typeInfo: .synchronizeState
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: referrerDialogRequestId,
-                    contextPayload: contextPayload
-                )
-            )
-        }
+        streamDataRouter.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(),
+            property: self.capabilityAgentProperty, completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
 }

@@ -23,13 +23,13 @@ import Foundation
 import NuguCore
 
 extension PhoneCallAgent {
-    public struct Event {
+    struct Event {
         let playServiceId: String
         let typeInfo: TypeInfo
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case candidatesListed
-            case makeCallFailed(errorCode: PhoneCallErrorCode, callType: PhoneCallType)
+            case makeCallFailed(errorCode: PhoneCallErrorCode, callType: PhoneCallType, referrerDialogRequestId: String)
         }
     }
 }
@@ -37,7 +37,7 @@ extension PhoneCallAgent {
 // MARK: - Eventable
 
 extension PhoneCallAgent.Event: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable] = [
             "playServiceId": playServiceId
         ]
@@ -45,7 +45,7 @@ extension PhoneCallAgent.Event: Eventable {
         switch typeInfo {
         case .candidatesListed:
             break
-        case .makeCallFailed(let errorCode, let callType):
+        case .makeCallFailed(let errorCode, let callType, _):
             payload["errorCode"] = errorCode.rawValue
             payload["callType"] = callType.rawValue
         }
@@ -53,12 +53,21 @@ extension PhoneCallAgent.Event: Eventable {
         return payload
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .candidatesListed:
             return "CandidatesListed"
         case .makeCallFailed:
             return "MakeCallFailed"
+        }
+    }
+    
+    var referrerDialogRequestId: String? {
+        switch typeInfo {
+        case .candidatesListed:
+            return nil
+        case .makeCallFailed(_, _, let referrerDialogRequestId):
+            return referrerDialogRequestId
         }
     }
 }
