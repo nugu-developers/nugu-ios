@@ -120,30 +120,11 @@ public final class DisplayAgent: DisplayAgentProtocol {
 
 public extension DisplayAgent {
     @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
-        let eventIdentifier = EventIdentifier()
-        displayDispatchQueue.async { [weak self] in
-            guard let self = self else {
-                completion?(.error(NuguAgentError.requestCanceled))
-                return
-            }
-            guard let item = self.templateList.first(where: { $0.templateId == templateId }) else {
-                completion?(.error(NuguAgentError.invalidState))
-                return
-            }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    typeInfo: .elementSelected(token: token, postback: postback),
-                    playServiceId: item.template.playServiceId,
-                    referrerDialogRequestId: item.dialogRequestId
-                ).rx,
-                eventIdentifier: eventIdentifier,
-                context: self.contextManager.rxContexts(),
-                property: self.capabilityAgentProperty,
-                completion: completion
-            ).subscribe().disposed(by: self.disposeBag)
-        }
-        return eventIdentifier.dialogRequestId
+        return sendFullContextEvent(elementSelected(
+            templateId: templateId,
+            token: token,
+            postback: postback
+        ), completion: completion).dialogRequestId
     }
     
     func notifyUserInteraction() {
@@ -431,6 +412,27 @@ private extension DisplayAgent {
             completion: completion
         ).subscribe().disposed(by: disposeBag)
         return eventIdentifier
+    }
+}
+
+// MARK: - Private (Eventable)
+
+private extension DisplayAgent {
+    func elementSelected(templateId: String, token: String, postback: [String: AnyHashable]?) -> Single<Eventable> {
+        return Single.create { [weak self] (observer) -> Disposable in
+            guard let item = self?.templateList.first(where: { $0.templateId == templateId }) else {
+                observer(.error(NuguAgentError.invalidState))
+                return Disposables.create()
+            }
+            
+            let settingEvent = Event(
+                    typeInfo: .elementSelected(token: token, postback: postback),
+                    playServiceId: item.template.playServiceId,
+                    referrerDialogRequestId: item.dialogRequestId
+                )
+            observer(.success(settingEvent))
+            return Disposables.create()
+        }.subscribeOn(displayScheduler)
     }
 }
 
