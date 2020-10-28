@@ -27,7 +27,7 @@ extension AudioPlayerAgent {
         let typeInfo: TypeInfo
         let referrerDialogRequestId: String?
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case requestPlayCommandIssued(payload: [String: AnyHashable])
             case requestCommandFailed(state: AudioPlayerState, directiveType: String)
         }
