@@ -26,7 +26,7 @@ public protocol PhoneCallAgentDelegate: class {
     func phoneCallAgentRequestState() -> PhoneCallState
     
     /// <#Description#>
-    func phoneCallAgentRequestTemplate() -> PhoneCallTemplate?
+    func phoneCallAgentRequestContext() -> PhoneCallContext
     
     /// <#Description#>
     /// - Parameters:
