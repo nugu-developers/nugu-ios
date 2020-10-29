@@ -311,23 +311,19 @@ extension TTSAgent: PlaySyncDelegate {
 private extension TTSAgent {
     func prefetchPlay() -> PrefetchDirective {
         return { [weak self] directive in
+            let player = try TTSPlayer(directive: directive)
             self?.ttsDispatchQueue.sync { [weak self] in
-                log.debug("")
                 guard let self = self else { return }
                 
+                log.debug(directive.header.messageId)
                 if self.prefetchPlayer?.stop(reason: .playAnother) == true ||
                     self.currentPlayer?.stop(reason: .playAnother) == true {
                     self.ttsState = .stopped
                 }
                 
-                do {
-                    self.prefetchPlayer = try TTSPlayer(directive: directive)
-                    self.prefetchPlayer?.delegate = self
-                    self.prefetchPlayer?.volume = self.volume
-                    log.debug("\(self.prefetchPlayer.debugDescription)")
-                } catch {
-                    log.error(error)
-                }
+                player.delegate = self
+                player.volume = self.volume
+                self.prefetchPlayer = player
             }
         }
     }
@@ -339,7 +335,6 @@ private extension TTSAgent {
                 return
             }
             self.ttsDispatchQueue.async { [weak self] in
-                log.debug("")
                 guard let self = self else {
                     completion(.canceled)
                     return
@@ -355,6 +350,7 @@ private extension TTSAgent {
                     return
                 }
                 
+                log.debug(directive.header.messageId)
                 self.currentPlayer = player
                 self.prefetchPlayer = nil
                 self.focusManager.requestFocus(channelDelegate: self)

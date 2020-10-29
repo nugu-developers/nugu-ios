@@ -130,13 +130,18 @@ final class AudioPlayer {
         
         return true
     }
-
-    func tryToResume(player: AudioPlayer) {
+    
+    func shouldResume(player: AudioPlayer) -> Bool {
         guard payload.audioItem.stream.token == player.payload.audioItem.stream.token,
                 payload.playServiceId == player.payload.playServiceId,
-                let internalPlayer = player.internalPlayer else {
-            return
+                player.internalPlayer != nil else {
+            return false
         }
+        return true
+    }
+
+    func replacePlayer(_ player: AudioPlayer) {
+        guard let internalPlayer = player.internalPlayer else { return }
         
         self.internalPlayer = internalPlayer
         player.internalPlayer = nil

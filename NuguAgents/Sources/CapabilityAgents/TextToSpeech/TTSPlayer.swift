@@ -135,11 +135,3 @@ extension TTSPlayer: MediaPlayerDelegate {
         delegate?.mediaPlayer(self, didChange: state)
     }
 }
-
-// MARK: - Downstream.Attachment + CustomStringConvertible
-
-extension TTSPlayer: CustomStringConvertible {
-    public var description: String {
-        return "\(dialogRequestId)"
-    }
-}

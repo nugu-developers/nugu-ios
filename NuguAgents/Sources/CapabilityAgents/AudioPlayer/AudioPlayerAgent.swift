@@ -305,7 +305,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
         guard let player = mediaPlayer as? AudioPlayer else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
-            log.info("\(state)")
+            log.info("\(state) \(player.messageId)")
             guard let self = self else { return }
             
             var audioPlayerState: AudioPlayerState?
@@ -398,6 +398,7 @@ extension AudioPlayerAgent: PlaySyncDelegate {
             guard property == self.playSyncProperty,
                   let player = self.latestPlayer, player.messageId == messageId else { return }
             
+            log.debug(messageId)
             self.stop(player: player, cancelAssociation: true)
         }
     }
@@ -422,45 +423,40 @@ extension AudioPlayerAgent: AudioPlayerProgressDelegate {
 private extension AudioPlayerAgent {
     func prefetchPlay() -> PrefetchDirective {
         return { [weak self] directive in
+            let player = try AudioPlayer(directive: directive)
             self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
+                log.debug(directive.header.messageId)
                 if self.prefetchPlayer?.stop(reason: .playAnother) == true {
                     self.audioPlayerState = .stopped
                 }
-                do {
-                    self.prefetchPlayer = try AudioPlayer(directive: directive)
-                    self.prefetchPlayer?.delegate = self
-                    self.prefetchPlayer?.progressDelegate = self
-                    self.prefetchPlayer?.volume = self.volume
-                } catch {
-                    log.error(error)
-                }
-                
-                if let currentPlayer = self.currentPlayer {
-                    self.prefetchPlayer?.tryToResume(player: currentPlayer)
-                }
-                if self.currentPlayer?.stop(reason: .playAnother) == true {
+                if let currentPlayer = self.currentPlayer,
+                   player.shouldResume(player: currentPlayer) != true,
+                   currentPlayer.stop(reason: .playAnother) == true {
                     self.audioPlayerState = .stopped
                 }
                 
-                if let player = self.prefetchPlayer {
-                    self.playSyncManager.startPlay(
-                        property: self.playSyncProperty,
-                        info: PlaySyncInfo(
-                            playStackServiceId: player.payload.playStackControl?.playServiceId,
-                            dialogRequestId: player.dialogRequestId,
-                            messageId: player.messageId,
-                            duration: NuguTimeInterval(seconds: 7)
-                        )
+                player.delegate = self
+                player.progressDelegate = self
+                player.volume = self.volume
+                self.prefetchPlayer = player
+                
+                self.playSyncManager.startPlay(
+                    property: self.playSyncProperty,
+                    info: PlaySyncInfo(
+                        playStackServiceId: player.payload.playStackControl?.playServiceId,
+                        dialogRequestId: player.dialogRequestId,
+                        messageId: player.messageId,
+                        duration: NuguTimeInterval(seconds: 7)
                     )
-                    
-                    self.audioPlayerDisplayManager.display(
-                        payload: player.payload,
-                        messageId: directive.header.messageId,
-                        dialogRequestId: directive.header.dialogRequestId
-                    )
-                }
+                )
+                
+                self.audioPlayerDisplayManager.display(
+                    payload: player.payload,
+                    messageId: directive.header.messageId,
+                    dialogRequestId: directive.header.dialogRequestId
+                )
             }
         }
     }
@@ -485,6 +481,12 @@ private extension AudioPlayerAgent {
                     return
                 }
                 
+                log.debug(directive.header.messageId)
+                if let currentPlayer = self.currentPlayer,
+                   player.shouldResume(player: currentPlayer) {
+                    log.info("Resuming \(player.messageId)")
+                    player.replacePlayer(currentPlayer)
+                }
                 self.currentPlayer = player
                 self.prefetchPlayer = nil
                 self.focusManager.requestFocus(channelDelegate: self)
