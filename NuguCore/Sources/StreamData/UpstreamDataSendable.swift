@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol UpstreamDataSendable {
+public protocol UpstreamDataSendable: class {
     /**
      Sends an event.
      */

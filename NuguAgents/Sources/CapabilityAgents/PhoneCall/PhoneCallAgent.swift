@@ -22,6 +22,8 @@ import Foundation
 
 import NuguCore
 
+import RxSwift
+
 public class PhoneCallAgent: PhoneCallAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.2")
     
@@ -45,6 +47,8 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), preFetch: prefetchMakeCall, directiveHandler: handleMakeCall)
     ]
     
+    private var disposeBag = DisposeBag()
+    
     public init(
         directiveSequencer: DirectiveSequenceable,
         contextManager: ContextManageable,
@@ -65,31 +69,17 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 
 public extension PhoneCallAgent {
     @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        let eventIdentifier = EventIdentifier()
-        self.contextManager.getContexts { [weak self] (contextPayload) in
+        let event = Event(typeInfo: .candidatesListed, playServiceId: playServiceId, referrerDialogRequestId: nil)
+        return sendFullContextEvent(event.rx) { [weak self] state in
+            completion?(state)
             guard let self = self else { return }
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    playServiceId: playServiceId,
-                    typeInfo: .candidatesListed
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    contextPayload: contextPayload
-                )
-            ) { [weak self] state in
-                completion?(state)
-                guard let self = self else { return }
-                switch state {
-                case .finished, .error:
-                    self.interactionControlManager.finish(mode: .multiTurn, category: self.capabilityAgentProperty.category)
-                default:
-                    break
-                }
+            switch state {
+            case .finished, .error:
+                self.interactionControlManager.finish(mode: .multiTurn, category: self.capabilityAgentProperty.category)
+            default:
+                break
             }
-        }
-        
-        return eventIdentifier.dialogRequestId
+        }.dialogRequestId
     }
 }
 
@@ -208,10 +198,18 @@ private extension PhoneCallAgent {
                     callType: phoneCallType,
                     recipient: recipientPerson,
                     dialogRequestId: directive.header.dialogRequestId
-                    ) {
-                    self.sendMakeCallFailed(playServiceId: playServiceId, errorCode: errorCode, phoneCallType: phoneCallType)
+                ) {
+                    self.sendCompactContextEvent(Event(
+                        typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType),
+                        playServiceId: playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    ).rx)
                 } else {
-                    self.sendMakeCallSucceeded(playServiceId: playServiceId, recipient: recipientPerson)
+                    self.sendCompactContextEvent(Event(
+                        typeInfo: .makeCallSucceeded(recipient: recipientPerson),
+                        playServiceId: playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    ).rx)
                 }
             }
         }
@@ -221,39 +219,33 @@ private extension PhoneCallAgent {
 // MARK: - Private (Event)
 
 private extension PhoneCallAgent {
-    func sendMakeCallFailed(playServiceId: String, errorCode: PhoneCallErrorCode, phoneCallType: PhoneCallType) {
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    playServiceId: playServiceId,
-                    typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType)
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    contextPayload: contextPayload
-                )
-            )
-        }
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
     
-    func sendMakeCallSucceeded(playServiceId: String, recipient: PhoneCallPerson) {
+    @discardableResult func sendFullContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        self.contextManager.getContexts(namespace: self.capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    playServiceId: playServiceId,
-                    typeInfo: .makeCallSucceeded(recipient: recipient)
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    contextPayload: contextPayload
-                )
-            )
-        }
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
 }

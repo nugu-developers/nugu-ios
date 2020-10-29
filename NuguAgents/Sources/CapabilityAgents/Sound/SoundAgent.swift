@@ -22,6 +22,8 @@ import Foundation
 
 import NuguCore
 
+import RxSwift
+
 public final class SoundAgent: SoundAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .sound, version: "1.0")
@@ -72,6 +74,8 @@ public final class SoundAgent: SoundAgentProtocol {
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Beep", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchBeep, directiveHandler: handleBeep)
     ]
+    
+    private var disposeBag = DisposeBag()
     
     public init(
         focusManager: FocusManageable,
@@ -175,11 +179,11 @@ private extension SoundAgent {
             self.soundDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let url = self.dataSource?.soundAgentRequestUrl(beepName: payload.beepName, dialogRequestId: directive.header.dialogRequestId) else {
-                    self.sendEvent(
+                    self.sendCompactContextEvent(Event(
+                        typeInfo: .beepFailed,
                         playServiceId: payload.playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId,
-                        info: .beepFailed
-                    )
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    ).rx)
                     return
                 }
                 self.stopSilently()
@@ -195,11 +199,11 @@ private extension SoundAgent {
                     dialogRequestId: directive.header.dialogRequestId,
                     messageId: directive.header.messageId
                 )
-                self.sendEvent(
+                self.sendCompactContextEvent(Event(
+                    typeInfo: .beepSucceeded,
                     playServiceId: payload.playServiceId,
-                    referrerDialogRequestId: directive.header.dialogRequestId,
-                    info: .beepSucceeded
-                )
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
             }
         }
     }
@@ -244,23 +248,19 @@ private extension SoundAgent {
 // MARK: - Private (Event)
 
 private extension SoundAgent {
-    func sendEvent(playServiceId: String, referrerDialogRequestId: String, info: Event.TypeInfo) {
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    playServiceId: playServiceId,
-                    typeInfo: info
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: referrerDialogRequestId,
-                    contextPayload: contextPayload
-                )
-            )
-        }
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
 }
 

@@ -23,11 +23,12 @@ import Foundation
 // MARK: - Event
 
 extension ASRAgent {
-    public struct Event {
+    struct Event {
         let typeInfo: TypeInfo
         let dialogAttributes: [String: AnyHashable]?
+        let referrerDialogRequestId: String?
         
-        public enum TypeInfo {
+        enum TypeInfo {
             case recognize(initiator: ASRInitiator, options: ASROptions)
             case responseTimeout
             case listenTimeout
@@ -40,7 +41,7 @@ extension ASRAgent {
 // MARK: - Eventable
 
 extension ASRAgent.Event: Eventable {
-    public var payload: [String: AnyHashable] {
+    var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable?]
         switch typeInfo {
         case .recognize(let initiator, let options):
@@ -87,7 +88,7 @@ extension ASRAgent.Event: Eventable {
         return payload.compactMapValues { $0 }
     }
     
-    public var name: String {
+    var name: String {
         switch typeInfo {
         case .recognize:
             return "Recognize"

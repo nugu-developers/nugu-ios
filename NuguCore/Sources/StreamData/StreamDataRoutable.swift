@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol StreamDataRoutable: class, UpstreamDataSendable {
+public protocol StreamDataRoutable: UpstreamDataSendable {
     /// Adds a delegate to be notified of stream data handling states.
     ///
     /// - Parameter delegate: The object to add.
