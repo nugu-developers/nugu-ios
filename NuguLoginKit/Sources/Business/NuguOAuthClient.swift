@@ -101,7 +101,7 @@ public extension NuguOAuthClient {
         parentViewController: UIViewController,
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
-        presentAuthorize(grant: grant, parentViewController: parentViewController, isLogin: true, completion: completion)
+        presentAuthorize(grant: grant, parentViewController: parentViewController, completion: completion)
     }
     
     /// Shows web-page where TID information can be modified with `AuthorizationCode` grant type.
@@ -120,7 +120,7 @@ public extension NuguOAuthClient {
         queries.append(URLQueryItem(name: "prompt", value: "mypage"))
         queries.append(URLQueryItem(name: "access_token", value: token))
         
-        presentAuthorize(grant: grant, parentViewController: parentViewController, additionalQueries: queries, isLogin: false, completion: completion)
+        presentAuthorize(grant: grant, parentViewController: parentViewController, additionalQueries: queries, completion: completion)
     }
     
     /// Get some NUGU member information.
@@ -244,7 +244,6 @@ private extension NuguOAuthClient {
         grant: AuthorizationCodeGrant,
         parentViewController: UIViewController,
         additionalQueries: [URLQueryItem]? = nil,
-        isLogin: Bool, // Temporary flag
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
         grant.safariController.completion = completion
@@ -283,72 +282,65 @@ private extension NuguOAuthClient {
         observer = NotificationCenter.default.addObserver(
             forName: .authorization,
             object: nil,
-            queue: OperationQueue.main
-        ) { [weak self] (notification) in
-            guard let self = self else {
-                complete(result: .failure(NuguLoginKitError.unknown(description: "self is nil")))
-                return
-            }
-            
-            guard let url = notification.userInfo?["url"] as? URL else {
-                complete(result: .failure(NuguLoginKitError.invalidOpenURL))
-                return
-            }
-            
-            // Get URLComponent
-            guard let urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-                complete(result: .failure(NuguLoginKitError.invalidOpenURL))
-                return
-            }
-            
-            let scheme = urlComponent.scheme ?? ""
-            let host = urlComponent.host ?? ""
-            
-            // Validate Redirect URI
-            guard grant.redirectUri == "\(scheme)://\(host)" else {
-                complete(result: .failure(NuguLoginKitError.invalidOpenURL))
-                return
-            }
-            
-            // Get authorization code
-            guard let authorizationCode = urlComponent.queryItems?.first(where: { $0.name == "code" })?.value else {
-                complete(result: .failure(NuguLoginKitError.noAuthorizationCode))
-                return
-            }
-            
-            // Validate state
-            guard
-                let state = urlComponent.queryItems?.first(where: { $0.name == "state" })?.value,
-                state == grant.safariController.currentState else {
-                complete(result: .failure(NuguLoginKitError.invalidState))
-                return
-            }
-            
-            // Temporary process
-            guard isLogin == true else {
-                complete(result: .failure(.finished))
-                return
-            }
-            
-            // Acquire token
-            let api = NuguOAuthTokenApi(
-                clientId: grant.clientId,
-                clientSecret: grant.clientSecret,
-                deviceUniqueId: self.deviceUniqueId,
-                grantTypeInfo: .authorizationCode(code: authorizationCode, redirectUri: grant.redirectUri)
-            )
-            
-            api.request { (result) in
-                complete(result: result
-                            .flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
-                                guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
-                                    return .failure(.parsingFailed(data))
-                                }
-                                return .success(authorizationInfo)
-                            })
-                            .mapError({ NuguLoginKitError.apiError(error: $0) })
+            queue: OperationQueue.main) { [weak self] (notification) in
+                guard let self = self else {
+                    complete(result: .failure(NuguLoginKitError.unknown(description: "self is nil")))
+                    return
+                }
+                
+                guard let url = notification.userInfo?["url"] as? URL else {
+                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
+                    return
+                }
+                
+                // Get URLComponent
+                guard let urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
+                    return
+                }
+                
+                let scheme = urlComponent.scheme ?? ""
+                let host = urlComponent.host ?? ""
+                
+                // Validate Redirect URI
+                guard grant.redirectUri == "\(scheme)://\(host)" else {
+                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
+                    return
+                }
+                
+                // Get authorization code
+                guard let authorizationCode = urlComponent.queryItems?.first(where: { $0.name == "code" })?.value else {
+                    complete(result: .failure(NuguLoginKitError.noAuthorizationCode))
+                    return
+                }
+                
+                // Validate state
+                guard
+                    let state = urlComponent.queryItems?.first(where: { $0.name == "state" })?.value,
+                    state == grant.safariController.currentState else {
+                        complete(result: .failure(NuguLoginKitError.invalidState))
+                        return
+                }
+                
+                // Acquire token
+                let api = NuguOAuthTokenApi(
+                    clientId: grant.clientId,
+                    clientSecret: grant.clientSecret,
+                    deviceUniqueId: self.deviceUniqueId,
+                    grantTypeInfo: .authorizationCode(code: authorizationCode, redirectUri: grant.redirectUri)
                 )
-            }
+                
+                api.request { (result) in
+                    complete(result: result
+                        .flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
+                            guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
+                                return .failure(.parsingFailed(data))
+                            }
+                            return .success(authorizationInfo)
+                        })
+                        .mapError({ NuguLoginKitError.apiError(error: $0) })
+                    )
+                }
         }
         
         DispatchQueue.main.async {
