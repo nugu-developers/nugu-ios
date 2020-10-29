@@ -25,7 +25,6 @@ extension Eventable {
     func makeEventMessage(
         property: CapabilityAgentProperty,
         eventIdentifier: EventIdentifier,
-        referrerDialogRequestId: String? = nil,
         httpHeaderFields: [String: String]? = nil,
         contextPayload: [ContextInfo]
     ) -> Upstream.Event {

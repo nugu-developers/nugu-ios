@@ -22,9 +22,10 @@ import Foundation
 
 extension MediaPlayerAgent {
     struct Event {
+        let typeInfo: TypeInfo
         let playServiceId: String
         let token: String
-        let typeInfo: TypeInfo
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case playSucceeded(message: String?)

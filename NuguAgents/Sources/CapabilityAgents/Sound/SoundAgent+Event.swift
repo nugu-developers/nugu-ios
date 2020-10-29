@@ -24,8 +24,9 @@ import Foundation
 
 extension SoundAgent {
     struct Event {
-        let playServiceId: String
         let typeInfo: TypeInfo
+        let playServiceId: String
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case beepSucceeded

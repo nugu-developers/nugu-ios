@@ -24,8 +24,9 @@ import Foundation
 
 extension AudioPlayerAgent {
     struct LyricsEvent {
-        let playServiceId: String
         let typeInfo: TypeInfo
+        let playServiceId: String
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case showLyricsSucceeded
