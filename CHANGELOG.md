@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.22.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.22.0)
+Released on 2020-10-29
+### Sample Application
+#### Fixed
+- Set audiosession as playback when carplay is connected and play media (#563)
+
+### SDK
+#### Fixex
+- Separate image resource bundle of  when using cocoapods (#561)
+- Add `TTSPlayer` and `AudioPlayer` to fix timing issues. (#560) (#571)
+
+#### Update
+- `DisplayAgent` 1.6 (upgrade capability-agent) (#564)
+- `TTSAgent` 1.3 (upgrade capability-agent) (#570)
+- `PhoneCallAgent` 1.2 (upgrade capability-agent)  (#573)
+- Revert "Update logic related authorization (showTidInfo, authorize)" (#574)
+- Refactor the capabilily agent function to send events consistently. (#572) 
+
 ## [0.21.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.21.1)
 Released on 2020-10-21
 ### Sample Application
