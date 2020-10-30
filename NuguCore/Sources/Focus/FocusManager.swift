@@ -24,6 +24,7 @@ public class FocusManager: FocusManageable {
     public weak var delegate: FocusDelegate?
     
     private let focusDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.focus_manager", qos: .userInitiated)
+    private let focusDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.focus_manager_delegate", qos: .userInitiated)
     
     @Atomic private var channelInfos = [FocusChannelInfo]()
     
@@ -51,7 +52,7 @@ extension FocusManager {
     }
     
     public func requestFocus(channelDelegate: FocusChannelDelegate) {
-        focusDispatchQueue.async { [weak self] in
+        focusDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
             guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
                 log.warning("\(channelDelegate): Channel not registered")
@@ -88,7 +89,7 @@ extension FocusManager {
     }
 
     public func releaseFocus(channelDelegate: FocusChannelDelegate) {
-        focusDispatchQueue.async { [weak self] in
+        focusDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
             guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
                 log.warning("\(channelDelegate): Channel not registered")
@@ -110,7 +111,9 @@ private extension FocusManager {
             return
         }
         
-        channelDelegate.focusChannelDidChange(focusState: focusState)
+        focusDelegateDispatchQueue.async {
+            channelDelegate.focusChannelDidChange(focusState: focusState)
+        }
         
         switch focusState {
         case .nothing:
