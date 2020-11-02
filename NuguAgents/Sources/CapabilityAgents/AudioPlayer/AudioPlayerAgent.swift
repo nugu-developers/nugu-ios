@@ -266,7 +266,7 @@ extension AudioPlayerAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        audioPlayerDispatchQueue.sync { [weak self] in
+        audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
             log.info("\(focusState) \(self.audioPlayerState)")
@@ -281,7 +281,7 @@ extension AudioPlayerAgent: FocusChannelDelegate {
                     player.play()
                 } else {
                     log.error("currentPlayer is nil")
-                    releaseFocusIfNeeded()
+                    self.releaseFocusIfNeeded()
                 }
             case (.background, .playing):
                 self.currentPlayer?.pause(reason: .focus)
@@ -467,14 +467,10 @@ private extension AudioPlayerAgent {
     
    func handlePlay() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self else {
-                completion(.canceled)
-                return
-            }
+            defer { completion(.finished) }
+            guard let self = self else { return }
             
-            self.audioPlayerDispatchQueue.async { [weak self] in
-                defer { completion(.finished) }
-                
+            self.audioPlayerDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
                 guard let player = self.prefetchPlayer, player.messageId == directive.header.messageId else {
                     log.info("Message id does not match")

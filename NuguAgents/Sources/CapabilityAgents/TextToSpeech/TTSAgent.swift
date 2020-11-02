@@ -191,7 +191,7 @@ extension TTSAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        ttsDispatchQueue.sync { [weak self] in
+        ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
             log.info("\(focusState) \(self.ttsState)")
@@ -201,7 +201,7 @@ extension TTSAgent: FocusChannelDelegate {
                     player.play()
                 } else {
                     log.error("currentPlayer is nil")
-                    releaseFocusIfNeeded()
+                    self.releaseFocusIfNeeded()
                 }
             // Foreground. playing 무시
             case (.foreground, _):

@@ -277,7 +277,7 @@ extension ASRAgent: FocusChannelDelegate {
     }
     
     public func focusChannelDidChange(focusState: FocusState) {
-        asrDispatchQueue.sync { [weak self] in
+        asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
             log.info("Focus:\(focusState) ASR:\(self.asrState)")
