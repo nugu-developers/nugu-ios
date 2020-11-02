@@ -34,8 +34,8 @@ public class TycheKeywordDetectorEngine {
     /// Window buffer for user's voice. This will help extract certain section of speaking keyword
     private var detectingData = ShiftingData(capacity: Int(KeywordDetectorConst.sampleRate*5*2))
     
-    public var netFilePath: String?
-    public var searchFilePath: String?
+    private var netFilePath: String?
+    private var searchFilePath: String?
     public weak var delegate: TycheKeywordDetectorEngineDelegate?
     public var state: TycheKeywordDetectorEngine.State = .inactive {
         didSet {
@@ -47,13 +47,24 @@ public class TycheKeywordDetectorEngine {
     }
     
     #if DEBUG
-    let filename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("detecting.raw")
+    private let filename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("detecting.raw")
     #endif
     
     public init() {}
     
     deinit {
         internalStop()
+    }
+    
+    /**
+     Set Tyche source files
+     */
+    public func setSource(netFilePath: String?, searchFilePath: String?) {
+        kwdQueue.async { [weak self] in
+            log.debug("set the keyword detector's source file")
+            self?.netFilePath = netFilePath
+            self?.searchFilePath = searchFilePath
+        }
     }
     
     /**

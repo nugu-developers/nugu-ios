@@ -30,18 +30,34 @@ public class KeywordDetector {
     /// <#Description#>
     public weak var delegate: KeywordDetectorDelegate?
     
+    private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keyword_detector_wrapper")
+    
     /// <#Description#>
-    public var state: KeywordDetectorState = .inactive {
+    private(set) public var state: KeywordDetectorState = .inactive {
         didSet {
             delegate?.keywordDetectorStateDidChange(state)
         }
     }
     
+    private var internalKeywordSource: KeywordSource? = nil {
+        didSet {
+            log.debug("set keyword source")
+            engine.setSource(netFilePath: internalKeywordSource?.netFileUrl.path, searchFilePath: internalKeywordSource?.searchFileUrl.path)
+        }
+    }
+    
     /// Must set `keywordSource` for using `KeywordDetector`
     public var keywordSource: KeywordSource? {
-        didSet {
-            engine.netFilePath = keywordSource?.netFileUrl.path
-            engine.searchFilePath = keywordSource?.searchFileUrl.path
+        get {
+            return kwdQueue.sync {
+                return internalKeywordSource
+            }
+        }
+        
+        set {
+            kwdQueue.sync {
+                internalKeywordSource = newValue
+            }
         }
     }
     
