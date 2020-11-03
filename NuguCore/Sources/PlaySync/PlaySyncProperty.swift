@@ -37,7 +37,7 @@ public struct PlaySyncProperty {
     }
     
     /// <#Description#>
-    public enum LayerType: String, Decodable {
+    public enum LayerType: String, Codable {
         case info = "INFO"
         case media = "MEDIA"
         case call = "CALL"

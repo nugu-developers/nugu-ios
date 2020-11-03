@@ -19,7 +19,7 @@
 //
 
 /// <#Description#>
-public enum AudioPlayerDisplayRepeat: String, Decodable, CodingKey {
+public enum AudioPlayerDisplayRepeat: String, Codable, CodingKey {
     case all = "ALL"
     case one = "ONE"
     case none = "NONE"
