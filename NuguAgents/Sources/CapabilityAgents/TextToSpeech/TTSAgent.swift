@@ -32,16 +32,22 @@ public final class TTSAgent: TTSAgentProtocol {
     // TTSAgentProtocol
     public var directiveCancelPolicy: DirectiveCancelPolicy = .cancelNone
     public var offset: Int? {
-        return latestPlayer?.offset.truncatedSeconds
+        ttsDispatchQueue.sync {
+            latestPlayer?.offset.truncatedSeconds
+        }
     }
     
     public var duration: Int? {
-        return latestPlayer?.duration.truncatedSeconds
+        ttsDispatchQueue.sync {
+            latestPlayer?.duration.truncatedSeconds
+        }
     }
     
     public var volume: Float = 1.0 {
         didSet {
-            latestPlayer?.volume = volume
+            ttsDispatchQueue.sync {
+                latestPlayer?.volume = volume
+            }
         }
     }
     
@@ -51,6 +57,8 @@ public final class TTSAgent: TTSAgentProtocol {
     private let focusManager: FocusManageable
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
+    
+    private let ttsDeleageteDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate")
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
@@ -91,7 +99,7 @@ public final class TTSAgent: TTSAgentProtocol {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != ttsState {
-                delegates.notify { delegate in
+                delegates.notify(queue: ttsDeleageteDispatchQueue) { delegate in
                     delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: player.dialogRequestId)
                 }
             }
@@ -101,8 +109,17 @@ public final class TTSAgent: TTSAgentProtocol {
     private let ttsResultSubject = PublishSubject<(dialogRequestId: String, result: TTSResult)>()
     
     // Players
-    private var currentPlayer: TTSPlayer?
-    private var prefetchPlayer: TTSPlayer?
+    private var currentPlayer: TTSPlayer? {
+        didSet {
+            currentPlayer?.volume = volume
+            prefetchPlayer = nil
+        }
+    }
+    private var prefetchPlayer: TTSPlayer? {
+        didSet {
+            prefetchPlayer?.delegate = self
+        }
+    }
     private var latestPlayer: TTSPlayer? {
         prefetchPlayer ?? currentPlayer
     }
@@ -321,8 +338,6 @@ private extension TTSAgent {
                     self.ttsState = .stopped
                 }
                 
-                player.delegate = self
-                player.volume = self.volume
                 self.prefetchPlayer = player
             }
         }
@@ -352,9 +367,8 @@ private extension TTSAgent {
                 
                 log.debug(directive.header.messageId)
                 self.currentPlayer = player
-                self.prefetchPlayer = nil
                 self.focusManager.requestFocus(channelDelegate: self)
-                self.delegates.notify { delegate in
+                self.delegates.notify(queue: self.ttsDeleageteDispatchQueue) { delegate in
                     delegate.ttsAgentDidReceive(text: player.payload.text, dialogRequestId: player.dialogRequestId)
                 }
                 
