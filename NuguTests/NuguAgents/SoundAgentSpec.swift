@@ -114,7 +114,7 @@ extension SoundAgentSpec: SoundAgentDataSource {
 // MARK: - SoundAgentDelegate
 
 extension SoundAgentSpec: SoundAgentDelegate {
-    func soundAgentDidChange(state: SoundState, dialogRequestId: String) {
+    func soundAgentDidChange(state: SoundState, header: Downstream.Header) {
         self.state.append(state)
     }
 }
