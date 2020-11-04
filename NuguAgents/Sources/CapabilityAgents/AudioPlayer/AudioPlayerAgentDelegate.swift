@@ -20,10 +20,12 @@
 
 import Foundation
 
+import NuguCore
+
 /// An delegate that appllication can extend to register to observe `AudioPlayerState` changes.
 public protocol AudioPlayerAgentDelegate: class {
     ///  Used to notify the observer of state changes.
     /// - Parameter state: The new AudioPlayerState of the `AudioPlayerAgent`
-    /// - Parameter dialogRequestId: The `dialogRequestId` for state.
-    func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String)
+    /// - Parameter header: The header of the originally handled directive.
+    func audioPlayerAgentDidChange(state: AudioPlayerState, header: Downstream.Header)
 }

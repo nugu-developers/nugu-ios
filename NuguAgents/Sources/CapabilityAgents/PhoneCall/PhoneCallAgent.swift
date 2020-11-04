@@ -140,7 +140,7 @@ private extension PhoneCallAgent {
                 self.interactionControlManager.start(mode: .multiTurn, category: self.capabilityAgentProperty.category)
                 delegate.phoneCallAgentDidReceiveSendCandidates(
                     item: candidatesItem,
-                    dialogRequestId: directive.header.dialogRequestId
+                    header: directive.header
                 )
             }
         }
@@ -197,7 +197,7 @@ private extension PhoneCallAgent {
                 if let errorCode = self.delegate?.phoneCallAgentDidReceiveMakeCall(
                     callType: phoneCallType,
                     recipient: recipientPerson,
-                    dialogRequestId: directive.header.dialogRequestId
+                    header: directive.header
                 ) {
                     self.sendCompactContextEvent(Event(
                         typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType),

@@ -71,8 +71,8 @@ public final class TTSAgent: TTSAgentProtocol {
                         property: playSyncProperty,
                         info: PlaySyncInfo(
                             playStackServiceId: player.payload.playStackControl?.playServiceId,
-                            dialogRequestId: player.dialogRequestId,
-                            messageId: player.messageId,
+                            dialogRequestId: player.header.dialogRequestId,
+                            messageId: player.header.messageId,
                             duration: NuguTimeInterval(seconds: 7)
                         )
                     )
@@ -80,7 +80,7 @@ public final class TTSAgent: TTSAgentProtocol {
             case .finished, .stopped:
                 if player.payload.playServiceId != nil {
                     if player.cancelAssociation {
-                        playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
+                        playSyncManager.stopPlay(dialogRequestId: player.header.dialogRequestId)
                     } else {
                         playSyncManager.endPlay(property: playSyncProperty)
                     }
@@ -92,7 +92,7 @@ public final class TTSAgent: TTSAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != ttsState {
                 delegates.notify { delegate in
-                    delegate.ttsAgentDidChange(state: ttsState, dialogRequestId: player.dialogRequestId)
+                    delegate.ttsAgentDidChange(state: ttsState, header: player.header)
                 }
             }
         }
@@ -250,17 +250,17 @@ extension TTSAgent: MediaPlayerDelegate {
             case .resume, .bufferRefilled:
                 ttsState = .playing
             case .finish:
-                ttsResult = (dialogRequestId: player.dialogRequestId, result: .finished)
+                ttsResult = (dialogRequestId: player.header.dialogRequestId, result: .finished)
                 ttsState = .finished
                 eventTypeInfo = .speechFinished
             case .pause:
                 self.stop(player: player, cancelAssociation: false)
             case .stop:
-                ttsResult = (dialogRequestId: player.dialogRequestId, result: .stopped(cancelAssociation: player.cancelAssociation))
+                ttsResult = (dialogRequestId: player.header.dialogRequestId, result: .stopped(cancelAssociation: player.cancelAssociation))
                 ttsState = .stopped
                 eventTypeInfo = .speechStopped
             case .error(let error):
-                ttsResult = (dialogRequestId: player.dialogRequestId, result: .error(error))
+                ttsResult = (dialogRequestId: player.header.dialogRequestId, result: .error(error))
                 ttsState = .stopped
                 eventTypeInfo = .speechStopped
             case .bufferUnderrun:
@@ -285,7 +285,7 @@ extension TTSAgent: MediaPlayerDelegate {
                     typeInfo: eventTypeInfo,
                     token: player.payload.token,
                     playServiceId: nil,
-                    referrerDialogRequestId: player.dialogRequestId
+                    referrerDialogRequestId: player.header.dialogRequestId
                 ).rx)
             }
         }
@@ -299,7 +299,7 @@ extension TTSAgent: PlaySyncDelegate {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard property == self.playSyncProperty,
-                  let player = self.latestPlayer, player.messageId == messageId else { return }
+                  let player = self.latestPlayer, player.header.messageId == messageId else { return }
             
             self.stop(player: player, cancelAssociation: true)
         }
@@ -339,7 +339,7 @@ private extension TTSAgent {
                     completion(.canceled)
                     return
                 }
-                guard let player = self.prefetchPlayer, player.messageId == directive.header.messageId else {
+                guard let player = self.prefetchPlayer, player.header.messageId == directive.header.messageId else {
                     completion(.canceled)
                     log.info("Message id does not match")
                     return
@@ -355,11 +355,11 @@ private extension TTSAgent {
                 self.prefetchPlayer = nil
                 self.focusManager.requestFocus(channelDelegate: self)
                 self.delegates.notify { delegate in
-                    delegate.ttsAgentDidReceive(text: player.payload.text, dialogRequestId: player.dialogRequestId)
+                    delegate.ttsAgentDidReceive(text: player.payload.text, header: player.header)
                 }
                 
                 self.ttsResultSubject
-                    .filter { $0.dialogRequestId == player.dialogRequestId }
+                    .filter { $0.dialogRequestId == player.header.dialogRequestId }
                     .take(1)
                     .subscribe(onNext: { [weak self] (_, result) in
                         guard let self = self else {
@@ -393,7 +393,7 @@ private extension TTSAgent {
                 guard player.internalPlayer != nil else {
                     // Release synchronized layer after playback finished.
                     if player.payload.playServiceId != nil {
-                        self.playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
+                        self.playSyncManager.stopPlay(dialogRequestId: player.header.dialogRequestId)
                     }
                     return
                 }

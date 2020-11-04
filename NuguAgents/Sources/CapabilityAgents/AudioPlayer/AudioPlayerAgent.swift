@@ -91,7 +91,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 playSyncManager.cancelTimer(property: playSyncProperty)
             case .stopped, .finished:
                 if player.cancelAssociation {
-                    playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
+                    playSyncManager.stopPlay(dialogRequestId: player.header.dialogRequestId)
                 } else {
                     playSyncManager.endPlay(property: playSyncProperty)
                 }
@@ -106,7 +106,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != audioPlayerState {
                 delegates.notify { delegate in
-                    delegate.audioPlayerAgentDidChange(state: audioPlayerState, dialogRequestId: player.dialogRequestId)
+                    delegate.audioPlayerAgentDidChange(state: audioPlayerState, header: player.header)
                 }
             }
         }
@@ -305,7 +305,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
         guard let player = mediaPlayer as? AudioPlayer else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
-            log.info("\(state) \(player.messageId)")
+            log.info("\(state) \(player.header.messageId)")
             guard let self = self else { return }
             
             var audioPlayerState: AudioPlayerState?
@@ -396,7 +396,7 @@ extension AudioPlayerAgent: PlaySyncDelegate {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard property == self.playSyncProperty,
-                  let player = self.latestPlayer, player.messageId == messageId else { return }
+                  let player = self.latestPlayer, player.header.messageId == messageId else { return }
             
             log.debug(messageId)
             self.stop(player: player, cancelAssociation: true)
@@ -446,8 +446,8 @@ private extension AudioPlayerAgent {
                     property: self.playSyncProperty,
                     info: PlaySyncInfo(
                         playStackServiceId: player.payload.playStackControl?.playServiceId,
-                        dialogRequestId: player.dialogRequestId,
-                        messageId: player.messageId,
+                        dialogRequestId: player.header.dialogRequestId,
+                        messageId: player.header.messageId,
                         duration: NuguTimeInterval(seconds: 7)
                     )
                 )
@@ -468,7 +468,7 @@ private extension AudioPlayerAgent {
             
             self.audioPlayerDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
-                guard let player = self.prefetchPlayer, player.messageId == directive.header.messageId else {
+                guard let player = self.prefetchPlayer, player.header.messageId == directive.header.messageId else {
                     log.info("Message id does not match")
                     return
                 }
@@ -480,7 +480,7 @@ private extension AudioPlayerAgent {
                 log.debug(directive.header.messageId)
                 if let currentPlayer = self.currentPlayer,
                    player.shouldResume(player: currentPlayer) {
-                    log.info("Resuming \(player.messageId)")
+                    log.info("Resuming \(player.header.messageId)")
                     player.replacePlayer(currentPlayer)
                 }
                 self.currentPlayer = player
@@ -497,7 +497,7 @@ private extension AudioPlayerAgent {
             guard let self = self, let player = self.latestPlayer else { return }
             guard player.internalPlayer != nil else {
                 // Release synchronized layer after playback finished.
-                self.playSyncManager.stopPlay(dialogRequestId: player.dialogRequestId)
+                self.playSyncManager.stopPlay(dialogRequestId: player.header.dialogRequestId)
                 return
             }
             
@@ -707,7 +707,7 @@ private extension AudioPlayerAgent {
 
 private extension AudioPlayerAgent {
     func playEvent(typeInfo: PlayEvent.TypeInfo, player: AudioPlayer) -> Single<Eventable> {
-        return playEvent(typeInfo: typeInfo, player: player, referrerDialogRequestId: player.dialogRequestId)
+        return playEvent(typeInfo: typeInfo, player: player, referrerDialogRequestId: player.header.dialogRequestId)
     }
     
     func playEvent(typeInfo: PlayEvent.TypeInfo, player: AudioPlayer, referrerDialogRequestId: String) -> Single<Eventable> {
@@ -770,7 +770,7 @@ private extension AudioPlayerAgent {
             let settingEvent = SettingsEvent(
                 typeInfo: typeInfo,
                 playServiceId: player.payload.playServiceId,
-                referrerDialogRequestId: player.dialogRequestId
+                referrerDialogRequestId: player.header.dialogRequestId
             )
             observer(.success(settingEvent))
             return Disposables.create()

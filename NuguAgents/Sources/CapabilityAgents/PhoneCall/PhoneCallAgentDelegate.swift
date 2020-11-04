@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// <#Description#>
 public protocol PhoneCallAgentDelegate: class {
     /// <#Description#>
@@ -28,13 +30,13 @@ public protocol PhoneCallAgentDelegate: class {
     /// <#Description#>
     /// - Parameters:
     ///   - item: <#item description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
-    func phoneCallAgentDidReceiveSendCandidates(item: PhoneCallCandidatesItem, dialogRequestId: String)
+    ///   - header: The header of the originally handled directive.
+    func phoneCallAgentDidReceiveSendCandidates(item: PhoneCallCandidatesItem, header: Downstream.Header)
     
     /// <#Description#>
     /// - Parameters:
     ///   - callType: <#callType description#>
     ///   - recipient: <#recipient description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
-    func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson, dialogRequestId: String) -> PhoneCallErrorCode?
+    ///   - header: The header of the originally handled directive.
+    func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson, header: Downstream.Header) -> PhoneCallErrorCode?
 }

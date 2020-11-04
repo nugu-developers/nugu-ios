@@ -20,11 +20,13 @@
 
 import Foundation
 
+import NuguCore
+
 /// An delegate that appllication can extend to observe `SoundState` changes.
 public protocol SoundAgentDelegate: class {
     /// Used to notify the observer of TTSState changes.
     ///
     /// - Parameter state: The new `SoundState` of the `SoundAgent`
-    /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    func soundAgentDidChange(state: SoundState, dialogRequestId: String)
+    /// - Parameter header: The header of the originally handled directive.
+    func soundAgentDidChange(state: SoundState, header: Downstream.Header)
 }

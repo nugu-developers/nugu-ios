@@ -201,7 +201,7 @@ extension AudioPlayerDisplayManager {
 
 // MARK: - AudioPlayerAgentDelegate
 extension AudioPlayerDisplayManager: AudioPlayerAgentDelegate {
-    func audioPlayerAgentDidChange(state: AudioPlayerState, dialogRequestId: String) {
+    func audioPlayerAgentDidChange(state: AudioPlayerState, header: Downstream.Header) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             

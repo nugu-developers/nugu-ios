@@ -63,7 +63,7 @@ public final class SoundAgent: SoundAgentProtocol {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != soundState {
-                delegate?.soundAgentDidChange(state: soundState, dialogRequestId: media.dialogRequestId)
+                delegate?.soundAgentDidChange(state: soundState, header: media.header)
             }
         }
     }
@@ -178,7 +178,7 @@ private extension SoundAgent {
             
             self.soundDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard let url = self.dataSource?.soundAgentRequestUrl(beepName: payload.beepName, dialogRequestId: directive.header.dialogRequestId) else {
+                guard let url = self.dataSource?.soundAgentRequestUrl(beepName: payload.beepName, header: directive.header) else {
                     self.sendCompactContextEvent(Event(
                         typeInfo: .beepFailed,
                         playServiceId: payload.playServiceId,
@@ -196,8 +196,7 @@ private extension SoundAgent {
                 self.currentPlayer = mediaPlayer
                 self.currentMedia = SoundMedia(
                     payload: payload,
-                    dialogRequestId: directive.header.dialogRequestId,
-                    messageId: directive.header.messageId
+                    header: directive.header
                 )
                 self.sendCompactContextEvent(Event(
                     typeInfo: .beepSucceeded,
@@ -214,7 +213,7 @@ private extension SoundAgent {
             
             self?.soundDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard self.currentMedia?.messageId == directive.header.messageId else {
+                guard self.currentMedia?.header.messageId == directive.header.messageId else {
                     log.info("Message id does not match")
                     return
                 }

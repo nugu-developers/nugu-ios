@@ -106,7 +106,7 @@ class SoundAgentSpec: QuickSpec {
 // MARK: - SoundAgentDataSource
 
 extension SoundAgentSpec: SoundAgentDataSource {
-    func soundAgentRequestUrl(beepName: SoundBeepName, dialogRequestId: String) -> URL? {
+    func soundAgentRequestUrl(beepName: SoundBeepName, header: Downstream.Header) -> URL? {
         return Bundle(for: type(of: self)).url(forResource: "responsefail", withExtension: "wav")
     }
 }

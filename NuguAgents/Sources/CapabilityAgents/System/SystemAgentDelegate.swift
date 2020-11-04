@@ -20,17 +20,19 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `SystemAgentDelegate` protocol defines methods that action when `SystemAgent` receives a directive.
 public protocol SystemAgentDelegate: class {
     /// <#Description#>
     /// - Parameters:
     ///   - code: <#code description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
-    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail, dialogRequestId: String)
+    ///   - header: The header of the originally handled directive.
+    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail, header: Downstream.Header)
     
     /// <#Description#>
     /// - Parameters:
     ///   - reason: <#reason description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
-    func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason, dialogRequestId: String)
+    ///   - header: The header of the originally handled directive.   
+    func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason, header: Downstream.Header)
 }
