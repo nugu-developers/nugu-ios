@@ -22,6 +22,8 @@ import Foundation
 
 import NuguCore
 
+import RxSwift
+
 public final class MediaPlayerAgent: MediaPlayerAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .mediaPlayer, version: "1.0")
     
@@ -46,6 +48,8 @@ public final class MediaPlayerAgent: MediaPlayerAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Toggle", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleToggle),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "GetInfo", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleGetInfo)
     ]
+    
+    private lazy var disposeBag = DisposeBag()
     
     public init(
         directiveSequencer: DirectiveSequenceable,
@@ -95,7 +99,7 @@ private extension MediaPlayerAgent {
                 payload: playPayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processPlayDirectiveResult(payload: playPayload, result: result)
+                    self?.processPlayDirectiveResult(payload: playPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -116,7 +120,7 @@ private extension MediaPlayerAgent {
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processStopDirectiveResult(playServiceId: playServiceId, token: token, result: result)
+                    self?.processStopDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -134,7 +138,7 @@ private extension MediaPlayerAgent {
                 payload: searchPayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processSearchDirectiveResult(payload: searchPayload, result: result)
+                    self?.processSearchDirectiveResult(payload: searchPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -152,7 +156,7 @@ private extension MediaPlayerAgent {
                 payload: previousPayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processPreviousDirectiveResult(payload: previousPayload, result: result)
+                    self?.processPreviousDirectiveResult(payload: previousPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -170,7 +174,7 @@ private extension MediaPlayerAgent {
                 payload: nextPayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processNextDirectiveResult(payload: nextPayload, result: result)
+                    self?.processNextDirectiveResult(payload: nextPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -188,7 +192,7 @@ private extension MediaPlayerAgent {
                 payload: movePayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processMoveDirectiveResult(payload: movePayload, result: result)
+                    self?.processMoveDirectiveResult(payload: movePayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -209,7 +213,7 @@ private extension MediaPlayerAgent {
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processPauseDirectiveResult(playServiceId: playServiceId, token: token, result: result)
+                    self?.processPauseDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -230,7 +234,7 @@ private extension MediaPlayerAgent {
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                self?.processResumeDirectiveResult(playServiceId: playServiceId, token: token, result: result)
+                self?.processResumeDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -251,7 +255,7 @@ private extension MediaPlayerAgent {
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processRewindDirectiveResult(playServiceId: playServiceId, token: token, result: result)
+                    self?.processRewindDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -269,7 +273,7 @@ private extension MediaPlayerAgent {
                 payload: togglePayload,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processToggleDirectiveResult(payload: togglePayload, result: result)
+                    self?.processToggleDirectiveResult(payload: togglePayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -290,7 +294,7 @@ private extension MediaPlayerAgent {
                 token: token,
                 dialogRequestId: directive.header.dialogRequestId,
                 completion: { [weak self] (result) in
-                    self?.processGetInfoDirectiveResult(playServiceId: playServiceId, token: token, result: result)
+                    self?.processGetInfoDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -299,27 +303,30 @@ private extension MediaPlayerAgent {
 // MARK: - Private(Event)
 
 private extension MediaPlayerAgent {
-    func sendEvent(event: MediaPlayerAgent.Event) {
-        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] (contextPayload) in
-            guard let self = self else { return }
-            
-            let eventIdentifier = EventIdentifier()
-            
-            self.upstreamDataSender.sendEvent(
-                event.makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    contextPayload: contextPayload
-                )
-            )
-        }
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
+        let eventIdentifier = EventIdentifier()
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
 }
 
 // MARK: - Private(Process directive)
 
 private extension MediaPlayerAgent {
-    func processPlayDirectiveResult(payload: MediaPlayerAgentDirectivePayload.Play, result: MediaPlayerAgentProcessResult.Play) {
+    func processPlayDirectiveResult(
+        payload: MediaPlayerAgentDirectivePayload.Play,
+        result: MediaPlayerAgentProcessResult.Play,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let message):
@@ -330,10 +337,20 @@ private extension MediaPlayerAgent {
             typeInfo = .playFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: payload.playServiceId, token: payload.token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processStopDirectiveResult(playServiceId: String, token: String, result: MediaPlayerAgentProcessResult.Stop) {
+    func processStopDirectiveResult(
+        playServiceId: String,
+        token: String,
+        result: MediaPlayerAgentProcessResult.Stop,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded:
@@ -342,10 +359,19 @@ private extension MediaPlayerAgent {
             typeInfo = .stopFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: playServiceId, token: token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: playServiceId,
+            token: token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processSearchDirectiveResult(payload: MediaPlayerAgentDirectivePayload.Search, result: MediaPlayerAgentProcessResult.Search) {
+    func processSearchDirectiveResult(
+        payload: MediaPlayerAgentDirectivePayload.Search,
+        result: MediaPlayerAgentProcessResult.Search,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let message):
@@ -354,10 +380,19 @@ private extension MediaPlayerAgent {
             typeInfo = .searchFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: payload.playServiceId, token: payload.token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processPreviousDirectiveResult(payload: MediaPlayerAgentDirectivePayload.Previous, result: MediaPlayerAgentProcessResult.Previous) {
+    func processPreviousDirectiveResult(
+        payload: MediaPlayerAgentDirectivePayload.Previous,
+        result: MediaPlayerAgentProcessResult.Previous,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let message):
@@ -368,10 +403,19 @@ private extension MediaPlayerAgent {
             typeInfo = .previousFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: payload.playServiceId, token: payload.token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processNextDirectiveResult(payload: MediaPlayerAgentDirectivePayload.Next, result: MediaPlayerAgentProcessResult.Next) {
+    func processNextDirectiveResult(
+        payload: MediaPlayerAgentDirectivePayload.Next,
+        result: MediaPlayerAgentProcessResult.Next,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let message):
@@ -382,10 +426,19 @@ private extension MediaPlayerAgent {
             typeInfo = .nextFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: payload.playServiceId, token: payload.token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processMoveDirectiveResult(payload: MediaPlayerAgentDirectivePayload.Move, result: MediaPlayerAgentProcessResult.Move) {
+    func processMoveDirectiveResult(
+        payload: MediaPlayerAgentDirectivePayload.Move,
+        result: MediaPlayerAgentProcessResult.Move,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let messasge):
@@ -394,10 +447,20 @@ private extension MediaPlayerAgent {
             typeInfo = .moveFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: payload.playServiceId, token: payload.token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processPauseDirectiveResult(playServiceId: String, token: String, result: MediaPlayerAgentProcessResult.Pause) {
+    func processPauseDirectiveResult(
+        playServiceId: String,
+        token: String,
+        result: MediaPlayerAgentProcessResult.Pause,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let messasge):
@@ -406,10 +469,20 @@ private extension MediaPlayerAgent {
             typeInfo = .pauseFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: playServiceId, token: token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: playServiceId,
+            token: token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processResumeDirectiveResult(playServiceId: String, token: String, result: MediaPlayerAgentProcessResult.Resume) {
+    func processResumeDirectiveResult(
+        playServiceId: String,
+        token: String,
+        result: MediaPlayerAgentProcessResult.Resume,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let messasge):
@@ -418,10 +491,20 @@ private extension MediaPlayerAgent {
             typeInfo = .resumeFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: playServiceId, token: token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: playServiceId,
+            token: token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processRewindDirectiveResult(playServiceId: String, token: String, result: MediaPlayerAgentProcessResult.Rewind) {
+    func processRewindDirectiveResult(
+        playServiceId: String,
+        token: String,
+        result: MediaPlayerAgentProcessResult.Rewind,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let messasge):
@@ -430,10 +513,19 @@ private extension MediaPlayerAgent {
             typeInfo = .rewindFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: playServiceId, token: token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: playServiceId,
+            token: token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processToggleDirectiveResult(payload: MediaPlayerAgentDirectivePayload.Toggle, result: MediaPlayerAgentProcessResult.Toggle) {
+    func processToggleDirectiveResult(
+        payload: MediaPlayerAgentDirectivePayload.Toggle,
+        result: MediaPlayerAgentProcessResult.Toggle,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let message):
@@ -442,10 +534,20 @@ private extension MediaPlayerAgent {
             typeInfo = .toggleFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: payload.playServiceId, token: payload.token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
     
-    func processGetInfoDirectiveResult(playServiceId: String, token: String, result: MediaPlayerAgentProcessResult.GetInfo) {
+    func processGetInfoDirectiveResult(
+        playServiceId: String,
+        token: String,
+        result: MediaPlayerAgentProcessResult.GetInfo,
+        referrerDialogRequestId: String
+    ) {
         let typeInfo: MediaPlayerAgent.Event.TypeInfo
         switch result {
         case .succeeded(let song, let issueDate, let playTime, let playListName):
@@ -454,6 +556,11 @@ private extension MediaPlayerAgent {
             typeInfo = .getInfoFailed(errorCode: errorCode)
         }
         
-        sendEvent(event: Event(playServiceId: playServiceId, token: token, typeInfo: typeInfo))
+        sendCompactContextEvent(Event(
+            typeInfo: typeInfo,
+            playServiceId: playServiceId,
+            token: token,
+            referrerDialogRequestId: referrerDialogRequestId
+        ).rx)
     }
 }

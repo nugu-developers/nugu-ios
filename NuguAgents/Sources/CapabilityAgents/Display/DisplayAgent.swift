@@ -26,7 +26,7 @@ import RxSwift
 
 public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.5")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.6")
     
     public weak var delegate: DisplayAgentDelegate?
     public var defaultDisplayTempalteDuration: DisplayTemplateDuration = .short
@@ -37,7 +37,6 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     private let sessionManager: SessionManageable
-    private let focusManager: FocusManageable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -81,6 +80,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Score2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SearchList1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SearchList2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UnifiedSearch1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceList", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceOption", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommercePrice", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
@@ -98,20 +98,17 @@ public final class DisplayAgent: DisplayAgentProtocol {
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable,
-        sessionManager: SessionManageable,
-        focusManager: FocusManageable
+        sessionManager: SessionManageable
     ) {
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         self.sessionManager = sessionManager
-        self.focusManager = focusManager
         
         playSyncManager.add(delegate: self)
         contextManager.add(delegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        focusManager.add(channelDelegate: self)
     }
     
     deinit {
@@ -123,33 +120,11 @@ public final class DisplayAgent: DisplayAgentProtocol {
 
 public extension DisplayAgent {
     @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
-        let eventIdentifier = EventIdentifier()
-        displayDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard let item = self.templateList.first(where: { $0.templateId == templateId }) else {
-                // TODO error 정의
-                completion?(.finished)
-                return
-            }
-
-            self.contextManager.getContexts { [weak self] contextPayload in
-                guard let self = self else { return }
-                
-                self.upstreamDataSender.sendEvent(
-                    Event(
-                        playServiceId: item.template.playServiceId,
-                        typeInfo: .elementSelected(token: token, postback: postback)
-                    ).makeEventMessage(
-                        property: self.capabilityAgentProperty,
-                        eventIdentifier: eventIdentifier,
-                        referrerDialogRequestId: item.dialogRequestId,
-                        contextPayload: contextPayload
-                    ),
-                    completion: completion
-                )
-            }
-        }
-        return eventIdentifier.dialogRequestId
+        return sendFullContextEvent(elementSelected(
+            templateId: templateId,
+            token: token,
+            postback: postback
+        ), completion: completion).dialogRequestId
     }
     
     func notifyUserInteraction() {
@@ -209,18 +184,6 @@ extension DisplayAgent: PlaySyncDelegate {
     }
 }
 
-// MARK: - FocusChannelDelegate
-
-extension DisplayAgent: FocusChannelDelegate {
-    public func focusChannelPriority() -> FocusChannelPriority {
-        return .background
-    }
-    
-    public func focusChannelDidChange(focusState: FocusState) {
-        log.info(focusState)
-    }
-}
-
 // MARK: - Private(Directive, Event)
 
 private extension DisplayAgent {
@@ -235,20 +198,20 @@ private extension DisplayAgent {
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let item = self.templateList.first(where: { $0.template.playServiceId == payload.playServiceId }) else {
-                    self.sendEvent(
+                    self.sendCompactContextEvent(Event(
                         typeInfo: .closeFailed,
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    )
+                    ).rx)
                     return
                 }
                 
                 self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
-                self.sendEvent(
+                self.sendCompactContextEvent(Event(
                     typeInfo: .closeSucceeded,
                     playServiceId: payload.playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
-                )
+                ).rx)
             }
         }
     }
@@ -264,11 +227,11 @@ private extension DisplayAgent {
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let item = self.templateList.first(where: { $0.template.playServiceId == payload.playServiceId }) else {
-                    self.sendEvent(
+                    self.sendCompactContextEvent(Event(
                         typeInfo: .controlFocusFailed(direction: payload.direction),
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    )
+                    ).rx)
                     return
                 }
                 
@@ -277,11 +240,11 @@ private extension DisplayAgent {
                     
                     self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
                     let typeInfo: Event.TypeInfo = focusResult ? .controlFocusSucceeded(direction: payload.direction) : .controlFocusFailed(direction: payload.direction)
-                    self.sendEvent(
+                    self.sendCompactContextEvent(Event(
                         typeInfo: typeInfo,
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    )
+                    ).rx)
                 }
             }
         }
@@ -298,11 +261,11 @@ private extension DisplayAgent {
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 guard let item = self.templateList.first(where: { $0.template.playServiceId == payload.playServiceId }) else {
-                    self.sendEvent(
+                    self.sendCompactContextEvent(Event(
                         typeInfo: .controlScrollFailed(direction: payload.direction),
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    )
+                    ).rx)
                     return
                 }
                 self.delegate?.displayAgentShouldScroll(templateId: item.templateId, direction: payload.direction) { [weak self] scrollResult in
@@ -310,11 +273,11 @@ private extension DisplayAgent {
                     
                     self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
                     let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded(direction: payload.direction) : .controlScrollFailed(direction: payload.direction)
-                    self.sendEvent(
+                    self.sendCompactContextEvent(Event(
                         typeInfo: typeInfo,
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    )
+                    ).rx)
                 }
             }
         }
@@ -373,11 +336,9 @@ private extension DisplayAgent {
                     return
                 }
                 defer {
-                    self.focusManager.releaseFocus(channelDelegate: self)
                     completion(.finished)
                 }
                 
-                self.focusManager.requestFocus(channelDelegate: self)
                 self.sessionManager.activate(dialogRequestId: item.dialogRequestId, category: .display)
                 self.playSyncManager.startPlay(
                     property: item.template.playSyncProperty,
@@ -423,30 +384,55 @@ private extension DisplayAgent {
 // MARK: - Private (Event)
 
 private extension DisplayAgent {
-    @discardableResult func sendEvent(
-        typeInfo: Event.TypeInfo,
-        playServiceId: String,
-        referrerDialogRequestId: String? = nil,
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
         completion: ((StreamDataState) -> Void)? = nil
-    ) -> String {
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
+    }
+    
+    @discardableResult func sendFullContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
+        let eventIdentifier = EventIdentifier()
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
+    }
+}
+
+// MARK: - Private (Eventable)
+
+private extension DisplayAgent {
+    func elementSelected(templateId: String, token: String, postback: [String: AnyHashable]?) -> Single<Eventable> {
+        return Single.create { [weak self] (observer) -> Disposable in
+            guard let item = self?.templateList.first(where: { $0.templateId == templateId }) else {
+                observer(.error(NuguAgentError.invalidState))
+                return Disposables.create()
+            }
             
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    playServiceId: playServiceId,
-                    typeInfo: typeInfo
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: referrerDialogRequestId,
-                    contextPayload: contextPayload
-                ),
-                completion: completion
-            )
-        }
-        return eventIdentifier.dialogRequestId
+            let settingEvent = Event(
+                    typeInfo: .elementSelected(token: token, postback: postback),
+                    playServiceId: item.template.playServiceId,
+                    referrerDialogRequestId: item.dialogRequestId
+                )
+            observer(.success(settingEvent))
+            return Disposables.create()
+        }.subscribeOn(displayScheduler)
     }
 }
 

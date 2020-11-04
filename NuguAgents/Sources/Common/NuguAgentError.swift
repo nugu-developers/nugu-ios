@@ -1,8 +1,8 @@
 //
-//  SystemAgent+Event.swift
+//  NuguAgentError.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 10/06/2019.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/10/28.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,33 +20,8 @@
 
 import Foundation
 
-// MARK: - Event
-
-extension SystemAgent {    
-    struct Event {
-        let typeInfo: TypeInfo
-        let referrerDialogRequestId: String?
-        
-        enum TypeInfo {
-            case synchronizeState
-        }
-    }
-}
-
-// MARK: - Eventable
-
-extension SystemAgent.Event: Eventable {
-    var payload: [String: AnyHashable] {
-        switch typeInfo {
-        default:
-            return [:]
-        }
-    }
-    
-    var name: String {
-        switch typeInfo {
-        case .synchronizeState:
-            return "SynchronizeState"
-        }
-    }
+/// <#Description#>
+public enum NuguAgentError: Error {
+    case requestCanceled
+    case invalidState
 }

@@ -22,6 +22,8 @@ import Foundation
 
 import NuguCore
 
+import RxSwift
+
 public final class ExtensionAgent: ExtensionAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .extension, version: "1.1")
@@ -38,6 +40,8 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Action", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleAction)
     ]
+    
+    private var disposeBag = DisposeBag()
     
     public init(
         upstreamDataSender: UpstreamDataSendable,
@@ -61,11 +65,11 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
 
 public extension ExtensionAgent {
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        return sendEvent(
+        return sendCompactContextEvent(Event(
             typeInfo: .commandIssued(data: data),
             playServiceId: playServiceId,
-            completion: completion
-        )
+            referrerDialogRequestId: nil
+        ).rx, completion: completion).dialogRequestId
     }
 }
 
@@ -103,11 +107,11 @@ private extension ExtensionAgent {
                     guard let self = self else { return }
                     
                     let typeInfo: Event.TypeInfo = isSuccess ? .actionSucceeded : .actionFailed
-                    self.sendEvent(
+                    self.sendCompactContextEvent(Event(
                         typeInfo: typeInfo,
                         playServiceId: item.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    )
+                    ).rx)
             })
         }
     }
@@ -116,29 +120,18 @@ private extension ExtensionAgent {
 // MARK: - Private (Event)
 
 private extension ExtensionAgent {
-    @discardableResult func sendEvent(
-        typeInfo: Event.TypeInfo,
-        playServiceId: String,
-        referrerDialogRequestId: String? = nil,
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
         completion: ((StreamDataState) -> Void)? = nil
-    ) -> String {
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts(namespace: capabilityAgentProperty.name) { [weak self] contextPayload in
-            guard let self = self else { return }
-            
-            self.upstreamDataSender.sendEvent(
-                Event(
-                    playServiceId: playServiceId,
-                    typeInfo: typeInfo
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    referrerDialogRequestId: referrerDialogRequestId,
-                    contextPayload: contextPayload
-                ),
-                completion: completion
-            )
-        }
-        return eventIdentifier.dialogRequestId
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
 }

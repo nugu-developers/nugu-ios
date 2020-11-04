@@ -195,23 +195,19 @@ public class TycheEndPointDetectorEngine {
             epdClientChannelRELEASE(engineHandle)
         }
         
-        try epdFilePath.withCString { [weak self] (cstringEpdFile) -> Void in
-            guard let self = self else { return }
-            
-            guard let epdHandle = epdClientChannelSTART(
-                cstringEpdFile,
-                myint(sampleRate),
-                myint(EndPointDetectorConst.inputStreamType.rawValue),
-                myint(EndPointDetectorConst.outputStreamType.rawValue),
-                1,
-                myint(maxDuration),
-                myint(timeout),
-                myint(pauseLength)
-                ) else {
-                    throw EndPointDetectorError.initFailed
-            }
-            
-            self.engineHandle = epdHandle
+        guard let epdHandle = epdClientChannelSTART(
+            epdFilePath,
+            myint(sampleRate),
+            myint(EndPointDetectorConst.inputStreamType.rawValue),
+            myint(EndPointDetectorConst.outputStreamType.rawValue),
+            1,
+            myint(maxDuration),
+            myint(timeout),
+            myint(pauseLength)
+            ) else {
+                throw EndPointDetectorError.initFailed
         }
+        
+        self.engineHandle = epdHandle
     }
 }

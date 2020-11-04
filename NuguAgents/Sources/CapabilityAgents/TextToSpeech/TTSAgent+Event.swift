@@ -24,9 +24,10 @@ import Foundation
 
 extension TTSAgent {
     struct Event {
+        let typeInfo: TypeInfo
         let token: String?
         let playServiceId: String?
-        let typeInfo: TypeInfo
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case speechStarted

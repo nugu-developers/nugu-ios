@@ -25,6 +25,7 @@ import Foundation
 extension TextAgent {
     struct Event {
         let typeInfo: TypeInfo
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case textInput(text: String, token: String?, attributes: [String: AnyHashable]?)

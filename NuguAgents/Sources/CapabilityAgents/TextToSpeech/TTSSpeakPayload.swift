@@ -1,5 +1,5 @@
 //
-//  TTSMedia.swift
+//  TTSSpeakPayload.swift
 //  NuguAgents
 //
 //  Created by MinChul Lee on 02/05/2019.
@@ -22,35 +22,22 @@ import Foundation
 
 import NuguCore
 
-struct TTSMedia {
-    let payload: Payload
-    let dialogRequestId: String
-    let messageId: String
-    var cancelAssociation: Bool = false
+struct TTSSpeakPayload {
+    let playStackControl: PlayStackControl?
+    let sourceType: SourceType
+    let text: String
+    let token: String?
+    let playServiceId: String?
     
-    init(payload: Payload, dialogRequestId: String, messageId: String) {
-        self.payload = payload
-        self.dialogRequestId = dialogRequestId
-        self.messageId = messageId
-    }
-    
-    struct Payload {
-        let playStackControl: PlayStackControl?
-        let sourceType: SourceType
-        let text: String
-        let token: String?
-        let playServiceId: String?
-        
-        enum SourceType: String, Decodable {
-            case url = "URL"
-            case attachment = "ATTACHMENT"
-        }
+    enum SourceType: String, Decodable {
+        case url = "URL"
+        case attachment = "ATTACHMENT"
     }
 }
 
-// MARK: - TTSMedia.Payload: Decodable
+// MARK: - TTSSpeakPayload: Decodable
 
-extension TTSMedia.Payload: Decodable {
+extension TTSSpeakPayload: Decodable {
     enum CodingKeys: String, CodingKey {
         case playStackControl
         case sourceType

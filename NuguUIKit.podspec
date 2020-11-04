@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguUIKit'
-  s.version = '0.21.0'
+  s.version = '0.22.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'UI Set of Nugu Service'
   s.description = <<-DESC
@@ -19,7 +19,9 @@ Pod::Spec.new do |s|
   
   s.swift_version = '5.1'
 
-  s.resources = 'NuguUIKit/Resources/**/*.{json,xcassets}', 'NuguUIKit/Sources/**/*.{xib}'
+  s.resources = 'NuguUIKit/Resources/**/*.{json}', 'NuguUIKit/Sources/**/*.{xib}'
+  s.resource_bundles = { 'NuguUIKit-Images' => ['NuguUIKit/Resources/*.xcassets'] }
+
   s.source_files = 'NuguUIKit/Sources/**/*.{swift}'
 
   s.dependency 'lottie-ios', '~> 3'

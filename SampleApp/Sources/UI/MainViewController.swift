@@ -615,12 +615,12 @@ extension MainViewController: DialogStateDelegate {
                 }
                 // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
                 self.showVoiceChrome()
+                self.nuguVoiceChrome.changeState(state: .speaking)
                 if let chips = chips {
                     let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                     let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                     self.setChipsButton(actionList: actionList, normalList: normalList)
                 }
-                self.nuguVoiceChrome.changeState(state: .speaking)
             }
         case .listening:
             voiceChromeDismissWorkItem?.cancel()
@@ -628,15 +628,15 @@ extension MainViewController: DialogStateDelegate {
                 guard let self = self else { return }
                 // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
                 self.showVoiceChrome()
-                if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
-                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                    self.setChipsButton(actionList: actionList, normalList: normalList)
-                }
                 if isMultiturn || sessionActivated {
                     self.nuguVoiceChrome.changeState(state: .listeningPassive)
                     self.nuguVoiceChrome.setRecognizedText(text: nil)
                     self.nuguButton.isActivated = false
+                }
+                if let chips = chips {
+                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
+                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
+                    self.setChipsButton(actionList: actionList, normalList: normalList)
                 }
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
             }
@@ -839,6 +839,9 @@ extension MainViewController: AudioPlayerAgentDelegate {
         log.debug("audioPlayerAgentDidChange : \(state)")
         NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(state: state)
         NuguAudioSessionManager.shared.pausedByInterruption = false
+        if state == .playing {
+            NuguAudioSessionManager.shared.updateAudioSessionToPlaybackIfNeeded()
+        }
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }

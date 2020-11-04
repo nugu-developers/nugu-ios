@@ -67,9 +67,6 @@ public enum NuguLoginKitError: Error {
     
     /// The error occurs by unknown or complicated issue.
     case unknown(description: String?)
-    
-    /// Temporay error (for t-agent)
-    case finished
 }
 
 /// The `APIErrorReason` is the reason for the case where the `statusCode` is not 200-299.

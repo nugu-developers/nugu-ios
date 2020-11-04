@@ -22,17 +22,15 @@ import Foundation
 
 public class FocusManager: FocusManageable {
     public weak var delegate: FocusDelegate?
-    private var handlingSoundDirectives = Set<String>()
     
     private let focusDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.focus_manager", qos: .userInitiated)
+    private let focusDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.focus_manager_delegate", qos: .userInitiated)
     
     @Atomic private var channelInfos = [FocusChannelInfo]()
     
     private var releaseFocusWorkItem: DispatchWorkItem?
     
-    public init(directiveSequencer: DirectiveSequenceable) {
-        directiveSequencer.add(delegate: self)
-    }
+    public init() {}
 }
 
 // MARK: - FocusManageable
@@ -54,7 +52,7 @@ extension FocusManager {
     }
     
     public func requestFocus(channelDelegate: FocusChannelDelegate) {
-        focusDispatchQueue.async { [weak self] in
+        focusDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
             guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
                 log.warning("\(channelDelegate): Channel not registered")
@@ -91,7 +89,7 @@ extension FocusManager {
     }
 
     public func releaseFocus(channelDelegate: FocusChannelDelegate) {
-        focusDispatchQueue.async { [weak self] in
+        focusDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
             guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
                 log.warning("\(channelDelegate): Channel not registered")
@@ -99,28 +97,6 @@ extension FocusManager {
             }
             
             self.update(channelDelegate: channelDelegate, focusState: .nothing)
-        }
-    }
-}
-
-// MARK: - DirectiveSequencerDelegate
-
-extension FocusManager: DirectiveSequencerDelegate {
-    public func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {
-        focusDispatchQueue.async { [weak self] in
-            if blockingPolicy.medium == .audio {
-                self?.handlingSoundDirectives.insert(directive.header.messageId)
-            }
-        }
-    }
-    
-    public func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult) {
-        focusDispatchQueue.async { [weak self] in
-            guard let self = self, self.handlingSoundDirectives.isEmpty == false else { return }
-            self.handlingSoundDirectives.remove(directive.header.messageId)
-            if self.handlingSoundDirectives.isEmpty == true {
-                self.notifyReleaseFocusIfNeeded()
-            }
         }
     }
 }
@@ -135,7 +111,9 @@ private extension FocusManager {
             return
         }
         
-        channelDelegate.focusChannelDidChange(focusState: focusState)
+        focusDelegateDispatchQueue.async {
+            channelDelegate.focusChannelDidChange(focusState: focusState)
+        }
         
         switch focusState {
         case .nothing:
@@ -163,7 +141,6 @@ private extension FocusManager {
         releaseFocusWorkItem?.cancel()
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
-            guard self.handlingSoundDirectives.isEmpty else { return }
             
             if self.channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
                 log.debug("")

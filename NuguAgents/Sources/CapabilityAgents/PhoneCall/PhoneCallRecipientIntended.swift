@@ -1,9 +1,9 @@
 //
-//  ASRInitiator.swift
+//  PhoneCallRecipient.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2020/09/21.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/05/18.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -21,8 +21,18 @@
 import Foundation
 
 /// <#Description#>
-public enum ASRInitiator: Equatable {
-    case wakeUpKeyword(keyword: String?, data: Data, start: Int, end: Int, detection: Int)
-    case user
-    case scenario
+public struct PhoneCallRecipientIntended: Codable {
+    /// <#Description#>
+    public let name: String?
+    /// <#Description#>
+    public let label: String?
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - name: <#name description#>
+    ///   - label: <#label description#>
+    public init(name: String?, label: String?) {
+        self.name = name
+        self.label = label
+    }
 }
