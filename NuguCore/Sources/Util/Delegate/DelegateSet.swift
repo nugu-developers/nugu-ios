@@ -40,6 +40,14 @@ public class DelegateSet<T> {
             })
     }
     
+    public func notify(queue: DispatchQueue, body: (T) -> Void) {
+        queue.sync {
+            allObjects.forEach({ (value) in
+                body(value)
+            })
+        }
+    }
+    
     public var allObjects: [T] {
         return delegates.allObjects.compactMap { $0 as? T }
     }
