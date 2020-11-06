@@ -26,18 +26,32 @@ import NuguCore
 ///
 /// NUGU ask you to get more information to know about you requested.
 struct ASRExpectSpeech {
-    public let playServiceId: String?
-    public let domainTypes: [AnyHashable]?
-    public let asrContext: [String: AnyHashable]?
+    let messageId: String
+    let dialogRequestId: String
+    let payload: Payload
+    
+    struct Payload {
+        let playServiceId: String?
+        let domainTypes: [AnyHashable]?
+        let asrContext: [String: AnyHashable]?
+        let epd: EPD?
+        
+        struct EPD: Decodable {
+            let timeoutMilliseconds: Int?
+            let silenceIntervalInMilliseconds: Int?
+            let maxSpeechDurationMilliseconds: Int?
+        }
+    }
 }
 
-// MARK: - ASRExpectSpeech: Decodable
+// MARK: - ASRExpectSpeech.Payload: Decodable
 
-extension ASRExpectSpeech: Decodable {
+extension ASRExpectSpeech.Payload: Decodable {
     enum CodingKeys: String, CodingKey {
         case playServiceId
         case domainTypes
         case asrContext
+        case epd
     }
     
     public init(from decoder: Decoder) throws {
@@ -45,5 +59,26 @@ extension ASRExpectSpeech: Decodable {
         playServiceId = try? container.decode(String.self, forKey: .playServiceId)
         domainTypes = try? container.decode([AnyHashable].self, forKey: .domainTypes)
         asrContext = try? container.decode([String: AnyHashable].self, forKey: .asrContext)
+        epd = try? container.decode(EPD.self, forKey: .epd)
+    }
+}
+
+// MARK: - ASRExpectSpeech.Payload.EPD+TimeIntervallic
+
+extension ASRExpectSpeech.Payload.EPD {
+    var timeout: TimeIntervallic? {
+        guard let timeoutMilliseconds = timeoutMilliseconds else { return nil }
+        
+        return NuguTimeInterval(milliseconds: timeoutMilliseconds)
+    }
+    var maxDuration: TimeIntervallic? {
+        guard let maxSpeechDurationMilliseconds = maxSpeechDurationMilliseconds else { return nil }
+        
+        return NuguTimeInterval(milliseconds: maxSpeechDurationMilliseconds)
+    }
+    var pauseLength: TimeIntervallic? {
+        guard let silenceIntervalInMilliseconds = silenceIntervalInMilliseconds else { return nil }
+        
+        return NuguTimeInterval(milliseconds: silenceIntervalInMilliseconds)
     }
 }
