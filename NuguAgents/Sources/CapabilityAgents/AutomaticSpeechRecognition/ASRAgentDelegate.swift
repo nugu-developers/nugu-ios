@@ -28,5 +28,6 @@ public protocol ASRAgentDelegate: class {
     
     /// Called when received a result of `startRecognition` request.
     /// - Parameter result: A recognized result.
+    /// - Parameter dialogRequestId: The dialog request id of the originally requested event.
     func asrAgentDidReceive(result: ASRResult, dialogRequestId: String)
 }

@@ -24,13 +24,11 @@ import NuguCore
 
 struct SoundMedia {
     let payload: Payload
-    let dialogRequestId: String
-    let messageId: String
+    let header: Downstream.Header
     
-    init(payload: Payload, dialogRequestId: String, messageId: String) {
+    init(payload: Payload, header: Downstream.Header) {
         self.payload = payload
-        self.dialogRequestId = dialogRequestId
-        self.messageId = messageId
+        self.header = header
     }
     
     struct Payload {
@@ -39,9 +37,9 @@ struct SoundMedia {
     }
 }
 
-// MARK: - SoundMedia.Payload: Decodable
+// MARK: - SoundMedia.Payload: Codable
 
-extension SoundMedia.Payload: Decodable {
+extension SoundMedia.Payload: Codable {
     enum CodingKeys: String, CodingKey {
         case beepName
         case playServiceId

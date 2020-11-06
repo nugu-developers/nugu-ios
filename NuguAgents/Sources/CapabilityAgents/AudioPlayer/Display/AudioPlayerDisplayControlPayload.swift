@@ -28,15 +28,15 @@ public struct AudioPlayerDisplayControlPayload {
     let direction: Direction
     
     /// <#Description#>
-    public enum Direction: String, Decodable {
+    public enum Direction: String, Codable {
         case previous = "PREVIOUS"
         case next = "NEXT"
     }
 }
 
-// MARK: - Decodable
+// MARK: - Codable
 
-extension AudioPlayerDisplayControlPayload: Decodable {
+extension AudioPlayerDisplayControlPayload: Codable {
     enum CodingKeys: String, CodingKey {
         case playServiceId
         case direction

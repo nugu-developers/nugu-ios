@@ -99,7 +99,7 @@ private extension MediaPlayerAgent {
             
             self?.delegate?.mediaPlayerAgentReceivePlay(
                 payload: playPayload,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processPlayDirectiveResult(payload: playPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -120,7 +120,7 @@ private extension MediaPlayerAgent {
             self?.delegate?.mediaPlayerAgentReceiveStop(
                 playServiceId: playServiceId,
                 token: token,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processStopDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -138,7 +138,7 @@ private extension MediaPlayerAgent {
             
             self?.delegate?.mediaPlayerAgentReceiveSearch(
                 payload: searchPayload,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processSearchDirectiveResult(payload: searchPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -156,7 +156,7 @@ private extension MediaPlayerAgent {
             
             self?.delegate?.mediaPlayerAgentReceivePrevious(
                 payload: previousPayload,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processPreviousDirectiveResult(payload: previousPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -174,7 +174,7 @@ private extension MediaPlayerAgent {
             
             self?.delegate?.mediaPlayerAgentReceiveNext(
                 payload: nextPayload,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processNextDirectiveResult(payload: nextPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -192,7 +192,7 @@ private extension MediaPlayerAgent {
             
             self?.delegate?.mediaPlayerAgentReceiveMove(
                 payload: movePayload,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processMoveDirectiveResult(payload: movePayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -213,7 +213,7 @@ private extension MediaPlayerAgent {
             self?.delegate?.mediaPlayerAgentReceivePause(
                 playServiceId: playServiceId,
                 token: token,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processPauseDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -234,7 +234,7 @@ private extension MediaPlayerAgent {
             self?.delegate?.mediaPlayerAgentReceiveResume(
                 playServiceId: playServiceId,
                 token: token,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                 self?.processResumeDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -255,7 +255,7 @@ private extension MediaPlayerAgent {
             self?.delegate?.mediaPlayerAgentReceiveRewind(
                 playServiceId: playServiceId,
                 token: token,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processRewindDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -273,7 +273,7 @@ private extension MediaPlayerAgent {
             
             self?.delegate?.mediaPlayerAgentReceiveToggle(
                 payload: togglePayload,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processToggleDirectiveResult(payload: togglePayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -294,7 +294,7 @@ private extension MediaPlayerAgent {
             self?.delegate?.mediaPlayerAgentReceiveGetInfo(
                 playServiceId: playServiceId,
                 token: token,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processGetInfoDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -318,7 +318,7 @@ private extension MediaPlayerAgent {
                 playServiceId: playServiceId,
                 action: action,
                 target: target,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processHandlePlaylistDirectiveResult(playServiceId: playServiceId, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
@@ -339,7 +339,7 @@ private extension MediaPlayerAgent {
             self?.delegate?.mediaPlayerAgentReceiveLyrics(
                 playServiceId: playServiceId,
                 action: action,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processHandleLyricsDirectiveResult(playServiceId: playServiceId, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })

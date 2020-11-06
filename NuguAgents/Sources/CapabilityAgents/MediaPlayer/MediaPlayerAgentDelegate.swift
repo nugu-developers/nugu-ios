@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// <#Description#>
 public protocol MediaPlayerAgentDelegate: class {
     /// <#Description#>
@@ -28,86 +30,99 @@ public protocol MediaPlayerAgentDelegate: class {
     /// <#Description#>
     /// - Parameters:
     ///   - payload: <#payload description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.   
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceivePlay(payload: MediaPlayerAgentDirectivePayload.Play, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Play) -> Void))
+    func mediaPlayerAgentReceivePlay(payload: MediaPlayerAgentDirectivePayload.Play, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Play) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - playServiceId: <#playServiceId description#>
     ///   - token: <#token description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceiveStop(playServiceId: String, token: String, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Stop) -> Void))
+    func mediaPlayerAgentReceiveStop(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Stop) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - payload: <#payload description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceiveSearch(payload: MediaPlayerAgentDirectivePayload.Search, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Search) -> Void))
+    func mediaPlayerAgentReceiveSearch(payload: MediaPlayerAgentDirectivePayload.Search, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Search) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - payload: <#payload description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceivePrevious(payload: MediaPlayerAgentDirectivePayload.Previous, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Previous) -> Void))
+    func mediaPlayerAgentReceivePrevious(payload: MediaPlayerAgentDirectivePayload.Previous, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Previous) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - payload: <#payload description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceiveNext(payload: MediaPlayerAgentDirectivePayload.Next, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Next) -> Void))
+    func mediaPlayerAgentReceiveNext(payload: MediaPlayerAgentDirectivePayload.Next, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Next) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - payload: <#payload description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceiveMove(payload: MediaPlayerAgentDirectivePayload.Move, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Move) -> Void))
+    func mediaPlayerAgentReceiveMove(payload: MediaPlayerAgentDirectivePayload.Move, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Move) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - playServiceId: <#playServiceId description#>
     ///   - token: <#token description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceivePause(playServiceId: String, token: String, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Pause) -> Void))
+    func mediaPlayerAgentReceivePause(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Pause) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - playServiceId: <#playServiceId description#>
     ///   - token: <#token description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceiveResume(playServiceId: String, token: String, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Resume) -> Void))
+    func mediaPlayerAgentReceiveResume(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Resume) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - playServiceId: <#playServiceId description#>
     ///   - token: <#token description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceiveRewind(playServiceId: String, token: String, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Rewind) -> Void))
+    func mediaPlayerAgentReceiveRewind(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Rewind) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - payload: <#payload description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceiveToggle(payload: MediaPlayerAgentDirectivePayload.Toggle, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.Toggle) -> Void))
+    func mediaPlayerAgentReceiveToggle(payload: MediaPlayerAgentDirectivePayload.Toggle, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Toggle) -> Void))
     
     /// <#Description#>
     /// - Parameters:
     ///   - playServiceId: <#playServiceId description#>
     ///   - token: <#token description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
-    func mediaPlayerAgentReceiveGetInfo(playServiceId: String, token: String, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.GetInfo) -> Void))
+    func mediaPlayerAgentReceiveGetInfo(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.GetInfo) -> Void))
     
-    func mediaPlayerAgentReceivePlaylist(playServiceId: String, action: String, target: String?, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.HandlePlaylist) -> Void))
+    /// <#Description#>
+    /// - Parameters:
+    ///   - playServiceId: <#playServiceId description#>
+    ///   - action: <#action description#>
+    ///   - target: <#target description#>
+    ///   - header: The header of the originally handled directive.
+    ///   - completion: <#completion description#>
+    func mediaPlayerAgentReceivePlaylist(playServiceId: String, action: String, target: String?, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.HandlePlaylist) -> Void))
     
-    func mediaPlayerAgentReceiveLyrics(playServiceId: String, action: String, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.HandleLyrics) -> Void))
+    /// <#Description#>
+    /// - Parameters:
+    ///   - playServiceId: <#playServiceId description#>
+    ///   - action: <#action description#>
+    ///   - header: The header of the originally handled directive.
+    ///   - completion: <#completion description#>
+    func mediaPlayerAgentReceiveLyrics(playServiceId: String, action: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.HandleLyrics) -> Void))
 }

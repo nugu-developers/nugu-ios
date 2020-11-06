@@ -60,7 +60,7 @@ public struct DisplayTemplate {
             PlaySyncProperty(layerType: contextLayer, contextType: .display)
         }
         
-        public enum Duration: String, Decodable {
+        public enum Duration: String, Codable {
             case short = "SHORT"
             case mid = "MID"
             case long = "LONG"
@@ -69,9 +69,9 @@ public struct DisplayTemplate {
     }
 }
 
-// MARK: - DisplayTemplate.Payload: Decodable
+// MARK: - DisplayTemplate.Payload: Codable
 
-extension DisplayTemplate.Payload: Decodable {
+extension DisplayTemplate.Payload: Codable {
     enum CodingKeys: String, CodingKey {
         case token
         case playServiceId

@@ -102,7 +102,7 @@ private extension ExtensionAgent {
             self?.delegate?.extensionAgentDidReceiveAction(
                 data: item.data,
                 playServiceId: item.playServiceId,
-                dialogRequestId: directive.header.dialogRequestId,
+                header: directive.header,
                 completion: { [weak self] (isSuccess) in
                     guard let self = self else { return }
                     

@@ -20,7 +20,7 @@
 
 import Foundation
 
-struct ExtensionAgentItem: Decodable {
+struct ExtensionAgentItem: Codable {
     let playServiceId: String
     let data: [String: AnyHashable]
     
@@ -34,5 +34,11 @@ struct ExtensionAgentItem: Decodable {
         
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
         data = try container.decode([String: AnyHashable].self, forKey: .data)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(playServiceId, forKey: .playServiceId)
+        try container.encode(data, forKey: .data)
     }
 }
