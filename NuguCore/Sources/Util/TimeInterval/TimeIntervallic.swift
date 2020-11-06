@@ -23,7 +23,7 @@ import AVFoundation
 
 // MARK: - TimeIntervallic
 
-/// <#Description#>
+/// Represents a time interval
 public protocol TimeIntervallic {
     
     /// <#Description#>

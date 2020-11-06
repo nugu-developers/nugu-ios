@@ -20,31 +20,31 @@
 
 import Foundation
 
-/// <#Description#>
+/// Represents a time interval
 public struct NuguTimeInterval {
-    /// <#Description#>
+    /// A number of seconds.
     public let seconds: Double
     
-    /// <#Description#>
-    /// - Parameter seconds: <#seconds description#>
+    /// Creates a `NuguTimeInterval`
+    /// - Parameter seconds: The number of seconds.
     public init(seconds: Double) {
         self.seconds = seconds
     }
     
-    /// <#Description#>
-    /// - Parameter seconds: <#seconds description#>
+    /// Creates a `NuguTimeInterval`
+    /// - Parameter seconds: The number of seconds.
     public init(seconds: Int) {
         self.seconds = Double(seconds)
     }
     
-    /// <#Description#>
-    /// - Parameter milliseconds: <#milliseconds description#>
+    /// Creates a `NuguTimeInterval`
+    /// - Parameter seconds: The number of milliseconds.
     public init(milliseconds: Double) {
         self.seconds = milliseconds / 1000.0
     }
     
-    /// <#Description#>
-    /// - Parameter milliseconds: <#milliseconds description#>
+    /// Creates a `NuguTimeInterval`
+    /// - Parameter seconds: The number of milliseconds.
     public init(milliseconds: Int) {
         self.seconds = Double(milliseconds) / 1000.0
     }
