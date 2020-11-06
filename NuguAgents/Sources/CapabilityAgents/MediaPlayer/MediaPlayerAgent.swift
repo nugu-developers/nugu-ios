@@ -25,7 +25,7 @@ import NuguCore
 import RxSwift
 
 public final class MediaPlayerAgent: MediaPlayerAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .mediaPlayer, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .mediaPlayer, version: "1.1")
     
     public weak var delegate: MediaPlayerAgentDelegate?
     
@@ -36,17 +36,19 @@ public final class MediaPlayerAgent: MediaPlayerAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handlePlay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleStop),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Play", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handlePlay),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleStop),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Search", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSearch),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Previous", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handlePrevious),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Next", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleNext),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Move", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleMove),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handlePause),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Resume", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleResume),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Rewind", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRewind),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Previous", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handlePrevious),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Next", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleNext),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Move", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleMove),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Pause", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handlePause),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Resume", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleResume),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Rewind", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleRewind),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Toggle", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleToggle),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "GetInfo", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleGetInfo)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "GetInfo", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleGetInfo),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandlePlaylist", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handlePlaylist),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HandleLyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleLyrics)
     ]
     
     private lazy var disposeBag = DisposeBag()
@@ -295,6 +297,51 @@ private extension MediaPlayerAgent {
                 header: directive.header,
                 completion: { [weak self] (result) in
                     self?.processGetInfoDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+            })
+        }
+    }
+    
+    func handlePlaylist() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let payloadDictionary = directive.payloadDictionary,
+                let playServiceId = payloadDictionary["playServiceId"] as? String,
+                let action = payloadDictionary["action"] as? String else {
+                    completion(.failed("Invalid payload"))
+                    return
+            }
+            
+            defer { completion(.finished) }
+            
+            let target = payloadDictionary["target"] as? String
+            
+            self?.delegate?.mediaPlayerAgentReceivePlaylist(
+                playServiceId: playServiceId,
+                action: action,
+                target: target,
+                header: directive.header,
+                completion: { [weak self] (result) in
+                    self?.processHandlePlaylistDirectiveResult(playServiceId: playServiceId, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+            })
+        }
+    }
+    
+    func handleLyrics() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let payloadDictionary = directive.payloadDictionary,
+                let playServiceId = payloadDictionary["playServiceId"] as? String,
+                let action = payloadDictionary["action"] as? String else {
+                    completion(.failed("Invalid payload"))
+                    return
+            }
+            
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceiveLyrics(
+                playServiceId: playServiceId,
+                action: action,
+                header: directive.header,
+                completion: { [weak self] (result) in
+                    self?.processHandleLyricsDirectiveResult(playServiceId: playServiceId, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }
     }
@@ -562,5 +609,51 @@ private extension MediaPlayerAgent {
             token: token,
             referrerDialogRequestId: referrerDialogRequestId
         ).rx)
+    }
+    
+    func processHandlePlaylistDirectiveResult(
+        playServiceId: String,
+        result: MediaPlayerAgentProcessResult.HandlePlaylist,
+        referrerDialogRequestId: String
+    ) {
+        let typeInfo: MediaPlayerAgent.Event.TypeInfo
+        switch result {
+        case .succeeded:
+            typeInfo = .handlePlaylistSucceeded
+        case .failed(let errorCode):
+            typeInfo = .handlePlaylistFailed(errorCode: errorCode)
+        }
+        
+        sendCompactContextEvent(
+            Event(
+                typeInfo: typeInfo,
+                playServiceId: playServiceId,
+                token: nil,
+                referrerDialogRequestId: referrerDialogRequestId
+            ).rx
+        )
+    }
+    
+    func processHandleLyricsDirectiveResult(
+        playServiceId: String,
+        result: MediaPlayerAgentProcessResult.HandleLyrics,
+        referrerDialogRequestId: String
+    ) {
+        let typeInfo: MediaPlayerAgent.Event.TypeInfo
+        switch result {
+        case .succeeded:
+            typeInfo = .handleLyricsSucceeded
+        case .failed(let errorCode):
+            typeInfo = .handleLyricsFailed(errorCode: errorCode)
+        }
+        
+        sendCompactContextEvent(
+            Event(
+                typeInfo: typeInfo,
+                playServiceId: playServiceId,
+                token: nil,
+                referrerDialogRequestId: referrerDialogRequestId
+            ).rx
+        )
     }
 }

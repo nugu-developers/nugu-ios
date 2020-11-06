@@ -22,28 +22,8 @@ import Foundation
 
 /// <#Description#>
 public struct MediaPlayerAgentSong: Codable {
-    
-    // MARK: Category
-    
     /// <#Description#>
-    public enum Category: String, Codable {
-        case none = "NONE"
-        case recommend = "RECOMMEND"
-        case popular = "POPULAR"
-        case new = "NEW"
-        case chart = "CHART"
-        case recentPlayed = "RECENT_PLAYED"
-        case favorite = "FAVORITE"
-        case likeSong = "LIKE_SONG"
-        case likeAlbum = "LIKE_ALBUM"
-        case likeArtist = "LIKE_ARTIST"
-        case likeTheme = "LIKE_THEME"
-        case playlist = "PLAYLIST"
-        case nowplaying = "NOWPLAYING"
-    }
-    
-    /// <#Description#>
-    public let category: Category
+    public let category: String
     /// <#Description#>
     public let theme: String?
     /// <#Description#>
@@ -76,7 +56,7 @@ public struct MediaPlayerAgentSong: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        category = try container.decode(Category.self, forKey: .category)
+        category = try container.decode(String.self, forKey: .category)
         theme = try container.decodeIfPresent(String.self, forKey: .theme)
         genre = try container.decodeIfPresent([String].self, forKey: .genre)
         artist = try container.decodeIfPresent([String].self, forKey: .artist)
@@ -99,7 +79,7 @@ public struct MediaPlayerAgentSong: Codable {
     ///   - issueDate: <#issueDate description#>
     ///   - etc: <#etc description#>
     public init(
-        category: Category,
+        category: String,
         theme: String?,
         genre: [String]?,
         artist: [String]?,

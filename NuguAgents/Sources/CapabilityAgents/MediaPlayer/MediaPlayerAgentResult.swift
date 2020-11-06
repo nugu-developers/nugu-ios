@@ -111,4 +111,16 @@ public enum MediaPlayerAgentProcessResult {
         case succeeded(song: MediaPlayerAgentSong?, issueDate: String?, playTime: String?, playListName: String?)
         case failed(errorCode: String?)
     }
+    
+    /// <#Description#>
+    public enum HandlePlaylist {
+        case succeeded
+        case failed(errorCode: String?)
+    }
+    
+    /// <#Description#>
+    public enum HandleLyrics {
+        case succeeded
+        case failed(errorCode: String?)
+    }
 }

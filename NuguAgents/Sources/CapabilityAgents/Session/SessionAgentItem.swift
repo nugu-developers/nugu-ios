@@ -20,7 +20,7 @@
 
 import Foundation
 
-struct SessionAgentItem: Decodable {
+struct SessionAgentItem: Codable {
     let playServiceId: String
     let sessionId: String
 }

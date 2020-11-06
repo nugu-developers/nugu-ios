@@ -37,9 +37,9 @@ struct SoundMedia {
     }
 }
 
-// MARK: - SoundMedia.Payload: Decodable
+// MARK: - SoundMedia.Payload: Codable
 
-extension SoundMedia.Payload: Decodable {
+extension SoundMedia.Payload: Codable {
     enum CodingKeys: String, CodingKey {
         case beepName
         case playServiceId

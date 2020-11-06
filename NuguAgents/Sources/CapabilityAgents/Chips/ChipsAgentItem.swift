@@ -30,7 +30,7 @@ public struct ChipsAgentItem {
     public let chips: [Chip]
     
     /// <#Description#>
-    public enum Target: String, Decodable {
+    public enum Target: String, Codable {
         case dialog = "DM"
     }
     
@@ -44,16 +44,16 @@ public struct ChipsAgentItem {
         public let token: String?
         
         /// <#Description#>
-        public enum ItemType: String, Decodable {
+        public enum ItemType: String, Codable {
             case action = "ACTION"
             case general = "GENERAL"
         }
     }
 }
 
-// MARK: - Decodable
+// MARK: - Codable
 
-extension ChipsAgentItem: Decodable {
+extension ChipsAgentItem: Codable {
     enum CodingKeys: String, CodingKey {
         case playServiceId
         case target
@@ -69,7 +69,7 @@ extension ChipsAgentItem: Decodable {
     }
 }
 
-extension ChipsAgentItem.Chip: Decodable {
+extension ChipsAgentItem.Chip: Codable {
     enum CodingKeys: String, CodingKey {
         case type
         case text
