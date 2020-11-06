@@ -20,7 +20,8 @@ Default Instances for Nugu service
 
   s.swift_version = '5.1'
   
-  s.source_files = 'NuguClientKit/Sources/**/*'
+  s.source_files = 'NuguClientKit/Sources/**/*', 'NuguClientKit/Sources-ObjC/*.{h,m}', 'NuguClientKit/NuguClientKit.h'
+  s.public_header_files = 'NuguClientKit/Sources-ObjC/*.h', 'NuguClientKit/NuguClientKit.h'
 
   s.dependency 'NuguCore', '~> 0'
   s.dependency 'NuguAgents', '~> 0'
