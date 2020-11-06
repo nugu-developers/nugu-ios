@@ -108,4 +108,21 @@ public protocol MediaPlayerAgentDelegate: class {
     ///   - header: The header of the originally handled directive.
     ///   - completion: <#completion description#>
     func mediaPlayerAgentReceiveGetInfo(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.GetInfo) -> Void))
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - playServiceId: <#playServiceId description#>
+    ///   - action: <#action description#>
+    ///   - target: <#target description#>
+    ///   - header: The header of the originally handled directive.
+    ///   - completion: <#completion description#>
+    func mediaPlayerAgentReceivePlaylist(playServiceId: String, action: String, target: String?, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.HandlePlaylist) -> Void))
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - playServiceId: <#playServiceId description#>
+    ///   - action: <#action description#>
+    ///   - header: The header of the originally handled directive.
+    ///   - completion: <#completion description#>
+    func mediaPlayerAgentReceiveLyrics(playServiceId: String, action: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.HandleLyrics) -> Void))
 }
