@@ -7,4 +7,4 @@ before_install:
    - ./carthage.sh update --cache-builds --platform iOS
 
 script:
-  - xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest'
+  - xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' 
