@@ -3,6 +3,31 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.23.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.0)
+Released on 2020-11-06
+### Sample Application
+#### Fixed
+- Fixes a bug where `startWakeUpDetector` does not called. (#582)
+
+#### Update
+- Pass `Downstream.Header` instead of `DialogRequestId` to function parameter of agent delegate. (#593)
+
+### SDK
+#### Fixex
+- Make `KeywordSource` not possible to be set simultaniouly. (#581)
+- Assign and release focus synchronously. (#580)
+- Fixes a bug where prefetch `AudioPlayer.Play`. (#577)
+- Make computed properties of `AudioPlayerAgent` and `TTSAgent` to be thread safe. (#583)
+
+#### Update
+- Extends decodable public struct to conform `Codable` (#592) (#593) (#584) (#586)
+- `ASRAgent` 1.4 (upgrade capability-agent) (#590)
+- Pass `Downstream.Header` instead of `DialogRequestId` to function parameter of agent delegate. (#593)
+- `MediaPlayer` 1.1 (upgrade capability-agent) #596
+
+#### Removed
+- Remove `phoneCallAgentRequestState()` delegate method (#576) 
+
 ## [0.22.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.22.0)
 Released on 2020-10-29
 ### Sample Application
