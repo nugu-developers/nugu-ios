@@ -32,8 +32,7 @@ final class TTSPlayer {
     weak var delegate: MediaPlayerDelegate?
     
     let payload: TTSSpeakPayload
-    let dialogRequestId: String
-    let messageId: String
+    let header: Downstream.Header
     var cancelAssociation: Bool = false
     
     init(directive: Downstream.Directive) throws {
@@ -42,15 +41,14 @@ final class TTSPlayer {
             throw TTSError.notSupportedSourceType
         }
         
-        dialogRequestId = directive.header.dialogRequestId
-        messageId = directive.header.messageId
+        header = directive.header
         internalPlayer = try OpusPlayer()
         internalPlayer?.delegate = self
     }
     
     func handleAttachment(_ attachment: Downstream.Attachment) -> Bool {
         guard let dataSource = internalPlayer as? MediaOpusStreamDataSource,
-              dialogRequestId == attachment.header.dialogRequestId else {
+              header.dialogRequestId == attachment.header.dialogRequestId else {
             return false
         }
         

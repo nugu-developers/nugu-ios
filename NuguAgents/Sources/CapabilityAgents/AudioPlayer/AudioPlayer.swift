@@ -45,8 +45,7 @@ final class AudioPlayer {
     weak var progressDelegate: AudioPlayerProgressDelegate?
     
     let payload: AudioPlayerPlayPayload
-    let dialogRequestId: String
-    let messageId: String
+    let header: Downstream.Header
     var cancelAssociation: Bool = false
     var pauseReason: PauseReason = .nothing
     private(set) var stopReason: StopReason = .stop
@@ -63,8 +62,7 @@ final class AudioPlayer {
     init(directive: Downstream.Directive) throws {
         payload = try JSONDecoder().decode(AudioPlayerPlayPayload.self, from: directive.payload)
         
-        dialogRequestId = directive.header.dialogRequestId
-        messageId = directive.header.messageId
+        header = directive.header
         
         switch payload.sourceType {
         case .url:
@@ -88,7 +86,7 @@ final class AudioPlayer {
     
     func handleAttachment(_ attachment: Downstream.Attachment) -> Bool {
         guard let dataSource = internalPlayer as? MediaOpusStreamDataSource,
-              dialogRequestId == attachment.header.dialogRequestId else {
+              header.dialogRequestId == attachment.header.dialogRequestId else {
             return false
         }
         

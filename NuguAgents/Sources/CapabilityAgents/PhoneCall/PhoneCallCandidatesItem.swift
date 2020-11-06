@@ -21,16 +21,20 @@
 import Foundation
 
 /// <#Description#>
-public struct PhoneCallCandidatesItem: Decodable {
+public struct PhoneCallCandidatesItem: Codable {
     
     // MARK: SearchTarget
     
     /// <#Description#>
-    public enum SearchTarget: Decodable {
+    public enum SearchTarget: Codable {
         case contact
         case exchange
         case t114
         case unknown
+        
+        enum CodingKeys: CodingKey {
+            case contact, exchange, t114, unknown
+        }
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.singleValueContainer()
@@ -41,6 +45,21 @@ public struct PhoneCallCandidatesItem: Decodable {
             case "EXCHANGE": self = .exchange
             case "T114": self = .t114
             default: self = .unknown
+            }
+        }
+        
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            
+            switch self {
+            case .contact:
+                try container.encode("CONTACT")
+            case .exchange:
+                try container.encode("EXCHANGE")
+            case .t114:
+                try container.encode("T114")
+            case .unknown:
+                try container.encode("UNKNOWN")
             }
         }
     }

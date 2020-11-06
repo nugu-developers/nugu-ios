@@ -23,7 +23,7 @@ import Foundation
 /// <#Description#>
 public enum Downstream {
     /// <#Description#>
-    public struct Directive: Decodable {
+    public struct Directive: Codable {
         /// <#Description#>
         public let header: Header
         /// <#Description#>
@@ -40,7 +40,7 @@ public enum Downstream {
     }
     
     /// <#Description#>
-    public struct Attachment: Decodable {
+    public struct Attachment: Codable {
         /// <#Description#>
         public let header: Header
         /// <#Description#>
@@ -73,7 +73,7 @@ public enum Downstream {
     }
     
     /// <#Description#>
-    public struct Header: Decodable {
+    public struct Header: Codable {
         /// <#Description#>
         public let namespace: String
         /// <#Description#>

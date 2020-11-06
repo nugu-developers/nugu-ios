@@ -20,17 +20,19 @@
 
 import Foundation
 
+import NuguCore
+
 /// An delegate that appllication can extend to register to observe TTSAgent state changes.
 public protocol TTSAgentDelegate: class {
     /// Used to notify the observer of TTSState changes.
     ///
     /// - Parameter state: The new `TTSState` of the `TTSAgent`
-    /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    func ttsAgentDidChange(state: TTSState, dialogRequestId: String)
+    ///   - header: The header of the originally handled directive.
+    func ttsAgentDidChange(state: TTSState, header: Downstream.Header)
     
     /// Tells the delegate that `TTSAgent` received TTS directive
     ///
     /// - Parameter text: The text to play.
-    /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    func ttsAgentDidReceive(text: String, dialogRequestId: String)
+    ///   - header: The header of the originally handled directive.
+    func ttsAgentDidReceive(text: String, header: Downstream.Header)
 }

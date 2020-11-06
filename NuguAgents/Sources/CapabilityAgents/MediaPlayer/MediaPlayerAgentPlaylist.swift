@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct MediaPlayerAgentPlaylist: Encodable {
+public struct MediaPlayerAgentPlaylist: Codable {
     /// <#Description#>
     public let name: String?
     /// <#Description#>

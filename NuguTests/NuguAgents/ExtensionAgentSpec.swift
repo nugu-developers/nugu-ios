@@ -94,7 +94,7 @@ class MockExtensionAgentDelegate: ExtensionAgentDelegate {
         ]
     }
     
-    func extensionAgentDidReceiveAction(data: [String : AnyHashable], playServiceId: String, dialogRequestId: String, completion: @escaping (Bool) -> Void) {
+    func extensionAgentDidReceiveAction(data: [String : AnyHashable], playServiceId: String, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         completion(true)
     }
 }

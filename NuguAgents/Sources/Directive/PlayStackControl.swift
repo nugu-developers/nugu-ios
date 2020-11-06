@@ -24,9 +24,9 @@ public struct PlayStackControl {
     let playServiceId: String?
 }
 
-// MARK: - Decodable
+// MARK: - Codable
 
-extension PlayStackControl: Decodable {
+extension PlayStackControl: Codable {
     enum CodingKeys: String, CodingKey {
         case playServiceId
     }

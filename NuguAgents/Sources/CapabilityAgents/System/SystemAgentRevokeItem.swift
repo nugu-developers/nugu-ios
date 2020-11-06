@@ -24,9 +24,9 @@ struct SystemAgentRevokeItem {
     let reason: SystemAgentRevokeReason
 }
 
-// MARK: - SystemAgentRevokeItem + Decodable
+// MARK: - SystemAgentRevokeItem + Codable
 
-extension SystemAgentRevokeItem: Decodable {
+extension SystemAgentRevokeItem: Codable {
     enum CodingKeys: String, CodingKey {
         case reason
     }

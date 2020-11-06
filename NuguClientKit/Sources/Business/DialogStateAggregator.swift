@@ -135,10 +135,10 @@ extension DialogStateAggregator: ASRAgentDelegate {
 // MARK: - TTSAgentDelegate
 
 extension DialogStateAggregator: TTSAgentDelegate {
-    public func ttsAgentDidReceive(text: String, dialogRequestId: String) {
+    public func ttsAgentDidReceive(text: String, header: Downstream.Header) {
     }
     
-    public func ttsAgentDidChange(state: TTSState, dialogRequestId: String) {
+    public func ttsAgentDidChange(state: TTSState, header: Downstream.Header) {
         dialogStateDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -196,10 +196,10 @@ private extension DialogStateAggregator {
 // MARK: - ChipsAgentDelegate
 
 extension DialogStateAggregator: ChipsAgentDelegate {
-    public func chipsAgentDidReceive(item: ChipsAgentItem, dialogRequestId: String) {
+    public func chipsAgentDidReceive(item: ChipsAgentItem, header: Downstream.Header) {
         dialogStateDispatchQueue.async { [weak self] in
             if item.target == .dialog {
-                self?.currentChips = (dialogRequestId: dialogRequestId, item: item)
+                self?.currentChips = (dialogRequestId: header.dialogRequestId, item: item)
             }
         }
     }

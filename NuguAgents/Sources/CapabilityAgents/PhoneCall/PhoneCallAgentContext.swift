@@ -20,10 +20,10 @@
 
 import Foundation
 
-public struct PhoneCallContext: Encodable {
+public struct PhoneCallContext: Codable {
     
     /// <#Description#>
-    public struct Template: Encodable {
+    public struct Template: Codable {
         /// <#Description#>
         public let intent: PhoneCallIntent?
         /// <#Description#>
@@ -58,7 +58,7 @@ public struct PhoneCallContext: Encodable {
     }
 
     /// <#Description#>
-    public struct Recipient: Encodable {
+    public struct Recipient: Codable {
         
         enum CodingKeys: String, CodingKey {
             case name

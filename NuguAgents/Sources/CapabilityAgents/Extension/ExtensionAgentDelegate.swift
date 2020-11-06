@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `ExtensionAgentDelegate` protocol defines methods that action when `ExtensionAgent` receives a directive.
 ///
 /// The methods of this protocol are all mandatory.
@@ -39,7 +41,7 @@ public protocol ExtensionAgentDelegate: class {
     /// When received any data, must call completion block to send an event.
     /// - Parameter data: The message decoded from json to dictionary received by `action` directive.
     /// - Parameter playServiceId: The unique identifier to specify play service.
-    /// - Parameter dialogRequestId: The `dialogRequestId` for action.
+    /// - Parameter header: The header of the originally handled directive.
     /// - Parameter completion: A block to call when you are finished performing the action.
-    func extensionAgentDidReceiveAction(data: [String: AnyHashable], playServiceId: String, dialogRequestId: String, completion: @escaping (Bool) -> Void)
+    func extensionAgentDidReceiveAction(data: [String: AnyHashable], playServiceId: String, header: Downstream.Header, completion: @escaping (Bool) -> Void)
 }
