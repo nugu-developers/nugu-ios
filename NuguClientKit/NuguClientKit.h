@@ -28,4 +28,4 @@ FOUNDATION_EXPORT const unsigned char NuguClientKitVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <NuguClientKit/PublicHeader.h>
 
-
+#import "NCObjcExceptionCatcher.h"

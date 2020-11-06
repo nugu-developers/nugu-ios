@@ -23,8 +23,7 @@ Nugu framework for AI Service
 
   s.swift_version = '5.1'
 
-  s.source_files = 'NuguCore/Interface/**/*', 'NuguCore/Sources/**/*', 'NuguCore/Sources-ObjC/*.{h,m}', 'NuguCore/NuguCore.h'
-  s.public_header_files = 'NuguCore/Sources-ObjC/*.h', 'NuguCore/NuguCore.h'
+  s.source_files = 'NuguCore/Sources/**/*'
 
   s.dependency 'NattyLog', '~> 1.0'
   s.dependency 'RxSwift', '~> 5'
