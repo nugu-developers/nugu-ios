@@ -24,7 +24,7 @@ extension MediaPlayerAgent {
     struct Event {
         let typeInfo: TypeInfo
         let playServiceId: String
-        let token: String
+        let token: String?
         let referrerDialogRequestId: String?
         
         enum TypeInfo {
@@ -63,6 +63,12 @@ extension MediaPlayerAgent {
             
             case getInfoSucceeded(song: MediaPlayerAgentSong?, issueDate: String?, playTime: String?, playListName: String?)
             case getInfoFailed(errorCode: String?)
+            
+            case handlePlaylistSucceeded
+            case handlePlaylistFailed(errorCode: String?)
+            
+            case handleLyricsSucceeded
+            case handleLyricsFailed(errorCode: String?)
         }
     }
 }
@@ -72,10 +78,13 @@ extension MediaPlayerAgent {
 extension MediaPlayerAgent.Event: Eventable {
     var payload: [String: AnyHashable] {
         var payloadDictionary: [String: AnyHashable] = [
-            "playServiceId": playServiceId,
-            "token": token
+            "playServiceId": playServiceId
         ]
-        
+            
+        if let token = token {
+            payloadDictionary["token"] = token
+        }
+
         switch typeInfo {
         case .playSucceeded(let message):
             payloadDictionary["message"] = message
@@ -171,6 +180,14 @@ extension MediaPlayerAgent.Event: Eventable {
             payloadDictionary["info"] = infoDictionary
         case .getInfoFailed(let errorCode):
             payloadDictionary["errorCode"] = errorCode
+        case .handlePlaylistSucceeded:
+            break
+        case .handlePlaylistFailed(let errorCode):
+            payloadDictionary["errorCode"] = errorCode
+        case .handleLyricsSucceeded:
+            break
+        case .handleLyricsFailed(let errorCode):
+            payloadDictionary["errorCode"] = errorCode
         }
         
         return payloadDictionary
@@ -203,6 +220,10 @@ extension MediaPlayerAgent.Event: Eventable {
         case .toggleFailed: return "ToggleFailed"
         case .getInfoSucceeded: return "GetInfoSucceeded"
         case .getInfoFailed: return "GetInfoFailed"
+        case .handlePlaylistSucceeded: return "HandlePlaylistSucceeded"
+        case .handlePlaylistFailed: return "HandlePlaylistFailed"
+        case .handleLyricsSucceeded: return "HandleLyricsSucceeded"
+        case .handleLyricsFailed: return "HandleLyricsFailed"
         }
     }
 }

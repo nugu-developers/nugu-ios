@@ -106,4 +106,8 @@ public protocol MediaPlayerAgentDelegate: class {
     ///   - dialogRequestId: <#dialogRequestId description#>
     ///   - completion: <#completion description#>
     func mediaPlayerAgentReceiveGetInfo(playServiceId: String, token: String, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.GetInfo) -> Void))
+    
+    func mediaPlayerAgentReceivePlaylist(playServiceId: String, action: String, target: String?, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.HandlePlaylist) -> Void))
+    
+    func mediaPlayerAgentReceiveLyrics(playServiceId: String, action: String, dialogRequestId: String, completion: @escaping ((MediaPlayerAgentProcessResult.HandleLyrics) -> Void))
 }
