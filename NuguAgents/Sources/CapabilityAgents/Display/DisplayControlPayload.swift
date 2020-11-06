@@ -28,15 +28,15 @@ public struct DisplayControlPayload {
     let direction: Direction
     
     /// <#Description#>
-    public enum Direction: String, Decodable {
+    public enum Direction: String, Codable {
         case previous = "PREVIOUS"
         case next = "NEXT"
     }
 }
 
-// MARK: - Decodable
+// MARK: - Codable
 
-extension DisplayControlPayload: Decodable {
+extension DisplayControlPayload: Codable {
     enum CodingKeys: String, CodingKey {
         case playServiceId
         case direction

@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public enum SystemAgentRevokeReason: String, Decodable {
+public enum SystemAgentRevokeReason: String, Codable {
     case revokeDevice = "REVOKED_DEVICE"
     case withdrawnUser = "WITHDRAWN_USER"
     case unknown = "UNKNOWN"
