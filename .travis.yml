@@ -1,9 +1,7 @@
 language: swift
 osx_image: xcode12.1
 
-cache:
-  directories:
-    - Carthage
+cache: carthage
 
 before_install:
    - ./carthage.sh update --cache-builds --platform iOS
