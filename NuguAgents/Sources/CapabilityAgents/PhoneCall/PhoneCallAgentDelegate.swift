@@ -23,9 +23,6 @@ import Foundation
 /// <#Description#>
 public protocol PhoneCallAgentDelegate: class {
     /// <#Description#>
-    func phoneCallAgentRequestState() -> PhoneCallState
-    
-    /// <#Description#>
     func phoneCallAgentRequestContext() -> PhoneCallContext
     
     /// <#Description#>

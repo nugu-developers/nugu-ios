@@ -37,21 +37,29 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     }
     
     public var offset: Int? {
-        latestPlayer?.offset.truncatedSeconds
+        audioPlayerDispatchQueue.sync {
+            latestPlayer?.offset.truncatedSeconds
+        }
     }
     
     public var duration: Int? {
-        latestPlayer?.duration.truncatedSeconds
+        audioPlayerDispatchQueue.sync {
+            latestPlayer?.duration.truncatedSeconds
+        }
     }
     
     public var volume: Float = 1.0 {
         didSet {
-            latestPlayer?.volume = volume
+            audioPlayerDispatchQueue.sync {
+                latestPlayer?.volume = volume
+            }
         }
     }
     
     public var isPlaying: Bool {
-        return audioPlayerState == .playing
+        audioPlayerDispatchQueue.sync {
+            audioPlayerState == .playing
+        }
     }
     
     // Private
@@ -68,6 +76,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     )
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
+    private let audioPlayerDeleageteDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent_delegate")
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
     private lazy var audioPlayerScheduler = SerialDispatchQueueScheduler(
         queue: audioPlayerDispatchQueue,
@@ -105,7 +114,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != audioPlayerState {
-                delegates.notify { delegate in
+                delegates.notify(queue: audioPlayerDeleageteDispatchQueue) { delegate in
                     delegate.audioPlayerAgentDidChange(state: audioPlayerState, dialogRequestId: player.dialogRequestId)
                 }
             }
@@ -113,8 +122,18 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     }
     
     // Players
-    private var currentPlayer: AudioPlayer?
-    private var prefetchPlayer: AudioPlayer?
+    private var currentPlayer: AudioPlayer? {
+        didSet {
+            currentPlayer?.volume = volume
+            prefetchPlayer = nil
+        }
+    }
+    private var prefetchPlayer: AudioPlayer? {
+        didSet {
+            prefetchPlayer?.delegate = self
+            prefetchPlayer?.progressDelegate = self
+        }
+    }
     private var latestPlayer: AudioPlayer? {
         prefetchPlayer ?? currentPlayer
     }
@@ -437,9 +456,6 @@ private extension AudioPlayerAgent {
                     self.audioPlayerState = .stopped
                 }
                 
-                player.delegate = self
-                player.progressDelegate = self
-                player.volume = self.volume
                 self.prefetchPlayer = player
                 
                 self.playSyncManager.startPlay(
@@ -484,7 +500,6 @@ private extension AudioPlayerAgent {
                     player.replacePlayer(currentPlayer)
                 }
                 self.currentPlayer = player
-                self.prefetchPlayer = nil
                 self.focusManager.requestFocus(channelDelegate: self)
             }
         }
