@@ -20,10 +20,13 @@
 
 import Foundation
 
+import NuguCore
+
 /// An delegate that appllication can extend to provide sound data.
 public protocol SoundAgentDataSource: class {
     /// It called when need sound `URL` to play beep.
     ///
     /// - Parameter beepName: The beep name to play.
-    func soundAgentRequestUrl(beepName: SoundBeepName, dialogRequestId: String) -> URL?
+    /// - Parameter header: The header of the originally handled directive.
+    func soundAgentRequestUrl(beepName: SoundBeepName, header: Downstream.Header) -> URL?
 }

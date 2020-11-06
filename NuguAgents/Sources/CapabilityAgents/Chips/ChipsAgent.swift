@@ -90,7 +90,7 @@ private extension ChipsAgent {
             defer { completion(.finished) }
 
             self?.delegates.notify { delegate in
-                delegate.chipsAgentDidReceive(item: item, dialogRequestId: directive.header.dialogRequestId)
+                delegate.chipsAgentDidReceive(item: item, header: directive.header)
             }
         }
     }
