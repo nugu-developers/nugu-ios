@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public enum PhoneCallState: String, Encodable {
+public enum PhoneCallState: String, Codable {
     case idle = "IDLE"
     case outgoing = "OUTGOING"
     case incoming = "INCOMING"

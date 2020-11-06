@@ -21,12 +21,12 @@
 import Foundation
 
 /// <#Description#>
-public struct MediaPlayerAgentContext: Encodable {
+public struct MediaPlayerAgentContext: Codable {
     
     // MARK: User
     
     /// <#Description#>
-    public struct User: Encodable {
+    public struct User: Codable {
         /// <#Description#>
         public let isLogIn: String
         /// <#Description#>
@@ -45,7 +45,7 @@ public struct MediaPlayerAgentContext: Encodable {
     // MARK: Playlist
     
     /// <#Description#>
-    public struct Playlist: Encodable {
+    public struct Playlist: Codable {
         /// <#Description#>
         public let type: String
         /// <#Description#>
@@ -82,7 +82,7 @@ public struct MediaPlayerAgentContext: Encodable {
     // MARK: Toggle
     
     /// <#Description#>
-    public struct Toggle: Encodable {
+    public struct Toggle: Codable {
         /// <#Description#>
         public let `repeat`: String?
         /// <#Description#>
