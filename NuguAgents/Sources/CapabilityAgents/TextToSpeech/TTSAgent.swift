@@ -99,8 +99,9 @@ public final class TTSAgent: TTSAgentProtocol {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != ttsState {
+                let state = ttsState
                 delegates.notify(queue: ttsDeleageteDispatchQueue) { delegate in
-                    delegate.ttsAgentDidChange(state: ttsState, header: player.header)
+                    delegate.ttsAgentDidChange(state: state, header: player.header)
                 }
             }
         }

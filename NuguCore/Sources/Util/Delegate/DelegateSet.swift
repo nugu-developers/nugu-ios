@@ -40,9 +40,9 @@ public class DelegateSet<T> {
             })
     }
     
-    public func notify(queue: DispatchQueue, body: (T) -> Void) {
-        queue.sync {
-            allObjects.forEach({ (value) in
+    public func notify(queue: DispatchQueue, body: @escaping (T) -> Void) {
+        queue.async { [weak self] in
+            self?.allObjects.forEach({ (value) in
                 body(value)
             })
         }
