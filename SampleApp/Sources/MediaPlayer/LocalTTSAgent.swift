@@ -159,6 +159,9 @@ extension LocalTTSAgent: FocusChannelDelegate {
             player?.pause()
         case .nothing:
             stop()
+        // Ignore prepare
+        default:
+            break
         }
     }
 }

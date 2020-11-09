@@ -313,6 +313,9 @@ extension AudioPlayerAgent: FocusChannelDelegate {
                 if let player = self.currentPlayer {
                     self.stop(player: player, cancelAssociation: false)
                 }
+            // Ignore prepare
+            default:
+                break
             }
         }
     }
