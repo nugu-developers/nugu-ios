@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.23.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.1)
+Released on 2020-11-09
+### SDK
+#### Fixex
+- Modify the delegate function to be called asynchronously to avoid deadlock. (#600)
+
 ## [0.23.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.0)
 Released on 2020-11-06
 ### Sample Application
