@@ -114,8 +114,9 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != audioPlayerState {
+                let state = audioPlayerState
                 delegates.notify(queue: audioPlayerDeleageteDispatchQueue) { delegate in
-                    delegate.audioPlayerAgentDidChange(state: audioPlayerState, header: player.header)
+                    delegate.audioPlayerAgentDidChange(state: state, header: player.header)
                 }
             }
         }
