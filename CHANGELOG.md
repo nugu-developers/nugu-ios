@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.24.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.1)
+Released on 2020-11-10
+### SDK
+#### Fixex
+- Fix parsing error in `MediaPlayerAgent` (#606)
+
 ## [0.24.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.0)
 Released on 2020-11-10
 ### Sample Application
