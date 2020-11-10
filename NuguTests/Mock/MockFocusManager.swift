@@ -35,6 +35,14 @@ class MockFocusManager: FocusManageable {
         //
     }
     
+    func prepareFocus(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
+    func cancelFocus(channelDelegate: FocusChannelDelegate) {
+        //
+    }
+    
     func requestFocus(channelDelegate: FocusChannelDelegate) {
         focusDispatchQueue.async {
             channelDelegate.focusChannelDidChange(focusState: .foreground)

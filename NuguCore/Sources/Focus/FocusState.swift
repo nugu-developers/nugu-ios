@@ -22,6 +22,8 @@ import Foundation
 
 /// An enum class used to specify the levels of focus that a Channel can have.
 public enum FocusState {
+    /// Indicate the channel will request focus..
+    case prepare
     /// Represents the highest focus a Channel can have.
     case foreground
     /// Represents the intermediate level focus a Channel can have.
