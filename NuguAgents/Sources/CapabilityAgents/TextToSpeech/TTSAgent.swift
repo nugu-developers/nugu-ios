@@ -129,8 +129,21 @@ public final class TTSAgent: TTSAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Speak", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchPlay, directiveHandler: handlePlay, attachmentHandler: handleAttachment),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleStop)
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: "Speak",
+            blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true),
+            preFetch: prefetchPlay,
+            cancelDirective: cancelPlay,
+            directiveHandler: handlePlay,
+            attachmentHandler: handleAttachment
+        ),
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: "Stop",
+            blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
+            directiveHandler: handleStop
+        )
     ]
     
     public init(
@@ -221,13 +234,16 @@ extension TTSAgent: FocusChannelDelegate {
                     log.error("currentPlayer is nil")
                     self.releaseFocusIfNeeded()
                 }
-            // Foreground. playing 무시
+            // Ignore (foreground, playing)
             case (.foreground, _):
                 break
             case (.background, _), (.nothing, _):
                 if let player = self.currentPlayer {
                     self.stop(player: player, cancelAssociation: false)
                 }
+            // Ignore prepare
+            default:
+                break
             }
         }
     }
@@ -340,6 +356,22 @@ private extension TTSAgent {
                 }
                 
                 self.prefetchPlayer = player
+                self.focusManager.prepareFocus(channelDelegate: self)
+            }
+        }
+    }
+    
+    func cancelPlay() -> CancelDirective {
+        return { [weak self] directive in
+            self?.ttsDispatchQueue.sync { [weak self] in
+                guard let self = self else { return }
+                guard let player = self.prefetchPlayer, player.header.messageId == directive.header.messageId else {
+                    log.info("Message id does not match")
+                    return
+                }
+                
+                self.prefetchPlayer = nil
+                self.focusManager.cancelFocus(channelDelegate: self)
             }
         }
     }

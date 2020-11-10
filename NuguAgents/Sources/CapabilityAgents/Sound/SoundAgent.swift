@@ -114,18 +114,18 @@ extension SoundAgent: FocusChannelDelegate {
             switch (focusState, self.soundState) {
             case (.foreground, let soundState) where [.idle, .stopped, .finished].contains(soundState):
                 self.currentPlayer?.play()
-            // Foreground. playing 무시
+            // Ignore (Foreground, playing)
             case (.foreground, _):
                 break
             case (.background, .playing):
                 self.stop()
-            // background. idle, stopped, finished 무시
+            // Ignore (background, [idle, stopped, finished])
             case (.background, _):
                 break
             case (.nothing, .playing):
                 self.stop()
-            // none. idle/stopped/finished 무시
-            case (.nothing, _):
+            // Ignore (prepare, _) and (none, [idle/stopped/finished])
+            default:
                 break
             }
         }

@@ -180,8 +180,20 @@ public final class ASRAgent: ASRAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ExpectSpeech", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), preFetch: prefetchExpectSpeech, directiveHandler: handleExpectSpeech, cancelDirective: cancelExpectSpeech),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NotifyResult", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleNotifyResult)
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: "ExpectSpeech",
+            blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true),
+            preFetch: prefetchExpectSpeech,
+            cancelDirective: cancelExpectSpeech,
+            directiveHandler: handleExpectSpeech
+        ),
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: "NotifyResult",
+            blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
+            directiveHandler: handleNotifyResult
+        )
     ]
     
     public init(
@@ -284,12 +296,13 @@ extension ASRAgent: FocusChannelDelegate {
             switch (focusState, self.asrState) {
             case (.foreground, let asrState) where [.idle, .expectingSpeech].contains(asrState):
                 self.executeStartCapture()
-            // Listening, Recognizing, Busy 무시
+            // Ignore (foreground, [listening, recognizing, busy])
             case (.foreground, _):
                 break
-            // Background 허용 안함.
+            // Not permitted background
             case (_, let asrState) where [.listening, .recognizing, .expectingSpeech].contains(asrState):
                 self.asrResult = .cancel
+            // Ignore prepare
             default:
                 break
             }
