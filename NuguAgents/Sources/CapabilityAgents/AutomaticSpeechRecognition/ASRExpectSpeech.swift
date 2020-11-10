@@ -58,7 +58,7 @@ extension ASRExpectSpeech.Payload: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         playServiceId = try? container.decode(String.self, forKey: .playServiceId)
         domainTypes = try? container.decode([AnyHashable].self, forKey: .domainTypes)
-        asrContext = try? container.decode([String: AnyHashable].self, forKey: .asrContext)
+        asrContext = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .asrContext)
         epd = try? container.decode(EPD.self, forKey: .epd)
     }
 }
