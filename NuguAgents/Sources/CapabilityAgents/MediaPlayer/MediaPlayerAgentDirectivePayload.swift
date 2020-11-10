@@ -70,7 +70,7 @@ public struct MediaPlayerAgentDirectivePayload {
             asrText = try container.decodeIfPresent(String.self, forKey: .asrText)
             song = try container.decodeIfPresent(MediaPlayerAgentSong.self, forKey: .song)
             toggle = try container.decodeIfPresent(Toggle.self, forKey: .toggle)
-            data = try container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
+            data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
         }
         
         public func encode(to encoder: Encoder) throws {
@@ -126,7 +126,7 @@ public struct MediaPlayerAgentDirectivePayload {
             token = try container.decode(String.self, forKey: .token)
             action = try container.decode(String.self, forKey: .action)
             target = try container.decode(String.self, forKey: .target)
-            data = try container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
+            data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
         }
         
         public func encode(to encoder: Encoder) throws {
@@ -170,7 +170,7 @@ public struct MediaPlayerAgentDirectivePayload {
             token = try container.decode(String.self, forKey: .token)
             action = try container.decode(String.self, forKey: .action)
             target = try container.decode(String.self, forKey: .target)
-            data = try container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
+            data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
         }
         
         public func encode(to encoder: Encoder) throws {
