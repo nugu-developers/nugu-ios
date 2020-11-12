@@ -89,14 +89,14 @@ public final class ASRAgent: ASRAgentProtocol {
         }
     }
     
-    private var asrResult: ASRResult = .none {
+    private var asrResult: ASRResult? {
         didSet {
-            log.info("\(asrResult)")
-            guard let asrRequest = asrRequest else {
+            guard let asrRequest = asrRequest, let asrResult = asrResult else {
                 asrState = .idle
                 log.error("ASRRequest not exist")
                 return
             }
+            log.info("\(asrResult)")
             
             // `ASRState` -> Event -> `expectSpeechDirective` -> `ASRAgentDelegate`
             switch asrResult {
@@ -116,7 +116,7 @@ public final class ASRAgent: ASRAgentProtocol {
                     referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                 ).rx)
                 expectSpeech = nil
-            case .error(let error):
+            case .error(let error, _):
                 asrState = .idle
                 switch error {
                 case NetworkError.timeout:
@@ -272,7 +272,7 @@ public extension ASRAgent {
             
             self.expectSpeech = nil
             if self.asrState != .idle {
-                self.asrResult = .cancel
+                self.asrResult = .cancel()
             }
         }
     }
@@ -301,7 +301,7 @@ extension ASRAgent: FocusChannelDelegate {
                 break
             // Not permitted background
             case (_, let asrState) where [.listening, .recognizing, .expectingSpeech].contains(asrState):
-                self.asrResult = .cancel
+                self.asrResult = .cancel()
             // Ignore prepare
             default:
                 break
@@ -352,7 +352,7 @@ extension ASRAgent: EndPointDetectorDelegate {
             case .end, .reachToMaxLength, .finish:
                 self.executeStopSpeech()
             case .unknown:
-                self.asrResult = .error(ASRError.recognizeFailed)
+                self.asrResult = .error(ASRError.listenFailed)
             case .timeout:
                 self.asrResult = .error(ASRError.listeningTimeout)
             }
@@ -494,13 +494,13 @@ private extension ASRAgent {
                 self.endPointDetector?.handleNotifyResult(item.state)
                 switch item.state {
                 case .partial:
-                    self.asrResult = .partial(text: item.result ?? "")
+                    self.asrResult = .partial(text: item.result ?? "", header: directive.header)
                 case .complete:
-                    self.asrResult = .complete(text: item.result ?? "")
+                    self.asrResult = .complete(text: item.result ?? "", header: directive.header)
                 case .none:
-                    self.asrResult = .none
+                    self.asrResult = .none(header: directive.header)
                 case .error:
-                    self.asrResult = .error(ASRError.recognizeFailed)
+                    self.asrResult = .error(ASRError.recognizeFailed, header: directive.header)
                 default:
                     // TODO 추후 Server EPD 개발시 구현
                     break
@@ -549,7 +549,7 @@ private extension ASRAgent {
     func executeStartCapture() {
         guard let asrRequest = asrRequest else {
             log.error("ASRRequest not exist")
-            asrResult = .cancel
+            asrResult = .cancel()
             return
         }
         
@@ -617,7 +617,7 @@ private extension ASRAgent {
     func executeStopSpeech() {
         guard let asrRequest = asrRequest else {
             log.error("ASRRequest not exist")
-            asrResult = .cancel
+            asrResult = .cancel()
             return
         }
         switch asrState {
