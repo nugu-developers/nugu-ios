@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.25.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.25.0)
+Released on 2020-11-12
+### Sample Application
+#### Update
+- Pass `Downstream.Header` to function parameter of agent delegate. (#613)
+
+### SDK
+#### Update
+- Pass `Downstream.Header` to function parameter of agent delegate. (#613)
+
 ## [0.24.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.1)
 Released on 2020-11-10
 ### SDK
