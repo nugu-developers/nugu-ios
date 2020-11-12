@@ -25,27 +25,19 @@ import NuguCore
 /// <#Description#>
 public struct DisplayTemplate {
     /// <#Description#>
-    public let type: String
+    public let header: Downstream.Header
     /// <#Description#>
     public let payload: Data
-    /// <#Description#>
-    public let templateId: String
-    /// <#Description#>
-    public let dialogRequestId: String
     /// <#Description#>
     public let template: Payload
     
     init(
-        type: String,
+        header: Downstream.Header,
         payload: Data,
-        templateId: String,
-        dialogRequestId: String,
         template: Payload
     ) {
-        self.type = type
+        self.header = header
         self.payload = payload
-        self.templateId = templateId
-        self.dialogRequestId = dialogRequestId
         self.template = template
     }
     
@@ -101,5 +93,20 @@ extension DisplayTemplate.Payload.Duration {
         case .long: return NuguTimeInterval(seconds: 30)
         case .longest: return NuguTimeInterval(seconds: 60 * 10)
         }
+    }
+}
+
+public extension DisplayTemplate {
+    /// <#Description#>
+    var type: String {
+        header.type
+    }
+    /// <#Description#>
+    var templateId: String {
+        header.messageId
+    }
+    /// <#Description#>
+    var dialogRequestId: String {
+        header.dialogRequestId
     }
 }

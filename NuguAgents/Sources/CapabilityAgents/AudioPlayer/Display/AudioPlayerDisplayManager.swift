@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
+final class AudioPlayerDisplayManager {
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .display)
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audio_player_display", qos: .userInitiated)
@@ -76,7 +76,7 @@ final class AudioPlayerDisplayManager: AudioPlayerDisplayManageable {
 // MARK: - AudioPlayerDisplayManageable
 
 extension AudioPlayerDisplayManager {
-    func display(payload: AudioPlayerPlayPayload, messageId: String, dialogRequestId: String) {
+    func display(payload: AudioPlayerPlayPayload, header: Downstream.Header) {
         guard let delegate = delegate else { return }
         guard let metaData = payload.audioItem.metadata,
             ((metaData["disableTemplate"] as? Bool) ?? false) == false else {
@@ -94,10 +94,9 @@ extension AudioPlayerDisplayManager {
             && (Int(content["durationSec"] as? String ?? "0") ?? 0 > 0)
         
         let item = AudioPlayerDisplayTemplate(
+            header: header,
             type: type,
             payload: metaData,
-            templateId: messageId,
-            dialogRequestId: dialogRequestId,
             mediaPayload: AudioPlayerDisplayTemplate.MediaPayload(
                 token: payload.audioItem.stream.token,
                 playServiceId: payload.playServiceId,
@@ -144,27 +143,27 @@ extension AudioPlayerDisplayManager {
         }
     }
     
-    func updateMetadata(payload: Data, playServiceId: String) {
+    func updateMetadata(payload: Data, playServiceId: String, header: Downstream.Header) {
         guard currentItem?.mediaPayload.playServiceId == playServiceId else { return }
-        delegate?.audioPlayerDisplayShouldUpdateMetadata(payload: payload)
+        delegate?.audioPlayerDisplayShouldUpdateMetadata(payload: payload, header: header)
     }
     
-    func showLyrics(playServiceId: String, completion: @escaping (Bool) -> Void) {
+    func showLyrics(playServiceId: String, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         guard let delegate = delegate,
             currentItem?.mediaPayload.playServiceId == playServiceId else {
                 completion(false)
                 return
         }
-        delegate.audioPlayerDisplayShouldShowLyrics(completion: completion)
+        delegate.audioPlayerDisplayShouldShowLyrics(header: header, completion: completion)
     }
     
-    func hideLyrics(playServiceId: String, completion: @escaping (Bool) -> Void) {
+    func hideLyrics(playServiceId: String, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         guard let delegate = delegate,
             currentItem?.mediaPayload.playServiceId == playServiceId else {
                 completion(false)
                 return
         }
-        delegate.audioPlayerDisplayShouldHideLyrics(completion: completion)
+        delegate.audioPlayerDisplayShouldHideLyrics(header: header, completion: completion)
     }
     
     func isLyricsVisible(playServiceId: String, completion: @escaping (Bool) -> Void) {
@@ -176,13 +175,13 @@ extension AudioPlayerDisplayManager {
         delegate.audioPlayerIsLyricsVisible(completion: completion)
     }
     
-    func controlLyricsPage(payload: AudioPlayerDisplayControlPayload, completion: @escaping (Bool) -> Void) {
+    func controlLyricsPage(payload: AudioPlayerDisplayControlPayload, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         guard let delegate = delegate,
             currentItem?.mediaPayload.playServiceId == payload.playServiceId else {
                 completion(false)
                 return
         }
-        delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction, completion: completion)
+        delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction, header: header, completion: completion)
     }
     
     func notifyUserInteraction() {
