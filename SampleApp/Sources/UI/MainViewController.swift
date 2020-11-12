@@ -681,16 +681,16 @@ extension MainViewController: ASRAgentDelegate {
     
     func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
         switch result {
-        case .complete(let text):
+        case .complete(let text, _):
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
             }
-        case .partial(let text):
+        case .partial(let text, _):
             DispatchQueue.main.async { [weak self] in
                 self?.nuguVoiceChrome.setRecognizedText(text: text)
             }
-        case .error(let error):
+        case .error(let error, _):
             DispatchQueue.main.async { [weak self] in
                 switch error {
                 case ASRError.listenFailed:
@@ -739,7 +739,7 @@ extension MainViewController: DisplayAgentDelegate {
         }
     }
     
-    func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+    func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let displayControllableView = self?.displayView as? DisplayControllable else {
                 completion(false)
@@ -750,7 +750,7 @@ extension MainViewController: DisplayAgentDelegate {
         }
     }
     
-    func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+    func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let displayControllableView = self?.displayView as? DisplayControllable else {
                 completion(false)
@@ -785,13 +785,13 @@ extension MainViewController: DisplayAgentDelegate {
 // MARK: - DisplayPlayerAgentDelegate
 
 extension MainViewController: AudioPlayerDisplayDelegate {
-    func audioPlayerDisplayShouldShowLyrics(completion: @escaping (Bool) -> Void) {
+    func audioPlayerDisplayShouldShowLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             completion(self?.displayAudioPlayerView?.shouldShowLyrics() ?? false)
         }
     }
     
-    func audioPlayerDisplayShouldHideLyrics(completion: @escaping (Bool) -> Void) {
+    func audioPlayerDisplayShouldHideLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             completion(self?.displayAudioPlayerView?.shouldHideLyrics() ?? false)
         }
@@ -803,7 +803,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
         }
     }
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async {
             completion(false)
         }
@@ -825,7 +825,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
         }
     }
     
-    func audioPlayerDisplayShouldUpdateMetadata(payload: Data) {
+    func audioPlayerDisplayShouldUpdateMetadata(payload: Data, header: Downstream.Header) {
         DispatchQueue.main.async { [weak self] in
             self?.displayAudioPlayerView?.updateSettings(payload: payload)
         }

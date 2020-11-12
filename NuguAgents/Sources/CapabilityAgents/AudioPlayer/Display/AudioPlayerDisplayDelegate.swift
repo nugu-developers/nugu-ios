@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// The DisplayPlayerAgent delegate is used to notify observers when a player template directive is received.
 public protocol AudioPlayerDisplayDelegate: class {
     /// Tells the delegate that the specified template should be displayed.
@@ -30,26 +32,29 @@ public protocol AudioPlayerDisplayDelegate: class {
     /// Tells the delegate that the specified template should be removed from the screen.
     ///
     /// - Parameter template: The template to remove from the screen.
-    /// - Parameter reason: Reason to clear the template.
     func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate)
     
     /// Tells the delegate that the specified template should be updated from the screen.
     ///
     /// - Parameter template: The template to update the screen.
-    func audioPlayerDisplayShouldUpdateMetadata(payload: Data)
+    /// - Parameter header: The header of the originally handled directive.
+    func audioPlayerDisplayShouldUpdateMetadata(payload: Data, header: Downstream.Header)
     
     /// Tells the delegate that the displayed template should show lyrics
+    /// - Parameter header: The header of the originally handled directive.
     /// - Parameter completion: Whether succeeded or not
-    func audioPlayerDisplayShouldShowLyrics(completion: @escaping (Bool) -> Void)
+    func audioPlayerDisplayShouldShowLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void)
     
     /// Tells the delegate that the displayed template should hide lyrics
+    /// - Parameter header: The header of the originally handled directive.
     /// - Parameter completion: Whether succeeded or not
-    func audioPlayerDisplayShouldHideLyrics(completion: @escaping (Bool) -> Void)
+    func audioPlayerDisplayShouldHideLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void)
     
     /// Tells the delegate that the displayed template should scroll with given direction.
     /// - Parameter direction: Direction to scroll.
+    /// - Parameter header: The header of the originally handled directive.
     /// - Parameter completion: Whether succeeded or not
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void)
     
     /// <#Description#>
     /// - Parameter completion: <#completion description#>

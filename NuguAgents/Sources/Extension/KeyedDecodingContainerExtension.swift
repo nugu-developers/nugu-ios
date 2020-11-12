@@ -26,9 +26,23 @@ extension KeyedDecodingContainer {
         return try container.decode(type)
     }
     
+    func decodeIfPresent(_ type: [String: AnyHashable].Type, forKey key: K) throws -> [String: AnyHashable]? {
+        guard contains(key) else {
+            return nil
+        }
+        return try decode(type, forKey: key)
+    }
+    
     func decode(_ type: [AnyHashable].Type, forKey key: K) throws -> [AnyHashable] {
         var container = try nestedUnkeyedContainer(forKey: key)
         return try container.decode(type)
+    }
+    
+    func decodeIfPresent(_ type: [AnyHashable].Type, forKey key: K) throws -> [AnyHashable]? {
+        guard contains(key) else {
+            return nil
+        }
+        return try decode(type, forKey: key)
     }
     
     func decode(_ type: [String: AnyHashable].Type) throws -> [String: AnyHashable] {

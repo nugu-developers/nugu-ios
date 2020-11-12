@@ -1,27 +1,27 @@
 PODS:
-  - JadeMarble (0.23.0):
+  - JadeMarble (0.24.1):
     - NattyLog (~> 1)
-  - KeenSense (0.23.0):
+  - KeenSense (0.24.1):
     - NattyLog (~> 1)
   - lottie-ios (3.1.9)
   - NattyLog (1.2.1)
-  - NuguAgents (0.23.0):
+  - NuguAgents (0.24.1):
     - JadeMarble (~> 0)
     - NattyLog (~> 1)
     - NuguCore (~> 0)
     - SilverTray (~> 1)
-  - NuguClientKit (0.23.0):
+  - NuguClientKit (0.24.1):
     - KeenSense (~> 0)
     - NattyLog (~> 1)
     - NuguAgents (~> 0)
     - NuguCore (~> 0)
-  - NuguCore (0.23.0):
+  - NuguCore (0.24.1):
     - NattyLog (~> 1.0)
     - RxSwift (~> 5)
-  - NuguLoginKit (0.23.0)
-  - NuguServiceKit (0.23.0):
+  - NuguLoginKit (0.24.1)
+  - NuguServiceKit (0.24.1):
     - NattyLog (~> 1)
-  - NuguUIKit (0.23.0):
+  - NuguUIKit (0.24.1):
     - lottie-ios (~> 3)
   - RxSwift (5.1.1)
   - SilverTray (1.2.6)
@@ -62,16 +62,16 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  JadeMarble: f8514746f805804e41090eef4757e7859064983e
-  KeenSense: d805b485f21c208b8f12b64163eb43a2f838f25e
+  JadeMarble: 3a5ff185e27f7356ec9ae870ccab9d99ffb30371
+  KeenSense: e1e988da63cf4c19580667f5d7ad0ba0a4421b81
   lottie-ios: 3a3758ef5a008e762faec9c9d50a39842f26d124
   NattyLog: f9ece0db2fb62178d8246f0ae033a9b64f2d7f30
-  NuguAgents: c233df949aae2b4059d111b67434849f0745175a
-  NuguClientKit: 04c80171456eaff481a2b9f6f164f5ba0c1fb2cf
-  NuguCore: d34a2860c9beab06432007ea453320466650d804
-  NuguLoginKit: 2d71fc860f4a2648e14cb74585f5501ac71a4086
-  NuguServiceKit: 032e98cc1bd458b76fe7a7d74f418efddb0f6e01
-  NuguUIKit: 7c9b9f241d26b68af97f4f09ab63664de86d9e7f
+  NuguAgents: 85ee8367e4a5ba958a9bb5ab88335cf404e45f26
+  NuguClientKit: 73ded6a2220bbc44ca2b21bf8d6c21ab3520c23d
+  NuguCore: 745f816615115d75643d971ba831b0a0a0f9ad43
+  NuguLoginKit: eccaad55705586e31ffd4e3bcd9e1a55056eb93f
+  NuguServiceKit: d00a73a36fbb282c7d1d8fb9890b3427d4915f91
+  NuguUIKit: 08efaf7d1d1cb3235fa5c454f969a148158ab4f7
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SilverTray: d006036dd35c1b898497c28dbf06eddce6f1745d
 

@@ -235,7 +235,7 @@ private extension DisplayAgent {
                     return
                 }
                 
-                self.delegate?.displayAgentShouldMoveFocus(templateId: item.templateId, direction: payload.direction) { [weak self] focusResult in
+                self.delegate?.displayAgentShouldMoveFocus(templateId: item.templateId, direction: payload.direction, header: directive.header) { [weak self] focusResult in
                     guard let self = self else { return }
                     
                     self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
@@ -268,7 +268,7 @@ private extension DisplayAgent {
                     ).rx)
                     return
                 }
-                self.delegate?.displayAgentShouldScroll(templateId: item.templateId, direction: payload.direction) { [weak self] scrollResult in
+                self.delegate?.displayAgentShouldScroll(templateId: item.templateId, direction: payload.direction, header: directive.header) { [weak self] scrollResult in
                     guard let self = self else { return }
                     
                     self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
@@ -292,10 +292,8 @@ private extension DisplayAgent {
             defer { completion(.finished) }
 
             let updateDisplayTemplate = DisplayTemplate(
-                type: directive.header.type,
+                header: directive.header,
                 payload: directive.payload,
-                templateId: directive.header.messageId,
-                dialogRequestId: directive.header.dialogRequestId,
                 template: template
             )
             
@@ -323,10 +321,8 @@ private extension DisplayAgent {
             }
             
             let item = DisplayTemplate(
-                type: directive.header.type,
+                header: directive.header,
                 payload: directive.payload,
-                templateId: directive.header.messageId,
-                dialogRequestId: directive.header.dialogRequestId,
                 template: template
             )
             

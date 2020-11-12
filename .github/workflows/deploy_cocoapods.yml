@@ -1,0 +1,37 @@
+name: Deploy CocoaPods
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  push:
+    runs-on: macOS-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Cocoapods
+        run: gem install cocoapods
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+
+      - name: Deploy to Cocoapods
+        run: |
+          set -eo pipefail
+          pod trunk push NuguCore.podspec
+          pod trunk push NuguServiceKit.podspec
+          pod trunk push --allow-warnings JadeMarble.podspec
+          pod trunk push --allow-warnings KeenSense.podspec
+          pod trunk push NuguUIKit.podspec
+          pod trunk push NuguLoginKit.podspec
+          pod trunk push --synchronous NuguAgents.podspec
+          pod trunk push --synchronous NuguClientKit.podspec
+
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}

@@ -3,6 +3,42 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.25.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.25.0)
+Released on 2020-11-12
+### Sample Application
+#### Update
+- Pass `Downstream.Header` to function parameter of agent delegate. (#613)
+
+### SDK
+#### Update
+- Pass `Downstream.Header` to function parameter of agent delegate. (#613)
+
+## [0.24.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.1)
+Released on 2020-11-10
+### SDK
+#### Fixex
+- Fix parsing error in `MediaPlayerAgent` (#606)
+
+## [0.24.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.0)
+Released on 2020-11-10
+### Sample Application
+#### Update
+- Implements a `FocusManager` feature to prevent `AudioPlayerAgent` playing temporarily.  (#604)
+
+### SDK
+#### Fixex
+- Fix parsing error in `MediaPlayerAgent` (#603)
+
+#### Update
+- Start a timer to stop `MediaPlayer` when playback is temporarily paused. (#602)
+- Implements a `FocusManager` feature to prevent `AudioPlayerAgent` playing temporarily.  (#604)
+
+## [0.23.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.1)
+Released on 2020-11-09
+### SDK
+#### Fixex
+- Modify the delegate function to be called asynchronously to avoid deadlock. (#600)
+
 ## [0.23.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.0)
 Released on 2020-11-06
 ### Sample Application

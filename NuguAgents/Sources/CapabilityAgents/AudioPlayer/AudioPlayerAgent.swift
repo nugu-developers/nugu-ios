@@ -69,7 +69,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     private let audioPlayerPauseTimeout: DispatchTimeInterval
-    private lazy var audioPlayerDisplayManager: AudioPlayerDisplayManageable = AudioPlayerDisplayManager(
+    private lazy var audioPlayerDisplayManager: AudioPlayerDisplayManager = AudioPlayerDisplayManager(
         audioPlayerPauseTimeout: audioPlayerPauseTimeout,
         audioPlayerAgent: self,
         playSyncManager: playSyncManager
@@ -104,18 +104,17 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 } else {
                     playSyncManager.endPlay(property: playSyncProperty)
                 }
-            case .paused(let temporary):
-                if temporary == false {
-                    playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
-                }
+            case .paused:
+                playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
             default:
                 break
             }
             
             // Notify delegates only if the agent's status changes.
             if oldValue != audioPlayerState {
+                let state = audioPlayerState
                 delegates.notify(queue: audioPlayerDeleageteDispatchQueue) { delegate in
-                    delegate.audioPlayerAgentDidChange(state: audioPlayerState, header: player.header)
+                    delegate.audioPlayerAgentDidChange(state: state, header: player.header)
                 }
             }
         }
@@ -266,10 +265,8 @@ public extension AudioPlayerAgent {
         switch audioPlayerState {
         case .stopped, .finished:
             playSyncManager.resetTimer(property: playSyncProperty)
-        case .paused(let temporary):
-            if temporary == false {
-                playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
-            }
+        case .paused:
+            playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
         default:
             break
         }
@@ -312,6 +309,9 @@ extension AudioPlayerAgent: FocusChannelDelegate {
                 if let player = self.currentPlayer {
                     self.stop(player: player, cancelAssociation: false)
                 }
+            // Ignore prepare
+            default:
+                break
             }
         }
     }
@@ -470,8 +470,7 @@ private extension AudioPlayerAgent {
                 
                 self.audioPlayerDisplayManager.display(
                     payload: player.payload,
-                    messageId: directive.header.messageId,
-                    dialogRequestId: directive.header.dialogRequestId
+                    header: directive.header
                 )
             }
         }
@@ -597,7 +596,7 @@ private extension AudioPlayerAgent {
             }
             defer { completion(.finished) }
             
-            self?.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId)
+            self?.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId, header: directive.header)
         }
     }
     
@@ -609,7 +608,7 @@ private extension AudioPlayerAgent {
             }
             defer { completion(.finished) }
             
-            self?.audioPlayerDisplayManager.showLyrics(playServiceId: playServiceId) { [weak self] isSuccess in
+            self?.audioPlayerDisplayManager.showLyrics(playServiceId: playServiceId, header: directive.header) { [weak self] isSuccess in
                 guard let self = self else { return }
                 
                 let typeInfo: LyricsEvent.TypeInfo = isSuccess ? .showLyricsSucceeded : .showLyricsFailed
@@ -630,7 +629,7 @@ private extension AudioPlayerAgent {
             }
             defer { completion(.finished) }
             
-            self?.audioPlayerDisplayManager.hideLyrics(playServiceId: playServiceId) { [weak self] isSuccess in
+            self?.audioPlayerDisplayManager.hideLyrics(playServiceId: playServiceId, header: directive.header) { [weak self] isSuccess in
                 guard let self = self else { return }
                 
                 let typeInfo: LyricsEvent.TypeInfo = isSuccess ? .hideLyricsSucceeded : .hideLyricsFailed
@@ -651,7 +650,7 @@ private extension AudioPlayerAgent {
             }
             defer { completion(.finished) }
             
-            self?.audioPlayerDisplayManager.controlLyricsPage(payload: payload) { [weak self] isSuccess in
+            self?.audioPlayerDisplayManager.controlLyricsPage(payload: payload, header: directive.header) { [weak self] isSuccess in
                 guard let self = self else { return }
                 
                 let typeInfo: LyricsEvent.TypeInfo = isSuccess ? .controlLyricsPageSucceeded(direction: payload.direction) : .controlLyricsPageFailed(direction: payload.direction)

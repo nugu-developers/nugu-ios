@@ -35,8 +35,8 @@ public class FocusManager: FocusManageable {
 
 // MARK: - FocusManageable
 
-extension FocusManager {
-    public func add(channelDelegate: FocusChannelDelegate) {
+public extension FocusManager {
+    func add(channelDelegate: FocusChannelDelegate) {
         _channelInfos.mutate {
             $0.remove(delegate: channelDelegate)
             
@@ -45,13 +45,31 @@ extension FocusManager {
         }
     }
     
-    public func remove(channelDelegate: FocusChannelDelegate) {
+    func remove(channelDelegate: FocusChannelDelegate) {
         _channelInfos.mutate {
             $0.remove(delegate: channelDelegate)
         }
     }
     
-    public func requestFocus(channelDelegate: FocusChannelDelegate) {
+    func prepareFocus(channelDelegate: FocusChannelDelegate) {
+        focusDispatchQueue.sync { [weak self] in
+            guard let self = self else { return }
+            
+            self.update(channelDelegate: channelDelegate, focusState: .prepare)
+        }
+    }
+    
+    func cancelFocus(channelDelegate: FocusChannelDelegate) {
+        focusDispatchQueue.sync { [weak self] in
+            guard let self = self else { return }
+            guard let info = self.channelInfos.object(forDelegate: channelDelegate),
+                  info.focusState == .prepare else { return }
+            
+            self.update(channelDelegate: channelDelegate, focusState: .nothing)
+        }
+    }
+    
+    func requestFocus(channelDelegate: FocusChannelDelegate) {
         focusDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
             guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
@@ -75,7 +93,12 @@ extension FocusManager {
                 self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
             }
 
-            if let backgroundChannelDelegate = self.backgroundChannelDelegate,
+            if let prepareChannelDelegate = self.prepareChannelDelegate,
+               prepareChannelDelegate !== channelDelegate,
+               channelDelegate.focusChannelPriority().requestPriority < prepareChannelDelegate.focusChannelPriority().requestPriority {
+                // Prepare channel will request focus in the future.
+                self.update(channelDelegate: channelDelegate, focusState: .background)
+            } else if let backgroundChannelDelegate = self.backgroundChannelDelegate,
                backgroundChannelDelegate !== channelDelegate,
                 channelDelegate.focusChannelPriority().requestPriority < backgroundChannelDelegate.focusChannelPriority().maintainPriority {
                 // Assign a higher background channel to the foreground in the future.
@@ -88,7 +111,7 @@ extension FocusManager {
         }
     }
 
-    public func releaseFocus(channelDelegate: FocusChannelDelegate) {
+    func releaseFocus(channelDelegate: FocusChannelDelegate) {
         focusDispatchQueue.sync { [weak self] in
             guard let self = self else { return }
             guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
@@ -119,7 +142,7 @@ private extension FocusManager {
         case .nothing:
             assignForeground()
             notifyReleaseFocusIfNeeded()
-        case .background, .foreground:
+        case .background, .foreground, .prepare:
             releaseFocusWorkItem?.cancel()
         }
     }
@@ -162,6 +185,14 @@ private extension FocusManager {
             .filter { $0.focusState == .background }
             .compactMap { $0.delegate}
             .sorted { $0.focusChannelPriority().maintainPriority > $1.focusChannelPriority().maintainPriority }
+            .first
+    }
+    
+    var prepareChannelDelegate: FocusChannelDelegate? {
+        return self.channelInfos
+            .filter { $0.focusState == .prepare }
+            .compactMap { $0.delegate}
+            .sorted { $0.focusChannelPriority().requestPriority > $1.focusChannelPriority().requestPriority }
             .first
     }
 }

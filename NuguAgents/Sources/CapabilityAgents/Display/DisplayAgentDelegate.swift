@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// The `DisplayAgent` delegate is used to notify observers when a template directive is received.
 public protocol DisplayAgentDelegate: class {
     /// Tells the delegate that the specified template should be displayed.
@@ -35,14 +37,16 @@ public protocol DisplayAgentDelegate: class {
     /// Tells the delegate that the displayed template should move focus with given direction.
     /// - Parameter templateId: The template id to move focus.
     /// - Parameter direction: Direction to move focus.
+    /// - Parameter header: The header of the originally handled directive.
     /// - Parameter completion: Whether succeeded or not.
-    func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
+    func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void)
     
     /// Tells the delegate that the displayed template should scroll with given direction.
     /// - Parameter templateId: The template id to scroll.
     /// - Parameter direction: Direction to scroll.
+    /// - Parameter header: The header of the originally handled directive.
     /// - Parameter completion: Whether succeeded or not.
-    func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
+    func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void)
     
     /// Provide a context of display-agent.
     /// - Parameter templateId: The template id to send context.
@@ -51,5 +55,6 @@ public protocol DisplayAgentDelegate: class {
     /// Should update proper displaying view with given template.
     /// - Parameters:
     ///   - templateId: The template id to update.
+    ///   - template: The template to update.
     func displayAgentShouldUpdate(templateId: String, template: DisplayTemplate)
 }

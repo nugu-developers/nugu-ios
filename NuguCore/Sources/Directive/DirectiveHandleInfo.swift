@@ -40,11 +40,11 @@ public struct DirectiveHandleInfo: Hashable {
     /// <#Description#>
     public let blockingPolicy: BlockingPolicy
     /// <#Description#>
-    public let directiveHandler: HandleDirective
+    public let preFetch: PrefetchDirective?
     /// <#Description#>
     public let cancelDirective: CancelDirective?
     /// <#Description#>
-    public let preFetch: PrefetchDirective?
+    public let directiveHandler: HandleDirective
     /// <#Description#>
     public let attachmentHandler: HandleAttachment?
     
@@ -67,16 +67,16 @@ public struct DirectiveHandleInfo: Hashable {
         name: String,
         blockingPolicy: BlockingPolicy,
         preFetch: (() -> PrefetchDirective)? = nil,
-        directiveHandler: () -> HandleDirective,
         cancelDirective: (() -> CancelDirective)? = nil,
+        directiveHandler: () -> HandleDirective,
         attachmentHandler: (() -> HandleAttachment)? = nil
     ) {
         self.namespace = namespace
         self.name = name
         self.blockingPolicy = blockingPolicy
-        self.directiveHandler = directiveHandler()
-        self.cancelDirective = cancelDirective?()
         self.preFetch = preFetch?()
+        self.cancelDirective = cancelDirective?()
+        self.directiveHandler = directiveHandler()
         self.attachmentHandler = attachmentHandler?()
     }
     
