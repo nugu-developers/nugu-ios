@@ -22,6 +22,7 @@ import Foundation
 import AVFoundation
 
 import NuguCore
+import NuguUtils
 import JadeMarble
 
 import RxSwift

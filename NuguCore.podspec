@@ -25,6 +25,7 @@ Nugu framework for AI Service
 
   s.source_files = 'NuguCore/Sources/**/*'
 
+  s.dependency 'NuguUtils', '~> 0'
   s.dependency 'NattyLog', '~> 1.0'
   s.dependency 'RxSwift', '~> 5'
 
