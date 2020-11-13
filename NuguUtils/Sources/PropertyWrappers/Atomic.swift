@@ -21,32 +21,32 @@
 import Foundation
 
 @propertyWrapper
-final class Atomic<Value> {
+final public class Atomic<Value> {
     private var value: Value
     private let queue = DispatchQueue(label: "com.sktelecom.romaine.atomic.queue")
 
-    init(wrappedValue value: Value) {
+    public init(wrappedValue value: Value) {
         self.value = value
     }
 
-    var wrappedValue: Value {
+    public var wrappedValue: Value {
       get { return load() }
       set { store(value: newValue) }
     }
 
-    func load() -> Value {
+    private func load() -> Value {
         return queue.sync { () -> Value in
             return value
         }
     }
 
-    func store(value: Value) {
+    private func store(value: Value) {
         queue.sync {
             self.value = value
         }
     }
     
-    func mutate(_ transform: (inout Value) -> Void) {
+    public func mutate(_ transform: (inout Value) -> Void) {
         queue.sync {
             transform(&value)
         }

@@ -22,6 +22,8 @@ import Foundation
 import AVFoundation
 import MobileCoreServices
 
+import NuguUtils
+
 public class MediaPlayer: NSObject, MediaPlayable {
     public weak var delegate: MediaPlayerDelegate?
     

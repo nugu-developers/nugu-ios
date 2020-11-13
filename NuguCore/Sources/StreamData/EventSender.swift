@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 import RxSwift
 
 /**

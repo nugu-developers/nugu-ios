@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 /// <#Description#>
 public protocol MediaPlayable: class {
     /// <#Description#>

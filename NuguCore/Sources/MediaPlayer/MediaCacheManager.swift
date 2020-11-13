@@ -21,6 +21,8 @@
 import UIKit
 import AVFoundation
 
+import NuguUtils
+
 struct MediaCacheManager {
     private static let aesKey = "_NuguMediaAesKey"
     

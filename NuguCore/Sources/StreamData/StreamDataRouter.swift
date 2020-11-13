@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
@@ -27,8 +29,8 @@ public class StreamDataRouter: StreamDataRoutable {
     
     private let nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
-    private var eventSenders = AtomicDictionary<String, EventSender>()
-    private var eventDisposables = AtomicDictionary<String, Disposable>()
+    @Atomic private var eventSenders = [String: EventSender]()
+    @Atomic private var eventDisposables = [String: Disposable]()
     private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
@@ -121,7 +123,9 @@ public extension StreamDataRouter {
     func sendStream(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)? = nil) {
         let boundary = HTTPConst.boundaryPrefix + event.header.dialogRequestId
         let eventSender = EventSender(boundary: boundary)
-        eventSenders[event.header.dialogRequestId] = eventSender
+        _eventSenders.mutate {
+            $0[event.header.dialogRequestId] = eventSender
+        }
         
         // write event data to the stream
         log.debug("Event: \(event.header.dialogRequestId), \(event.header.namespace).\(event.header.name)")
@@ -140,29 +144,36 @@ public extension StreamDataRouter {
             .disposed(by: self.disposeBag)
         
         // request event as multi part stream
-        eventDisposables[event.header.dialogRequestId] = nuguApiProvider.events(boundary: boundary, httpHeaderFields: event.httpHeaderFields, inputStream: eventSender.streams.input)
-            .subscribe(onNext: { [weak self] (part) in
-                self?.notifyMessage(with: part, completion: completion)
-            }, onError: { [weak self] (error) in
-                log.error("\(error.localizedDescription)")
-                completion?(.error(error))
-                self?.delegates.notify({ (delegate) in
-                    delegate.streamDataDidSend(event: event, error: error)
+        _eventDisposables.mutate {
+            $0[event.header.dialogRequestId] = nuguApiProvider.events(boundary: boundary, httpHeaderFields: event.httpHeaderFields, inputStream: eventSender.streams.input)
+                .subscribe(onNext: { [weak self] (part) in
+                    self?.notifyMessage(with: part, completion: completion)
+                }, onError: { [weak self] (error) in
+                    log.error("\(error.localizedDescription)")
+                    completion?(.error(error))
+                    self?.delegates.notify({ (delegate) in
+                        delegate.streamDataDidSend(event: event, error: error)
+                    })
+                }, onCompleted: { [weak self] in
+                    completion?(.finished)
+                    self?.delegates.notify({ (delegate) in
+                        delegate.streamDataDidSend(event: event, error: nil)
+                    })
+                    // Send end_stream after receiving end_stream from server.
+                    // ex> Send `ASR.Recoginze` event with invalid access token.
+                    if eventSender.streams.output.streamStatus != .closed {
+                        eventSender.streams.output.close()
+                    }
+                }, onDisposed: { [weak self] in
+                    self?._eventDisposables.mutate {
+                        $0[event.header.dialogRequestId] = nil
+                    }
+                    
+                    self?._eventSenders.mutate {
+                        $0[event.header.dialogRequestId] = nil
+                    }
                 })
-            }, onCompleted: { [weak self] in
-                completion?(.finished)
-                self?.delegates.notify({ (delegate) in
-                    delegate.streamDataDidSend(event: event, error: nil)
-                })
-                // Send end_stream after receiving end_stream from server.
-                // ex> Send `ASR.Recoginze` event with invalid access token.
-                if eventSender.streams.output.streamStatus != .closed {
-                    eventSender.streams.output.close()
-                }
-            }, onDisposed: { [weak self] in
-                self?.eventDisposables[event.header.dialogRequestId]  = nil
-                self?.eventSenders[event.header.dialogRequestId] = nil
-            })
+        }
     }
     
     /**
