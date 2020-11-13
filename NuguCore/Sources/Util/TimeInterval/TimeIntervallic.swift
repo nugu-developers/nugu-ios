@@ -23,20 +23,20 @@ import AVFoundation
 
 // MARK: - TimeIntervallic
 
-/// Represents a time interval
+/// A type with a time interval representation.
 public protocol TimeIntervallic {
     
-    /// <#Description#>
+    /// A number of seconds.
     var seconds: Double { get }
     
-    /// <#Description#>
+    /// A number of milliseconds.
     var milliseconds: Double { get }
 }
 
 // MARK: - TimeIntervallic + Optional
 
 extension TimeIntervallic {
-    /// <#Description#>
+    /// A number of milliseconds.
     public var milliseconds: Double {
         return seconds * 1000.0
     }
@@ -45,7 +45,7 @@ extension TimeIntervallic {
 // MARK: - TimeIntervallic + Int
 
 extension TimeIntervallic {
-    /// <#Description#>
+    /// A number of seconds.
     public var truncatedSeconds: Int {
         guard seconds.isNaN == false else { return 0 }
         
@@ -59,7 +59,7 @@ extension TimeIntervallic {
         }
     }
     
-    /// <#Description#>
+    /// A number of milliseconds.
     public var truncatedMilliSeconds: Int {
         let secondToMilliseconds = seconds * 1000.0
         guard secondToMilliseconds.isNaN == false else { return 0 }
@@ -78,7 +78,6 @@ extension TimeIntervallic {
 // MARK: - DispatchTimeInterval + TimeIntervallic
 
 extension DispatchTimeInterval: TimeIntervallic {
-    /// <#Description#>
     public var seconds: Double {
         switch self {
         case .seconds(let seconds):

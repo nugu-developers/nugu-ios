@@ -22,6 +22,8 @@ import Foundation
 
 /// <#Description#>
 public enum ContextType {
+    /// The element of supportedInterfaces in context.
     case capability
+    /// The element of client in context.
     case client
 }
