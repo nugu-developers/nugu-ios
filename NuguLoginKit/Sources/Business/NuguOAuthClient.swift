@@ -21,6 +21,8 @@
 import UIKit
 import SafariServices
 
+import NuguUtils
+
 /// <#Description#>
 public class NuguOAuthClient {
     /// The `deviceUniqueId` is unique identifier each device.
@@ -217,7 +219,7 @@ public extension NuguOAuthClient {
     ///   - clientSecret: The `clientSecret` for OAuth authentication.
     ///   - token: The `token` is access-token currently being used.
     ///   - completion: The closure to receive result for `revoke`.
-    func revoke(clientId: String, clientSecret: String, token: String, completion: ((Result<Void, NuguLoginKitError>) -> Void)?) {
+    func revoke(clientId: String, clientSecret: String, token: String, completion: ((EndedUp<NuguLoginKitError>) -> Void)?) {
         let api = NuguOAuthUtilApi(
             token: token,
             clientId: clientId,
@@ -227,11 +229,13 @@ public extension NuguOAuthClient {
         )
         
         api.request { (result) in
-            completion?(result
-                .flatMap({ (_) -> Result<Void, NuguLoginKitError.APIError> in
-                    return .success(())
-                })
-                .mapError({ NuguLoginKitError.apiError(error: $0) })
+            completion?(
+                result
+                    .flatMap { (_) -> Result<Void, NuguLoginKitError.APIError> in
+                        return .success(())
+                    }
+                    .mapError { NuguLoginKitError.apiError(error: $0) }
+                    .toEndedUp()
             )
         }
     }

@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 public protocol MediaUrlDataSource {
     func setSource(url: String, offset: TimeIntervallic, cacheKey: String?)
     func setSource(url: URL, offset: TimeIntervallic, cacheKey: String?)

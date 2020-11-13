@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 /// <#Description#>
 public protocol PlaySyncManageable: ContextInfoDelegate {
     /// Register `PlaySyncDelegate` to `PlaySyncManageable`.

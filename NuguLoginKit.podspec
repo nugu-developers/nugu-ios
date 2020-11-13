@@ -21,4 +21,6 @@ Framework for login using OAuth 2.0
   s.swift_version = '5.1'
 
   s.source_files = 'NuguLoginKit/Sources/**/*'
+
+  s.dependency 'NuguUtils', '~> 0'
 end

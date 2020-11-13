@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 import RxSwift
 
@@ -188,7 +189,7 @@ extension AudioPlayer: MediaPlayable {
         internalPlayer?.resume()
     }
     
-    func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
+    func seek(to offset: TimeIntervallic, completion: ((EndedUp<Error>) -> Void)?) {
         internalPlayer?.seek(to: offset, completion: completion)
     }
 }

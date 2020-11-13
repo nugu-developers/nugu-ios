@@ -111,7 +111,6 @@
 		1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3112375707000C9A177 /* MediaPlayer.swift */; };
 		1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3212375707000C9A177 /* Collection+Convenience.swift */; };
 		1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3222375707000C9A177 /* Dictionary+DeepMerge.swift */; };
-		1FFFF3912375707100C9A177 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3272375707000C9A177 /* Atomic.swift */; };
 		1FFFF3922375707100C9A177 /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF32A2375707000C9A177 /* ContextManager.swift */; };
 		1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF35E2375707000C9A177 /* NetworkConst.swift */; };
 		1FFFF3BC2375707100C9A177 /* HTTPConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3612375707000C9A177 /* HTTPConst.swift */; };
@@ -179,7 +178,19 @@
 		680EF96324B30DAE003DE266 /* MediaPlayerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680EF96224B30DAE003DE266 /* MediaPlayerAgentProtocol.swift */; };
 		680EF96524B30DBB003DE266 /* MediaPlayerAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680EF96424B30DBB003DE266 /* MediaPlayerAgentDelegate.swift */; };
 		68F2F801253D874900D91AA1 /* PhoneCallAgentContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F2F800253D874900D91AA1 /* PhoneCallAgentContext.swift */; };
-		7303C68A23C5C00F00610343 /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68923C5C00F00610343 /* BoundStreams.swift */; };
+		7314DF4B255E3EA2004882BB /* NuguUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7314DF49255E3EA2004882BB /* NuguUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7314DF4E255E3EA2004882BB /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
+		7314DF4F255E3EA2004882BB /* NuguUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7314DF68255E3F21004882BB /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68923C5C00F00610343 /* BoundStreams.swift */; };
+		7314DF87255E3F27004882BB /* CryptoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC7243ACA280027D76D /* CryptoUtil.swift */; };
+		7314DFA8255E3F33004882BB /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
+		7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
+		7314DFB4255E3F39004882BB /* DelegateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23A2375703000C9A177 /* DelegateSet.swift */; };
+		7314DFB5255E3F39004882BB /* DelegateDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2392375703000C9A177 /* DelegateDictionary.swift */; };
+		7314DFDE255E3FF2004882BB /* TimeUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3262375707000C9A177 /* TimeUUID.swift */; };
+		7314E030255E4491004882BB /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3272375707000C9A177 /* Atomic.swift */; };
+		7314E031255E4491004882BB /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
+		7314E050255E44DE004882BB /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F10090A23792A0000D90FEE /* RxSwift.framework */; };
 		73152F9E23E0405900F843C3 /* NuguAgents.h in Headers */ = {isa = PBXBuildFile; fileRef = 73152F9C23E0405900F843C3 /* NuguAgents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		73152FA123E0405900F843C3 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
 		73152FA223E0405900F843C3 /* NuguAgents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -219,19 +230,18 @@
 		73152FE923E05D1100F843C3 /* NuguCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFEFFD23753F1800C9A177 /* NuguCore.framework */; };
 		73152FED23E05D9700F843C3 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
 		7315301923E11EDF00F843C3 /* MediaPlayableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */; };
-		7315301F23E11EDF00F843C3 /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
-		7315302023E11EDF00F843C3 /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
-		7315302123E11EDF00F843C3 /* DelegateDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2392375703000C9A177 /* DelegateDictionary.swift */; };
-		7315302223E11EDF00F843C3 /* DelegateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23A2375703000C9A177 /* DelegateSet.swift */; };
 		7315302923E11EDF00F843C3 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27D2375703000C9A177 /* NetworkError.swift */; };
 		7315306F23E1248300F843C3 /* ASRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2552375703000C9A177 /* ASRError.swift */; };
 		7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */; };
+		7329679925636E240077C3C4 /* DispatchQueue+safeSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7329679825636E240077C3C4 /* DispatchQueue+safeSync.swift */; };
+		732967B9256377190077C3C4 /* EndedUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732967B8256377190077C3C4 /* EndedUp.swift */; };
+		732967F6256383AB0077C3C4 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
+		73296856256394580077C3C4 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */; };
 		7330CD8A237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */; };
 		7330CD8D237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */; };
 		7330CD8E237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8C237A784500FCD6E9 /* TycheKeywordDetectorEngine.swift */; };
 		7334F47523FD170200EA5E58 /* Eventable+makeEventMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7334F47423FD170200EA5E58 /* Eventable+makeEventMessage.swift */; };
-		73454FBD2382C1E50073AF48 /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
 		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
 		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
 		735A4CBE241172F1004E7A41 /* EventResponseProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBA241172F0004E7A41 /* EventResponseProcessor.swift */; };
@@ -377,7 +387,6 @@
 		75047DCB24F78F41007BBF22 /* Container+Merge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75047DCA24F78F41007BBF22 /* Container+Merge.swift */; };
 		75082BC4243AC5B20027D76D /* MediaCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC3243AC5B20027D76D /* MediaCacheManager.swift */; };
 		75082BC6243AC85E0027D76D /* FileManager+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC5243AC85E0027D76D /* FileManager+Convenience.swift */; };
-		75082BC8243ACA280027D76D /* CryptoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC7243ACA280027D76D /* CryptoUtil.swift */; };
 		7522203C244F627E00192D88 /* NuguChipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7522203B244F627E00192D88 /* NuguChipsView.swift */; };
 		7522203E244F632800192D88 /* NuguChipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7522203D244F632800192D88 /* NuguChipsView.xib */; };
 		7522205D244FFD1C00192D88 /* NuguToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7522205C244FFD1C00192D88 /* NuguToast.swift */; };
@@ -481,7 +490,6 @@
 		7E35D79424623444003289A2 /* MultiPartProcessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79324623444003289A2 /* MultiPartProcessable.swift */; };
 		7E35D79824623A22003289A2 /* TTSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79724623A22003289A2 /* TTSError.swift */; };
 		7E38656624AEE97100E78C6E /* DisplayContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E38656524AEE97100E78C6E /* DisplayContext.swift */; };
-		7E3C5707244FC62300FF36DF /* AtomicDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3C5706244FC62300FF36DF /* AtomicDictionary.swift */; };
 		7E3C570F2450049C00FF36DF /* Keyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3C570E2450049C00FF36DF /* Keyword.swift */; };
 		7E4382542418DAB200053A0D /* PlayStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4382532418DAB200053A0D /* PlayStack.swift */; };
 		7E5F4896243C3C8A00118054 /* SoundAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5F4895243C3C8A00118054 /* SoundAgent.swift */; };
@@ -498,7 +506,6 @@
 		7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F0E247F583F008731CD /* MockSessionManager.swift */; };
 		7EA53F11247F5904008731CD /* MockDialogAttributeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */; };
 		7EB81CD724C04F3B000910A9 /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB81CD624C04F3B000910A9 /* Eventable.swift */; };
-		7EB81CD824C0576D000910A9 /* TimeUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3262375707000C9A177 /* TimeUUID.swift */; };
 		7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */; };
 		7EC282F325206A8C00E3F18A /* BackgroundFocusHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC282F225206A8C00E3F18A /* BackgroundFocusHolder.swift */; };
 		7ECD3DF324F673D4007F29CE /* DirectiveSequencerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECD3DF224F673D4007F29CE /* DirectiveSequencerDelegate.swift */; };
@@ -631,6 +638,13 @@
 			remoteGlobalIDString = 1FFFF02323753F8A00C9A177;
 			remoteInfo = NuguUIKit;
 		};
+		7314DF4C255E3EA2004882BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7314DF46255E3EA2004882BB;
+			remoteInfo = NuguUtils;
+		};
 		73152F9F23E0405900F843C3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D9C428722745894000A6585 /* Project object */;
@@ -659,6 +673,20 @@
 			remoteGlobalIDString = 73152F9923E0405900F843C3;
 			remoteInfo = NuguAgents;
 		};
+		732967F8256383AB0077C3C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7314DF46255E3EA2004882BB;
+			remoteInfo = NuguUtils;
+		};
+		73296858256394580077C3C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7314DF46255E3EA2004882BB;
+			remoteInfo = NuguUtils;
+		};
 		7525AC89249AFE8E006800A3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D9C428722745894000A6585 /* Project object */;
@@ -682,6 +710,7 @@
 				7525AC8C249AFE8E006800A3 /* NuguServiceKit.framework in Embed Frameworks */,
 				1FFFF51B237674DF00C9A177 /* NuguUIKit.framework in Embed Frameworks */,
 				1F1008F72379247800D90FEE /* NuguCore.framework in Embed Frameworks */,
+				7314DF4F255E3EA2004882BB /* NuguUtils.framework in Embed Frameworks */,
 				1FFFF517237674DF00C9A177 /* NuguLoginKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -918,11 +947,16 @@
 		7303C68423C5BFD400610343 /* EndPointDetectorState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectorState.swift; sourceTree = "<group>"; };
 		7303C68523C5BFD400610343 /* ClientEndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientEndPointDetector.swift; sourceTree = "<group>"; };
 		7303C68923C5C00F00610343 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
+		7314DF47255E3EA2004882BB /* NuguUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7314DF49255E3EA2004882BB /* NuguUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguUtils.h; sourceTree = "<group>"; };
+		7314DF4A255E3EA2004882BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Precondition.swift"; sourceTree = "<group>"; };
 		73152F9A23E0405900F843C3 /* NuguAgents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguAgents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73152F9C23E0405900F843C3 /* NuguAgents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguAgents.h; sourceTree = "<group>"; };
 		73152F9D23E0405900F843C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73152FDB23E0451900F843C3 /* NuguAgents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAgents.swift; sourceTree = "<group>"; };
+		7329679825636E240077C3C4 /* DispatchQueue+safeSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+safeSync.swift"; sourceTree = "<group>"; };
+		732967B8256377190077C3C4 /* EndedUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndedUp.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
 		7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngine.swift; sourceTree = "<group>"; };
 		7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKeywordDetectorEngineDelegate.swift; sourceTree = "<group>"; };
@@ -1174,7 +1208,6 @@
 		7E35D79724623A22003289A2 /* TTSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSError.swift; sourceTree = "<group>"; };
 		7E35D79924623B53003289A2 /* MicInputError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicInputError.swift; sourceTree = "<group>"; };
 		7E38656524AEE97100E78C6E /* DisplayContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayContext.swift; sourceTree = "<group>"; };
-		7E3C5706244FC62300FF36DF /* AtomicDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicDictionary.swift; sourceTree = "<group>"; };
 		7E3C570E2450049C00FF36DF /* Keyword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyword.swift; sourceTree = "<group>"; };
 		7E4382532418DAB200053A0D /* PlayStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStack.swift; sourceTree = "<group>"; };
 		7E5237F8239649940058F0B9 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
@@ -1231,6 +1264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F10091323792A1F00D90FEE /* NattyLog.framework in Frameworks */,
+				73296856256394580077C3C4 /* NuguUtils.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1250,6 +1284,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				732967F6256383AB0077C3C4 /* NuguUtils.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1293,6 +1328,7 @@
 				1FFFF51A237674DF00C9A177 /* NuguUIKit.framework in Frameworks */,
 				1F1008CE2379221500D90FEE /* NuguClientKit.framework in Frameworks */,
 				1F1008F62379247800D90FEE /* NuguCore.framework in Frameworks */,
+				7314DF4E255E3EA2004882BB /* NuguUtils.framework in Frameworks */,
 				1F100908237929FB00D90FEE /* NattyLog.framework in Frameworks */,
 				1F1008D02379221700D90FEE /* KeenSense.framework in Frameworks */,
 				1FFFF516237674DF00C9A177 /* NuguLoginKit.framework in Frameworks */,
@@ -1315,6 +1351,14 @@
 				1F2E8008238FCCE100569C59 /* NattyLog.framework in Frameworks */,
 				1F721C66241767E100023EF8 /* Quick.framework in Frameworks */,
 				1F721C67241767E100023EF8 /* Nimble.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7314DF44255E3EA2004882BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7314E050255E44DE004882BB /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1486,8 +1530,6 @@
 			isa = PBXGroup;
 			children = (
 				7E0713DA24FCD01C009314DA /* NuguUserDefault.swift */,
-				73454FBC2382C1E50073AF48 /* Publish.swift */,
-				1FFFF3272375707000C9A177 /* Atomic.swift */,
 			);
 			path = PropertyWrappers;
 			sourceTree = "<group>";
@@ -1750,12 +1792,7 @@
 		1FFFF3252375707000C9A177 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				1F1009982387969600D90FEE /* TimeInterval */,
-				1F1009972387968D00D90FEE /* Delegate */,
-				7303C68923C5C00F00610343 /* BoundStreams.swift */,
-				75082BC7243ACA280027D76D /* CryptoUtil.swift */,
 				1FFFF3262375707000C9A177 /* TimeUUID.swift */,
-				7E3C5706244FC62300FF36DF /* AtomicDictionary.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -2339,6 +2376,7 @@
 				7525AC85249AFE8E006800A3 /* NuguServiceKit */,
 				1FFFF03223753FA200C9A177 /* JadeMarble */,
 				1FFFF03F23753FB200C9A177 /* KeenSense */,
+				7314DF48255E3EA2004882BB /* NuguUtils */,
 				1FFFF48E237671F500C9A177 /* SampleApp */,
 				1FFFF524237676BE00C9A177 /* NuguTests */,
 				3D9C429122745894000A6585 /* Products */,
@@ -2364,6 +2402,7 @@
 				1FFFF523237676BE00C9A177 /* NuguTests.xctest */,
 				73152F9A23E0405900F843C3 /* NuguAgents.framework */,
 				7525AC84249AFE8E006800A3 /* NuguServiceKit.framework */,
+				7314DF47255E3EA2004882BB /* NuguUtils.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2409,6 +2448,39 @@
 			path = EndPointDetector;
 			sourceTree = "<group>";
 		};
+		7314DF48255E3EA2004882BB /* NuguUtils */ = {
+			isa = PBXGroup;
+			children = (
+				7314DF67255E3EDB004882BB /* Sources */,
+				7314DF49255E3EA2004882BB /* NuguUtils.h */,
+				7314DF4A255E3EA2004882BB /* Info.plist */,
+			);
+			path = NuguUtils;
+			sourceTree = "<group>";
+		};
+		7314DF67255E3EDB004882BB /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				7329679725636E240077C3C4 /* Extensions */,
+				7314E02F255E4474004882BB /* PropertyWrappers */,
+				1F1009982387969600D90FEE /* TimeInterval */,
+				1F1009972387968D00D90FEE /* Delegate */,
+				7303C68923C5C00F00610343 /* BoundStreams.swift */,
+				75082BC7243ACA280027D76D /* CryptoUtil.swift */,
+				732967B8256377190077C3C4 /* EndedUp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7314E02F255E4474004882BB /* PropertyWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				73454FBC2382C1E50073AF48 /* Publish.swift */,
+				1FFFF3272375707000C9A177 /* Atomic.swift */,
+			);
+			path = PropertyWrappers;
+			sourceTree = "<group>";
+		};
 		73152F9B23E0405900F843C3 /* NuguAgents */ = {
 			isa = PBXGroup;
 			children = (
@@ -2447,6 +2519,14 @@
 				06CF293B254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		7329679725636E240077C3C4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7329679825636E240077C3C4 /* DispatchQueue+safeSync.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		735A4CC2241172FA004E7A41 /* Api */ = {
@@ -2976,6 +3056,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7314DF42255E3EA2004882BB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7314DF4B255E3EA2004882BB /* NuguUtils.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		73152F9523E0405900F843C3 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -3007,6 +3095,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				73296859256394580077C3C4 /* PBXTargetDependency */,
 			);
 			name = NuguCore;
 			packageProductDependencies = (
@@ -3051,6 +3140,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				732967F9256383AB0077C3C4 /* PBXTargetDependency */,
 			);
 			name = NuguLoginKit;
 			productName = NuguLoginKit;
@@ -3139,6 +3229,7 @@
 				1F1008F92379247800D90FEE /* PBXTargetDependency */,
 				73152FA023E0405900F843C3 /* PBXTargetDependency */,
 				7525AC8A249AFE8E006800A3 /* PBXTargetDependency */,
+				7314DF4D255E3EA2004882BB /* PBXTargetDependency */,
 			);
 			name = SampleApp;
 			packageProductDependencies = (
@@ -3170,6 +3261,24 @@
 			productName = NuguTests;
 			productReference = 1FFFF523237676BE00C9A177 /* NuguTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		7314DF46255E3EA2004882BB /* NuguUtils */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7314DF52255E3EA2004882BB /* Build configuration list for PBXNativeTarget "NuguUtils" */;
+			buildPhases = (
+				7314DF42255E3EA2004882BB /* Headers */,
+				7314DF43255E3EA2004882BB /* Sources */,
+				7314DF44255E3EA2004882BB /* Frameworks */,
+				7314DF45255E3EA2004882BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NuguUtils;
+			productName = NuguUtils;
+			productReference = 7314DF47255E3EA2004882BB /* NuguUtils.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		73152F9923E0405900F843C3 /* NuguAgents */ = {
 			isa = PBXNativeTarget;
@@ -3244,6 +3353,9 @@
 					1FFFF522237676BE00C9A177 = {
 						CreatedOnToolsVersion = 11.0;
 					};
+					7314DF46255E3EA2004882BB = {
+						CreatedOnToolsVersion = 12.1;
+					};
 					73152F9923E0405900F843C3 = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
@@ -3276,6 +3388,7 @@
 				7525AC83249AFE8E006800A3 /* NuguServiceKit */,
 				1FFFF03023753FA200C9A177 /* JadeMarble */,
 				1FFFF03D23753FB200C9A177 /* KeenSense */,
+				7314DF46255E3EA2004882BB /* NuguUtils */,
 				1FFFF48C237671F500C9A177 /* SampleApp */,
 				1FFFF522237676BE00C9A177 /* NuguTests */,
 			);
@@ -3400,6 +3513,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7314DF45255E3EA2004882BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		73152F9823E0405900F843C3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3515,19 +3635,13 @@
 				7373895824A473A60018DDD2 /* FocusChannelDelegate.swift in Sources */,
 				7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */,
 				1FFFF3C62375707100C9A177 /* FocusChannelInfo.swift in Sources */,
-				7315302123E11EDF00F843C3 /* DelegateDictionary.swift in Sources */,
 				7373894524A46E5F0018DDD2 /* ContextManageable.swift in Sources */,
-				7E3C5707244FC62300FF36DF /* AtomicDictionary.swift in Sources */,
-				7303C68A23C5C00F00610343 /* BoundStreams.swift in Sources */,
 				7373892E24A46D430018DDD2 /* StreamDataDelegate.swift in Sources */,
 				7373893424A46D4D0018DDD2 /* Downstream.swift in Sources */,
-				7EB81CD824C0576D000910A9 /* TimeUUID.swift in Sources */,
-				7315302223E11EDF00F843C3 /* DelegateSet.swift in Sources */,
 				7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */,
 				7373895524A473A60018DDD2 /* FocusState.swift in Sources */,
 				7E0713DE24FCD02C009314DA /* UserDefaults+Nugu.swift in Sources */,
 				1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */,
-				75082BC8243ACA280027D76D /* CryptoUtil.swift in Sources */,
 				7373895D24A473B90018DDD2 /* PlaySyncManageable.swift in Sources */,
 				7E35D79424623444003289A2 /* MultiPartProcessable.swift in Sources */,
 				7373893D24A46E510018DDD2 /* MediaUrlDataSource.swift in Sources */,
@@ -3539,8 +3653,8 @@
 				73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */,
 				735A4CE2241173F4004E7A41 /* EventSenderError.swift in Sources */,
 				7373895F24A473B90018DDD2 /* PlaySyncDelegate.swift in Sources */,
+				7314DFDE255E3FF2004882BB /* TimeUUID.swift in Sources */,
 				7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */,
-				1FFFF3912375707100C9A177 /* Atomic.swift in Sources */,
 				1FFFF38D2375707000C9A177 /* Dictionary+DeepMerge.swift in Sources */,
 				1FFFF3BA2375707100C9A177 /* NetworkConst.swift in Sources */,
 				7373892224A46D120018DDD2 /* MediaPlayerState.swift in Sources */,
@@ -3550,7 +3664,6 @@
 				1FD4A98423A22576002EB56D /* NuguCore.swift in Sources */,
 				7373893824A46D6C0018DDD2 /* AuthorizationStoreDelegate.swift in Sources */,
 				735A4CC624117339004E7A41 /* MultiPartParserError.swift in Sources */,
-				73454FBD2382C1E50073AF48 /* Publish.swift in Sources */,
 				1FFFF3CB2375707100C9A177 /* DirectiveSequencer.swift in Sources */,
 				7373892F24A46D430018DDD2 /* UpstreamDataSendable.swift in Sources */,
 				7E4382542418DAB200053A0D /* PlayStack.swift in Sources */,
@@ -3558,13 +3671,11 @@
 				7373895E24A473B90018DDD2 /* PlaySyncProperty.swift in Sources */,
 				7373894324A46E5F0018DDD2 /* ContextInfoDelegate.swift in Sources */,
 				7315302923E11EDF00F843C3 /* NetworkError.swift in Sources */,
-				7315302023E11EDF00F843C3 /* TimeIntervallic.swift in Sources */,
 				735A4CC0241172F1004E7A41 /* NuguApiProvider.swift in Sources */,
 				7373893724A46D6C0018DDD2 /* AuthorizationStoreable.swift in Sources */,
 				1FFFF3C42375707100C9A177 /* PlaySyncInfo.swift in Sources */,
 				735A4CBE241172F1004E7A41 /* EventResponseProcessor.swift in Sources */,
 				1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */,
-				7315301F23E11EDF00F843C3 /* NuguTimeInterval.swift in Sources */,
 				1FFFF3802375707000C9A177 /* MediaAVPlayerItem.swift in Sources */,
 				735A4CC724117339004E7A41 /* MultiPartParser.swift in Sources */,
 				1FFFF3C32375707100C9A177 /* PlaySyncManager.swift in Sources */,
@@ -3793,6 +3904,23 @@
 				1F9C5B8823FA82D90086CC04 /* ExtensionAgentSpec.swift in Sources */,
 				1F5DD4B5240CFEEB00719FBC /* DisplayAgentSpec.swift in Sources */,
 				7EA53F0D247F5685008731CD /* SessionManagerSpec.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7314DF43255E3EA2004882BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				732967B9256377190077C3C4 /* EndedUp.swift in Sources */,
+				7314E031255E4491004882BB /* Publish.swift in Sources */,
+				7329679925636E240077C3C4 /* DispatchQueue+safeSync.swift in Sources */,
+				7314DFA8255E3F33004882BB /* NuguTimeInterval.swift in Sources */,
+				7314DF87255E3F27004882BB /* CryptoUtil.swift in Sources */,
+				7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */,
+				7314E030255E4491004882BB /* Atomic.swift in Sources */,
+				7314DFB5255E3F39004882BB /* DelegateDictionary.swift in Sources */,
+				7314DFB4255E3F39004882BB /* DelegateSet.swift in Sources */,
+				7314DF68255E3F21004882BB /* BoundStreams.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4034,6 +4162,11 @@
 			target = 1FFFF02323753F8A00C9A177 /* NuguUIKit */;
 			targetProxy = 1FFFF5392376779200C9A177 /* PBXContainerItemProxy */;
 		};
+		7314DF4D255E3EA2004882BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7314DF46255E3EA2004882BB /* NuguUtils */;
+			targetProxy = 7314DF4C255E3EA2004882BB /* PBXContainerItemProxy */;
+		};
 		73152FA023E0405900F843C3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 73152F9923E0405900F843C3 /* NuguAgents */;
@@ -4053,6 +4186,16 @@
 			isa = PBXTargetDependency;
 			target = 73152F9923E0405900F843C3 /* NuguAgents */;
 			targetProxy = 73152FEF23E05D9700F843C3 /* PBXContainerItemProxy */;
+		};
+		732967F9256383AB0077C3C4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7314DF46255E3EA2004882BB /* NuguUtils */;
+			targetProxy = 732967F8256383AB0077C3C4 /* PBXContainerItemProxy */;
+		};
+		73296859256394580077C3C4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7314DF46255E3EA2004882BB /* NuguUtils */;
+			targetProxy = 73296858256394580077C3C4 /* PBXContainerItemProxy */;
 		};
 		7525AC8A249AFE8E006800A3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -4757,6 +4900,72 @@
 			};
 			name = Release;
 		};
+		7314DF50255E3EA2004882BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = NuguUtils/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.25.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUtils;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7314DF51255E3EA2004882BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = NuguUtils/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.25.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUtils;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		73152FA323E0405900F843C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4970,6 +5179,15 @@
 			buildConfigurations = (
 				3D9C429622745894000A6585 /* Debug */,
 				3D9C429722745894000A6585 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7314DF52255E3EA2004882BB /* Build configuration list for PBXNativeTarget "NuguUtils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7314DF50255E3EA2004882BB /* Debug */,
+				7314DF51255E3EA2004882BB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

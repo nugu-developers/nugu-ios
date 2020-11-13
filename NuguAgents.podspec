@@ -23,6 +23,7 @@ Default Agent Implementations for Nugu service
   s.source_files = 'NuguAgents/Sources/**/*'
   
   s.dependency 'NuguCore', '~> 0'
+  s.dependency 'NuguUtils', '~> 0'
   s.dependency 'SilverTray', '~> 1'
   s.dependency 'NattyLog', '~> 1'
   s.ios.dependency 'JadeMarble', '~> 0'
