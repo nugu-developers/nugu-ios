@@ -22,44 +22,10 @@ import Foundation
 
 /// <#Description#>
 public enum Upstream {
-    
     // MARK: Event
     
     /// <#Description#>
     public struct Event {
-        /// <#Description#>
-        public struct Header: Encodable {
-            /// <#Description#>
-            public let namespace: String
-            /// <#Description#>
-            public let name: String
-            /// <#Description#>
-            public let version: String
-            /// <#Description#>
-            public let dialogRequestId: String
-            /// <#Description#>
-            public let messageId: String
-            /// <#Description#>
-            public let referrerDialogRequestId: String?
-            
-            /// <#Description#>
-            /// - Parameters:
-            ///   - namespace: <#namespace description#>
-            ///   - name: <#name description#>
-            ///   - version: <#version description#>
-            ///   - dialogRequestId: <#dialogRequestId description#>
-            ///   - messageId: <#messageId description#>
-            ///   - referrerDialogRequestId: <#referrerDialogRequestId description#>
-            public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String, referrerDialogRequestId: String? = nil) {
-                self.namespace = namespace
-                self.name = name
-                self.version = version
-                self.dialogRequestId = dialogRequestId
-                self.messageId = messageId
-                self.referrerDialogRequestId = referrerDialogRequestId
-            }
-        }
-        
         /// <#Description#>
         public let payload: [String: AnyHashable]
         /// <#Description#>
@@ -88,42 +54,58 @@ public enum Upstream {
     /// <#Description#>
     public struct Attachment {
         /// <#Description#>
-        public struct Header {
-            /// <#Description#>
-            public let seq: Int32
-            /// <#Description#>
-            public let isEnd: Bool
-            /// <#Description#>
-            public let type: String
-            /// <#Description#>
-            public let messageId: String
-            
-            /// <#Description#>
-            /// - Parameters:
-            ///   - seq: <#seq description#>
-            ///   - isEnd: <#isEnd description#>
-            ///   - type: <#type description#>
-            ///   - messageId: <#messageId description#>
-            public init(seq: Int32, isEnd: Bool, type: String, messageId: String) {
-                self.seq = seq
-                self.isEnd = isEnd
-                self.type = type
-                self.messageId = messageId
-            }
-        }
-        
+        public let header: Header
+        /// <#Description#>
+        public let seq: Int32
+        /// <#Description#>
+        public let isEnd: Bool
+        /// <#Description#>
+        public let type: String
         /// <#Description#>
         public let content: Data
-        /// <#Description#>
-        public let header: Header
         
         /// <#Description#>
         /// - Parameters:
         ///   - content: <#content description#>
         ///   - header: <#header description#>
-        public init(content: Data, header: Header) {
+        public init(header: Header, seq: Int32, isEnd: Bool, type: String, content: Data) {
+            self.seq = seq
+            self.isEnd = isEnd
+            self.type = type
             self.content = content
             self.header = header
+        }
+    }
+    
+    public struct Header: Codable {
+        /// <#Description#>
+        public let namespace: String
+        /// <#Description#>
+        public let name: String
+        /// <#Description#>
+        public let version: String
+        /// <#Description#>
+        public let dialogRequestId: String
+        /// <#Description#>
+        public let messageId: String
+        /// <#Description#>
+        public let referrerDialogRequestId: String?
+        
+        /// <#Description#>
+        /// - Parameters:
+        ///   - namespace: <#namespace description#>
+        ///   - name: <#name description#>
+        ///   - version: <#version description#>
+        ///   - dialogRequestId: <#dialogRequestId description#>
+        ///   - messageId: <#messageId description#>
+        ///   - referrerDialogRequestId: <#referrerDialogRequestId description#>
+        public init(namespace: String, name: String, version: String, dialogRequestId: String, messageId: String, referrerDialogRequestId: String? = nil) {
+            self.namespace = namespace
+            self.name = name
+            self.version = version
+            self.dialogRequestId = dialogRequestId
+            self.messageId = messageId
+            self.referrerDialogRequestId = referrerDialogRequestId
         }
     }
 }
@@ -178,7 +160,7 @@ extension Upstream.Event {
 
 // MARK: - Upstream.Event.Header
 
-extension Upstream.Event.Header {
+extension Upstream.Header {
     public var type: String { "\(namespace).\(name)" }
 }
 

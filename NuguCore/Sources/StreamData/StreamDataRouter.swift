@@ -171,8 +171,8 @@ public extension StreamDataRouter {
      It won't emit received or finished state on completion.
      because those states will be emitted to event-request's completion.
      */
-    func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)? = nil) {
-        guard let eventSender = eventSenders[dialogRequestId] else {
+    func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
+        guard let eventSender = eventSenders[attachment.header.dialogRequestId] else {
             completion?(.error(EventSenderError.noEventRequested))
             delegates.notify({ (delegate) in
                 delegate.streamDataDidSend(attachment: attachment, error: EventSenderError.noEventRequested)
@@ -183,7 +183,7 @@ public extension StreamDataRouter {
         log.debug("Attachment: \(attachment)")
         eventSender.send(attachment)
             .subscribe(onCompleted: { [weak self] in
-                if attachment.header.isEnd {
+                if attachment.isEnd {
                     eventSender.finish()
                 }
 
@@ -285,10 +285,11 @@ private extension Downstream.Header {
         guard let namespace = headerDictionary["Namespace"],
             let name = headerDictionary["Name"],
             let dialogRequestId = headerDictionary["Dialog-Request-Id"],
-            let version = headerDictionary["Version"] else {
+            let version = headerDictionary["Version"],
+            let messageId = headerDictionary["Message-Id"] else {
                 return nil
         }
         
-        self.init(namespace: namespace, name: name, dialogRequestId: dialogRequestId, messageId: "", version: version)
+        self.init(namespace: namespace, name: name, dialogRequestId: dialogRequestId, messageId: messageId, version: version)
     }
 }
