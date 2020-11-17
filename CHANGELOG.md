@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.26.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.0)
+Released on 2020-11-17
+### Sample Application
+#### Update
+- Modify the structure of `Upstream` to be similar to Downstream. (#621)
+
+### SDK
+#### Update
+- Modify the structure of `Upstream` to be similar to Downstream. (#621)
+- Add `directiveSequencerWillPrefetch` function to `DirectiveSequencerDelegate` (#620)
+
+#### Fixed
+- Fixes a bug where `playServiceId` is missing when sending `TTS` event. (#619)
+
 ## [0.25.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.25.0)
 Released on 2020-11-12
 ### Sample Application
@@ -16,7 +30,7 @@ Released on 2020-11-12
 ## [0.24.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.1)
 Released on 2020-11-10
 ### SDK
-#### Fixex
+#### Fixed
 - Fix parsing error in `MediaPlayerAgent` (#606)
 
 ## [0.24.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.0)
@@ -26,7 +40,7 @@ Released on 2020-11-10
 - Implements a `FocusManager` feature to prevent `AudioPlayerAgent` playing temporarily.  (#604)
 
 ### SDK
-#### Fixex
+#### Fixed
 - Fix parsing error in `MediaPlayerAgent` (#603)
 
 #### Update
@@ -36,7 +50,7 @@ Released on 2020-11-10
 ## [0.23.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.1)
 Released on 2020-11-09
 ### SDK
-#### Fixex
+#### Fixed
 - Modify the delegate function to be called asynchronously to avoid deadlock. (#600)
 
 ## [0.23.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.0)
@@ -49,7 +63,7 @@ Released on 2020-11-06
 - Pass `Downstream.Header` instead of `DialogRequestId` to function parameter of agent delegate. (#593)
 
 ### SDK
-#### Fixex
+#### Fixed
 - Make `KeywordSource` not possible to be set simultaniouly. (#581)
 - Assign and release focus synchronously. (#580)
 - Fixes a bug where prefetch `AudioPlayer.Play`. (#577)
@@ -71,7 +85,7 @@ Released on 2020-10-29
 - Set audiosession as playback when carplay is connected and play media (#563)
 
 ### SDK
-#### Fixex
+#### Fixed
 - Separate image resource bundle of  when using cocoapods (#561)
 - Add `TTSPlayer` and `AudioPlayer` to fix timing issues. (#560) (#571)
 
