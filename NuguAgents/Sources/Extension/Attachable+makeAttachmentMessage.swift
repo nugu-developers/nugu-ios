@@ -1,5 +1,5 @@
 //
-//  Attachmentable+makeAttachmentMessage.swift
+//  Attachable+makeAttachmentMessage.swift
 //  NuguAgents
 //
 //  Created by 이민철님/AI Assistant개발Cell on 2020/11/16.
@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-extension Attachmentable {
+extension Attachable {
     func makeAttachmentMessage(
         property: CapabilityAgentProperty,
         dialogRequestId: String,

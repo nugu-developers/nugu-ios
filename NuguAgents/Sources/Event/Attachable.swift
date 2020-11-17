@@ -1,5 +1,5 @@
 //
-//  Attachmentable.swift
+//  Attachable.swift
 //  NuguAgents
 //
 //  Created by 이민철님/AI Assistant개발Cell on 2020/11/16.
@@ -20,7 +20,7 @@
 
 import Foundation
 
-public protocol Attachmentable {
+public protocol Attachable {
     var name: String { get }
     var type: String { get }
 }

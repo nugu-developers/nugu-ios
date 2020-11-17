@@ -113,9 +113,9 @@ extension ASRAgent.Event: Eventable {
 }
 
 
-// MARK: - Attachmentable
+// MARK: - Attachable
 
-extension ASRAgent.Attachment: Attachmentable {
+extension ASRAgent.Attachment: Attachable {
     var name: String {
         switch typeInfo {
         case .recognize: return "Recognize"

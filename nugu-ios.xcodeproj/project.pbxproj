@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		062AE29B256270A80057A310 /* Attachmentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062AE29A256270A80057A310 /* Attachmentable.swift */; };
-		062AE2A6256270C80057A310 /* Attachmentable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062AE2A5256270C80057A310 /* Attachmentable+makeAttachmentMessage.swift */; };
+		062AE29B256270A80057A310 /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062AE29A256270A80057A310 /* Attachable.swift */; };
+		062AE2A6256270C80057A310 /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062AE2A5256270C80057A310 /* Attachable+makeAttachmentMessage.swift */; };
 		066C9D1A25553EDE000C7800 /* NCObjcExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		066C9D2425553EE2000C7800 /* NCObjcExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E553C7825132E66008E4D89 /* NCObjcExceptionCatcher.m */; };
 		066C9D2E25553EF0000C7800 /* MicInputProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3192375707000C9A177 /* MicInputProvider.swift */; };
