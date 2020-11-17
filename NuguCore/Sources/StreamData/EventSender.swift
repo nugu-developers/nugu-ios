@@ -100,7 +100,7 @@ class EventSender {
                 guard let self = self else { return Completable.empty() }
                 return self.sendData(self.makeMultipartData(attachment))
         }
-        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_attachment_\(attachment.header.seq)"))
+        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_attachment_\(attachment.seq)"))
         
     }
     
@@ -221,8 +221,8 @@ private extension EventSender {
     
     func makeMultipartData(_ attachment: Upstream.Attachment) -> Data {
         let headerLines = [
-            "Content-Disposition: form-data; name=\"attachment\"; filename=\"\(attachment.header.seq);\(attachment.header.isEnd ? "end" : "continued")\"",
-            "Content-Type: \(attachment.header.type)",
+            "Content-Disposition: form-data; name=\"attachment\"; filename=\"\(attachment.seq);\(attachment.isEnd ? "end" : "continued")\"",
+            "Content-Type: \(attachment.type)",
             "Message-Id: \(attachment.header.messageId)"
         ]
         
