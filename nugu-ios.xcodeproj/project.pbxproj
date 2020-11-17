@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		062AE29B256270A80057A310 /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062AE29A256270A80057A310 /* Attachable.swift */; };
-		062AE2A6256270C80057A310 /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062AE2A5256270C80057A310 /* Attachable+makeAttachmentMessage.swift */; };
+		065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */; };
+		065DF8C825637D58009CF99E /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8C725637D57009CF99E /* Attachable.swift */; };
 		066C9D1A25553EDE000C7800 /* NCObjcExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		066C9D2425553EE2000C7800 /* NCObjcExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E553C7825132E66008E4D89 /* NCObjcExceptionCatcher.m */; };
 		066C9D2E25553EF0000C7800 /* MicInputProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3192375707000C9A177 /* MicInputProvider.swift */; };
@@ -690,8 +690,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		062AE29A256270A80057A310 /* Attachmentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachmentable.swift; sourceTree = "<group>"; };
-		062AE2A5256270C80057A310 /* Attachmentable+makeAttachmentMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Attachmentable+makeAttachmentMessage.swift"; sourceTree = "<group>"; };
+		065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Attachable+makeAttachmentMessage.swift"; sourceTree = "<group>"; };
+		065DF8C725637D57009CF99E /* Attachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachable.swift; sourceTree = "<group>"; };
 		06CF28EA2547DE5700CEC3EC /* ContextManager+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContextManager+Rx.swift"; sourceTree = "<group>"; };
 		06CF293B254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpstreamEventSendable+Convenience.swift"; sourceTree = "<group>"; };
 		06CFF674254276EF00A11CB4 /* Bundle+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Convenience.swift"; sourceTree = "<group>"; };
@@ -1682,9 +1682,9 @@
 		1FFFF2A32375703000C9A177 /* Event */ = {
 			isa = PBXGroup;
 			children = (
+				065DF8C725637D57009CF99E /* Attachable.swift */,
 				7EB81CD624C04F3B000910A9 /* Eventable.swift */,
 				1FFFF2A42375703000C9A177 /* EventIdentifier.swift */,
-				062AE29A256270A80057A310 /* Attachmentable.swift */,
 			);
 			path = Event;
 			sourceTree = "<group>";
@@ -2436,8 +2436,8 @@
 		73152FE123E047F200F843C3 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */,
 				7334F47423FD170200EA5E58 /* Eventable+makeEventMessage.swift */,
-				062AE2A5256270C80057A310 /* Attachmentable+makeAttachmentMessage.swift */,
 				73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */,
 				1F862F08252DB2590069C310 /* JSONCodingKey.swift */,
 				1FFFF3242375707000C9A177 /* KeyedDecodingContainerExtension.swift */,
@@ -3825,10 +3825,8 @@
 				73152FBE23E0414700F843C3 /* ASRConst.swift in Sources */,
 				1FBA3B7624596E1A001E5828 /* PhoneCallAgent+Event.swift in Sources */,
 				7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */,
-				062AE2A6256270C80057A310 /* Attachmentable+makeAttachmentMessage.swift in Sources */,
 				737388DA24A46C3C0018DDD2 /* SoundAgentProtocol.swift in Sources */,
 				680EF96324B30DAE003DE266 /* MediaPlayerAgentProtocol.swift in Sources */,
-				062AE29B256270A80057A310 /* Attachmentable.swift in Sources */,
 				68F2F801253D874900D91AA1 /* PhoneCallAgentContext.swift in Sources */,
 				1FD5D17D24A99993007BA384 /* PhoneCallState.swift in Sources */,
 				1FD5D19E24D35281007BA384 /* MediaPlayerAgentPlaylist.swift in Sources */,
@@ -3854,6 +3852,7 @@
 				73152FCD23E0415B00F843C3 /* DisplayClosePayload.swift in Sources */,
 				7EA53EFD247F3C2D008731CD /* SessionAgentItem.swift in Sources */,
 				7373890024A46C930018DDD2 /* SystemAgentRevokeReason.swift in Sources */,
+				065DF8C825637D58009CF99E /* Attachable.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */,
 				737388DB24A46C3C0018DDD2 /* SoundAgentDataSource.swift in Sources */,
@@ -3942,6 +3941,7 @@
 				1FD5D19124C82F3B007BA384 /* MediaPlayerAgent+Event.swift in Sources */,
 				737388C924A46C1D0018DDD2 /* ChipsAgentProtocol.swift in Sources */,
 				1FD5D17E24A99993007BA384 /* PhoneCallType.swift in Sources */,
+				065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */,
 				680EF96524B30DBB003DE266 /* MediaPlayerAgentDelegate.swift in Sources */,
 				1FD5D17B24A99993007BA384 /* PhoneCallAgentProtocol.swift in Sources */,
 			);
