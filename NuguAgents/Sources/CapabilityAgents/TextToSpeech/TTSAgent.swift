@@ -318,7 +318,7 @@ extension TTSAgent: MediaPlayerDelegate {
                 self.sendCompactContextEvent(Event(
                     typeInfo: eventTypeInfo,
                     token: player.payload.token,
-                    playServiceId: nil,
+                    playServiceId: player.payload.playServiceId,
                     referrerDialogRequestId: player.header.dialogRequestId
                 ).rx)
             }
