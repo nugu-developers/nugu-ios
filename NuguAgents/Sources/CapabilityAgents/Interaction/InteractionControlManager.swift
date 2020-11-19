@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguCore
+
 import RxSwift
 
 public class InteractionControlManager: InteractionControlManageable {
@@ -29,14 +31,26 @@ public class InteractionControlManager: InteractionControlManageable {
         internalSerialQueueName: "com.sktelecom.romaine.interaction_control"
     )
     
-    public weak var delegate: InteractionControlDelegate?
+    private let delegates = DelegateSet<InteractionControlDelegate>()
     
     private var interactionControls = Set<CapabilityAgentCategory>()
     private var timeoutTimers = [String: Disposable]()
     
     public init() {}
+}
+
+// MARK: - InteractionControlManageable
+
+public extension InteractionControlManager {
+    func add(delegate: InteractionControlDelegate) {
+        delegates.add(delegate)
+    }
     
-    public func start(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {
+    func remove(delegate: InteractionControlDelegate) {
+        delegates.remove(delegate)
+    }
+    
+    func start(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {
         log.debug(category)
         interactionDispatchQueue.async { [weak self] in
             guard let self = self, mode == .multiTurn else { return }
@@ -44,12 +58,14 @@ public class InteractionControlManager: InteractionControlManageable {
             self.addTimer(category: category)
             self.interactionControls.insert(category)
             if self.interactionControls.count == 1 {
-                self.delegate?.interactionControlDidChange(isMultiturn: true)
+                self.delegates.notify {
+                    $0.interactionControlDidChange(isMultiturn: true)
+                }
             }
         }
     }
     
-    public func finish(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {
+    func finish(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {
         log.debug(category)
         interactionDispatchQueue.async { [weak self] in
             guard let self = self, mode == .multiTurn else { return }
@@ -57,7 +73,9 @@ public class InteractionControlManager: InteractionControlManageable {
             self.removeTimer(category: category)
             self.interactionControls.remove(category)
             if self.interactionControls.isEmpty {
-                self.delegate?.interactionControlDidChange(isMultiturn: false)
+                self.delegates.notify {
+                    $0.interactionControlDidChange(isMultiturn: false)
+                }
             }
         }
     }
@@ -73,7 +91,9 @@ private extension InteractionControlManager {
                 log.debug("Timer fired. \(category)")
                 self.interactionControls.remove(category)
                 if self.interactionControls.isEmpty {
-                    self.delegate?.interactionControlDidChange(isMultiturn: false)
+                    self.delegates.notify {
+                        $0.interactionControlDidChange(isMultiturn: false)
+                    }
                 }
             })
     }
