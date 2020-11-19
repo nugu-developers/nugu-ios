@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 import SilverTray
 
 /**
@@ -81,8 +82,10 @@ class OpusPlayer: MediaPlayable {
         player.resume()
     }
     
-    func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)? = nil) {
-        player.seek(to: offset.truncatedMilliSeconds, completion: completion)
+    func seek(to offset: TimeIntervallic, completion: ((EndedUp<Error>) -> Void)? = nil) {
+        player.seek(to: offset.truncatedMilliSeconds) { (result) in
+            completion?(result.toEndedUp())
+        }
     }
 }
 

@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 /// The duration of `DisplayTemplate`.
 public enum DisplayTemplateDuration {

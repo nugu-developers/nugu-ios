@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 import Quick
 import Nimble
 
