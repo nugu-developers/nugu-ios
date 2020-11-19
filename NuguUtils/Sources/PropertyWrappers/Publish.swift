@@ -1,8 +1,8 @@
 //
-//  AtomicDictionary.swift
-//  NuguCore
+//  Publish.swift
+//  NuguUtils
 //
-//  Created by MinChul Lee on 2020/04/22.
+//  Created by childc on 2019/11/18.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,32 +20,30 @@
 
 import Foundation
 
-final class AtomicDictionary<Key: Hashable, Value> {
-    private let dictionaryQueue = DispatchQueue(label: "com.sktelecom.romaine.atomic_dictionary")
+import RxSwift
+
+@propertyWrapper
+public struct Publish<Value> {
+    private var value: Value
+    private let subject = PublishSubject<Value>()
     
-    private var dictionary = [Key: Value]()
-    
-    var keys: Dictionary<Key, Value>.Keys {
-        dictionaryQueue.sync {
-            dictionary.keys
-        }
-    }
-    var values: Dictionary<Key, Value>.Values {
-        dictionaryQueue.sync {
-            dictionary.values
-        }
+    public init(wrappedValue value: Value) {
+        self.value = value
     }
     
-    subscript(key: Key) -> Value? {
+    public var wrappedValue: Value {
         get {
-            dictionaryQueue.sync {
-                dictionary[key]
-            }
+            return value
         }
+        
         set {
-            dictionaryQueue.sync {
-                dictionary[key] = newValue
-            }
+            value = newValue
+            subject.onNext(value)
         }
+    }
+    
+    /// The property that can be accessed with the `$` syntax and allows access to the `Publish`
+    public var projectedValue: Observable<Value> {
+        return subject.asObserver()
     }
 }

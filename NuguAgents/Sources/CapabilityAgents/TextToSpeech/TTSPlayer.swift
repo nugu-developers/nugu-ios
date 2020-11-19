@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 final class TTSPlayer {
     enum StopReason: String {
@@ -112,7 +113,7 @@ extension TTSPlayer: MediaPlayable {
         internalPlayer?.resume()
     }
     
-    func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
+    func seek(to offset: TimeIntervallic, completion: ((EndedUp<Error>) -> Void)?) {
         internalPlayer?.seek(to: offset, completion: completion)
     }
 }

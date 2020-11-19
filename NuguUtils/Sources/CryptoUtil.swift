@@ -1,6 +1,6 @@
 //
 //  CryptoUtil.swift
-//  NuguCore
+//  NuguUtils
 //
 //  Created by 김진님/AI Assistant개발 Cell on 2020/04/06.
 //  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.

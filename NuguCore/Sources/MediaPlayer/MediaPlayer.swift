@@ -22,6 +22,8 @@ import Foundation
 import AVFoundation
 import MobileCoreServices
 
+import NuguUtils
+
 public class MediaPlayer: NSObject, MediaPlayable {
     public weak var delegate: MediaPlayerDelegate?
     
@@ -98,7 +100,7 @@ extension MediaPlayer {
         delegate?.mediaPlayer(self, didChange: .resume)
     }
     
-    public func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
+    public func seek(to offset: TimeIntervallic, completion: ((EndedUp<Error>) -> Void)?) {
         guard
             let mediaPlayer = player,
             mediaPlayer.currentItem != nil else {
@@ -107,7 +109,7 @@ extension MediaPlayer {
         }
 
         mediaPlayer.seek(to: offset.cmTime)
-        completion?(.success(()))
+        completion?(.success)
     }
     
     public var offset: TimeIntervallic {
