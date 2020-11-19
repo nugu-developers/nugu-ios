@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		060FAB382566693600F01EE3 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
 		063A84722565027D0032F13B /* VoiceChromePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063A84712565027D0032F13B /* VoiceChromePresenter.swift */; };
 		065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */; };
 		065DF8C825637D58009CF99E /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8C725637D57009CF99E /* Attachable.swift */; };
@@ -534,6 +535,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		060FAB3A2566693600F01EE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FFFF02323753F8A00C9A177;
+			remoteInfo = NuguUIKit;
+		};
 		1F1008F42379247800D90FEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D9C428722745894000A6585 /* Project object */;
@@ -1242,6 +1250,7 @@
 			files = (
 				1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */,
 				73152FED23E05D9700F843C3 /* NuguAgents.framework in Frameworks */,
+				060FAB382566693600F01EE3 /* NuguUIKit.framework in Frameworks */,
 				1F9C5B8223F664340086CC04 /* KeenSense.framework in Frameworks */,
 				1F10091623792A2D00D90FEE /* NattyLog.framework in Frameworks */,
 				1F1008E82379237F00D90FEE /* NuguCore.framework in Frameworks */,
@@ -3042,6 +3051,7 @@
 				1FFFF3E52375737A00C9A177 /* PBXTargetDependency */,
 				73152FF023E05D9700F843C3 /* PBXTargetDependency */,
 				1F9C5B8523F664340086CC04 /* PBXTargetDependency */,
+				060FAB3B2566693600F01EE3 /* PBXTargetDependency */,
 			);
 			name = NuguClientKit;
 			packageProductDependencies = (
@@ -3976,6 +3986,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		060FAB3B2566693600F01EE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FFFF02323753F8A00C9A177 /* NuguUIKit */;
+			targetProxy = 060FAB3A2566693600F01EE3 /* PBXContainerItemProxy */;
+		};
 		1F1008F52379247800D90FEE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FFFF03023753FA200C9A177 /* JadeMarble */;
