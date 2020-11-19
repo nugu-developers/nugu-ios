@@ -23,20 +23,20 @@
 
 import Foundation
 
-fileprivate class DispatchQueueManager {
-    static let shared = DispatchQueueManager()
-    @Atomic var keys = [Int: DispatchSpecificKey<Int>]()
+private class DispatchKeyManager {
+    static let shared = DispatchKeyManager()
+    var keys = WeakDictionary<DispatchQueue, DispatchSpecificKey<Int>>(type: .key)
 }
 
 fileprivate extension DispatchQueue {
     func setSpecificKey() {
         let specificKey = DispatchSpecificKey<Int>()
-        DispatchQueueManager.shared.keys[hashValue] = specificKey
+        DispatchKeyManager.shared.keys[self] = specificKey
         setSpecific(key: specificKey, value: hashValue)
     }
     
     var isCurrentSpecific: Bool {
-        guard let specificKey = DispatchQueueManager.shared.keys[hashValue],
+        guard let specificKey = DispatchKeyManager.shared.keys[self],
               DispatchQueue.getSpecific(key: specificKey) == hashValue else {
             return false
         }
