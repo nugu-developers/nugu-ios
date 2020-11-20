@@ -266,8 +266,6 @@ public extension AudioPlayerAgent {
         switch audioPlayerState {
         case .stopped, .finished:
             playSyncManager.resetTimer(property: playSyncProperty)
-        case .paused:
-            playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
         default:
             break
         }
