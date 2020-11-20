@@ -38,53 +38,6 @@ private var nattyConfiguration: NattyConfiguration {
 // MARK: - Url
 
 struct SampleApp {
-    // Own poc_id issued from Nugu Developers site ( https://developers.nugu.co.kr/#/sdk/pocList)
-    static var pocId: String {
-        return "nugu.public.sample"
-    }
-    
-    /// Web page url for NUGU usage guide of own device
-    /// URLQueryItem["poc_id"]: put your own poc_id issued from Nugu Developers site ( https://developers.nugu.co.kr/#/sdk/pocList)
-    static func makeGuideWebURL(deviceUniqueId: String) -> URL? {
-        var urlComponent = URLComponents(string: "https://webview.sktnugu.com/v2/3pp/confirm.html")
-        urlComponent?.queryItems = [
-            URLQueryItem(name: "poc_id", value: pocId),
-            URLQueryItem(name: "device_unique_id", value: deviceUniqueId)
-        ]
-        return urlComponent?.url
-    }
-    
-    /// Intercept open url and replace with redirectUri's scheme
-    /// for free pass of Sample app's Oauth validation check
-    /// Used only for Sample app (Clients should not use this code)
-    /// - Parameter openUrl: url parameter from AppDelegate's application(_:open:options:) method for url scheme replacement
-    static func schemeReplacedUrl(openUrl: URL) -> URL? {
-        guard
-            let redirectUri = redirectUri,
-            let redirectUrlComponents = URLComponents(string: redirectUri) else {
-                return nil
-        }
-        
-        var openUrlComponents = URLComponents(url: openUrl, resolvingAgainstBaseURL: false)
-        openUrlComponents?.scheme = redirectUrlComponents.scheme
-        
-        guard let replacedUrl = openUrlComponents?.url else {
-            return nil
-        }
-        
-        return replacedUrl
-    }
-    
-    static var privacyUrl: URL {
-        return URL(string: "https://privacy.sktelecom.com/view.do?ctg=policy&name=policy")!
-    }
-    
-    static let oauthRedirectUri: String = "nugu.public.sample://oauth_refresh"
-}
-
-// MARK: - Login Method
-
-extension SampleApp {
     enum LoginMethod: Int, CaseIterable {
         /// Nugu App Link
         case type1 = 0
@@ -98,55 +51,12 @@ extension SampleApp {
             }
         }
     }
-}
-
-// MARK: - NuguServerType
-
-extension SampleApp {
-    enum NuguServerType {
-        case stg
-        case prd
-    }
-}
-
-// MARK: - Sample data
-
-extension SampleApp {
+    
     /// Change variables according to your app
-    
-    /// Example for Type1
-    ///
-    /// static var loginMethod: LoginMethod? = .type1
-    /// static var deviceUniqueId: String? = "{Unique-id per device}"
-    /// static var clientId: String? = "{Client-id}" => Client-id is need for oauth-authorization
-    /// static var clientSecret: String? = "{Client-secret}" => Client-secret is need for oauth-authorization
-    /// static var redirectUri: String? = "{Redirect-uri}" => Redirect-uri is need for oauth-authorization
-    
-    /// Example for Type2
-    ///
-    /// static var loginMethod: LoginMethod? = .type1
-    /// static var deviceUniqueId: String? = "{Unique-id per device}"
-    /// static var clientId: String? = "{Client-id}" => Client-id is need for oauth-authorization
-    /// static var clientSecret: String? = "{Client-secret}" => Client-secret is need for oauth-authorization
-    
-    // Common
     static var loginMethod: LoginMethod? {
-        return LoginMethod(rawValue: UserDefaults.Romaine.loginMethod)
-    }
-    static var clientId: String? {
-        return UserDefaults.Romaine.clientId
-    }
-    static var clientSecret: String? {
-        return UserDefaults.Romaine.clientSecret
-    }
-    
-    // Link App (Type 1)
-    static var redirectUri: String? {
-        return UserDefaults.Romaine.redirectUri
+        return LoginMethod(rawValue: UserDefaults.Standard.loginMethod)
     }
 }
-
-// MARK: - Safe Area
 
 extension SampleApp {
     static var bottomSafeAreaHeight: CGFloat {
@@ -162,6 +72,5 @@ extension SampleApp {
 // MARK: - Notification.Name
 
 extension Notification.Name {
-    static let login = Notification.Name("com.skt.Romaine.login")
     static let oauthRefresh = Notification.Name("com.skt.Romaine.oauth_refresh")
 }

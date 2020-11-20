@@ -20,7 +20,7 @@
 
 import UIKit
 
-import NuguServiceKit
+import NuguClientKit
 
 import KeenSense
 
@@ -135,7 +135,14 @@ extension SettingViewController: UITableViewDelegate {
                 self?.tid = tid
             })
         case (1, 0):
-            performSegue(withIdentifier: "showNuguServiceWebView", sender: NuguServiceWebView.serviceSettingUrl)
+            ConfigurationStore.shared.serviceSettingUrl { (result) in
+                switch result {
+                case .success(let url):
+                    performSegue(withIdentifier: "showNuguServiceWebView", sender: url)
+                case .failure(let error):
+                    log.error(error)
+                }
+            }
         case (2, 2):
             let wakeUpWordActionSheet = UIAlertController(
                 title: nil,
@@ -154,9 +161,23 @@ extension SettingViewController: UITableViewDelegate {
             }
             present(wakeUpWordActionSheet, animated: true)
         case (3, 0):
-            performSegue(withIdentifier: "showNuguServiceWebView", sender: NuguServiceWebView.agreementUrl)
+            ConfigurationStore.shared.agreementUrl { (result) in
+                switch result {
+                case .success(let url):
+                    performSegue(withIdentifier: "showNuguServiceWebView", sender: url)
+                case .failure(let error):
+                    log.error(error)
+                }
+            }
         case (3, 1):
-            UIApplication.shared.open(SampleApp.privacyUrl, options: [:], completionHandler: nil)
+            ConfigurationStore.shared.privacyUrl { (result) in
+                switch result {
+                case .success(let url):
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                case .failure(let error):
+                    log.error(error)
+                }
+            }
         case (4, 0):
             dismiss(animated: true, completion: {
                 NuguCentralManager.shared.revoke()

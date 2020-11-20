@@ -23,6 +23,8 @@ import Foundation
 extension UserDefaults {
     enum Standard {
         // MARK: Setting
+        @UserDefault(userDefaults: .standard, key: "loginMethod", defaultValue: 0)
+        static var loginMethod: Int
         
         /// Setting value for using nugu service.
         @UserDefault(userDefaults: .standard, key: "useNuguService", defaultValue: true)

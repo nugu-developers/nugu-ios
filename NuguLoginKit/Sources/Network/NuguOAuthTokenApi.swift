@@ -45,7 +45,7 @@ extension NuguOAuthTokenApi: ApiProvidable {
     }
     
     var uri: String {
-        return NuguOAuthServerInfo.serverBaseUrl + "/oauth/token"
+        return NuguOAuthServerInfo.serverBaseUrl + "/v1/auth/oauth/token"
     }
     
     var bodyParams: [String: String] {

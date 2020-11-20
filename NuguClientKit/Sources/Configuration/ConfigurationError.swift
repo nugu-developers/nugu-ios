@@ -1,9 +1,9 @@
 //
-//  NuguOAuthServerInfo.swift
-//  NuguLoginKit
+//  ConfigurationError.swift
+//  NuguClientKit
 //
-//  Created by childc on 2019/11/20.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/11/20.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,8 +20,7 @@
 
 import Foundation
 
-/// <#Description#>
-public enum NuguOAuthServerInfo {
-    /// <#Description#>
-    public static var serverBaseUrl = "https://api.sktnugu.com"
+public enum ConfigurationError: Error {
+    case notConfigured
+    case invalidUrl
 }

@@ -220,13 +220,13 @@ extension NuguCentralManager {
     }
     
     func revoke() {
+        guard let configuration = ConfigurationStore.shared.configuration else { return }
+        
         if SampleApp.loginMethod == SampleApp.LoginMethod.type1,
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret,
             let token = UserDefaults.Standard.accessToken {
             oauthClient.revoke(
-                clientId: clientId,
-                clientSecret: clientSecret,
+                clientId: configuration.authClientId,
+                clientSecret: configuration.authClientSecret,
                 token: token) { [weak self] (result) in
                     switch result {
                     case .success:
@@ -253,15 +253,13 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func getUserInfo(completion: ((_ userInfo: NuguUserInfo?) -> Void)?) {
-        guard
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret,
-            let token = UserDefaults.Standard.accessToken else {
-                completion?(nil)
-                return
+        guard let configuration = ConfigurationStore.shared.configuration,
+              let token = UserDefaults.Standard.accessToken else {
+            completion?(nil)
+            return
         }
         
-        oauthClient.getUserInfo(clientId: clientId, clientSecret: clientSecret, token: token) { result in
+        oauthClient.getUserInfo(clientId: configuration.authClientId, clientSecret: configuration.authClientSecret, token: token) { result in
             switch result {
             case .success(let userInfo):
                 completion?(userInfo)
@@ -273,22 +271,14 @@ extension NuguCentralManager {
     
     func showTidInfo(parentViewController: UIViewController, completion: ((_ tid: String?) -> Void)?) {
         guard SampleApp.loginMethod == SampleApp.LoginMethod.type1,
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret,
-            let redirectUri = SampleApp.redirectUri,
-            let token = UserDefaults.Standard.accessToken else {
+            let token = UserDefaults.Standard.accessToken,
+            let grant = ConfigurationStore.shared.configuration?.authorizationCodeGrant else {
                 completion?(nil)
                 return
         }
         
-        let authorizationCodeGrant = AuthorizationCodeGrant(
-            clientId: clientId,
-            clientSecret: clientSecret,
-            redirectUri: redirectUri
-        )
-        
         oauthClient.showTidInfo(
-            grant: authorizationCodeGrant,
+            grant: grant,
             token: token,
             parentViewController: parentViewController,
             completion: { [weak self] (result) in
@@ -370,47 +360,36 @@ private extension NuguCentralManager {
 
 private extension NuguCentralManager {
     func authorizationCodeLogin(from viewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
-        guard
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret,
-            let redirectUri = SampleApp.redirectUri else {
-                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret, redirectUri")))
-                return
+        guard let grant = ConfigurationStore.shared.configuration?.authorizationCodeGrant else {
+            completion(.failure(SampleAppError.nilValue(description: "ConfigurationSotre is not configured")))
+            return
         }
         
         oauthClient.authorize(
-            grant: AuthorizationCodeGrant(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                redirectUri: redirectUri
-            ),
+            grant: grant,
             parentViewController: viewController) { (result) in
                 completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
     
     func refreshTokenLogin(refreshToken: String, completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
-        guard
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret else {
-                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret")))
-                return
+        guard let grant = ConfigurationStore.shared.configuration?.refreshTokenGrant(refreshToken: refreshToken) else {
+            completion(.failure(SampleAppError.nilValue(description: "ConfigurationSotre is not configured")))
+            return
         }
         
-        oauthClient.authorize(grant: RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken)) { (result) in
+        oauthClient.authorize(grant: grant) { (result) in
                 completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
     
     func clientCredentialsLogin(completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
-        guard
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret else {
-                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret")))
-                return
+        guard let grant = ConfigurationStore.shared.configuration?.clientCredentialsGrant else {
+            completion(.failure(SampleAppError.nilValue(description: "ConfigurationSotre is not configured")))
+            return
         }
         
-        oauthClient.authorize(grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret)) { (result) in
+        oauthClient.authorize(grant: grant) { (result) in
             completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
