@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
-  s.name = 'NuguLoginKit'
-  s.version = '0.26.0'
+  s.name = 'NuguUtils'
+  s.version = '0.26.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Supported login for Nugu Service'
   s.description = <<-DESC
@@ -18,9 +18,10 @@ Framework for login using OAuth 2.0
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   
-  s.swift_version = '5.1'
+  s.swift_version = '5.3'
 
-  s.source_files = 'NuguLoginKit/Sources/**/*'
+  s.source_files = 'NuguUtils/Sources/**/*'
 
-  s.dependency 'NuguUtils', '~> 0'
+  s.dependency 'RxSwift', '~> 5'
 end
+

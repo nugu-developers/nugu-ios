@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 public class FocusManager: FocusManageable {
     public weak var delegate: FocusDelegate?
     

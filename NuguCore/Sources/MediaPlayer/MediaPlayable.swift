@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 /// <#Description#>
 public protocol MediaPlayable: class {
     /// <#Description#>
@@ -49,7 +51,7 @@ public protocol MediaPlayable: class {
     /// Sets the current playback time to the specified time.
     ///
     /// - Parameter offset: The time(seconds) to which to seek.
-    func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?)
+    func seek(to offset: TimeIntervallic, completion: ((EndedUp<Error>) -> Void)?)
 }
 
 // MARK: - MediaPlayable + Optional

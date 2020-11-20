@@ -20,6 +20,8 @@
 
 import XCTest
 
+import NuguUtils
+
 @testable import NuguCore
 
 class TimeIntervallicTests: XCTestCase {
