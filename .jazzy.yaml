@@ -1,7 +1,27 @@
+# module: Nugu
+# root_url:
+# dash_url:
+# github_file_prefix:
+# docset_playground_url:
+# head:
 podspec: NuguCore.podspec
-output: ../docs/NuguCore
+output: docs2
+clean: true
+sdk: iphone
+author: SK Telecom Co., Ltd.
+author_url: https://developers.nugu.co.kr
+title: NUGU SDK iOS
+copyright: (c) 2020 SK Telecom Co., Ltd. All rights reserved.
+module_version: 0.26.0
+PATH: README.md
+pod_sources: https://github.com/nugu-developers/nugu-ios.git
+github_url: https://github.com/nugu-developers/nugu-ios
 skip_undocumented: true
-
+min_acl: public
+hide_documentation_coverage: true
+hide_unlisted_documentation: true
+theme: apple
+undocumented_text: Undocumented
 custom_categories:
   - name: Common
     children:
@@ -39,7 +59,6 @@ custom_categories:
     - DirectiveSequencerDelegate
     - BlockingPolicy
     - DirectiveHandleInfo
-    - Array
     - DirectiveHandleInfos
     - PrefetchDirective
     - HandleDirective
@@ -69,6 +88,5 @@ custom_categories:
     children:
     - TimeIntervallic
     - NuguTimeInterval
-    - CMTime
     - DispatchTimeInterval
   
