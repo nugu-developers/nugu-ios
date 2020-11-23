@@ -27,7 +27,12 @@ import NuguCore
 /// The methods of this protocol are all optional.
 public protocol TextAgentDelegate: class {
     /// Tells the delegate that `TextAgent` received result.
-    /// - Parameter directive: The directive of `Text.TextSource` event.
+    /// - Parameter directive: The directive of `Text.TextSource`.
     /// - Returns: true if handled, otherwise return false
     func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool
+    
+    /// Tells the delegate that `TextAgent` received result.
+    /// - Parameter directive: The directive of `Text.TextRedirect`.
+    /// - Returns: true if handled, otherwise return false
+    func textAgentShouldHandleTextRedirect(directive: Downstream.Directive) -> Bool
 }

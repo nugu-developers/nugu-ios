@@ -705,15 +705,6 @@ extension MainViewController: ASRAgentDelegate {
         default: break
         }
     }
-
-}
-
-// MARK: - TextAgentDelegate
-
-extension MainViewController: TextAgentDelegate {
-    func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool {
-        return true
-    }
 }
 
 // MARK: - DisplayAgentDelegate
