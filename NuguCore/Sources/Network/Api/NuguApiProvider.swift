@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 import RxSwift
 
 class NuguApiProvider: NSObject {
@@ -40,7 +42,7 @@ class NuguApiProvider: NSObject {
     }
 
     // handle response for upload task.
-    private var eventResponseProcessors = AtomicDictionary<URLSessionTask, EventResponseProcessor>()
+    @Atomic private var eventResponseProcessors = [URLSessionTask: EventResponseProcessor]()
 
     // handle received directives by server side event
     private var serverSideEventProcessor: ServerSideEventProcessor?
@@ -216,7 +218,9 @@ extension NuguApiProvider {
                 
                 uploadTask = self.session.uploadTask(withStreamedRequest: streamRequest)
                 let eventResponse = EventResponseProcessor(inputStream: inputStream)
-                self.eventResponseProcessors[uploadTask] = eventResponse
+                self._eventResponseProcessors.mutate {
+                    $0[uploadTask] = eventResponse
+                }
                 
                 uploadTask.resume()
                 single(.success(eventResponse.subject))

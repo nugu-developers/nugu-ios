@@ -22,6 +22,7 @@ import Foundation
 import AVFoundation
 
 import NuguCore
+import NuguUtils
 import JadeMarble
 
 import RxSwift
@@ -374,9 +375,15 @@ extension ASRAgent: EndPointDetectorDelegate {
                 return
             }
             
-            let attachmentHeader = Upstream.Attachment.Header(seq: self.attachmentSeq, isEnd: false, type: "audio/speex", messageId: TimeUUID().hexString)
-            let attachment = Upstream.Attachment(content: speechData, header: attachmentHeader)
-            self.upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
+            let attachment = Attachment(typeInfo: .recognize).makeAttachmentMessage(
+                property: self.capabilityAgentProperty,
+                dialogRequestId: asrRequest.eventIdentifier.dialogRequestId,
+                referrerDialogRequestId: asrRequest.referrerDialogRequestId,
+                attachmentSeq: self.attachmentSeq,
+                isEnd: false,
+                speechData: speechData
+            )
+            self.upstreamDataSender.sendStream(attachment)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
         }
@@ -630,9 +637,15 @@ private extension ASRAgent {
         
         asrState = .busy
 
-        let attachmentHeader = Upstream.Attachment.Header(seq: self.attachmentSeq, isEnd: true, type: "audio/speex", messageId: TimeUUID().hexString)
-        let attachment = Upstream.Attachment(content: Data(), header: attachmentHeader)
-        upstreamDataSender.sendStream(attachment, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
+        let attachment = Attachment(typeInfo: .recognize).makeAttachmentMessage(
+            property: self.capabilityAgentProperty,
+            dialogRequestId: asrRequest.eventIdentifier.dialogRequestId,
+            referrerDialogRequestId: asrRequest.referrerDialogRequestId,
+            attachmentSeq: self.attachmentSeq,
+            isEnd: true,
+            speechData: Data()
+        )
+        upstreamDataSender.sendStream(attachment)
     }
     
     @discardableResult func startRecognition(

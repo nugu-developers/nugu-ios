@@ -1,6 +1,6 @@
 //
 //  BoundStreams.swift
-//  NuguCore
+//  NuguUtils
 //
 //  Created by childc on 2019/11/07.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.

@@ -1,15 +1,16 @@
 Pod::Spec.new do |s|
-  s.name = 'NuguServiceKit'
-  s.version = '0.26.0'
+  s.name = 'NuguUtils'
+  s.version = '0.26.1'
   s.license = 'Apache License, Version 2.0'
-  s.summary = 'Customized Webview for Nugu Service'
+  s.summary = 'Supported login for Nugu Service'
   s.description = <<-DESC
-  Provides NuguServiceWebView with customized cookie and javascript delegate for using webView in Nugu Service
+Framework for login using OAuth 2.0
                        DESC
 
   s.homepage = 'https://github.com/nugu-developers/nugu-ios'
   s.author = { 'SK Telecom Co., Ltd.' => 'nugu_dev_sdk@sk.com' }
   s.source = { :git => 'https://github.com/nugu-developers/nugu-ios.git', :tag => s.version.to_s }
+  s.documentation_url = 'https://developers.nugu.co.kr'
 
   s.ios.deployment_target = '10.0'
 
@@ -17,9 +18,10 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   
-  s.swift_version = '5.1'
+  s.swift_version = '5.3'
 
-  s.dependency 'NattyLog', '~> 1'
+  s.source_files = 'NuguUtils/Sources/**/*'
 
-  s.source_files = 'NuguServiceKit/Sources/**/*'
+  s.dependency 'RxSwift', '~> 5'
 end
+

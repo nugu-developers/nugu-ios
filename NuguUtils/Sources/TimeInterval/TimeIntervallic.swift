@@ -1,6 +1,6 @@
 //
 //  TimeIntervallic.swift
-//  NuguCore
+//  NuguUtils
 //
 //  Created by yonghoonKwon on 2019/11/20.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -35,18 +35,18 @@ public protocol TimeIntervallic {
 
 // MARK: - TimeIntervallic + Optional
 
-extension TimeIntervallic {
+public extension TimeIntervallic {
     /// A number of milliseconds.
-    public var milliseconds: Double {
+    var milliseconds: Double {
         return seconds * 1000.0
     }
 }
 
 // MARK: - TimeIntervallic + Int
 
-extension TimeIntervallic {
-    /// A number of seconds.
-    public var truncatedSeconds: Int {
+public extension TimeIntervallic {
+/// A number of seconds.
+    var truncatedSeconds: Int {
         guard seconds.isNaN == false else { return 0 }
         
         switch seconds {
@@ -60,7 +60,7 @@ extension TimeIntervallic {
     }
     
     /// A number of milliseconds.
-    public var truncatedMilliSeconds: Int {
+    var truncatedMilliSeconds: Int {
         let secondToMilliseconds = seconds * 1000.0
         guard secondToMilliseconds.isNaN == false else { return 0 }
 
@@ -97,9 +97,9 @@ extension DispatchTimeInterval: TimeIntervallic {
     }
 }
 
-extension TimeIntervallic {
+public extension TimeIntervallic {
     /// <#Description#>
-    public var dispatchTimeInterval: DispatchTimeInterval {
+    var dispatchTimeInterval: DispatchTimeInterval {
         return .milliseconds(self.truncatedMilliSeconds)
     }
 }
@@ -108,9 +108,9 @@ extension TimeIntervallic {
 
 extension NuguTimeInterval: TimeIntervallic {}
 
-extension TimeIntervallic {
+public extension TimeIntervallic {
     /// <#Description#>
-    public var nuguTimeInterval: NuguTimeInterval {
+    var nuguTimeInterval: NuguTimeInterval {
         return NuguTimeInterval(milliseconds: milliseconds)
     }
 }
@@ -119,9 +119,9 @@ extension TimeIntervallic {
 
 extension CMTime: TimeIntervallic {}
 
-extension TimeIntervallic {
+public extension TimeIntervallic {
     /// <#Description#>
-    public var cmTime: CMTime {
+    var cmTime: CMTime {
         return CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
     }
 }

@@ -539,23 +539,23 @@ extension NuguCentralManager: NuguClientDelegate {
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {
         // Use some analytics SDK(or API) here.
-        log.debug("\(direcive.header.namespace).\(direcive.header.name)")
+        log.debug("\(direcive.header.type)")
     }
     
     func nuguClientDidReceive(attachment: Downstream.Attachment) {
         // Use some analytics SDK(or API) here.
-        log.debug("\(attachment.header.namespace).\(attachment.header.name)")
+        log.debug("\(attachment.header.type)")
     }
     
     func nuguClientWillSend(event: Upstream.Event) {
         // Use some analytics SDK(or API) here.
-        log.debug("\(event.header.namespace).\(event.header.name)")
+        log.debug("\(event.header.type)")
     }
     
     func nuguClientDidSend(event: Upstream.Event, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: URLError or NetworkError or EventSenderError
-        log.debug("\(error?.localizedDescription ?? ""): \(event.header.namespace).\(event.header.name)")
+        log.debug("\(error?.localizedDescription ?? ""): \(event.header.type)")
         guard let error = error else { return }
         handleNetworkError(error: error)
     }
@@ -563,7 +563,7 @@ extension NuguCentralManager: NuguClientDelegate {
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: EventSenderError
-        log.debug("\(error?.localizedDescription ?? ""): \(attachment.header.seq)")
+        log.debug("\(error?.localizedDescription ?? ""): \(attachment.seq)")
     }
 }
 
