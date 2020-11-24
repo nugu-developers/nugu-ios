@@ -185,8 +185,6 @@
 		7314DF87255E3F27004882BB /* CryptoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC7243ACA280027D76D /* CryptoUtil.swift */; };
 		7314DFA8255E3F33004882BB /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
 		7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
-		7314DFB4255E3F39004882BB /* DelegateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23A2375703000C9A177 /* DelegateSet.swift */; };
-		7314DFB5255E3F39004882BB /* DelegateDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2392375703000C9A177 /* DelegateDictionary.swift */; };
 		7314DFDE255E3FF2004882BB /* TimeUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3262375707000C9A177 /* TimeUUID.swift */; };
 		7314E030255E4491004882BB /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3272375707000C9A177 /* Atomic.swift */; };
 		7314E031255E4491004882BB /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FBC2382C1E50073AF48 /* Publish.swift */; };
@@ -337,6 +335,8 @@
 		739078FD241A3E0C007D753F /* ServerSideEventReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */; };
 		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
 		73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C9F526256664370011DD65 /* WeakDictionary.swift */; };
+		73C9F550256668CC0011DD65 /* DelegateDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2392375703000C9A177 /* DelegateDictionary.swift */; };
+		73C9F55B256668D00011DD65 /* DelegateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23A2375703000C9A177 /* DelegateSet.swift */; };
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
 		7500491024766B1500B73DD8 /* AudioDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500490F24766B1500B73DD8 /* AudioDisplayView.swift */; };
 		7500492624769D3300B73DD8 /* ImageList1ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500492524769D3300B73DD8 /* ImageList1ViewCell.swift */; };
@@ -1794,6 +1794,7 @@
 		1FFFF3252375707000C9A177 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				1F1009972387968D00D90FEE /* Delegate */,
 				1FFFF3262375707000C9A177 /* TimeUUID.swift */,
 			);
 			path = Util;
@@ -2466,7 +2467,6 @@
 				7329679725636E240077C3C4 /* Extensions */,
 				7314E02F255E4474004882BB /* PropertyWrappers */,
 				1F1009982387969600D90FEE /* TimeInterval */,
-				1F1009972387968D00D90FEE /* Delegate */,
 				7303C68923C5C00F00610343 /* BoundStreams.swift */,
 				75082BC7243ACA280027D76D /* CryptoUtil.swift */,
 				732967B8256377190077C3C4 /* EndedUp.swift */,
@@ -3636,6 +3636,7 @@
 				7315301923E11EDF00F843C3 /* MediaPlayableError.swift in Sources */,
 				7373892124A46D120018DDD2 /* MediaPlayerDelegate.swift in Sources */,
 				7373895824A473A60018DDD2 /* FocusChannelDelegate.swift in Sources */,
+				73C9F55B256668D00011DD65 /* DelegateSet.swift in Sources */,
 				7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */,
 				1FFFF3C62375707100C9A177 /* FocusChannelInfo.swift in Sources */,
 				7373894524A46E5F0018DDD2 /* ContextManageable.swift in Sources */,
@@ -3655,6 +3656,7 @@
 				7373894224A46E5F0018DDD2 /* ContextInfo.swift in Sources */,
 				73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */,
 				735A4CE2241173F4004E7A41 /* EventSenderError.swift in Sources */,
+				73C9F550256668CC0011DD65 /* DelegateDictionary.swift in Sources */,
 				7373895F24A473B90018DDD2 /* PlaySyncDelegate.swift in Sources */,
 				7314DFDE255E3FF2004882BB /* TimeUUID.swift in Sources */,
 				7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */,
@@ -3922,8 +3924,6 @@
 				7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */,
 				73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */,
 				7314E030255E4491004882BB /* Atomic.swift in Sources */,
-				7314DFB5255E3F39004882BB /* DelegateDictionary.swift in Sources */,
-				7314DFB4255E3F39004882BB /* DelegateSet.swift in Sources */,
 				7314DF68255E3F21004882BB /* BoundStreams.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
