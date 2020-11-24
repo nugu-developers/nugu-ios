@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.26.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.2)
+Released on 2020-11-24
+#### Update
+- Pass only 1 `sessionId` for `playServiceId` in the context of `SessionAgent`. (#633)
+- Make sure that the `StreamDataDelegate` functions are called first to satisfy the statistical requirements. (#636)
+
+#### Fixed
+- Fixes a bug when canceling and resuming timers for layer. (#630)
+- Ignore user interaction when playback paused (#630)
+- Skip attachment when last data appended. (#635)
+
+#### Added
+- Separate NuguUtils to share and dynamic access (#627)
+
 ## [0.26.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.1)
 Released on 2020-11-17
 #### Fixed
