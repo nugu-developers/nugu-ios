@@ -58,9 +58,16 @@ public final class SessionAgent: SessionAgentProtocol {
 
 extension SessionAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+        let sessions = sessionManager.activeSessions
+            .reduce(into: [Session]()) { (result, session) in
+                result.removeAll { $0.playServiceId == session.playServiceId }
+                result.append(session)
+            }
+            .map { ["sessionId": $0.sessionId, "playServiceId": $0.playServiceId] }
+                
         let payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "list": sessionManager.activeSessions.map { ["sessionId": $0.sessionId, "playServiceId": $0.playServiceId] }
+            "list": sessions
         ]
         
         completion(
