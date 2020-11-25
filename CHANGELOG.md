@@ -3,8 +3,20 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.26.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.3)
+Released on 2020-11-25
+### SDK
+#### Fixed
+- Add NuguUtils scheme (#641)
+
 ## [0.26.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.2)
 Released on 2020-11-24
+### Sample Application
+#### Added
+- Separate NuguUtils to share and dynamic access (#627)
+> Drag and drop `NuguUtils` framework to "Frameworks, Libraries, and Embedded Content" section in application targets’ General settings tab.(For more information, See the  [Carthage](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application))
+
+### SDK
 #### Update
 - Pass only 1 `sessionId` for `playServiceId` in the context of `SessionAgent`. (#633)
 - Make sure that the `StreamDataDelegate` functions are called first to satisfy the statistical requirements. (#636)
@@ -19,6 +31,7 @@ Released on 2020-11-24
 
 ## [0.26.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.1)
 Released on 2020-11-17
+### SDK
 #### Fixed
 - Fixes a build error. (#623)
 
