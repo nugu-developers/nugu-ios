@@ -62,12 +62,7 @@ public final class ASRAgent: ASRAgentProtocol {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
             
-            // `expectingSpeechTimeout` -> `ASRRequest` -> `FocusState` -> EndPointDetector` -> `ASRAgentDelegate`
-            // dispose expectingSpeechTimeout
-            if asrState != .expectingSpeech {
-                expectingSpeechTimeout?.dispose()
-            }
-            
+            // `ASRRequest` -> `FocusState` -> EndPointDetector` -> `ASRAgentDelegate`
             // release asrRequest
             if asrState == .idle {
                 asrRequest = nil
@@ -94,6 +89,7 @@ public final class ASRAgent: ASRAgentProtocol {
         didSet {
             guard let asrRequest = asrRequest, let asrResult = asrResult else {
                 asrState = .idle
+                expectSpeech = nil
                 log.error("ASRRequest not exist")
                 return
             }
@@ -159,7 +155,6 @@ public final class ASRAgent: ASRAgentProtocol {
     private var attachmentSeq: Int32 = 0
     
     private lazy var disposeBag = DisposeBag()
-    private var expectingSpeechTimeout: Disposable?
     private var expectSpeech: ASRExpectSpeech? {
         didSet {
             if oldValue?.messageId != expectSpeech?.messageId {
@@ -242,7 +237,21 @@ public extension ASRAgent {
         initiator: ASRInitiator,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
-        return startRecognition(initiator: initiator, options: options, by: nil, completion: completion)
+        log.debug("startRecognition, initiator: \(initiator)")
+        let eventIdentifier = EventIdentifier()
+        
+        asrDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
+                log.warning("Not permitted in current state \(self.asrState)")
+                completion?(.error(ASRError.listenFailed))
+                return
+            }
+         
+            self.startRecognition(initiator: initiator, eventIdentifier: eventIdentifier, completion: completion)
+        }
+        
+        return eventIdentifier.dialogRequestId
     }
     
     /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
@@ -438,7 +447,7 @@ private extension ASRAgent {
         return { [weak self] directive, completion in
             defer { completion(.finished) }
             
-            self?.asrDispatchQueue.async { [weak self] in
+            self?.asrDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
                 // ex> TTS 도중 stopRecognition 호출.
                 guard let expectSpeech = self.expectSpeech, expectSpeech.messageId == directive.header.messageId else {
@@ -448,31 +457,16 @@ private extension ASRAgent {
                 // ex> TTS 도중 wakeup
                 guard [.idle, .busy].contains(self.asrState) else {
                     log.warning("ExpectSpeech only allowed in IDLE or BUSY state.")
+                    self.sendCompactContextEvent(Event(
+                        typeInfo: .listenFailed,
+                        dialogAttributes: self.dialogAttributeStore.attributes,
+                        referrerDialogRequestId: expectSpeech.dialogRequestId
+                    ).rx)
                     return
                 }
                 
                 self.asrState = .expectingSpeech
-                self.expectingSpeechTimeout = Observable<Int>
-                    .timer(ASRConst.focusTimeout, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                    .subscribe(onNext: { [weak self] _ in
-                        log.info("expectingSpeechTimeout")
-                        self?.asrResult = .error(ASRError.listenFailed)
-                    })
-                self.expectingSpeechTimeout?.disposed(by: self.disposeBag)
-
-                let options: ASROptions
-                if let epd = expectSpeech.payload.epd {
-                    options = ASROptions(
-                        maxDuration: epd.maxDuration ?? self.options.maxDuration,
-                        timeout: epd.timeout ?? self.options.timeout,
-                        pauseLength: epd.pauseLength ?? self.options.pauseLength,
-                        encoding: self.options.encoding,
-                        endPointing: self.options.endPointing
-                    )
-                } else {
-                    options = self.options
-                }
-                self.startRecognition(initiator: .scenario, options: options, by: directive)
+                self.startRecognition(initiator: .scenario, eventIdentifier: EventIdentifier(), completion: nil)
             }
         }
     }
@@ -602,6 +596,8 @@ private extension ASRAgent {
             endPointDetector = ClientEndPointDetector(asrOptions: asrRequest.options, epdFile: epdFile)
         case .server:
             // TODO: after server preparation.
+            log.error("Server side end point detector does not support yet.")
+            asrResult = .error(ASRError.listenFailed)
 //            endPointDetector = ServerEndPointDetector(asrOptions: asrRequest.options)
 //
 //            // send wake up voice data
@@ -648,51 +644,44 @@ private extension ASRAgent {
         upstreamDataSender.sendStream(attachment)
     }
     
-    @discardableResult func startRecognition(
+    /// asrDispatchQueue
+    func startRecognition(
         initiator: ASRInitiator,
-        options: ASROptions,
-        by directive: Downstream.Directive?,
-        completion: ((StreamDataState) -> Void)? = nil
-    ) -> String {
-        log.debug("startRecognition, initiator: \(initiator)")
-        let eventIdentifier = EventIdentifier()
-        if options.endPointing == .server {
-            log.warning("Server side end point detector does not support yet.")
-            completion?(.error(ASRError.listenFailed))
-            return eventIdentifier.dialogRequestId
-        }
-
-        asrDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
-                log.warning("Not permitted in current state \(self.asrState)")
-                completion?(.error(ASRError.listenFailed))
-                return
-            }
-
-            let semaphore = DispatchSemaphore(value: 0)
-            self.contextManager.getContexts { [weak self] contextPayload in
-                defer {
-                    semaphore.signal()
-                }
-
-                guard let self = self else { return }
-
-                self.asrRequest = ASRRequest(
-                    contextPayload: contextPayload,
-                    eventIdentifier: eventIdentifier,
-                    initiator: initiator,
-                    options: self.options,
-                    referrerDialogRequestId: directive?.header.dialogRequestId,
-                    completion: completion
-                )
-
-                self.focusManager.requestFocus(channelDelegate: self)
+        eventIdentifier: EventIdentifier,
+        completion: ((StreamDataState) -> Void)?
+    ) {
+        let semaphore = DispatchSemaphore(value: 0)
+        self.contextManager.getContexts { [weak self] contextPayload in
+            defer {
+                semaphore.signal()
             }
             
-            semaphore.wait()
+            guard let self = self else { return }
+            
+            let options: ASROptions
+            if let epd = self.expectSpeech?.payload.epd {
+                options = ASROptions(
+                    maxDuration: epd.maxDuration ?? self.options.maxDuration,
+                    timeout: epd.timeout ?? self.options.timeout,
+                    pauseLength: epd.pauseLength ?? self.options.pauseLength,
+                    encoding: self.options.encoding,
+                    endPointing: self.options.endPointing
+                )
+            } else {
+                options = self.options
+            }
+            self.asrRequest = ASRRequest(
+                contextPayload: contextPayload,
+                eventIdentifier: eventIdentifier,
+                initiator: initiator,
+                options: options,
+                referrerDialogRequestId: self.expectSpeech?.dialogRequestId,
+                completion: completion
+            )
+            
+            self.focusManager.requestFocus(channelDelegate: self)
         }
         
-        return eventIdentifier.dialogRequestId
+        semaphore.wait()
     }
 }
