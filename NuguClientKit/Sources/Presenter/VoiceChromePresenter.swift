@@ -23,14 +23,9 @@ import UIKit
 
 import NuguAgents
 import NuguUIKit
+import NuguUtils
 
-public protocol VoiceChromeDelegate: class {
-    func voiceChromeWillShow()
-    func voiceChromeWillHide()
-    func voiceChromeShouldDisableIdleTimer() -> Bool
-    func voiceChromeShouldEnableIdleTimer() -> Bool
-}
-
+/// <#Description#>
 public class VoiceChromePresenter {
     private let nuguVoiceChrome: NuguVoiceChrome
     private let viewController: UIViewController
@@ -38,9 +33,9 @@ public class VoiceChromePresenter {
     private var asrState: ASRState = .idle
     private var isMultiturn: Bool = false
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
-    private var isHidden = true
     
-    public weak var delegate: VoiceChromeDelegate?
+    public weak var delegate: VoiceChromePresenterDelegate?
+    public var isHidden = true
     
     public init(viewController: UIViewController, nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
         self.viewController = viewController
@@ -55,16 +50,15 @@ public class VoiceChromePresenter {
 // MARK: - Public (Voice Chrome)
 
 public extension VoiceChromePresenter {
-    func presentVoiceChrome() {
+    func presentVoiceChrome() throws {
+        guard NetworkReachabilityManager.shared.isReachable else { throw VoiceChromePresenterError.networkUnreachable }
         log.debug("")
-        guard let view = viewController.view else { return }
         
         voiceChromeDismissWorkItem?.cancel()
         nuguVoiceChrome.removeFromSuperview()
-        nuguVoiceChrome.frame = CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + bottomSafeAreaHeight)
         nuguVoiceChrome.changeState(state: .listeningPassive)
         
-        showVoiceChrome()
+        try showVoiceChrome()
     }
     
     func dismissVoiceChrome() {
@@ -81,15 +75,6 @@ public extension VoiceChromePresenter {
             self?.nuguVoiceChrome.removeFromSuperview()
         })
     }
-    
-    func setChipsButton(actionList: [(text: String, token: String?)], normalList: [(text: String, token: String?)]) {
-        var chipsButtonList = [NuguChipsButton.NuguChipsButtonType]()
-        let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0.text, token: $0.token) }
-        chipsButtonList.append(contentsOf: actionButtonList)
-        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0.text, token: $0.token) }
-        chipsButtonList.append(contentsOf: normalButtonList)
-        nuguVoiceChrome.setChipsData(chipsData: chipsButtonList)
-    }
 }
 
 // MARK: - Private
@@ -103,10 +88,10 @@ private extension VoiceChromePresenter {
         }
     }
     
-    func showVoiceChrome() {
+    func showVoiceChrome() throws {
         log.debug("")
-        guard let view = viewController.view else { return }
-        guard isHidden == true else { return }
+        guard let view = viewController.view else { throw VoiceChromePresenterError.superViewNotExsit }
+        guard isHidden == true else { throw VoiceChromePresenterError.alreadyShown      }
         
         delegate?.voiceChromeWillShow()
         
@@ -120,9 +105,19 @@ private extension VoiceChromePresenter {
         }
         
         if view.subviews.contains(nuguVoiceChrome) == false {
+            nuguVoiceChrome.frame = CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + bottomSafeAreaHeight)
             view.addSubview(nuguVoiceChrome)
         }
         showAnimation()
+    }
+    
+    func setChipsButton(actionList: [(text: String, token: String?)], normalList: [(text: String, token: String?)]) {
+        var chipsButtonList = [NuguChipsButton.NuguChipsButtonType]()
+        let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0.text, token: $0.token) }
+        chipsButtonList.append(contentsOf: actionButtonList)
+        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0.text, token: $0.token) }
+        chipsButtonList.append(contentsOf: normalButtonList)
+        nuguVoiceChrome.setChipsData(chipsData: chipsButtonList)
     }
     
     func disableIdleTimer() {
@@ -165,7 +160,7 @@ extension VoiceChromePresenter: DialogStateDelegate {
                     return
                 }
                 // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
-                self.showVoiceChrome()
+                try? self.showVoiceChrome()
                 self.nuguVoiceChrome.changeState(state: .speaking)
                 if let chips = chips {
                     let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
@@ -178,7 +173,7 @@ extension VoiceChromePresenter: DialogStateDelegate {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
-                self.showVoiceChrome()
+                try? self.showVoiceChrome()
                 if isMultiturn || sessionActivated {
                     self.nuguVoiceChrome.changeState(state: .listeningPassive)
                     self.nuguVoiceChrome.setRecognizedText(text: nil)
