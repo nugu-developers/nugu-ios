@@ -26,7 +26,7 @@ import RxSwift
 
 public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.1")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.5")
     
     public weak var delegate: TextAgentDelegate?
     
@@ -40,7 +40,18 @@ public final class TextAgent: TextAgentProtocol {
     
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextSource", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleTextSource)
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: "TextSource",
+            blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
+            directiveHandler: handleTextSource
+        ),
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: "TextRedirect",
+            blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
+            directiveHandler: handleTextRedirect
+        )
     ]
     
     private var disposeBag = DisposeBag()
@@ -105,6 +116,13 @@ private extension TextAgent {
             
             self?.textDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
+                guard self.delegate?.textAgentShouldHandleTextSource(directive: directive) != false else {
+                    self.sendCompactContextEvent(Event(
+                        typeInfo: .textSourceFailed(token: payload.token, playServiceId: payload.playServiceId, errorCode: "NOT_SUPPORTED_STATE"),
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    ).rx)
+                    return
+                }
                 
                 let requestType: TextAgentRequestType
                 if let playServiceId = payload.playServiceId {
@@ -122,11 +140,61 @@ private extension TextAgent {
             }
         }
     }
+    
+    func handleTextRedirect() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let payload = try? JSONDecoder().decode(TextAgentRedirectPayload.self, from: directive.payload) else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            defer { completion(.finished) }
+            
+            self?.textDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard self.delegate?.textAgentShouldHandleTextRedirect(directive: directive) != false else {
+                    self.sendCompactContextEvent(Event(
+                        typeInfo: .textRedirectFailed(token: payload.token, playServiceId: payload.playServiceId, errorCode: "NOT_SUPPORTED_STATE"),
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    ).rx)
+                    return
+                }
+                
+                let requestType: TextAgentRequestType
+                if let playServiceId = payload.targetPlayServiceId {
+                    requestType = .specific(playServiceId: playServiceId)
+                } else {
+                    requestType = .normal
+                }
+                
+                self.sendFullContextEvent(self.textInput(
+                    text: payload.text,
+                    token: payload.token,
+                    requestType: requestType,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ))
+            }
+        }
+    }
 }
 
 // MARK: - Private(Event)
 
 private extension TextAgent {
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
+        let eventIdentifier = EventIdentifier()
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
+    }
+    
     @discardableResult func sendFullContextEvent(
         _ event: Single<Eventable>,
         completion: ((StreamDataState) -> Void)? = nil
