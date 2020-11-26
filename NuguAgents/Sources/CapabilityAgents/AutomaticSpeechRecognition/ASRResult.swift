@@ -37,6 +37,8 @@ public enum ASRResult {
     case complete(text: String, header: Downstream.Header)
     /// 음성 인식 요청 취소
     case cancel(header: Downstream.Header? = nil)
+    /// The `ASR.ExpectSpeech` directive has been cancelled.
+    case cancelExpectSpeech
     /// 음성 인식 결과 실패
     /// - Parameter error:
     /// - Parameter header: The header of the originally handled directive.

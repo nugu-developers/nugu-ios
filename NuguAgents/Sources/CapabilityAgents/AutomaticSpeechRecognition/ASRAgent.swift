@@ -113,6 +113,14 @@ public final class ASRAgent: ASRAgentProtocol {
                     referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                 ).rx)
                 expectSpeech = nil
+            case .cancelExpectSpeech:
+                asrState = .idle
+                sendCompactContextEvent(Event(
+                    typeInfo: .listenFailed,
+                    dialogAttributes: dialogAttributeStore.attributes,
+                    referrerDialogRequestId: asrRequest.referrerDialogRequestId
+                ).rx)
+                expectSpeech = nil
             case .error(let error, _):
                 asrState = .idle
                 switch error {
@@ -310,8 +318,10 @@ extension ASRAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Not permitted background
-            case (_, let asrState) where [.listening, .recognizing, .expectingSpeech].contains(asrState):
+            case (_, let asrState) where [.listening, .recognizing].contains(asrState):
                 self.asrResult = .cancel()
+            case (_, .expectingSpeech):
+                self.asrResult = .cancelExpectSpeech
             // Ignore prepare
             default:
                 break
@@ -457,11 +467,6 @@ private extension ASRAgent {
                 // ex> TTS 도중 wakeup
                 guard [.idle, .busy].contains(self.asrState) else {
                     log.warning("ExpectSpeech only allowed in IDLE or BUSY state.")
-                    self.sendCompactContextEvent(Event(
-                        typeInfo: .listenFailed,
-                        dialogAttributes: self.dialogAttributeStore.attributes,
-                        referrerDialogRequestId: expectSpeech.dialogRequestId
-                    ).rx)
                     return
                 }
                 
