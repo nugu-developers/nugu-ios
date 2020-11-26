@@ -177,7 +177,6 @@ private extension MainViewController {
         NuguCentralManager.shared.client.keywordDetector.delegate = self
         NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
         NuguCentralManager.shared.client.asrAgent.add(delegate: self)
-        NuguCentralManager.shared.client.textAgent.delegate = self
         NuguCentralManager.shared.client.displayAgent.delegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.displayDelegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
