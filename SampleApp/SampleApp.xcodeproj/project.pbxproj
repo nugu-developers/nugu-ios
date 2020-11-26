@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		732E443B256FDC5600EB7BEF /* skt_epd_model.raw in Resources */ = {isa = PBXBuildFile; fileRef = 732E4436256FDC5500EB7BEF /* skt_epd_model.raw */; };
+		732E443C256FDC5600EB7BEF /* skt_trigger_search_tinkerbell.raw in Resources */ = {isa = PBXBuildFile; fileRef = 732E4437256FDC5600EB7BEF /* skt_trigger_search_tinkerbell.raw */; };
+		732E443D256FDC5600EB7BEF /* skt_trigger_am_tinkerbell.raw in Resources */ = {isa = PBXBuildFile; fileRef = 732E4438256FDC5600EB7BEF /* skt_trigger_am_tinkerbell.raw */; };
+		732E443E256FDC5600EB7BEF /* skt_trigger_am_aria.raw in Resources */ = {isa = PBXBuildFile; fileRef = 732E4439256FDC5600EB7BEF /* skt_trigger_am_aria.raw */; };
+		732E443F256FDC5600EB7BEF /* skt_trigger_search_aria.raw in Resources */ = {isa = PBXBuildFile; fileRef = 732E443A256FDC5600EB7BEF /* skt_trigger_search_aria.raw */; };
 		73F284DF23815CC9004EBBDF /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A523815CC9004EBBDF /* SettingViewController.swift */; };
 		73F284E023815CC9004EBBDF /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A623815CC9004EBBDF /* IntroViewController.swift */; };
 		73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A723815CC9004EBBDF /* MainViewController.swift */; };
@@ -159,6 +164,11 @@
 /* Begin PBXFileReference section */
 		1E35ABD8543680F9A99E41F6 /* Pods_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3251FD919C1818DBE8CE0077 /* Pods-SampleApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleApp.release.xcconfig"; path = "Target Support Files/Pods-SampleApp/Pods-SampleApp.release.xcconfig"; sourceTree = "<group>"; };
+		732E4436256FDC5500EB7BEF /* skt_epd_model.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_epd_model.raw; sourceTree = "<group>"; };
+		732E4437256FDC5600EB7BEF /* skt_trigger_search_tinkerbell.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_search_tinkerbell.raw; sourceTree = "<group>"; };
+		732E4438256FDC5600EB7BEF /* skt_trigger_am_tinkerbell.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_am_tinkerbell.raw; sourceTree = "<group>"; };
+		732E4439256FDC5600EB7BEF /* skt_trigger_am_aria.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_am_aria.raw; sourceTree = "<group>"; };
+		732E443A256FDC5600EB7BEF /* skt_trigger_search_aria.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_search_aria.raw; sourceTree = "<group>"; };
 		73F28420238157A7004EBBDF /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F284A523815CC9004EBBDF /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		73F284A623815CC9004EBBDF /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
@@ -554,6 +564,11 @@
 				7E6A0B0F241084C000C7A19E /* Assets.xcassets */,
 				7E6A0B10241084C000C7A19E /* LaunchScreen.storyboard */,
 				7E6A0B12241084C000C7A19E /* Main.storyboard */,
+				732E4436256FDC5500EB7BEF /* skt_epd_model.raw */,
+				732E4439256FDC5600EB7BEF /* skt_trigger_am_aria.raw */,
+				732E4438256FDC5600EB7BEF /* skt_trigger_am_tinkerbell.raw */,
+				732E443A256FDC5600EB7BEF /* skt_trigger_search_aria.raw */,
+				732E4437256FDC5600EB7BEF /* skt_trigger_search_tinkerbell.raw */,
 			);
 			path = Resources;
 			sourceTree = SOURCE_ROOT;
@@ -828,6 +843,7 @@
 				7EE2DD23247CF4750005DE17 /* Score1View.xib in Resources */,
 				7EE2DD31247CF4750005DE17 /* Weather4ViewCell.xib in Resources */,
 				7EE2DD35247CF4750005DE17 /* TextList4View.xib in Resources */,
+				732E443E256FDC5600EB7BEF /* skt_trigger_am_aria.raw in Resources */,
 				7ECD3DF024F64605007F29CE /* listening_start.wav in Resources */,
 				7EE2DD0D247CF4750005DE17 /* AudioPlayer2View.xib in Resources */,
 				7ECD3DEF24F64605007F29CE /* listening_end.wav in Resources */,
@@ -842,6 +858,7 @@
 				7EE2DD40247CF4750005DE17 /* TextList3ViewCell.xib in Resources */,
 				7EE2DD0F247CF4750005DE17 /* AudioPlayerBarView.xib in Resources */,
 				7EE2DD19247CF4750005DE17 /* ImageText2View.xib in Resources */,
+				732E443F256FDC5600EB7BEF /* skt_trigger_search_aria.raw in Resources */,
 				7EE2DD4D247CF4750005DE17 /* ImageList2ViewCell.xib in Resources */,
 				7E6A0B3E2410888000C7A19E /* device_GW_error_004.wav in Resources */,
 				7EE2DD22247CF4750005DE17 /* FullText1View.xib in Resources */,
@@ -867,8 +884,11 @@
 				7EE2DD1B247CF4750005DE17 /* ImageText3View.xib in Resources */,
 				7EE2DD50247CF4750005DE17 /* ImageList3ViewCell.xib in Resources */,
 				7EE2DD2C247CF4750005DE17 /* Weather2View.xib in Resources */,
+				732E443C256FDC5600EB7BEF /* skt_trigger_search_tinkerbell.raw in Resources */,
 				7EE2DD2F247CF4750005DE17 /* Weather3View.xib in Resources */,
 				7E6A0B3B2410888000C7A19E /* device_GW_error_001.wav in Resources */,
+				732E443B256FDC5600EB7BEF /* skt_epd_model.raw in Resources */,
+				732E443D256FDC5600EB7BEF /* skt_trigger_am_tinkerbell.raw in Resources */,
 				7EE2DD51247CF4750005DE17 /* ImageList1View.xib in Resources */,
 				7EE2DD3A247CF4750005DE17 /* TextList1ViewCell.xib in Resources */,
 			);

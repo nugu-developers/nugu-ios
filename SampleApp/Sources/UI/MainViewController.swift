@@ -27,6 +27,8 @@ import NuguClientKit
 import NuguUIKit
 
 final class MainViewController: UIViewController {
+    var resignActiveObserver: Any?
+    var becomeActiveObserver: Any?
     
     // MARK: Properties
     
@@ -50,20 +52,7 @@ final class MainViewController: UIViewController {
         setGradientBackground()
         addWatermarkLabel()
         initializeNugu()
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(willResignActive(_:)),
-            name: UIApplication.willResignActiveNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(didBecomeActive(_:)),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
+        registerObservers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -106,35 +95,59 @@ final class MainViewController: UIViewController {
     // MARK: Deinitialize
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        removeObservers()
+    }
+}
+
+// MARK: - private (Observer)
+private extension MainViewController {
+    func registerObservers() {
+        // To avoid duplicated observing
+        removeObservers()
+        
+        /** Catch resigning active notification to stop recognizing & wake up detector
+         It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
+         */
+        resignActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self else { return }
+
+            self.dismissVoiceChrome()
+
+            // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
+            if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
+                NuguCentralManager.shared.client.ttsAgent.stopTTS()
+            }
+            NuguCentralManager.shared.client.asrAgent.stopRecognition()
+            NuguCentralManager.shared.stopMicInputProvider()
+        })
+        
+        /** Catch becoming active notification to refresh mic status & Nugu button
+         Recover all status for any issues caused from becoming background
+         */
+        becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self else { return }
+            guard self.navigationController?.visibleViewController == self else { return }
+
+            self.refreshNugu()
+        })
+    }
+    
+    func removeObservers() {
+        if let resignActiveObserver = resignActiveObserver {
+            NotificationCenter.default.removeObserver(resignActiveObserver)
+            self.resignActiveObserver = nil
+        }
+
+        if let becomeActiveObserver = becomeActiveObserver {
+            NotificationCenter.default.removeObserver(becomeActiveObserver)
+            self.becomeActiveObserver = nil
+        }
     }
 }
 
 // MARK: - Private (Selector)
 
 @objc private extension MainViewController {
-    
-    /// Catch resigning active notification to stop recognizing & wake up detector
-    /// It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
-    /// - Parameter notification: UIApplication.willResignActiveNotification
-    func willResignActive(_ notification: Notification) {
-        dismissVoiceChrome()
-        // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
-        if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
-            NuguCentralManager.shared.client.ttsAgent.stopTTS()
-        }
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
-        NuguCentralManager.shared.stopMicInputProvider()
-    }
-    
-    /// Catch becoming active notification to refresh mic status & Nugu button
-    /// Recover all status for any issues caused from becoming background
-    /// - Parameter notification: UIApplication.didBecomeActiveNotification
-    func didBecomeActive(_ notification: Notification) {
-        guard navigationController?.visibleViewController == self else { return }
-        refreshNugu()
-    }
-        
     func didTapForDismissVoiceChrome() {
         guard nuguVoiceChrome.currentState == .listeningPassive || nuguVoiceChrome.currentState == .listeningActive  else { return }
         dismissVoiceChrome()
@@ -146,13 +159,18 @@ final class MainViewController: UIViewController {
 
 private extension MainViewController {
     @IBAction func showSettingsButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.stopMicInputProvider()
-
-        performSegue(withIdentifier: "showSettings", sender: nil)
+//        NuguCentralManager.shared.stopMicInputProvider()
+//
+//        performSegue(withIdentifier: "showSettings", sender: nil)
+        
+        registerObservers()
+        
     }
     
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
-        presentVoiceChrome(initiator: .user)
+//        presentVoiceChrome(initiator: .user)
+
+        removeObservers()
     }
     
     @IBAction func sendTextInput(_ button: UIButton) {
@@ -177,7 +195,6 @@ private extension MainViewController {
         NuguCentralManager.shared.client.keywordDetector.delegate = self
         NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
         NuguCentralManager.shared.client.asrAgent.add(delegate: self)
-        NuguCentralManager.shared.client.textAgent.delegate = self
         NuguCentralManager.shared.client.displayAgent.delegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.displayDelegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)

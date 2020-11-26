@@ -9,6 +9,7 @@ PODS:
     - JadeMarble (~> 0)
     - NattyLog (~> 1)
     - NuguCore (~> 0)
+    - NuguUtils (~> 0)
     - SilverTray (~> 1)
   - NuguClientKit (0.26.0):
     - KeenSense (~> 0)
@@ -17,12 +18,16 @@ PODS:
     - NuguCore (~> 0)
   - NuguCore (0.26.0):
     - NattyLog (~> 1.0)
+    - NuguUtils (~> 0)
     - RxSwift (~> 5)
-  - NuguLoginKit (0.26.0)
+  - NuguLoginKit (0.26.0):
+    - NuguUtils (~> 0)
   - NuguServiceKit (0.26.0):
     - NattyLog (~> 1)
   - NuguUIKit (0.26.0):
     - lottie-ios (~> 3)
+  - NuguUtils (0.26.1):
+    - RxSwift (~> 5)
   - RxSwift (5.1.1)
   - SilverTray (1.2.6)
 
@@ -35,13 +40,14 @@ DEPENDENCIES:
   - NuguLoginKit (from `../`)
   - NuguServiceKit (from `../`)
   - NuguUIKit (from `../`)
+  - NuguUtils (from `../`)
+  - SilverTray (from `../../silvertray-ios`)
 
 SPEC REPOS:
   trunk:
     - lottie-ios
     - NattyLog
     - RxSwift
-    - SilverTray
 
 EXTERNAL SOURCES:
   JadeMarble:
@@ -60,21 +66,26 @@ EXTERNAL SOURCES:
     :path: "../"
   NuguUIKit:
     :path: "../"
+  NuguUtils:
+    :path: "../"
+  SilverTray:
+    :path: "../../silvertray-ios"
 
 SPEC CHECKSUMS:
   JadeMarble: 06a53f1bc836b70075a7a03ecdd4631e51746300
   KeenSense: e33039ae22b52240e7472614041a07b91c4df896
   lottie-ios: 3a3758ef5a008e762faec9c9d50a39842f26d124
   NattyLog: f9ece0db2fb62178d8246f0ae033a9b64f2d7f30
-  NuguAgents: 4402ab4156d2d1dac63bb02dcb265c70693bdd05
+  NuguAgents: 0b7e804c0f43f2b6f88cea2b87d9e56e68fc6b19
   NuguClientKit: 3b8b887813b3c9065c8bc36b7802e6877ab9273d
-  NuguCore: 6ba22898ad3407c1bc4aedbe76eeb581e6a632ac
-  NuguLoginKit: a144900ee62cdf5ff2ecdccafdba4121ce653344
+  NuguCore: 78384d8e0b4cfbcc776aae3d5b702ea9b4964b78
+  NuguLoginKit: 2e73c1a6f5de453ea096afc72621def0749732c7
   NuguServiceKit: c5a97f4db8d6aed169e92db571486a0db1dd868b
   NuguUIKit: 7917ac932c8dac4d49df83fd7914a1343ebecdab
+  NuguUtils: fb31ca715bd18ad60dc198cb9830bd63f6b3b42a
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SilverTray: d006036dd35c1b898497c28dbf06eddce6f1745d
 
-PODFILE CHECKSUM: fed1a1aa73e7405ed59ad9f1441a792ea394d47a
+PODFILE CHECKSUM: f5e7c4c6ed0f511532d963387118acf51eab5ba8
 
 COCOAPODS: 1.10.0
