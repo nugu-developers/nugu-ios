@@ -28,7 +28,12 @@ import NuguUtils
 /// <#Description#>
 public class VoiceChromePresenter {
     private let nuguVoiceChrome: NuguVoiceChrome
-    private let viewController: UIViewController
+    
+    private weak var viewController: UIViewController?
+    private weak var superView: UIView?
+    private var targetView: UIView? {
+        superView ?? viewController?.view
+    }
     
     private var asrState: ASRState = .idle
     private var isMultiturn: Bool = false
@@ -37,8 +42,19 @@ public class VoiceChromePresenter {
     public weak var delegate: VoiceChromePresenterDelegate?
     public var isHidden = true
     
-    public init(viewController: UIViewController, nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
+    public convenience init(superView: UIView, nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient)
+        
+        self.superView = superView
+    }
+    
+    public convenience init(viewController: UIViewController, nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient)
+        
         self.viewController = viewController
+    }
+    
+    private init(nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
         self.nuguVoiceChrome = nuguVoiceChrome
         
         nuguClient.dialogStateAggregator.add(delegate: self)
@@ -82,15 +98,15 @@ public extension VoiceChromePresenter {
 private extension VoiceChromePresenter {
     var bottomSafeAreaHeight: CGFloat {
         if #available(iOS 11.0, *) {
-            return viewController.view?.safeAreaInsets.bottom ?? 0
+            return targetView?.safeAreaInsets.bottom ?? 0
         } else {
-            return viewController.bottomLayoutGuide.length
+            return viewController?.bottomLayoutGuide.length ?? 0
         }
     }
     
     func showVoiceChrome() throws {
         log.debug("")
-        guard let view = viewController.view else { throw VoiceChromePresenterError.superViewNotExsit }
+        guard let view = targetView else { throw VoiceChromePresenterError.superViewNotExsit }
         guard isHidden == true else { throw VoiceChromePresenterError.alreadyShown      }
         
         delegate?.voiceChromeWillShow()
