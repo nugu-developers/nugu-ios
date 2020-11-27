@@ -159,18 +159,13 @@ private extension MainViewController {
 
 private extension MainViewController {
     @IBAction func showSettingsButtonDidClick(_ button: UIButton) {
-//        NuguCentralManager.shared.stopMicInputProvider()
-//
-//        performSegue(withIdentifier: "showSettings", sender: nil)
-        
-        registerObservers()
-        
+        NuguCentralManager.shared.stopMicInputProvider()
+
+        performSegue(withIdentifier: "showSettings", sender: nil)
     }
     
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
-//        presentVoiceChrome(initiator: .user)
-
-        removeObservers()
+        presentVoiceChrome(initiator: .user)
     }
     
     @IBAction func sendTextInput(_ button: UIButton) {
