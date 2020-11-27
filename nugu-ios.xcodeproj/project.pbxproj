@@ -207,7 +207,6 @@
 		73152FB923E0414700F843C3 /* EndPointDetectorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68423C5BFD400610343 /* EndPointDetectorState.swift */; };
 		73152FBA23E0414700F843C3 /* ASRAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3432375707000C9A177 /* ASRAgent.swift */; };
 		73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3482375707000C9A177 /* ASRAgent+Event.swift */; };
-		73152FBE23E0414700F843C3 /* ASRConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3492375707000C9A177 /* ASRConst.swift */; };
 		73152FBF23E0414700F843C3 /* ASRRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3442375707000C9A177 /* ASRRequest.swift */; };
 		73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3472375707000C9A177 /* ASRNotifyResult.swift */; };
 		73152FC123E0414F00F843C3 /* SystemAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF34D2375707000C9A177 /* SystemAgent.swift */; };
@@ -857,7 +856,6 @@
 		1FFFF3442375707000C9A177 /* ASRRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRRequest.swift; sourceTree = "<group>"; };
 		1FFFF3472375707000C9A177 /* ASRNotifyResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRNotifyResult.swift; sourceTree = "<group>"; };
 		1FFFF3482375707000C9A177 /* ASRAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ASRAgent+Event.swift"; sourceTree = "<group>"; };
-		1FFFF3492375707000C9A177 /* ASRConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRConst.swift; sourceTree = "<group>"; };
 		1FFFF34B2375707000C9A177 /* SystemAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SystemAgent+Event.swift"; sourceTree = "<group>"; };
 		1FFFF34D2375707000C9A177 /* SystemAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgent.swift; sourceTree = "<group>"; };
 		1FFFF34E2375707000C9A177 /* SystemAgentExceptionItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemAgentExceptionItem.swift; sourceTree = "<group>"; };
@@ -1881,7 +1879,6 @@
 				737388F024A46C7F0018DDD2 /* ASROptions.swift */,
 				737388F124A46C7F0018DDD2 /* ASRResult.swift */,
 				737388F224A46C7F0018DDD2 /* ASRState.swift */,
-				1FFFF3492375707000C9A177 /* ASRConst.swift */,
 			);
 			path = AutomaticSpeechRecognition;
 			sourceTree = "<group>";
@@ -3958,7 +3955,6 @@
 				1F862EF5252DAB040069C310 /* KeyedEncodingContainerExtension.swift in Sources */,
 				1FD5D17A24A99993007BA384 /* PhoneCallAgentDelegate.swift in Sources */,
 				7373891424A46CB90018DDD2 /* TextAgentDelegate.swift in Sources */,
-				73152FBE23E0414700F843C3 /* ASRConst.swift in Sources */,
 				1FBA3B7624596E1A001E5828 /* PhoneCallAgent+Event.swift in Sources */,
 				7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */,
 				737388DA24A46C3C0018DDD2 /* SoundAgentProtocol.swift in Sources */,
