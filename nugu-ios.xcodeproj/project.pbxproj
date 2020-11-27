@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0600C2C125709A450071AEF3 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		060DDE88256E67DC006B4F59 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060DDE87256E67DC006B4F59 /* NetworkReachabilityManager.swift */; };
 		060FAB382566693600F01EE3 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
-		063A84722565027D0032F13B /* VoiceChromePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063A84712565027D0032F13B /* VoiceChromePresenter.swift */; };
 		06301FBC256B853D00FD97E8 /* TextAgentRedirectPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06301FBB256B853D00FD97E8 /* TextAgentRedirectPayload.swift */; };
+		063A84722565027D0032F13B /* VoiceChromePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063A84712565027D0032F13B /* VoiceChromePresenter.swift */; };
 		065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */; };
 		065DF8C825637D58009CF99E /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8C725637D57009CF99E /* Attachable.swift */; };
 		066C9D1A25553EDE000C7800 /* NCObjcExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -546,6 +547,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0600C2C325709A450071AEF3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7314DF46255E3EA2004882BB;
+			remoteInfo = NuguUtils;
+		};
 		060FAB3A2566693600F01EE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D9C428722745894000A6585 /* Project object */;
@@ -733,8 +741,8 @@
 
 /* Begin PBXFileReference section */
 		060DDE87256E67DC006B4F59 /* NetworkReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReachabilityManager.swift; sourceTree = "<group>"; };
-		063A84712565027D0032F13B /* VoiceChromePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenter.swift; sourceTree = "<group>"; };
 		06301FBB256B853D00FD97E8 /* TextAgentRedirectPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentRedirectPayload.swift; sourceTree = "<group>"; };
+		063A84712565027D0032F13B /* VoiceChromePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenter.swift; sourceTree = "<group>"; };
 		065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Attachable+makeAttachmentMessage.swift"; sourceTree = "<group>"; };
 		065DF8C725637D57009CF99E /* Attachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachable.swift; sourceTree = "<group>"; };
 		067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterDelegate.swift; sourceTree = "<group>"; };
@@ -1290,6 +1298,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0600C2C125709A450071AEF3 /* NuguUtils.framework in Frameworks */,
 				1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */,
 				73152FED23E05D9700F843C3 /* NuguAgents.framework in Frameworks */,
 				060FAB382566693600F01EE3 /* NuguUIKit.framework in Frameworks */,
@@ -3161,6 +3170,7 @@
 				73152FF023E05D9700F843C3 /* PBXTargetDependency */,
 				1F9C5B8523F664340086CC04 /* PBXTargetDependency */,
 				060FAB3B2566693600F01EE3 /* PBXTargetDependency */,
+				0600C2C425709A450071AEF3 /* PBXTargetDependency */,
 			);
 			name = NuguClientKit;
 			packageProductDependencies = (
@@ -4138,6 +4148,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0600C2C425709A450071AEF3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7314DF46255E3EA2004882BB /* NuguUtils */;
+			targetProxy = 0600C2C325709A450071AEF3 /* PBXContainerItemProxy */;
+		};
 		060FAB3B2566693600F01EE3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FFFF02323753F8A00C9A177 /* NuguUIKit */;
@@ -4300,7 +4315,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4337,7 +4352,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4370,7 +4385,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4403,7 +4418,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4432,7 +4447,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4461,7 +4476,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4494,7 +4509,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4527,7 +4542,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4565,7 +4580,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -4610,7 +4625,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/JadeMarble/Libraries",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheEpd\"",
@@ -4654,7 +4669,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
@@ -4697,7 +4712,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/KeenSense/Libraries",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"TycheWakeup\"",
@@ -4973,7 +4988,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5006,7 +5021,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5039,7 +5054,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5071,7 +5086,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5104,7 +5119,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5139,7 +5154,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26.3;
+				MARKETING_VERSION = 0.27.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

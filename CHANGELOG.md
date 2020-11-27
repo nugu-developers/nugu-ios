@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.27.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.27.0)
+Released on 2020-11-27
+### Sample Application
+#### Added
+- Add `VoiceChromePresenter` (#629)
+> Application only needs to apply the changes of  [`MainViewController`](https://github.com/nugu-developers/nugu-ios/pull/629/files#diff-7468829fbd38fb482c72def9b95c04abe8d927db4e1b5ffd789187e8f36f13f3)    
+
+### SDK
+#### Added
+- Add `VoiceChromePresenter` (#629)
+
+#### Fixed
+- Request focus synchronously when handling `ASR.ExpectSpeech`. (#643)
+
+#### Update
+- `TextAgent` 1.5 (upgrade capability-agent) (#634)
+
 ## [0.26.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.3)
 Released on 2020-11-25
 ### SDK
