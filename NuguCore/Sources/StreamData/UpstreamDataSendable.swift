@@ -38,7 +38,7 @@ public protocol UpstreamDataSendable: class {
      Every event and attachment have `DialogRequestId`.
      This method finds the suitable stream using that id
      */
-    func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)?)
+    func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)?)
     
     /// Cancels an event.
     ///
@@ -57,7 +57,7 @@ public extension UpstreamDataSendable {
     /// - Parameters:
     ///   - attachment: <#attachment description#>
     ///   - dialogRequestId: <#dialogRequestId description#>
-    func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String) {
-        sendStream(attachment, dialogRequestId: dialogRequestId, completion: nil)
+    func sendStream(_ attachment: Upstream.Attachment) {
+        sendStream(attachment, completion: nil)
     }
 }

@@ -29,6 +29,8 @@ extension TextAgent {
         
         enum TypeInfo {
             case textInput(text: String, token: String?, attributes: [String: AnyHashable]?)
+            case textSourceFailed(token: String, playServiceId: String?, errorCode: String)
+            case textRedirectFailed(token: String, playServiceId: String, errorCode: String)
         }
     }
 }
@@ -47,6 +49,18 @@ extension TextAgent.Event: Eventable {
                 "domainTypes": attributes?["domainTypes"],
                 "asrContext": attributes?["asrContext"]
             ]
+        case .textSourceFailed(let token, let playServiceId, let errorCode):
+            payload = [
+                "token": token,
+                "playServiceId": playServiceId,
+                "errorCode": errorCode
+            ]
+        case .textRedirectFailed(let token, let playServiceId, let errorCode):
+            payload = [
+                "token": token,
+                "playServiceId": playServiceId,
+                "errorCode": errorCode
+            ]
         }
         
         return payload.compactMapValues { $0 }
@@ -54,8 +68,9 @@ extension TextAgent.Event: Eventable {
     
     var name: String {
         switch typeInfo {
-        case .textInput:
-            return "TextInput"
+        case .textInput: return "TextInput"
+        case .textSourceFailed: return "TextSourceFailed"
+        case .textRedirectFailed: return "TextRedirectFailed"
         }
     }
 }

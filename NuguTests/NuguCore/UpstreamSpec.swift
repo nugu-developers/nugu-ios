@@ -30,7 +30,7 @@ class UpstreamSpec: QuickSpec {
             describe("event") {
                 let event = Upstream.Event(
                     payload: ["test": "value1"],
-                    header: Upstream.Event.Header(
+                    header: Upstream.Header(
                         namespace: "namespace1",
                         name: "name1",
                         version: "version1",

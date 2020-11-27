@@ -36,12 +36,19 @@ final class MainViewController: UIViewController {
     @IBOutlet private weak var watermarkLabel: UILabel!
     @IBOutlet private weak var textInputTextField: UITextField!
     
-    private var voiceChromeDismissWorkItem: DispatchWorkItem?
-    
     private weak var displayView: DisplayView?
     private weak var displayAudioPlayerView: AudioDisplayView?
     
-    private var nuguVoiceChrome = NuguVoiceChrome()
+    private lazy var nuguVoiceChrome: NuguVoiceChrome = {
+        NuguVoiceChrome(frame: CGRect())
+    }()
+    private lazy var voiceChromePresenter: VoiceChromePresenter = {
+        VoiceChromePresenter(
+            viewController: self,
+            nuguVoiceChrome: nuguVoiceChrome,
+            nuguClient: NuguCentralManager.shared.client
+        )
+    }()
     
     // MARK: Override
     
@@ -119,7 +126,6 @@ final class MainViewController: UIViewController {
     /// It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
     /// - Parameter notification: UIApplication.willResignActiveNotification
     func willResignActive(_ notification: Notification) {
-        dismissVoiceChrome()
         // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
         if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
@@ -136,9 +142,8 @@ final class MainViewController: UIViewController {
         refreshNugu()
     }
         
-    func didTapForDismissVoiceChrome() {
-        guard nuguVoiceChrome.currentState == .listeningPassive || nuguVoiceChrome.currentState == .listeningActive  else { return }
-        dismissVoiceChrome()
+    func didTapForStopRecognition() {
+        guard [.listening, .recognizing].contains(NuguCentralManager.shared.client.asrAgent.asrState) else { return }
         NuguCentralManager.shared.client.asrAgent.stopRecognition()
     }
 }
@@ -178,10 +183,18 @@ private extension MainViewController {
         NuguCentralManager.shared.client.keywordDetector.delegate = self
         NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
         NuguCentralManager.shared.client.asrAgent.add(delegate: self)
-        NuguCentralManager.shared.client.textAgent.delegate = self
         NuguCentralManager.shared.client.displayAgent.delegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.displayDelegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
+        
+        // UI
+        voiceChromePresenter.delegate = self
+        nuguVoiceChrome.onChipsSelect = { [weak self] selectedChips in
+            self?.chipsDidSelect(selectedChips: selectedChips)
+        }
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
+        tapGestureRecognizer.delegate = self
+        view.addGestureRecognizer(tapGestureRecognizer)
     }
     
     /// Show nugu usage guide webpage after successful login process
@@ -248,85 +261,34 @@ private extension MainViewController {
 
 private extension MainViewController {
     func presentVoiceChrome(initiator: ASRInitiator) {
-        voiceChromeDismissWorkItem?.cancel()
-        nuguVoiceChrome.removeFromSuperview()
-        nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: self.view.frame.size.height, width: self.view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
-        view.addSubview(self.nuguVoiceChrome)
-        showVoiceChrome()
+        nuguVoiceChrome.setChipsData(chipsData: [
+            NuguChipsButton.NuguChipsButtonType.action(text: "오늘 날씨 알려줘", token: nil),
+            NuguChipsButton.NuguChipsButtonType.action(text: "습도 알려줘", token: nil),
+            NuguChipsButton.NuguChipsButtonType.normal(text: "라디오 목록 알려줘", token: nil),
+            NuguChipsButton.NuguChipsButtonType.normal(text: "주말 날씨 알려줘", token: nil),
+            NuguChipsButton.NuguChipsButtonType.normal(text: "오존 농도 알려줘", token: nil),
+            NuguChipsButton.NuguChipsButtonType.normal(text: "멜론 틀어줘", token: nil),
+            NuguChipsButton.NuguChipsButtonType.normal(text: "NUGU 토픽 알려줘", token: nil)
+        ])
         
-        setChipsButton(
-            actionList: [("오늘 날씨 알려줘", nil), ("습도 알려줘", nil)],
-            normalList: [("라디오 목록 알려줘", nil), ("템플릿 열어줘", nil), ("템플릿에서 도움말1", nil), ("주말 날씨 알려줘", nil), ("오존 농도 알려줘", nil), ("멜론 틀어줘", nil), ("NUGU 토픽 알려줘", nil)]
-        )
-        nuguButton.isActivated = false
-        
-        NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { [weak self] success in
-            guard let self = self else { return }
-            guard success else {
-                log.error("Start MicInputProvider failed")
-                DispatchQueue.main.async { [weak self] in
-                    self?.dismissVoiceChrome()
-                }
-                return
-            }
-            
+        do {
+            try voiceChromePresenter.presentVoiceChrome()
             NuguCentralManager.shared.startRecognition(initiator: initiator)
-        }
-    }
-    
-    func showVoiceChrome() {
-        let showAnimation = {
-            UIView.animate(withDuration: 0.3) { [weak self] in
-                guard let self = self else { return }
-                self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
+            NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { success in
+                guard success else {
+                    log.error("Start MicInputProvider failed")
+                    NuguCentralManager.shared.stopRecognition()
+                    return
+                }
+            }
+        } catch {
+            switch error {
+            case VoiceChromePresenterError.networkUnreachable:
+                NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+            default:
+                log.error(error)
             }
         }
-        
-        if view.subviews.contains(nuguVoiceChrome) == false {
-            nuguVoiceChrome = NuguVoiceChrome(frame: CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SampleApp.bottomSafeAreaHeight))
-            view.addSubview(nuguVoiceChrome)
-            showAnimation()
-        } else {
-            if nuguVoiceChrome.frame.origin.y != view.frame.size.height - nuguVoiceChrome.bounds.height {
-                showAnimation()
-            }
-        }
-        addTapGestureRecognizerForDismissVoiceChrome()
-    }
-    
-    func dismissVoiceChrome() {
-        view.gestureRecognizers = nil
-        
-        voiceChromeDismissWorkItem?.cancel()
-        
-        nuguButton.isActivated = true
-        
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            guard let self = self else { return }
-            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: self.nuguVoiceChrome.bounds.height)
-        }, completion: { [weak self] _ in
-            self?.nuguVoiceChrome.removeFromSuperview()
-        })
-    }
-    
-    func setChipsButton(actionList: [(text: String, token: String?)], normalList: [(text: String, token: String?)]) {
-        var chipsButtonList = [NuguChipsButton.NuguChipsButtonType]()
-        let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0.text, token: $0.token) }
-        chipsButtonList.append(contentsOf: actionButtonList)
-        let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0.text, token: $0.token) }
-        chipsButtonList.append(contentsOf: normalButtonList)
-        nuguVoiceChrome.setChipsData(
-            chipsData: chipsButtonList,
-            onChipsSelect: { [weak self] selectedChips in
-                self?.chipsDidSelect(selectedChips: selectedChips)
-            }
-        )
-    }
-    
-    func addTapGestureRecognizerForDismissVoiceChrome() {
-        view.gestureRecognizers?.forEach { view.removeGestureRecognizer($0) }
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForDismissVoiceChrome))
-        view.addGestureRecognizer(tapGestureRecognizer)
     }
 }
 
@@ -598,62 +560,42 @@ extension MainViewController: KeywordDetectorDelegate {
     func keywordDetectorDidError(_ error: Error) {}
 }
 
+// MARK: - VoiceChromePresenterDelegate
+
+extension MainViewController: VoiceChromePresenterDelegate {
+    func voiceChromeWillShow() {
+        nuguButton.isActivated = false
+    }
+    
+    func voiceChromeWillHide() {
+        nuguButton.isActivated = true
+    }
+    
+    func voiceChromeShouldDisableIdleTimer() -> Bool {
+        true
+    }
+    
+    func voiceChromeShouldEnableIdleTimer() -> Bool {
+        true
+    }
+}
+
 // MARK: - DialogStateDelegate
 
 extension MainViewController: DialogStateDelegate {
     func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
         log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
         switch state {
-        case .idle:
-            voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
-                self?.dismissVoiceChrome()
-            })
-            guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
-            DispatchQueue.main.async(execute: voiceChromeDismissWorkItem)
-        case .speaking:
-            voiceChromeDismissWorkItem?.cancel()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                guard isMultiturn == true else {
-                    self.dismissVoiceChrome()
-                    return
-                }
-                // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
-                self.showVoiceChrome()
-                self.nuguVoiceChrome.changeState(state: .speaking)
-                if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
-                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                    self.setChipsButton(actionList: actionList, normalList: normalList)
-                }
-            }
         case .listening:
-            voiceChromeDismissWorkItem?.cancel()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
-                self.showVoiceChrome()
-                if isMultiturn || sessionActivated {
-                    self.nuguVoiceChrome.changeState(state: .listeningPassive)
-                    self.nuguVoiceChrome.setRecognizedText(text: nil)
-                    self.nuguButton.isActivated = false
-                }
-                if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
-                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                    self.setChipsButton(actionList: actionList, normalList: normalList)
-                }
+            DispatchQueue.main.async {
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
-            }
-        case .recognizing:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.changeState(state: .listeningActive)
             }
         case .thinking:
             DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.changeState(state: .processing)
                 self?.nuguButton.pauseDeactivateAnimation()
             }
+        default:
+            break
         }
     }
 }
@@ -686,21 +628,15 @@ extension MainViewController: ASRAgentDelegate {
     
     func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
         switch result {
-        case .complete(let text, _):
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.setRecognizedText(text: text)
+        case .complete:
+            DispatchQueue.main.async {
                 NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
             }
-        case .partial(let text, _):
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.setRecognizedText(text: text)
-            }
         case .error(let error, _):
-            DispatchQueue.main.async { [weak self] in
+            DispatchQueue.main.async {
                 switch error {
                 case ASRError.listenFailed:
                     NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
-                    self?.nuguVoiceChrome.changeState(state: .speakingError)
                 case ASRError.recognizeFailed:
                     NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
                 default:
@@ -709,15 +645,6 @@ extension MainViewController: ASRAgentDelegate {
             }
         default: break
         }
-    }
-
-}
-
-// MARK: - TextAgentDelegate
-
-extension MainViewController: TextAgentDelegate {
-    func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool {
-        return true
     }
 }
 

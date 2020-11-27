@@ -22,6 +22,7 @@ import Foundation
 
 import NuguCore
 import NuguAgents
+import NuguUtils
 
 /// DialogStateAggregator aggregate several components state into one.
 public class DialogStateAggregator {
@@ -86,7 +87,7 @@ public class DialogStateAggregator {
         self.sessionManager = sessionManager
         self.focusManager = focusManager
         
-        interactionControlManager.delegate = self
+        interactionControlManager.add(delegate: self)
     }
 }
 

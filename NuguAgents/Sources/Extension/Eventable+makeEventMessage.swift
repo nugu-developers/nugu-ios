@@ -28,7 +28,7 @@ extension Eventable {
         httpHeaderFields: [String: String]? = nil,
         contextPayload: [ContextInfo]
     ) -> Upstream.Event {
-        let header = Upstream.Event.Header(
+        let header = Upstream.Header(
             namespace: property.name,
             name: name,
             version: property.version,

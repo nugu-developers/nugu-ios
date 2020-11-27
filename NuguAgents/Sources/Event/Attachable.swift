@@ -1,8 +1,8 @@
 //
-//  Publish.swift
-//  NuguCore
+//  Attachable.swift
+//  NuguAgents
 //
-//  Created by childc on 2019/11/18.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/11/16.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,30 +20,7 @@
 
 import Foundation
 
-import RxSwift
-
-@propertyWrapper
-struct Publish<Value> {
-    private var value: Value
-    private let subject = PublishSubject<Value>()
-    
-    init(wrappedValue value: Value) {
-        self.value = value
-    }
-    
-    var wrappedValue: Value {
-        get {
-            return value
-        }
-        
-        set {
-            value = newValue
-            subject.onNext(value)
-        }
-    }
-    
-    /// The property that can be accessed with the `$` syntax and allows access to the `Publish`
-    var projectedValue: Observable<Value> {
-        return subject.asObserver()
-    }
+public protocol Attachable {
+    var name: String { get }
+    var type: String { get }
 }

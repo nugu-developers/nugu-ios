@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 import RxSwift
 
 public class DirectiveSequencer: DirectiveSequenceable {
@@ -89,17 +91,17 @@ public extension DirectiveSequencer {
 private extension DirectiveSequencer {
     func prefetchDirective(_ directive: Downstream.Directive) {
         guard let handler = directiveHandleInfos[directive.header.type] else {
-            notifyDidHandle(directive: directive, result: .failed("No handler registered \(directive.header)"))
+            notifyDidComplete(directive: directive, result: .failed("No handler registered \(directive.header)"))
             return
         }
         guard isCancelledDirective(directive) == false else {
-            notifyDidHandle(directive: directive, result: .canceled)
+            notifyDidComplete(directive: directive, result: .canceled)
             return
         }
         
         // Directives should be prefetch sequentially.
         do {
-            notifyWillHandle(directive: directive, handler: handler)
+            notifyWillPrefetch(directive: directive, handler: handler)
             log.info(directive.header)
             try handler.preFetch?(directive)
             
@@ -107,20 +109,20 @@ private extension DirectiveSequencer {
                 self?.handleDirective(directive)
             }
         } catch {
-            notifyDidHandle(directive: directive, result: .failed("\(error)"))
+            notifyDidComplete(directive: directive, result: .failed("\(error)"))
         }
     }
     
     func handleDirective(_ directive: Downstream.Directive) {
         guard let handler = directiveHandleInfos[directive.header.type] else {
             log.warning("No handler registered \(directive.header)")
-            notifyDidHandle(directive: directive, result: .failed("No handler registered \(directive.header)"))
+            notifyDidComplete(directive: directive, result: .failed("No handler registered \(directive.header)"))
             return
         }
         guard isCancelledDirective(directive) == false else {
             log.debug("Cancel directive \(directive.header)")
             handler.cancelDirective?(directive)
-            notifyDidHandle(directive: directive, result: .canceled)
+            notifyDidComplete(directive: directive, result: .canceled)
             return
         }
         guard handlingDirectives.contains(where: {
@@ -134,6 +136,7 @@ private extension DirectiveSequencer {
         }
         
         log.info(directive.header)
+        notifyWillHandle(directive: directive, handler: handler)
         handlingDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
         handler.directiveHandler(directive) { [weak self ] result in
             self?.directiveSequencerDispatchQueue.async { [weak self] in
@@ -145,7 +148,7 @@ private extension DirectiveSequencer {
                         self.directiveCancelPolicies.remove(at: 0)
                     }
                 }
-                self.notifyDidHandle(directive: directive, result: result)
+                self.notifyDidComplete(directive: directive, result: result)
                 self.handlingDirectives.removeAll { directive.header.messageId == $0.directive.header.messageId }
 
                 // Block 된 Directive 다시시도.
@@ -167,6 +170,13 @@ private extension DirectiveSequencer {
         }
     }
     
+    func notifyWillPrefetch(directive: Downstream.Directive, handler: DirectiveHandleInfo) {
+        log.debug("\(directive.header)")
+        delegates.notify {
+            $0.directiveSequencerWillPrefetch(directive: directive, blockingPolicy: handler.blockingPolicy)
+        }
+    }
+    
     func notifyWillHandle(directive: Downstream.Directive, handler: DirectiveHandleInfo) {
         log.debug("\(directive.header)")
         delegates.notify {
@@ -174,10 +184,10 @@ private extension DirectiveSequencer {
         }
     }
     
-    func notifyDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult) {
+    func notifyDidComplete(directive: Downstream.Directive, result: DirectiveHandleResult) {
         log.debug("\(directive.header): \(result)")
         delegates.notify {
-            $0.directiveSequencerDidHandle(directive: directive, result: result)
+            $0.directiveSequencerDidComplete(directive: directive, result: result)
         }
     }
 }

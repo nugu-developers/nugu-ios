@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 import RxSwift
 
@@ -58,7 +59,7 @@ public final class TTSAgent: TTSAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     
-    private let ttsDeleageteDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate")
+    private let ttsDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate")
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
@@ -100,7 +101,7 @@ public final class TTSAgent: TTSAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != ttsState {
                 let state = ttsState
-                delegates.notify(queue: ttsDeleageteDispatchQueue) { delegate in
+                delegates.notify(queue: ttsDelegateDispatchQueue) { delegate in
                     delegate.ttsAgentDidChange(state: state, header: player.header)
                 }
             }
@@ -318,7 +319,7 @@ extension TTSAgent: MediaPlayerDelegate {
                 self.sendCompactContextEvent(Event(
                     typeInfo: eventTypeInfo,
                     token: player.payload.token,
-                    playServiceId: nil,
+                    playServiceId: player.payload.playServiceId,
                     referrerDialogRequestId: player.header.dialogRequestId
                 ).rx)
             }
@@ -401,7 +402,7 @@ private extension TTSAgent {
                 log.debug(directive.header.messageId)
                 self.currentPlayer = player
                 self.focusManager.requestFocus(channelDelegate: self)
-                self.delegates.notify(queue: self.ttsDeleageteDispatchQueue) { delegate in
+                self.delegates.notify(queue: self.ttsDelegateDispatchQueue) { delegate in
                     delegate.ttsAgentDidReceive(text: player.payload.text, header: player.header)
                 }
                 

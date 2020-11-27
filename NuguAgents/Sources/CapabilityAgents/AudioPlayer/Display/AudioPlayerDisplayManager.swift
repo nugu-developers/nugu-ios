@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 import RxSwift
 
@@ -188,10 +189,6 @@ extension AudioPlayerDisplayManager {
         switch audioPlayerState {
         case .stopped, .finished:
             playSyncManager.resetTimer(property: playSyncProperty)
-        case .paused(let temporary):
-            if temporary == false {
-                playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
-            }
         default:
             break
         }

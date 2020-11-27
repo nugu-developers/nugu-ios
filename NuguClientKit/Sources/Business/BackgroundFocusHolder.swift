@@ -55,13 +55,15 @@ extension BackgroundFocusHolder: FocusChannelDelegate {
         .background
     }
     
-    func focusChannelDidChange(focusState: FocusState) {}
+    func focusChannelDidChange(focusState: FocusState) {
+        log.debug(focusState)
+    }
 }
 
 // MARK: - DirectiveSequencerDelegate
 
 extension BackgroundFocusHolder: DirectiveSequencerDelegate {
-    func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {
+    func directiveSequencerWillPrefetch(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {
         queue.async { [weak self] in
             guard let self = self else { return }
             
@@ -72,7 +74,9 @@ extension BackgroundFocusHolder: DirectiveSequencerDelegate {
         }
     }
     
-    func directiveSequencerDidHandle(directive: Downstream.Directive, result: DirectiveHandleResult) {
+    func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {}
+    
+    func directiveSequencerDidComplete(directive: Downstream.Directive, result: DirectiveHandleResult) {
         queue.async { [weak self] in
             guard let self = self else { return }
             

@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguLoginKit
+
 public struct Configuration: Decodable {
     public var authServerUrl: String
     public var authClientId: String

@@ -36,6 +36,14 @@ extension ASRAgent {
             case listenFailed
         }
     }
+    
+    struct Attachment {
+        let typeInfo: TypeInfo
+        
+        enum TypeInfo {
+            case recognize
+        }
+    }
 }
 
 // MARK: - Eventable
@@ -100,6 +108,23 @@ extension ASRAgent.Event: Eventable {
             return "StopRecognize"
         case .listenFailed:
             return "ListenFailed"
+        }
+    }
+}
+
+
+// MARK: - Attachable
+
+extension ASRAgent.Attachment: Attachable {
+    var name: String {
+        switch typeInfo {
+        case .recognize: return "Recognize"
+        }
+    }
+    
+    var type: String {
+        switch typeInfo {
+        case .recognize: return "audio/speex"
         }
     }
 }

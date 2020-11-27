@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 import RxSwift
 
@@ -59,6 +60,8 @@ final class AudioPlayer {
     private var intervalReporter: Disposable?
     private var lastReportedOffset: Int = 0
     
+    private var lastDataAppended = false
+    
     init(directive: Downstream.Directive) throws {
         payload = try JSONDecoder().decode(AudioPlayerPlayPayload.self, from: directive.payload)
         
@@ -89,11 +92,15 @@ final class AudioPlayer {
               header.dialogRequestId == attachment.header.dialogRequestId else {
             return false
         }
+        guard lastDataAppended == false else {
+            return true
+        }
         
         do {
             try dataSource.appendData(attachment.content)
             
             if attachment.isEnd {
+                lastDataAppended = true
                 try dataSource.lastDataAppended()
             }
         } catch {
@@ -146,6 +153,7 @@ final class AudioPlayer {
         
         lastReportedOffset = player.lastReportedOffset
         player.stopProgressReport()
+        lastDataAppended = player.lastDataAppended
         
         seek(to: NuguTimeInterval(seconds: payload.audioItem.stream.offset))
         
@@ -188,7 +196,7 @@ extension AudioPlayer: MediaPlayable {
         internalPlayer?.resume()
     }
     
-    func seek(to offset: TimeIntervallic, completion: ((Result<Void, Error>) -> Void)?) {
+    func seek(to offset: TimeIntervallic, completion: ((EndedUp<Error>) -> Void)?) {
         internalPlayer?.seek(to: offset, completion: completion)
     }
 }

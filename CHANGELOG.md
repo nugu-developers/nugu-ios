@@ -3,6 +3,69 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.27.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.27.0)
+Released on 2020-11-27
+### Sample Application
+#### Added
+- Add `VoiceChromePresenter` (#629)
+> Application only needs to apply the changes of  [`MainViewController`](https://github.com/nugu-developers/nugu-ios/pull/629/files#diff-7468829fbd38fb482c72def9b95c04abe8d927db4e1b5ffd789187e8f36f13f3)    
+
+### SDK
+#### Added
+- Add `VoiceChromePresenter` (#629)
+
+#### Fixed
+- Request focus synchronously when handling `ASR.ExpectSpeech`. (#643)
+
+#### Update
+- `TextAgent` 1.5 (upgrade capability-agent) (#634)
+
+## [0.26.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.3)
+Released on 2020-11-25
+### SDK
+#### Fixed
+- Add NuguUtils scheme (#641)
+
+## [0.26.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.2)
+Released on 2020-11-24
+### Sample Application
+#### Added
+- Separate NuguUtils to share and dynamic access (#627)
+> Drag and drop `NuguUtils` framework to "Frameworks, Libraries, and Embedded Content" section in application targets’ General settings tab.(For more information, See the  [Carthage](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application))
+
+### SDK
+#### Update
+- Pass only 1 `sessionId` for `playServiceId` in the context of `SessionAgent`. (#633)
+- Make sure that the `StreamDataDelegate` functions are called first to satisfy the statistical requirements. (#636)
+
+#### Fixed
+- Fixes a bug when canceling and resuming timers for layer. (#630)
+- Ignore user interaction when playback paused (#630)
+- Skip attachment when last data appended. (#635)
+
+#### Added
+- Separate NuguUtils to share and dynamic access (#627)
+
+## [0.26.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.1)
+Released on 2020-11-17
+### SDK
+#### Fixed
+- Fixes a build error. (#623)
+
+## [0.26.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.0)
+Released on 2020-11-17
+### Sample Application
+#### Update
+- Modify the structure of `Upstream` to be similar to Downstream. (#621)
+
+### SDK
+#### Update
+- Modify the structure of `Upstream` to be similar to Downstream. (#621)
+- Add `directiveSequencerWillPrefetch` function to `DirectiveSequencerDelegate` (#620)
+
+#### Fixed
+- Fixes a bug where `playServiceId` is missing when sending `TTS` event. (#619)
+
 ## [0.25.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.25.0)
 Released on 2020-11-12
 ### Sample Application
@@ -16,7 +79,7 @@ Released on 2020-11-12
 ## [0.24.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.1)
 Released on 2020-11-10
 ### SDK
-#### Fixex
+#### Fixed
 - Fix parsing error in `MediaPlayerAgent` (#606)
 
 ## [0.24.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.24.0)
@@ -26,7 +89,7 @@ Released on 2020-11-10
 - Implements a `FocusManager` feature to prevent `AudioPlayerAgent` playing temporarily.  (#604)
 
 ### SDK
-#### Fixex
+#### Fixed
 - Fix parsing error in `MediaPlayerAgent` (#603)
 
 #### Update
@@ -36,7 +99,7 @@ Released on 2020-11-10
 ## [0.23.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.1)
 Released on 2020-11-09
 ### SDK
-#### Fixex
+#### Fixed
 - Modify the delegate function to be called asynchronously to avoid deadlock. (#600)
 
 ## [0.23.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.23.0)
@@ -49,7 +112,7 @@ Released on 2020-11-06
 - Pass `Downstream.Header` instead of `DialogRequestId` to function parameter of agent delegate. (#593)
 
 ### SDK
-#### Fixex
+#### Fixed
 - Make `KeywordSource` not possible to be set simultaniouly. (#581)
 - Assign and release focus synchronously. (#580)
 - Fixes a bug where prefetch `AudioPlayer.Play`. (#577)
@@ -71,7 +134,7 @@ Released on 2020-10-29
 - Set audiosession as playback when carplay is connected and play media (#563)
 
 ### SDK
-#### Fixex
+#### Fixed
 - Separate image resource bundle of  when using cocoapods (#561)
 - Add `TTSPlayer` and `AudioPlayer` to fix timing issues. (#560) (#571)
 

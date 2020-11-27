@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 public final class ChipsAgent: ChipsAgentProtocol {
     // CapabilityAgentable

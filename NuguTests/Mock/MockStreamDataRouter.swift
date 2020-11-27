@@ -55,7 +55,7 @@ class MockStreamDataRouter: StreamDataRoutable {
         
     }
     
-    func sendStream(_ attachment: Upstream.Attachment, dialogRequestId: String, completion: ((StreamDataState) -> Void)?) {
+    func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)?) {
         
     }
     
