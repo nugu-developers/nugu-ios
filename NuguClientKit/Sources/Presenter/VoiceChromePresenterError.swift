@@ -1,8 +1,8 @@
 //
-//  MockInteractionControlManager.swift
-//  NuguTests
+//  VoiceChromePresenterError.swift
+//  NuguClientKit
 //
-//  Created by MinChul Lee on 2020/08/07.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/11/25.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,18 +20,8 @@
 
 import Foundation
 
-import NuguAgents
-
-class MockInteractionControlManager: InteractionControlManageable {
-    func add(delegate: InteractionControlDelegate) {
-    }
-    
-    func remove(delegate: InteractionControlDelegate) {
-    }
-    
-    func start(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {
-    }
-    
-    func finish(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {
-    }
+public enum VoiceChromePresenterError: Error {
+    case superViewNotExsit
+    case alreadyShown
+    case networkUnreachable
 }
