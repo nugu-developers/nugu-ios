@@ -154,7 +154,6 @@ private extension VoiceChromePresenter {
     }
 }
 
-
 // MARK: - DialogStateDelegate
 
 extension VoiceChromePresenter: DialogStateDelegate {
