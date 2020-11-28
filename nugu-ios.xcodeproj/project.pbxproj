@@ -2456,22 +2456,6 @@
 			path = DataSource;
 			sourceTree = "<group>";
 		};
-		75032BBC246B74C20077B824 /* AudioPlayer */ = {
-			isa = PBXGroup;
-			children = (
-				75962AF22475ED930003B189 /* AudioPlayer1View.swift */,
-				75962AF42475EDB20003B189 /* AudioPlayer1View.xib */,
-				75962AF62475EDC30003B189 /* AudioPlayer2View.swift */,
-				75962AF82475EDD10003B189 /* AudioPlayer2View.xib */,
-				75962AFA24762ECB0003B189 /* FullLyricsView.swift */,
-				75962AFC24762EDF0003B189 /* FullLyricsView.xib */,
-				75962B0824763E010003B189 /* AudioPlayerBarView.swift */,
-				75962B0A24763E120003B189 /* AudioPlayerBarView.xib */,
-				75A46F872572A09E004BB472 /* AudioPlayerBarViewDelegate.swift */,
-			);
-			path = AudioPlayer;
-			sourceTree = "<group>";
-		};
 		7522202B244F0DE300192D88 /* animations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2535,6 +2519,11 @@
 				75032BB3246A32CD0077B824 /* DisplayIdleBar.xib */,
 				752CE55A246E849900E68733 /* DisplayTitleView.swift */,
 				752CE55E246E84EC00E68733 /* DisplayTitleView.xib */,
+				75962AFA24762ECB0003B189 /* FullLyricsView.swift */,
+				75962AFC24762EDF0003B189 /* FullLyricsView.xib */,
+				75962B0824763E010003B189 /* AudioPlayerBarView.swift */,
+				75962B0A24763E120003B189 /* AudioPlayerBarView.xib */,
+				75A46F872572A09E004BB472 /* AudioPlayerBarViewDelegate.swift */,
 			);
 			path = ComponentViews;
 			sourceTree = "<group>";
@@ -2553,8 +2542,11 @@
 			children = (
 				7500490F24766B1500B73DD8 /* AudioDisplayView.swift */,
 				75A46F5B2572962E004BB472 /* AudioDisplayViewDelegate.swift */,
+				75962AF22475ED930003B189 /* AudioPlayer1View.swift */,
+				75962AF42475EDB20003B189 /* AudioPlayer1View.xib */,
+				75962AF62475EDC30003B189 /* AudioPlayer2View.swift */,
+				75962AF82475EDD10003B189 /* AudioPlayer2View.xib */,
 				752CE559246E845E00E68733 /* ComponentViews */,
-				75032BBC246B74C20077B824 /* AudioPlayer */,
 				1FFFF4B4237672F100C9A177 /* Models */,
 			);
 			path = AudioDisplayView;

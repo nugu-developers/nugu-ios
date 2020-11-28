@@ -26,18 +26,4 @@ extension UILabel {
         textColor = UIColor.textColor(rgbHexString: displayText?.color)
         isHidden = displayText == nil
     }
-    
-    func setAttributedDisplayText(displayText: DisplayCommonTemplate.Common.Text?) {
-        if let displayTextData = displayText?.text?.data(using: .utf8),
-            let displayAttributedText = try? NSAttributedString(
-                data: displayTextData,
-                options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
-                documentAttributes: nil
-            ) {
-            attributedText = displayAttributedText
-            textAlignment = .center
-        } else {
-            setDisplayText(displayText: displayText)
-        }
-    }
 }

@@ -50,6 +50,10 @@ extension Array {
     mutating func merge(_ forArray: Array) {
         forArray.enumerated().forEach { index, targetElement in
             var element = targetElement
+            guard self.count > index else {
+                self.append(element)
+                return
+            }
             if var originalElement = self[index] as? Array, let targetElement = targetElement as? Array {
                 originalElement.merge(targetElement)
                 if let mergedElement = originalElement as? Element {
@@ -71,4 +75,3 @@ extension Array {
         return resultArray
     }
 }
-
