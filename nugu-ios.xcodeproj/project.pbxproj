@@ -352,7 +352,6 @@
 		75047D9B24F4DE8F007BBF22 /* listening_end.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9824F4DE8F007BBF22 /* listening_end.wav */; };
 		75047D9C24F4DE8F007BBF22 /* listening_start.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9924F4DE8F007BBF22 /* listening_start.wav */; };
 		75047D9F24F4F05D007BBF22 /* responsefail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9724F4DE8E007BBF22 /* responsefail.wav */; };
-		75047DCB24F78F41007BBF22 /* Container+Merge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75047DCA24F78F41007BBF22 /* Container+Merge.swift */; };
 		75082BC4243AC5B20027D76D /* MediaCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC3243AC5B20027D76D /* MediaCacheManager.swift */; };
 		75082BC6243AC85E0027D76D /* FileManager+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC5243AC85E0027D76D /* FileManager+Convenience.swift */; };
 		7522203C244F627E00192D88 /* NuguChipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7522203B244F627E00192D88 /* NuguChipsView.swift */; };
@@ -1005,7 +1004,6 @@
 		75047D9724F4DE8E007BBF22 /* responsefail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = responsefail.wav; sourceTree = "<group>"; };
 		75047D9824F4DE8F007BBF22 /* listening_end.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = listening_end.wav; sourceTree = "<group>"; };
 		75047D9924F4DE8F007BBF22 /* listening_start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = listening_start.wav; sourceTree = "<group>"; };
-		75047DCA24F78F41007BBF22 /* Container+Merge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+Merge.swift"; sourceTree = "<group>"; };
 		75082BC3243AC5B20027D76D /* MediaCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaCacheManager.swift; sourceTree = "<group>"; };
 		75082BC5243AC85E0027D76D /* FileManager+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Convenience.swift"; sourceTree = "<group>"; };
 		75082BC7243ACA280027D76D /* CryptoUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtil.swift; sourceTree = "<group>"; };
@@ -2145,7 +2143,6 @@
 		1FFFF4C0237672F100C9A177 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				75047DCA24F78F41007BBF22 /* Container+Merge.swift */,
 				1FFFF4C1237672F100C9A177 /* UIColor+Convenience.swift */,
 				1FFFF4C2237672F100C9A177 /* Int+Convenience.swift */,
 				752CE557246E731D00E68733 /* UILabel+Convenience.swift */,
@@ -3506,7 +3503,6 @@
 				75D069C4247F76CC000B5D1F /* SettingTableViewCell.swift in Sources */,
 				1FFFF4F6237672F100C9A177 /* UIColor+Convenience.swift in Sources */,
 				1FFFF4F7237672F100C9A177 /* Int+Convenience.swift in Sources */,
-				75047DCB24F78F41007BBF22 /* Container+Merge.swift in Sources */,
 				7500491024766B1500B73DD8 /* AudioDisplayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

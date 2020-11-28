@@ -324,7 +324,7 @@ private extension MainViewController {
     func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         displayView?.removeFromSuperview()
         let displayView = NuguDisplayWebView(frame: view.frame)
-        displayView.load(displayPayload: displayTemplate.payload, displayType: displayTemplate.type, deviceTypeCode: "APP_NUGU_AGENT")
+        displayView.load(displayPayload: displayTemplate.payload, displayType: displayTemplate.type, deviceTypeCode: SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_"))
         displayView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
