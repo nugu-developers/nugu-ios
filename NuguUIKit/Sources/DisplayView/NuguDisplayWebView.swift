@@ -60,6 +60,7 @@ final public class NuguDisplayWebView: UIView {
     public var onNuguButtonClick: (() -> Void)?
     public var onChipsSelect: ((_ selectedChips: String) -> Void)?
     public var onCloseButtonClick: (() -> Void)?
+    public var onTapForStopRecognition: (() -> Void)?
     
     // Override
     public override init(frame: CGRect) {
@@ -121,9 +122,24 @@ private extension NuguDisplayWebView {
     func makeWebView(_ configuration: WKWebViewConfiguration) {
         let webViewFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - bottomSafeAreaHeight)
         let webView = WKWebView(frame: webViewFrame, configuration: configuration)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
+        tapGestureRecognizer.delegate = self
+        webView.addGestureRecognizer(tapGestureRecognizer)
         webView.allowsLinkPreview = false
         subviews.first?.insertSubview(webView, at: 0)
         displayWebView = webView
+    }
+    
+    @objc func didTapForStopRecognition() {
+        onTapForStopRecognition?()
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+
+extension NuguDisplayWebView: UIGestureRecognizerDelegate {
+     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
@@ -218,6 +234,8 @@ private extension NuguDisplayWebView {
         onCloseButtonClick?()
     }
 }
+
+// MARK: - WKScriptMessageHandler
 
 extension NuguDisplayWebView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {

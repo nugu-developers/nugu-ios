@@ -329,14 +329,16 @@ private extension MainViewController {
             guard let self = self else { return }
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
             self.dismissDisplayView()
-        }
-        
+        }        
         // TODO: - EventType 꼭 확인할것 (웹에선 무시하는건지?)
         displayView.onItemSelect = { (token, postback) in
             NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
         }
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
+        }
+        displayView.onTapForStopRecognition = { [weak self] in
+            self?.didTapForStopRecognition()
         }
         displayView.onChipsSelect = { (selectedChips) in
             NuguCentralManager.shared.requestTextInput(text: selectedChips, requestType: .dialog)
