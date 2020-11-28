@@ -34,8 +34,8 @@ final class MainViewController: UIViewController {
     @IBOutlet private weak var settingButton: UIButton!
     @IBOutlet private weak var watermarkLabel: UILabel!
     @IBOutlet private weak var textInputTextField: UITextField!
-    
-    private weak var displayView: DisplayView?
+        
+    private weak var displayView: NuguDisplayWebView?
     private weak var displayAudioPlayerView: AudioDisplayView?
     
     private lazy var nuguVoiceChrome: NuguVoiceChrome = {
@@ -321,95 +321,25 @@ extension MainViewController: UIGestureRecognizerDelegate {
 // MARK: - Private (DisplayView)
 
 private extension MainViewController {
-    func makeDisplayView(displayTemplate: DisplayTemplate) -> DisplayView? {
-        let displayView: DisplayView?
-
-        switch displayTemplate.type {
-        case "Display.FullText1":
-            displayView = FullText1View(frame: view.frame)
-        case "Display.FullText2":
-            displayView = FullText2View(frame: view.frame)
-        case "Display.FullText3":
-            displayView = FullText3View(frame: view.frame)
-        case "Display.ImageText1":
-            displayView = ImageText1View(frame: view.frame)
-        case "Display.ImageText2":
-            displayView = ImageText2View(frame: view.frame)
-        case "Display.ImageText3":
-            displayView = ImageText3View(frame: view.frame)
-        case "Display.ImageText4":
-            displayView = ImageText4View(frame: view.frame)
-        case "Display.FullImage":
-            displayView = FullImageView(frame: view.frame)
-        case "Display.Score1":
-            displayView = Score1View(frame: view.frame)
-        case "Display.Score2":
-            displayView = Score2View(frame: view.frame)
-        case "Display.TextList1":
-            displayView = TextList1View(frame: view.frame)
-        case "Display.TextList2":
-            displayView = TextList2View(frame: view.frame)
-        case "Display.TextList3":
-            displayView = TextList3View(frame: view.frame)
-        case "Display.TextList4":
-            displayView = TextList4View(frame: view.frame)
-        case "Display.ImageList1":
-            displayView = ImageList1View(frame: view.frame)
-        case "Display.ImageList2":
-            displayView = ImageList2View(frame: view.frame)
-        case "Display.ImageList3":
-            displayView = ImageList3View(frame: view.frame)
-        case "Display.Weather1":
-            displayView = Weather1View(frame: view.frame)
-        case "Display.Weather2":
-            displayView = Weather2View(frame: view.frame)
-        case "Display.Weather3":
-            displayView = Weather3View(frame: view.frame)
-        case "Display.Weather4":
-            displayView = Weather4View(frame: view.frame)
-        case "Display.Weather5":
-            displayView = Weather5View(frame: view.frame)
-        default:
-            // Draw your own DisplayView with DisplayTemplate.payload and set as self.displayView
-            displayView = nil
-        }
-        return displayView
-    }
-    
     func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         displayView?.removeFromSuperview()
-        
-        guard let displayView = makeDisplayView(displayTemplate: displayTemplate) else {
-            completion(nil)
-            return
-        }
-        
-        displayView.displayPayload = displayTemplate.payload
+        let displayView = NuguDisplayWebView(frame: view.frame)
+        displayView.load(displayPayload: displayTemplate.payload, displayType: displayTemplate.type, deviceTypeCode: "APP_NUGU_AGENT")
         displayView.onCloseButtonClick = { [weak self] in
             guard let self = self else { return }
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
             self.dismissDisplayView()
         }
-        displayView.onItemSelect = { eventType in
-            switch eventType {
-            case .elementSelected(let token, let postback):
-                guard let token = token else { return }
-                NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
-            case .textInput(let token, let textInput):
-                guard let textInput = textInput  else { return }
-                if let playServiceId = textInput.playServiceId {
-                    NuguCentralManager.shared.requestTextInput(text: textInput.text, token: token, requestType: .specific(playServiceId: playServiceId))
-                } else {
-                    NuguCentralManager.shared.requestTextInput(text: textInput.text, token: token, requestType: .normal)
-                }
-            }
-        }
         
+        // TODO: - EventType 꼭 확인할것 (웹에선 무시하는건지?)
+        displayView.onItemSelect = { (token, postback) in
+            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
+        }
         displayView.onUserInteraction = {
             NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
         }
-        displayView.onChipsSelect = { [weak self] (selectedChips) in
-            self?.chipsDidSelect(selectedChips: selectedChips)
+        displayView.onChipsSelect = { (selectedChips) in
+            NuguCentralManager.shared.requestTextInput(text: selectedChips, requestType: .dialog)
         }
         displayView.onNuguButtonClick = { [weak self] in
             self?.presentVoiceChrome(initiator: .user)
@@ -647,43 +577,18 @@ extension MainViewController: ASRAgentDelegate {
 
 extension MainViewController: DisplayAgentDelegate {
     func displayAgentRequestContext(templateId: String, completion: @escaping (DisplayContext?) -> Void) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self,
-                let displayControllableView = self.displayView as? DisplayControllable else {
-                    return completion(nil)
-            }
-
-            let focusedItemToken: String? = {
-                guard self.displayView?.supportVisibleTokenList == true else { return nil }
-                return displayControllableView.focusedItemToken()
-            }()
-            let visibleTokenList = { () -> [String]? in
-                guard self.displayView?.supportVisibleTokenList == true else { return nil }
-                return displayControllableView.visibleTokenList()
-            }()
-            
-            completion(DisplayContext(focusedItemToken: focusedItemToken, visibleTokenList: visibleTokenList))
-        }
+        displayView?.requestContext(completion: { (displayContext) in
+            completion(displayContext)
+        })
     }
     
     func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
-        DispatchQueue.main.async { [weak self] in
-            guard let displayControllableView = self?.displayView as? DisplayControllable else {
-                completion(false)
-                return
-            }
-            
-            completion(displayControllableView.focus(direction: direction))
-        }
+        completion(false)
     }
     
     func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
-            guard let displayControllableView = self?.displayView as? DisplayControllable else {
-                completion(false)
-                return
-            }
-            completion(displayControllableView.scroll(direction: direction))
+            self?.displayView?.scroll(direction: direction, completion: completion)
         }
     }
     
