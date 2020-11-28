@@ -23,6 +23,7 @@ import MediaPlayer
 
 import NuguAgents
 import NuguClientKit
+import NuguUIKit
 
 final class NuguDisplayPlayerController {
     

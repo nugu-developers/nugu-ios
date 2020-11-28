@@ -376,53 +376,21 @@ private extension MainViewController {
     }
 }
 
-// MARK: - Private (DisplayAudioPlayerView)
+// MARK: - Private (AudioDisplayView)
 
-private extension MainViewController {
-    func makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> AudioDisplayView? {
-        let displayAudioPlayerView: AudioDisplayView?
-        
-        switch audioPlayerDisplayTemplate.type {
-        case "AudioPlayer.Template1":
-            displayAudioPlayerView = AudioPlayer1View(frame: view.frame)
-        case "AudioPlayer.Template2":
-            displayAudioPlayerView = AudioPlayer2View(frame: view.frame)
-        default:
-            // Draw your own AudioPlayerView with AudioPlayerDisplayTemplate.payload and set as self.displayAudioPlayerView
-            displayAudioPlayerView = nil
-        }
-        
-        return displayAudioPlayerView
-    }
-    
+private extension MainViewController {    
     func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         let wasPlayerBarMode = displayAudioPlayerView?.isBarMode == true
         displayAudioPlayerView?.removeFromSuperview()
         
-        guard let audioPlayerView = makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: audioPlayerDisplayTemplate) else {
+        guard let audioPlayerView = AudioDisplayView.makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: audioPlayerDisplayTemplate, frame: view.frame) else {
             completion(nil)
             return
         }
-
+        audioPlayerView.delegate = self
+        
         if wasPlayerBarMode == true {
             audioPlayerView.setBarMode()
-        }
-        
-        audioPlayerView.isSeekable = audioPlayerDisplayTemplate.isSeekable
-        audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
-        audioPlayerView.onCloseButtonClick = { [weak self] in
-            guard let self = self else { return }
-            self.dismissDisplayAudioPlayerView()
-            NuguCentralManager.shared.displayPlayerController.remove()
-        }
-        audioPlayerView.onUserInteraction = {
-            NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
-        }
-        audioPlayerView.onChipsSelect = { [weak self] selectedChips in
-            self?.chipsDidSelect(selectedChips: selectedChips)
-        }
-        audioPlayerView.onNuguButtonClick = { [weak self] in
-            self?.presentVoiceChrome(initiator: .user)
         }
         
         audioPlayerView.alpha = 0
@@ -681,5 +649,66 @@ extension MainViewController: AudioPlayerAgentDelegate {
                 let displayAudioPlayerView = self.displayAudioPlayerView else { return }
             displayAudioPlayerView.audioPlayerState = state
         }
+    }
+}
+
+// MARK: - AudioDisplayViewDelegate
+
+extension MainViewController: AudioDisplayViewDelegate {
+    func onCloseButtonClick() {
+        dismissDisplayAudioPlayerView()
+        NuguCentralManager.shared.displayPlayerController.remove()
+    }
+    
+    func onUserInteraction() {
+        NuguCentralManager.shared.client.audioPlayerAgent.notifyUserInteraction()
+    }
+    
+    func onNuguButtonClick() {
+        presentVoiceChrome(initiator: .user)
+    }
+    
+    func onChipsSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
+        chipsDidSelect(selectedChips: selectedChips)
+    }
+    
+    func onPreviousButtonClick() {
+        NuguCentralManager.shared.client.audioPlayerAgent.prev()
+    }
+    
+    func onPlayButtonClick() {
+        NuguCentralManager.shared.client.audioPlayerAgent.play()
+    }
+    
+    func onPauseButtonClick() {
+        NuguCentralManager.shared.client.audioPlayerAgent.pause()
+    }
+    
+    func onNextButtonClick() {
+        NuguCentralManager.shared.client.audioPlayerAgent.next()
+    }
+    
+    func onFavoriteButtonClick(current: Bool) {
+        NuguCentralManager.shared.client.audioPlayerAgent.requestFavoriteCommand(current: current)
+    }
+    
+    func onRepeatButtonDidClick(currentMode: AudioPlayerDisplayRepeat) {
+        NuguCentralManager.shared.client.audioPlayerAgent.requestRepeatCommand(currentMode: currentMode)
+    }
+    
+    func onShuffleButtonDidClick(current: Bool) {
+        NuguCentralManager.shared.client.audioPlayerAgent.requestShuffleCommand(current: current)
+    }
+    
+    func requestAudioPlayerIsPlaying() -> Bool? {
+        return NuguCentralManager.shared.client.audioPlayerAgent.isPlaying
+    }
+    
+    func requestOffset() -> Int? {
+        return NuguCentralManager.shared.client.audioPlayerAgent.offset
+    }
+    
+    func requestDuration() -> Int? {
+        return NuguCentralManager.shared.client.audioPlayerAgent.duration
     }
 }
