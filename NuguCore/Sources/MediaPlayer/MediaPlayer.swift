@@ -126,7 +126,10 @@ extension MediaPlayer {
             log.warning("player is nil")
             return NuguTimeInterval(seconds: 0)
         }
-        
+        guard asset.statusOfValue(forKey: "duration", error: nil) == .loaded else {
+            asset.loadValuesAsynchronously(forKeys: ["duration"], completionHandler: nil)
+            return NuguTimeInterval(seconds: 0)
+        }
         return asset.duration
     }
     
