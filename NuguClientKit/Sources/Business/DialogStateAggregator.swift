@@ -87,7 +87,7 @@ public class DialogStateAggregator {
         self.sessionManager = sessionManager
         self.focusManager = focusManager
         
-        interactionControlManager.delegate = self
+        interactionControlManager.add(delegate: self)
     }
 }
 

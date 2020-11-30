@@ -1,9 +1,9 @@
 //
-//  ASRConst.swift
-//  NuguAgents
+//  VoiceChromePresenterError.swift
+//  NuguClientKit
 //
-//  Created by MinChul Lee on 2019/06/18.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/11/25.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 import Foundation
 
-enum ASRConst {
-    static let focusTimeout: DispatchTimeInterval = .milliseconds(1000)
+public enum VoiceChromePresenterError: Error {
+    case superViewNotExsit
+    case alreadyShown
+    case networkUnreachable
 }
