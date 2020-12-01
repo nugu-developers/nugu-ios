@@ -23,10 +23,6 @@ import UIKit
 import NuguAgents
 
 final class AudioPlayer2View: AudioDisplayView {
-    // Private Properties
-    private var audioProgressTimer: DispatchSourceTimer?
-    private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayer2View.audioProgress")
-    
     // Intialize
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -106,44 +102,5 @@ final class AudioPlayer2View: AudioDisplayView {
                 bodyText: template.content.subtitle
             )
         }
-    }
-}
-
-// MARK: - Progress Setting
-
-private extension AudioPlayer2View {
-    func setAudioPlayerProgress() {
-        DispatchQueue.main.async { [weak self] in
-            guard let elapsedTimeAsInt = self?.delegate?.requestOffset(),
-                  let durationAsInt = self?.delegate?.requestDuration() else {
-                    self?.elapsedTimeLabel.text = nil
-                    self?.durationTimeLabel.text = nil
-                    self?.progressView.isHidden = true
-                    return
-            }
-            let elapsedTime = Float(elapsedTimeAsInt)
-            let duration = Float(durationAsInt)
-            self?.elapsedTimeLabel.text = Int(elapsedTime).secondTimeString
-            self?.durationTimeLabel.text = Int(duration).secondTimeString
-            UIView.animate(withDuration: 1.0, animations: { [weak self] in
-                let progress = duration == 0 ? 0 : elapsedTime/duration
-                self?.progressView.setProgress(progress, animated: true)
-            })
-        }
-    }
-    
-    func startProgressTimer() {
-        audioProgressTimer?.cancel()
-        audioProgressTimer = DispatchSource.makeTimerSource(queue: audioProgressTimerQueue)
-        audioProgressTimer?.schedule(deadline: .now(), repeating: 1.0)
-        audioProgressTimer?.setEventHandler(handler: { [weak self] in
-            self?.setAudioPlayerProgress()
-        })
-        audioProgressTimer?.resume()
-    }
-    
-    func stopProgressTimer() {
-        audioProgressTimer?.cancel()
-        audioProgressTimer = nil
     }
 }

@@ -47,12 +47,13 @@ final class FullLyricsView: UIView {
         addGestureRecognizer(tapRecognizer)
     }
     
-    func updateLyricsFocus(lyricsIndex: Int) {
-        guard let currentLyricsLabel = stackView.arrangedSubviews[lyricsIndex+1] as? UILabel
-            else { return }
-        if let prevLyricsLabel = stackView.arrangedSubviews[lyricsIndex] as? UILabel {
-            prevLyricsLabel.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
+    func updateLyricsFocus(lyricsIndex: Int?) {
+        stackView.arrangedSubviews.forEach { (label) in
+            guard let label = label as? UILabel else { return }
+            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
         }
+        guard let lyricsIndex = lyricsIndex,
+            let currentLyricsLabel = stackView.arrangedSubviews[lyricsIndex + 1] as? UILabel else { return }
         currentLyricsLabel.textColor = UIColor(red: 0, green: 157.0/255.0, blue: 1, alpha: 1.0)
     }
     

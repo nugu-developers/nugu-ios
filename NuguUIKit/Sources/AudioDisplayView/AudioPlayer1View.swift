@@ -33,13 +33,9 @@ final class AudioPlayer1View: AudioDisplayView {
     @IBOutlet private weak var badgeImageView: UIImageView!
     @IBOutlet private weak var badgeLabel: UILabel!
     
-    private var audioProgressTimer: DispatchSourceTimer?
-    private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayer1View.audioProgress")
-    
     private var lyricsTimer: DispatchSourceTimer?
     private let lyricsTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayer1View.lyrics")
     private var lyricsData: AudioPlayerLyricsTemplate?
-    private var lyricsIndex = 0
     
     private var fullLyricsView: FullLyricsView?
     
@@ -176,6 +172,25 @@ final class AudioPlayer1View: AudioDisplayView {
         fullLyricsView?.removeFromSuperview()
         return true
     }
+    
+    override func startProgressTimer() {
+        super.startProgressTimer()
+        
+        lyricsTimer?.cancel()
+        lyricsTimer = DispatchSource.makeTimerSource(queue: lyricsTimerQueue)
+        lyricsTimer?.schedule(deadline: .now(), repeating: 0.1)
+        lyricsTimer?.setEventHandler(handler: { [weak self] in
+            self?.updateLyrics()
+        })
+        lyricsTimer?.resume()
+    }
+    
+    override func stopProgressTimer() {
+        super.stopProgressTimer()
+        
+        lyricsTimer?.cancel()
+        lyricsTimer = nil
+    }
 }
 
 // MARK: - Private (Selector)
@@ -227,84 +242,38 @@ private extension AudioPlayer1View {
                 return
             }
             
-            if self.lyricsIndex >= lyricsInfoList.count {
-                self.lyricsIndex = 0
+            let currentOffSetInMilliseconds = offSet * 1000
+            
+            guard let firstStartTime = lyricsInfoList.first?.time else { return }
+            if currentOffSetInMilliseconds < firstStartTime {
+                self.currentLyricsLabel.textColor = UIColor(red: 136/255.0, green: 136/255.0, blue: 136/255.0, alpha: 1.0)
+                self.currentLyricsLabel.text = lyricsInfoList.first?.text
+                self.nextLyricsLabel.text = lyricsInfoList[1].text
+                self.fullLyricsView?.updateLyricsFocus(lyricsIndex: nil)
                 return
             }
             
-            guard let currentIndexTime = lyricsInfoList[self.lyricsIndex].time,
-                let nextIndexTime = self.lyricsIndex+1 >= lyricsInfoList.count ? nil : lyricsInfoList[self.lyricsIndex+1].time else { return }
-            
-            let offSetInMilliseconds = offSet * 1000
-            let currentLyrics = lyricsInfoList[self.lyricsIndex].text
-            let nextLyrics = self.lyricsIndex+1 >= lyricsInfoList.count ? "" : lyricsInfoList[self.lyricsIndex+1].text
-            
-            if currentIndexTime > offSetInMilliseconds {
-                self.currentLyricsLabel.textColor = UIColor(red: 136/255.0, green: 136/255.0, blue: 136/255.0, alpha: 1.0)
-                self.currentLyricsLabel.text = currentLyrics
-                self.nextLyricsLabel.text = nextLyrics
-            } else if self.lyricsIndex >= lyricsInfoList.count - 1 {
-                self.currentLyricsLabel.text = currentLyrics
-                self.nextLyricsLabel.text = nextLyrics
-            } else if currentIndexTime <= offSetInMilliseconds && nextIndexTime > offSetInMilliseconds {
+            guard let lastStartTime = lyricsInfoList.last?.time else { return }
+            if currentOffSetInMilliseconds >= lastStartTime {
                 self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
-                self.currentLyricsLabel.text = currentLyrics
-                self.nextLyricsLabel.text = nextLyrics
-                self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
-            } else {
-                self.lyricsIndex += 1
-                self.updateLyrics()
+                self.currentLyricsLabel.text = lyricsInfoList.last?.text
+                self.nextLyricsLabel.text = ""
+                self.fullLyricsView?.updateLyricsFocus(lyricsIndex: lyricsInfoList.count - 1)
+                return
             }
+            
+            guard let nextLyricsIndex = lyricsInfoList.firstIndex(where: { (lyricsInfo) -> Bool in
+                guard let lyricsTime = lyricsInfo.time else { return false }
+                return currentOffSetInMilliseconds < lyricsTime
+            }) else { return }
+            
+            let currentLyricsIndex = nextLyricsIndex - 1
+            self.fullLyricsView?.updateLyricsFocus(lyricsIndex: currentLyricsIndex)  
+            self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
+            self.currentLyricsLabel.text = lyricsInfoList[currentLyricsIndex].text
+            self.nextLyricsLabel.text = lyricsInfoList[nextLyricsIndex].text
+            
+            self.fullLyricsView?.updateLyricsFocus(lyricsIndex: currentLyricsIndex)
         }
-    }
-}
-    
-// MARK: - Progress Setting
-
-private extension AudioPlayer1View {
-    func setAudioPlayerProgress() {
-        DispatchQueue.main.async { [weak self] in
-            guard let elapsedTimeAsInt = self?.delegate?.requestOffset(),
-                  let durationAsInt = self?.delegate?.requestDuration() else {
-                    self?.elapsedTimeLabel.text = nil
-                    self?.durationTimeLabel.text = nil
-                    self?.progressView.isHidden = true
-                    return
-            }
-            self?.progressView.isHidden = false
-            let elapsedTime = Float(elapsedTimeAsInt)
-            let duration = Float(durationAsInt)
-            self?.elapsedTimeLabel.text = Int(elapsedTime).secondTimeString
-            self?.durationTimeLabel.text = Int(duration).secondTimeString
-            UIView.animate(withDuration: 1.0, animations: { [weak self] in
-                let progress = duration == 0 ? 0 : elapsedTime/duration
-                self?.progressView.setProgress(progress, animated: true)
-            })
-        }
-    }
-    
-    func startProgressTimer() {
-        audioProgressTimer?.cancel()
-        audioProgressTimer = DispatchSource.makeTimerSource(queue: audioProgressTimerQueue)
-        audioProgressTimer?.schedule(deadline: .now(), repeating: 1.0)
-        audioProgressTimer?.setEventHandler(handler: { [weak self] in
-            self?.setAudioPlayerProgress()
-        })
-        audioProgressTimer?.resume()
-        
-        lyricsTimer?.cancel()
-        lyricsTimer = DispatchSource.makeTimerSource(queue: lyricsTimerQueue)
-        lyricsTimer?.schedule(deadline: .now(), repeating: 0.1)
-        lyricsTimer?.setEventHandler(handler: { [weak self] in
-            self?.updateLyrics()
-        })
-        lyricsTimer?.resume()
-    }
-    
-    func stopProgressTimer() {
-        audioProgressTimer?.cancel()
-        audioProgressTimer = nil
-        lyricsTimer?.cancel()
-        lyricsTimer = nil
     }
 }

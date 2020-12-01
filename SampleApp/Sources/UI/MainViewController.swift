@@ -403,6 +403,7 @@ private extension MainViewController {
             return
         }
         audioPlayerView.delegate = self
+        audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         
         if wasPlayerBarMode == true {
             audioPlayerView.setBarMode()

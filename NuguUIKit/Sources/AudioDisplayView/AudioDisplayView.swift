@@ -69,22 +69,25 @@ public class AudioDisplayView: UIView {
         }
     }
     
+    public var displayPayload: [String: AnyHashable]?
+    
     // Internal Properties
     var isSeekable: Bool = false
-    var displayPayload: [String: AnyHashable]?
     var repeatMode: AudioPlayerDisplayRepeat? {
         didSet {
             guard let repeatMode = repeatMode else { return }
             switch repeatMode {
             case .all:
-                repeatButton.setImage(UIImage(named: "btn_repeat_on"), for: .normal)
+                repeatButton.setImage(UIImage(named: "btn_repeat_on", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
             case .one:
-                repeatButton.setImage(UIImage(named: "btn_repeat_1_on"), for: .normal)
+                repeatButton.setImage(UIImage(named: "btn_repeat_1_on", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
             case .none:
-                repeatButton.setImage(UIImage(named: "btn_repeat_off"), for: .normal)
+                repeatButton.setImage(UIImage(named: "btn_repeat_off", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
             }
         }
     }
+    var audioProgressTimer: DispatchSourceTimer?
+    let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioDisplayView.audioProgress")
     
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         delegate?.onUserInteraction()
@@ -98,6 +101,43 @@ public class AudioDisplayView: UIView {
     
     public func shouldHideLyrics() -> Bool {
         return false
+    }
+    
+    // MARK: - Progress Setting
+    
+    func setAudioPlayerProgress() {
+        DispatchQueue.main.async { [weak self] in
+            guard let elapsedTimeAsInt = self?.delegate?.requestOffset(),
+                  let durationAsInt = self?.delegate?.requestDuration() else {
+                    self?.elapsedTimeLabel.text = nil
+                    self?.durationTimeLabel.text = nil
+                    self?.progressView.isHidden = true
+                    return
+            }
+            let elapsedTime = Float(elapsedTimeAsInt)
+            let duration = Float(durationAsInt)
+            self?.elapsedTimeLabel.text = Int(elapsedTime).secondTimeString
+            self?.durationTimeLabel.text = Int(duration).secondTimeString
+            UIView.animate(withDuration: 1.0, animations: { [weak self] in
+                let progress = duration == 0 ? 0 : elapsedTime/duration
+                self?.progressView.setProgress(progress, animated: true)
+            })
+        }
+    }
+    
+    func startProgressTimer() {
+        audioProgressTimer?.cancel()
+        audioProgressTimer = DispatchSource.makeTimerSource(queue: audioProgressTimerQueue)
+        audioProgressTimer?.schedule(deadline: .now(), repeating: 1.0)
+        audioProgressTimer?.setEventHandler(handler: { [weak self] in
+            self?.setAudioPlayerProgress()
+        })
+        audioProgressTimer?.resume()
+    }
+    
+    func stopProgressTimer() {
+        audioProgressTimer?.cancel()
+        audioProgressTimer = nil
     }
 }
 
@@ -116,7 +156,6 @@ public extension AudioDisplayView {
             displayAudioPlayerView = nil
         }
         displayAudioPlayerView?.isSeekable = audioPlayerDisplayTemplate.isSeekable
-        displayAudioPlayerView?.displayPayload = audioPlayerDisplayTemplate.payload
         return displayAudioPlayerView
     }
     
