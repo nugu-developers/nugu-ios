@@ -86,16 +86,6 @@ public class AudioDisplayView: UIView {
         }
     }
     
-    // Private Properties
-    private var bottomSafeAreaHeight: CGFloat {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
-        if #available(iOS 11.0, *) {
-            return rootViewController.view.safeAreaInsets.bottom
-        } else {
-            return rootViewController.bottomLayoutGuide.length
-        }
-    }
-    
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         delegate?.onUserInteraction()
         return super.hitTest(point, with: event)
@@ -155,7 +145,7 @@ public extension AudioDisplayView {
     func setBarMode() {
         audioPlayerBarViewContainerView.isHidden = false
         fullAudioPlayerContainerView.isHidden = true
-        frame = CGRect(origin: CGPoint(x: 0, y: frame.size.height - 58.0 - bottomSafeAreaHeight), size: audioPlayerBarViewContainerView.frame.size)
+        frame = CGRect(origin: CGPoint(x: 0, y: frame.size.height - 58.0 - SafeAreaUtil.bottomSafeAreaHeight), size: audioPlayerBarViewContainerView.frame.size)
     }
 }
 

@@ -1,6 +1,6 @@
 //
 //  WeakScriptMessageHandler.swift
-//  NuguServiceKit
+//  NuguUtils
 //
 //  Created by 김진님/AI Assistant개발 Cell on 2020/07/07.
 //  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
@@ -20,15 +20,15 @@
 
 import WebKit
 
-class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
-    weak var delegate: WKScriptMessageHandler?
+public class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
+    public weak var delegate: WKScriptMessageHandler?
     
-    init(delegate: WKScriptMessageHandler) {
+    public init(delegate: WKScriptMessageHandler) {
         self.delegate = delegate
         super.init()
     }
 
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         self.delegate?.userContentController(userContentController, didReceive: message)
     }
 }

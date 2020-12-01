@@ -21,6 +21,8 @@
 import UIKit
 import WebKit
 
+import NuguUtils
+
 /// <#Description#>
 final public class NuguServiceWebView: WKWebView {
     

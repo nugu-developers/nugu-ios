@@ -22,6 +22,7 @@ import UIKit
 import WebKit
 
 import NuguAgents
+import NuguUtils
 
 final public class NuguDisplayWebView: UIView {
     // JavaScript Interfaces
@@ -36,7 +37,7 @@ final public class NuguDisplayWebView: UIView {
     
     public static var displayWebServerAddress = "http://stg-template.aicloud.kr/view"
     
-    // Properties
+    // Private Properties
     private var displayWebView: WKWebView?
     private var displayPayload: Data?
     private var displayType: String?
@@ -44,23 +45,14 @@ final public class NuguDisplayWebView: UIView {
     private var focusedItemToken: String?
     private var visibleTokenList: [String]?
     private var controlCompletion: ((Bool) -> Void)?
-    
-    private var bottomSafeAreaHeight: CGFloat {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
-        if #available(iOS 11.0, *) {
-            return rootViewController.view.safeAreaInsets.bottom
-        } else {
-            return rootViewController.bottomLayoutGuide.length
-        }
-    }
-    
+        
     // Public Callbacks
     public var onItemSelect: ((_ token: String, _ postBack: [String: AnyHashable]?) -> Void)?
     public var onUserInteraction: (() -> Void)?
     public var onNuguButtonClick: (() -> Void)?
     public var onChipsSelect: ((_ selectedChips: String) -> Void)?
-    public var onCloseButtonClick: (() -> Void)?
     public var onTapForStopRecognition: (() -> Void)?
+    public var onClose: (() -> Void)?
     
     // Override
     public override init(frame: CGRect) {
@@ -100,7 +92,7 @@ private extension NuguDisplayWebView {
         
         let userContentController = WKUserContentController()
         for interface in NuguDisplayWebViewInterface.allCases {
-            userContentController.add(self, name: interface.rawValue)
+            userContentController.add(WeakScriptMessageHandler(delegate: self), name: interface.rawValue)
         }
         webViewConfiguration.userContentController = userContentController
         
@@ -120,7 +112,7 @@ private extension NuguDisplayWebView {
     }
     
     func makeWebView(_ configuration: WKWebViewConfiguration) {
-        let webViewFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - bottomSafeAreaHeight)
+        let webViewFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - SafeAreaUtil.bottomSafeAreaHeight)
         let webView = WKWebView(frame: webViewFrame, configuration: configuration)
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
         tapGestureRecognizer.delegate = self
@@ -146,7 +138,7 @@ extension NuguDisplayWebView: UIGestureRecognizerDelegate {
 // MARK: - Public Methods
 
 public extension NuguDisplayWebView {
-    func load(displayPayload: Data, displayType: String?, deviceTypeCode: String) {
+    func load(displayPayload: Data, displayType: String?, deviceTypeCode: String, clientInfo: [String: String]? = nil) {
         self.displayPayload = displayPayload
         self.displayType = displayType
         guard let displayType = self.displayType,
@@ -155,7 +147,8 @@ public extension NuguDisplayWebView {
         request(urlString: NuguDisplayWebView.displayWebServerAddress,
                 displayType: displayType,
                 deviceTypeCode: deviceTypeCode,
-                payload: payloadDictionary)
+                payload: payloadDictionary,
+                clientInfo: clientInfo)
     }
     
     func update(updatePayload: Data) {
@@ -189,7 +182,7 @@ private extension NuguDisplayWebView {
         return url.percentEncodedQuery ?? ""
     }
     
-    func request(urlString: String, displayType: String, deviceTypeCode: String, payload: [String: Any]) {
+    func request(urlString: String, displayType: String, deviceTypeCode: String, payload: [String: Any], clientInfo: [String: String]?) {
         var displayRequestBodyParam = [String: String]()
         displayRequestBodyParam["device_type_code"] = deviceTypeCode
         
@@ -199,6 +192,17 @@ private extension NuguDisplayWebView {
         if let jsonData = try? JSONSerialization.data(withJSONObject: dataParam, options: []),
             let jsonStr = String(data: jsonData, encoding: .utf8) {
             displayRequestBodyParam["data"] = jsonStr
+        }
+        
+        var defaultClientInfo = [String: String]()
+        defaultClientInfo["nuguSdkVersion"] = Bundle(for: NuguDisplayWebView.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
+        defaultClientInfo["osType"] = "IOS"
+        if let clientInfo = clientInfo {
+            defaultClientInfo.merge(clientInfo)
+        }
+        if let jsonData = try? JSONSerialization.data(withJSONObject: defaultClientInfo, options: []),
+            let jsonStr = String(data: jsonData, encoding: .utf8) {
+            displayRequestBodyParam["client_info"] = jsonStr
         }
         
         guard let url = URL(string: urlString) else { return }
@@ -221,17 +225,9 @@ private extension NuguDisplayWebView {
         DispatchQueue.main.async { [weak self] in
             self?.controlCompletion = completion
             self?.displayWebView?.evaluateJavaScript("control('\(type)', '\(direction.rawValue)')", completionHandler: { (result, error) in
-                print("++++ control('\(type)', '\(direction.rawValue)') \(String(describing: result)) \(String(describing: error)) ++++")
+                log.debug("control('\(type)', '\(direction.rawValue)') \(String(describing: result)) \(String(describing: error))")
             })
         }
-    }
-}
-
-// MARK: - Private (IBActions)
-
-private extension NuguDisplayWebView {
-    @IBAction func closeButtonDidClick(_ button: UIButton) {
-        onCloseButtonClick?()
     }
 }
 
@@ -258,9 +254,9 @@ extension NuguDisplayWebView: WKScriptMessageHandler {
                 }
             }
         case .close:
-            if let onCloseButtonClick = self.onCloseButtonClick {
+            if let onClose = self.onClose {
                 DispatchQueue.main.async {
-                    onCloseButtonClick()
+                    onClose()
                 }
             }
         case .onElementSelected:

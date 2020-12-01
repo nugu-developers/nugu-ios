@@ -401,7 +401,6 @@
 		75C61BB824C6DB8700265228 /* 02_passive.json in Resources */ = {isa = PBXBuildFile; fileRef = 75C61BB124C6DB8700265228 /* 02_passive.json */; };
 		75C61BB924C6DB8700265228 /* 03_transition.json in Resources */ = {isa = PBXBuildFile; fileRef = 75C61BB224C6DB8700265228 /* 03_transition.json */; };
 		75D069C4247F76CC000B5D1F /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */; };
-		75F1A7D824B451F00023B6C9 /* WeakScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */; };
 		7E0713DB24FCD01C009314DA /* NuguUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0713DA24FCD01C009314DA /* NuguUserDefault.swift */; };
 		7E0713DE24FCD02C009314DA /* UserDefaults+Nugu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
@@ -459,6 +458,8 @@
 		A17B06642394D22800D739E9 /* device_GW_error_006.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065D2394D22800D739E9 /* device_GW_error_006.wav */; };
 		A17B06D2239E28DB00D739E9 /* ASRBeepPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */; };
 		A17B06D4239E28EB00D739E9 /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */; };
+		A19EC86025761228003E53A9 /* SafeAreaUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */; };
+		A19EC87625761343003E53A9 /* WeakScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */; };
 		A1B86FF82390B3C100F6BD11 /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */; };
 		A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */; };
 /* End PBXBuildFile section */
@@ -1114,6 +1115,7 @@
 		A17B065D2394D22800D739E9 /* device_GW_error_006.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_006.wav; sourceTree = "<group>"; };
 		A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
+		A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeAreaUtil.swift; sourceTree = "<group>"; };
 		A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAudioSessionManager.swift; sourceTree = "<group>"; };
 		A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2142,6 +2144,7 @@
 		1FFFF4C0237672F100C9A177 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */,
 				1FFFF4C1237672F100C9A177 /* UIColor+Convenience.swift */,
 				1FFFF4C2237672F100C9A177 /* Int+Convenience.swift */,
 				752CE557246E731D00E68733 /* UILabel+Convenience.swift */,
@@ -2329,6 +2332,7 @@
 				75082BC7243ACA280027D76D /* CryptoUtil.swift */,
 				732967B8256377190077C3C4 /* EndedUp.swift */,
 				73C9F526256664370011DD65 /* WeakDictionary.swift */,
+				75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -2502,7 +2506,6 @@
 			isa = PBXGroup;
 			children = (
 				7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */,
-				75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */,
 				7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */,
 				7525AC92249B01BC006800A3 /* NuguServiceCookie.swift */,
 				7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */,
@@ -3419,6 +3422,7 @@
 				758E8DFF2570D5F500F12268 /* NuguDisplayWebView.swift in Sources */,
 				75A46EE925725986004BB472 /* UILabel+Convenience.swift in Sources */,
 				1FFFF474237580F500C9A177 /* NuguVoiceChrome.swift in Sources */,
+				A19EC86025761228003E53A9 /* SafeAreaUtil.swift in Sources */,
 				75A46F0D257259AD004BB472 /* AudioPlayer1View.swift in Sources */,
 				75A46F5C2572962E004BB472 /* AudioDisplayViewDelegate.swift in Sources */,
 				75A46F2825725A55004BB472 /* NuguUIKit.swift in Sources */,
@@ -3525,6 +3529,7 @@
 				7314E031255E4491004882BB /* Publish.swift in Sources */,
 				7329679925636E240077C3C4 /* DispatchQueue+safeSync.swift in Sources */,
 				7314DFA8255E3F33004882BB /* NuguTimeInterval.swift in Sources */,
+				A19EC87625761343003E53A9 /* WeakScriptMessageHandler.swift in Sources */,
 				7314DF87255E3F27004882BB /* CryptoUtil.swift in Sources */,
 				7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */,
 				73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */,
@@ -3692,7 +3697,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7525AC99249B01C8006800A3 /* NuguServiceWebView.swift in Sources */,
-				75F1A7D824B451F00023B6C9 /* WeakScriptMessageHandler.swift in Sources */,
 				7525AC95249B01BD006800A3 /* NuguServiceCookie.swift in Sources */,
 				7525AC97249B01BD006800A3 /* WebOpenExternalApp.swift in Sources */,
 				7525ACB3249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift in Sources */,

@@ -324,12 +324,16 @@ private extension MainViewController {
     func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         displayView?.removeFromSuperview()
         let displayView = NuguDisplayWebView(frame: view.frame)
-        displayView.load(displayPayload: displayTemplate.payload, displayType: displayTemplate.type, deviceTypeCode: SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_"))
-        displayView.onCloseButtonClick = { [weak self] in
+        displayView.load(
+            displayPayload: displayTemplate.payload,
+            displayType: displayTemplate.type,
+            deviceTypeCode: SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_"),
+            clientInfo: ["buttonColor": "white"])
+        displayView.onClose = { [weak self] in
             guard let self = self else { return }
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
             self.dismissDisplayView()
-        }        
+        }
         // TODO: - EventType 꼭 확인할것 (웹에선 무시하는건지?)
         displayView.onItemSelect = { (token, postback) in
             NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
@@ -350,12 +354,23 @@ private extension MainViewController {
         displayView.alpha = 0
         view.insertSubview(displayView, belowSubview: nuguVoiceChrome)
         
+        let closeButton = UIButton(type: .custom)
+        closeButton.setImage(UIImage(named: "btn_close"), for: .normal)
+        closeButton.frame = CGRect(x: displayView.frame.size.width - 48, y: SafeAreaUtil.topSafeAreaHeight + 16, width: 28.0, height: 28.0)
+        closeButton.addTarget(self, action: #selector(self.onDisplayViewCloseButtonDidClick), for: .touchUpInside)
+        displayView.addSubview(closeButton)
+        
         UIView.animate(withDuration: 0.3, animations: {
             displayView.alpha = 1.0
         }, completion: { [weak self] (_) in
             completion(displayView)
             self?.displayView = displayView
         })
+    }
+    
+    @objc func onDisplayViewCloseButtonDidClick() {
+        NuguCentralManager.shared.client.ttsAgent.stopTTS()
+        dismissDisplayView()
     }
     
     func updateDisplayView(displayTemplate: DisplayTemplate) {
