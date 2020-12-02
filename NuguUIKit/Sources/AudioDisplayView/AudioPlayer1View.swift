@@ -115,7 +115,7 @@ final class AudioPlayer1View: AudioDisplayView {
         }
     }
     
-    // Initilize
+    // Initialize
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -163,12 +163,12 @@ final class AudioPlayer1View: AudioDisplayView {
     
     // MARK: - Show / Hide lyrics
     
-    public override func shouldShowLyrics() -> Bool {
+    override func shouldShowLyrics() -> Bool {
         showLyrics()
         return true
     }
     
-    public override func shouldHideLyrics() -> Bool {
+    override func shouldHideLyrics() -> Bool {
         fullLyricsView?.removeFromSuperview()
         return true
     }

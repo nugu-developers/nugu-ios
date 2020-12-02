@@ -35,7 +35,7 @@ final public class NuguDisplayWebView: UIView {
         case onControlResult
     }
     
-    public static var displayWebServerAddress = "http://stg-template.aicloud.kr/view"
+    public static var displayWebServerAddress = "http://template.aicloud.kr/view"
     
     // Private Properties
     private var displayWebView: WKWebView?
