@@ -55,6 +55,9 @@ final class FullLyricsView: UIView {
         guard let lyricsIndex = lyricsIndex,
             let currentLyricsLabel = stackView.arrangedSubviews[lyricsIndex + 1] as? UILabel else { return }
         currentLyricsLabel.textColor = UIColor(red: 0, green: 157.0/255.0, blue: 1, alpha: 1.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.scrollView.scrollRectToVisible(currentLyricsLabel.frame, animated: true)
+        }
     }
     
     @objc func viewDidTap(gestureRecognizer: UITapGestureRecognizer) {

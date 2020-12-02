@@ -36,6 +36,7 @@ final class AudioPlayer1View: AudioDisplayView {
     private var lyricsTimer: DispatchSourceTimer?
     private let lyricsTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayer1View.lyrics")
     private var lyricsData: AudioPlayerLyricsTemplate?
+    private var lyricsIndex = 0
     
     private var fullLyricsView: FullLyricsView?
     
@@ -221,6 +222,9 @@ private extension AudioPlayer1View {
         if let fullLyricsView = fullLyricsView {
             fullAudioPlayerContainerView.addSubview(fullLyricsView)
         }
+        if self.lyricsIndex != -1 {
+            fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
+        }
     }
     
     func updateLyrics() {
@@ -245,7 +249,8 @@ private extension AudioPlayer1View {
             let currentOffSetInMilliseconds = offSet * 1000
             
             guard let firstStartTime = lyricsInfoList.first?.time else { return }
-            if currentOffSetInMilliseconds < firstStartTime {
+            if currentOffSetInMilliseconds < firstStartTime && self.lyricsIndex != -1 {
+                self.lyricsIndex = -1
                 self.currentLyricsLabel.textColor = UIColor(red: 136/255.0, green: 136/255.0, blue: 136/255.0, alpha: 1.0)
                 self.currentLyricsLabel.text = lyricsInfoList.first?.text
                 self.nextLyricsLabel.text = lyricsInfoList[1].text
@@ -254,7 +259,8 @@ private extension AudioPlayer1View {
             }
             
             guard let lastStartTime = lyricsInfoList.last?.time else { return }
-            if currentOffSetInMilliseconds >= lastStartTime {
+            if currentOffSetInMilliseconds >= lastStartTime && self.lyricsIndex != lyricsInfoList.count - 1 {
+                self.lyricsIndex = lyricsInfoList.count - 1
                 self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
                 self.currentLyricsLabel.text = lyricsInfoList.last?.text
                 self.nextLyricsLabel.text = ""
@@ -266,8 +272,10 @@ private extension AudioPlayer1View {
                 guard let lyricsTime = lyricsInfo.time else { return false }
                 return currentOffSetInMilliseconds < lyricsTime
             }) else { return }
-            
             let currentLyricsIndex = nextLyricsIndex - 1
+            guard self.lyricsIndex != currentLyricsIndex else { return }
+            self.lyricsIndex = currentLyricsIndex
+                                    
             self.fullLyricsView?.updateLyricsFocus(lyricsIndex: currentLyricsIndex)  
             self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
             self.currentLyricsLabel.text = lyricsInfoList[currentLyricsIndex].text
