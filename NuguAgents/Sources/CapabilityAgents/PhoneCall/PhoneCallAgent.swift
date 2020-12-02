@@ -68,8 +68,17 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 // MARK: - PhoneCallAgentProtocol
 
 public extension PhoneCallAgent {
-    @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String {
-        let event = Event(typeInfo: .candidatesListed, playServiceId: playServiceId, referrerDialogRequestId: nil)
+    @discardableResult func requestSendCandidates(
+        playServiceId: String,
+        header: Downstream.Header?,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String {
+        let event = Event(
+            typeInfo: .candidatesListed,
+            playServiceId: playServiceId,
+            referrerDialogRequestId: header?.dialogRequestId
+        )
+        
         return sendFullContextEvent(event.rx) { [weak self] state in
             completion?(state)
             guard let self = self else { return }
