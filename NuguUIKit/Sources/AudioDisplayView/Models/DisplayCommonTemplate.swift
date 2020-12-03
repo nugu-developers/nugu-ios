@@ -18,8 +18,6 @@
 //  limitations under the License.
 //
 
-import Foundation
-
 struct DisplayCommonTemplate: Decodable {
     struct Common {
         struct Image: Decodable {

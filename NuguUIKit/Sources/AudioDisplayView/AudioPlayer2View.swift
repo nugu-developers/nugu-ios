@@ -20,8 +20,6 @@
 
 import UIKit
 
-import NuguAgents
-
 final class AudioPlayer2View: AudioDisplayView {
     // Intialize
     override init(frame: CGRect) {

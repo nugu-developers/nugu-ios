@@ -20,8 +20,6 @@
 
 import UIKit
 
-import NuguAgents
-
 final class AudioPlayer1View: AudioDisplayView {
     // Private Properties
     @IBOutlet private weak var contentStackView: UIStackView!

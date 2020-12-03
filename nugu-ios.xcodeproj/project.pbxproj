@@ -460,6 +460,10 @@
 		A17B06D4239E28EB00D739E9 /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */; };
 		A19EC86025761228003E53A9 /* SafeAreaUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */; };
 		A19EC87625761343003E53A9 /* WeakScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */; };
+		A19EC9E82578CE95003E53A9 /* NattyLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F100907237929FB00D90FEE /* NattyLog.framework */; };
+		A19EC9FE2578CEA5003E53A9 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
+		A19ECA022578CEA5003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
+		A19ECA1A2578CED3003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		A1B86FF82390B3C100F6BD11 /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */; };
 		A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */; };
 /* End PBXBuildFile section */
@@ -632,6 +636,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7525AC83249AFE8E006800A3;
 			remoteInfo = NuguServiceKit;
+		};
+		A19ECA002578CEA5003E53A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 73152F9923E0405900F843C3;
+			remoteInfo = NuguAgents;
+		};
+		A19ECA042578CEA5003E53A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7314DF46255E3EA2004882BB;
+			remoteInfo = NuguUtils;
+		};
+		A19ECA1C2578CED3003E53A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7314DF46255E3EA2004882BB;
+			remoteInfo = NuguUtils;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1156,7 +1181,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A19EC9E82578CE95003E53A9 /* NattyLog.framework in Frameworks */,
 				7522205E2450123E00192D88 /* Lottie.framework in Frameworks */,
+				A19EC9FE2578CEA5003E53A9 /* NuguAgents.framework in Frameworks */,
+				A19ECA022578CEA5003E53A9 /* NuguUtils.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1242,6 +1270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7525ACB4249C4177006800A3 /* NattyLog.framework in Frameworks */,
+				A19ECA1A2578CED3003E53A9 /* NuguUtils.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2852,6 +2881,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				A19ECA012578CEA5003E53A9 /* PBXTargetDependency */,
+				A19ECA052578CEA5003E53A9 /* PBXTargetDependency */,
 			);
 			name = NuguUIKit;
 			packageProductDependencies = (
@@ -3005,6 +3036,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A19ECA1D2578CED3003E53A9 /* PBXTargetDependency */,
 			);
 			name = NuguServiceKit;
 			productName = NuguServiceKit;
@@ -3827,6 +3859,21 @@
 			isa = PBXTargetDependency;
 			target = 7525AC83249AFE8E006800A3 /* NuguServiceKit */;
 			targetProxy = 7525AC89249AFE8E006800A3 /* PBXContainerItemProxy */;
+		};
+		A19ECA012578CEA5003E53A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 73152F9923E0405900F843C3 /* NuguAgents */;
+			targetProxy = A19ECA002578CEA5003E53A9 /* PBXContainerItemProxy */;
+		};
+		A19ECA052578CEA5003E53A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7314DF46255E3EA2004882BB /* NuguUtils */;
+			targetProxy = A19ECA042578CEA5003E53A9 /* PBXContainerItemProxy */;
+		};
+		A19ECA1D2578CED3003E53A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7314DF46255E3EA2004882BB /* NuguUtils */;
+			targetProxy = A19ECA1C2578CED3003E53A9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
