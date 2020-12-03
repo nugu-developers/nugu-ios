@@ -97,8 +97,8 @@ extension NuguServiceWebViewController: NuguServiceWebJavascriptDelegate {
         present(SFSafariViewController(url: URL(string: url)!), animated: true, completion: nil)
     }
     
-    func closeWindow(reason: String) {
-        log.debug("closeWindow : \(reason)")
+    func closeWindow(reason: String?) {
+        log.debug("closeWindow : \(reason ?? "nil")")
         if reason == "WITHDRAWN_USER" {
             navigationController?.dismiss(animated: true, completion: {
                 NuguCentralManager.shared.clearSampleApp()

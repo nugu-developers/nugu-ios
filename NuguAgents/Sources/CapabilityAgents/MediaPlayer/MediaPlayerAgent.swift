@@ -90,17 +90,21 @@ extension MediaPlayerAgent: ContextInfoDelegate {
 private extension MediaPlayerAgent {
     func handlePlay() -> HandleDirective {
         return { [weak self] directive, completion in
+            guard let delegate = self?.delegate else {
+                completion(.canceled)
+                return
+            }
             guard let playPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Play.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
             
-            defer { completion(.finished) }
-            
-            self?.delegate?.mediaPlayerAgentReceivePlay(
+            delegate.mediaPlayerAgentReceivePlay(
                 payload: playPayload,
                 header: directive.header,
                 completion: { [weak self] (result) in
+                    defer { completion(.finished) }
+                    
                     self?.processPlayDirectiveResult(payload: playPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
             })
         }

@@ -30,6 +30,11 @@ public protocol PhoneCallAgentProtocol: CapabilityAgentable {
     /// <#Description#>
     /// - Parameters:
     ///   - playServiceId: <#playServiceId description#>
+    ///   - header: <#header description#>
     ///   - completion: <#completion description#>
-    @discardableResult func requestSendCandidates(playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
+    @discardableResult func requestSendCandidates(
+        playServiceId: String,
+        header: Downstream.Header?,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String
 }
