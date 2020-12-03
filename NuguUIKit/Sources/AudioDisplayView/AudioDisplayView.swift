@@ -86,8 +86,10 @@ public class AudioDisplayView: UIView {
             }
         }
     }
-    var audioProgressTimer: DispatchSourceTimer?
-    let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioDisplayView.audioProgress")
+    
+    // Private Properties
+    private var audioProgressTimer: DispatchSourceTimer?
+    private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioDisplayView.audioProgress")
     
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         delegate?.onUserInteraction()
