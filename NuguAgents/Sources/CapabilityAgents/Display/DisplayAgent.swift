@@ -45,6 +45,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     )
     
     // Current display info
+    private var prefetchDisplayTemplate: DisplayTemplate?
     private var templateList = [DisplayTemplate]()
     private var updateTemplateList = [DisplayTemplate]()
     
@@ -56,42 +57,29 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlFocus", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlFocus),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlScroll", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlScroll),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdate),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullText3", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText3", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageText4", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList3", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TextList4", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ImageList3", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather3", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather4", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Weather5", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "FullImage", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Score1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Score2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SearchList1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SearchList2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UnifiedSearch1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceList", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceOption", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommercePrice", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CommerceInfo", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call1", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call2", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Call3", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Timer", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Dummy", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "CustomTemplate", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true), directiveHandler: handleDisplay)
-    ]
+    ] + [
+        "FullText1", "FullText2", "FullText3",
+        "ImageText1", "ImageText2", "ImageText3", "ImageText4",
+        "TextList1", "TextList2", "TextList3", "TextList4",
+        "ImageList1", "ImageList2", "ImageList3",
+        "Weather1", "Weather2", "Weather3", "Weather4", "Weather5",
+        "FullImage",
+        "Score1", "Score2",
+        "SearchList1", "SearchList2", "UnifiedSearch1",
+        "CommerceList", "CommerceOption", "CommercePrice", "CommerceInfo",
+        "Call1", "Call2", "Call3",
+        "Timer",
+        "Dummy",
+        "CustomTemplate"
+    ].map({ (name) in
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: name,
+            blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: true),
+            preFetch: prefetchDisplay,
+            directiveHandler: handleDisplay
+        )
+    })
   
     public init(
         upstreamDataSender: UpstreamDataSendable,
@@ -309,14 +297,9 @@ private extension DisplayAgent {
         }
     }
     
-    func handleDisplay() -> HandleDirective {
-        return { [weak self] directive, completion in
-            guard let self = self, let delegate = self.delegate else {
-                completion(.canceled)
-                return
-            }
+    func prefetchDisplay() -> PrefetchDirective {
+        return { [weak self] directive in
             guard let template = try? JSONDecoder().decode(DisplayTemplate.Payload.self, from: directive.payload)  else {
-                completion(.failed("Invalid payload"))
                 return
             }
             
@@ -326,14 +309,30 @@ private extension DisplayAgent {
                 template: template
             )
             
+            self?.displayDispatchQueue.async { [weak self] in
+                self?.prefetchDisplayTemplate = item
+                self?.setRenderedTemplate(item: item)
+            }
+        }
+    }
+    
+    func handleDisplay() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let self = self, let delegate = self.delegate else {
+                completion(.canceled)
+                return
+            }
+            guard let item = self.prefetchDisplayTemplate, directive.header.messageId == item.header.messageId  else {
+                completion(.failed("Message id does not match"))
+                return
+            }
+            
             self.displayDispatchQueue.async { [weak self] in
                 guard let self = self else {
                     completion(.canceled)
                     return
                 }
-                defer {
-                    completion(.finished)
-                }
+                defer { completion(.finished) }
                 
                 self.sessionManager.activate(dialogRequestId: item.dialogRequestId, category: .display)
                 self.playSyncManager.startPlay(
@@ -353,6 +352,7 @@ private extension DisplayAgent {
                     guard let displayObject = $0 else {
                         self.sessionManager.deactivate(dialogRequestId: item.dialogRequestId, category: .display)
                         self.playSyncManager.endPlay(property: item.template.playSyncProperty)
+                        self.removeRenderedTemplate(item: item)
                         return
                     }
                     
@@ -366,8 +366,6 @@ private extension DisplayAgent {
                                 self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
                             }
                         }).disposed(by: self.disposeBag)
-                    
-                    self.setRenderedTemplate(item: item)
                 }
                 if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
                     log.error("`displayAgentShouldRender` completion block does not called")
@@ -437,7 +435,8 @@ private extension DisplayAgent {
 private extension DisplayAgent {
     func setRenderedTemplate(item: DisplayTemplate) {
         templateList
-            .filter { $0.template.contextLayer == item.template.contextLayer }
+            // FIXME: Currently the application is not separating the display view according to 'LayerType'.
+            // .filter { $0.template.contextLayer == item.template.contextLayer }
             .forEach { removeRenderedTemplate(item: $0) }
         templateList.insert(item, at: 0)
     }
