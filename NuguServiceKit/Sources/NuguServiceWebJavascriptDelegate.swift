@@ -30,5 +30,5 @@ public protocol NuguServiceWebJavascriptDelegate: class {
     func openInAppBrowser(url: String)
     /// <#Description#>
     /// - Parameter reason: <#reason description#>
-    func closeWindow(reason: String)
+    func closeWindow(reason: String?)
 }
