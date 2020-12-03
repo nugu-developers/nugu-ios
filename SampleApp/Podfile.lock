@@ -1,34 +1,34 @@
 PODS:
-  - JadeMarble (0.27.1):
+  - JadeMarble (0.27.2):
     - NattyLog (~> 1)
-  - KeenSense (0.27.1):
+  - KeenSense (0.27.2):
     - NattyLog (~> 1)
   - lottie-ios (3.1.9)
   - NattyLog (1.2.1)
-  - NuguAgents (0.27.1):
+  - NuguAgents (0.27.2):
     - JadeMarble (~> 0)
     - NattyLog (~> 1)
     - NuguCore (~> 0)
     - NuguUtils (~> 0)
     - SilverTray (~> 1)
-  - NuguClientKit (0.27.1):
+  - NuguClientKit (0.27.2):
     - KeenSense (~> 0)
     - NattyLog (~> 1)
     - NuguAgents (~> 0)
     - NuguCore (~> 0)
     - NuguUIKit (~> 0)
     - NuguUtils (~> 0)
-  - NuguCore (0.27.1):
+  - NuguCore (0.27.2):
     - NattyLog (~> 1.0)
     - NuguUtils (~> 0)
     - RxSwift (~> 5)
-  - NuguLoginKit (0.27.1):
+  - NuguLoginKit (0.27.2):
     - NuguUtils (~> 0)
-  - NuguServiceKit (0.27.1):
+  - NuguServiceKit (0.27.2):
     - NattyLog (~> 1)
-  - NuguUIKit (0.27.1):
+  - NuguUIKit (0.27.2):
     - lottie-ios (~> 3)
-  - NuguUtils (0.27.1):
+  - NuguUtils (0.27.2):
     - RxSwift (~> 5)
   - RxSwift (5.1.1)
   - SilverTray (1.2.6)
@@ -72,17 +72,17 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  JadeMarble: 839d243f13883f88f8f807517b5b18e1fb8e34b9
-  KeenSense: 17022bc7bddccf09e85b4c9133f32d5ac77c36d5
+  JadeMarble: efdfc9a6055cbc875b54e715cb719dbdf6043cde
+  KeenSense: 910e5f616a590b40b07361fb9947f6edf72d4d60
   lottie-ios: 3a3758ef5a008e762faec9c9d50a39842f26d124
   NattyLog: f9ece0db2fb62178d8246f0ae033a9b64f2d7f30
-  NuguAgents: 6cab34a6c1599dc640debb160be8f89af6d7bac9
-  NuguClientKit: 54f415c584a73ab846abb252751b250e4add8172
-  NuguCore: 26db520a2203e361f1d9f452d44c16f03d05e9e5
-  NuguLoginKit: 511bc852063c2ec8ca0d9e3f2e67865dd18d689b
-  NuguServiceKit: 04625f12ae55303c9c19011fc5a75836d95d72c5
-  NuguUIKit: d08eaafd490774df7ae18d59b178d032ab655eda
-  NuguUtils: 72436e9ba3af3af2a8d76f48a26d9ae11f1932e4
+  NuguAgents: 09bc0be2bb38143efac0339ec2857db74e2ee870
+  NuguClientKit: 2664385f5d86314cdc6c233d4b2aecfcfd2f4fe8
+  NuguCore: b4c802740baf8c5ee4488a9f525f920b04e41d98
+  NuguLoginKit: 00bf068a7124e66661e42d47502af1bd48e60562
+  NuguServiceKit: e64b00ec2e88f10a00e1f3f67e70dd1196b7856a
+  NuguUIKit: a22664ef453a16d43c178f845cb9bb2e71c30855
+  NuguUtils: 743e4a18cf138fc0085b5b30bbf718dac26b2f88
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SilverTray: d006036dd35c1b898497c28dbf06eddce6f1745d
 

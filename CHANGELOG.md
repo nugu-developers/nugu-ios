@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.27.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.27.2)
+Released on 2020-12-03
+### Sample Application
+#### Fixed
+- Call `closeWindow` delegate even if `reason` field is empty (#654)
+
+### SDK
+#### Fixed
+- Check "duration" status before accessing AVURLAsset.duration property (#652) 
+- Call `closeWindow` delegate even if `reason` field is empty (#654)
+- Fixes a bug where `displayAgentDidClear` called abnormally when `LayerType` is `Media`. (#661)   
+- Request background focus when `MediaPlayer.PlaySuspended` event is requested. (#657)
+
+#### Update
+- Add `header` parameter in `requestSendCandidates` function (#656) 
+
 ## [0.27.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.27.1)
 Released on 2020-11-27
 ### SDK
