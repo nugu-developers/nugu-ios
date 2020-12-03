@@ -41,6 +41,8 @@ final public class NuguDisplayWebView: UIView {
     private var displayWebView: WKWebView?
     private var displayPayload: Data?
     private var displayType: String?
+    private var deviceTypeCode: String?
+    private var clientInfo: [String: String]?
     
     private var focusedItemToken: String?
     private var visibleTokenList: [String]?
@@ -141,6 +143,8 @@ public extension NuguDisplayWebView {
     func load(displayPayload: Data, displayType: String?, deviceTypeCode: String, clientInfo: [String: String]? = nil) {
         self.displayPayload = displayPayload
         self.displayType = displayType
+        self.deviceTypeCode = deviceTypeCode
+        self.clientInfo = clientInfo
         guard let displayType = self.displayType,
               let payloadData = self.displayPayload,
               let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadData, options: .mutableContainers) as? [String: Any] else { return }
@@ -158,8 +162,10 @@ public extension NuguDisplayWebView {
                 return
         }
         let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
-        guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
+        guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []),
+              let deviceTypeCode = deviceTypeCode else { return }
         displayPayload = mergedPayloadData
+        load(displayPayload: mergedPayloadData, displayType: displayType, deviceTypeCode: deviceTypeCode, clientInfo: clientInfo)
     }
     
     func scroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
@@ -235,7 +241,7 @@ private extension NuguDisplayWebView {
 
 extension NuguDisplayWebView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("userContentController \(message.name), \(message.body)")
+        log.debug("userContentController \(message.name), \(message.body)")
         switch NuguDisplayWebViewInterface(rawValue: message.name) {
         case .onContextChanged:
             if let body = message.body as? [String: Any] {
