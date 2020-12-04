@@ -199,10 +199,12 @@ private extension MainViewController {
     
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
-        ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { (result) in
+        ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { [weak self] (result) in
             switch result {
-            case .success(let url):
-                performSegue(withIdentifier: "mainToGuideWeb", sender: url)
+            case .success(let urlString):
+                if let url = URL(string: urlString) {
+                    self?.performSegue(withIdentifier: "mainToGuideWeb", sender: url)
+                }
             case .failure(let error):
                 log.error(error)
             }

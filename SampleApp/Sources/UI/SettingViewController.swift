@@ -51,15 +51,25 @@ final class SettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.reloadData()
-        NuguCentralManager.shared.getUserInfo { [weak self] (nuguUserInfo) in
-            self?.tid = nuguUserInfo?.username
-        }
+        
+        updateTid()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let nuguServiceWebViewController = segue.destination as? NuguServiceWebViewController,
             let initialURLString = sender as? String {
             nuguServiceWebViewController.initialURLString = initialURLString
+        }
+    }
+    
+    private func updateTid() {
+        NuguCentralManager.shared.getUserInfo { [weak self] (result) in
+            switch result {
+            case .success(let nuguUserInfo):
+                self?.tid = nuguUserInfo.username
+            case .failure:
+                self?.tid = nil
+            }
         }
     }
 }
@@ -131,14 +141,14 @@ extension SettingViewController: UITableViewDelegate {
         let index = (indexPath.section, indexPath.row)
         switch index {
         case (0, 0):
-            NuguCentralManager.shared.showTidInfo(parentViewController: self, completion: { [weak self] tid in
-                self?.tid = tid
-            })
+            NuguCentralManager.shared.showTidInfo(parentViewController: self) { [weak self] in
+                self?.updateTid()
+            }
         case (1, 0):
-            ConfigurationStore.shared.serviceSettingUrl { (result) in
+            ConfigurationStore.shared.serviceSettingUrl { [weak self] (result) in
                 switch result {
-                case .success(let url):
-                    performSegue(withIdentifier: "showNuguServiceWebView", sender: url)
+                case .success(let urlString):
+                    self?.performSegue(withIdentifier: "showNuguServiceWebView", sender: urlString)
                 case .failure(let error):
                     log.error(error)
                 }
@@ -161,10 +171,10 @@ extension SettingViewController: UITableViewDelegate {
             }
             present(wakeUpWordActionSheet, animated: true)
         case (3, 0):
-            ConfigurationStore.shared.agreementUrl { (result) in
+            ConfigurationStore.shared.agreementUrl { [weak self] (result) in
                 switch result {
-                case .success(let url):
-                    performSegue(withIdentifier: "showNuguServiceWebView", sender: url)
+                case .success(let urlString):
+                    self?.performSegue(withIdentifier: "showNuguServiceWebView", sender: urlString)
                 case .failure(let error):
                     log.error(error)
                 }
@@ -172,8 +182,10 @@ extension SettingViewController: UITableViewDelegate {
         case (3, 1):
             ConfigurationStore.shared.privacyUrl { (result) in
                 switch result {
-                case .success(let url):
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                case .success(let urlString):
+                    if let url = URL(string: urlString) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
                 case .failure(let error):
                     log.error(error)
                 }

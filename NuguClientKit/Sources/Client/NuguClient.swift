@@ -227,7 +227,7 @@ extension NuguClient: AuthorizationStoreDelegate {
     }
     
     public func authorizationStoreRequestAccessToken() -> String? {
-        return delegate?.nuguClientRequestAccessToken()
+        delegate?.nuguClientRequestAccessToken()
     }
 }
 

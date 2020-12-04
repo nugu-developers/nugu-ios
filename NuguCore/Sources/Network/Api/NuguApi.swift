@@ -62,13 +62,13 @@ extension NuguApi {
         case .policy:
             return "policies"
         case .events:
-            return version + "/events"
+            return "events"
         case .eventAttachment:
-            return version + "/event-attachment"
+            return "event-attachment"
         case .directives:
-            return version + "/directives"
+            return "directives"
         case .ping:
-            return version + "/ping"
+            return "ping"
         }
     }
     
@@ -112,5 +112,11 @@ extension NuguApi {
                 "User-Agent": NetworkConst.userAgent
             ]
         }
+    }
+}
+
+extension NuguApi {
+    func uri(baseUrl: String) -> String {
+        [baseUrl, version, path].joined(separator: "/")
     }
 }

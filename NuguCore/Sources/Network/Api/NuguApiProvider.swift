@@ -75,7 +75,7 @@ class NuguApiProvider: NSObject {
     private let internalPolicies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
         let disposable = Disposables.create()
         
-        var urlComponent = URLComponents(string: (NuguServerInfo.registryServerAddress + NuguApi.policy.path))
+        var urlComponent = URLComponents(string: NuguApi.policy.uri(baseUrl: NuguServerInfo.registryServerAddress))
         urlComponent?.queryItems = [
             URLQueryItem(name: "protocol", value: "H2")
         ]
@@ -121,8 +121,8 @@ class NuguApiProvider: NSObject {
                     self.serverSideEventProcessor = ServerSideEventProcessor()
                     
                     // connect downstream.
-                    guard let downstreamUrl = URL(string: resourceServerUrl+"/"+NuguApi.directives.path) else {
-                        log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.directives.path)")
+                    guard let downstreamUrl = URL(string: NuguApi.directives.uri(baseUrl: resourceServerUrl)) else {
+                        log.error("invailid url: \(NuguApi.directives.uri(baseUrl: resourceServerUrl))")
                         single(.error(NetworkError.noSuitableResourceServer))
                         return
                     }
@@ -198,9 +198,9 @@ extension NuguApiProvider {
                     return
                 }
                 
-                guard let urlComponent = URLComponents(string: resourceServerUrl+"/"+NuguApi.events.path),
+                guard let urlComponent = URLComponents(string: NuguApi.events.uri(baseUrl: resourceServerUrl)),
                     let url = urlComponent.url else {
-                        log.error("invailid url: \(resourceServerUrl+"/"+NuguApi.events.path)")
+                        log.error("invailid url: \(NuguApi.events.uri(baseUrl: resourceServerUrl))")
                         single(.error(NetworkError.badRequest))
                         return
                 }
@@ -257,10 +257,10 @@ extension NuguApiProvider {
      Send ping data to keep stream of server side event
      */
     var ping: Completable {
-        guard let url = url,
-            let pingUrl = URL(string: url+"/"+NuguApi.ping.path) else {
-                log.error("no resource server url")
-                return Completable.error(NetworkError.noSuitableResourceServer)
+        guard let baseUrl = url,
+              let pingUrl = URL(string: NuguApi.ping.uri(baseUrl: baseUrl)) else {
+            log.error("no resource server url")
+            return Completable.error(NetworkError.noSuitableResourceServer)
         }
         
         var request = URLRequest(url: pingUrl)

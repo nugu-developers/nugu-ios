@@ -57,7 +57,10 @@ public protocol NuguClientDelegate: class {
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?)
     
     // authorization related
-    /// <#Description#>
+    
+    /// Provides an access token from cache(ex> `UserDefault`).
+    ///
+    /// - returns: The current authorization token.
     func nuguClientRequestAccessToken() -> String?
 }
 

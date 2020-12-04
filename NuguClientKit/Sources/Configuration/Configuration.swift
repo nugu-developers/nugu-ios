@@ -56,37 +56,13 @@ public struct Configuration: Decodable {
     }
 }
 
-// MARK: - OAuth
-
-public extension Configuration {
-    var authorizationCodeGrant: AuthorizationCodeGrant {
-        AuthorizationCodeGrant(
-            clientId: authClientId,
-            clientSecret: authClientSecret,
-            redirectUri: authRedirectUri
-        )
-    }
-    
-    var clientCredentialsGrant: ClientCredentialsGrant {
-        ClientCredentialsGrant(
-            clientId: authClientId,
-            clientSecret: authClientSecret
-        )
-    }
-    
-    func refreshTokenGrant(refreshToken: String) -> RefreshTokenGrant {
-        RefreshTokenGrant(
-            clientId: authClientId,
-            clientSecret: authClientSecret,
-            refreshToken: refreshToken
-        )
-    }
-}
-
 // MAKR: - Url
 
 public extension Configuration {
     var serviceWebRedirectUri: String {
         authRedirectUri + "_refresh"
+    }
+    var discoveryUri: String {
+        "\(authServerUrl)/.well-known/oauth-authorization-server/\(authClientId)"
     }
 }

@@ -36,7 +36,7 @@ final class NuguServiceWebViewController: UIViewController {
         super.viewDidLoad()
         
         nuguServiceWebView.javascriptDelegate = self
-        setCookie()
+        nuguServiceWebView.setNuguServiceCookie()
         nuguServiceWebView.loadUrlString(initialURLString)
         
         NotificationCenter.default.addObserver(
@@ -58,23 +58,6 @@ private extension NuguServiceWebViewController {
     @objc func refreshAfterOauth() {
         presentedViewController?.dismiss(animated: true, completion: nil)
         nuguServiceWebView.reload()
-    }
-}
-
-// MARK: - private
-
-private extension NuguServiceWebViewController {
-    func setCookie() {
-        guard let configuration = ConfigurationStore.shared.configuration else { return }
-        
-        let cookie = NuguServiceCookie(
-            authToken: "Bearer \(UserDefaults.Standard.accessToken ?? "")",
-            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-            pocId: configuration.pocId, // Put your own pocId
-            theme: "LIGHT",
-            oauthRedirectUri: configuration.serviceWebRedirectUri
-        )
-        nuguServiceWebView.setNuguServiceCookie(nuguServiceCookie: cookie)
     }
 }
 
