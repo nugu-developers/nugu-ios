@@ -22,6 +22,7 @@ import UIKit
 import SafariServices
 
 import NuguServiceKit
+import NuguClientKit
 
 final class NuguServiceWebViewController: UIViewController {
     
@@ -64,12 +65,14 @@ private extension NuguServiceWebViewController {
 
 private extension NuguServiceWebViewController {
     func setCookie() {
+        guard let configuration = ConfigurationStore.shared.configuration else { return }
+        
         let cookie = NuguServiceCookie(
             authToken: "Bearer \(UserDefaults.Standard.accessToken ?? "")",
             appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-            pocId: SampleApp.pocId, // Put your own pocId
+            pocId: configuration.pocId, // Put your own pocId
             theme: "LIGHT",
-            oauthRedirectUri: SampleApp.oauthRedirectUri
+            oauthRedirectUri: configuration.serviceWebRedirectUri
         )
         nuguServiceWebView.setNuguServiceCookie(nuguServiceCookie: cookie)
     }
