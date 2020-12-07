@@ -1,9 +1,9 @@
 //
-//  AuthorizationStore.swift
-//  NuguCore
+//  WeakSet.swift
+//  NuguUtils
 //
-//  Created by MinChul Lee on 26/04/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by DCs-MBP on 2020/11/19.
+//  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -16,21 +16,23 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-//
 
 import Foundation
 
-public class AuthorizationStore: AuthorizationStoreable {
-    public static let shared = AuthorizationStore()
+public class WeakSet<Element> where Element: AnyObject, Element: Hashable {
+    private let hashTable: NSHashTable<AnyObject> = NSHashTable.weakObjects()
     
-    public weak var delegate: AuthorizationStoreDelegate?
+    public init() {}
     
-    public var authorizationToken: String? {
-        guard let delegate = delegate,
-              let accessToken = delegate.authorizationStoreRequestAccessToken() else {
-            return nil
-        }
-
-        return "Bearer \(accessToken)"
+    public func insert(_ newMember: Element) {
+        hashTable.add(newMember)
+    }
+    
+    public func remove(_ memeber: Element) {
+        hashTable.remove(memeber)
+    }
+    
+    public var allObjects: [Element] {
+        return hashTable.allObjects.compactMap { $0 as? Element }
     }
 }
