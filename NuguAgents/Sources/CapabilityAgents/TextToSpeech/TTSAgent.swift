@@ -437,7 +437,7 @@ private extension TTSAgent {
             defer { completion(.finished) }
             
             self?.ttsDispatchQueue.async { [weak self] in
-                guard let self = self, let player = self.latestPlayer else { return }
+                guard let self = self, let player = self.currentPlayer else { return }
                 guard player.internalPlayer != nil else {
                     // Release synchronized layer after playback finished.
                     if player.payload.playServiceId != nil {
