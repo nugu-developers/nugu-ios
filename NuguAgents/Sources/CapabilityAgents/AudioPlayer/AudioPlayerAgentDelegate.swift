@@ -28,4 +28,8 @@ public protocol AudioPlayerAgentDelegate: class {
     /// - Parameter state: The new AudioPlayerState of the `AudioPlayerAgent`
     /// - Parameter header: The header of the originally handled directive.
     func audioPlayerAgentDidChange(state: AudioPlayerState, header: Downstream.Header)
+    
+    ///  Used to notify the observer of duration changes.
+    /// - Parameter duration: The duration of the current player item.
+    func audioPlayerAgentDidChange(duration: Int)
 }
