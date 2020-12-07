@@ -241,8 +241,12 @@ private extension AudioPlayer {
         intervalReporter = Observable<Int>
             .interval(.milliseconds(100), scheduler: SerialDispatchQueueScheduler(qos: .default))
             .map({ [weak self] (_) -> Int in
-                let offset = self?.internalPlayer?.offset.seconds ?? 0.0
-                return Int(ceil(offset))
+                guard let seconds = self?.internalPlayer?.offset.seconds,
+                      seconds.isNaN == false,
+                      seconds.isInfinite == false else {
+                    return 0
+                }
+                return Int(ceil(seconds))
             })
             .filter { [weak self] offset in
                 guard let self = self else { return false }
