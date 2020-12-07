@@ -27,6 +27,8 @@ import NuguClientKit
 import NuguUIKit
 
 final class MainViewController: UIViewController {
+    var resignActiveObserver: Any?
+    var becomeActiveObserver: Any?
     
     // MARK: Properties
     
@@ -57,20 +59,7 @@ final class MainViewController: UIViewController {
         setGradientBackground()
         addWatermarkLabel()
         initializeNugu()
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(willResignActive(_:)),
-            name: UIApplication.willResignActiveNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(didBecomeActive(_:)),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
+        registerObservers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -113,34 +102,56 @@ final class MainViewController: UIViewController {
     // MARK: Deinitialize
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        removeObservers()
     }
 }
 
-// MARK: - Private (Selector)
+// MARK: - private (Observer)
 
-@objc private extension MainViewController {
-    
-    /// Catch resigning active notification to stop recognizing & wake up detector
-    /// It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
-    /// - Parameter notification: UIApplication.willResignActiveNotification
-    func willResignActive(_ notification: Notification) {
-        // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
-        if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
-            NuguCentralManager.shared.client.ttsAgent.stopTTS()
-        }
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
-        NuguCentralManager.shared.stopMicInputProvider()
-    }
-    
-    /// Catch becoming active notification to refresh mic status & Nugu button
-    /// Recover all status for any issues caused from becoming background
-    /// - Parameter notification: UIApplication.didBecomeActiveNotification
-    func didBecomeActive(_ notification: Notification) {
-        guard navigationController?.visibleViewController == self else { return }
-        refreshNugu()
-    }
+private extension MainViewController {
+    func registerObservers() {
+        // To avoid duplicated observing
+        removeObservers()
         
+        /**
+         Catch resigning active notification to stop recognizing & wake up detector
+         It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
+         */
+        resignActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main, using: { (notification) in
+            // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
+            if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
+                NuguCentralManager.shared.client.ttsAgent.stopTTS()
+            }
+            NuguCentralManager.shared.client.asrAgent.stopRecognition()
+            NuguCentralManager.shared.stopMicInputProvider()
+        })
+        
+        /**
+         Catch becoming active notification to refresh mic status & Nugu button
+         Recover all status for any issues caused from becoming background
+         */
+        becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self else { return }
+            guard self.navigationController?.visibleViewController == self else { return }
+
+            self.refreshNugu()
+        })
+    }
+    
+    func removeObservers() {
+        if let resignActiveObserver = resignActiveObserver {
+            NotificationCenter.default.removeObserver(resignActiveObserver)
+            self.resignActiveObserver = nil
+        }
+
+        if let becomeActiveObserver = becomeActiveObserver {
+            NotificationCenter.default.removeObserver(becomeActiveObserver)
+            self.becomeActiveObserver = nil
+        }
+    }
+}
+    
+@objc private extension MainViewController {
     func didTapForStopRecognition() {
         guard [.listening, .recognizing].contains(NuguCentralManager.shared.client.asrAgent.asrState) else { return }
         NuguCentralManager.shared.client.asrAgent.stopRecognition()
@@ -170,7 +181,6 @@ private extension MainViewController {
 // MARK: - Private (Nugu)
 
 private extension MainViewController {
-    
     /// Initialize to start using Nugu
     /// AudioSession is required for using Nugu
     /// Add delegates for all the components that provided by default client or custom provided ones

@@ -23,12 +23,8 @@ import UIKit
 import NuguUIKit
 
 final class IntroViewController: UIViewController {
-    
-    // MARK: Properties
-    
+    var appStateObserver: Any?
     @IBOutlet private weak var loginMethodLabel: UILabel!
-    
-    // MARK: Override
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,27 +39,19 @@ final class IntroViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(willEnterForeground(_:)),
-            name: UIApplication.willEnterForegroundNotification,
-            object: nil
-        )
+        appStateObserver = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main, using: { [weak self] _ in
+            self?.refreshView()
+        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NotificationCenter.default.removeObserver(
-            self,
-            name: UIApplication.willEnterForegroundNotification,
-            object: nil
-        )
+        if let appStateObserver = appStateObserver {
+            NotificationCenter.default.removeObserver(appStateObserver)
+            self.appStateObserver = nil
+        }
     }
-    
-    // MARK: Deinitialize
-    
-    deinit {}
 }
 
 // MARK: - Private (login)
