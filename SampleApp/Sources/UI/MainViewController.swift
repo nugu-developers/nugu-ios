@@ -785,4 +785,8 @@ extension MainViewController: AudioPlayerAgentDelegate {
             displayAudioPlayerView.audioPlayerState = state
         }
     }
+    
+    func audioPlayerAgentDidChange(duration: Int) {
+        NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(duration: duration)
+    }
 }

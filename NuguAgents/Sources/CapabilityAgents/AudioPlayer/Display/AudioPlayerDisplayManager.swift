@@ -204,6 +204,8 @@ extension AudioPlayerDisplayManager: AudioPlayerAgentDelegate {
             self.audioPlayerState = state
         }
     }
+    
+    func audioPlayerAgentDidChange(duration: Int) {}
 }
 
 // MARK: - PlaySyncDelegate
