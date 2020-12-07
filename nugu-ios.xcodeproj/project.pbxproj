@@ -29,6 +29,7 @@
 		066C9D3025553EF0000C7800 /* MicInputConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31A2375707000C9A177 /* MicInputConst.swift */; };
 		067CB451256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */; };
 		067CB473256E582200D57AF0 /* VoiceChromePresenterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */; };
+		06CDA2A9257DC597009DA31B /* NuguServiceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7525AC84249AFE8E006800A3 /* NuguServiceKit.framework */; };
 		06CF28EB2547DE5700CEC3EC /* ContextManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CF28EA2547DE5700CEC3EC /* ContextManager+Rx.swift */; };
 		06CF293C254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CF293B254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift */; };
 		06CFF675254276EF00A11CB4 /* Bundle+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CFF674254276EF00A11CB4 /* Bundle+Convenience.swift */; };
@@ -574,6 +575,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1FFFF02323753F8A00C9A177;
 			remoteInfo = NuguUIKit;
+		};
+		06CDA2AB257DC597009DA31B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7525AC83249AFE8E006800A3;
+			remoteInfo = NuguServiceKit;
 		};
 		1F1008F42379247800D90FEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1319,6 +1327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0600C2C125709A450071AEF3 /* NuguUtils.framework in Frameworks */,
+				06CDA2A9257DC597009DA31B /* NuguServiceKit.framework in Frameworks */,
 				1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */,
 				73152FED23E05D9700F843C3 /* NuguAgents.framework in Frameworks */,
 				060FAAFA256668E000F01EE3 /* NuguLoginKit.framework in Frameworks */,
@@ -3215,6 +3224,7 @@
 				060FAAFD256668E000F01EE3 /* PBXTargetDependency */,
 				060FAB3B2566693600F01EE3 /* PBXTargetDependency */,
 				0600C2C425709A450071AEF3 /* PBXTargetDependency */,
+				06CDA2AC257DC597009DA31B /* PBXTargetDependency */,
 			);
 			name = NuguClientKit;
 			packageProductDependencies = (
@@ -4212,6 +4222,11 @@
 			isa = PBXTargetDependency;
 			target = 1FFFF02323753F8A00C9A177 /* NuguUIKit */;
 			targetProxy = 060FAB3A2566693600F01EE3 /* PBXContainerItemProxy */;
+		};
+		06CDA2AC257DC597009DA31B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7525AC83249AFE8E006800A3 /* NuguServiceKit */;
+			targetProxy = 06CDA2AB257DC597009DA31B /* PBXContainerItemProxy */;
 		};
 		1F1008F52379247800D90FEE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
