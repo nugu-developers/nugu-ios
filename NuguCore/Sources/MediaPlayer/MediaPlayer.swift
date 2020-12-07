@@ -134,7 +134,13 @@ extension MediaPlayer {
                     return
                 }
                 
-                self.delegate?.mediaPlayer(self, didChange: asset.duration)
+                let status = asset.statusOfValue(forKey: "duration", error: nil)
+                switch status {
+                case .loaded:
+                    self.delegate?.mediaPlayer(self, didChange: asset.duration)
+                default:
+                    break
+                }
             }
             log.debug("Duration not loaded")
             return NuguTimeInterval(seconds: 0)
