@@ -62,6 +62,12 @@ final class NuguDisplayPlayerController {
         }
     }
     
+    func nuguAudioPlayerAgentDidChange(duration: Int) {
+        DispatchQueue.main.async { [weak self] in
+            self?.update()
+        }
+    }
+    
     func remove() {
         removeRemoteCommands()
         currentItem = nil

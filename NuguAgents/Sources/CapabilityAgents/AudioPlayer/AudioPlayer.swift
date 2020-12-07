@@ -226,6 +226,10 @@ extension AudioPlayer: MediaPlayerDelegate {
         
         delegate?.mediaPlayer(self, didChange: state)
     }
+    
+    func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange duration: TimeIntervallic) {
+        delegate?.mediaPlayer(self, didChange: duration)
+    }
 }
 
 // MARK: - Private (Timer)
