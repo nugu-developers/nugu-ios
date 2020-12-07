@@ -159,7 +159,7 @@ public final class ASRAgent: ASRAgentProtocol {
     }
     
     // For Recognize Event
-    private var asrRequest: ASRRequest?
+    @Atomic private var asrRequest: ASRRequest?
     private var attachmentSeq: Int32 = 0
     
     private lazy var disposeBag = DisposeBag()
@@ -615,7 +615,6 @@ private extension ASRAgent {
 //                    log.error(error)
 //                }
 //            }
-            break
         }
         endPointDetector?.delegate = self
         endPointDetector?.start()
