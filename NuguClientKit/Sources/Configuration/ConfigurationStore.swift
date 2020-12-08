@@ -23,6 +23,9 @@ import Foundation
 import NuguCore
 import NuguLoginKit
 
+/// The entry point of NUGU SDKs.
+///
+/// Application should configure `ConfigurationStore` using `configure()`, `configure(url:)` or `configure(configuration:)`
 public class ConfigurationStore {
     public static let shared = ConfigurationStore()
     
@@ -53,10 +56,12 @@ public class ConfigurationStore {
     // singleton
     private init() {}
     
+    /// Configure with `Configuration`
     public func configure(configuration: Configuration) {
         self.configuration = configuration
     }
     
+    /// Configure with specific `url`
     public func configure(url: URL) throws {
         do {
             let data = try Data(contentsOf: url)
@@ -66,6 +71,7 @@ public class ConfigurationStore {
         }
     }
     
+    /// Configure with `nugu-config.plist` in `Bundle.main`
     public func configure() {
         guard let url = Bundle.main.url(forResource: "nugu-config", withExtension: "plist") else {
             log.error("nugu-config.plist is not exist")
@@ -84,6 +90,7 @@ public class ConfigurationStore {
 // MAKR: - Url
 
 public extension ConfigurationStore {
+    /// Determine whether the `url` is `Configuration.serviceWebRedirectUri`.
     func isServiceWebRedirectUrl(url: URL) -> Bool {
         guard let configuration = configuration else {
             log.error("ConfigurationStore is not configured")
@@ -93,6 +100,7 @@ public extension ConfigurationStore {
         return url.absoluteString.starts(with: configuration.serviceWebRedirectUri)
     }
     
+    /// Determine whether the `url` is `Configuration.authRedirectUri`.
     func isAuthorizationRedirectUrl(url: URL) -> Bool {
         guard let configuration = configuration else {
             log.error("ConfigurationStore is not configured")
@@ -102,6 +110,9 @@ public extension ConfigurationStore {
         return url.absoluteString.starts(with: configuration.authRedirectUri)
     }
     
+    /// Get the web page url for the privacy policy.
+    ///
+    /// - Parameter completion: The closure to receive result.
     func privacyUrl(completion: @escaping (Result<String, Error>) -> Void) {
         configurationMetadata { result in
             switch result {
@@ -117,7 +128,9 @@ public extension ConfigurationStore {
         }
     }
     
-    /// Web page url for NUGU usage guide of own device
+    /// Get the web page url for NUGU usage guide of own device
+    ///
+    /// - Parameter completion: The closure to receive result.
     func usageGuideUrl(deviceUniqueId: String, completion: @escaping (Result<String, Error>) -> Void) {
         guard let configuration = configuration else {
             completion(.failure(ConfigurationError.notConfigured))
@@ -147,6 +160,9 @@ public extension ConfigurationStore {
         }
     }
     
+    /// Get the web page url to configure play settings for the user device.
+    ///
+    /// - Parameter completion: The closure to receive result.
     func serviceSettingUrl(completion: @escaping (Result<String, Error>) -> Void) {
         configurationMetadata { result in
             switch result {
@@ -162,6 +178,9 @@ public extension ConfigurationStore {
         }
     }
     
+    /// Get the web page url for the terms of service.
+    ///
+    /// - Parameter completion: The closure to receive result.
     func agreementUrl(completion: @escaping (Result<String, Error>) -> Void) {
         configurationMetadata { result in
             switch result {

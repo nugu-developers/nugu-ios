@@ -141,7 +141,7 @@ extension NuguCentralManager {
         
         switch loginMethod {
         case .type1:
-            oauthClient.authorize(parentViewController: viewController) { [weak self] (result) in
+            oauthClient.authorizeWithNuguId(parentViewController: viewController) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo

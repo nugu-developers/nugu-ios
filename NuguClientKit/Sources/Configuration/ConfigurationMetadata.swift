@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct ConfigurationMetadata: Decodable {
+public struct ConfigurationMetadata: Codable {
     let issuer: String?
     let authorizationEndpoint: String?
     let tokenEndpoint: String?

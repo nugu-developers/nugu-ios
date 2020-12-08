@@ -37,7 +37,7 @@ public extension NuguServiceWebView {
         let cookie = NuguServiceCookie(
             authToken: token,
             appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-            pocId: configuration.pocId, // Put your own pocId
+            pocId: configuration.pocId,
             theme: theme,
             oauthRedirectUri: configuration.serviceWebRedirectUri
         )
