@@ -50,6 +50,7 @@ final class ASRBeepPlayer {
     // MARK: Internal (beep)
     
     func beep(type: BeepType) {
+        guard type.isEnabled == true else { return }
         play(type: type)
         focusManager.requestFocus(channelDelegate: self)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in

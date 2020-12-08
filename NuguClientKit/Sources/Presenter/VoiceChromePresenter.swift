@@ -96,14 +96,6 @@ public extension VoiceChromePresenter {
 // MARK: - Private
 
 private extension VoiceChromePresenter {
-    var bottomSafeAreaHeight: CGFloat {
-        if #available(iOS 11.0, *) {
-            return targetView?.safeAreaInsets.bottom ?? 0
-        } else {
-            return viewController?.bottomLayoutGuide.length ?? 0
-        }
-    }
-    
     func showVoiceChrome() throws {
         log.debug("")
         guard let view = targetView else { throw VoiceChromePresenterError.superViewNotExsit }
@@ -121,7 +113,7 @@ private extension VoiceChromePresenter {
         }
         
         if view.subviews.contains(nuguVoiceChrome) == false {
-            nuguVoiceChrome.frame = CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + bottomSafeAreaHeight)
+            nuguVoiceChrome.frame = CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SafeAreaUtil.bottomSafeAreaHeight)
             view.addSubview(nuguVoiceChrome)
         }
         showAnimation()
