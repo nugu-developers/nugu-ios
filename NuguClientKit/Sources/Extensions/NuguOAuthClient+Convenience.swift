@@ -71,7 +71,7 @@ public extension NuguOAuthClient {
     /// `ConfigurationStore` must be configured.
     /// - Parameter parentViewController: The `parentViewController` will present a safariViewController.
     /// - Parameter completion: The closure to receive result for authorization.
-    func authorizeWithNuguId(parentViewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, NuguLoginKitError>) -> Void) {
+    func authorizeWithTid(parentViewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, NuguLoginKitError>) -> Void) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             completion(.failure(.unknown(description: "ConfigurationStore is not configured")))
             return
