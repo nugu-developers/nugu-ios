@@ -27,7 +27,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.4")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.5")
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
@@ -389,14 +389,14 @@ extension AudioPlayerAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
         var payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "playServiceId": latestPlayer?.payload.playServiceId,
+            "playServiceId": currentPlayer?.payload.playServiceId,
             "playerActivity": audioPlayerState.playerActivity,
             // This is a mandatory in Play kit.
-            "offsetInMilliseconds": latestPlayer?.offset.truncatedMilliSeconds,
-            "token": latestPlayer?.payload.audioItem.stream.token,
+            "offsetInMilliseconds": currentPlayer?.offset.truncatedMilliSeconds,
+            "token": currentPlayer?.payload.audioItem.stream.token,
             "lyricsVisible": false
         ]
-        payload["durationInMilliseconds"] = latestPlayer?.duration.truncatedMilliSeconds
+        payload["durationInMilliseconds"] = currentPlayer?.duration.truncatedMilliSeconds
         
         if let playServiceId = latestPlayer?.payload.playServiceId {
             let semaphore = DispatchSemaphore(value: 0)
@@ -452,12 +452,13 @@ private extension AudioPlayerAgent {
                 guard let self = self else { return }
                 
                 log.debug(directive.header.messageId)
-                if self.prefetchPlayer?.stop(reason: .playAnother) == true {
+                if let prefetchPlayer = self.prefetchPlayer,
+                   prefetchPlayer.stop(reason: player.payload.playServiceId == prefetchPlayer.payload.playServiceId ? .playAnother : .stop) == true {
                     self.audioPlayerState = .stopped
                 }
                 if let currentPlayer = self.currentPlayer,
                    player.shouldResume(player: currentPlayer) != true,
-                   currentPlayer.stop(reason: .playAnother) == true {
+                   currentPlayer.stop(reason: player.payload.playServiceId == currentPlayer.payload.playServiceId ? .playAnother : .stop) == true {
                     self.audioPlayerState = .stopped
                 }
                 

@@ -258,7 +258,7 @@ extension TTSAgent: ContextInfoDelegate {
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
             "engine": "skt",
-            "token": latestPlayer?.payload.token
+            "token": currentPlayer?.payload.token
         ]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
