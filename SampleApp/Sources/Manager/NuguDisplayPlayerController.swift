@@ -40,6 +40,8 @@ final class NuguDisplayPlayerController {
     private var nowPlayingInfoCenter: MPNowPlayingInfoCenter?
     
     private var renderingContext: AnyObject?
+    private var albumImageLoadRequest: URLSessionDataTask?
+    
     
     init() {
         update()
@@ -187,14 +189,16 @@ private extension NuguDisplayPlayerController {
         
         // Set MPMediaItemArtwork if imageUrl exists
         if let imageUrl = imageUrl, let artWorkUrl = URL(string: imageUrl) {
-            ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
+            albumImageLoadRequest?.cancel()
+            albumImageLoadRequest = ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
+                let updatedDuration = self?.currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0) : 0
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = updatedDuration
                 switch result {
                 case .success(let imageData):
                     guard let artWorkImage = UIImage(data: imageData) else { return }
                     let artWork = MPMediaItemArtwork(boundsSize: artWorkImage.size, requestHandler: { _ -> UIImage in
                         return artWorkImage
                     })
-                    
                     nowPlayingInfo[MPMediaItemPropertyArtwork] = artWork
                     self?.nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
                 case .failure:
