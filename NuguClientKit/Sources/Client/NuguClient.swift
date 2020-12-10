@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 import NuguCore
 import NuguAgents
@@ -291,5 +292,19 @@ extension NuguClient: StreamDataDelegate {
     
     public func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {
         delegate?.nuguClientDidSend(attachment: attachment, error: error)
+    }
+}
+
+// MARK: - MicInputProviderDelegate
+
+extension NuguClient: MicInputProviderDelegate {
+    public func micInputProviderDidReceive(buffer: AVAudioPCMBuffer) {
+        if keywordDetector.state == .active {
+            keywordDetector.putAudioBuffer(buffer: buffer)
+        }
+        
+        if [.listening, .recognizing].contains(asrAgent.asrState) {
+            asrAgent.putAudioBuffer(buffer: buffer)
+        }
     }
 }
