@@ -22,6 +22,7 @@ import Foundation
 
 import NuguCore
 import NuguLoginKit
+import NuguUIKit
 
 /// The entry point of NUGU SDKs.
 ///
@@ -35,6 +36,7 @@ public class ConfigurationStore {
             guard let configuration = configuration else { return }
             
             NuguOAuthServerInfo.serverBaseUrl = configuration.authServerUrl
+            NuguDisplayWebView.deviceTypeCode = configuration.deviceTypeCode
             requestDiscovery(completion: nil)
         }
     }
@@ -50,6 +52,9 @@ public class ConfigurationStore {
             if let address = configurationMetadata.deviceGatewayRegistryUri {
                 NuguServerInfo.registryServerAddress = address
             }
+            if let url = configurationMetadata.templateServerUri {
+                NuguDisplayWebView.displayWebServerAddress = url
+            }
         }
     }
     
@@ -62,7 +67,7 @@ public class ConfigurationStore {
     }
     
     /// Configure with specific `url`
-    public func configure(url: URL) throws {
+    public func configure(url: URL) {
         do {
             let data = try Data(contentsOf: url)
             configuration = try PropertyListDecoder().decode(Configuration.self, from: data)
