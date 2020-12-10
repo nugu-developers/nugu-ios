@@ -41,8 +41,7 @@ final class NuguDisplayPlayerController {
     
     private var renderingContext: AnyObject?
     private var albumImageLoadRequest: URLSessionDataTask?
-    
-    
+        
     init() {
         update()
     }
@@ -149,64 +148,52 @@ private extension NuguDisplayPlayerController {
         }
         
         nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        if nowPlayingInfoCenter?.nowPlayingInfo == nil {
+            nowPlayingInfoCenter?.nowPlayingInfo = [:]
+        }
         
-        let duration: Int
-        let title: String
-        let albumTitle: String
-        let imageUrl: String?
-        
-        duration = currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0) : 0
-        title = parsedPayload.title
-        albumTitle = parsedPayload.albumTitle
-        imageUrl = parsedPayload.imageUrl
-        
-        // Set nowPlayingInfo display properties
-        var nowPlayingInfo = nowPlayingInfoCenter?.nowPlayingInfo ?? [:]
-        nowPlayingInfo[MPMediaItemPropertyTitle] = title
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = albumTitle
-        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = nil
+        nowPlayingInfoCenter?.nowPlayingInfo?[MPMediaItemPropertyTitle] = parsedPayload.title
+        nowPlayingInfoCenter?.nowPlayingInfo?[MPMediaItemPropertyAlbumTitle] = parsedPayload.albumTitle
+        nowPlayingInfoCenter?.nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0) : 0
     
-        let offset = currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0) : 0
-        
-        // TODO: - AudioPlayer can not start playing in background when MPRemoteCommandCenter's command target has totally removed. Adding remote commands in here is not a perfect solution. Should consider more proper solution.
         addRemoteCommands()
+        
+        let offset = currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0) : 0
         
         switch state {
         case .playing:
             // Set playbackTime as current offset, set playbackRate as 1
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = offset
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+            nowPlayingInfoCenter?.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = offset
+            nowPlayingInfoCenter?.nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
         case .paused:
             // Set playbackRate as 0, set playbackTime as current offset
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = offset
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
+            nowPlayingInfoCenter?.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = offset
+            nowPlayingInfoCenter?.nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
         default:
             // Set playbackRate as 0, set playbackTime as 0
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
+            nowPlayingInfoCenter?.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0
+            nowPlayingInfoCenter?.nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
         }
         
-        // Set MPMediaItemArtwork if imageUrl exists
-        if let imageUrl = imageUrl, let artWorkUrl = URL(string: imageUrl) {
+        if let imageUrl = parsedPayload.imageUrl, let artWorkUrl = URL(string: imageUrl) {
             albumImageLoadRequest?.cancel()
             albumImageLoadRequest = ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
-                let updatedDuration = self?.currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0) : 0
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = updatedDuration
                 switch result {
                 case .success(let imageData):
-                    guard let artWorkImage = UIImage(data: imageData) else { return }
+                    guard let artWorkImage = UIImage(data: imageData) else {
+                        self?.nowPlayingInfoCenter?.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
+                        return
+                    }
                     let artWork = MPMediaItemArtwork(boundsSize: artWorkImage.size, requestHandler: { _ -> UIImage in
                         return artWorkImage
                     })
-                    nowPlayingInfo[MPMediaItemPropertyArtwork] = artWork
-                    self?.nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
+                    self?.nowPlayingInfoCenter?.nowPlayingInfo?[MPMediaItemPropertyArtwork] = artWork
                 case .failure:
-                    self?.nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
+                    self?.nowPlayingInfoCenter?.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
                 }
             }
         } else {
-            nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
+            nowPlayingInfoCenter?.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
         }
     }
 }
