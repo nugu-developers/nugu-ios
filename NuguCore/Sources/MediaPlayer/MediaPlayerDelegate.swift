@@ -24,9 +24,9 @@ import NuguUtils
 
 public protocol MediaPlayerDelegate: class {
     func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable)
-    func mediaPlayerDurationDidChanged(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable)
+    func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable)
 }
 
 public extension MediaPlayerDelegate {
-    func mediaPlayerDurationDidChanged(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {}
+    func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {}
 }

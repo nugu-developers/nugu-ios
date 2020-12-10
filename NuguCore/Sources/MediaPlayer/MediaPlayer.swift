@@ -137,7 +137,7 @@ extension MediaPlayer {
                 let status = asset.statusOfValue(forKey: "duration", error: nil)
                 switch status {
                 case .loaded:
-                    self.delegate?.mediaPlayerDurationDidChanged(asset.duration, mediaPlayer: self)
+                    self.delegate?.mediaPlayerDurationDidChange(asset.duration, mediaPlayer: self)
                 default:
                     break
                 }

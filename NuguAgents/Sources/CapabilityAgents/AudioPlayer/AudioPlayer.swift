@@ -228,7 +228,7 @@ extension AudioPlayer: MediaPlayerDelegate {
     }
     
     func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange duration: TimeIntervallic) {
-        delegate?.mediaPlayerDurationDidChanged(duration, mediaPlayer: self)
+        delegate?.mediaPlayerDurationDidChange(duration, mediaPlayer: self)
     }
 }
 
