@@ -25,12 +25,10 @@ import NuguServiceKit
 import NuguClientKit
 
 final class NuguServiceWebViewController: UIViewController {
+    var initialURLString: String?
+    var authObserver: Any?
     
     @IBOutlet private weak var nuguServiceWebView: NuguServiceWebView!
-    
-    var initialURLString: String?
-    
-    // MARK: - Override
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,25 +37,17 @@ final class NuguServiceWebViewController: UIViewController {
         nuguServiceWebView.setNuguServiceCookie()
         nuguServiceWebView.loadUrlString(initialURLString)
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(refreshAfterOauth),
-            name: .oauthRefresh,
-            object: nil
-        )
+        authObserver = NotificationCenter.default.addObserver(forName: .oauthRefresh, object: nil, queue: .main, using: { [weak self] _ in
+            self?.presentedViewController?.dismiss(animated: true, completion: nil)
+            self?.nuguServiceWebView.reload()
+        })
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-}
-
-// MARK: - @objc (oauth_refresh)
-
-private extension NuguServiceWebViewController {
-    @objc func refreshAfterOauth() {
-        presentedViewController?.dismiss(animated: true, completion: nil)
-        nuguServiceWebView.reload()
+        if let authObserver = authObserver {
+            NotificationCenter.default.removeObserver(authObserver)
+            self.authObserver = nil
+        }
     }
 }
 

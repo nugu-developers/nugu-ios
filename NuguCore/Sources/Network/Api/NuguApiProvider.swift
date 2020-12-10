@@ -75,6 +75,11 @@ class NuguApiProvider: NSObject {
     private let internalPolicies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
         let disposable = Disposables.create()
         
+        guard let header = NuguApi.policy.header else {
+            event(.error(NetworkError.authError))
+            return disposable
+        }
+        
         var urlComponent = URLComponents(string: NuguApi.policy.uri(baseUrl: NuguServerInfo.registryServerAddress))
         urlComponent?.queryItems = [
             URLQueryItem(name: "protocol", value: "H2")
@@ -88,7 +93,7 @@ class NuguApiProvider: NSObject {
         
         var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 30.0)
         request.httpMethod = NuguApi.policy.method.rawValue
-        request.allHTTPHeaderFields = NuguApi.policy.header
+        request.allHTTPHeaderFields = header
         
         event(.success(request))
         return disposable
@@ -109,6 +114,11 @@ class NuguApiProvider: NSObject {
             guard let self = self else { return disposable }
             
             self.processorQueue.async {
+                guard let header = NuguApi.directives.header else {
+                    single(.error(NetworkError.authError))
+                    return
+                }
+                
                 // enable client side load balance and find new resource server for directive and event both.
                 self.isCSLBEnabled = true
                 
@@ -129,7 +139,7 @@ class NuguApiProvider: NSObject {
                     
                     var downstreamRequest = URLRequest(url: downstreamUrl, cachePolicy: .useProtocolCachePolicy, timeoutInterval: Double.infinity)
                     downstreamRequest.httpMethod = NuguApi.directives.method.rawValue
-                    downstreamRequest.allHTTPHeaderFields = NuguApi.directives.header
+                    downstreamRequest.allHTTPHeaderFields = header
                     self.session.dataTask(with: downstreamRequest).resume()
                     log.debug("directive request header:\n\(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
                 }
@@ -193,6 +203,11 @@ extension NuguApiProvider {
             guard let self = self else { return disposable }
             
             self.processorQueue.async {
+                guard let header = NuguApi.events.header else {
+                    single(.error(NetworkError.authError))
+                    return
+                }
+                
                 guard let resourceServerUrl = self.url else {
                     single(.error(NetworkError.noSuitableResourceServer))
                     return
@@ -207,7 +222,7 @@ extension NuguApiProvider {
                 
                 var streamRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: self.requestTimeout)
                 streamRequest.httpMethod = NuguApi.events.method.rawValue
-                streamRequest.allHTTPHeaderFields = NuguApi.events.header
+                streamRequest.allHTTPHeaderFields = header
                 streamRequest.allHTTPHeaderFields?[HTTPConst.contentTypeKey] = HTTPConst.eventContentTypePrefix+boundary
                 if let httpHeaderFields = httpHeaderFields {
                     streamRequest.allHTTPHeaderFields = streamRequest.allHTTPHeaderFields?.merged(with: httpHeaderFields)
@@ -225,6 +240,7 @@ extension NuguApiProvider {
                 uploadTask.resume()
                 single(.success(eventResponse.subject))
             }
+            
             return disposable
         }
         .asObservable()
@@ -263,9 +279,13 @@ extension NuguApiProvider {
             return Completable.error(NetworkError.noSuitableResourceServer)
         }
         
+        guard let header = NuguApi.ping.header else {
+            return Completable.error(NetworkError.authError)
+        }
+        
         var request = URLRequest(url: pingUrl)
         request.httpMethod = NuguApi.ping.method.rawValue
-        request.allHTTPHeaderFields = NuguApi.ping.header
+        request.allHTTPHeaderFields = header
         
         return request.rxDataTask(urlSession: session)
             .asCompletable()

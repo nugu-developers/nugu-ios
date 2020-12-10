@@ -23,6 +23,7 @@ import MediaPlayer
 
 import NuguAgents
 import NuguClientKit
+import NuguUIKit
 
 final class NuguDisplayPlayerController {
     
@@ -59,6 +60,12 @@ final class NuguDisplayPlayerController {
     func nuguAudioPlayerAgentDidChange(state: AudioPlayerState) {
         DispatchQueue.main.async { [weak self] in
             self?.update(newState: state)
+        }
+    }
+    
+    func nuguAudioPlayerAgentDidChange(duration: Int) {
+        DispatchQueue.main.async { [weak self] in
+            self?.update()
         }
     }
     

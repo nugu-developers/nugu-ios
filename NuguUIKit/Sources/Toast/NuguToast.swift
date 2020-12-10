@@ -50,15 +50,6 @@ final public class NuguToast {
     private lazy var toastLabel = UILabel()
     
     private var hideAnimationWorkItem: DispatchWorkItem?
-    
-    private var bottomSafeAreaHeight: CGFloat {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
-        if #available(iOS 11.0, *) {
-            return rootViewController.view.safeAreaInsets.bottom
-        } else {
-            return rootViewController.bottomLayoutGuide.length
-        }
-    }
 }
 
 // MARK: - Public
@@ -92,7 +83,7 @@ public extension NuguToast {
                                  width: window.bounds.size.width - CGFloat(ToastConst.viewMargin * 2),
                                  height: toastLabel.intrinsicContentSize.height + CGFloat(ToastConst.textVerticalPadding * 2))
         toastView.center = CGPoint(x: window.center.x,
-                                   y: window.bounds.size.height - (toastView.bounds.size.height/2) - (bottomMargin ?? CGFloat(ToastConst.bottomMargin)) - bottomSafeAreaHeight)
+                                   y: window.bounds.size.height - (toastView.bounds.size.height/2) - (bottomMargin ?? CGFloat(ToastConst.bottomMargin)) - SafeAreaUtil.bottomSafeAreaHeight)
         toastLabel.center = CGPoint(x: toastView.frame.size.width/2,
                                     y: toastView.frame.size.height/2)
         toastView.alpha = 0
