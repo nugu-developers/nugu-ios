@@ -403,21 +403,30 @@ private extension MainViewController {
 
 // MARK: - Private (AudioDisplayView)
 
-private extension MainViewController {    
+private extension MainViewController {
+    func replaceDisplayView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
+        guard let displayAudioPlayerView = self.displayAudioPlayerView else {
+            completion(nil)
+            return
+        }
+        displayAudioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
+        completion(displayAudioPlayerView)
+        self.displayAudioPlayerView = displayAudioPlayerView
+    }
+    
     func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        let wasPlayerBarMode = displayAudioPlayerView?.isBarMode == true
+        if let displayAudioPlayerView = self.displayAudioPlayerView,
+           view.subviews.contains(displayAudioPlayerView) == true {
+            replaceDisplayView(audioPlayerDisplayTemplate: audioPlayerDisplayTemplate, completion: completion)
+            return
+        }
         displayAudioPlayerView?.removeFromSuperview()
-        
         guard let audioPlayerView = AudioDisplayView.makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: audioPlayerDisplayTemplate, frame: view.frame) else {
             completion(nil)
             return
         }
         audioPlayerView.delegate = self
         audioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
-        
-        if wasPlayerBarMode == true {
-            audioPlayerView.setBarMode()
-        }
         
         audioPlayerView.alpha = 0
         view.insertSubview(audioPlayerView, belowSubview: nuguVoiceChrome)
