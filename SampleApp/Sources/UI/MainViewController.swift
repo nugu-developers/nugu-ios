@@ -411,7 +411,6 @@ private extension MainViewController {
         }
         displayAudioPlayerView.displayPayload = audioPlayerDisplayTemplate.payload
         completion(displayAudioPlayerView)
-        self.displayAudioPlayerView = displayAudioPlayerView
     }
     
     func addDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
