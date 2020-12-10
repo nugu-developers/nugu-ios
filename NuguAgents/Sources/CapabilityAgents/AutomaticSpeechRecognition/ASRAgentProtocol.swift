@@ -60,9 +60,13 @@ public protocol ASRAgentProtocol: CapabilityAgentable {
 
 // MARK: - Default
 public extension ASRAgentProtocol {
-    /// <#Description#>
-    /// - Parameter initiator: <#initiator description#>
-    /// - Returns: <#description#>
+    /// This function asks the `ASRAgent` to send a Recognize Event to Server and start streaming from `AudioStream`, which transitions it to the `recognizing` state.
+    ///
+    /// This function can be called in `idle` and `expectingSpeech` state.
+    ///
+    /// - Parameters:
+    ///   - options: The options for recognition.
+    /// - Returns: The dialogRequestId for request.
     @discardableResult func startRecognition(initiator: ASRInitiator) -> String {
         return startRecognition(initiator: initiator, completion: nil)
     }

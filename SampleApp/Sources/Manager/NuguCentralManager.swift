@@ -503,18 +503,9 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func requestTextInput(text: String, token: String? = nil, requestType: TextAgentRequestType, completion: (() -> Void)? = nil) {
-        client.dialogStateAggregator.isChipsRequestInProgress = true
-
-        client.textAgent.requestTextInput(
-            text: text,
-            token: token,
-            requestType: requestType
-        ) { [weak self] state in
+        client.requestTextInput(text: text, token: token, requestType: requestType) { state in
             switch state {
-            case .sent:
-                self?.client.asrAgent.stopRecognition()
             case .finished, .error:
-                NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = false
                 completion?()
             default: break
             }

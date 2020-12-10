@@ -217,6 +217,36 @@ public extension NuguClient {
     func stopReceiveServerInitiatedDirective() {
         streamDataRouter.stopReceiveServerInitiatedDirective()
     }
+    
+    /// Send event that needs a text-based recognition
+    ///
+    /// This function cancel speech recognition.(e.g. `ASRAgentProtocol.startRecognition(:initiator)`)
+    /// Use `NuguClient.textAgent.requestTextInput` directly to request independent of speech recognition.
+    ///
+    /// - Parameters:
+    ///   - text: The `text` to be recognized
+    ///   - token: <#token description#>
+    ///   - requestType: <#requestType description#>
+    ///   - completion: The completion handler to call when the request is complete
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func requestTextInput(text: String, token: String? = nil, requestType: TextAgentRequestType, completion: ((StreamDataState) -> Void)? = nil) -> String {
+        dialogStateAggregator.isChipsRequestInProgress = true
+
+        return textAgent.requestTextInput(
+            text: text,
+            token: token,
+            requestType: requestType
+        ) { [weak self] state in
+            switch state {
+            case .sent:
+                self?.asrAgent.stopRecognition()
+            case .finished, .error:
+                self?.dialogStateAggregator.isChipsRequestInProgress = false
+            default: break
+            }
+            completion?(state)
+        }
+    }
 }
 
 // MARK: - Authorization
