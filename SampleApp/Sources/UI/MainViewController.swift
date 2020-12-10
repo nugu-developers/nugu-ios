@@ -331,14 +331,36 @@ extension MainViewController: UIGestureRecognizerDelegate {
 // MARK: - Private (DisplayView)
 
 private extension MainViewController {
+    func replaceDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
+        guard let displayView = self.displayView else {
+            completion(nil)
+            return
+        }
+        displayView.load(
+            displayPayload: displayTemplate.payload,
+            displayType: displayTemplate.type,
+            deviceTypeCode: SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_"),
+            clientInfo: ["buttonColor": "white"]
+        )
+        displayView.onItemSelect = { (token, postback) in
+            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
+        }
+        completion(displayView)
+    }
+    
     func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        displayView?.removeFromSuperview()
+        if let displayView = self.displayView,
+           view.subviews.contains(displayView) {
+            replaceDisplayView(displayTemplate: displayTemplate, completion: completion)
+            return
+        }
         let displayView = NuguDisplayWebView(frame: view.frame)
         displayView.load(
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
             deviceTypeCode: SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_"),
-            clientInfo: ["buttonColor": "white"])
+            clientInfo: ["buttonColor": "white"]
+        )
         displayView.onClose = { [weak self] in
             guard let self = self else { return }
             NuguCentralManager.shared.client.ttsAgent.stopTTS()
