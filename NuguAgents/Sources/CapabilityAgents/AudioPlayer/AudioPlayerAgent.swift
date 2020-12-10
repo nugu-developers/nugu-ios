@@ -375,6 +375,12 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             }
         }
     }
+    
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange duration: TimeIntervallic) {
+        delegates.notify(queue: audioPlayerDelegateDispatchQueue) { delegate in
+            delegate.audioPlayerAgentDidChange(duration: duration.truncatedSeconds)
+        }
+    }
 }
 
 // MARK: - ContextInfoDelegate

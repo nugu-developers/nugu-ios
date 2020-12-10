@@ -26,8 +26,11 @@ public class AuthorizationStore: AuthorizationStoreable {
     public weak var delegate: AuthorizationStoreDelegate?
     
     public var authorizationToken: String? {
-        guard let delegate = delegate else { return nil }
-        guard let accessToken = delegate.authorizationStoreRequestAccessToken() else { return nil }
+        guard let delegate = delegate,
+              let accessToken = delegate.authorizationStoreRequestAccessToken() else {
+            return nil
+        }
+
         return "Bearer \(accessToken)"
     }
 }

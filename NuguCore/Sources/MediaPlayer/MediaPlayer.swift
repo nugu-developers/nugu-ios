@@ -127,7 +127,22 @@ extension MediaPlayer {
             return NuguTimeInterval(seconds: 0)
         }
         guard asset.statusOfValue(forKey: "duration", error: nil) == .loaded else {
-            asset.loadValuesAsynchronously(forKeys: ["duration"], completionHandler: nil)
+            asset.loadValuesAsynchronously(forKeys: ["duration"]) { [weak self] in
+                guard let self = self else { return }
+                guard let asset = self.player?.currentItem?.asset else {
+                    log.warning("player is nil")
+                    return
+                }
+                
+                let status = asset.statusOfValue(forKey: "duration", error: nil)
+                switch status {
+                case .loaded:
+                    self.delegate?.mediaPlayer(self, didChange: asset.duration)
+                default:
+                    break
+                }
+            }
+            log.debug("Duration not loaded")
             return NuguTimeInterval(seconds: 0)
         }
         return asset.duration

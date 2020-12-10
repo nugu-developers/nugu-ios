@@ -27,9 +27,7 @@ import NuguUtils
 public class NuguOAuthClient {
     /// The `deviceUniqueId` is unique identifier each device.
     private(set) public var deviceUniqueId: String
-    
-    private var observer: NSObjectProtocol?
-    
+    private var observer: Any?
     private var serviceName: String?
     
     /// The initializer for `NuguOAuthClient`.
@@ -78,7 +76,10 @@ public class NuguOAuthClient {
     }
     
     deinit {
-        observer = nil
+        if let observer = observer {
+            NotificationCenter.default.removeObserver(observer)
+            self.observer = nil
+        }
     }
 }
 
@@ -286,7 +287,7 @@ private extension NuguOAuthClient {
         observer = NotificationCenter.default.addObserver(
             forName: .authorization,
             object: nil,
-            queue: OperationQueue.main) { [weak self] (notification) in
+            queue: .main) { [weak self] (notification) in
                 guard let self = self else {
                     complete(result: .failure(NuguLoginKitError.unknown(description: "self is nil")))
                     return

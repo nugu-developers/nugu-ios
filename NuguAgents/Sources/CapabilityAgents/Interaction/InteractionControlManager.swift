@@ -20,7 +20,7 @@
 
 import Foundation
 
-import NuguUtils
+import NuguCore
 
 import RxSwift
 
