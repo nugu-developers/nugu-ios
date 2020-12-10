@@ -319,7 +319,7 @@ extension AudioPlayerAgent: FocusChannelDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension AudioPlayerAgent: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
+    public func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable) {
         guard let player = mediaPlayer as? AudioPlayer else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
@@ -431,12 +431,12 @@ extension AudioPlayerAgent: PlaySyncDelegate {
 // MARK: - AudioPlayerProgressDelegate
 
 extension AudioPlayerAgent: AudioPlayerProgressDelegate {
-    func audioPlayer(_ player: AudioPlayer, didReportDelay progress: TimeIntervallic) {
+    func audioPlayerDidDelayedReport(_ player: AudioPlayer) {
         log.debug(player.offset.truncatedMilliSeconds)
         sendCompactContextEvent(playEvent(typeInfo: .progressReportDelayElapsed, player: player))
     }
     
-    func audioPlayer(_ player: AudioPlayer, didReportInterval progress: TimeIntervallic) {
+    func audioPlayerDidIntervalReport(_ player: AudioPlayer) {
         log.debug(player.offset.truncatedMilliSeconds)
         sendCompactContextEvent(playEvent(typeInfo: .progressReportIntervalElapsed, player: player))
     }

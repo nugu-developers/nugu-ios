@@ -26,8 +26,8 @@ import NuguUtils
 import RxSwift
 
 protocol AudioPlayerProgressDelegate: class {
-    func audioPlayer(_ player: AudioPlayer, didReportDelay progress: TimeIntervallic)
-    func audioPlayer(_ player: AudioPlayer, didReportInterval progress: TimeIntervallic)
+    func audioPlayerDidDelayedReport(_ player: AudioPlayer)
+    func audioPlayerDidIntervalReport(_ player: AudioPlayer)
 }
 
 final class AudioPlayer {
@@ -129,7 +129,7 @@ final class AudioPlayer {
             cancelAssociation = false
             internalPlayer = nil
             player.delegate = nil
-            delegate?.mediaPlayer(self, didChange: .stop)
+            delegate?.mediaPlayerStateDidChange(.stop, mediaPlayer: self)
         }
         player.stop()
         
@@ -204,7 +204,7 @@ extension AudioPlayer: MediaPlayable {
 // MARK: - MediaPlayerDelegate
 
 extension AudioPlayer: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
+    public func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable) {
         log.info("media state: \(state)")
         
         switch state {
@@ -224,11 +224,11 @@ extension AudioPlayer: MediaPlayerDelegate {
             break
         }
         
-        delegate?.mediaPlayer(self, didChange: state)
+        delegate?.mediaPlayerStateDidChange(state, mediaPlayer: self)
     }
     
     func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange duration: TimeIntervallic) {
-        delegate?.mediaPlayer(self, didChange: duration)
+        delegate?.mediaPlayerDurationDidChanged(duration, mediaPlayer: self)
     }
 }
 
@@ -269,10 +269,10 @@ private extension AudioPlayer {
                 // Check if there is any report target between last offset and current offset.
                 let offsetRange = (self.lastReportedOffset + 1...offset)
                 if delayReportTime > 0, offsetRange.contains(delayReportTime) {
-                    self.progressDelegate?.audioPlayer(self, didReportDelay: self.offset)
+                    self.progressDelegate?.audioPlayerDidDelayedReport(self)
                 }
                 if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {
-                    self.progressDelegate?.audioPlayer(self, didReportInterval: self.offset)
+                    self.progressDelegate?.audioPlayerDidIntervalReport(self)
                 }
                 self.lastReportedOffset = offset
             })

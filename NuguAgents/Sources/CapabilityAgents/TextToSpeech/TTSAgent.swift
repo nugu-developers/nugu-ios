@@ -267,7 +267,7 @@ extension TTSAgent: ContextInfoDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension TTSAgent: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
+    public func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable) {
         guard let player = mediaPlayer as? TTSPlayer else { return }
         log.info("media \(mediaPlayer) state: \(state)")
         

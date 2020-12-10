@@ -72,7 +72,7 @@ final class TTSPlayer {
             cancelAssociation = false
             internalPlayer = nil
             player.delegate = nil
-            delegate?.mediaPlayer(self, didChange: .stop)
+            delegate?.mediaPlayerStateDidChange(.stop, mediaPlayer: self)
         }
         player.stop()
         return true
@@ -121,7 +121,7 @@ extension TTSPlayer: MediaPlayable {
 // MARK: - MediaPlayerDelegate
 
 extension TTSPlayer: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
+    public func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable ) {
         log.info("media state: \(state)")
         
         switch state {
@@ -131,10 +131,10 @@ extension TTSPlayer: MediaPlayerDelegate {
             break
         }
         
-        delegate?.mediaPlayer(self, didChange: state)
+        delegate?.mediaPlayerStateDidChange(state, mediaPlayer: self)
     }
     
     func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange duration: TimeIntervallic) {
-        delegate?.mediaPlayer(self, didChange: duration)
+        delegate?.mediaPlayerDurationDidChanged(duration, mediaPlayer: self)
     }
 }
