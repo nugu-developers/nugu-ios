@@ -70,6 +70,8 @@ final class NuguCentralManager {
     private let micInputProvider = MicInputProvider()
     
     private init() {
+        // TODO: - should be removed after configuration metadata has been applied
+        NuguDisplayWebView.deviceTypeCode = SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_")
     }
 }
 

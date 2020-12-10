@@ -337,7 +337,6 @@ private extension MainViewController {
         displayView.load(
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
-            deviceTypeCode: SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_"),
             clientInfo: ["buttonColor": "white"])
         displayView.onClose = { [weak self] in
             guard let self = self else { return }
