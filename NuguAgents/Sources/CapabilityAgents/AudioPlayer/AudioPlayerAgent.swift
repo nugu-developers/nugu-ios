@@ -376,7 +376,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
         }
     }
     
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange duration: TimeIntervallic) {
+    public func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {
         delegates.notify(queue: audioPlayerDelegateDispatchQueue) { delegate in
             delegate.audioPlayerAgentDidChange(duration: duration.truncatedSeconds)
         }
@@ -431,12 +431,12 @@ extension AudioPlayerAgent: PlaySyncDelegate {
 // MARK: - AudioPlayerProgressDelegate
 
 extension AudioPlayerAgent: AudioPlayerProgressDelegate {
-    func audioPlayerDidDelayedReport(_ player: AudioPlayer) {
+    func audioPlayerDidReportDelay(_ player: AudioPlayer) {
         log.debug(player.offset.truncatedMilliSeconds)
         sendCompactContextEvent(playEvent(typeInfo: .progressReportDelayElapsed, player: player))
     }
     
-    func audioPlayerDidIntervalReport(_ player: AudioPlayer) {
+    func audioPlayerDidReportInterval(_ player: AudioPlayer) {
         log.debug(player.offset.truncatedMilliSeconds)
         sendCompactContextEvent(playEvent(typeInfo: .progressReportIntervalElapsed, player: player))
     }
