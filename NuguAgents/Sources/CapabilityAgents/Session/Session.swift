@@ -43,6 +43,7 @@ public struct Session: Equatable {
 
 // MARK: - CustomStringConvertible
 
+/// :nodoc:
 extension Session: CustomStringConvertible {
     public var description: String {
         return "\(dialogRequestId)-\(sessionId)"

@@ -23,8 +23,12 @@ import Foundation
 /// The `AuthorizationStoreable` is used to provide authorization token.
 /// Provide authorization token
 public protocol AuthorizationStoreable: class {
+    // MARK: Managing Interactions
+    
     /// An delegate that application should extend to provide access token.
     var delegate: AuthorizationStoreDelegate? { get set }
+    
+    // MARK: Getting the OAuth authorization token
     
     /// The current authorization token. (auth_type + access_token)
     var authorizationToken: String? { get }

@@ -118,9 +118,6 @@
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">VoiceChromePresenter</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">VoiceChromePresenter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DialogStateDelegate.html">DialogStateDelegate</a></span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">VoiceChromePresenter</span><span class="p">:</span> <span class="kt">ASRAgentDelegate</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">VoiceChromePresenter</span><span class="p">:</span> <span class="kt">InteractionControlDelegate</span></code></pre>
 
                 </div>
               </div>
@@ -129,22 +126,13 @@
           </section>
           <section class="section task-group-section">
             <div class="task-group">
-              <div class="task-name-container">
-                <a name="/DialogStateDelegate"></a>
-                <a name="//apple_ref/swift/Section/DialogStateDelegate" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/DialogStateDelegate"></a>
-                  <h3 class="section-name"><p>DialogStateDelegate</p>
-</h3>
-                </div>
-              </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13NuguClientKit19DialogStateDelegateP06dialogE9DidChange_11isMultiturn5chips16sessionActivatedyAA0dE0O_SbSay0A6Agents14ChipsAgentItemV4ChipVGSgSbtF"></a>
-                    <a name="//apple_ref/swift/Method/dialogStateDidChange(_:isMultiturn:chips:sessionActivated:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13NuguClientKit19DialogStateDelegateP06dialogE9DidChange_11isMultiturn5chips16sessionActivatedyAA0dE0O_SbSay0A6Agents14ChipsAgentItemV4ChipVGSgSbtF">dialogStateDidChange(_:<wbr>isMultiturn:<wbr>chips:<wbr>sessionActivated:<wbr>)</a>
+                    <a name="/s:13NuguClientKit20VoiceChromePresenterC8delegateAA0deF8Delegate_pSgvp"></a>
+                    <a name="//apple_ref/swift/Property/delegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit20VoiceChromePresenterC8delegateAA0deF8Delegate_pSgvp">delegate</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -152,15 +140,183 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>&lt;#Description#&gt;</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">dialogStateDidChange</span><span class="p">(</span><span class="n">_</span> <span class="nv">state</span><span class="p">:</span> <span class="kt"><a href="../Enums/DialogState.html">DialogState</a></span><span class="p">,</span> <span class="nv">isMultiturn</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">chips</span><span class="p">:</span> <span class="p">[</span><span class="kt">ChipsAgentItem</span><span class="o">.</span><span class="kt">Chip</span><span class="p">]?,</span> <span class="nv">sessionActivated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/VoiceChromePresenterDelegate.html">VoiceChromePresenterDelegate</a></span><span class="p">?</span></code></pre>
 
                         </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit20VoiceChromePresenterC8isHiddenSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isHidden" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit20VoiceChromePresenterC8isHiddenSbvp">isHidden</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isHidden</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit20VoiceChromePresenterC9superView04nugudE00iB0ACSo6UIViewC_0A5UIKit0adE0CAA0aB0Ctcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(superView:nuguVoiceChrome:nuguClient:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit20VoiceChromePresenterC9superView04nugudE00iB0ACSo6UIViewC_0A5UIKit0adE0CAA0aB0Ctcfc">init(superView:<wbr>nuguVoiceChrome:<wbr>nuguClient:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">superView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="nv">nuguVoiceChrome</span><span class="p">:</span> <span class="kt">NuguVoiceChrome</span><span class="p">,</span> <span class="nv">nuguClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/NuguClient.html">NuguClient</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>superView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#superView description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nuguVoiceChrome</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#nuguVoiceChrome description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nuguClient</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#nuguClient description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit20VoiceChromePresenterC14viewController04nugudE00iB0ACSo06UIViewH0C_0A5UIKit0adE0CAA0aB0Ctcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(viewController:nuguVoiceChrome:nuguClient:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit20VoiceChromePresenterC14viewController04nugudE00iB0ACSo06UIViewH0C_0A5UIKit0adE0CAA0aB0Ctcfc">init(viewController:<wbr>nuguVoiceChrome:<wbr>nuguClient:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">nuguVoiceChrome</span><span class="p">:</span> <span class="kt">NuguVoiceChrome</span><span class="p">,</span> <span class="nv">nuguClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/NuguClient.html">NuguClient</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>viewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#viewController description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nuguVoiceChrome</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#nuguVoiceChrome description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nuguClient</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>&lt;#nuguClient description#&gt;</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -169,11 +325,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/AutomaticSpeechRecognitionDelegate"></a>
-                <a name="//apple_ref/swift/Section/AutomaticSpeechRecognitionDelegate" class="dashAnchor"></a>
+                <a name="/Public%20%28Voice%20Chrome%29"></a>
+                <a name="//apple_ref/swift/Section/Public (Voice Chrome)" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/AutomaticSpeechRecognitionDelegate"></a>
-                  <h3 class="section-name"><p>AutomaticSpeechRecognitionDelegate</p>
+                  <a class="section-name-link" href="#/Public%20%28Voice%20Chrome%29"></a>
+                  <h3 class="section-name"><p>Public (Voice Chrome)</p>
 </h3>
                 </div>
               </div>
@@ -181,9 +337,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10NuguAgents16ASRAgentDelegateP17asrAgentDidChange5stateyAA8ASRStateO_tF"></a>
-                    <a name="//apple_ref/swift/Method/asrAgentDidChange(state:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10NuguAgents16ASRAgentDelegateP17asrAgentDidChange5stateyAA8ASRStateO_tF">asrAgentDidChange(state:<wbr>)</a>
+                    <a name="/s:13NuguClientKit20VoiceChromePresenterC07presentdE0yyKF"></a>
+                    <a name="//apple_ref/swift/Method/presentVoiceChrome()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit20VoiceChromePresenterC07presentdE0yyKF">presentVoiceChrome()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -191,13 +347,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>&lt;#Description#&gt;</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    &lt;#description#&gt;
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">asrAgentDidChange</span><span class="p">(</span><span class="nv">state</span><span class="p">:</span> <span class="kt">ASRState</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">presentVoiceChrome</span><span class="p">()</span> <span class="k">throws</span></code></pre>
 
                         </div>
                       </div>
@@ -207,9 +369,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10NuguAgents16ASRAgentDelegateP18asrAgentDidReceive6result15dialogRequestIdyAA9ASRResultO_SStF"></a>
-                    <a name="//apple_ref/swift/Method/asrAgentDidReceive(result:dialogRequestId:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10NuguAgents16ASRAgentDelegateP18asrAgentDidReceive6result15dialogRequestIdyAA9ASRResultO_SStF">asrAgentDidReceive(result:<wbr>dialogRequestId:<wbr>)</a>
+                    <a name="/s:13NuguClientKit20VoiceChromePresenterC07dismissdE0yyF"></a>
+                    <a name="//apple_ref/swift/Method/dismissVoiceChrome()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit20VoiceChromePresenterC07dismissdE0yyF">dismissVoiceChrome()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -217,52 +379,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">asrAgentDidReceive</span><span class="p">(</span><span class="nv">result</span><span class="p">:</span> <span class="kt">ASRResult</span><span class="p">,</span> <span class="nv">dialogRequestId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                        <p>&lt;#Description#&gt;</p>
 
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/InteractionControlDelegate"></a>
-                <a name="//apple_ref/swift/Section/InteractionControlDelegate" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/InteractionControlDelegate"></a>
-                  <h3 class="section-name"><p>InteractionControlDelegate</p>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10NuguAgents26InteractionControlDelegateP011interactionD9DidChange11isMultiturnySb_tF"></a>
-                    <a name="//apple_ref/swift/Method/interactionControlDidChange(isMultiturn:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10NuguAgents26InteractionControlDelegateP011interactionD9DidChange11isMultiturnySb_tF">interactionControlDidChange(isMultiturn:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">interactionControlDidChange</span><span class="p">(</span><span class="nv">isMultiturn</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">dismissVoiceChrome</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>

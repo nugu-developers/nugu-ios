@@ -21,7 +21,8 @@ hide_unlisted_documentation: true
 theme: apple
 undocumented_text: Undocumented
 exclude:
-  - Sources/MediaPlayer/MediaAVPlayerItem.swift
+  - Sources/MediaPlayer/*
+  - Sources/PlaySync/*
 custom_categories:
   - name: Common
     children:
@@ -32,10 +33,6 @@ custom_categories:
     children:
     - AuthorizationStoreable
     - AuthorizationStoreDelegate
-  - name: Michrophone
-    children:
-    - MicInputProvider
-    - MicInputError
   - name: Network
     children:
     - StreamDataRoutable
@@ -73,18 +70,6 @@ custom_categories:
     - ContextInfoDelegate
     - ContextInfo
     - ContextType
-  - name: LayerPolicy
-    children:
-    - PlaySyncManageable
-    - PlaySyncDelegate
-    - PlaySyncProperty
-    - PlaySyncInfo
-  - name: MediaPlayer
-    children:
-    - MediaPlayable
-    - MediaPlayerDelegate
-    - MediaPlayerState
-    - MediaPlayableError
   - name: TimeIntervallic
     children:
     - TimeIntervallic

@@ -210,17 +210,21 @@ public class NuguClient {
 // MARK: - Helper functions
 
 public extension NuguClient {
+    /// <#Description#>
+    /// - Parameter completion: <#completion description#>
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
         streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
     }
     
+    /// <#Description#>
     func stopReceiveServerInitiatedDirective() {
         streamDataRouter.stopReceiveServerInitiatedDirective()
     }
 }
 
-// MARK: - Authorization
+// MARK: - AuthorizationStoreDelegate
 
+/// :nodoc:
 extension NuguClient: AuthorizationStoreDelegate {
     private func setupAuthorizationStore() {
         AuthorizationStore.shared.delegate = self
@@ -233,6 +237,7 @@ extension NuguClient: AuthorizationStoreDelegate {
 
 // MARK: - FocusManagerDelegate
 
+/// :nodoc:
 extension NuguClient: FocusDelegate {
     private func setupAudioSessionRequester() {
         focusManager.delegate = self
@@ -249,6 +254,7 @@ extension NuguClient: FocusDelegate {
 
 // MARK: - DialogStateDelegate
 
+/// :nodoc:
 extension NuguClient: DialogStateDelegate {
     private func setupDialogStateAggregator() {
         dialogStateAggregator.add(delegate: self)
@@ -268,6 +274,7 @@ extension NuguClient: DialogStateDelegate {
 
 // MARK: - StreamDataDelegate
 
+/// :nodoc:
 extension NuguClient: StreamDataDelegate {
     private func setupStreamDataRouter() {
         streamDataRouter.add(delegate: self)

@@ -109,6 +109,7 @@ extension DialogStateAggregator {
 
 // MARK: - ASRAgentDelegate
 
+/// :nodoc:
 extension DialogStateAggregator: ASRAgentDelegate {
     public func asrAgentDidChange(state: ASRState) {
         dialogStateDispatchQueue.async { [weak self] in
@@ -135,6 +136,7 @@ extension DialogStateAggregator: ASRAgentDelegate {
 
 // MARK: - TTSAgentDelegate
 
+/// :nodoc:
 extension DialogStateAggregator: TTSAgentDelegate {
     public func ttsAgentDidReceive(text: String, header: Downstream.Header) {
     }
@@ -158,6 +160,7 @@ extension DialogStateAggregator: TTSAgentDelegate {
 
 // MARK: - InteractionControlDelegate
 
+/// :nodoc:
 extension DialogStateAggregator: InteractionControlDelegate {
     public func interactionControlDidChange(isMultiturn: Bool) {
         log.debug(isMultiturn)
@@ -172,6 +175,7 @@ extension DialogStateAggregator: InteractionControlDelegate {
 
 // MARK: - Private
 
+/// :nodoc:
 private extension DialogStateAggregator {
     /// dialogStateDispatchQueue
     func tryEnterIdleState() {
@@ -196,6 +200,7 @@ private extension DialogStateAggregator {
 
 // MARK: - ChipsAgentDelegate
 
+/// :nodoc:
 extension DialogStateAggregator: ChipsAgentDelegate {
     public func chipsAgentDidReceive(item: ChipsAgentItem, header: Downstream.Header) {
         dialogStateDispatchQueue.async { [weak self] in

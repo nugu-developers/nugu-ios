@@ -9,14 +9,7 @@
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceWebView.swift",
-      "line": 88,
-      "symbol": "NuguServiceWebView.userContentController(_:didReceive:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceWebView.swift",
-      "line": 148,
+      "line": 149,
       "symbol": "NuguServiceWebView.loadUrlString(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"

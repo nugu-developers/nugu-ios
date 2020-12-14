@@ -1,27 +1,6 @@
 {
   "warnings": [
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 95,
-      "symbol": "KeywordDetector.tycheKeywordDetectorEngineDidDetect(data:start:end:detection:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 100,
-      "symbol": "KeywordDetector.tycheKeywordDetectorEngineDidError(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/KeywordDetector/KeywordDetector.swift",
-      "line": 105,
-      "symbol": "KeywordDetector.tycheKeywordDetectorEngineDidChange(state:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/MicInputProvider/MicInputError.swift",
       "line": 26,
       "symbol": "MicInputError.audioFormatError",
@@ -64,66 +43,10 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 213,
-      "symbol": "NuguClient.startReceiveServerInitiatedDirective(completion:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Client/NuguClient.swift",
-      "line": 217,
-      "symbol": "NuguClient.stopReceiveServerInitiatedDirective()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/NuguClientKit.swift",
       "line": 47,
       "symbol": "logEnabled",
       "symbol_kind": "source.lang.swift.decl.var.global",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenter.swift",
-      "line": 42,
-      "symbol": "VoiceChromePresenter.delegate",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenter.swift",
-      "line": 43,
-      "symbol": "VoiceChromePresenter.isHidden",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenter.swift",
-      "line": 45,
-      "symbol": "VoiceChromePresenter.init(superView:nuguVoiceChrome:nuguClient:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenter.swift",
-      "line": 51,
-      "symbol": "VoiceChromePresenter.init(viewController:nuguVoiceChrome:nuguClient:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenter.swift",
-      "line": 69,
-      "symbol": "VoiceChromePresenter.presentVoiceChrome()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenter.swift",
-      "line": 80,
-      "symbol": "VoiceChromePresenter.dismissVoiceChrome()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
