@@ -1,33 +1,33 @@
 {
   "warnings": [
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceCookie.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceCookie.swift",
       "line": 24,
       "symbol": "NuguServiceCookie",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceWebView.swift",
-      "line": 81,
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceWebView.swift",
+      "line": 88,
       "symbol": "NuguServiceWebView.userContentController(_:didReceive:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceWebView.swift",
-      "line": 139,
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceWebView.swift",
+      "line": 148,
       "symbol": "NuguServiceWebView.loadUrlString(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/WebOpenExternalApp.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/WebOpenExternalApp.swift",
       "line": 23,
       "symbol": "WebOpenExternalApp",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
+  "source_directory": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
 }

@@ -194,6 +194,7 @@ private extension MediaAVPlayerItem {
 }
 
 // MARK: - AVPlayerItem.Status extension
+
 extension AVPlayerItem.Status: CustomStringConvertible {
     public var description: String {
         switch self {

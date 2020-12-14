@@ -17,7 +17,8 @@
     <a title="FocusManageable Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../../index.html">NUGU SDK 0.21.0 Docs</a> (80% documented)</p>
+        <p><a href="../index.html">NUGU SDK iOS</a></p>
+        <p class="header-right"><a href="https://github.com/nugu-developers/nugu-ios"><img src="../img/gh.png"/>View on GitHub</a></p>
         <p class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -54,17 +55,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/AuthorizationStoreDelegate.html">AuthorizationStoreDelegate</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name">
-            <a href="../Michrophone.html">Michrophone</a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a href="../Classes/MicInputProvider.html">MicInputProvider</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/MicInputError.html">MicInputError</a>
               </li>
             </ul>
           </li>
@@ -154,9 +144,6 @@
                 <a href="../Structs/DirectiveHandleInfo.html">DirectiveHandleInfo</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/Array.html">Array</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../DirectiveSequener.html#/s:8NuguCore20DirectiveHandleInfosa">DirectiveHandleInfos</a>
               </li>
               <li class="nav-group-task">
@@ -192,7 +179,7 @@
                 <a href="../Structs/ContextInfo.html">ContextInfo</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Context.html#/s:8NuguCore11ContextTypeO">ContextType</a>
+                <a href="../Enums/ContextType.html">ContextType</a>
               </li>
             </ul>
           </li>
@@ -226,30 +213,10 @@
                 <a href="../Protocols/MediaPlayable.html">MediaPlayable</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Protocols/MediaPlayerDelegate.html">MediaPlayerDelegate</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Enums/MediaPlayerState.html">MediaPlayerState</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/MediaPlayableError.html">MediaPlayableError</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name">
-            <a href="../TimeIntervallic.html">TimeIntervallic</a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a href="../Protocols/TimeIntervallic.html">TimeIntervallic</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/NuguTimeInterval.html">NuguTimeInterval</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../TimeIntervallic.html#/c:@SA@CMTime">CMTime</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/DispatchTimeInterval.html">DispatchTimeInterval</a>
               </li>
             </ul>
           </li>
@@ -286,7 +253,7 @@ their priorities so that the invariant that there can only be one Foreground Cha
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>&lt;#Description#&gt;</p>
+                        <p>The object that acts as the delegate of focus-manager</p>
 
                       </div>
                       <div class="declaration">
@@ -383,6 +350,104 @@ their priorities so that the invariant that there can only be one Foreground Cha
                               <td>
                                 <div>
                                   <p>The object to unregister.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore15FocusManageableP07prepareC015channelDelegateyAA0c7ChannelG0_p_tF"></a>
+                    <a name="//apple_ref/swift/Method/prepareFocus(channelDelegate:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore15FocusManageableP07prepareC015channelDelegateyAA0c7ChannelG0_p_tF">prepareFocus(channelDelegate:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This method will acquire the channel and prepare focus to it.</p>
+
+<p>The caller will be notified via an focusChannelDidChange:focusState:</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">prepareFocus</span><span class="p">(</span><span class="nv">channelDelegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/FocusChannelDelegate.html">FocusChannelDelegate</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>channelDelegate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The object to prepare focus.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore15FocusManageableP06cancelC015channelDelegateyAA0c7ChannelG0_p_tF"></a>
+                    <a name="//apple_ref/swift/Method/cancelFocus(channelDelegate:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore15FocusManageableP06cancelC015channelDelegateyAA0c7ChannelG0_p_tF">cancelFocus(channelDelegate:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This method will release the prepared channel.</p>
+
+<p>The caller will be notified via an focusChannelDidChange:focusState:
+If the Channel to release is the current foreground focused Channel, it will also notify the next highest priority
+Channel via an focusChannelDidChange:focusState: callback that it has gained foreground focus.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">cancelFocus</span><span class="p">(</span><span class="nv">channelDelegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/FocusChannelDelegate.html">FocusChannelDelegate</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>channelDelegate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The object to release focus.</p>
                                 </div>
                               </td>
                             </tr>
@@ -497,7 +562,7 @@ Channel via an focusChannelDidChange:focusState: callback that it has gained for
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2020 <a class="link" href="https://github.com/nugu-developers/nugu-ios" target="_blank" rel="external">SK Telecom Co., Ltd.</a>. All rights reserved. (Last updated: 2020-10-19)</p>
+          <p>(c) 2020 SK Telecom Co., Ltd. All rights reserved.</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

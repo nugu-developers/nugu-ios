@@ -15,52 +15,37 @@ find ./docs/NuguCore -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"..\/index.html\">NuguCore/<a href=\"..\/..\/index.html\">NUGU SDK/'
 rm -rf ./docs/NuguCore/docsets
 
-jazzy --podspec NuguAgents.podspec --skip-undocumented -o docs/NuguAgents
+jazzy --config NuguAgents/.jazzy.yaml
 find ./docs/NuguAgents -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"index.html\">NuguAgents/<a href=\"..\/index.html\">NUGU SDK/'
 find ./docs/NuguAgents -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"..\/index.html\">NuguAgents/<a href=\"..\/..\/index.html\">NUGU SDK/'
 rm -rf ./docs/NuguAgents/docsets
 
-jazzy --podspec NuguClientKit.podspec --skip-undocumented -o docs/NuguClientKit
+jazzy --config NuguClientKit/.jazzy.yaml
 find ./docs/NuguClientKit -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"index.html\">NuguClientKit/<a href=\"..\/index.html\">NUGU SDK/'
 find ./docs/NuguClientKit -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"..\/index.html\">NuguClientKit/<a href=\"..\/..\/index.html\">NUGU SDK/'
 rm -rf ./docs/NuguClientKit/docsets
 
-jazzy --podspec NuguLoginKit.podspec --skip-undocumented -o docs/NuguLoginKit
+jazzy --config NuguLoginKit/.jazzy.yaml
 find ./docs/NuguLoginKit -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"index.html\">NuguLoginKit/<a href=\"..\/index.html\">NUGU SDK/'
 find ./docs/NuguLoginKit -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"..\/index.html\">NuguLoginKit/<a href=\"..\/..\/index.html\">NUGU SDK/'
 rm -rf ./docs/NuguLoginKit/docsets
 
-jazzy --podspec NuguServiceKit.podspec --skip-undocumented -o docs/NuguServiceKit
+jazzy --config NuguServiceKit/.jazzy.yaml
 find ./docs/NuguServiceKit -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"index.html\">NuguServiceKit/<a href=\"..\/index.html\">NUGU SDK/'
 find ./docs/NuguServiceKit -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"..\/index.html\">NuguServiceKit/<a href=\"..\/..\/index.html\">NUGU SDK/'
 rm -rf ./docs/NuguServiceKit/docsets
 
-jazzy --podspec NuguUIKit.podspec --skip-undocumented -o docs/NuguUIKit
+jazzy --config NuguUIKit/.jazzy.yaml
 find ./docs/NuguUIKit -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"index.html\">NuguUIKit/<a href=\"..\/index.html\">NUGU SDK/'
 find ./docs/NuguUIKit -name '*.html' -type f -print0 | xargs -0 \
 sed -i '' 's/<a href=\"..\/index.html\">NuguUIKit/<a href=\"..\/..\/index.html\">NUGU SDK/'
 rm -rf ./docs/NuguUIKit/docsets
-
-jazzy --podspec KeenSense.podspec --skip-undocumented -o docs/KeenSense
-find ./docs/KeenSense -name '*.html' -type f -print0 | xargs -0 \
-sed -i '' 's/<a href=\"index.html\">KeenSense/<a href=\"..\/index.html\">NUGU SDK/'
-find ./docs/KeenSense -name '*.html' -type f -print0 | xargs -0 \
-sed -i '' 's/<a href=\"..\/index.html\">KeenSense/<a href=\"..\/..\/index.html\">NUGU SDK/'
-rm -rf ./docs/KeenSense/docsets
-
-jazzy --podspec JadeMarble.podspec --skip-undocumented -o docs/JadeMarble
-find ./docs/JadeMarble -name '*.html' -type f -print0 | xargs -0 \
-sed -i '' 's/<a href=\"index.html\">JadeMarble/<a href=\"..\/index.html\">NUGU SDK/'
-find ./docs/JadeMarble -name '*.html' -type f -print0 | xargs -0 \
-sed -i '' 's/<a href=\"..\/index.html\">JadeMarble/<a href=\"..\/..\/index.html\">NUGU SDK/'
-rm -rf ./docs/JadeMarble/docsets
-

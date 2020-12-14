@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>KeywordDetector  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/KeywordDetector" class="dashAnchor"></a>
+    <a title="KeywordDetector  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">NUGU SDK iOS</a></p>
+        <p class="header-right"><a href="https://github.com/nugu-developers/nugu-ios"><img src="img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="img/carat.png" />
+        KeywordDetector  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Common.html">Common</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Common.html#/s:13NuguClientKit8logLevel8NattyLog0gE0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="NuguClient.html">NuguClient</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/NuguClient.html">NuguClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/NuguClientDelegate.html">NuguClientDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="VoiceChromePresenter.html">VoiceChromePresenter</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/VoiceChromePresenter.html">VoiceChromePresenter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/VoiceChromePresenterDelegate.html">VoiceChromePresenterDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="DialogStateAggregator.html">DialogStateAggregator</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/DialogStateAggregator.html">DialogStateAggregator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/DialogStateDelegate.html">DialogStateDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/DialogState.html">DialogState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="MicInputProvider.html">MicInputProvider</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/MicInputProvider.html">MicInputProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/MicInputError.html">MicInputError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="KeywordDetector.html">KeywordDetector</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/KeywordDetector.html">KeywordDetector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/KeywordDetectorDelegate.html">KeywordDetectorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/KeywordDetectorState.html">KeywordDetectorState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/KeywordSource.html">KeywordSource</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>KeywordDetector</h1>
+            
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit15KeywordDetectorC"></a>
+                    <a name="//apple_ref/swift/Class/KeywordDetector" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit15KeywordDetectorC">KeywordDetector</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Classes/KeywordDetector.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">KeywordDetector</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">KeywordDetector</span><span class="p">:</span> <span class="kt">TycheKeywordDetectorEngineDelegate</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">KeywordDetector</span><span class="p">:</span> <span class="kt">ContextInfoDelegate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit23KeywordDetectorDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/KeywordDetectorDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit23KeywordDetectorDelegateP">KeywordDetectorDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/KeywordDetectorDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">KeywordDetectorDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit20KeywordDetectorStateO"></a>
+                    <a name="//apple_ref/swift/Enum/KeywordDetectorState" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit20KeywordDetectorStateO">KeywordDetectorState</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Enums/KeywordDetectorState.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">KeywordDetectorState</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit13KeywordSourceV"></a>
+                    <a name="//apple_ref/swift/Struct/KeywordSource" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit13KeywordSourceV">KeywordSource</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Structs/KeywordSource.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">KeywordSource</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>(c) 2020 SK Telecom Co., Ltd. All rights reserved.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
