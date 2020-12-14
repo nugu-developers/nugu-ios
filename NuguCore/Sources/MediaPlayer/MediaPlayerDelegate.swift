@@ -20,9 +20,13 @@
 
 import Foundation
 
-/// <#Description#>
+import NuguUtils
+
 public protocol MediaPlayerDelegate: class {
-    /// <#Description#>
-    /// - Parameter state: <#state description#>
-    func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState)
+    func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable)
+    func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable)
+}
+
+public extension MediaPlayerDelegate {
+    func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {}
 }

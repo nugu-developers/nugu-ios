@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguServiceKit'
-  s.version = '0.26.0'
+  s.version = '0.27.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Customized Webview for Nugu Service'
   s.description = <<-DESC
@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
   
   s.swift_version = '5.1'
 
+  s.dependency 'NuguUtils', '~> 0'
   s.dependency 'NattyLog', '~> 1'
 
   s.source_files = 'NuguServiceKit/Sources/**/*'

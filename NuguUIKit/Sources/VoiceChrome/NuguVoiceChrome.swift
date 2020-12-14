@@ -72,6 +72,12 @@ final public class NuguVoiceChrome: UIView {
         }
     }
     
+    public var onChipsSelect: ((_ selectedChips: NuguChipsButton.NuguChipsButtonType) -> Void)? {
+        didSet {
+            chipsView.onChipsSelect = onChipsSelect
+        }
+    }
+    
     public private(set) var currentState: State = .listeningPassive
     
     // MARK: - Private Properties
@@ -108,16 +114,7 @@ final public class NuguVoiceChrome: UIView {
         // swiftlint:enable force_cast
         view.frame = bounds
         addSubview(view)
-        
-        let path = UIBezierPath(
-            roundedRect: bounds,
-            byRoundingCorners: [.topLeft, .topRight],
-            cornerRadii: CGSize(width: 12.0, height: 12.0)
-        )
-        let mask = CAShapeLayer()
-        mask.path = path.cgPath
-        backgroundView.layer.mask = mask
-        backgroundView.clipsToBounds = true
+        setupBackgroundView()
         
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.15
@@ -137,6 +134,26 @@ final public class NuguVoiceChrome: UIView {
         }
         
         changeState(state: .listeningPassive)
+    }
+    
+    public override var frame: CGRect {
+        didSet {
+            guard let view = subviews.first else { return }
+            
+            view.frame = bounds
+            setupBackgroundView()
+        }
+    }
+    
+    private func setupBackgroundView() {
+        let path = UIBezierPath(
+            roundedRect: bounds,
+            byRoundingCorners: [.topLeft, .topRight],
+            cornerRadii: CGSize(width: 12.0, height: 12.0)
+        )
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        backgroundView.layer.mask = mask
     }
 }
 
@@ -208,6 +225,17 @@ public extension NuguVoiceChrome {
             self?.animationView.stop()
             self?.setRecognizedText(text: nil)
             onChipsSelect(selectedChips)
+        }
+    }
+    
+    func setChipsData(chipsData: [NuguChipsButton.NuguChipsButtonType]) {
+        recognizedTextLabel.text = nil
+        chipsView.chipsData = chipsData
+        chipsView.isHidden = false
+        chipsView.onChipsSelect = { [weak self] selectedChips in
+            self?.animationView.stop()
+            self?.setRecognizedText(text: nil)
+            self?.onChipsSelect?(selectedChips)
         }
     }
     

@@ -23,63 +23,111 @@ import MediaPlayer
 
 import NuguAgents
 import NuguClientKit
+import NuguUIKit
 
 final class NuguDisplayPlayerController {
-    
-    // MARK: Properties
-    
     private var playCommandTarget: Any?
     private var pauseCommandTarget: Any?
     private var previousCommandTarget: Any?
     private var nextCommandTarget: Any?
     private var seekCommandTarget: Any?
+    private let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+    private let remoteCommandCenter = MPRemoteCommandCenter.shared()
+    private let nowPlayInfoCenterQueue = DispatchQueue(label: "com.sktelecom.romaine.now_playing_info_update_queue")
     
-    private var currentItem: AudioPlayerDisplayTemplate?
-    private var currentState: AudioPlayerState = .idle
-    private var nowPlayingInfoCenter: MPNowPlayingInfoCenter?
-    
-    private var renderingContext: AnyObject?
-    
-    init() {
-        update()
-    }
-    
-    func nuguAudioPlayerDisplayDidRender(template: AudioPlayerDisplayTemplate) {
-        DispatchQueue.main.async { [weak self] in
-            self?.update(newItem: template)
+    func update(_ template: AudioPlayerDisplayTemplate) {
+        nowPlayInfoCenterQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard let parsedPayload = self.parsePayload(template: template) else {
+                log.debug("invalid payload")
+                return
+            }
+            
+            // Set nowPlayingInfo display properties
+            var nowPlayingInfo = self.nowPlayingInfoCenter.nowPlayingInfo ?? [:]
+            nowPlayingInfo[MPMediaItemPropertyTitle] = parsedPayload.title
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = parsedPayload.albumTitle
+            
+            // Set song title and album title first. Because getting album art must be processed asynchronouly.
+            self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+            
+            // Set MPMediaItemArtwork if imageUrl exists
+            if let imageUrl = parsedPayload.imageUrl, let artWorkUrl = URL(string: imageUrl) {
+                ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
+                    guard case let .success(imageData) = result,
+                          let artWorkImage = UIImage(data: imageData) else {
+                        return
+                    }
+
+                    let artWork = MPMediaItemArtwork(boundsSize: artWorkImage.size) { _ in artWorkImage }
+                    var playingInfo = self?.nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+                    playingInfo[MPMediaItemPropertyArtwork] = artWork
+                    self?.nowPlayingInfoCenter.nowPlayingInfo = playingInfo
+                }
+            }
+            
+            // TODO: - AudioPlayer can not start playing in background when MPRemoteCommandCenter's command target has totally removed. Adding remote commands in here is not a perfect solution. Should consider more proper solution.
+            self.addRemoteCommands(seekable: template.isSeekable)
         }
     }
     
-    func nuguAudioPlayerDisplayDidClear() {
-        DispatchQueue.main.async { [weak self] in
-            self?.remove()
+    func update(_ state: AudioPlayerState) {
+        nowPlayInfoCenterQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            var nowPlayingInfo = self.nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+            
+            switch state {
+            case .playing:
+                // Set playbackTime as current offset, set playbackRate as 1
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0
+                
+            case .paused:
+                // Set playbackRate as 0, set playbackTime as current offset
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
+            default:
+                // Set playbackRate as 0, set playbackTime as 0
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = 0
+            }
+            
+            self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
         }
     }
     
-    func nuguAudioPlayerAgentDidChange(state: AudioPlayerState) {
-        DispatchQueue.main.async { [weak self] in
-            self?.update(newState: state)
+    func update(_ duration: Int) {
+        nowPlayInfoCenterQueue.async { [weak self] in
+            guard let self = self else { return }
+
+            var nowPlayingInfo = self.nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
+            
+            self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
         }
     }
     
     func remove() {
-        removeRemoteCommands()
-        currentItem = nil
-        nowPlayingInfoCenter?.nowPlayingInfo = nil
-        nowPlayingInfoCenter = nil
-        renderingContext = nil
+        nowPlayInfoCenterQueue.async { [weak self] in
+            self?.removeRemoteCommands()
+            self?.nowPlayingInfoCenter.nowPlayingInfo = nil
+        }
     }
 }
 
 // MARK: - MPNowPlayingInfoCenter
 
 private extension NuguDisplayPlayerController {
-    func addRemoteCommands() {
+    func addRemoteCommands(seekable isSeekable: Bool) {
         addPlayCommand()
         addPauseCommand()
         addPreviousTrackCommand()
         addNextTackCommand()
-        if currentItem?.isSeekable == true {
+        
+        if isSeekable {
             addChangePlaybackPositionCommand()
         } else {
             removeChangePlaybackPositionCommand()
@@ -116,88 +164,6 @@ private extension NuguDisplayPlayerController {
             return nil
         }
     }
-    
-    func update(
-        newItem: AudioPlayerDisplayTemplate? = nil,
-        newState: AudioPlayerState? = nil
-        ) {
-        let item = newItem ?? currentItem
-        let state = newState ?? currentState
-        
-        defer {
-            currentItem = item
-            currentState = state
-        }
-        
-        guard let playerItem = item else {
-            remove()
-            return
-        }
-        
-        guard let parsedPayload = parsePayload(template: playerItem) else {
-            log.debug("invalid payload")
-            return
-        }
-        
-        nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
-        
-        let duration: Int
-        let title: String
-        let albumTitle: String
-        let imageUrl: String?
-        
-        duration = currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.duration ?? 0) : 0
-        title = parsedPayload.title
-        albumTitle = parsedPayload.albumTitle
-        imageUrl = parsedPayload.imageUrl
-        
-        // Set nowPlayingInfo display properties
-        var nowPlayingInfo = nowPlayingInfoCenter?.nowPlayingInfo ?? [:]
-        nowPlayingInfo[MPMediaItemPropertyTitle] = title
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = albumTitle
-        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = nil
-    
-        let offset = currentItem?.isSeekable == true ? (NuguCentralManager.shared.client.audioPlayerAgent.offset ?? 0) : 0
-        
-        // TODO: - AudioPlayer can not start playing in background when MPRemoteCommandCenter's command target has totally removed. Adding remote commands in here is not a perfect solution. Should consider more proper solution.
-        addRemoteCommands()
-        
-        switch state {
-        case .playing:
-            // Set playbackTime as current offset, set playbackRate as 1
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = offset
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
-        case .paused:
-            // Set playbackRate as 0, set playbackTime as current offset
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = offset
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
-        default:
-            // Set playbackRate as 0, set playbackTime as 0
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
-        }
-        
-        // Set MPMediaItemArtwork if imageUrl exists
-        if let imageUrl = imageUrl, let artWorkUrl = URL(string: imageUrl) {
-            ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
-                switch result {
-                case .success(let imageData):
-                    guard let artWorkImage = UIImage(data: imageData) else { return }
-                    let artWork = MPMediaItemArtwork(boundsSize: artWorkImage.size, requestHandler: { _ -> UIImage in
-                        return artWorkImage
-                    })
-                    
-                    nowPlayingInfo[MPMediaItemPropertyArtwork] = artWork
-                    self?.nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
-                case .failure:
-                    self?.nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
-                }
-            }
-        } else {
-            nowPlayingInfoCenter?.nowPlayingInfo = nowPlayingInfo
-        }
-    }
 }
 
 // MARK: - Private (MPRemoteCommandCenter.Command)
@@ -210,7 +176,7 @@ private extension NuguDisplayPlayerController {
         guard playCommandTarget == nil else { return }
         
         if playCommandTarget == nil {
-            playCommandTarget = MPRemoteCommandCenter.shared()
+            playCommandTarget = remoteCommandCenter
                 .playCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
                     NuguCentralManager.shared.client.audioPlayerAgent.play()
                     return .success
@@ -221,7 +187,7 @@ private extension NuguDisplayPlayerController {
     func addPauseCommand() {
         guard pauseCommandTarget == nil else { return }
         
-        pauseCommandTarget = MPRemoteCommandCenter.shared()
+        pauseCommandTarget = remoteCommandCenter
             .pauseCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
                 NuguCentralManager.shared.client.audioPlayerAgent.pause()
                 return .success
@@ -231,7 +197,7 @@ private extension NuguDisplayPlayerController {
     func addPreviousTrackCommand() {
         guard previousCommandTarget == nil else { return }
         
-        previousCommandTarget = MPRemoteCommandCenter.shared()
+        previousCommandTarget = remoteCommandCenter
             .previousTrackCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
                 NuguCentralManager.shared.client.audioPlayerAgent.prev()
                 return .success
@@ -241,7 +207,7 @@ private extension NuguDisplayPlayerController {
     func addNextTackCommand() {
         guard nextCommandTarget == nil else { return }
         
-        nextCommandTarget = MPRemoteCommandCenter.shared()
+        nextCommandTarget = remoteCommandCenter
             .nextTrackCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
                 NuguCentralManager.shared.client.audioPlayerAgent.next()
                 return .success
@@ -251,7 +217,7 @@ private extension NuguDisplayPlayerController {
     func addChangePlaybackPositionCommand() {
         guard seekCommandTarget == nil else { return }
         
-        seekCommandTarget = MPRemoteCommandCenter.shared()
+        seekCommandTarget = remoteCommandCenter
             .changePlaybackPositionCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
                 guard let event = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
                 NuguCentralManager.shared.client.audioPlayerAgent.seek(to: Int(event.positionTime))
@@ -262,27 +228,27 @@ private extension NuguDisplayPlayerController {
     // MARK: Remove Commands
     
     func removePlayCommand() {
-        MPRemoteCommandCenter.shared().playCommand.removeTarget(playCommandTarget)
+        remoteCommandCenter.playCommand.removeTarget(playCommandTarget)
         playCommandTarget = nil
     }
     
     func removePauseCommand() {
-        MPRemoteCommandCenter.shared().pauseCommand.removeTarget(pauseCommandTarget)
+        remoteCommandCenter.pauseCommand.removeTarget(pauseCommandTarget)
         pauseCommandTarget = nil
     }
     
     func removePreviousTrackCommand() {
-        MPRemoteCommandCenter.shared().previousTrackCommand.removeTarget(previousCommandTarget)
+        remoteCommandCenter.previousTrackCommand.removeTarget(previousCommandTarget)
         previousCommandTarget = nil
     }
     
     func removeNextTrackCommand() {
-        MPRemoteCommandCenter.shared().nextTrackCommand.removeTarget(nextCommandTarget)
+        remoteCommandCenter.nextTrackCommand.removeTarget(nextCommandTarget)
         nextCommandTarget = nil
     }
     
     func removeChangePlaybackPositionCommand() {
-        MPRemoteCommandCenter.shared().changePlaybackPositionCommand.removeTarget(seekCommandTarget)
+        remoteCommandCenter.changePlaybackPositionCommand.removeTarget(seekCommandTarget)
         seekCommandTarget = nil
     }
 }

@@ -45,7 +45,7 @@ public extension TimeIntervallic {
 // MARK: - TimeIntervallic + Int
 
 public extension TimeIntervallic {
-/// A number of seconds.
+    /// A number of seconds.
     var truncatedSeconds: Int {
         guard seconds.isNaN == false else { return 0 }
         

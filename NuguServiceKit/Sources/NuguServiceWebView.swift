@@ -21,6 +21,8 @@
 import UIKit
 import WebKit
 
+import NuguUtils
+
 /// <#Description#>
 final public class NuguServiceWebView: WKWebView {
     
@@ -84,25 +86,27 @@ final public class NuguServiceWebView: WKWebView {
 
 extension NuguServiceWebView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        log.debug(message)        
+        log.debug(message)
         guard let jsonDictionary = (message.body as? [String: Any]),
             let methodName = jsonDictionary["method"] as? String,
-            let body = jsonDictionary["body"],
-            let bodyData = try? JSONSerialization.data(withJSONObject: body, options: []),
             let methodType = MethodType(rawValue: methodName) else { return }
-        
         switch methodType {
         case .openExternalApp:
-            guard let openExternalAppItem = try? JSONDecoder().decode(WebOpenExternalApp.self, from: bodyData) else { return }
+            guard let body = jsonDictionary["body"],
+            let bodyData = try? JSONSerialization.data(withJSONObject: body, options: []),
+            let openExternalAppItem = try? JSONDecoder().decode(WebOpenExternalApp.self, from: bodyData) else { return }
             javascriptDelegate?.openExternalApp(openExternalAppItem: openExternalAppItem)
         case .openInAppBrowser:
-            guard let jsonObject = try? JSONSerialization.jsonObject(with: bodyData, options: []) as? [String: AnyHashable],
-                let url = jsonObject["url"] as? String else { return }
+            guard let body = jsonDictionary["body"] as? [String: AnyHashable],
+                  let url = body["url"] as? String else { return }    
             javascriptDelegate?.openInAppBrowser(url: url)
         case .closeWindow:
-            guard let jsonObject = try? JSONSerialization.jsonObject(with: bodyData, options: []) as? [String: AnyHashable],
-                let reason = jsonObject["reason"] as? String else { return }
-            javascriptDelegate?.closeWindow(reason: reason)
+            if let body = jsonDictionary["body"] as? [String: AnyHashable],
+               let reason = body["reason"] as? String {
+                javascriptDelegate?.closeWindow(reason: reason)
+            } else {
+                javascriptDelegate?.closeWindow(reason: nil)
+            }
         }
     }
 }

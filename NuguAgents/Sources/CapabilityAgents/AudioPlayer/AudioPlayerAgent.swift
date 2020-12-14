@@ -77,7 +77,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     )
     private let delegates = DelegateSet<AudioPlayerAgentDelegate>()
     
-    private let audioPlayerDeleageteDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent_delegate")
+    private let audioPlayerDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent_delegate")
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
     private lazy var audioPlayerScheduler = SerialDispatchQueueScheduler(
         queue: audioPlayerDispatchQueue,
@@ -114,7 +114,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != audioPlayerState {
                 let state = audioPlayerState
-                delegates.notify(queue: audioPlayerDeleageteDispatchQueue) { delegate in
+                delegates.notify(queue: audioPlayerDelegateDispatchQueue) { delegate in
                     delegate.audioPlayerAgentDidChange(state: state, header: player.header)
                 }
             }
@@ -266,8 +266,6 @@ public extension AudioPlayerAgent {
         switch audioPlayerState {
         case .stopped, .finished:
             playSyncManager.resetTimer(property: playSyncProperty)
-        case .paused:
-            playSyncManager.startTimer(property: playSyncProperty, duration: audioPlayerPauseTimeout)
         default:
             break
         }
@@ -321,7 +319,7 @@ extension AudioPlayerAgent: FocusChannelDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension AudioPlayerAgent: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
+    public func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable) {
         guard let player = mediaPlayer as? AudioPlayer else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
@@ -377,6 +375,12 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             }
         }
     }
+    
+    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange duration: TimeIntervallic) {
+        delegates.notify(queue: audioPlayerDelegateDispatchQueue) { delegate in
+            delegate.audioPlayerAgentDidChange(duration: duration.truncatedSeconds)
+        }
+    }
 }
 
 // MARK: - ContextInfoDelegate
@@ -427,12 +431,12 @@ extension AudioPlayerAgent: PlaySyncDelegate {
 // MARK: - AudioPlayerProgressDelegate
 
 extension AudioPlayerAgent: AudioPlayerProgressDelegate {
-    func audioPlayer(_ player: AudioPlayer, didReportDelay progress: TimeIntervallic) {
+    func audioPlayerDidDelayedReport(_ player: AudioPlayer) {
         log.debug(player.offset.truncatedMilliSeconds)
         sendCompactContextEvent(playEvent(typeInfo: .progressReportDelayElapsed, player: player))
     }
     
-    func audioPlayer(_ player: AudioPlayer, didReportInterval progress: TimeIntervallic) {
+    func audioPlayerDidIntervalReport(_ player: AudioPlayer) {
         log.debug(player.offset.truncatedMilliSeconds)
         sendCompactContextEvent(playEvent(typeInfo: .progressReportIntervalElapsed, player: player))
     }

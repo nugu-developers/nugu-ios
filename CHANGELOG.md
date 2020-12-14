@@ -3,6 +3,61 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.27.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.27.1)
+Released on 2020-11-27
+### SDK
+#### Update
+- Add `init` function to initialize with `UIView`. (#651)
+
+## [0.27.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.27.0)
+Released on 2020-11-27
+### Sample Application
+#### Added
+- Add `VoiceChromePresenter` (#629)
+> Application only needs to apply the changes of  [`MainViewController`](https://github.com/nugu-developers/nugu-ios/pull/629/files#diff-7468829fbd38fb482c72def9b95c04abe8d927db4e1b5ffd789187e8f36f13f3)    
+
+### SDK
+#### Added
+- Add `VoiceChromePresenter` (#629)
+
+#### Fixed
+- Request focus synchronously when handling `ASR.ExpectSpeech`. (#643)
+
+#### Update
+- `TextAgent` 1.5 (upgrade capability-agent) (#634)
+
+## [0.26.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.3)
+Released on 2020-11-25
+### SDK
+#### Fixed
+- Add NuguUtils scheme (#641)
+
+## [0.26.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.2)
+Released on 2020-11-24
+### Sample Application
+#### Added
+- Separate NuguUtils to share and dynamic access (#627)
+> Drag and drop `NuguUtils` framework to "Frameworks, Libraries, and Embedded Content" section in application targets’ General settings tab.(For more information, See the  [Carthage](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application))
+
+### SDK
+#### Update
+- Pass only 1 `sessionId` for `playServiceId` in the context of `SessionAgent`. (#633)
+- Make sure that the `StreamDataDelegate` functions are called first to satisfy the statistical requirements. (#636)
+
+#### Fixed
+- Fixes a bug when canceling and resuming timers for layer. (#630)
+- Ignore user interaction when playback paused (#630)
+- Skip attachment when last data appended. (#635)
+
+#### Added
+- Separate NuguUtils to share and dynamic access (#627)
+
+## [0.26.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.1)
+Released on 2020-11-17
+### SDK
+#### Fixed
+- Fixes a build error. (#623)
+
 ## [0.26.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.26.0)
 Released on 2020-11-17
 ### Sample Application

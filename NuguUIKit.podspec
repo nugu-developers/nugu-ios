@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguUIKit'
-  s.version = '0.26.0'
+  s.version = '0.27.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'UI Set of Nugu Service'
   s.description = <<-DESC
@@ -25,4 +25,7 @@ Pod::Spec.new do |s|
   s.source_files = 'NuguUIKit/Sources/**/*.{swift}'
 
   s.dependency 'lottie-ios', '~> 3'
+  s.dependency 'NuguAgents', '~> 0'
+  s.dependency 'NuguUtils', '~> 0'
+  s.dependency 'NattyLog', '~> 1'
 end

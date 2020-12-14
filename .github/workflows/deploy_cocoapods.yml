@@ -24,12 +24,13 @@ jobs:
       - name: Deploy to Cocoapods
         run: |
           set -eo pipefail
-          pod trunk push NuguCore.podspec
+          pod trunk push NuguUtils.podspec
+          pod trunk push --synchronous NuguCore.podspec
           pod trunk push NuguServiceKit.podspec
           pod trunk push --allow-warnings JadeMarble.podspec
           pod trunk push --allow-warnings KeenSense.podspec
           pod trunk push NuguUIKit.podspec
-          pod trunk push NuguLoginKit.podspec
+          pod trunk push --synchronous NuguLoginKit.podspec
           pod trunk push --synchronous NuguAgents.podspec
           pod trunk push --synchronous NuguClientKit.podspec
 

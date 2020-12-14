@@ -59,7 +59,7 @@ public final class TTSAgent: TTSAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     
-    private let ttsDeleageteDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate")
+    private let ttsDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate")
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     private let delegates = DelegateSet<TTSAgentDelegate>()
@@ -101,7 +101,7 @@ public final class TTSAgent: TTSAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != ttsState {
                 let state = ttsState
-                delegates.notify(queue: ttsDeleageteDispatchQueue) { delegate in
+                delegates.notify(queue: ttsDelegateDispatchQueue) { delegate in
                     delegate.ttsAgentDidChange(state: state, header: player.header)
                 }
             }
@@ -267,7 +267,7 @@ extension TTSAgent: ContextInfoDelegate {
 // MARK: - MediaPlayerDelegate
 
 extension TTSAgent: MediaPlayerDelegate {
-    public func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange state: MediaPlayerState) {
+    public func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable) {
         guard let player = mediaPlayer as? TTSPlayer else { return }
         log.info("media \(mediaPlayer) state: \(state)")
         
@@ -402,7 +402,7 @@ private extension TTSAgent {
                 log.debug(directive.header.messageId)
                 self.currentPlayer = player
                 self.focusManager.requestFocus(channelDelegate: self)
-                self.delegates.notify(queue: self.ttsDeleageteDispatchQueue) { delegate in
+                self.delegates.notify(queue: self.ttsDelegateDispatchQueue) { delegate in
                     delegate.ttsAgentDidReceive(text: player.payload.text, header: player.header)
                 }
                 
