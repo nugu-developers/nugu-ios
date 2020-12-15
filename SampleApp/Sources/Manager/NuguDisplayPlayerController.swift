@@ -56,6 +56,7 @@ final class NuguDisplayPlayerController {
                 ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
                     guard case let .success(imageData) = result,
                           let artWorkImage = UIImage(data: imageData) else {
+                        self?.nowPlayingInfoCenter.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
                         return
                     }
 
@@ -64,9 +65,9 @@ final class NuguDisplayPlayerController {
                     playingInfo[MPMediaItemPropertyArtwork] = artWork
                     self?.nowPlayingInfoCenter.nowPlayingInfo = playingInfo
                 }
+            } else {
+                self.nowPlayingInfoCenter.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
             }
-            
-            // TODO: - AudioPlayer can not start playing in background when MPRemoteCommandCenter's command target has totally removed. Adding remote commands in here is not a perfect solution. Should consider more proper solution.
             self.addRemoteCommands(seekable: template.isSeekable)
         }
     }
@@ -95,6 +96,10 @@ final class NuguDisplayPlayerController {
                 nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = 0
             }
             
+            if self.seekCommandTarget == nil {
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = 0
+            }
+            
             self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
         }
     }
@@ -104,7 +109,7 @@ final class NuguDisplayPlayerController {
             guard let self = self else { return }
 
             var nowPlayingInfo = self.nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = (self.seekCommandTarget != nil) ? duration : 0
             
             self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
         }
