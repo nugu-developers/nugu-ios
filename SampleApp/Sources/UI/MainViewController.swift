@@ -358,7 +358,6 @@ private extension MainViewController {
         displayView.load(
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
-            deviceTypeCode: SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_"),
             clientInfo: ["buttonColor": "white"]
         )
         displayView.onClose = { [weak self] in
@@ -670,7 +669,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         log.debug("")
         DispatchQueue.main.async { [weak self] in
-            NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerDisplayDidRender(template: template)
+            NuguCentralManager.shared.displayPlayerController.update(template)
             self?.addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template, completion: completion)
         }
     }
@@ -678,7 +677,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
     func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
         log.debug("")
         DispatchQueue.main.async { [weak self] in
-            NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerDisplayDidClear()
+            NuguCentralManager.shared.displayPlayerController.remove()
             self?.dismissDisplayAudioPlayerView()
         }
     }
@@ -695,7 +694,7 @@ extension MainViewController: AudioPlayerDisplayDelegate {
 extension MainViewController: AudioPlayerAgentDelegate {
     func audioPlayerAgentDidChange(state: AudioPlayerState, header: Downstream.Header) {
         log.debug("audioPlayerAgentDidChange : \(state)")
-        NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(state: state)
+        NuguCentralManager.shared.displayPlayerController.update(state)
         NuguAudioSessionManager.shared.pausedByInterruption = false
         if state == .playing {
             NuguAudioSessionManager.shared.updateAudioSessionToPlaybackIfNeeded()
@@ -708,7 +707,7 @@ extension MainViewController: AudioPlayerAgentDelegate {
     }
     
     func audioPlayerAgentDidChange(duration: Int) {
-        NuguCentralManager.shared.displayPlayerController.nuguAudioPlayerAgentDidChange(duration: duration)
+        NuguCentralManager.shared.displayPlayerController.update(duration)
     }
 }
 
