@@ -39,6 +39,7 @@ final class NuguCentralManager {
         client.locationAgent.delegate = self
         client.systemAgent.add(systemAgentDelegate: self)
         client.soundAgent.dataSource = self
+        micInputProvider.delegate = client
         
         if let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") {
             client.asrAgent.options = ASROptions(endPointing: .client(epdFile: epdFile))
@@ -70,6 +71,8 @@ final class NuguCentralManager {
     private let micInputProvider = MicInputProvider()
     
     private init() {
+        // TODO: - should be removed after configuration metadata has been applied
+        NuguDisplayWebView.deviceTypeCode = SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_")
     }
 }
 
@@ -447,15 +450,7 @@ extension NuguCentralManager {
                         NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
                     }
                     do {
-                        try self.micInputProvider.start { [weak self] (buffer, _) in
-                            if self?.client.keywordDetector.state == .active {
-                                self?.client.keywordDetector.putAudioBuffer(buffer: buffer)
-                            }
-                            
-                            if [.listening, .recognizing].contains(self?.client.asrAgent.asrState) {
-                                self?.client.asrAgent.putAudioBuffer(buffer: buffer)
-                            }
-                        }
+                        try self.micInputProvider.start()
                         completion(true)
                     } catch {
                         log.error(error)
@@ -503,18 +498,9 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func requestTextInput(text: String, token: String? = nil, requestType: TextAgentRequestType, completion: (() -> Void)? = nil) {
-        client.dialogStateAggregator.isChipsRequestInProgress = true
-
-        client.textAgent.requestTextInput(
-            text: text,
-            token: token,
-            requestType: requestType
-        ) { [weak self] state in
+        client.requestTextInput(text: text, token: token, requestType: requestType) { state in
             switch state {
-            case .sent:
-                self?.client.asrAgent.stopRecognition()
             case .finished, .error:
-                NuguCentralManager.shared.client.dialogStateAggregator.isChipsRequestInProgress = false
                 completion?()
             default: break
             }

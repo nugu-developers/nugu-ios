@@ -23,6 +23,8 @@ import AVFoundation
 
 /// Record audio input from a microphone.
 public class MicInputProvider {
+    public weak var delegate: MicInputProviderDelegate?
+    
     /// Whether the microphone is currently running.
     public var isRunning: Bool {
         return audioEngine.isRunning
@@ -62,6 +64,16 @@ public class MicInputProvider {
         } catch {
             stop() // Unless Mic input is opened, It should be reset
             throw error
+        }
+    }
+    
+    /// Starts recording from the microphone.
+    ///
+    /// Audio buffers are passed through `MicInputProviderDelegate.micInputProviderDidReceive(buffer:)`.
+    /// - throws: An error of type `MicInputError`
+    public func start() throws {
+        try start { [weak self] (buffer, _) in
+            self?.delegate?.micInputProviderDidReceive(buffer: buffer)
         }
     }
     

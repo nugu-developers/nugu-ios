@@ -1,9 +1,9 @@
 //
-//  InteractionControl.swift
-//  NuguAgents
+//  MicInputProviderDelegate.swift
+//  NuguClientKit
 //
-//  Created by MinChul Lee on 2020/08/07.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/12/10.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,15 +19,11 @@
 //
 
 import Foundation
+import AVFoundation
 
-/// <#Description#>
-public struct InteractionControl: Codable {
-    /// <#Description#>
-    public let mode: Mode
-    
-    /// <#Description#>
-    public enum Mode: String, Codable {
-        case none = "NONE"
-        case multiTurn = "MULTI_TURN"
-    }
+/// An delegate to processing audio buffers.
+public protocol MicInputProviderDelegate: class {
+    /// Tells the delegate that the audio buffer has been received.
+    /// - Parameter buffer: The new audio buffer.
+    func micInputProviderDidReceive(buffer: AVAudioPCMBuffer)
 }
