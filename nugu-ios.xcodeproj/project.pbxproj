@@ -21,6 +21,7 @@
 		066C9D3025553EF0000C7800 /* MicInputConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31A2375707000C9A177 /* MicInputConst.swift */; };
 		067CB451256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */; };
 		067CB473256E582200D57AF0 /* VoiceChromePresenterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */; };
+		068C3C512581F80800EC0BEE /* MicInputProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 068C3C502581F80800EC0BEE /* MicInputProviderDelegate.swift */; };
 		06CF28EB2547DE5700CEC3EC /* ContextManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CF28EA2547DE5700CEC3EC /* ContextManager+Rx.swift */; };
 		06CF293C254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CF293B254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift */; };
 		06CFF675254276EF00A11CB4 /* Bundle+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CFF674254276EF00A11CB4 /* Bundle+Convenience.swift */; };
@@ -690,6 +691,7 @@
 		065DF8C725637D57009CF99E /* Attachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachable.swift; sourceTree = "<group>"; };
 		067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterDelegate.swift; sourceTree = "<group>"; };
 		067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterError.swift; sourceTree = "<group>"; };
+		068C3C502581F80800EC0BEE /* MicInputProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicInputProviderDelegate.swift; sourceTree = "<group>"; };
 		06CF28EA2547DE5700CEC3EC /* ContextManager+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContextManager+Rx.swift"; sourceTree = "<group>"; };
 		06CF293B254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpstreamEventSendable+Convenience.swift"; sourceTree = "<group>"; };
 		06CFF674254276EF00A11CB4 /* Bundle+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Convenience.swift"; sourceTree = "<group>"; };
@@ -1686,6 +1688,7 @@
 				1FFFF3192375707000C9A177 /* MicInputProvider.swift */,
 				1FFFF31A2375707000C9A177 /* MicInputConst.swift */,
 				7E35D79924623B53003289A2 /* MicInputError.swift */,
+				068C3C502581F80800EC0BEE /* MicInputProviderDelegate.swift */,
 			);
 			path = MicInputProvider;
 			sourceTree = "<group>";
@@ -3401,6 +3404,7 @@
 				1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */,
 				066C9D2425553EE2000C7800 /* NCObjcExceptionCatcher.m in Sources */,
 				7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */,
+				068C3C512581F80800EC0BEE /* MicInputProviderDelegate.swift in Sources */,
 				066C9D2F25553EF0000C7800 /* MicInputError.swift in Sources */,
 				7EC282F325206A8C00E3F18A /* BackgroundFocusHolder.swift in Sources */,
 				1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */,
@@ -3568,8 +3572,6 @@
 				7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */,
 				73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */,
 				7314E030255E4491004882BB /* Atomic.swift in Sources */,
-				7314DFB5255E3F39004882BB /* DelegateDictionary.swift in Sources */,
-				7314DFB4255E3F39004882BB /* DelegateSet.swift in Sources */,
 				060DDE88256E67DC006B4F59 /* NetworkReachabilityManager.swift in Sources */,
 				7314DF68255E3F21004882BB /* BoundStreams.swift in Sources */,
 			);
