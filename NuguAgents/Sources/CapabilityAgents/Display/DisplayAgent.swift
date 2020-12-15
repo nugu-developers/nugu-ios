@@ -37,6 +37,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     private let sessionManager: SessionManageable
+    private let interactionControlManager: InteractionControlManageable
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -86,13 +87,15 @@ public final class DisplayAgent: DisplayAgentProtocol {
         playSyncManager: PlaySyncManageable,
         contextManager: ContextManageable,
         directiveSequencer: DirectiveSequenceable,
-        sessionManager: SessionManageable
+        sessionManager: SessionManageable,
+        interactionControlManager: InteractionControlManageable
     ) {
         self.upstreamDataSender = upstreamDataSender
         self.playSyncManager = playSyncManager
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         self.sessionManager = sessionManager
+        self.interactionControlManager = interactionControlManager
         
         playSyncManager.add(delegate: self)
         contextManager.add(delegate: self)
@@ -247,7 +250,7 @@ private extension DisplayAgent {
             defer { completion(.finished) }
 
             self?.displayDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
+                guard let self = self, let delegate = self.delegate else { return }
                 guard let item = self.templateList.first(where: { $0.template.playServiceId == payload.playServiceId }) else {
                     self.sendCompactContextEvent(Event(
                         typeInfo: .controlScrollFailed(direction: payload.direction),
@@ -256,7 +259,10 @@ private extension DisplayAgent {
                     ).rx)
                     return
                 }
-                self.delegate?.displayAgentShouldScroll(templateId: item.templateId, direction: payload.direction, header: directive.header) { [weak self] scrollResult in
+                if let interactionControl = payload.interactionControl {
+                    self.interactionControlManager.start(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
+                }
+                delegate.displayAgentShouldScroll(templateId: item.templateId, direction: payload.direction, header: directive.header) { [weak self] scrollResult in
                     guard let self = self else { return }
                     
                     self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
@@ -265,7 +271,17 @@ private extension DisplayAgent {
                         typeInfo: typeInfo,
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    ).rx)
+                    ).rx) { [weak self] state in
+                        guard let self = self else { return }
+                        switch state {
+                        case .finished, .error:
+                            if let interactionControl = payload.interactionControl {
+                                self.interactionControlManager.finish(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
+                            }
+                        default:
+                            break
+                        }
+                    }
                 }
             }
         }
