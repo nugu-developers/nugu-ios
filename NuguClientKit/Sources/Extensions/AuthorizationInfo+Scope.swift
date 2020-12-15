@@ -1,8 +1,8 @@
 //
-//  AuthorizationStoreable.swift
-//  NuguCore
+//  AuthorizationInfo+Scope.swift
+//  NuguClientKit
 //
-//  Created by MinChul Lee on 2019/12/06.
+//  Created by yonghoonKwon on 13/09/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,15 +20,11 @@
 
 import Foundation
 
-/// The `AuthorizationStoreable` is used to provide authorization token.
-/// Provide authorization token
-public protocol AuthorizationStoreable: class {
-    /// An delegate that application should extend to provide access token.
-    var delegate: AuthorizationStoreDelegate? { get set }
-    
-    /// The current access  token.
-    var accessToken: String? { get }
-    
-    /// The current authorization token. (auth_type + access_token)
-    var authorizationToken: String? { get }
+import NuguLoginKit
+
+public extension AuthorizationInfo {
+    /// Indicates that the client can receive server initiated directives.
+    var availableServerInitiatedDirective: Bool {
+        scopes.contains("device:S.I.D")
+    }
 }

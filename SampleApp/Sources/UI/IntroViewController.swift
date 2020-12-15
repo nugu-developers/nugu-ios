@@ -26,8 +26,21 @@ final class IntroViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if UserDefaults.Standard.refreshToken != nil {
-            logIn()
+        if SampleApp.loginMethod != nil {
+            NuguCentralManager.shared.refreshToken { [weak self] result in
+                DispatchQueue.main.async { [weak self] in
+                    switch result {
+                    case .success:
+                        self?.performSegue(withIdentifier: "introToMain", sender: nil)
+                    case .failure(let sampleAppError):
+                        log.debug(sampleAppError.errorDescription)
+                        
+                        NuguToast.shared.showToast(message: sampleAppError.errorDescription)
+                        UserDefaults.Standard.clear()
+                        UserDefaults.Nugu.clear()
+                    }
+                }
+            }
         }
     }
 }
@@ -36,7 +49,7 @@ final class IntroViewController: UIViewController {
 
 private extension IntroViewController {
     func logIn() {
-        NuguCentralManager.shared.login(from: self, completion: { [weak self] result in
+        NuguCentralManager.shared.login(from: self) { [weak self] result in
             DispatchQueue.main.async { [weak self] in
                 switch result {
                 case .success:
@@ -49,7 +62,7 @@ private extension IntroViewController {
                     UserDefaults.Nugu.clear()
                 }
             }
-        })
+        }
     }
 }
 

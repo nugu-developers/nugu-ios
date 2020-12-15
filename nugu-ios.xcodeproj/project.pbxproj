@@ -14,8 +14,12 @@
 		060DDE88256E67DC006B4F59 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060DDE87256E67DC006B4F59 /* NetworkReachabilityManager.swift */; };
 		060FAAFA256668E000F01EE3 /* NuguLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF01723753F7D00C9A177 /* NuguLoginKit.framework */; };
 		060FAB382566693600F01EE3 /* NuguUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFFF02423753F8A00C9A177 /* NuguUIKit.framework */; };
+		062CD13B2574D1FC00A04B22 /* ConfigurationMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062CD13A2574D1FC00A04B22 /* ConfigurationMetadata.swift */; };
 		06301FBC256B853D00FD97E8 /* TextAgentRedirectPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06301FBB256B853D00FD97E8 /* TextAgentRedirectPayload.swift */; };
 		063A84722565027D0032F13B /* VoiceChromePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063A84712565027D0032F13B /* VoiceChromePresenter.swift */; };
+		06500C7A25762C8E0088F776 /* NuguOAuthClient+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06500C7925762C8E0088F776 /* NuguOAuthClient+Convenience.swift */; };
+		06500D0B2578D80C0088F776 /* AuthorizationInfo+Scope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06500D0A2578D80C0088F776 /* AuthorizationInfo+Scope.swift */; };
+		06500D172579D0750088F776 /* NuguServiceWebView+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06500D162579D0750088F776 /* NuguServiceWebView+Convenience.swift */; };
 		065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */; };
 		065DF8C825637D58009CF99E /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8C725637D57009CF99E /* Attachable.swift */; };
 		066C9D1A25553EDE000C7800 /* NCObjcExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -25,6 +29,7 @@
 		066C9D3025553EF0000C7800 /* MicInputConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF31A2375707000C9A177 /* MicInputConst.swift */; };
 		067CB451256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */; };
 		067CB473256E582200D57AF0 /* VoiceChromePresenterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */; };
+		06CDA2A9257DC597009DA31B /* NuguServiceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7525AC84249AFE8E006800A3 /* NuguServiceKit.framework */; };
 		06CF28EB2547DE5700CEC3EC /* ContextManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CF28EA2547DE5700CEC3EC /* ContextManager+Rx.swift */; };
 		06CF293C254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CF293B254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift */; };
 		06CFF675254276EF00A11CB4 /* Bundle+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CFF674254276EF00A11CB4 /* Bundle+Convenience.swift */; };
@@ -493,6 +498,13 @@
 			remoteGlobalIDString = 1FFFF02323753F8A00C9A177;
 			remoteInfo = NuguUIKit;
 		};
+		06CDA2AB257DC597009DA31B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D9C428722745894000A6585 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7525AC83249AFE8E006800A3;
+			remoteInfo = NuguServiceKit;
+		};
 		1F1008F42379247800D90FEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D9C428722745894000A6585 /* Project object */;
@@ -697,8 +709,12 @@
 		0600C3542570E4CF0071AEF3 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		0600C3552570E4CF0071AEF3 /* ConfigurationStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationStore.swift; sourceTree = "<group>"; };
 		060DDE87256E67DC006B4F59 /* NetworkReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReachabilityManager.swift; sourceTree = "<group>"; };
+		062CD13A2574D1FC00A04B22 /* ConfigurationMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationMetadata.swift; sourceTree = "<group>"; };
 		06301FBB256B853D00FD97E8 /* TextAgentRedirectPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAgentRedirectPayload.swift; sourceTree = "<group>"; };
 		063A84712565027D0032F13B /* VoiceChromePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenter.swift; sourceTree = "<group>"; };
+		06500C7925762C8E0088F776 /* NuguOAuthClient+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NuguOAuthClient+Convenience.swift"; sourceTree = "<group>"; };
+		06500D0A2578D80C0088F776 /* AuthorizationInfo+Scope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthorizationInfo+Scope.swift"; sourceTree = "<group>"; };
+		06500D162579D0750088F776 /* NuguServiceWebView+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NuguServiceWebView+Convenience.swift"; sourceTree = "<group>"; };
 		065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Attachable+makeAttachmentMessage.swift"; sourceTree = "<group>"; };
 		065DF8C725637D57009CF99E /* Attachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachable.swift; sourceTree = "<group>"; };
 		067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterDelegate.swift; sourceTree = "<group>"; };
@@ -1172,6 +1188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0600C2C125709A450071AEF3 /* NuguUtils.framework in Frameworks */,
+				06CDA2A9257DC597009DA31B /* NuguServiceKit.framework in Frameworks */,
 				1F10091C23792A7500D90FEE /* RxSwift.framework in Frameworks */,
 				73152FED23E05D9700F843C3 /* NuguAgents.framework in Frameworks */,
 				060FAAFA256668E000F01EE3 /* NuguLoginKit.framework in Frameworks */,
@@ -1296,6 +1313,7 @@
 				0600C3532570E4CF0071AEF3 /* ConfigurationError.swift */,
 				0600C3542570E4CF0071AEF3 /* Configuration.swift */,
 				0600C3552570E4CF0071AEF3 /* ConfigurationStore.swift */,
+				062CD13A2574D1FC00A04B22 /* ConfigurationMetadata.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -1308,6 +1326,16 @@
 				067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		06500CF52578C4460088F776 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				06500C7925762C8E0088F776 /* NuguOAuthClient+Convenience.swift */,
+				06500D0A2578D80C0088F776 /* AuthorizationInfo+Scope.swift */,
+				06500D162579D0750088F776 /* NuguServiceWebView+Convenience.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		067CB4B0256E66DC00D57AF0 /* Network */ = {
@@ -1963,6 +1991,7 @@
 		1FFFF3D72375735E00C9A177 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				06500CF52578C4460088F776 /* Extensions */,
 				0600C3522570E4CF0071AEF3 /* Configuration */,
 				063A8470256502700032F13B /* Presenter */,
 				1FD1CFF623BDC0480000FB8C /* Business */,
@@ -2866,6 +2895,7 @@
 				060FAAFD256668E000F01EE3 /* PBXTargetDependency */,
 				060FAB3B2566693600F01EE3 /* PBXTargetDependency */,
 				0600C2C425709A450071AEF3 /* PBXTargetDependency */,
+				06CDA2AC257DC597009DA31B /* PBXTargetDependency */,
 			);
 			name = NuguClientKit;
 			packageProductDependencies = (
@@ -3423,17 +3453,21 @@
 				7EF12B1323C41F5F0000E158 /* DialogStateDelegate.swift in Sources */,
 				1F2E803923966D9D00569C59 /* KeywordSource.swift in Sources */,
 				1F2E803E2397A27300569C59 /* KeywordDetectorState.swift in Sources */,
+				062CD13B2574D1FC00A04B22 /* ConfigurationMetadata.swift in Sources */,
 				066C9D2425553EE2000C7800 /* NCObjcExceptionCatcher.m in Sources */,
 				7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */,
 				066C9D2F25553EF0000C7800 /* MicInputError.swift in Sources */,
 				0600C3572570E4CF0071AEF3 /* Configuration.swift in Sources */,
 				7EC282F325206A8C00E3F18A /* BackgroundFocusHolder.swift in Sources */,
+				06500C7A25762C8E0088F776 /* NuguOAuthClient+Convenience.swift in Sources */,
+				06500D0B2578D80C0088F776 /* AuthorizationInfo+Scope.swift in Sources */,
 				1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */,
 				7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */,
 				063A84722565027D0032F13B /* VoiceChromePresenter.swift in Sources */,
 				1FD1CFF723BDC0660000FB8C /* DialogStateAggregator.swift in Sources */,
 				1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */,
 				1FD4A97C23A0C2FD002EB56D /* NuguClientKit.swift in Sources */,
+				06500D172579D0750088F776 /* NuguServiceWebView+Convenience.swift in Sources */,
 				0600C3562570E4CF0071AEF3 /* ConfigurationError.swift in Sources */,
 				067CB451256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift in Sources */,
 				067CB473256E582200D57AF0 /* VoiceChromePresenterError.swift in Sources */,
@@ -3782,6 +3816,11 @@
 			isa = PBXTargetDependency;
 			target = 1FFFF02323753F8A00C9A177 /* NuguUIKit */;
 			targetProxy = 060FAB3A2566693600F01EE3 /* PBXContainerItemProxy */;
+		};
+		06CDA2AC257DC597009DA31B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7525AC83249AFE8E006800A3 /* NuguServiceKit */;
+			targetProxy = 06CDA2AB257DC597009DA31B /* PBXContainerItemProxy */;
 		};
 		1F1008F52379247800D90FEE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
