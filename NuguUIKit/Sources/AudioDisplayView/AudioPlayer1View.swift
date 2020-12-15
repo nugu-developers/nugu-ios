@@ -67,6 +67,9 @@ final class AudioPlayer1View: AudioDisplayView {
             lyricsView.gestureRecognizers?.forEach { lyricsView.removeGestureRecognizer($0) }
             let tapGestureRecognizeView = UITapGestureRecognizer(target: self, action: #selector(lyricsViewDidTap(_:)))
             lyricsView.addGestureRecognizer(tapGestureRecognizeView)
+            lyricsIndex = 0
+            updateLyrics()
+            replaceFullLyrics()
             
             if let favorite = template.content.settings?.favorite {
                 favoriteButtonContainerView.isHidden = false
@@ -203,6 +206,26 @@ private extension AudioPlayer1View {
 // MARK: - Private (Lyrics)
 
 private extension AudioPlayer1View {
+    func replaceFullLyrics() {
+        guard let fullLyricsView = self.fullLyricsView,
+              fullAudioPlayerContainerView.subviews.contains(fullLyricsView) == true else {
+            return
+        }
+        fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
+        fullLyricsView.headerLabel.text = lyricsData?.title
+        lyricsData?.lyricsInfoList.forEach { lyricsInfo in
+            let label = UILabel()
+            label.textAlignment = .center
+            label.text = lyricsInfo.text
+            label.font = UIFont.systemFont(ofSize: 16)
+            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
+            fullLyricsView.stackView.addArrangedSubview(label)
+        }
+        if lyricsIndex != -1 {
+            fullLyricsView.updateLyricsFocus(lyricsIndex: lyricsIndex)
+        }
+    }
+    
     func showLyrics() {
         fullLyricsView = FullLyricsView(frame: contentStackView.frame)
         fullLyricsView?.headerLabel.text = lyricsData?.title

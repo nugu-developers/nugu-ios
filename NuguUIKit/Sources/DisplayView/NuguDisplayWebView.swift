@@ -36,6 +36,7 @@ final public class NuguDisplayWebView: UIView {
     }
     
     public static var displayWebServerAddress = "http://template.aicloud.kr/view"
+    public static var deviceTypeCode: String?
     
     // Private Properties
     private var displayWebView: WKWebView?
@@ -140,17 +141,15 @@ extension NuguDisplayWebView: UIGestureRecognizerDelegate {
 // MARK: - Public Methods
 
 public extension NuguDisplayWebView {
-    func load(displayPayload: Data, displayType: String?, deviceTypeCode: String, clientInfo: [String: String]? = nil) {
+    func load(displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
         self.displayPayload = displayPayload
         self.displayType = displayType
-        self.deviceTypeCode = deviceTypeCode
         self.clientInfo = clientInfo
         guard let displayType = self.displayType,
               let payloadData = self.displayPayload,
               let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadData, options: .mutableContainers) as? [String: Any] else { return }
         request(urlString: NuguDisplayWebView.displayWebServerAddress,
                 displayType: displayType,
-                deviceTypeCode: deviceTypeCode,
                 payload: payloadDictionary,
                 clientInfo: clientInfo)
     }
@@ -162,10 +161,9 @@ public extension NuguDisplayWebView {
                 return
         }
         let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
-        guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []),
-              let deviceTypeCode = deviceTypeCode else { return }
+        guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
         displayPayload = mergedPayloadData
-        load(displayPayload: mergedPayloadData, displayType: displayType, deviceTypeCode: deviceTypeCode, clientInfo: clientInfo)
+        load(displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
     }
     
     func scroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
@@ -188,9 +186,13 @@ private extension NuguDisplayWebView {
         return url.percentEncodedQuery ?? ""
     }
     
-    func request(urlString: String, displayType: String, deviceTypeCode: String, payload: [String: Any], clientInfo: [String: String]?) {
+    func request(urlString: String, displayType: String, payload: [String: Any], clientInfo: [String: String]?) {
         var displayRequestBodyParam = [String: String]()
-        displayRequestBodyParam["device_type_code"] = deviceTypeCode
+        if let deviceTypeCode = NuguDisplayWebView.deviceTypeCode {
+            displayRequestBodyParam["device_type_code"] = deviceTypeCode
+        } else {
+            log.warning("device_type_code is nil")
+        }
         
         var dataParam = payload
         let type = displayType.contains(".") ? displayType : "Display.\(displayType)"

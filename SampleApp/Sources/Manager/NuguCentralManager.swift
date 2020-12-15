@@ -75,7 +75,12 @@ final class NuguCentralManager {
     private let micQueue = DispatchQueue(label: "central_manager_mic_input_queue")
     private let micInputProvider = MicInputProvider()
     
-    private init() {}
+    private init() {
+        // TODO: - should be removed after configuration metadata has been applied
+        if let deviceTypeCode = ConfigurationStore.shared.configuration?.deviceTypeCode {
+            NuguDisplayWebView.deviceTypeCode = deviceTypeCode
+        }
+    }
 }
 
 // MARK: - Internal (Enable / Disable)
