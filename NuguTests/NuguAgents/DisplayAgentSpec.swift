@@ -33,6 +33,7 @@ class DisplayAgentSpec: QuickSpec {
     let contextManager: ContextManageable = MockContextManager()
     let directiveSequencer: DirectiveSequenceable = MockDirectiveSequencer()
     let sessionManager: SessionManageable = MockSessionManager()
+    let interactionControlManager: InteractionControlManageable = MockInteractionControlManager()
     
     override func spec() {
         describe("DisplayAgent") {
@@ -41,7 +42,8 @@ class DisplayAgentSpec: QuickSpec {
                 playSyncManager: playSyncManager,
                 contextManager: contextManager,
                 directiveSequencer: directiveSequencer,
-                sessionManager: sessionManager
+                sessionManager: sessionManager,
+                interactionControlManager: interactionControlManager
             )
             
             describe("context") {

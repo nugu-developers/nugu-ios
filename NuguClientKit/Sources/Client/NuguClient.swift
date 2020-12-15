@@ -72,7 +72,8 @@ public class NuguClient {
         playSyncManager: playSyncManager,
         contextManager: contextManager,
         directiveSequencer: directiveSequencer,
-        sessionManager: sessionManager
+        sessionManager: sessionManager,
+        interactionControlManager: interactionControlManager
     )
     
     /// <#Description#>
