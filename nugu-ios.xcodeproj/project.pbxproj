@@ -14,6 +14,8 @@
 		063A84722565027D0032F13B /* VoiceChromePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063A84712565027D0032F13B /* VoiceChromePresenter.swift */; };
 		065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */; };
 		065DF8C825637D58009CF99E /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8C725637D57009CF99E /* Attachable.swift */; };
+		066B774C25870E9A00AE9CFE /* DelegateDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066B774A25870E9A00AE9CFE /* DelegateDictionary.swift */; };
+		066B774D25870E9A00AE9CFE /* DelegateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066B774B25870E9A00AE9CFE /* DelegateSet.swift */; };
 		066C9D1A25553EDE000C7800 /* NCObjcExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		066C9D2425553EE2000C7800 /* NCObjcExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E553C7825132E66008E4D89 /* NCObjcExceptionCatcher.m */; };
 		066C9D2E25553EF0000C7800 /* MicInputProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3192375707000C9A177 /* MicInputProvider.swift */; };
@@ -337,8 +339,6 @@
 		739078FD241A3E0C007D753F /* ServerSideEventReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */; };
 		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
 		73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C9F526256664370011DD65 /* WeakDictionary.swift */; };
-		73C9F550256668CC0011DD65 /* DelegateDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2392375703000C9A177 /* DelegateDictionary.swift */; };
-		73C9F55B256668D00011DD65 /* DelegateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF23A2375703000C9A177 /* DelegateSet.swift */; };
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
 		75047D9A24F4DE8F007BBF22 /* responsefail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9724F4DE8E007BBF22 /* responsefail.wav */; };
 		75047D9B24F4DE8F007BBF22 /* listening_end.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9824F4DE8F007BBF22 /* listening_end.wav */; };
@@ -690,6 +690,8 @@
 		06500CCC2578821B0088F776 /* NuguUtils.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguUtils.podspec; sourceTree = "<group>"; };
 		065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Attachable+makeAttachmentMessage.swift"; sourceTree = "<group>"; };
 		065DF8C725637D57009CF99E /* Attachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachable.swift; sourceTree = "<group>"; };
+		066B774A25870E9A00AE9CFE /* DelegateDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegateDictionary.swift; sourceTree = "<group>"; };
+		066B774B25870E9A00AE9CFE /* DelegateSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegateSet.swift; sourceTree = "<group>"; };
 		067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterDelegate.swift; sourceTree = "<group>"; };
 		067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterError.swift; sourceTree = "<group>"; };
 		068C3C502581F80800EC0BEE /* MicInputProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicInputProviderDelegate.swift; sourceTree = "<group>"; };
@@ -1288,6 +1290,15 @@
 				067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		066B774925870E9A00AE9CFE /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				066B774A25870E9A00AE9CFE /* DelegateDictionary.swift */,
+				066B774B25870E9A00AE9CFE /* DelegateSet.swift */,
+			);
+			path = Delegate;
 			sourceTree = "<group>";
 		};
 		067CB4B0256E66DC00D57AF0 /* Network */ = {
@@ -2358,6 +2369,7 @@
 		7314DF67255E3EDB004882BB /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				066B774925870E9A00AE9CFE /* Delegate */,
 				067CB4B0256E66DC00D57AF0 /* Network */,
 				7329679725636E240077C3C4 /* Extensions */,
 				7314E02F255E4474004882BB /* PropertyWrappers */,
@@ -3333,7 +3345,6 @@
 				7315301923E11EDF00F843C3 /* MediaPlayableError.swift in Sources */,
 				7373892124A46D120018DDD2 /* MediaPlayerDelegate.swift in Sources */,
 				7373895824A473A60018DDD2 /* FocusChannelDelegate.swift in Sources */,
-				73C9F55B256668D00011DD65 /* DelegateSet.swift in Sources */,
 				7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */,
 				1FFFF3C62375707100C9A177 /* FocusChannelInfo.swift in Sources */,
 				7373894524A46E5F0018DDD2 /* ContextManageable.swift in Sources */,
@@ -3353,7 +3364,6 @@
 				7373894224A46E5F0018DDD2 /* ContextInfo.swift in Sources */,
 				73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */,
 				735A4CE2241173F4004E7A41 /* EventSenderError.swift in Sources */,
-				73C9F550256668CC0011DD65 /* DelegateDictionary.swift in Sources */,
 				7373895F24A473B90018DDD2 /* PlaySyncDelegate.swift in Sources */,
 				7314DFDE255E3FF2004882BB /* TimeUUID.swift in Sources */,
 				7E98BAD2239A312500B9582D /* AuthorizationStore.swift in Sources */,
@@ -3569,6 +3579,8 @@
 				7314E031255E4491004882BB /* Publish.swift in Sources */,
 				7329679925636E240077C3C4 /* DispatchQueue+safeSync.swift in Sources */,
 				7314DFA8255E3F33004882BB /* NuguTimeInterval.swift in Sources */,
+				066B774D25870E9A00AE9CFE /* DelegateSet.swift in Sources */,
+				066B774C25870E9A00AE9CFE /* DelegateDictionary.swift in Sources */,
 				A19EC87625761343003E53A9 /* WeakScriptMessageHandler.swift in Sources */,
 				7314DF87255E3F27004882BB /* CryptoUtil.swift in Sources */,
 				7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */,

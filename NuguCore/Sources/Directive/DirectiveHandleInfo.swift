@@ -94,7 +94,6 @@ public struct DirectiveHandleInfo: Hashable {
 // MARK: - Array + DirectiveTypeInforable
 
 public extension Array where Element == DirectiveHandleInfo {
-    /// <#Description#>
     var asDictionary: DirectiveHandleInfos {
         return self.reduce(into: [String: DirectiveHandleInfo]()) { result, directiveTypeInfo in
             result[directiveTypeInfo.type] = directiveTypeInfo

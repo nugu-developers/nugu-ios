@@ -21,15 +21,17 @@
 import Foundation
 import CommonCrypto
 
-/// <#Description#>
+/// A class that represents an immutable universally unique identifier.
+///
+/// A UUID represents a 128-bit value.
 public struct TimeUUID {
     // seconds
     private static let baseTime = 1546300800000.0
     
-    /// 32 * 4(hex string) = 128bit
+    /// Returns a string created from the UUID
     public let hexString: String
     
-    /// <#Description#>
+    /// Creates an instance of an `TimeUUID`.
     public init() {
         var hexString = String()
         

@@ -1,145 +1,313 @@
 {
   "warnings": [
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/AudioDisplayView.swift",
+      "line": 25,
+      "symbol": "AudioDisplayView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/AudioDisplayView.swift",
+      "line": 148,
+      "symbol": "AudioDisplayView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/AudioDisplayView.swift",
+      "line": 239,
+      "symbol": "AudioDisplayView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/AudioDisplayViewDelegate.swift",
+      "line": 23,
+      "symbol": "AudioDisplayViewDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/Models/AudioPlayer1Template.swift",
+      "line": 21,
+      "symbol": "AudioPlayer1Template",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/Models/AudioPlayer2Template.swift",
+      "line": 21,
+      "symbol": "AudioPlayer2Template",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/Models/DisplayCommonTemplate.swift",
+      "line": 173,
+      "symbol": "DisplayCommonTemplate.Common.ImageAlign",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/Models/DisplayCommonTemplate.swift",
+      "line": 185,
+      "symbol": "DisplayCommonTemplate.Common.Duration",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/Models/DisplayCommonTemplate.swift",
+      "line": 200,
+      "symbol": "DisplayCommonTemplate.Common.BadgeNumberMode",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/AudioDisplayView/Models/DisplayCommonTemplate.swift",
+      "line": 212,
+      "symbol": "DisplayCommonTemplate.Common.EventType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
       "line": 30,
       "symbol": "NuguButton.NuguButtonType.fab(color:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
       "line": 31,
       "symbol": "NuguButton.NuguButtonType.button(color:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
       "line": 35,
       "symbol": "NuguButton.NuguButtonType.NuguButtonColor.blue",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
       "line": 36,
       "symbol": "NuguButton.NuguButtonType.NuguButtonColor.white",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Button/NuguButton.swift",
       "line": 133,
       "symbol": "NuguButton.isHighlighted",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
       "line": 26,
       "symbol": "NuguChipsButton.NuguChipsButtonTheme.light",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
       "line": 27,
       "symbol": "NuguChipsButton.NuguChipsButtonTheme.dark",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
       "line": 52,
       "symbol": "NuguChipsButton.NuguChipsButtonType.action(text:token:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
       "line": 53,
       "symbol": "NuguChipsButton.NuguChipsButtonType.normal(text:token:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsButton.swift",
       "line": 125,
       "symbol": "NuguChipsButton.isHighlighted",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsView.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsView.swift",
       "line": 23,
       "symbol": "NuguChipsView",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsView.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Chips/NuguChipsView.swift",
       "line": 94,
       "symbol": "NuguChipsView",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/DisplayView/NuguDisplayWebView.swift",
+      "line": 27,
+      "symbol": "NuguDisplayWebView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/DisplayView/NuguDisplayWebView.swift",
+      "line": 134,
+      "symbol": "NuguDisplayWebView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/DisplayView/NuguDisplayWebView.swift",
+      "line": 142,
+      "symbol": "NuguDisplayWebView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/DisplayView/NuguDisplayWebView.swift",
+      "line": 242,
+      "symbol": "NuguDisplayWebView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Util/ImageDataLoader.swift",
+      "line": 23,
+      "symbol": "ImageDataLoader",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Util/SafeAreaUtil.swift",
+      "line": 23,
+      "symbol": "SafeAreaUtil",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Util/UIColor+Convenience.swift",
+      "line": 24,
+      "symbol": "UIColor.init(rgbHexValue:alpha:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Util/UIColor+Convenience.swift",
+      "line": 36,
+      "symbol": "UIColor.init(rgbHexString:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Util/UIColor+Convenience.swift",
+      "line": 42,
+      "symbol": "UIColor.backgroundColor(rgbHexString:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Util/UIColor+Convenience.swift",
+      "line": 46,
+      "symbol": "UIColor.textColor(rgbHexString:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/Util/UIColor+Convenience.swift",
+      "line": 50,
+      "symbol": "UIColor.hexString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
       "line": 39,
       "symbol": "NuguVoiceChrome.NuguVoiceChromeTheme.light",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
       "line": 40,
       "symbol": "NuguVoiceChrome.NuguVoiceChromeTheme.dark",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
       "line": 75,
+      "symbol": "NuguVoiceChrome.onChipsSelect",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "line": 81,
       "symbol": "NuguVoiceChrome.currentState",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
-      "line": 148,
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "line": 139,
+      "symbol": "NuguVoiceChrome.frame",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "line": 165,
       "symbol": "NuguVoiceChrome.State.listeningPassive",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
-      "line": 149,
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "line": 166,
       "symbol": "NuguVoiceChrome.State.listeningActive",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
-      "line": 150,
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "line": 167,
       "symbol": "NuguVoiceChrome.State.processing",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
-      "line": 151,
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "line": 168,
       "symbol": "NuguVoiceChrome.State.speaking",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
-      "line": 152,
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "line": 169,
       "symbol": "NuguVoiceChrome.State.speakingError",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguUIKit/Sources/VoiceChrome/NuguVoiceChrome.swift",
+      "line": 231,
+      "symbol": "NuguVoiceChrome.setChipsData(chipsData:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
+  "source_directory": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
 }

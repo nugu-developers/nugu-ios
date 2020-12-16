@@ -91,6 +91,7 @@ public class KeywordDetector {
 
 // MARK: - TycheKeywordDetectorEngineDelegate
 
+/// :nodoc:
 extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
     public func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int) {
         delegate?.keywordDetectorDidDetect(keyword: keywordSource?.keyword, data: data, start: start, end: end, detection: detection)
@@ -114,6 +115,7 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
 
 // MARK: - ContextInfoDelegate
 
+/// :nodoc:
 extension KeywordDetector: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
         guard let keyword = keywordSource?.keyword else {

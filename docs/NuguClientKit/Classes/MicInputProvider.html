@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MicInputProvider Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/MicInputProvider" class="dashAnchor"></a>
+    <a title="MicInputProvider Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">NUGU SDK iOS</a></p>
+        <p class="header-right"><a href="https://github.com/nugu-developers/nugu-ios"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        MicInputProvider Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Common.html">Common</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Common.html#/s:13NuguClientKit8logLevel8NattyLog0gE0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../NuguClient.html">NuguClient</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/NuguClient.html">NuguClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NuguClientDelegate.html">NuguClientDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../VoiceChromePresenter.html">VoiceChromePresenter</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/VoiceChromePresenter.html">VoiceChromePresenter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/VoiceChromePresenterDelegate.html">VoiceChromePresenterDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../DialogStateAggregator.html">DialogStateAggregator</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/DialogStateAggregator.html">DialogStateAggregator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DialogStateDelegate.html">DialogStateDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DialogState.html">DialogState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../MicInputProvider.html">MicInputProvider</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/MicInputProvider.html">MicInputProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MicInputError.html">MicInputError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../KeywordDetector.html">KeywordDetector</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/KeywordDetector.html">KeywordDetector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeywordDetectorDelegate.html">KeywordDetectorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeywordDetectorState.html">KeywordDetectorState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KeywordSource.html">KeywordSource</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>MicInputProvider</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">MicInputProvider</span></code></pre>
+
+                </div>
+              </div>
+            <p>Record audio input from a microphone.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit16MicInputProviderC9isRunningSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isRunning" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit16MicInputProviderC9isRunningSbvp">isRunning</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Whether the microphone is currently running.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isRunning</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit16MicInputProviderC11audioFormatSo07AVAudioH0CSgvp"></a>
+                    <a name="//apple_ref/swift/Property/audioFormat" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit16MicInputProviderC11audioFormatSo07AVAudioH0CSgvp">audioFormat</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The format of the PCM audio to be contained in the buffer.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">audioFormat</span><span class="p">:</span> <span class="kt">AVAudioFormat</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit16MicInputProviderC11inputFormatACSo07AVAudioH0CSg_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(inputFormat:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit16MicInputProviderC11inputFormatACSo07AVAudioH0CSg_tcfc">init(inputFormat:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates an instance of an MicInputProvider.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">inputFormat</span><span class="p">:</span> <span class="kt">AVAudioFormat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inputFormat</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The format of the PCM audio to be contained in the buffer.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit16MicInputProviderC5start8tapBlockyySo16AVAudioPCMBufferC_So0J4TimeCtc_tKF"></a>
+                    <a name="//apple_ref/swift/Method/start(tapBlock:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit16MicInputProviderC5start8tapBlockyySo16AVAudioPCMBufferC_So0J4TimeCtc_tKF">start(tapBlock:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Starts recording from the microphone.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    An error of type <code><a href="../Enums/MicInputError.html">MicInputError</a></code>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span><span class="nv">tapBlock</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">AVAudioNodeTapBlock</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tapBlock</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a block to be called with audio buffers</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit16MicInputProviderC4stopyyF"></a>
+                    <a name="//apple_ref/swift/Method/stop()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit16MicInputProviderC4stopyyF">stop()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Stops recording from the microphone.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">stop</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>(c) 2020 SK Telecom Co., Ltd. All rights reserved.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

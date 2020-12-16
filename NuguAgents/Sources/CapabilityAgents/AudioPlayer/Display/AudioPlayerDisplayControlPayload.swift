@@ -22,9 +22,7 @@ import Foundation
 
 /// <#Description#>
 public struct AudioPlayerDisplayControlPayload {
-    /// <#Description#>
     let playServiceId: String
-    /// <#Description#>
     let direction: Direction
     
     /// <#Description#>
