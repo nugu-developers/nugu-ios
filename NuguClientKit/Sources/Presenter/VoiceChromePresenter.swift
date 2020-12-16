@@ -39,21 +39,37 @@ public class VoiceChromePresenter {
     private var isMultiturn: Bool = false
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
+    /// <#Description#>
     public weak var delegate: VoiceChromePresenterDelegate?
+    /// <#Description#>
     public var isHidden = true
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - superView: <#superView description#>
+    ///   - nuguVoiceChrome: <#nuguVoiceChrome description#>
+    ///   - nuguClient: <#nuguClient description#>
     public convenience init(superView: UIView, nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
         self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient)
         
         self.superView = superView
     }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - viewController: <#viewController description#>
+    ///   - nuguVoiceChrome: <#nuguVoiceChrome description#>
+    ///   - nuguClient: <#nuguClient description#>
     public convenience init(viewController: UIViewController, nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
         self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient)
         
         self.viewController = viewController
     }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - nuguVoiceChrome: <#nuguVoiceChrome description#>
+    ///   - nuguClient: <#nuguClient description#>
     private init(nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
         self.nuguVoiceChrome = nuguVoiceChrome
         
@@ -66,6 +82,8 @@ public class VoiceChromePresenter {
 // MARK: - Public (Voice Chrome)
 
 public extension VoiceChromePresenter {
+    /// <#Description#>
+    /// - Throws: <#description#>
     func presentVoiceChrome() throws {
         guard NetworkReachabilityManager.shared.isReachable else { throw VoiceChromePresenterError.networkUnreachable }
         log.debug("")
@@ -77,6 +95,7 @@ public extension VoiceChromePresenter {
         try showVoiceChrome()
     }
     
+    /// <#Description#>
     func dismissVoiceChrome() {
         log.debug("")
         delegate?.voiceChromeWillHide()
@@ -148,6 +167,7 @@ private extension VoiceChromePresenter {
 
 // MARK: - DialogStateDelegate
 
+/// :nodoc:
 extension VoiceChromePresenter: DialogStateDelegate {
     public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
         log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
@@ -205,6 +225,7 @@ extension VoiceChromePresenter: DialogStateDelegate {
 
 // MARK: - AutomaticSpeechRecognitionDelegate
 
+/// :nodoc:
 extension VoiceChromePresenter: ASRAgentDelegate {
     public func asrAgentDidChange(state: ASRState) {
         DispatchQueue.main.async { [weak self] in
@@ -246,6 +267,7 @@ extension VoiceChromePresenter: ASRAgentDelegate {
 
 // MARK: - InteractionControlDelegate
 
+/// :nodoc:
 extension VoiceChromePresenter: InteractionControlDelegate {
     public func interactionControlDidChange(isMultiturn: Bool) {
         DispatchQueue.main.async { [weak self] in

@@ -112,6 +112,7 @@ extension Downstream.Header {
 
 // MARK: - Downstream.Header + CustomStringConvertible
 
+/// :nodoc:
 extension Downstream.Header: CustomStringConvertible {
     public var description: String {
         return "\(type)(\(messageId))"
@@ -120,6 +121,7 @@ extension Downstream.Header: CustomStringConvertible {
 
 // MARK: - Downstream.Attachment + CustomStringConvertible
 
+/// :nodoc:
 extension Downstream.Attachment: CustomStringConvertible {
     public var description: String {
         return "\(header)), \(seq), \(isEnd)"

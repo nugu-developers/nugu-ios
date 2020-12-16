@@ -1,0 +1,127 @@
+# root_url:
+# dash_url:
+# github_file_prefix:
+# docset_playground_url:
+# head:
+module: NuguAgents
+output: ../docs/NuguAgents
+clean: true
+sdk: iphone
+author: SK Telecom Co., Ltd.
+author_url: https://developers.nugu.co.kr
+title: NUGU SDK iOS
+copyright: (c) 2020 SK Telecom Co., Ltd. All rights reserved.
+module_version: 0.27.5
+readme: README.md
+github_url: https://github.com/nugu-developers/nugu-ios
+skip_undocumented: true
+min_acl: public
+hide_documentation_coverage: true
+hide_unlisted_documentation: true
+theme: apple
+undocumented_text: Undocumented
+exclude:
+  - Sources/CapabilityAgents/CapabilityAgentable.swift
+  - Sources/CapabilityAgents/CapabilityAgentProperty.swift
+  - Sources/CapabilityAgents/Interaction/InteractionControlDelegate.swift
+  - Sources/CapabilityAgents/Interaction/InteractionControlManageable.swift
+  - Sources/CapabilityAgents/Interaction/InteractionControl.swift
+custom_categories:
+  - name: Common
+    children:
+    - logLevel
+    - logEnabled
+    - NuguAgentError
+  - name: PhoneCallAgent
+    children:
+    - PhoneCallAgentProtocol
+    - PhoneCallAgentDelegate
+    - PhoneCallErrorCode
+    - PhoneCallIntent
+    - PhoneCallPerson
+    - PhoneCallRecipientIntended
+    - PhoneCallState
+    - PhoneCallType
+    - PhoneCallCandidatesItem
+    - PhoneCallContext
+  - name: ChipsAgent
+    children:
+    - ChipsAgentProtocol
+    - ChipsAgentDelegate
+    - ChipsAgentItem
+  - name: SessionAgent
+    children:
+    - SessionAgentProtocol
+    - SessionManageable
+    - SessionDelegate
+    - Session
+  - name: SoundAgent
+    children:
+    - SoundAgentProtocol
+    - SoundAgentDelegate
+    - SoundAgentDataSource
+    - SoundState
+    - SoundBeepName
+  - name: ExtensionAgent
+    children:
+    - ExtensionAgentProtocol
+    - ExtensionAgentDelegate
+  - name: AudioPlayerAgent
+    children:
+    - AudioPlayerAgentProtocol
+    - AudioPlayerAgentDelegate
+    - AudioPlayerState
+    - AudioPlayerDisplayDelegate
+    - AudioPlayerDisplayTemplate
+    - AudioPlayerDisplayRepeat
+    - AudioPlayerDisplayControlPayload
+  - name: ASRAgent
+    children:
+    - ASRAgentProtocol
+    - ASRAgentDelegate
+    - ASRState
+    - ASROptions
+    - ASRInitiator
+    - ASRResult
+    - ASRError
+  - name: SystemAgent
+    children:
+    - SystemAgentProtocol
+    - SystemAgentDelegate
+    - SystemAgentExceptionCode
+    - SystemAgentRevokeReason
+  - name: TTSAgent
+    children:
+    - TTSAgentProtocol
+    - TTSAgentDelegate
+    - TTSState
+    - TTSResult
+    - TTSError
+  - name: DisplayAgent
+    children:
+    - DisplayAgentProtocol
+    - DisplayAgentDelegate
+    - DisplayTemplate
+    - DisplayControlPayload
+    - DisplayContext
+    - DisplayTemplateDuration
+  - name: TextAgent
+    children:
+    - TextAgentProtocol
+    - TextAgentDelegate
+    - TextAgentRequestType
+    - ContextType
+  - name: LocationAgent
+    children:
+    - LocationAgentProtocol
+    - LocationAgentDelegate
+    - LocationInfo
+  - name: MediaPlayerAgent
+    children:
+    - MediaPlayerAgentProtocol
+    - MediaPlayerAgentDelegate
+    - MediaPlayerAgentContext
+    - MediaPlayerAgentSong
+    - MediaPlayerAgentDirectivePayload
+    - MediaPlayerAgentPlaylist
+    - MediaPlayerAgentProcessResult

@@ -84,6 +84,7 @@ final public class NuguServiceWebView: WKWebView {
 
 // MARK: - WKScriptMessageHandler
 
+/// :nodoc:
 extension NuguServiceWebView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         log.debug(message)

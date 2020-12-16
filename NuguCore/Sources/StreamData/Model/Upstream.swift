@@ -166,6 +166,7 @@ extension Upstream.Header {
 
 // MARK: - Upstream.Attachment + CustomStringConvertible
 
+/// :nodoc:
 extension Upstream.Attachment: CustomStringConvertible {
     public var description: String {
         return "\(header))"

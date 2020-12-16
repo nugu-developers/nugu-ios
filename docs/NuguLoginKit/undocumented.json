@@ -1,26 +1,26 @@
 {
   "warnings": [
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Business/OAuthSafariController.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Business/OAuthSafariController.swift",
       "line": 61,
       "symbol": "OAuthSafariController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Network/NuguOAuthTokenApi.swift",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Network/NuguOAuthTokenApi.swift",
       "line": 38,
       "symbol": "NuguOAuthTokenApi",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Network/NuguOAuthUtilApi.swift",
-      "line": 39,
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguLoginKit/Sources/Network/NuguOAuthUtilApi.swift",
+      "line": 38,
       "symbol": "NuguOAuthUtilApi",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/minchullee/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
+  "source_directory": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
 }

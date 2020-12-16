@@ -55,6 +55,7 @@ public struct PlaySyncProperty {
 
 // MARK: - Hashable
 
+/// :nodoc:
 extension PlaySyncProperty: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(layerType.hashValue)
@@ -64,18 +65,21 @@ extension PlaySyncProperty: Hashable {
 
 // MARK: - CustomStringConvertible
 
+/// :nodoc:
 extension PlaySyncProperty.LayerType: CustomStringConvertible {
     public var description: String {
         return rawValue
     }
 }
 
+/// :nodoc:
 extension PlaySyncProperty.ContextType: CustomStringConvertible {
     public var description: String {
         return rawValue
     }
 }
 
+/// :nodoc:
 extension PlaySyncProperty: CustomStringConvertible {
     public var description: String {
         return "Layer: \(layerType).\(contextType)"
