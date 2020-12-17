@@ -70,8 +70,3 @@ custom_categories:
     - ContextInfoDelegate
     - ContextInfo
     - ContextType
-  - name: TimeIntervallic
-    children:
-    - TimeIntervallic
-    - NuguTimeInterval
-    - DispatchTimeInterval

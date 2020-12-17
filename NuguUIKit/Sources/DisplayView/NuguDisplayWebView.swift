@@ -24,6 +24,7 @@ import WebKit
 import NuguAgents
 import NuguUtils
 
+/// <#Description#>
 final public class NuguDisplayWebView: UIView {
     // JavaScript Interfaces
     private enum NuguDisplayWebViewInterface: String, CaseIterable {

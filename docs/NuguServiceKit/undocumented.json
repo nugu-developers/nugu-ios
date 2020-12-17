@@ -2,9 +2,9 @@
   "warnings": [
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/NuguServiceCookie.swift",
-      "line": 24,
-      "symbol": "NuguServiceCookie",
-      "symbol_kind": "source.lang.swift.decl.struct",
+      "line": 35,
+      "symbol": "NuguServiceCookie.init(authToken:appVersion:pocId:theme:oauthRedirectUri:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
@@ -16,9 +16,16 @@
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/WebOpenExternalApp.swift",
-      "line": 23,
-      "symbol": "WebOpenExternalApp",
-      "symbol_kind": "source.lang.swift.decl.struct",
+      "line": 25,
+      "symbol": "WebOpenExternalApp.scheme",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguServiceKit/Sources/WebOpenExternalApp.swift",
+      "line": 26,
+      "symbol": "WebOpenExternalApp.appId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     }
   ],

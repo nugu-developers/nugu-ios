@@ -148,13 +148,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/NuguCore.swift",
-      "line": 47,
-      "symbol": "logEnabled",
-      "symbol_kind": "source.lang.swift.decl.var.global",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/PropertyWrappers/NuguUserDefault.swift",
       "line": 24,
       "symbol": "NuguUserDefault",
