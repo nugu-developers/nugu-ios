@@ -1,0 +1,14 @@
+name: Test PR
+on: pull_request
+jobs:
+  test:
+    runs-on: macOS-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Carthage
+        run: ./carthage.sh update --cache-builds --platform iOS
+        
+      - name: Run tests
+        run: xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest'
