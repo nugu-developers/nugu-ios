@@ -5,9 +5,19 @@ jobs:
     runs-on: macOS-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
-      - name: Install Carthage
+      - name: Cache Carthage
+        id: cache-carthage
+        uses: actions/cache@v2
+        with:
+          path: Carthage
+          key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-carthage-
+            
+      - name: Update Carthage
+        if: steps.cache-carthage.outputs.cache-hit != 'true'
         run: ./carthage.sh update --cache-builds --platform iOS
         
       - name: Run tests
