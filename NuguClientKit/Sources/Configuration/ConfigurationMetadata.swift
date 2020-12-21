@@ -21,24 +21,24 @@
 import Foundation
 
 public struct ConfigurationMetadata: Codable {
-    let issuer: String?
-    let authorizationEndpoint: String?
-    let tokenEndpoint: String?
-    let tokenEndpointAuthMethodsSupported: [String]?
-    let responseTypesSupported: [String]?
-    let grantTypesSupported: [String]?
-    let introspectionEndpoint: String?
-    let introspectionEndpointAuthMethodsSupported: [String]?
-    let revocationEndpoint: String?
-    let revocationEndpointAuthMethodsSupported: [String]?
-    let deviceGatewayRegistryUri: String?
-    let deviceGatewayServerGrpcUri: String?
-    let deviceGatewayServerH2Uri: String?
-    let templateServerUri: String?
-    let policyUri: String?
-    let termOfServiceUri: String?
-    let serviceDocumentation: String?
-    let serviceSetting: String?
+    public let issuer: String?
+    public let authorizationEndpoint: String?
+    public let tokenEndpoint: String?
+    public let tokenEndpointAuthMethodsSupported: [String]?
+    public let responseTypesSupported: [String]?
+    public let grantTypesSupported: [String]?
+    public let introspectionEndpoint: String?
+    public let introspectionEndpointAuthMethodsSupported: [String]?
+    public let revocationEndpoint: String?
+    public let revocationEndpointAuthMethodsSupported: [String]?
+    public let deviceGatewayRegistryUri: String?
+    public let deviceGatewayServerGrpcUri: String?
+    public let deviceGatewayServerH2Uri: String?
+    public let templateServerUri: String?
+    public let policyUri: String?
+    public let termOfServiceUri: String?
+    public let serviceDocumentation: String?
+    public let serviceSetting: String?
     
     enum CodingKeys: String, CodingKey {
         case issuer = "issuer"

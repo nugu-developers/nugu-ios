@@ -3628,8 +3628,6 @@
 				7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */,
 				73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */,
 				7314E030255E4491004882BB /* Atomic.swift in Sources */,
-				7314DFB5255E3F39004882BB /* DelegateDictionary.swift in Sources */,
-				7314DFB4255E3F39004882BB /* DelegateSet.swift in Sources */,
 				060DDE88256E67DC006B4F59 /* NetworkReachabilityManager.swift in Sources */,
 				7314DF68255E3F21004882BB /* BoundStreams.swift in Sources */,
 			);
