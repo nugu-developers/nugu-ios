@@ -1,0 +1,24 @@
+name: Test PR
+on: pull_request
+jobs:
+  test:
+    runs-on: macOS-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache Carthage
+        id: cache-carthage
+        uses: actions/cache@v2
+        with:
+          path: Carthage
+          key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-carthage-
+
+      - name: Update Carthage
+        if: steps.cache-carthage.outputs.cache-hit != 'true'
+        run: ./carthage.sh bootstrap --no-use-binaries --platform iOS --cache-builds
+        
+      - name: Run tests
+        run: xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest'
