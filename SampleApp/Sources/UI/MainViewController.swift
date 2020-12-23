@@ -25,7 +25,6 @@ import NuguCore
 import NuguAgents
 import NuguClientKit
 import NuguUIKit
-import NuguLoginKit
 
 final class MainViewController: UIViewController {
     var resignActiveObserver: Any?
