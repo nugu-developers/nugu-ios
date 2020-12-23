@@ -29,9 +29,14 @@ import NuguUIKit
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     
-    // Scopes value received from AuthorizationInfo when logged in successfully
-    // Use this value for start / stop receiving server initiavtive directives
-    private var scopes: [String]?
+    private var authorizationInfo: AuthorizationInfo? {
+        didSet {
+            guard let authorizationInfo = authorizationInfo else { return }
+            
+            UserDefaults.Standard.accessToken = authorizationInfo.accessToken
+            UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
+        }
+    }
     
     lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
@@ -70,10 +75,7 @@ final class NuguCentralManager {
     private let micQueue = DispatchQueue(label: "central_manager_mic_input_queue")
     private let micInputProvider = MicInputProvider()
     
-    private init() {
-        // TODO: - should be removed after configuration metadata has been applied
-        NuguDisplayWebView.deviceTypeCode = SampleApp.pocId.uppercased().replacingOccurrences(of: ".", with: "_")
-    }
+    private init() {}
 }
 
 // MARK: - Internal (Enable / Disable)
@@ -81,7 +83,7 @@ final class NuguCentralManager {
 extension NuguCentralManager {
     func enable() {
         log.debug("")
-        if scopes?.contains("device:S.I.D") == true {
+        if authorizationInfo?.availableServerInitiatedDirective == true {
             client.startReceiveServerInitiatedDirective()
         } else {
             client.stopReceiveServerInitiatedDirective()
@@ -128,7 +130,7 @@ extension NuguCentralManager {
     }
 }
 
-// MARK: - Internal (Auth)
+// MARK: - Internal (OAuth)
 
 extension NuguCentralManager {
     func login(from viewController: UIViewController, completion: @escaping (Result<Void, SampleAppError>) -> Void) {
@@ -139,170 +141,103 @@ extension NuguCentralManager {
         
         switch loginMethod {
         case .type1:
-            // If has not refreshToken
-            guard let refreshToken = UserDefaults.Standard.refreshToken else {
-                authorizationCodeLogin(from: viewController) { [weak self] (result) in
-                    switch result {
-                    case .success(let authInfo):
-                        UserDefaults.Standard.accessToken = authInfo.accessToken
-                        UserDefaults.Standard.refreshToken = authInfo.refreshToken
-                        self?.scopes = authInfo.scopes
-                        completion(.success(()))
-                    case .failure(let sampleAppError):
-                        completion(.failure(sampleAppError))
-                    }
-                }
-                return
-            }
-            
-            // If has refreshToken
-            refreshTokenLogin(refreshToken: refreshToken) { [weak self] (result) in
+            oauthClient.authorizeWithTid(parentViewController: viewController) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
-                    UserDefaults.Standard.accessToken = authInfo.accessToken
-                    UserDefaults.Standard.refreshToken = authInfo.refreshToken
-                    self?.scopes = authInfo.scopes
+                    self?.authorizationInfo = authInfo
                     completion(.success(()))
-                case .failure:
-                    completion(.failure(.loginWithRefreshTokenFailed))
+                case .failure(let error):
+                    let sampleAppError = SampleAppError.parseFromNuguLoginKitError(error: error)
+                    completion(.failure(sampleAppError))
                 }
             }
         case .type2:
-            clientCredentialsLogin { [weak self] (result) in
+            oauthClient.authorize { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
-                    UserDefaults.Standard.accessToken = authInfo.accessToken
-                    self?.scopes = authInfo.scopes
+                    self?.authorizationInfo = authInfo
                     completion(.success(()))
-                case .failure(let sampleAppError):
+                case .failure(let error):
+                    let sampleAppError = SampleAppError.parseFromNuguLoginKitError(error: error)
                     completion(.failure(sampleAppError))
                 }
             }
         }
     }
     
-    func handleAuthError() {
+    func refreshToken(completion: @escaping (Result<Void, SampleAppError>) -> Void) {
         guard let loginMethod = SampleApp.loginMethod else {
             log.info("loginMethod is nil")
+            completion(.failure(SampleAppError.nilValue(description: "loginMethod is nil")))
+            return
+        }
+        guard let refreshToken = UserDefaults.Standard.refreshToken else {
+            completion(.failure(SampleAppError.nilValue(description: "RefreshToken is nil")))
             return
         }
         
         switch loginMethod {
         case .type1:
-            // If has not refreshToken
-            guard let refreshToken = UserDefaults.Standard.refreshToken else {
-                log.debug("Try to login with refresh token when refresh token is nil")
-                clearSampleAppAfterErrorHandling(sampleAppError: .nilValue(description: "Try to login with refresh token when refresh token is nil"))
-                return
-            }
-            
-            // If has refreshToken
-            refreshTokenLogin(refreshToken: refreshToken) { [weak self] (result) in
+            oauthClient.refreshToken(refreshToken: refreshToken) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
-                    UserDefaults.Standard.accessToken = authInfo.accessToken
-                    UserDefaults.Standard.refreshToken = authInfo.refreshToken
-                    self?.scopes = authInfo.scopes
-                    self?.enable()
-                case .failure(let sampleAppError):
-                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                    self?.authorizationInfo = authInfo
+                    completion(.success(()))
+                case .failure(let error):
+                    let sampleAppError = SampleAppError.parseFromNuguLoginKitError(error: error)
+                    completion(.failure(sampleAppError))
                 }
             }
         case .type2:
-            clientCredentialsLogin { [weak self] (result) in
+            oauthClient.authorize { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
-                    UserDefaults.Standard.accessToken = authInfo.accessToken
-                    self?.scopes = authInfo.scopes
-                    self?.enable()
-                case .failure(let sampleAppError):
-                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                    self?.authorizationInfo = authInfo
+                    completion(.success(()))
+                case .failure(let error):
+                    let sampleAppError = SampleAppError.parseFromNuguLoginKitError(error: error)
+                    completion(.failure(sampleAppError))
                 }
             }
         }
     }
     
     func revoke() {
-        if SampleApp.loginMethod == SampleApp.LoginMethod.type1,
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret,
-            let token = UserDefaults.Standard.accessToken {
-            oauthClient.revoke(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                token: token) { [weak self] (result) in
-                    switch result {
-                    case .success:
-                        self?.clearSampleApp()
-                    case .failure(let nuguLoginKitError):
-                        log.debug(nuguLoginKitError.localizedDescription)
-                    }
+        oauthClient.revoke { [weak self] (result) in
+            switch result {
+            case .success:
+                self?.clearSampleApp()
+            case .failure(let nuguLoginKitError):
+                log.debug(nuguLoginKitError.localizedDescription)
             }
-        } else {
-            clearSampleApp()
         }
     }
     
     func clearSampleApp() {
-        scopes = nil
+        authorizationInfo = nil
         popToRootViewController()
         disable()
         UserDefaults.Standard.clear()
         UserDefaults.Nugu.clear()
     }
-}
-
-// MARK: - Internal (User Info)
-
-extension NuguCentralManager {
-    func getUserInfo(completion: ((_ userInfo: NuguUserInfo?) -> Void)?) {
-        guard
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret,
-            let token = UserDefaults.Standard.accessToken else {
-                completion?(nil)
-                return
-        }
-        
-        oauthClient.getUserInfo(clientId: clientId, clientSecret: clientSecret, token: token) { result in
-            switch result {
-            case .success(let userInfo):
-                completion?(userInfo)
-            case .failure:
-                completion?(nil)
-            }
-        }
+    
+    func getUserInfo(completion: @escaping (Result<NuguUserInfo, NuguLoginKitError>) -> Void) {
+        oauthClient.getUserInfo(completion: completion)
     }
     
-    func showTidInfo(parentViewController: UIViewController, completion: ((_ tid: String?) -> Void)?) {
-        guard SampleApp.loginMethod == SampleApp.LoginMethod.type1,
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret,
-            let redirectUri = SampleApp.redirectUri,
-            let token = UserDefaults.Standard.accessToken else {
-                completion?(nil)
-                return
+    func showTidInfo(parentViewController: UIViewController, completion: @escaping () -> Void) {
+        guard SampleApp.loginMethod == SampleApp.LoginMethod.type1 else {
+            log.error("loginMethod is not type1")
+            completion()
+            return
         }
         
-        let authorizationCodeGrant = AuthorizationCodeGrant(
-            clientId: clientId,
-            clientSecret: clientSecret,
-            redirectUri: redirectUri
-        )
-        
-        oauthClient.showTidInfo(
-            grant: authorizationCodeGrant,
-            token: token,
-            parentViewController: parentViewController,
-            completion: { [weak self] (result) in
-                if case .success(let authInfo) = result {
-                    UserDefaults.Standard.accessToken = authInfo.accessToken
-                    UserDefaults.Standard.refreshToken = authInfo.refreshToken
-                }
-                self?.getUserInfo(completion: { (userInfo) in
-                    completion?(userInfo?.username)
-                })
-        })
+        oauthClient.showTidInfo(parentViewController: parentViewController) { [weak self] (result) in
+            if case .success(let authInfo) = result {
+                self?.authorizationInfo = authInfo
+            }
+            completion()
+        }
     }
 }
 
@@ -325,14 +260,14 @@ private extension NuguCentralManager {
             switch sampleAppError {
             case .loginUnauthorized:
                 self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
-                    self?.scopes = nil
+                    self?.authorizationInfo = nil
                     self?.disable()
                     UserDefaults.Standard.clear()
                     UserDefaults.Nugu.clear()
                 })
             default:
                 self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
-                    self?.scopes = nil
+                    self?.authorizationInfo = nil
                     self?.disable()
                     UserDefaults.Standard.clear()
                     UserDefaults.Nugu.clear()
@@ -351,7 +286,14 @@ private extension NuguCentralManager {
         if let networkError = error as? NetworkError {
             switch networkError {
             case .authError:
-                handleAuthError()
+                refreshToken { [weak self] result in
+                    switch result {
+                    case .success:
+                        self?.enable()
+                    case .failure(let sampleAppError):
+                        self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                    }
+                }
             case .timeout:
                 localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
             default:
@@ -365,56 +307,6 @@ private extension NuguCentralManager {
             default: // Handle other URLErrors with your own way
                 break
             }
-        }
-    }
-}
-
-// MARK: - Private (Auth)
-
-private extension NuguCentralManager {
-    func authorizationCodeLogin(from viewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
-        guard
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret,
-            let redirectUri = SampleApp.redirectUri else {
-                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret, redirectUri")))
-                return
-        }
-        
-        oauthClient.authorize(
-            grant: AuthorizationCodeGrant(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                redirectUri: redirectUri
-            ),
-            parentViewController: viewController) { (result) in
-                completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
-        }
-    }
-    
-    func refreshTokenLogin(refreshToken: String, completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
-        guard
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret else {
-                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret")))
-                return
-        }
-        
-        oauthClient.authorize(grant: RefreshTokenGrant(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken)) { (result) in
-                completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
-        }
-    }
-    
-    func clientCredentialsLogin(completion: @escaping (Result<AuthorizationInfo, SampleAppError>) -> Void) {
-        guard
-            let clientId = SampleApp.clientId,
-            let clientSecret = SampleApp.clientSecret else {
-                completion(.failure(SampleAppError.nilValue(description: "There is nil value in clientId, clientSecret")))
-                return
-        }
-        
-        oauthClient.authorize(grant: ClientCredentialsGrant(clientId: clientId, clientSecret: clientSecret)) { (result) in
-            completion(result.mapError { SampleAppError.parseFromNuguLoginKitError(error: $0) })
         }
     }
 }
@@ -571,7 +463,14 @@ extension NuguCentralManager: SystemAgentDelegate {
         case .ttsSpeakingException:
             localTTSAgent.playLocalTTS(type: .deviceGatewayTTSConnectionError)
         case .unauthorizedRequestException:
-            handleAuthError()
+            refreshToken { [weak self] result in
+                switch result {
+                case .success:
+                    self?.enable()
+                case .failure(let sampleAppError):
+                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                }
+            }
         case .internalServiceException:
             DispatchQueue.main.async {
                 NuguToast.shared.showToast(message: SampleAppError.internalServiceException.errorDescription)
@@ -588,11 +487,8 @@ extension NuguCentralManager: SystemAgentDelegate {
 
 extension NuguCentralManager: SoundAgentDataSource {
     func soundAgentRequestUrl(beepName: SoundBeepName, header: Downstream.Header) -> URL? {
-        let url: URL?
         switch beepName {
-        case .responseFail:
-            url = Bundle.main.url(forResource: "responsefail", withExtension: "wav")
+        case .responseFail: return Bundle.main.url(forResource: "responsefail", withExtension: "wav")
         }
-        return url
     }
 }

@@ -61,9 +61,9 @@ extension NuguOAuthUtilApi: ApiProvidable {
     var uri: String {
         switch typeInfo {
         case .getUserInfo:
-            return NuguOAuthServerInfo.serverBaseUrl + "/oauth/introspect"
+            return NuguOAuthServerInfo.serverBaseUrl + "/v1/auth/oauth/introspect"
         case .revoke:
-            return NuguOAuthServerInfo.serverBaseUrl + "/oauth/revoke"
+            return NuguOAuthServerInfo.serverBaseUrl + "/v1/auth/oauth/revoke"
         }
     }
     

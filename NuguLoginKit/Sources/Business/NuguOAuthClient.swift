@@ -253,7 +253,7 @@ private extension NuguOAuthClient {
     ) {
         grant.safariController.completion = completion
         let state = grant.safariController.makeState()
-        var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/oauth/authorize")
+        var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/v1/auth/oauth/authorize")
         
         var queries = [URLQueryItem]()
         queries.append(URLQueryItem(name: "response_type", value: "code"))

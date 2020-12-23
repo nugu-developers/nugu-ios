@@ -22,6 +22,7 @@ import UIKit
 import SafariServices
 
 import NuguServiceKit
+import NuguClientKit
 
 final class NuguServiceWebViewController: UIViewController {
     var initialURLString: String?
@@ -33,7 +34,7 @@ final class NuguServiceWebViewController: UIViewController {
         super.viewDidLoad()
         
         nuguServiceWebView.javascriptDelegate = self
-        setCookie()
+        nuguServiceWebView.setNuguServiceCookie()
         nuguServiceWebView.loadUrlString(initialURLString)
         
         authObserver = NotificationCenter.default.addObserver(forName: .oauthRefresh, object: nil, queue: .main, using: { [weak self] _ in
@@ -47,21 +48,6 @@ final class NuguServiceWebViewController: UIViewController {
             NotificationCenter.default.removeObserver(authObserver)
             self.authObserver = nil
         }
-    }
-}
-
-// MARK: - private
-
-private extension NuguServiceWebViewController {
-    func setCookie() {
-        let cookie = NuguServiceCookie(
-            authToken: "Bearer \(UserDefaults.Standard.accessToken ?? "")",
-            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-            pocId: SampleApp.pocId, // Put your own pocId
-            theme: "LIGHT",
-            oauthRedirectUri: SampleApp.oauthRedirectUri
-        )
-        nuguServiceWebView.setNuguServiceCookie(nuguServiceCookie: cookie)
     }
 }
 
