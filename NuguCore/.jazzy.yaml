@@ -1,0 +1,77 @@
+# root_url:
+# dash_url:
+# github_file_prefix:
+# docset_playground_url:
+# head:
+module: NuguCore
+output: ../docs/NuguCore
+clean: true
+sdk: iphone
+author: SK Telecom Co., Ltd.
+author_url: https://developers.nugu.co.kr
+title: NUGU SDK iOS
+copyright: (c) 2020 SK Telecom Co., Ltd. All rights reserved.
+module_version: 0.27.5
+readme: README.md
+github_url: https://github.com/nugu-developers/nugu-ios
+skip_undocumented: true
+min_acl: public
+hide_documentation_coverage: true
+hide_unlisted_documentation: true
+theme: apple
+undocumented_text: Undocumented
+exclude:
+  - Sources/MediaPlayer/*
+  - Sources/PlaySync/*
+custom_categories:
+  - name: Common
+    children:
+    - logLevel
+    - logEnabled
+    - NuguServerInfo
+  - name: Authorization
+    children:
+    - AuthorizationStoreable
+    - AuthorizationStoreDelegate
+  - name: Network
+    children:
+    - StreamDataRoutable
+    - StreamDataDelegate
+    - StreamDataState
+    - EventSenderError
+    - NetworkError
+    - UpstreamDataSendable
+    - Upstream
+    - Downstream
+    - TimeUUID
+  - name: AudioFocus
+    children:
+    - FocusManageable
+    - FocusDelegate
+    - FocusChannelDelegate
+    - FocusChannelPriority
+    - FocusState
+  - name: DirectiveSequener
+    children:
+    - DirectiveSequenceable
+    - DirectiveSequencerDelegate
+    - BlockingPolicy
+    - DirectiveHandleInfo
+    - DirectiveHandleInfos
+    - PrefetchDirective
+    - HandleDirective
+    - CancelDirective
+    - HandleAttachment
+    - DirectiveHandleResult
+    - DirectiveCancelPolicy
+  - name: Context
+    children:
+    - ContextManageable
+    - ContextInfoDelegate
+    - ContextInfo
+    - ContextType
+  - name: TimeIntervallic
+    children:
+    - TimeIntervallic
+    - NuguTimeInterval
+    - DispatchTimeInterval

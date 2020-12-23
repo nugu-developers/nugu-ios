@@ -54,6 +54,7 @@ public struct PlaySyncInfo {
 
 // MARK: - CustomStringConvertible
 
+/// :nodoc:
 extension PlaySyncInfo: CustomStringConvertible {
     public var description: String {
         return playStackServiceId ?? ""

@@ -26,8 +26,8 @@ import NuguUtils
 import RxSwift
 
 protocol AudioPlayerProgressDelegate: class {
-    func audioPlayerDidDelayedReport(_ player: AudioPlayer)
-    func audioPlayerDidIntervalReport(_ player: AudioPlayer)
+    func audioPlayerDidReportDelay(_ player: AudioPlayer)
+    func audioPlayerDidReportInterval(_ player: AudioPlayer)
 }
 
 final class AudioPlayer {
@@ -227,7 +227,7 @@ extension AudioPlayer: MediaPlayerDelegate {
         delegate?.mediaPlayerStateDidChange(state, mediaPlayer: self)
     }
     
-    func mediaPlayer(_ mediaPlayer: MediaPlayable, didChange duration: TimeIntervallic) {
+    func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {
         delegate?.mediaPlayerDurationDidChange(duration, mediaPlayer: self)
     }
 }
@@ -269,10 +269,10 @@ private extension AudioPlayer {
                 // Check if there is any report target between last offset and current offset.
                 let offsetRange = (self.lastReportedOffset + 1...offset)
                 if delayReportTime > 0, offsetRange.contains(delayReportTime) {
-                    self.progressDelegate?.audioPlayerDidDelayedReport(self)
+                    self.progressDelegate?.audioPlayerDidReportDelay(self)
                 }
                 if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {
-                    self.progressDelegate?.audioPlayerDidIntervalReport(self)
+                    self.progressDelegate?.audioPlayerDidReportInterval(self)
                 }
                 self.lastReportedOffset = offset
             })

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DirectiveSequener  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/DirectiveSequener" class="dashAnchor"></a>
+    <a title="DirectiveSequener  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">NUGU SDK iOS</a></p>
+        <p class="header-right"><a href="https://github.com/nugu-developers/nugu-ios"><img src="img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="img/carat.png" />
+        DirectiveSequener  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Common.html">Common</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Common.html#/s:8NuguCore8logLevel8NattyLog0fD0Ovp">logLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/NuguServerInfo.html">NuguServerInfo</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Authorization.html">Authorization</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/AuthorizationStoreable.html">AuthorizationStoreable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/AuthorizationStoreDelegate.html">AuthorizationStoreDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Network.html">Network</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/StreamDataRoutable.html">StreamDataRoutable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/StreamDataDelegate.html">StreamDataDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/StreamDataState.html">StreamDataState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/EventSenderError.html">EventSenderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/UpstreamDataSendable.html">UpstreamDataSendable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Upstream.html">Upstream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Upstream/Event.html">– Event</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Upstream/Attachment.html">– Attachment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Downstream.html">Downstream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Downstream/Directive.html">– Directive</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Downstream/Attachment.html">– Attachment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Downstream/Header.html">– Header</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/TimeUUID.html">TimeUUID</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="AudioFocus.html">AudioFocus</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/FocusManageable.html">FocusManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FocusDelegate.html">FocusDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FocusChannelDelegate.html">FocusChannelDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/FocusChannelPriority.html">FocusChannelPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/FocusState.html">FocusState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="DirectiveSequener.html">DirectiveSequener</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/DirectiveSequenceable.html">DirectiveSequenceable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/DirectiveSequencerDelegate.html">DirectiveSequencerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/BlockingPolicy.html">BlockingPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/BlockingPolicy.html#/s:8NuguCore14BlockingPolicyV6MediumO">– Medium</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/DirectiveHandleInfo.html">DirectiveHandleInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="DirectiveSequener.html#/s:8NuguCore20DirectiveHandleInfosa">DirectiveHandleInfos</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="DirectiveSequener.html#/s:8NuguCore17PrefetchDirectivea">PrefetchDirective</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="DirectiveSequener.html#/s:8NuguCore15HandleDirectivea">HandleDirective</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="DirectiveSequener.html#/s:8NuguCore15CancelDirectivea">CancelDirective</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="DirectiveSequener.html#/s:8NuguCore16HandleAttachmenta">HandleAttachment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="DirectiveSequener.html#/s:8NuguCore21DirectiveHandleResultO">DirectiveHandleResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/DirectiveCancelPolicy.html">DirectiveCancelPolicy</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Context.html">Context</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/ContextManageable.html">ContextManageable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/ContextInfoDelegate.html">ContextInfoDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/ContextInfo.html">ContextInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/ContextType.html">ContextType</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>DirectiveSequener</h1>
+            
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore21DirectiveSequenceableP"></a>
+                    <a name="//apple_ref/swift/Protocol/DirectiveSequenceable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore21DirectiveSequenceableP">DirectiveSequenceable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/DirectiveSequenceable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DirectiveSequenceable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore26DirectiveSequencerDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/DirectiveSequencerDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore26DirectiveSequencerDelegateP">DirectiveSequencerDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Protocols/DirectiveSequencerDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DirectiveSequencerDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore14BlockingPolicyV"></a>
+                    <a name="//apple_ref/swift/Struct/BlockingPolicy" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore14BlockingPolicyV">BlockingPolicy</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Structs/BlockingPolicy.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">BlockingPolicy</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore19DirectiveHandleInfoV"></a>
+                    <a name="//apple_ref/swift/Struct/DirectiveHandleInfo" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore19DirectiveHandleInfoV">DirectiveHandleInfo</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Structs/DirectiveHandleInfo.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DirectiveHandleInfo</span> <span class="p">:</span> <span class="kt">Hashable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore20DirectiveHandleInfosa"></a>
+                    <a name="//apple_ref/swift/Alias/DirectiveHandleInfos" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore20DirectiveHandleInfosa">DirectiveHandleInfos</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">DirectiveHandleInfos</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt"><a href="Structs/DirectiveHandleInfo.html">DirectiveHandleInfo</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore17PrefetchDirectivea"></a>
+                    <a name="//apple_ref/swift/Alias/PrefetchDirective" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore17PrefetchDirectivea">PrefetchDirective</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">PrefetchDirective</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">directive</span><span class="p">:</span> <span class="kt"><a href="Enums/Downstream.html">Downstream</a></span><span class="o">.</span><span class="kt">Directive</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore15HandleDirectivea"></a>
+                    <a name="//apple_ref/swift/Alias/HandleDirective" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore15HandleDirectivea">HandleDirective</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">HandleDirective</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">directive</span><span class="p">:</span> <span class="kt"><a href="Enums/Downstream.html">Downstream</a></span><span class="o">.</span><span class="kt">Directive</span><span class="p">,</span> <span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="DirectiveSequener.html#/s:8NuguCore21DirectiveHandleResultO">DirectiveHandleResult</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore15CancelDirectivea"></a>
+                    <a name="//apple_ref/swift/Alias/CancelDirective" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore15CancelDirectivea">CancelDirective</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">CancelDirective</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">directive</span><span class="p">:</span> <span class="kt"><a href="Enums/Downstream.html">Downstream</a></span><span class="o">.</span><span class="kt">Directive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore16HandleAttachmenta"></a>
+                    <a name="//apple_ref/swift/Alias/HandleAttachment" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore16HandleAttachmenta">HandleAttachment</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">HandleAttachment</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">attachment</span><span class="p">:</span> <span class="kt"><a href="Enums/Downstream.html">Downstream</a></span><span class="o">.</span><span class="kt">Attachment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore21DirectiveHandleResultO"></a>
+                    <a name="//apple_ref/swift/Enum/DirectiveHandleResult" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore21DirectiveHandleResultO">DirectiveHandleResult</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">DirectiveHandleResult</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore21DirectiveCancelPolicyV"></a>
+                    <a name="//apple_ref/swift/Struct/DirectiveCancelPolicy" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore21DirectiveCancelPolicyV">DirectiveCancelPolicy</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>&lt;#Description#&gt;</p>
+
+                        <a href="Structs/DirectiveCancelPolicy.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DirectiveCancelPolicy</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>(c) 2020 SK Telecom Co., Ltd. All rights reserved.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

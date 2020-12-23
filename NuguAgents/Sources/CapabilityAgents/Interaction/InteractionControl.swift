@@ -21,12 +21,12 @@
 import Foundation
 
 /// <#Description#>
-public struct InteractionControl: Decodable {
+public struct InteractionControl: Codable {
     /// <#Description#>
     public let mode: Mode
     
     /// <#Description#>
-    public enum Mode: String, Decodable {
+    public enum Mode: String, Codable {
         case none = "NONE"
         case multiTurn = "MULTI_TURN"
     }

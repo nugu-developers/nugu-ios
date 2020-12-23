@@ -26,6 +26,7 @@ public struct DisplayControlPayload {
     let playServiceId: String
     /// <#Description#>
     let direction: Direction
+    let interactionControl: InteractionControl?
     
     /// <#Description#>
     public enum Direction: String, Codable {
@@ -40,6 +41,7 @@ extension DisplayControlPayload: Codable {
     enum CodingKeys: String, CodingKey {
         case playServiceId
         case direction
+        case interactionControl
     }
     
     public init(from decoder: Decoder) throws {
@@ -47,5 +49,6 @@ extension DisplayControlPayload: Codable {
         
         playServiceId = try container.decode(String.self, forKey: .playServiceId)
         direction = try container.decode(Direction.self, forKey: .direction)
+        interactionControl = try? container.decode(InteractionControl.self, forKey: .interactionControl)
     }
 }

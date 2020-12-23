@@ -20,10 +20,10 @@
 
 import Foundation
 
-/// <#Description#>
+/// Manage the device-gateway server address.
 public enum NuguServerInfo {
-    /// <#Description#>
+    /// The resource server address.
     public static var resourceServerAddress: String = "https://dghttp.sktnugu.com"
-    /// <#Description#>
+    /// The registry server address.
     public static var registryServerAddress: String = "https://reg-http.sktnugu.com"
 }
