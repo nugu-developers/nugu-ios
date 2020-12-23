@@ -1,9 +1,9 @@
 //
-//  NuguServerInfo.swift
-//  NuguCore
+//  ConfigurationError.swift
+//  NuguClientKit
 //
-//  Created by childc on 2019/11/20.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by 이민철님/AI Assistant개발Cell on 2020/11/20.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,10 +20,8 @@
 
 import Foundation
 
-/// Manage the device-gateway server address.
-public enum NuguServerInfo {
-    /// The resource server address.
-    public static var resourceServerAddress: String = "https://dghttp.sktnugu.com"
-    /// The registry server address.
-    public static var registryServerAddress: String = "https://reg-http.sktnugu.com"
+public enum ConfigurationError: Error {
+    case notConfigured
+    case invalidUrl
+    case invalidPayload
 }

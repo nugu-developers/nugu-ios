@@ -30,6 +30,9 @@ public protocol AuthorizationStoreable: class {
     
     // MARK: Getting the OAuth authorization token
     
+    /// The current access  token.
+    var accessToken: String? { get }
+    
     /// The current authorization token. (auth_type + access_token)
     var authorizationToken: String? { get }
 }

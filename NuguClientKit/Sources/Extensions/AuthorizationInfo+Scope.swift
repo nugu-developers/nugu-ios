@@ -1,8 +1,8 @@
 //
-//  NuguServerInfo.swift
-//  NuguCore
+//  AuthorizationInfo+Scope.swift
+//  NuguClientKit
 //
-//  Created by childc on 2019/11/20.
+//  Created by yonghoonKwon on 13/09/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,11 @@
 
 import Foundation
 
-/// Manage the device-gateway server address.
-public enum NuguServerInfo {
-    /// The resource server address.
-    public static var resourceServerAddress: String = "https://dghttp.sktnugu.com"
-    /// The registry server address.
-    public static var registryServerAddress: String = "https://reg-http.sktnugu.com"
+import NuguLoginKit
+
+public extension AuthorizationInfo {
+    /// Indicates that the client can receive server initiated directives.
+    var availableServerInitiatedDirective: Bool {
+        scopes.contains("device:S.I.D")
+    }
 }

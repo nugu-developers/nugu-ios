@@ -208,10 +208,16 @@ private extension MainViewController {
     
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
-        guard UserDefaults.Standard.hasSeenGuideWeb == false,
-            let url = SampleApp.makeGuideWebURL(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) else { return }
-        
-        performSegue(withIdentifier: "mainToGuideWeb", sender: url)
+        ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { [weak self] (result) in
+            switch result {
+            case .success(let urlString):
+                if let url = URL(string: urlString) {
+                    self?.performSegue(withIdentifier: "mainToGuideWeb", sender: url)
+                }
+            case .failure(let error):
+                log.error(error)
+            }
+        }
     }
     
     /// Refresh Nugu status

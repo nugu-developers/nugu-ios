@@ -19,6 +19,8 @@
 //
 
 import UIKit
+
+import NuguClientKit
 import NuguLoginKit
 
 @UIApplicationMain
@@ -27,19 +29,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        ConfigurationStore.shared.configure()
         return true
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        if url.absoluteString == SampleApp.oauthRedirectUri {
+        if ConfigurationStore.shared.isServiceWebRedirectUrl(url: url) {
             NotificationCenter.default.post(name: .oauthRefresh, object: nil, userInfo: nil)
             return true
+        } else if ConfigurationStore.shared.isAuthorizationRedirectUrl(url: url) {
+            NuguOAuthClient.handle(url: url)
+            return true
         }
-        // Only for free pass of Sample app's Oauth validation check
-        guard let schemeReplacedUrl = SampleApp.schemeReplacedUrl(openUrl: url) else { return false }
         
-        NuguOAuthClient.handle(url: schemeReplacedUrl)
-        return true
+        return false
     }
     
     func applicationWillResignActive(_ application: UIApplication) {

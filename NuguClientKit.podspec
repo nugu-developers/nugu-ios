@@ -26,8 +26,10 @@ Default Instances for Nugu service
   s.dependency 'NuguCore', '~> 0'
   s.dependency 'NuguAgents', '~> 0'
   s.dependency 'KeenSense', '~> 0'
+  s.dependency 'NuguLoginKit', '~> 0'
   s.dependency 'NuguUIKit', '~> 0'
   s.dependency 'NuguUtils', '~> 0'
+  s.dependency 'NuguServiceKit', '~> 0'
 
   s.dependency 'NattyLog', '~> 1'
 end

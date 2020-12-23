@@ -101,4 +101,7 @@ fastlane/screenshots/screenshots.html
 # scan temporary files
 fastlane/test_output
 
+# configuration file
+nugu-config.plist
+
 # End of https://www.gitignore.io/api/macos,xcode,carthage,cocoapods,fastlane

@@ -23,5 +23,5 @@ import Foundation
 /// <#Description#>
 public enum NuguOAuthServerInfo {
     /// <#Description#>
-    public static var serverBaseUrl = "https://api.sktnugu.com/v1/auth"
+    public static var serverBaseUrl = "https://api.sktnugu.com"
 }
