@@ -348,9 +348,6 @@ extension MainViewController: DisplayWebViewPresenterDelegate {
     func onDisplayWebViewNuguButtonClick() {
         presentVoiceChrome(initiator: .user)
     }
-    func onDisplayWebViewChipsSelect(selectedChips: String) {
-        NuguCentralManager.shared.requestTextInput(text: selectedChips, requestType: .dialog)
-    }
 }
 
 // MARK: - Private (AudioDisplayView)

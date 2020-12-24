@@ -41,6 +41,7 @@ public protocol DisplayWebViewPresenterDelegate: class {
 
 public extension DisplayWebViewPresenterDelegate {
     func onDisplayWebViewItemSelect(templateId: String, token: String, postback: [String: AnyHashable]?) {}
+    func onDisplayWebViewChipsSelect(selectedChips: String) {}
     func onDisplayWebViewUserInteraction() {}
     func onDisplayWebViewTapForStopRecognition() {}
     func onDisplayWebViewClose() {}

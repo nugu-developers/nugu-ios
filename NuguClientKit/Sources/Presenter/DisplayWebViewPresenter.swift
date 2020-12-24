@@ -161,6 +161,7 @@ private extension DisplayWebViewPresenter {
             self?.delegate?.onDisplayWebViewTapForStopRecognition()
         }
         nuguDisplayWebView?.onChipsSelect = { [weak self] (selectedChips) in
+            self?.nuguClient?.requestTextInput(text: selectedChips, requestType: .dialog)
             self?.delegate?.onDisplayWebViewChipsSelect(selectedChips: selectedChips)
         }
         nuguDisplayWebView?.onNuguButtonClick = { [weak self] in
