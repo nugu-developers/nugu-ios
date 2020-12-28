@@ -185,7 +185,11 @@ private extension DisplayWebViewPresenter {
             completion(nil)
             return
         }
-        targetView?.addSubview(nuguDisplayWebView)
+        if let voiceChrome = targetView?.subviews.filter({ $0.isKind(of: NuguVoiceChrome.self) }).first {
+            targetView?.insertSubview(nuguDisplayWebView, belowSubview: voiceChrome)
+        } else {
+            targetView?.addSubview(nuguDisplayWebView)
+        }
         
         let closeButton = UIButton(type: .custom)
         closeButton.setImage(UIImage(named: "btn_close"), for: .normal)
