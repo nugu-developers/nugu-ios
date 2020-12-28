@@ -20,13 +20,14 @@
 
 import Foundation
 import UIKit
+import WebKit
 
 import NuguAgents
 import NuguUIKit
 import NuguCore
 
 /// DisplayWebViewPresenter is a class which helps user for displaying DisplayWebView more easily.
-public class DisplayWebViewPresenter {
+public class DisplayWebViewPresenter: NSObject {
 
     public weak var delegate: DisplayWebViewPresenterDelegate?
     
@@ -38,6 +39,7 @@ public class DisplayWebViewPresenter {
     }
     private var nuguClient: NuguClient?
     private var clientInfo: [String: String]?
+    private var addWebViewCompletion: (() -> Void)?
     
     /// Initialize with superView
     /// - Parameters:
@@ -64,6 +66,7 @@ public class DisplayWebViewPresenter {
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
     private init(nuguClient: NuguClient, clientInfo: [String: String]? = nil) {
+        super.init()
         self.nuguClient = nuguClient
         self.clientInfo = clientInfo
         nuguClient.displayAgent.delegate = self
@@ -111,22 +114,35 @@ extension DisplayWebViewPresenter: DisplayAgentDelegate {
     }
 }
 
+// MARK: - Private (DisplayView present/dismiss)
+
 private extension DisplayWebViewPresenter {
-    func replaceDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        guard let nuguDisplayWebView = self.nuguDisplayWebView else {
-            completion(nil)
-            return
+    func checkSupportVisibleTokenListOrSupportFocusedItemToken(displayTemplate: DisplayTemplate) -> Bool {
+        guard let jsonPayload = try? JSONSerialization.jsonObject(with: displayTemplate.payload, options: []) as? [String: Any] else {
+            return false
         }
-        nuguDisplayWebView.load(
+        let supportVisibleTokenList = jsonPayload["supportVisibleTokenList"] as? Bool
+        let supportFocusedItemToken = jsonPayload["supportFocusedItemToken"] as? Bool
+        return (supportVisibleTokenList == true) || (supportFocusedItemToken == true)
+    }
+    
+    func replaceDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
+        nuguDisplayWebView?.load(
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
             clientInfo: self.clientInfo
         )
-        nuguDisplayWebView.onItemSelect = { [weak self] (token, postback) in
+        nuguDisplayWebView?.onItemSelect = { [weak self] (token, postback) in
             self?.nuguClient?.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
-            self?.delegate?.onDisplayWebViewItemSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
         }
-        completion(nuguDisplayWebView)
+        if checkSupportVisibleTokenListOrSupportFocusedItemToken(displayTemplate: displayTemplate) == true {
+            addWebViewCompletion = { [weak self] in
+                guard let self = self else { return }
+                completion(self.nuguDisplayWebView)
+            }
+        } else {
+            completion(nuguDisplayWebView)
+        }
     }
     
     func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
@@ -137,6 +153,7 @@ private extension DisplayWebViewPresenter {
             return
         }
         nuguDisplayWebView = NuguDisplayWebView(frame: targetView?.frame ?? .zero)
+        nuguDisplayWebView?.displayWebView?.navigationDelegate = self
         nuguDisplayWebView?.load(
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
@@ -145,24 +162,19 @@ private extension DisplayWebViewPresenter {
         nuguDisplayWebView?.onClose = { [weak self] in
             self?.nuguClient?.ttsAgent.stopTTS()
             self?.dismissDisplayView()
-            self?.delegate?.onDisplayWebViewClose()
         }
         nuguDisplayWebView?.onItemSelect = { [weak self] (token, postback) in
             self?.nuguClient?.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
-            self?.delegate?.onDisplayWebViewItemSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
         }
         nuguDisplayWebView?.onUserInteraction = { [weak self] in
             self?.nuguClient?.displayAgent.notifyUserInteraction()
-            self?.delegate?.onDisplayWebViewUserInteraction()
         }
         nuguDisplayWebView?.onTapForStopRecognition = { [weak self] in
             guard [.listening, .recognizing].contains(self?.nuguClient?.asrAgent.asrState) else { return }
             self?.nuguClient?.asrAgent.stopRecognition()
-            self?.delegate?.onDisplayWebViewTapForStopRecognition()
         }
         nuguDisplayWebView?.onChipsSelect = { [weak self] (selectedChips) in
             self?.nuguClient?.requestTextInput(text: selectedChips, requestType: .dialog)
-            self?.delegate?.onDisplayWebViewChipsSelect(selectedChips: selectedChips)
         }
         nuguDisplayWebView?.onNuguButtonClick = { [weak self] in
             self?.delegate?.onDisplayWebViewNuguButtonClick()
@@ -181,7 +193,15 @@ private extension DisplayWebViewPresenter {
         closeButton.addTarget(self, action: #selector(self.onDisplayViewCloseButtonDidClick), for: .touchUpInside)
         nuguDisplayWebView.addSubview(closeButton)
         
-        completion(nuguDisplayWebView)
+        if checkSupportVisibleTokenListOrSupportFocusedItemToken(displayTemplate: displayTemplate) == true {
+            addWebViewCompletion = { [weak self] in
+                guard let self = self else { return }
+                completion(self.nuguDisplayWebView)
+            }
+        } else {
+            completion(nuguDisplayWebView)
+        }
+
         UIView.animate(withDuration: 0.3, animations: {
             nuguDisplayWebView.alpha = 1.0
         }, completion: { [weak self] (_) in
@@ -192,7 +212,6 @@ private extension DisplayWebViewPresenter {
     @objc func onDisplayViewCloseButtonDidClick() {
         nuguClient?.ttsAgent.stopTTS()
         dismissDisplayView()
-        delegate?.onDisplayWebViewClose()
     }
     
     func updateDisplayView(displayTemplate: DisplayTemplate) {
@@ -210,5 +229,13 @@ private extension DisplayWebViewPresenter {
                 nuguDisplayWebView.removeFromSuperview()
             }
         )
+    }
+}
+
+// MARK: - WKNavigationDelegate
+
+extension DisplayWebViewPresenter: WKNavigationDelegate {
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        addWebViewCompletion?()
     }
 }

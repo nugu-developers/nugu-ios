@@ -23,26 +23,6 @@ import NuguAgents
 
 /// A delegate that application can extend to observe `DisplayWebViewPresenter` changes.
 public protocol DisplayWebViewPresenterDelegate: class {
-    /// Delegate method called when item has been selected.
-    func onDisplayWebViewItemSelect(templateId: String, token: String, postback: [String: AnyHashable]?)
-    /// Delegate method called when chips has been selected.
-    func onDisplayWebViewChipsSelect(selectedChips: String)
     /// Delegate method called when nugu button has been selected.
     func onDisplayWebViewNuguButtonClick()
-    /// Delegate method called when user interaction (scroll, touch, etc)  has been occurred.
-    func onDisplayWebViewUserInteraction()
-    /// Delegate method called when tap has been occurred during voice chrome is being shown.
-    func onDisplayWebViewTapForStopRecognition()
-    /// Delegate method called when close event has been occurred.
-    func onDisplayWebViewClose()
-}
-
-// MARK: - Optional
-
-public extension DisplayWebViewPresenterDelegate {
-    func onDisplayWebViewItemSelect(templateId: String, token: String, postback: [String: AnyHashable]?) {}
-    func onDisplayWebViewChipsSelect(selectedChips: String) {}
-    func onDisplayWebViewUserInteraction() {}
-    func onDisplayWebViewTapForStopRecognition() {}
-    func onDisplayWebViewClose() {}
 }
