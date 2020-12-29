@@ -164,7 +164,11 @@ private extension AudioDisplayViewPresenter {
         audioDisplayView.displayPayload = audioPlayerDisplayTemplate.payload
         
         audioDisplayView.alpha = 0
-        targetView.addSubview(audioDisplayView)
+        if let voiceChrome = targetView.subviews.first(where: { $0.isKind(of: NuguVoiceChrome.self) }) {
+            targetView.insertSubview(audioDisplayView, belowSubview: voiceChrome)
+        } else {
+            targetView.addSubview(audioDisplayView)
+        }
         completion(audioDisplayView)
         
         UIView.animate(withDuration: 0.3, animations: {
