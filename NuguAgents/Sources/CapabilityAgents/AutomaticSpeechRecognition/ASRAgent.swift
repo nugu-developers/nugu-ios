@@ -197,7 +197,13 @@ public final class ASRAgent: ASRAgentProtocol {
             name: "NotifyResult",
             blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
             directiveHandler: handleNotifyResult
-        )
+        ),
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: "CancelRecognize",
+            blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
+            directiveHandler: handleCancelRecognize
+        ),
     ]
     
     public init(
@@ -510,6 +516,27 @@ private extension ASRAgent {
                 default:
                     // TODO 추후 Server EPD 개발시 구현
                     break
+                }
+            }
+        }
+    }
+    
+    func handleCancelRecognize() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let self = self else {
+                completion(.canceled)
+                return
+            }
+            
+            self.asrDispatchQueue.async { [weak self] in
+                guard let self = self else {
+                    completion(.canceled)
+                    return
+                }
+                defer { completion(.finished) }
+                
+                if self.asrState != .idle {
+                    self.asrResult = .cancel()
                 }
             }
         }
