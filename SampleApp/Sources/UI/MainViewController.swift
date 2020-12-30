@@ -50,6 +50,13 @@ final class MainViewController: UIViewController {
             nuguClient: NuguCentralManager.shared.client
         )
     }()
+    private lazy var displayWebViewPresenter: DisplayWebViewPresenter = {
+        DisplayWebViewPresenter(
+            viewController: self,
+            nuguClient: NuguCentralManager.shared.client,
+            clientInfo: ["buttonColor": "white"]
+        )
+    }()
     
     // MARK: Override
     
@@ -192,12 +199,12 @@ private extension MainViewController {
         NuguCentralManager.shared.client.keywordDetector.delegate = self
         NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
         NuguCentralManager.shared.client.asrAgent.add(delegate: self)
-        NuguCentralManager.shared.client.displayAgent.delegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.displayDelegate = self
         NuguCentralManager.shared.client.audioPlayerAgent.add(delegate: self)
         
         // UI
         voiceChromePresenter.delegate = self
+        displayWebViewPresenter.delegate = self
         nuguVoiceChrome.onChipsSelect = { [weak self] selectedChips in
             self?.chipsDidSelect(selectedChips: selectedChips)
         }
@@ -208,6 +215,7 @@ private extension MainViewController {
     
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
+        guard UserDefaults.Standard.hasSeenGuideWeb == false else { return }
         ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { [weak self] (result) in
             switch result {
             case .success(let urlString):
@@ -334,96 +342,11 @@ extension MainViewController: UIGestureRecognizerDelegate {
     }
 }
 
-// MARK: - Private (DisplayView)
+// MARK: - DisplayWebViewPresenterDelegate
 
-private extension MainViewController {
-    func replaceDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        guard let displayView = self.displayView else {
-            completion(nil)
-            return
-        }
-        displayView.load(
-            displayPayload: displayTemplate.payload,
-            displayType: displayTemplate.type,
-            clientInfo: ["buttonColor": "white"]
-        )
-        displayView.onItemSelect = { (token, postback) in
-            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
-        }
-        completion(displayView)
-    }
-    
-    func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        if let displayView = self.displayView,
-           view.subviews.contains(displayView) {
-            replaceDisplayView(displayTemplate: displayTemplate, completion: completion)
-            return
-        }
-        let displayView = NuguDisplayWebView(frame: view.frame)
-        displayView.load(
-            displayPayload: displayTemplate.payload,
-            displayType: displayTemplate.type,
-            clientInfo: ["buttonColor": "white"]
-        )
-        displayView.onClose = { [weak self] in
-            guard let self = self else { return }
-            NuguCentralManager.shared.client.ttsAgent.stopTTS()
-            self.dismissDisplayView()
-        }
-        // TODO: - EventType 꼭 확인할것 (웹에선 무시하는건지?)
-        displayView.onItemSelect = { (token, postback) in
-            NuguCentralManager.shared.client.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
-        }
-        displayView.onUserInteraction = {
-            NuguCentralManager.shared.client.displayAgent.notifyUserInteraction()
-        }
-        displayView.onTapForStopRecognition = { [weak self] in
-            self?.didTapForStopRecognition()
-        }
-        displayView.onChipsSelect = { (selectedChips) in
-            NuguCentralManager.shared.requestTextInput(text: selectedChips, requestType: .dialog)
-        }
-        displayView.onNuguButtonClick = { [weak self] in
-            self?.presentVoiceChrome(initiator: .user)
-        }
-        
-        displayView.alpha = 0
-        view.insertSubview(displayView, belowSubview: nuguVoiceChrome)
-        
-        let closeButton = UIButton(type: .custom)
-        closeButton.setImage(UIImage(named: "btn_close"), for: .normal)
-        closeButton.frame = CGRect(x: displayView.frame.size.width - 48, y: SafeAreaUtil.topSafeAreaHeight + 16, width: 28.0, height: 28.0)
-        closeButton.addTarget(self, action: #selector(self.onDisplayViewCloseButtonDidClick), for: .touchUpInside)
-        displayView.addSubview(closeButton)
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            displayView.alpha = 1.0
-        }, completion: { [weak self] (_) in
-            completion(displayView)
-            self?.displayView = displayView
-        })
-    }
-    
-    @objc func onDisplayViewCloseButtonDidClick() {
-        NuguCentralManager.shared.client.ttsAgent.stopTTS()
-        dismissDisplayView()
-    }
-    
-    func updateDisplayView(displayTemplate: DisplayTemplate) {
-        displayView?.update(updatePayload: displayTemplate.payload)
-    }
-    
-    func dismissDisplayView() {
-        guard let view = displayView else { return }
-        UIView.animate(
-            withDuration: 0.3,
-            animations: {
-                view.alpha = 0
-            },
-            completion: { _ in
-                view.removeFromSuperview()
-            }
-        )
+extension MainViewController: DisplayWebViewPresenterDelegate {    
+    func onDisplayWebViewNuguButtonClick() {
+        presentVoiceChrome(initiator: .user)
     }
 }
 
@@ -599,47 +522,6 @@ extension MainViewController: ASRAgentDelegate {
                 }
             }
         default: break
-        }
-    }
-}
-
-// MARK: - DisplayAgentDelegate
-
-extension MainViewController: DisplayAgentDelegate {
-    func displayAgentRequestContext(templateId: String, completion: @escaping (DisplayContext?) -> Void) {
-        displayView?.requestContext(completion: { (displayContext) in
-            completion(displayContext)
-        })
-    }
-    
-    func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
-        completion(false)
-    }
-    
-    func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
-        DispatchQueue.main.async { [weak self] in
-            self?.displayView?.scroll(direction: direction, completion: completion)
-        }
-    }
-    
-    func displayAgentShouldRender(template: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        log.debug("templateId: \(template.templateId)")
-        DispatchQueue.main.async {  [weak self] in
-            self?.addDisplayView(displayTemplate: template, completion: completion)
-        }
-    }
-    
-    func displayAgentShouldUpdate(templateId: String, template: DisplayTemplate) {
-        log.debug("templateId: \(templateId)")
-        DispatchQueue.main.async { [weak self] in
-            self?.updateDisplayView(displayTemplate: template)
-        }
-    }
-    
-    func displayAgentDidClear(templateId: String) {
-        log.debug("templateId: \(templateId)")
-        DispatchQueue.main.async { [weak self] in
-            self?.dismissDisplayView()
         }
     }
 }
