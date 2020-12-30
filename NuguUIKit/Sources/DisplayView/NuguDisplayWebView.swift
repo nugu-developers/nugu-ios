@@ -39,8 +39,9 @@ final public class NuguDisplayWebView: UIView {
     public static var displayWebServerAddress = "http://template.aicloud.kr/view"
     public static var deviceTypeCode: String?
     
+    public var displayWebView: WKWebView?
+    
     // Private Properties
-    private var displayWebView: WKWebView?
     private var displayPayload: Data?
     private var displayType: String?
     private var deviceTypeCode: String?
