@@ -15,6 +15,13 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Audio/MicInputProvider/MicInputProvider.swift",
+      "line": 26,
+      "symbol": "MicInputProvider.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Business/BackgroundFocusHolder.swift",
       "line": 59,
       "symbol": "BackgroundFocusHolder",
@@ -43,17 +50,24 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/NuguClientKit.swift",
-      "line": 47,
-      "symbol": "logEnabled",
-      "symbol_kind": "source.lang.swift.decl.var.global",
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenterError.swift",
+      "line": 25,
+      "symbol": "VoiceChromePresenterError.superViewNotExsit",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenterError.swift",
-      "line": 23,
-      "symbol": "VoiceChromePresenterError",
-      "symbol_kind": "source.lang.swift.decl.enum",
+      "line": 26,
+      "symbol": "VoiceChromePresenterError.alreadyShown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguClientKit/Sources/Presenter/VoiceChromePresenterError.swift",
+      "line": 27,
+      "symbol": "VoiceChromePresenterError.networkUnreachable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     }
   ],

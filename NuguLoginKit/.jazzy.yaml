@@ -23,7 +23,6 @@ undocumented_text: Undocumented
 custom_categories:
   - name: Common
     children:
-    - logLevel
     - NuguOAuthServerInfo
     - NuguLoginKitError
     - APIErrorReason

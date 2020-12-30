@@ -110,7 +110,6 @@ custom_categories:
     - TextAgentProtocol
     - TextAgentDelegate
     - TextAgentRequestType
-    - ContextType
   - name: LocationAgent
     children:
     - LocationAgentProtocol
