@@ -156,7 +156,7 @@ extension NuguAudioSessionManager {
     func registerAudioEngineConfigurationObserver() {
         removeAudioEngineConfigurationObserver()
         
-        audioEngineConfigurationObserver = NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: nil, using: { (notification) in
+        audioEngineConfigurationObserver = NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: nil, using: { (_) in
             if UserDefaults.Standard.useWakeUpDetector == true {
                 NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
                     log.debug("startMicInputProvider: \(success)")

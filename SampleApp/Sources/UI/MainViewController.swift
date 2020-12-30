@@ -130,7 +130,7 @@ private extension MainViewController {
          Catch resigning active notification to stop recognizing & wake up detector
          It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
          */
-        resignActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main, using: { (notification) in
+        resignActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main, using: { (_) in
             // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
             if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
                 NuguCentralManager.shared.client.ttsAgent.stopTTS()
@@ -143,7 +143,7 @@ private extension MainViewController {
          Catch becoming active notification to refresh mic status & Nugu button
          Recover all status for any issues caused from becoming background
          */
-        becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+        becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
             guard let self = self else { return }
             guard self.navigationController?.visibleViewController == self else { return }
 

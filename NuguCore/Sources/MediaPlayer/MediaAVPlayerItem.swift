@@ -86,7 +86,7 @@ final class MediaAVPlayerItem: AVPlayerItem {
 
 private extension MediaAVPlayerItem {
     func addPlayerItemObservers() {
-        playerStatusObserver = observe(\.status, options: .new) { [weak self] (item, change) in
+        playerStatusObserver = observe(\.status, options: .new) { [weak self] (_, change) in
             guard let self = self else { return }
             guard change.oldValue != change.newValue else { return } // This closure will be called on iOS 12. Though old and new value are nil.
 
@@ -102,7 +102,7 @@ private extension MediaAVPlayerItem {
             }
         }
         
-        playbackBufferEmptyObserver = observe(\.isPlaybackBufferEmpty, options: .new, changeHandler: { [weak self] (item, change) in
+        playbackBufferEmptyObserver = observe(\.isPlaybackBufferEmpty, options: .new, changeHandler: { [weak self] (_, change) in
             guard let self = self else { return }
             guard change.oldValue != change.newValue else { return }
 
@@ -112,7 +112,7 @@ private extension MediaAVPlayerItem {
             }
         })
         
-        playbackLikelyToKeepUpObserver = observe(\.isPlaybackLikelyToKeepUp, options: .new, changeHandler: { [weak self] (item, change) in
+        playbackLikelyToKeepUpObserver = observe(\.isPlaybackLikelyToKeepUp, options: .new, changeHandler: { [weak self] (_, change) in
             guard let self = self else { return }
             guard change.oldValue != change.newValue else { return }
             
@@ -122,7 +122,7 @@ private extension MediaAVPlayerItem {
             }
         })
         
-        playbackBufferFullObserver = observe(\.isPlaybackBufferFull, options: .new, changeHandler: { [weak self] (item, change) in
+        playbackBufferFullObserver = observe(\.isPlaybackBufferFull, options: .new, changeHandler: { [weak self] (_, change) in
             guard let self = self else { return }
             guard change.oldValue != change.newValue else { return }
             
