@@ -20,6 +20,7 @@
 
 import UIKit
 
+/// <#Description#>
 final public class NuguChipsView: UIView {
     
     // MARK: - NuguChipsView.Const

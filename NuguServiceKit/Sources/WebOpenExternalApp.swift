@@ -20,6 +20,7 @@
 
 import Foundation
 
+/// <#Description#>
 public struct WebOpenExternalApp: Decodable {
     public let scheme: String?
     public let appId: String?

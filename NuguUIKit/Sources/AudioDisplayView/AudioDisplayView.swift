@@ -22,6 +22,7 @@ import UIKit
 
 import NuguAgents
 
+/// <#Description#>
 public class AudioDisplayView: UIView {    
     // IBOutlets
     @IBOutlet weak var fullAudioPlayerContainerView: UIView!

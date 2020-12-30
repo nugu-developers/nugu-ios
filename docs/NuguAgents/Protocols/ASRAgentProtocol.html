@@ -43,6 +43,9 @@
                 <a href="../Common.html#/s:10NuguAgents8logLevel8NattyLog0fD0Ovp">logLevel</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Common.html#/s:10NuguAgents10logEnabledSbvp">logEnabled</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Common.html#/s:10NuguAgents0A10AgentErrorO">NuguAgentError</a>
               </li>
             </ul>
@@ -94,6 +97,15 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/PhoneCallCandidatesItem/SearchTarget.html">– SearchTarget</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallContext.html">PhoneCallContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallContext/Template.html">– Template</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneCallContext/Recipient.html">– Recipient</a>
               </li>
             </ul>
           </li>
@@ -682,7 +694,9 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>&lt;#Description#&gt;</p>
+                        <p>This function asks the <code>ASRAgent</code> to send a Recognize Event to Server and start streaming from <code>AudioStream</code>, which transitions it to the <code>recognizing</code> state.</p>
+
+<p>This function can be called in <code>idle</code> and <code>expectingSpeech</code> state.</p>
 
                       </div>
                       <div class="declaration">
@@ -701,12 +715,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>initiator</em>
+                                <em>options</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>&lt;#initiator description#&gt;</p>
+                                  <p>The options for recognition.</p>
                                 </div>
                               </td>
                             </tr>
@@ -715,7 +729,7 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>&lt;#description#&gt;</p>
+                        <p>The dialogRequestId for request.</p>
                       </div>
                     </section>
                   </div>

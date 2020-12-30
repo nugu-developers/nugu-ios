@@ -21,6 +21,7 @@
 import Foundation
 import UIKit
 
+/// <#Description#>
 public struct NuguServiceCookie: Encodable {
     let authToken: String
     let osTypeCode: String = "MBL_IOS" // CURRENTLY SUPPORT ONLY MBL_IOS

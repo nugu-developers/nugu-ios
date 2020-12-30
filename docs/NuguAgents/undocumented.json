@@ -380,21 +380,21 @@
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
-      "line": 109,
+      "line": 112,
       "symbol": "DisplayAgent",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
-      "line": 130,
+      "line": 133,
       "symbol": "DisplayAgent",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayAgent.swift",
-      "line": 159,
+      "line": 162,
       "symbol": "DisplayAgent",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
@@ -408,14 +408,14 @@
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayControlPayload.swift",
-      "line": 32,
+      "line": 33,
       "symbol": "DisplayControlPayload.Direction.previous",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/Display/DisplayControlPayload.swift",
-      "line": 33,
+      "line": 34,
       "symbol": "DisplayControlPayload.Direction.next",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
@@ -877,9 +877,37 @@
     },
     {
       "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentContext.swift",
-      "line": 23,
-      "symbol": "PhoneCallContext",
-      "symbol_kind": "source.lang.swift.decl.struct",
+      "line": 37,
+      "symbol": "PhoneCallContext.Template.searchScene",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentContext.swift",
+      "line": 96,
+      "symbol": "PhoneCallContext.state",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentContext.swift",
+      "line": 97,
+      "symbol": "PhoneCallContext.template",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentContext.swift",
+      "line": 98,
+      "symbol": "PhoneCallContext.recipient",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/CapabilityAgents/PhoneCall/PhoneCallAgentContext.swift",
+      "line": 100,
+      "symbol": "PhoneCallContext.init(state:template:recipient:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
@@ -1559,13 +1587,6 @@
       "line": 43,
       "symbol": "KeyedEncodingContainer.encodeIfPresent(_:forKey:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguAgents/Sources/NuguAgents.swift",
-      "line": 47,
-      "symbol": "logEnabled",
-      "symbol_kind": "source.lang.swift.decl.var.global",
       "warning": "undocumented"
     }
   ],
