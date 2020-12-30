@@ -3,6 +3,51 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.28.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.0)
+Released on 2020-12-30
+### Sample Application
+#### Added
+- Add `NuguDisplayWebView` to `NuguUIKit` and move `AudioPlayerView` from `SampleApp` to `NuguUIKit` (#655) (#673) (#683)
+> Not essential changes to reflect.
+> For more information, See the [NuguDisplayWebView 를 직접 사용하기](https://developers-doc.nugu.co.kr/nugu-sdk/platform/ios/nugu-display-template-server#nugudisplaywebview)
+- Add Display views presenters (#693)
+> Not essential changes to reflect.
+> For more information, See the [DisplayWebViewPresenter 를 사용하기](https://developers-doc.nugu.co.kr/nugu-sdk/platform/ios/nugu-display-template-server#displaywebviewpresenter)
+- Add `MicInputProviderDelegate` (#680)
+> Not essential changes to reflect.  
+- Add `NuguClient.requestTextInput` function to improve convenience. (#675)
+> Not essential changes to reflect.  
+- Provide sdk configurations by config file and `OAuth Discovery` API (#690)
+> Not essential changes to reflect.
+> For more information, See the [Configuration 파일 설정하기](https://developers-doc.nugu.co.kr/nugu-sdk/platform/ios/start#configuration)
+
+#### Fixed
+- Refactor NuguDisplayPlayerController and Fix duration-vanishing issue. (#677) (#679)
+
+#### Update
+- Make observer possible to be removed properly. (#668)
+> Not essential changes to reflect.  
+
+### SDK
+#### Added
+- Add `NuguDisplayWebView` to `NuguUIKit` and move `AudioPlayerView` from `SampleApp` to `NuguUIKit` (#655) (#673) (#683
+- Add Display views presenters (#693)
+- Add `MicInputProviderDelegate` (#680)
+- Add `NuguClient.requestTextInput` function to improve convenience. (#675)
+- Provide sdk configurations by config file and `OAuth Discovery` API (#690) 
+
+#### Fixed
+- Pass error when the auth-token is missing. (#662)
+- Refactor NuguDisplayPlayerController and Fix duration-vanishing issue. (#677) (#679)
+- Do not stop the prefetched player when handling the `TTS.Stop` directive. (#667)
+
+#### Update
+- Make observer possible to be removed properly. (#668)
+- `AudioPlayerAgent` 1.5 (upgrade capability-agent) (#670)
+- Apply interaction control when handling `Display.ControlScroll` directive. (#681)
+- Update API documentation. (#682) (#687)
+- Handle `ASR.CancelRecognize` directive. (#686)
+
 ## [0.27.5](https://github.com/nugu-developers/nugu-ios/releases/tag/0.27.5)
 Released on 2020-12-07
 ### Sample Application
@@ -52,6 +97,7 @@ Released on 2020-11-27
 ### Sample Application
 #### Added
 - Add `VoiceChromePresenter` (#629)
+> Not essential changes to reflect.
 > Application only needs to apply the changes of  [`MainViewController`](https://github.com/nugu-developers/nugu-ios/pull/629/files#diff-7468829fbd38fb482c72def9b95c04abe8d927db4e1b5ffd789187e8f36f13f3)    
 
 ### SDK
