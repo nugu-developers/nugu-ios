@@ -147,6 +147,17 @@ public class AudioDisplayView: UIView {
 // MARK: - Public Methods
 
 public extension AudioDisplayView {
+    static func audioPlayerViewType(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate) -> AudioDisplayView.Type? {
+        switch audioPlayerDisplayTemplate.type {
+        case "AudioPlayer.Template1":
+            return AudioPlayer1View.self
+        case "AudioPlayer.Template2":
+            return AudioPlayer2View.self
+        default:
+            return nil
+        }
+    }
+    
     static func makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate, frame: CGRect) -> AudioDisplayView? {
         let displayAudioPlayerView: AudioDisplayView?
         

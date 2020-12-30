@@ -172,6 +172,7 @@ final class AudioPlayer1View: AudioDisplayView {
     
     override func shouldHideLyrics() -> Bool {
         fullLyricsView?.removeFromSuperview()
+        contentStackView.isHidden = false
         return true
     }
     
@@ -211,6 +212,14 @@ private extension AudioPlayer1View {
               fullAudioPlayerContainerView.subviews.contains(fullLyricsView) == true else {
             return
         }
+        
+        guard lyricsData?.lyricsInfoList != nil,
+              lyricsData?.lyricsType != "NONE" else {
+            fullLyricsView.removeFromSuperview()
+            contentStackView.isHidden = false
+            return
+        }
+        
         fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
         fullLyricsView.headerLabel.text = lyricsData?.title
         lyricsData?.lyricsInfoList.forEach { lyricsInfo in
@@ -227,6 +236,7 @@ private extension AudioPlayer1View {
     }
     
     func showLyrics() {
+        contentStackView.isHidden = true
         fullLyricsView = FullLyricsView(frame: contentStackView.frame)
         fullLyricsView?.headerLabel.text = lyricsData?.title
         lyricsData?.lyricsInfoList.forEach { lyricsInfo in
@@ -239,6 +249,7 @@ private extension AudioPlayer1View {
         }
         fullLyricsView?.onViewDidTap = { [weak self] in
             self?.fullLyricsView?.removeFromSuperview()
+            self?.contentStackView.isHidden = false
         }
         if let fullLyricsView = fullLyricsView {
             fullAudioPlayerContainerView.addSubview(fullLyricsView)
@@ -264,6 +275,7 @@ private extension AudioPlayer1View {
                 self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
                 self.currentLyricsLabel.text = "전체 가사보기"
                 self.nextLyricsLabel.text = nil
+                self.fullLyricsView?.updateLyricsFocus(lyricsIndex: nil)
                 return
             }
             
