@@ -203,7 +203,7 @@ public final class ASRAgent: ASRAgentProtocol {
             name: "CancelRecognize",
             blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
             directiveHandler: handleCancelRecognize
-        ),
+        )
     ]
     
     public init(

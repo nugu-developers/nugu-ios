@@ -112,7 +112,6 @@ extension ASRAgent.Event: Eventable {
     }
 }
 
-
 // MARK: - Attachable
 
 extension ASRAgent.Attachment: Attachable {
