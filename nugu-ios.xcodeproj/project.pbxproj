@@ -348,6 +348,8 @@
 		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
 		73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C9F526256664370011DD65 /* WeakDictionary.swift */; };
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
+		75021E4E259431B50014537C /* DisplayWebViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021E4D259431B50014537C /* DisplayWebViewPresenter.swift */; };
+		75021E64259436930014537C /* DisplayWebViewPresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021E63259436930014537C /* DisplayWebViewPresenterDelegate.swift */; };
 		75021EAC25945E670014537C /* AudioDisplayViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021EAB25945E670014537C /* AudioDisplayViewPresenter.swift */; };
 		75021EB825945E7B0014537C /* AudioDisplayViewPresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021EB725945E7B0014537C /* AudioDisplayViewPresenterDelegate.swift */; };
 		75047D9A24F4DE8F007BBF22 /* responsefail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 75047D9724F4DE8E007BBF22 /* responsefail.wav */; };
@@ -1058,6 +1060,8 @@
 		73C9F526256664370011DD65 /* WeakDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakDictionary.swift; sourceTree = "<group>"; };
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
 		7500490F24766B1500B73DD8 /* AudioDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayView.swift; sourceTree = "<group>"; };
+		75021E4D259431B50014537C /* DisplayWebViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayWebViewPresenter.swift; sourceTree = "<group>"; };
+		75021E63259436930014537C /* DisplayWebViewPresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayWebViewPresenterDelegate.swift; sourceTree = "<group>"; };
 		75021EAB25945E670014537C /* AudioDisplayViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayViewPresenter.swift; sourceTree = "<group>"; };
 		75021EB725945E7B0014537C /* AudioDisplayViewPresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayViewPresenterDelegate.swift; sourceTree = "<group>"; };
 		75032BB1246A32B60077B824 /* DisplayIdleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayIdleBar.swift; sourceTree = "<group>"; };
@@ -1330,6 +1334,8 @@
 				063A84712565027D0032F13B /* VoiceChromePresenter.swift */,
 				067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */,
 				067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */,
+				75021E4D259431B50014537C /* DisplayWebViewPresenter.swift */,
+				75021E63259436930014537C /* DisplayWebViewPresenterDelegate.swift */,
 				75021EAB25945E670014537C /* AudioDisplayViewPresenter.swift */,
 				75021EB725945E7B0014537C /* AudioDisplayViewPresenterDelegate.swift */,
 			);
@@ -3468,6 +3474,7 @@
 				7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */,
 				068C3C512581F80800EC0BEE /* MicInputProviderDelegate.swift in Sources */,
 				066C9D2F25553EF0000C7800 /* MicInputError.swift in Sources */,
+				75021E64259436930014537C /* DisplayWebViewPresenterDelegate.swift in Sources */,
 				0600C3572570E4CF0071AEF3 /* Configuration.swift in Sources */,
 				7EC282F325206A8C00E3F18A /* BackgroundFocusHolder.swift in Sources */,
 				75021EAC25945E670014537C /* AudioDisplayViewPresenter.swift in Sources */,
@@ -3475,6 +3482,7 @@
 				7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */,
 				063A84722565027D0032F13B /* VoiceChromePresenter.swift in Sources */,
 				1FD1CFF723BDC0660000FB8C /* DialogStateAggregator.swift in Sources */,
+				75021E4E259431B50014537C /* DisplayWebViewPresenter.swift in Sources */,
 				1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */,
 				1FD4A97C23A0C2FD002EB56D /* NuguClientKit.swift in Sources */,
 				0600C3562570E4CF0071AEF3 /* ConfigurationError.swift in Sources */,
