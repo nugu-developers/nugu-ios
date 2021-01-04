@@ -89,7 +89,6 @@ extension SystemAgent: ContextInfoDelegate {
         ]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
-
 }
 
 // MARK: - Private (handle directive)
