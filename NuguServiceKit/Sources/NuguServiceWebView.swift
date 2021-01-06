@@ -25,8 +25,21 @@ import NuguUtils
 
 /// <#Description#>
 final public class NuguServiceWebView: WKWebView {
-    /// <#Description#>
+    
+    /// Domain for NuguServiceWebView
     public static var domain = "https://webview.sktnugu.com"
+
+    /// Url for service setting web page (deprecated)
+    @available(*, deprecated, message: "Use `ConfigurationStore`")
+    public static var serviceSettingUrl: String {
+        return domain + "/3pp/main.html?screenCode=setting_webview"
+    }
+    
+    /// Url for agreement web page (deprecated)
+    @available(*, deprecated, message: "Use `ConfigurationStore`")
+    public static var agreementUrl: String {
+        return domain + "/3pp/agreement/list.html"
+    }
 
     private enum MethodType: String, CaseIterable {
         case openExternalApp
