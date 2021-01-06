@@ -88,10 +88,7 @@ public class MicInputProvider {
             inputNode = audioEngine.inputNode
             inputFormat = inputNode.inputFormat(forBus: audioBus)
         }) {
-            log.error("create AVAudioInputNode error: \(error)\n" +
-                "\t\tengine output format: \(audioEngine.inputNode.outputFormat(forBus: audioBus))\n" +
-                "\t\tengine input format: \(audioEngine.inputNode.inputFormat(forBus: audioBus))")
-            
+            log.error("create AVAudioInputNode error: \(error.localizedDescription)")
             throw error
         }
         
