@@ -66,7 +66,7 @@ public class DialogStateAggregator {
     public var isMultiturn: Bool = false
     // TODO: Refactor
     /// <#Description#>
-    var isChipsRequestInProgress: Bool = false {
+    public var isChipsRequestInProgress: Bool = false {
         didSet {
             log.debug(isChipsRequestInProgress)
             dialogStateDispatchQueue.async { [weak self] in
