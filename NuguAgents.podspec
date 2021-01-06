@@ -22,11 +22,11 @@ Default Agent Implementations for Nugu service
 
   s.source_files = 'NuguAgents/Sources/**/*'
   
-  s.dependency 'NuguCore', '~> 0'
-  s.dependency 'NuguUtils', '~> 0'
+  s.dependency 'NuguCore', s.version.to_s
+  s.dependency 'NuguUtils', s.version.to_s
   s.dependency 'SilverTray', '~> 1'
   s.dependency 'NattyLog', '~> 1'
-  s.ios.dependency 'JadeMarble', '~> 0'
+  s.ios.dependency 'JadeMarble', s.version.to_s
 
   # s.subspec 'iOS_Specific' do |iOS|
   #   iOS.subspec 'ASR' do |asr|
