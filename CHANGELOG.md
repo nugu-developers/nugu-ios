@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.28.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.1)
+Released on 2021-01-06
+### SDK
+#### Added
+- Revert removed url variables in `NuguServiceWebView` (#697)
+
+#### Fixed
+- Handle exception on creating "AVAudioInputNode". (#696)
+
+#### Update
+- Modify protection level of `DialogStateAggregator.isChipsRequestInProgress` for backward compatibility. (#698)
+
 ## [0.28.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.0)
 Released on 2020-12-30
 ### Sample Application
