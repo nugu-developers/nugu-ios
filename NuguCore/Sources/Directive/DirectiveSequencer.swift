@@ -125,17 +125,14 @@ private extension DirectiveSequencer {
             notifyDidComplete(directive: directive, result: .canceled)
             return
         }
-        guard handlingDirectives.contains(where: {
-            $0.blockingPolicy.isBlocking == true &&
-                $0.blockingPolicy.medium == handler.blockingPolicy.medium &&
-                $0.directive.header.dialogRequestId == directive.header.dialogRequestId
-        }) == false else {
+        guard shouldBlocked(blockingPolicy: handler.blockingPolicy, directive: directive) == false else {
             log.debug("Block directive \(directive.header)")
             blockedDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
             return
         }
         
         log.info(directive.header)
+        blockedDirectives.removeAll { $0.directive.header.messageId == directive.header.messageId }
         notifyWillHandle(directive: directive, handler: handler)
         handlingDirectives.append((directive: directive, blockingPolicy: handler.blockingPolicy))
         handler.directiveHandler(directive) { [weak self ] result in
@@ -150,15 +147,41 @@ private extension DirectiveSequencer {
                 }
                 self.notifyDidComplete(directive: directive, result: result)
                 self.handlingDirectives.removeAll { directive.header.messageId == $0.directive.header.messageId }
-
-                // Block 된 Directive 다시시도.
-                if handler.blockingPolicy.isBlocking {
-                    let directives = self.blockedDirectives.filter { $0.blockingPolicy.medium == handler.blockingPolicy.medium }
-                    self.blockedDirectives.removeAll { $0.blockingPolicy.medium == handler.blockingPolicy.medium }
-                    directives.map { $0.directive }.forEach(self.handleDirective)
-                }
+                self.enqueueBlockedDirectivies()
             }
         }
+    }
+    
+    func shouldBlocked(blockingPolicy: BlockingPolicy, directive: Downstream.Directive) -> Bool {
+        let directives = (handlingDirectives + blockedDirectives)
+            .filter { $0.directive.header.dialogRequestId == directive.header.dialogRequestId }
+        let targetDirectiveCount = directives.firstIndex {
+            $0.directive.header.messageId == directive.header.messageId
+        } ?? directives.count
+        
+        if targetDirectiveCount == 0 {
+            return false
+        }
+        
+        return directives[0..<targetDirectiveCount]
+            .contains(where: {
+                if blockingPolicy.medium == .any {
+                    return true
+                }
+                if $0.blockingPolicy.isBlocking == true {
+                    if $0.blockingPolicy.medium == blockingPolicy.medium || $0.blockingPolicy.medium == .any {
+                        return true
+                    }
+                }
+                
+                return false
+            })
+    }
+    
+    func enqueueBlockedDirectivies() {
+        blockedDirectives
+            .filter { shouldBlocked(blockingPolicy: $0.blockingPolicy, directive: $0.directive) == false }
+            .forEach { handleDirective($0.directive) }
     }
     
     func isCancelledDirective(_ directive: Downstream.Directive) -> Bool {
