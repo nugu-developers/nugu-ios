@@ -23,10 +23,10 @@ import Foundation
 import NuguCore
 
 class MockDirectiveSequencer: DirectiveSequenceable {
-    func add(delegate: DirectiveSequencerDelegate) {
+    func add(delegate: DirectiveSequencerListener) {
     }
     
-    func remove(delegate: DirectiveSequencerDelegate) {
+    func remove(delegate: DirectiveSequencerListener) {
     }
     
     func processDirective(_ directive: Downstream.Directive) {

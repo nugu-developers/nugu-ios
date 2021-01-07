@@ -1,5 +1,5 @@
 //
-//  PlaySyncDelegate.swift
+//  PlaySyncListener.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 2019/07/16.
@@ -20,11 +20,6 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol PlaySyncDelegate: class {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - property: <#property description#>
-    ///   - messageId: <#messageId description#>
+public protocol PlaySyncListener: class {
     func playSyncDidRelease(property: PlaySyncProperty, messageId: String)
 }

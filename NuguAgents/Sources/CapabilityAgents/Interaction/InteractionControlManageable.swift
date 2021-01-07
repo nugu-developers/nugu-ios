@@ -20,15 +20,11 @@
 
 import Foundation
 
+import NuguUtils
+
 /// <#Description#>
 public protocol InteractionControlManageable: class {
-    /// Adds a delegate to be notified of `InteractionControlManageable` state changes.
-    /// - Parameter delegate: The object to add.
-    func add(delegate: InteractionControlDelegate)
-    
-    /// Removes a delegate from `InteractionControlManageable`.
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: InteractionControlDelegate)
+    var interactionStateObserverContainer: Observing<InteractionState>.ObserverContainer { get }
     
     /// <#Description#>
     /// - Parameters:
@@ -41,4 +37,9 @@ public protocol InteractionControlManageable: class {
     ///   - mode: <#mode description#>
     ///   - category: <#category description#>
     func finish(mode: InteractionControl.Mode, category: CapabilityAgentCategory)
+}
+
+public enum InteractionState {
+    case multi
+    case single
 }

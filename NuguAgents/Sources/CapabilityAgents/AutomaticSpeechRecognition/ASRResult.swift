@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 /// The result of `startRecognition` request.
-public enum ASRResult {
+public enum ASRResult: Equatable {
     /// 음성 인식 결과 없음
     /// - Parameter header: The header of the originally handled directive.
     case none(header: Downstream.Header)
@@ -43,4 +43,23 @@ public enum ASRResult {
     /// - Parameter error:
     /// - Parameter header: The header of the originally handled directive.
     case error(_ error: Error, header: Downstream.Header? = nil)
+    
+    public static func == (lhs: ASRResult, rhs: ASRResult) -> Bool {
+        switch (lhs, rhs) {
+        case let (.none(lhsHeader), .none(rhsHeader)):
+            return lhsHeader == rhsHeader
+        case let (.partial(lhsText, lhsHeader), .partial(rhsText, rhsHeader)):
+            return lhsText == rhsText && lhsHeader == rhsHeader
+        case let (.complete(lhsText, lhsHeader), .complete(rhsText, rhsHeader)):
+            return lhsText == rhsText && lhsHeader == rhsHeader
+        case let (.cancel(lhsHeader), .cancel(rhsHeader)):
+            return lhsHeader == rhsHeader
+        case (.cancelExpectSpeech, .cancelExpectSpeech):
+            return true
+        case let (.error(lhsError, lhsHeader), .error(rhsError, rhsHeader)):
+            return lhsError.localizedDescription == rhsError.localizedDescription && lhsHeader == rhsHeader
+        default:
+            return false
+        }
+    }
 }

@@ -42,6 +42,8 @@ public final class ASRAgent: ASRAgentProtocol {
     private let sessionManager: SessionManageable
     private let playSyncManager: PlaySyncManageable
     private let interactionControlManager: InteractionControlManageable
+    private var endPointDetector: EndPointDetectable?
+    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
     private let eventTimeFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -51,16 +53,16 @@ public final class ASRAgent: ASRAgentProtocol {
         return dateFormatter
     }()
     
-    private var endPointDetector: EndPointDetectable?
-    
-    private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
-    
-    private let asrDelegates = DelegateSet<ASRAgentDelegate>()
-    
     public var options: ASROptions = ASROptions(endPointing: .server)
-    private(set) public var asrState: ASRState = .idle {
-        didSet {
-            log.info("From:\(oldValue) To:\(asrState)")
+    
+    @Observing private var internalAsrState: ASRState = .idle
+    private(set) public var asrState: ASRState {
+        get {
+            internalAsrState
+        }
+        
+        set {
+            log.info("From:\(internalAsrState) To:\(newValue)")
             
             // `ASRRequest` -> `FocusState` -> EndPointDetector` -> `ASRAgentDelegate`
             // release asrRequest
@@ -76,17 +78,17 @@ public final class ASRAgent: ASRAgentProtocol {
                 endPointDetector = nil
             }
             
-            // Notify delegates only if the agent's status changes.
-            if oldValue != asrState {
-                asrDelegates.notify { delegate in
-                    delegate.asrAgentDidChange(state: asrState)
-                }
-            }
+            internalAsrState = newValue
         }
     }
     
+    @Observing private var internalAsrResult: ASRResult = .none(header: .init(namespace: "", name: "", dialogRequestId: "", messageId: "", version: ""))
     private var asrResult: ASRResult? {
-        didSet {
+        get {
+            internalAsrResult
+        }
+        
+        set {
             guard let asrRequest = asrRequest, let asrResult = asrResult else {
                 asrState = .idle
                 expectSpeech = nil
@@ -152,11 +154,14 @@ public final class ASRAgent: ASRAgentProtocol {
                 expectSpeech = nil
             }
             
-            asrDelegates.notify { (delegate) in
-                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
-            }
+            _internalAsrState.additionalInfo = ["dialogRequestId": asrRequest.eventIdentifier.dialogRequestId]
+            internalAsrResult = newValue ?? .none(header: .init(namespace: "", name: "", dialogRequestId: "", messageId: "", version: ""))
         }
     }
+    
+    // Observer containers
+    public var asrStateObserverContainer: Observing<ASRState>.ObserverContainer { $internalAsrState }
+    public var asrResultObserverContainer: Observing<ASRResult>.ObserverContainer { $internalAsrResult }
     
     // For Recognize Event
     @Atomic private var asrRequest: ASRRequest?
@@ -225,28 +230,36 @@ public final class ASRAgent: ASRAgentProtocol {
         self.playSyncManager = playSyncManager
         self.interactionControlManager = interactionControlManager
         
-        playSyncManager.add(delegate: self)
-        contextManager.add(delegate: self)
+        playSyncManager.addListener(self)
+        contextManager.addProvider(contextInfoProvider)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        
+        // Observing Values
+        _internalAsrState.notificationQueue = nil
+        _internalAsrState.duplicatedNotify = false
     }
     
     deinit {
+        playSyncManager.removeListener(self)
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+    }
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable] = [
+            "version": self.capabilityAgentProperty.version,
+            "engine": "skt"
+        ]
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload))
     }
 }
 
 // MARK: - ASRAgentProtocol
 
 public extension ASRAgent {
-    func add(delegate: ASRAgentDelegate) {
-        asrDelegates.add(delegate)
-    }
-    
-    func remove(delegate: ASRAgentDelegate) {
-        asrDelegates.remove(delegate)
-    }
-    
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
         completion: ((StreamDataState) -> Void)?
@@ -336,18 +349,6 @@ extension ASRAgent: FocusChannelDelegate {
     }
 }
 
-// MARK: - ContextInfoDelegate
-
-extension ASRAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable] = [
-            "version": capabilityAgentProperty.version,
-            "engine": "skt"
-        ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
-    }
-}
-
 // MARK: - EndPointDetectorDelegate
 
 extension ASRAgent: EndPointDetectorDelegate {
@@ -417,7 +418,7 @@ extension ASRAgent: EndPointDetectorDelegate {
 
 // MARK: - PlaySyncDelegate
 
-extension ASRAgent: PlaySyncDelegate {
+extension ASRAgent: PlaySyncListener {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }

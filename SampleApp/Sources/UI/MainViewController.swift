@@ -203,8 +203,28 @@ private extension MainViewController {
         
         // Add delegates
         NuguCentralManager.shared.client.keywordDetector.delegate = self
-        NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
-        NuguCentralManager.shared.client.asrAgent.add(delegate: self)
+        
+        // Add Observers
+        NuguCentralManager.shared.client.dialogStateAggregator.dialogStateObserverCotainer.addObserver { [weak self] (state, additionalInfo) in
+            guard let self = self else { return }
+            guard let isMultiturn = additionalInfo?["multiturn"] as? Bool else { return }
+            
+            let chips = additionalInfo?["chips"] as? [ChipsAgentItem.Chip]
+            log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
+
+            switch state {
+            case .listening:
+                DispatchQueue.main.async {
+                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
+                }
+            case .thinking:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguButton.pauseDeactivateAnimation()
+                }
+            default:
+                break
+            }
+        }
         
         // UI
         voiceChromePresenter.delegate = self
@@ -216,6 +236,51 @@ private extension MainViewController {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
         tapGestureRecognizer.delegate = self
         view.addGestureRecognizer(tapGestureRecognizer)
+        
+        // Observers
+        NuguCentralManager.shared.client.asrAgent.asrStateObserverContainer.addObserver { (state, additionalInfo) in
+            switch state {
+            case .idle:
+                if UserDefaults.Standard.useWakeUpDetector == true {
+                    NuguCentralManager.shared.startWakeUpDetector()
+                } else {
+                    NuguCentralManager.shared.stopMicInputProvider()
+                }
+            case .listening:
+                NuguCentralManager.shared.stopWakeUpDetector()
+            case .expectingSpeech:
+                NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
+                    guard success == true else {
+                        log.debug("startMicInputProvider failed!")
+                        NuguCentralManager.shared.stopRecognition()
+                        return
+                    }
+                }
+            default:
+                break
+            }
+        }
+        
+        NuguCentralManager.shared.client.asrAgent.asrResultObserverContainer.addObserver { (result, additionalInfo) in
+            switch result {
+            case .complete:
+                DispatchQueue.main.async {
+                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
+                }
+            case .error(let error, _):
+                DispatchQueue.main.async {
+                    switch error {
+                    case ASRError.listenFailed:
+                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+                    case ASRError.recognizeFailed:
+                        NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                    default:
+                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+                    }
+                }
+            default: break
+            }
+        }
     }
     
     /// Show nugu usage guide webpage after successful login process
@@ -434,73 +499,5 @@ extension MainViewController: VoiceChromePresenterDelegate {
     
     func voiceChromeShouldEnableIdleTimer() -> Bool {
         true
-    }
-}
-
-// MARK: - DialogStateDelegate
-
-extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
-        switch state {
-        case .listening:
-            DispatchQueue.main.async {
-                NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
-            }
-        case .thinking:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguButton.pauseDeactivateAnimation()
-            }
-        default:
-            break
-        }
-    }
-}
-
-// MARK: - AutomaticSpeechRecognitionDelegate
-
-extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState) {
-        switch state {
-        case .idle:
-            if UserDefaults.Standard.useWakeUpDetector == true {
-                NuguCentralManager.shared.startWakeUpDetector()
-            } else {
-                NuguCentralManager.shared.stopMicInputProvider()
-            }
-        case .listening:
-            NuguCentralManager.shared.stopWakeUpDetector()
-        case .expectingSpeech:
-            NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
-                guard success == true else {
-                    log.debug("startMicInputProvider failed!")
-                    NuguCentralManager.shared.stopRecognition()
-                    return
-                }
-            }
-        default:
-            break
-        }
-    }
-    
-    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        switch result {
-        case .complete:
-            DispatchQueue.main.async {
-                NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
-            }
-        case .error(let error, _):
-            DispatchQueue.main.async {
-                switch error {
-                case ASRError.listenFailed:
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
-                case ASRError.recognizeFailed:
-                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                default:
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
-                }
-            }
-        default: break
-        }
     }
 }

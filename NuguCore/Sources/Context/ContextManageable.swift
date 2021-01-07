@@ -23,15 +23,15 @@ import Foundation
 /// Manage capability agent's context.
 /// Context is a container used to communicate the state of the capability agents to server.
 public protocol ContextManageable: class {
-    /// Add `ContextInfoDelegate` to `ContextManager`
+    /// Add `ContextInfoProvidable` to `ContextManager`
     ///
-    /// When the context manager receives a getContexts request it queries the registered `ContextInfoDelegate` for updated context.
-    /// - Parameter delegate: The object that acts as the provider of the ContextManager
-    func add(delegate: ContextInfoDelegate)
+    /// When the context manager receives a getContexts request it queries the registered `ContextInfoProvidable` for updated context.
+    /// - Parameter provider: The object that acts as the provider of the ContextManager
+    func addProvider(_ provider: @escaping ProvideContextInfo)
     
-    /// Remove `ContextInfoDelegate` from `ContextManager`
-    /// - Parameter delegate: The object to remove
-    func remove(delegate: ContextInfoDelegate)
+    /// Remove `ContextInfoProvidable` from `ContextManager`
+    /// - Parameter provider: The object to remove
+    func removeProvider(_ provider: @escaping ProvideContextInfo)
     
     /// Request the `ContextManager` for context.
     ///

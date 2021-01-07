@@ -22,19 +22,17 @@ import Foundation
 import AVFoundation
 
 import NuguCore
+import NuguUtils
 
 /// ASR (AutomaticSpeechRecognition) is responsible for capturing the audio and delivering it to the server and receiving the result of speech recognition.
 public protocol ASRAgentProtocol: CapabilityAgentable {
     var options: ASROptions { get set }
     var asrState: ASRState { get }
     
-    /// Adds a delegate to be notified of `ASRAgent` state changes.
-    /// - Parameter delegate: The object to add.
-    func add(delegate: ASRAgentDelegate)
-    
-    /// Removes a delegate from `ASRAgent`.
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: ASRAgentDelegate)
+    /// ObserverContainer for notifying of `ASRState` changes.
+    var asrStateObserverContainer: Observing<ASRState>.ObserverContainer { get }
+    /// ObserverContainer for notifying of `ASRResult` changes.
+    var asrResultObserverContainer: Observing<ASRResult>.ObserverContainer { get }
     
     /// This function asks the `ASRAgent` to send a Recognize Event to Server and start streaming from `AudioStream`, which transitions it to the `recognizing` state.
     ///

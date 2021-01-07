@@ -69,8 +69,24 @@ final class AudioPlayerDisplayManager {
         self.audioPlayerPauseTimeout = audioPlayerPauseTimeout
         self.playSyncManager = playSyncManager
         
-        audioPlayerAgent.add(delegate: self)
-        playSyncManager.add(delegate: self)
+        playSyncManager.addListener(self)
+        
+        // Observer
+        audioPlayerAgent.audioPlayerStateObserverContainer.addObserver { [weak self] (state, additionalInfo) in
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.audioPlayerState = state
+            }
+        }
+        
+        audioPlayerAgent.audioPlayerDurationObserverContainer.addObserver { (duration, additionalInfo) in
+            // Nothing to do
+        }
+    }
+    
+    deinit {
+        playSyncManager.removeListener(self)
     }
 }
 
@@ -195,22 +211,9 @@ extension AudioPlayerDisplayManager {
     }
 }
 
-// MARK: - AudioPlayerAgentDelegate
-extension AudioPlayerDisplayManager: AudioPlayerAgentDelegate {
-    func audioPlayerAgentDidChange(state: AudioPlayerState, header: Downstream.Header) {
-        displayDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.audioPlayerState = state
-        }
-    }
-    
-    func audioPlayerAgentDidChange(duration: Int) {}
-}
-
 // MARK: - PlaySyncDelegate
 
-extension AudioPlayerDisplayManager: PlaySyncDelegate {
+extension AudioPlayerDisplayManager: PlaySyncListener {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }

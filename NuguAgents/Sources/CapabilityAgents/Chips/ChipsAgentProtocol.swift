@@ -20,13 +20,10 @@
 
 import Foundation
 
+import NuguUtils
+
 /// Chips-agent handles directives for displaying grammer guide on voice chrome view.
 public protocol ChipsAgentProtocol: CapabilityAgentable {
-    /// Adds a delegate to be notified of `ChipsAgentItem` changes.
-    /// - Parameter delegate: The object to add.
-    func add(delegate: ChipsAgentDelegate)
-    
-    /// Removes a delegate from chips-agent.
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: ChipsAgentDelegate)
+    /// ObserverContainer for notifying of `ChipsAgentItem` changes.
+    var chipsItemObserverContainer: Observing<ChipsAgentItem?>.ObserverContainer { get }
 }

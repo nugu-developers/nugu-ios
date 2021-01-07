@@ -59,21 +59,25 @@ public final class TTSAgent: TTSAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     
-    private let ttsDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate")
+    private let observerQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate")
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
-    private let delegates = DelegateSet<TTSAgentDelegate>()
-    
-    private var ttsState: TTSState = .idle {
-        didSet {
-            log.info("state changed from: \(oldValue) to: \(ttsState)")
+    @Observing private var receivedText: String = ""
+    @Observing private var internalTtsState: TTSState = .idle
+    private var ttsState: TTSState {
+        get {
+            internalTtsState
+        }
+
+        set {
+            log.info("state changed from: \(ttsState) to: \(newValue)")
             guard let player = latestPlayer else {
                 log.error("TTSPlayer is nil")
                 return
             }
             
             // `PlaySyncState` -> `TTSAgentDelegate`
-            switch ttsState {
+            switch newValue {
             case .playing:
                 if player.payload.playServiceId != nil {
                     playSyncManager.startPlay(
@@ -98,13 +102,8 @@ public final class TTSAgent: TTSAgentProtocol {
                 break
             }
             
-            // Notify delegates only if the agent's status changes.
-            if oldValue != ttsState {
-                let state = ttsState
-                delegates.notify(queue: ttsDelegateDispatchQueue) { delegate in
-                    delegate.ttsAgentDidChange(state: state, header: player.header)
-                }
-            }
+            self._internalTtsState.additionalInfo = ["header": player.header]
+            self.internalTtsState = newValue
         }
     }
     
@@ -160,29 +159,41 @@ public final class TTSAgent: TTSAgentProtocol {
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        playSyncManager.add(delegate: self)
-        contextManager.add(delegate: self)
+        playSyncManager.addListener(self)
+        contextManager.addProvider(contextInfoProvider)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        
+        _internalTtsState.notificationQueue = observerQueue
+        _receivedText.notificationQueue = observerQueue
     }
     
     deinit {
+        playSyncManager.removeListener(self)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        contextManager.removeProvider(contextInfoProvider)
         currentPlayer?.stop()
         prefetchPlayer?.stop()
+    }
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable] = [
+            "ttsActivity": self.ttsState.value,
+            "version": self.capabilityAgentProperty.version,
+            "engine": "skt",
+            "token": self.currentPlayer?.payload.token
+        ]
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
 // MARK: - TTSAgentProtocol
 
 public extension TTSAgent {
-    func add(delegate: TTSAgentDelegate) {
-        delegates.add(delegate)
-    }
-    
-    func remove(delegate: TTSAgentDelegate) {
-        delegates.remove(delegate)
-    }
+    var ttsStateObserverContainer: Observing<TTSState>.ObserverContainer { $internalTtsState }
+    var receivedTextObserverContainer: Observing<String>.ObserverContainer { $receivedText }
     
     func requestTTS(
         text: String,
@@ -252,8 +263,8 @@ extension TTSAgent: FocusChannelDelegate {
 
 // MARK: - ContextInfoDelegate
 
-extension TTSAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+extension TTSAgent: ContextInfoProvidable {
+    public func requestContextInfo(completion: (ContextInfo?) -> Void) {
         let payload: [String: AnyHashable] = [
             "ttsActivity": ttsState.value,
             "version": capabilityAgentProperty.version,
@@ -329,7 +340,7 @@ extension TTSAgent: MediaPlayerDelegate {
 
 // MARK: - PlaySyncDelegate
 
-extension TTSAgent: PlaySyncDelegate {
+extension TTSAgent: PlaySyncListener {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         ttsDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -402,9 +413,8 @@ private extension TTSAgent {
                 log.debug(directive.header.messageId)
                 self.currentPlayer = player
                 self.focusManager.requestFocus(channelDelegate: self)
-                self.delegates.notify(queue: self.ttsDelegateDispatchQueue) { delegate in
-                    delegate.ttsAgentDidReceive(text: player.payload.text, header: player.header)
-                }
+                self._receivedText.additionalInfo = ["header": player.header]
+                self.receivedText = player.payload.text
                 
                 self.ttsResultSubject
                     .filter { $0.dialogRequestId == player.header.dialogRequestId }

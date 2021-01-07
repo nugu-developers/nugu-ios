@@ -32,10 +32,11 @@ public class InteractionControlManager: InteractionControlManageable {
         internalSerialQueueName: "com.sktelecom.romaine.interaction_control"
     )
     
-    private let delegates = DelegateSet<InteractionControlDelegate>()
-    
     private var interactionControls = Set<CapabilityAgentCategory>()
     private var timeoutTimers = [String: Disposable]()
+    
+    @Observing var interactionState: InteractionState = .single
+    public var interactionStateObserverContainer: Observing<InteractionState>.ObserverContainer { $interactionState }
     
     public init() {}
 }
@@ -43,14 +44,6 @@ public class InteractionControlManager: InteractionControlManageable {
 // MARK: - InteractionControlManageable
 
 public extension InteractionControlManager {
-    func add(delegate: InteractionControlDelegate) {
-        delegates.add(delegate)
-    }
-    
-    func remove(delegate: InteractionControlDelegate) {
-        delegates.remove(delegate)
-    }
-    
     func start(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {
         log.debug(category)
         interactionDispatchQueue.async { [weak self] in
@@ -59,9 +52,7 @@ public extension InteractionControlManager {
             self.addTimer(category: category)
             self.interactionControls.insert(category)
             if self.interactionControls.count == 1 {
-                self.delegates.notify {
-                    $0.interactionControlDidChange(isMultiturn: true)
-                }
+                self.interactionState = .multi
             }
         }
     }
@@ -74,9 +65,7 @@ public extension InteractionControlManager {
             self.removeTimer(category: category)
             self.interactionControls.remove(category)
             if self.interactionControls.isEmpty {
-                self.delegates.notify {
-                    $0.interactionControlDidChange(isMultiturn: false)
-                }
+                self.interactionState = .single
             }
         }
     }
@@ -92,9 +81,7 @@ private extension InteractionControlManager {
                 log.debug("Timer fired. \(category)")
                 self.interactionControls.remove(category)
                 if self.interactionControls.isEmpty {
-                    self.delegates.notify {
-                        $0.interactionControlDidChange(isMultiturn: false)
-                    }
+                    self.interactionState = .single
                 }
             })
     }

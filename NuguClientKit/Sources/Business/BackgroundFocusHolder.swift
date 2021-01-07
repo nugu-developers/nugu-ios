@@ -25,6 +25,9 @@ import NuguAgents
 
 class BackgroundFocusHolder {
     private let focusManager: FocusManageable
+    private let directiveSequencer: DirectiveSequenceable
+    private let streamDataRouter: StreamDataRoutable
+    private let dialogStateAggregator: DialogStateAggregator
     
     private let queue = DispatchQueue(label: "com.sktelecom.romaine.dummy_focus_requester")
     // Prevent releasing focus while these event are being processed.
@@ -41,16 +44,36 @@ class BackgroundFocusHolder {
     
     init(
         focusManager: FocusManageable,
-        directiveSequener: DirectiveSequenceable,
+        directiveSequencer: DirectiveSequenceable,
         streamDataRouter: StreamDataRoutable,
         dialogStateAggregator: DialogStateAggregator
     ) {
         self.focusManager = focusManager
+        self.directiveSequencer = directiveSequencer
+        self.streamDataRouter = streamDataRouter
+        self.dialogStateAggregator = dialogStateAggregator
         
         focusManager.add(channelDelegate: self)
-        directiveSequener.add(delegate: self)
-        streamDataRouter.add(delegate: self)
-        dialogStateAggregator.add(delegate: self)
+        directiveSequencer.addListener(self)
+        streamDataRouter.addListener(self)
+        
+        dialogStateAggregator.dialogStateObserverCotainer.addObserver { [weak self] (state, additionalInfo) in
+            self?.queue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.dialogState = state
+                if state == .idle {
+                    self.tryReleaseFocus()
+                } else {
+                    self.requestFocus()
+                }
+            }
+        }
+    }
+    
+    deinit {
+        directiveSequencer.removeListener(self)
+        streamDataRouter.removeListener(self)
     }
 }
 
@@ -68,7 +91,7 @@ extension BackgroundFocusHolder: FocusChannelDelegate {
 
 // MARK: - DirectiveSequencerDelegate
 
-extension BackgroundFocusHolder: DirectiveSequencerDelegate {
+extension BackgroundFocusHolder: DirectiveSequencerListener {
     func directiveSequencerWillPrefetch(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {
         queue.async { [weak self] in
             guard let self = self else { return }
@@ -95,7 +118,7 @@ extension BackgroundFocusHolder: DirectiveSequencerDelegate {
 
 // MARK: - StreamDataDelegate
 
-extension BackgroundFocusHolder: StreamDataDelegate {
+extension BackgroundFocusHolder: StreamDataListener {
     func streamDataDidReceive(direcive: Downstream.Directive) {}
     
     func streamDataDidReceive(attachment: Downstream.Attachment) {}
@@ -122,21 +145,6 @@ extension BackgroundFocusHolder: StreamDataDelegate {
     }
     
     func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {}
-}
-
-extension BackgroundFocusHolder: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.dialogState = state
-            if state == .idle {
-                self.tryReleaseFocus()
-            } else {
-                self.requestFocus()
-            }
-        }
-    }
 }
 
 // MARK: - Private

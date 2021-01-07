@@ -60,8 +60,34 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
         self.upstreamDataSender = upstreamDataSender
         self.interactionControlManager = interactionControlManager
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+    }
+    
+    deinit {
+        contextManager.removeProvider(contextInfoProvider)
+        directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+    }
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        var payload = [String: AnyHashable?]()
+        payload["version"] = self.capabilityAgentProperty.version
+        
+        if let context = self.delegate?.phoneCallAgentRequestContext(),
+            let contextData = try? JSONEncoder().encode(context),
+            let contextDictionary = try? JSONSerialization.jsonObject(with: contextData, options: []) as? [String: AnyHashable] {
+            payload = contextDictionary
+        }
+        
+        completion(
+            ContextInfo(
+                contextType: .capability,
+                name: self.capabilityAgentProperty.name,
+                payload: payload.compactMapValues { $0 }
+            )
+        )
     }
 }
 
@@ -89,30 +115,6 @@ public extension PhoneCallAgent {
                 break
             }
         }.dialogRequestId
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension PhoneCallAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        var payload = [String: AnyHashable?]()
-        
-        if let context = delegate?.phoneCallAgentRequestContext(),
-            let contextData = try? JSONEncoder().encode(context),
-            let contextDictionary = try? JSONSerialization.jsonObject(with: contextData, options: []) as? [String: AnyHashable] {
-            payload = contextDictionary
-        }
-        
-        payload["version"] = capabilityAgentProperty.version
-        
-        completion(
-            ContextInfo(
-                contextType: .capability,
-                name: capabilityAgentProperty.name,
-                payload: payload.compactMapValues { $0 }
-            )
-        )
     }
 }
 

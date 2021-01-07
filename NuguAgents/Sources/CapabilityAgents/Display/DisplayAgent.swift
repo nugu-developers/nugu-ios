@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-public final class DisplayAgent: DisplayAgentProtocol {
+public final class DisplayAgent: DisplayAgentProtocol, ContextInfoProvidable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.6")
     
@@ -97,42 +97,21 @@ public final class DisplayAgent: DisplayAgentProtocol {
         self.sessionManager = sessionManager
         self.interactionControlManager = interactionControlManager
         
-        playSyncManager.add(delegate: self)
-        contextManager.add(delegate: self)
+        playSyncManager.addListener(self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        contextManager.addProvider(contextInfoProvider)
     }
     
     deinit {
+        playSyncManager.removeListener(self)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-    }
-}
-
-// MARK: - DisplayAgentProtocol
-
-public extension DisplayAgent {
-    @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
-        return sendFullContextEvent(elementSelected(
-            templateId: templateId,
-            token: token,
-            postback: postback
-        ), completion: completion).dialogRequestId
+        contextManager.removeProvider(contextInfoProvider)
     }
     
-    func notifyUserInteraction() {
-        displayDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.templateList
-                .filter { $0.template.contextLayer != .overlay }
-                .forEach { self.playSyncManager.resetTimer(property: $0.template.playSyncProperty) }
-        }
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension DisplayAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        displayDispatchQueue.async { [weak self] in
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        self.displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             let item = self.templateList.first
             var payload: [String: AnyHashable?] = [
@@ -157,9 +136,30 @@ extension DisplayAgent: ContextInfoDelegate {
     }
 }
 
+// MARK: - DisplayAgentProtocol
+
+public extension DisplayAgent {
+    @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
+        return sendFullContextEvent(elementSelected(
+            templateId: templateId,
+            token: token,
+            postback: postback
+        ), completion: completion).dialogRequestId
+    }
+    
+    func notifyUserInteraction() {
+        displayDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.templateList
+                .filter { $0.template.contextLayer != .overlay }
+                .forEach { self.playSyncManager.resetTimer(property: $0.template.playSyncProperty) }
+        }
+    }
+}
+
 // MARK: - PlaySyncDelegate
 
-extension DisplayAgent: PlaySyncDelegate {
+extension DisplayAgent: PlaySyncListener {
     public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }

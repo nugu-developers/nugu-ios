@@ -27,7 +27,6 @@ import NuguUtils
 /// DialogStateAggregator aggregate several components state into one.
 public class DialogStateAggregator {
     private let dialogStateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.dialog_state_aggregator", qos: .userInitiated)
-    private let dialogStateDelegates = DelegateSet<DialogStateDelegate>()
     
     private let sessionManager: SessionManageable
     private let focusManager: FocusManageable
@@ -37,9 +36,14 @@ public class DialogStateAggregator {
     
     private var currentChips: (dialogRequestId: String, item: ChipsAgentItem)?
 
-    private var dialogState: DialogState = .idle {
-        didSet {
-            log.info("from \(oldValue) to \(dialogState) isMultiturn \(isMultiturn)")
+    @Observing private var internalDialogState: DialogState = .idle
+    private var dialogState: DialogState {
+        get {
+            internalDialogState
+        }
+
+        set {
+            log.info("from \(dialogState) to \(newValue) isMultiturn \(isMultiturn)")
 
             multiturnSpeakingToListeningTimer?.cancel()
             
@@ -50,11 +54,22 @@ public class DialogStateAggregator {
                 // Delete the chips if it is not for the most recently active session.
                 currentChips = nil
             }
-            dialogStateDelegates.notify { delegate in
-                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem?.chips, sessionActivated: sessionActivated)
+            
+            var additionalInfo: [String: Any] = ["multiturn": isMultiturn,
+                                  "sessionActivated": sessionActivated]
+            if let chips = chipsItem?.chips {
+                additionalInfo["chips"] = chips
             }
+
+            _internalDialogState.additionalInfo = additionalInfo
+            internalDialogState = newValue
         }
     }
+
+    public var dialogStateObserverCotainer: Observing<DialogState>.ObserverContainer {
+        $internalDialogState
+    }
+    
     private var asrState: ASRState = .idle
     private var ttsState: TTSState = .finished
     
@@ -82,92 +97,76 @@ public class DialogStateAggregator {
     init(
         sessionManager: SessionManageable,
         interactionControlManager: InteractionControlManageable,
-        focusManager: FocusManageable
+        focusManager: FocusManageable,
+        asrAgent: ASRAgentProtocol,
+        ttsAgent: TTSAgentProtocol,
+        chipsAgent: ChipsAgentProtocol
     ) {
         self.sessionManager = sessionManager
         self.focusManager = focusManager
         
-        interactionControlManager.add(delegate: self)
-    }
-}
+        interactionControlManager.interactionStateObserverContainer.addObserver { [weak self] (state, additionalInfo) in
+            log.debug("interaction state: \(state)")
 
-// MARK: - DialogStateAggregatable
-
-extension DialogStateAggregator {
-    /// Adds a delegate to be notified of DialogStateAggregator state changes.
-    /// - Parameter delegate: The object to add.
-    public func add(delegate: DialogStateDelegate) {
-        dialogStateDelegates.add(delegate)
-    }
-    
-    /// Removes a delegate from DialogStateAggregator.
-    /// - Parameter delegate: The object to remove.
-    public func remove(delegate: DialogStateDelegate) {
-        dialogStateDelegates.remove(delegate)
-    }
-}
-
-// MARK: - ASRAgentDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: ASRAgentDelegate {
-    public func asrAgentDidChange(state: ASRState) {
-        dialogStateDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.asrState = state
-            switch state {
-            case .idle:
-                self.tryEnterIdleState()
-            case .listening:
-                self.dialogState = .listening
-            case .recognizing:
-                self.dialogState = .recognizing
-            case .busy:
-                self.dialogState = .thinking
-            case .expectingSpeech:
-                break
+            self?.dialogStateDispatchQueue.async { [weak self] in
+                self?.isMultiturn = (state == .multi)
+                if state != .multi {
+                    self?.tryEnterIdleState()
+                }
             }
         }
-    }
-    
-    public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {}
-}
-
-// MARK: - TTSAgentDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: TTSAgentDelegate {
-    public func ttsAgentDidReceive(text: String, header: Downstream.Header) {
-    }
-    
-    public func ttsAgentDidChange(state: TTSState, header: Downstream.Header) {
-        dialogStateDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.ttsState = state
-            switch state {
-            case .idle:
-                break
-            case .playing:
-                self.dialogState = .speaking
-            case .finished, .stopped:
-                self.tryEnterIdleState()
+        
+        // Observers
+        asrAgent.asrStateObserverContainer.addObserver { [weak self] (state, additionalInfo) in
+            self?.dialogStateDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.asrState = state
+                switch state {
+                case .idle:
+                    self.tryEnterIdleState()
+                case .listening:
+                    self.dialogState = .listening
+                case .recognizing:
+                    self.dialogState = .recognizing
+                case .busy:
+                    self.dialogState = .thinking
+                case .expectingSpeech:
+                    break
+                }
             }
         }
-    }
-}
-
-// MARK: - InteractionControlDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: InteractionControlDelegate {
-    public func interactionControlDidChange(isMultiturn: Bool) {
-        log.debug(isMultiturn)
-        dialogStateDispatchQueue.async { [weak self] in
-            self?.isMultiturn = isMultiturn
-            if isMultiturn == false {
-                self?.tryEnterIdleState()
+        
+        asrAgent.asrResultObserverContainer.addObserver { (state, additionalInfo) in
+            // Nothing to do
+        }
+        
+        ttsAgent.ttsStateObserverContainer.addObserver { [weak self] (state, additionalInfo) in
+            self?.dialogStateDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.ttsState = state
+                switch state {
+                case .idle:
+                    break
+                case .playing:
+                    self.dialogState = .speaking
+                case .finished, .stopped:
+                    self.tryEnterIdleState()
+                }
+            }
+        }
+        
+        ttsAgent.receivedTextObserverContainer.addObserver { (text, additionalInfo) in
+            // Nothing to do
+        }
+        
+        chipsAgent.chipsItemObserverContainer.addObserver { [weak self] (item, additionalInfo) in
+            self?.dialogStateDispatchQueue.async { [weak self] in
+                if let item = item, item.target == .dialog,
+                   let header = additionalInfo?["header"] as? Downstream.Header {
+                    self?.currentChips = (dialogRequestId: header.dialogRequestId, item: item)
+                }
             }
         }
     }
@@ -195,18 +194,5 @@ private extension DialogStateAggregator {
         }
         multiturnSpeakingToListeningTimer = workItem
         dialogStateDispatchQueue.asyncAfter(deadline: .now() + shortTimeout, execute: workItem)
-    }
-}
-
-// MARK: - ChipsAgentDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: ChipsAgentDelegate {
-    public func chipsAgentDidReceive(item: ChipsAgentItem, header: Downstream.Header) {
-        dialogStateDispatchQueue.async { [weak self] in
-            if item.target == .dialog {
-                self?.currentChips = (dialogRequestId: header.dialogRequestId, item: item)
-            }
-        }
     }
 }

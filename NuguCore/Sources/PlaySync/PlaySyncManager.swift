@@ -31,7 +31,7 @@ public class PlaySyncManager: PlaySyncManageable {
         internalSerialQueueName: "com.sktelecom.romaine.play_sync"
     )
     
-    private let delegates = DelegateSet<PlaySyncDelegate>()
+    private var listeners = [PlaySyncListener]()
     
     private var playStack = PlayStack()
     private var playContextTimers = [PlaySyncProperty: Disposable]() {
@@ -46,19 +46,19 @@ public class PlaySyncManager: PlaySyncManageable {
     private var timerDuration = [PlaySyncProperty: TimeIntervallic]()
     
     public init(contextManager: ContextManageable) {
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
     }
 }
 
 // MARK: - PlaySyncManageable
 
 public extension PlaySyncManager {
-    func add(delegate: PlaySyncDelegate) {
-        delegates.add(delegate)
+    func addListener(_ listener: PlaySyncListener) {
+        listeners.append(listener)
     }
     
-    func remove(delegate: PlaySyncDelegate) {
-        delegates.remove(delegate)
+    func removeListener(_ listener: PlaySyncListener) {
+        listeners = listeners.filter { $0 !== listener }
     }
     
     func startPlay(property: PlaySyncProperty, info: PlaySyncInfo) {
@@ -183,15 +183,17 @@ public extension PlaySyncManager {
 }
 
 // MARK: - ContextInfoDelegate
-extension PlaySyncManager: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        playSyncDispatchQueue.async { [weak self] in
-            guard let self = self else {
-                completion(nil)
-                return
+extension PlaySyncManager: ContextInfoProvidable {
+    public var contextInfoProvider: ProvideContextInfo {
+        return { [weak self] completion in
+            self?.playSyncDispatchQueue.async { [weak self] in
+                guard let self = self else {
+                    completion(nil)
+                    return
+                }
+                log.debug("\(self.playStack.playServiceIds)")
+                completion(ContextInfo(contextType: .client, name: "playStack", payload: self.playStack.playServiceIds))
             }
-            log.debug("\(self.playStack.playServiceIds)")
-            completion(ContextInfo(contextType: .client, name: "playStack", payload: self.playStack.playServiceIds))
         }
     }
 }
@@ -238,8 +240,8 @@ private extension PlaySyncManager {
         
         playStack[property] = nil
         
-        delegates.notify { (delegate) in
-            delegate.playSyncDidRelease(property: property, messageId: play.messageId)
+        listeners.forEach { (listener) in
+            listener.playSyncDidRelease(property: property, messageId: play.messageId)
         }
     }
     

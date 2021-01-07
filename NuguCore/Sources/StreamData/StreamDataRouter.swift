@@ -25,7 +25,7 @@ import NuguUtils
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
-    private var delegates = DelegateSet<StreamDataDelegate>()
+    private var listeners = [StreamDataListener]()
     
     private let delegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.stream_data_router_delegate")
     private let nuguApiProvider = NuguApiProvider()
@@ -42,12 +42,12 @@ public class StreamDataRouter: StreamDataRoutable {
         self.directiveSequencer = directiveSequencer
     }
     
-    public func add(delegate: StreamDataDelegate) {
-        delegates.add(delegate)
+    public func addListener(_ listener: StreamDataListener) {
+        listeners.append(listener)
     }
     
-    public func remove(delegate: StreamDataDelegate) {
-        delegates.remove(delegate)
+    public func removeListener(_ listener: StreamDataListener) {
+        listeners = listeners.filter { $0 !== listener }
     }
 }
 
@@ -134,16 +134,22 @@ public extension StreamDataRouter {
             .subscribe(onCompleted: { [weak self] in
                 guard let self = self else { return }
                 
-                self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                    delegate.streamDataWillSend(event: event)
+                self.delegateDispatchQueue.async { [weak self] in
+                    self?.listeners.forEach { (listener) in
+                        listener.streamDataWillSend(event: event)
+                    }
                 }
+                
                 completion?(.sent)
             }, onError: { [weak self] (error) in
                 guard let self = self else { return }
                 
-                self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                    delegate.streamDataDidSend(event: event, error: error)
+                self.delegateDispatchQueue.async { [weak self] in
+                    self?.listeners.forEach { (listener) in
+                        listener.streamDataDidSend(event: event, error: error)
+                    }
                 }
+                
                 completion?(.error(error))
             })
             .disposed(by: self.disposeBag)
@@ -157,16 +163,23 @@ public extension StreamDataRouter {
                     guard let self = self else { return }
                     
                     log.error("\(error.localizedDescription)")
-                    self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                        delegate.streamDataDidSend(event: event, error: error)
+                    
+                    self.delegateDispatchQueue.async { [weak self] in
+                        self?.listeners.forEach { (listener) in
+                            listener.streamDataDidSend(event: event, error: error)
+                        }
                     }
+                    
                     completion?(.error(error))
                 }, onCompleted: { [weak self] in
                     guard let self = self else { return }
                     
-                    self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                        delegate.streamDataDidSend(event: event, error: nil)
+                    self.delegateDispatchQueue.async { [weak self] in
+                        self?.listeners.forEach { (listener) in
+                            listener.streamDataDidSend(event: event, error: nil)
+                        }
                     }
+                    
                     completion?(.finished)
                     // Send end_stream after receiving end_stream from server.
                     // ex> Send `ASR.Recoginze` event with invalid access token.
@@ -193,9 +206,12 @@ public extension StreamDataRouter {
      */
     func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[attachment.header.dialogRequestId] else {
-            delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                delegate.streamDataDidSend(attachment: attachment, error: EventSenderError.noEventRequested)
+            self.delegateDispatchQueue.async { [weak self] in
+                self?.listeners.forEach { (listener) in
+                    listener.streamDataDidSend(attachment: attachment, error: EventSenderError.noEventRequested)
+                }
             }
+            
             completion?(.error(EventSenderError.noEventRequested))
             return
         }
@@ -209,16 +225,22 @@ public extension StreamDataRouter {
                     eventSender.finish()
                 }
                 
-                self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                    delegate.streamDataDidSend(attachment: attachment, error: nil)
+                self.delegateDispatchQueue.async { [weak self] in
+                    self?.listeners.forEach { (listener) in
+                        listener.streamDataDidSend(attachment: attachment, error: nil)
+                    }
                 }
+                
                 completion?(.sent)
             }, onError: { [weak self] (error) in
                 guard let self = self else { return }
                 
-                self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                    delegate.streamDataDidSend(attachment: attachment, error: error)
+                self.delegateDispatchQueue.async { [weak self] in
+                    self?.listeners.forEach { (listener) in
+                        listener.streamDataDidSend(attachment: attachment, error: error)
+                    }
                 }
+                
                 completion?(.error(error))
             })
             .disposed(by: disposeBag)
@@ -251,17 +273,25 @@ extension StreamDataRouter {
                 .compactMap(Downstream.Directive.init)
                 .forEach { directive in
                     log.debug("Directive: \(directive.header)")
-                    delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                        delegate.streamDataDidReceive(direcive: directive)
+                    
+                    self.delegateDispatchQueue.async { [weak self] in
+                        self?.listeners.forEach { (listener) in
+                            listener.streamDataDidReceive(direcive: directive)
+                        }
                     }
+                    
                     directiveSequencer.processDirective(directive)
                     completion?(.received(part: directive))
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
             log.debug("Attachment: \(attachment.header.dialogRequestId), \(attachment.header.type)")
-            delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                delegate.streamDataDidReceive(attachment: attachment)
+            
+            self.delegateDispatchQueue.async { [weak self] in
+                self?.listeners.forEach { (listener) in
+                    listener.streamDataDidReceive(attachment: attachment)
+                }
             }
+            
             directiveSequencer.processAttachment(attachment)
         } else {
             log.error("Invalid data \(part.header)")

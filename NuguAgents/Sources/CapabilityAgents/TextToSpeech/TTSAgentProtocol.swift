@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 /// The `TTSAgent` handles directives for controlling speech playback.
 public protocol TTSAgentProtocol: CapabilityAgentable {
@@ -42,15 +43,11 @@ public protocol TTSAgentProtocol: CapabilityAgentable {
     /// The cancellation policy when playback is implicitly stopped.
     var directiveCancelPolicy: DirectiveCancelPolicy { get set }
     
-    /// Adds a delegate to be notified of `TTSState` changes.
-    ///
-    /// - Parameter delegate: The object to add.
-    func add(delegate: TTSAgentDelegate)
+    /// ObserverContainer for notifying of `TTSState` changes.
+    var ttsStateObserverContainer: Observing<TTSState>.ObserverContainer { get }
     
-    /// Removes a delegate from `TTSAgent`.
-    ///
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: TTSAgentDelegate)
+    /// ObserverContainer for notifying of received text changes
+    var receivedTextObserverContainer: Observing<String>.ObserverContainer { get }
     
     /// Request voice synthesis and playback.
     ///

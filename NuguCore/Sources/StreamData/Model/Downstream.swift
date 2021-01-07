@@ -73,7 +73,7 @@ public enum Downstream {
     }
     
     /// <#Description#>
-    public struct Header: Codable {
+    public struct Header: Codable, Hashable {
         /// <#Description#>
         public let namespace: String
         /// <#Description#>

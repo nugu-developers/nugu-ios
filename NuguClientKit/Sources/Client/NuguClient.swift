@@ -103,12 +103,7 @@ public class NuguClient {
     )
     
     /// <#Description#>
-    public private(set) lazy var keywordDetector: KeywordDetector = {
-        let keywordDetector =  KeywordDetector()
-        contextManager.add(delegate: keywordDetector)
-        
-        return keywordDetector
-    }()
+    public private(set) lazy var keywordDetector = KeywordDetector(contextManager: contextManager)
     
     private let backgroundFocusHolder: BackgroundFocusHolder
     
@@ -166,11 +161,11 @@ public class NuguClient {
         dialogStateAggregator = DialogStateAggregator(
             sessionManager: sessionManager,
             interactionControlManager: interactionControlManager,
-            focusManager: focusManager
+            focusManager: focusManager,
+            asrAgent: asrAgent,
+            ttsAgent: ttsAgent,
+            chipsAgent: chipsAgent
         )
-        asrAgent.add(delegate: dialogStateAggregator)
-        ttsAgent.add(delegate: dialogStateAggregator)
-        chipsAgent.add(delegate: dialogStateAggregator)
         
         // audio player
         audioPlayerAgent = AudioPlayerAgent(
@@ -196,7 +191,7 @@ public class NuguClient {
         
         backgroundFocusHolder = BackgroundFocusHolder(
             focusManager: focusManager,
-            directiveSequener: directiveSequencer,
+            directiveSequencer: directiveSequencer,
             streamDataRouter: streamDataRouter,
             dialogStateAggregator: dialogStateAggregator
         )
@@ -284,22 +279,20 @@ extension NuguClient: FocusDelegate {
     }
 }
 
-// MARK: - DialogStateDelegate
+// MARK: - DialogStateObserver
 
 /// :nodoc:
-extension NuguClient: DialogStateDelegate {
+extension NuguClient {
     private func setupDialogStateAggregator() {
-        dialogStateAggregator.add(delegate: self)
-    }
-    
-    public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        switch state {
-        case .idle:
-            playSyncManager.resumeTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
-        case .listening:
-            playSyncManager.pauseTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
-        default:
-            break
+        dialogStateAggregator.dialogStateObserverCotainer.addObserver { [weak self] (state, additionalInfo) in
+            switch state {
+            case .idle:
+                self?.playSyncManager.resumeTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+            case .listening:
+                self?.playSyncManager.pauseTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+            default:
+                break
+            }
         }
     }
 }
@@ -307,9 +300,9 @@ extension NuguClient: DialogStateDelegate {
 // MARK: - StreamDataDelegate
 
 /// :nodoc:
-extension NuguClient: StreamDataDelegate {
+extension NuguClient: StreamDataListener {
     private func setupStreamDataRouter() {
-        streamDataRouter.add(delegate: self)
+        streamDataRouter.addListener(self)
     }
     
     public func streamDataDidReceive(direcive: Downstream.Directive) {

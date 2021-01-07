@@ -1,5 +1,5 @@
 //
-//  StreamDataDelegate.swift
+//  StreamDataListener.swift
 //  NuguCore
 //
 //  Created by MinChul Lee on 2020/03/18.
@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol StreamDataDelegate: class {
+public protocol StreamDataListener: class {
     /// <#Description#>
     /// - Parameter direcive: <#direcive description#>
     func streamDataDidReceive(direcive: Downstream.Directive)

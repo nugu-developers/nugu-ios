@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct ChipsAgentItem {
+public struct ChipsAgentItem: Equatable {
     /// <#Description#>
     public let playServiceId: String
     /// <#Description#>

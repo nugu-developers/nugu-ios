@@ -42,7 +42,7 @@ final class NuguCentralManager {
         let client = NuguClient(delegate: self)
         
         client.locationAgent.delegate = self
-        client.systemAgent.add(systemAgentDelegate: self)
+        client.systemAgent.delegate = self
         client.soundAgent.dataSource = self
         micInputProvider.delegate = client
         

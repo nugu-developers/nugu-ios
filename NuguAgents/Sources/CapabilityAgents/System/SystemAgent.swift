@@ -25,17 +25,18 @@ import NuguUtils
 
 import RxSwift
 
-public final class SystemAgent: SystemAgentProtocol {
+public final class SystemAgent: SystemAgentProtocol, ContextInfoProvidable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.3")
+    
+    // Delegate
+    public weak var delegate: SystemAgentDelegate?
     
     // Private
     private let contextManager: ContextManageable
     private let streamDataRouter: StreamDataRoutable
     private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
-    
-    private let delegates = DelegateSet<SystemAgentDelegate>()
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -59,37 +60,23 @@ public final class SystemAgent: SystemAgentProtocol {
         self.streamDataRouter = streamDataRouter
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-}
-
-// MARK: - SystemAgentProtocol
-
-public extension SystemAgent {
-    func add(systemAgentDelegate: SystemAgentDelegate) {
-        delegates.add(systemAgentDelegate)
-    }
     
-    func remove(systemAgentDelegate: SystemAgentDelegate) {
-        delegates.remove(systemAgentDelegate)
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension SystemAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
         let payload: [String: AnyHashable] = [
-            "version": capabilityAgentProperty.version
+            "version": self.capabilityAgentProperty.version
         ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload))
     }
-
 }
 
 // MARK: - Private (handle directive)
@@ -132,9 +119,7 @@ private extension SystemAgent {
             self?.systemDispatchQueue.async { [weak self] in
                 switch exceptionItem.code {
                 case .fail(let code):
-                    self?.delegates.notify { delegate in
-                        delegate.systemAgentDidReceiveExceptionFail(code: code, header: directive.header)
-                    }
+                    self?.delegate?.systemAgentDidReceiveExceptionFail(code: code, header: directive.header)
                 case .warning(let code):
                     log.debug("received warning code: \(code)")
                 }
@@ -151,9 +136,7 @@ private extension SystemAgent {
             defer { completion(.finished) }
 
             self?.systemDispatchQueue.async { [weak self] in
-                self?.delegates.notify { delegate in
-                    delegate.systemAgentDidReceiveRevokeDevice(reason: revokeItem.reason, header: directive.header)
-                }
+                self?.delegate?.systemAgentDidReceiveRevokeDevice(reason: revokeItem.reason, header: directive.header)
             }
         }
     }

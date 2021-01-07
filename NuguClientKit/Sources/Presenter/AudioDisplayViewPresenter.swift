@@ -62,8 +62,23 @@ public class AudioDisplayViewPresenter {
     private init(nuguClient: NuguClient) {
         self.nuguClient = nuguClient
         
-        nuguClient.audioPlayerAgent.add(delegate: self)
         nuguClient.audioPlayerAgent.displayDelegate = self
+        
+        // Observers
+        nuguClient.audioPlayerAgent.audioPlayerStateObserverContainer.addObserver { [weak self] (state, additionalInfo) in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self,
+                    let audioDisplayView = self.audioDisplayView else { return }
+                audioDisplayView.audioPlayerState = state
+                self.delegate?.displayControllerShouldUpdateState(state: state)
+            }
+        }
+        
+        nuguClient.audioPlayerAgent.audioPlayerDurationObserverContainer.addObserver { [weak self] (duration, additionalInfo) in
+            DispatchQueue.main.async { [weak self] in
+                self?.delegate?.displayControllerShouldUpdateDuration(duration: duration)
+            }
+        }
     }
 }
 
@@ -111,25 +126,6 @@ extension AudioDisplayViewPresenter: AudioPlayerDisplayDelegate {
     public func audioPlayerIsLyricsVisible(completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             completion(self?.audioDisplayView?.isLyricsVisible ?? false)
-        }
-    }
-}
-
-// MARK: - AudioPlayerAgentDelegate
-
-extension AudioDisplayViewPresenter: AudioPlayerAgentDelegate {
-    public func audioPlayerAgentDidChange(state: AudioPlayerState, header: Downstream.Header) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self,
-                let audioDisplayView = self.audioDisplayView else { return }
-            audioDisplayView.audioPlayerState = state
-            self.delegate?.displayControllerShouldUpdateState(state: state)
-        }
-    }
-    
-    public func audioPlayerAgentDidChange(duration: Int) {
-        DispatchQueue.main.async { [weak self] in
-            self?.delegate?.displayControllerShouldUpdateDuration(duration: duration)
         }
     }
 }

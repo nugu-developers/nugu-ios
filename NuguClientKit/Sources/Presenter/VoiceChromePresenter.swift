@@ -28,6 +28,7 @@ import NuguUtils
 /// <#Description#>
 public class VoiceChromePresenter {
     private let nuguVoiceChrome: NuguVoiceChrome
+    private let nuguClient: NuguClient
     
     private weak var viewController: UIViewController?
     private weak var superView: UIView?
@@ -72,10 +73,12 @@ public class VoiceChromePresenter {
     ///   - nuguClient: <#nuguClient description#>
     private init(nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
         self.nuguVoiceChrome = nuguVoiceChrome
+        self.nuguClient = nuguClient
         
-        nuguClient.dialogStateAggregator.add(delegate: self)
-        nuguClient.asrAgent.add(delegate: self)
-        nuguClient.interactionControlManager.add(delegate: self)
+        // Observers
+        addDialogStateObserver()
+        addInteractionControlStateObserver()
+        addAsrObserver()
     }
 }
 
@@ -165,119 +168,121 @@ private extension VoiceChromePresenter {
     }
 }
 
-// MARK: - DialogStateDelegate
+// MARK: - Observers
 
-/// :nodoc:
-extension VoiceChromePresenter: DialogStateDelegate {
-    public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
-        switch state {
-        case .idle:
-            voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
-                self?.dismissVoiceChrome()
-            })
-            guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
-            DispatchQueue.main.async(execute: voiceChromeDismissWorkItem)
-        case .speaking:
-            voiceChromeDismissWorkItem?.cancel()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                guard isMultiturn == true else {
-                    self.dismissVoiceChrome()
-                    return
-                }
-                // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
-                try? self.showVoiceChrome()
-                self.nuguVoiceChrome.changeState(state: .speaking)
-                if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
-                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                    self.setChipsButton(actionList: actionList, normalList: normalList)
-                }
-            }
-        case .listening:
-            voiceChromeDismissWorkItem?.cancel()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
-                try? self.showVoiceChrome()
-                if isMultiturn || sessionActivated {
-                    self.nuguVoiceChrome.changeState(state: .listeningPassive)
-                    self.nuguVoiceChrome.setRecognizedText(text: nil)
-                }
-                if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
-                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                    self.setChipsButton(actionList: actionList, normalList: normalList)
-                }
-            }
-        case .recognizing:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.changeState(state: .listeningActive)
-            }
-        case .thinking:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.changeState(state: .processing)
-            }
-        }
-    }
-}
-
-// MARK: - AutomaticSpeechRecognitionDelegate
-
-/// :nodoc:
-extension VoiceChromePresenter: ASRAgentDelegate {
-    public func asrAgentDidChange(state: ASRState) {
-        DispatchQueue.main.async { [weak self] in
+extension VoiceChromePresenter {
+    func addDialogStateObserver() {
+        nuguClient.dialogStateAggregator.dialogStateObserverCotainer.addObserver { [weak self] (state, additionalInfo) in
             guard let self = self else { return }
-            
-            self.asrState = state
+            guard let isMultiturn = additionalInfo?["multiturn"] as? Bool,
+                  let sessionActivated = additionalInfo?["sessionActivated"] as? Bool else { return }
+
+            let chips = additionalInfo?["chips"] as? [ChipsAgentItem.Chip]
+            log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
+
             switch state {
             case .idle:
-                self.enableIdleTimer()
-            default:
-                self.disableIdleTimer()
+                self.voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
+                    self?.dismissVoiceChrome()
+                })
+                guard let voiceChromeDismissWorkItem = self.voiceChromeDismissWorkItem else { break }
+                DispatchQueue.main.async(execute: voiceChromeDismissWorkItem)
+            case .speaking:
+                self.voiceChromeDismissWorkItem?.cancel()
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    guard isMultiturn == true else {
+                        self.dismissVoiceChrome()
+                        return
+                    }
+                    // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
+                    try? self.showVoiceChrome()
+                    self.nuguVoiceChrome.changeState(state: .speaking)
+                    if let chips = chips {
+                        let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
+                        let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
+                        self.setChipsButton(actionList: actionList, normalList: normalList)
+                    }
+                }
+            case .listening:
+                self.voiceChromeDismissWorkItem?.cancel()
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
+                    try? self.showVoiceChrome()
+                    if isMultiturn || sessionActivated {
+                        self.nuguVoiceChrome.changeState(state: .listeningPassive)
+                        self.nuguVoiceChrome.setRecognizedText(text: nil)
+                    }
+                    if let chips = chips {
+                        let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
+                        let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
+                        self.setChipsButton(actionList: actionList, normalList: normalList)
+                    }
+                }
+            case .recognizing:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.changeState(state: .listeningActive)
+                }
+            case .thinking:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.changeState(state: .processing)
+                }
             }
         }
     }
     
-    public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        switch result {
-        case .complete(let text, _):
+    func addInteractionControlStateObserver() {
+        nuguClient.interactionControlManager.interactionStateObserverContainer.addObserver { [weak self] (state, additionalInfo) in
             DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.setRecognizedText(text: text)
-            }
-        case .partial(let text, _):
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.setRecognizedText(text: text)
-            }
-        case .error(let error, _):
-            DispatchQueue.main.async { [weak self] in
-                switch error {
-                case ASRError.listenFailed:
-                    self?.nuguVoiceChrome.changeState(state: .speakingError)
-                default:
-                    break
+                guard let self = self else { return }
+                
+                self.isMultiturn = (state == .multi)
+                switch state {
+                case .multi:
+                    self.disableIdleTimer()
+                case .single:
+                    self.enableIdleTimer()
                 }
             }
-        default: break
         }
     }
-}
-
-// MARK: - InteractionControlDelegate
-
-/// :nodoc:
-extension VoiceChromePresenter: InteractionControlDelegate {
-    public func interactionControlDidChange(isMultiturn: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.isMultiturn = isMultiturn
-            if isMultiturn {
-                self.disableIdleTimer()
-            } else {
-                self.enableIdleTimer()
+    
+    func addAsrObserver() {
+        nuguClient.asrAgent.asrStateObserverContainer.addObserver { (state, additionalInfo) in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.asrState = state
+                switch state {
+                case .idle:
+                    self.enableIdleTimer()
+                default:
+                    self.disableIdleTimer()
+                }
+            }
+        }
+        
+        nuguClient.asrAgent.asrResultObserverContainer.addObserver { (result, additionalInfo) in
+            switch result {
+            case .complete(let text, _):
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.setRecognizedText(text: text)
+                }
+            case .partial(let text, _):
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.setRecognizedText(text: text)
+                }
+            case .error(let error, _):
+                DispatchQueue.main.async { [weak self] in
+                    switch error {
+                    case ASRError.listenFailed:
+                        self?.nuguVoiceChrome.changeState(state: .speakingError)
+                    default:
+                        break
+                    }
+                }
+            default: break
             }
         }
     }

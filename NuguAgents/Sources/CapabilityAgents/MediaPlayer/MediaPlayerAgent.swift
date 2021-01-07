@@ -62,26 +62,23 @@ public final class MediaPlayerAgent: MediaPlayerAgentProtocol {
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension MediaPlayerAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        var payload = [String: AnyHashable?]()
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
         
-        if let context = delegate?.mediaPlayerAgentRequestContext(),
+        var payload = [String: AnyHashable?]()
+        payload["version"] = self.capabilityAgentProperty.version
+        
+        if let context = self.delegate?.mediaPlayerAgentRequestContext(),
             let contextData = try? JSONEncoder().encode(context),
             let contextDictionary = try? JSONSerialization.jsonObject(with: contextData, options: []) as? [String: AnyHashable] {
             payload = contextDictionary
         }
         
-        payload["version"] = capabilityAgentProperty.version
-        
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 

@@ -26,6 +26,7 @@ import NuguUtils
 import RxSwift
 
 final public class SessionManager: SessionManageable {
+    public weak var delegate: SessionDelegate?
     private let sessionDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.session", qos: .userInitiated)
     private lazy var sessionScheduler = SerialDispatchQueueScheduler(
         queue: sessionDispatchQueue,
@@ -42,8 +43,9 @@ final public class SessionManager: SessionManageable {
     }
     
     // private
-    private let delegates = DelegateSet<SessionDelegate>()
     private var activeTimers = [String: Disposable]()
+    
+    @Observing private var internalSessions = [String: Session]()
     private var sessions = [String: Session]() {
         didSet {
             updateActiveSession()
@@ -58,14 +60,6 @@ final public class SessionManager: SessionManageable {
     
     public init() {}
     
-    public func add(delegate: SessionDelegate) {
-        delegates.add(delegate)
-    }
-    
-    public func remove(delegate: SessionDelegate) {
-        delegates.remove(delegate)
-    }
-    
     public func set(session: Session) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -74,9 +68,7 @@ final public class SessionManager: SessionManageable {
             self.addTimer(session: session)
             
             self.addActiveSession(dialogRequestId: session.dialogRequestId)
-            self.delegates.notify { (delegate) in
-                delegate.sessionDidSet(session: session)
-            }
+            self.delegate?.sessionDidSet(session: session)
         }
     }
     
@@ -116,9 +108,7 @@ private extension SessionManager {
             .subscribe(onSuccess: { [weak self] _ in
                 log.debug("Timer fired. \(session.dialogRequestId)")
                 self?.sessions[session.dialogRequestId] = nil
-                self?.delegates.notify { (delegate) in
-                    delegate.sessionDidUnset(session: session)
-                }
+                self?.delegate?.sessionDidUnset(session: session)
             })
     }
     
@@ -135,8 +125,8 @@ private extension SessionManager {
     }
     
     func updateActiveSession() {
-        activeSessions.removeAll { (session) -> Bool in
-            sessions[session.dialogRequestId] == nil || activeList[session.dialogRequestId] == nil
+        activeSessions.removeAll {
+            sessions[$0.dialogRequestId] == nil || activeList[$0.dialogRequestId] == nil
         }
     }
 }

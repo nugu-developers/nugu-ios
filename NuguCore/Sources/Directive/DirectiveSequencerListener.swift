@@ -1,8 +1,8 @@
 //
-//  SessionManageable.swift
-//  NuguAgents
+//  DirectiveSequencerListener.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 2020/05/28.
+//  Created by MinChul Lee on 2020/07/08.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,23 +21,22 @@
 import Foundation
 
 /// <#Description#>
-public protocol SessionManageable: class {
-    var delegate: SessionDelegate? { get set }
-    
-    /// <#Description#>
-    var activeSessions: [Session] { get }
-    
-    /// <#Description#>
-    /// - Parameter session: <#session description#>
-    func set(session: Session)
+public protocol DirectiveSequencerListener: class {
     /// <#Description#>
     /// - Parameters:
-    ///   - dialogRequestId: <#dialogRequestId description#>
-    ///   - category: <#category description#>
-    func activate(dialogRequestId: String, category: CapabilityAgentCategory)
+    ///   - directive: <#directive description#>
+    ///   - blockingPolicy: <#blockingPolicy description#>
+    func directiveSequencerWillPrefetch(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)
+    
     /// <#Description#>
     /// - Parameters:
-    ///   - dialogRequestId: <#dialogRequestId description#>
-    ///   - category: <#category description#>
-    func deactivate(dialogRequestId: String, category: CapabilityAgentCategory)
+    ///   - directive: <#directive description#>
+    ///   - blockingPolicy: <#blockingPolicy description#>
+    func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - directive: <#directive description#>
+    ///   - result: <#result description#>
+    func directiveSequencerDidComplete(directive: Downstream.Directive, result: DirectiveHandleResult)
 }

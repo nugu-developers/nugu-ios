@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 /// The `AudioPlayerAgent` handles directives for controlling audio playback.
 public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
@@ -29,13 +30,11 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// Sets a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
     var displayDelegate: AudioPlayerDisplayDelegate? { get set }
     
-    /// Adds a delegate to be notified of `AudioPlayerState` changes.
-    /// - Parameter delegate: The object to add.
-    func add(delegate: AudioPlayerAgentDelegate)
+    /// ObserverContainer for notifying of `AudioPlayerState` changes.
+    var audioPlayerStateObserverContainer: Observing<AudioPlayerState>.ObserverContainer { get }
     
-    /// Removes a delegate from AudioPlayerAgent.
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: AudioPlayerAgentDelegate)
+    /// ObserverContainer for notifying of `duration` changes.
+    var audioPlayerDurationObserverContainer: Observing<Int>.ObserverContainer { get }
     
     /// Returns the current time of the current player item.
     ///

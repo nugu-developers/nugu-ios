@@ -23,14 +23,14 @@ import Foundation
 import NuguCore
 import NuguUtils
 
-public final class ChipsAgent: ChipsAgentProtocol {
+public final class ChipsAgent: ChipsAgentProtocol, ContextInfoProvidable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .chips, version: "1.1")
     
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
-    private let delegates = DelegateSet<ChipsAgentDelegate>()
+    @Observing<ChipsAgentItem?> private var currentItem: ChipsAgentItem?
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -44,39 +44,29 @@ public final class ChipsAgent: ChipsAgentProtocol {
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-}
-
-// MARK: - ChipsAgent + ChipsAgentProtocol
-
-public extension ChipsAgent {
-    func add(delegate: ChipsAgentDelegate) {
-        delegates.add(delegate)
-    }
     
-    func remove(delegate: ChipsAgentDelegate) {
-        delegates.remove(delegate)
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension ChipsAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version
-        ]
-        
-        completion(
-            ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
-        )
-    }
+    public var chipsItemObserverContainer: Observing<ChipsAgentItem?>.ObserverContainer { $currentItem }
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = {
+        return { [weak self] completion in
+            guard let self = self else { return }
+            
+            let payload: [String: AnyHashable?] = [
+                "version": self.capabilityAgentProperty.version
+            ]
+            
+            completion(
+                ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload)
+            )
+        }
+    }()
 }
 
 // MARK: - Private(Directive)
@@ -89,10 +79,9 @@ private extension ChipsAgent {
                 return
             }
             defer { completion(.finished) }
-
-            self?.delegates.notify { delegate in
-                delegate.chipsAgentDidReceive(item: item, header: directive.header)
-            }
+            
+            self?._currentItem.additionalInfo = ["header": directive.header]
+            self?.currentItem = item
         }
     }
 }

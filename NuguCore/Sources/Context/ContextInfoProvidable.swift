@@ -1,6 +1,6 @@
 //
-//  AudioPlayerAgentDelegate.swift
-//  NuguAgents
+//  ContextInfoProvidable.swift
+//  NuguCore
 //
 //  Created by MinChul Lee on 25/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -20,16 +20,12 @@
 
 import Foundation
 
-import NuguCore
+public typealias ProvideContextInfo = (_ completion: @escaping (ContextInfo?) -> Void) -> Void
 
-/// An delegate that appllication can extend to register to observe `AudioPlayerState` changes.
-public protocol AudioPlayerAgentDelegate: class {
-    ///  Used to notify the observer of state changes.
-    /// - Parameter state: The new AudioPlayerState of the `AudioPlayerAgent`
-    /// - Parameter header: The header of the originally handled directive.
-    func audioPlayerAgentDidChange(state: AudioPlayerState, header: Downstream.Header)
-    
-    ///  Used to notify the observer of duration changes.
-    /// - Parameter duration: The duration of the current player item.
-    func audioPlayerAgentDidChange(duration: Int)
+/// ContextInfoProvidable may be capability agent whose context needs to be sent to the server.
+public protocol ContextInfoProvidable: class {
+    /// A request to provide the context.
+    ///
+    /// It should perform minimum processing and return quickly
+    var contextInfoProvider: ProvideContextInfo { get }
 }

@@ -25,12 +25,12 @@ public protocol StreamDataRoutable: UpstreamDataSendable {
     /// Adds a delegate to be notified of stream data handling states.
     ///
     /// - Parameter delegate: The object to add.
-    func add(delegate: StreamDataDelegate)
+    func addListener(_ listener: StreamDataListener)
     
     /// Removes a delegate from stream-data-router.
     ///
     /// - Parameter delegate: The object to remove.
-    func remove(delegate: StreamDataDelegate)
+    func removeListener(_ listener: StreamDataListener)
     
     /// <#Description#>
     /// - Parameter completion: <#completion description#>

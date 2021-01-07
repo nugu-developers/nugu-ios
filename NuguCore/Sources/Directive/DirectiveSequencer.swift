@@ -28,7 +28,7 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private var handlingDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     private var blockedDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     
-    private var delegates = DelegateSet<DirectiveSequencerDelegate>()
+    private var listeners = [DirectiveSequencerListener]()
     @Atomic private var directiveHandleInfos = DirectiveHandleInfos()
     private var directiveCancelPolicies = [(dialogRequestId: String, policy: DirectiveCancelPolicy)]()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
@@ -40,12 +40,12 @@ public class DirectiveSequencer: DirectiveSequenceable {
 // MARK: - DirectiveSequenceable
 
 public extension DirectiveSequencer {
-    func add(delegate: DirectiveSequencerDelegate) {
-        delegates.add(delegate)
+    func addListener(_ listener: DirectiveSequencerListener) {
+        listeners.append(listener)
     }
     
-    func remove(delegate: DirectiveSequencerDelegate) {
-        delegates.remove(delegate)
+    func removeListener(_ listener: DirectiveSequencerListener) {
+        listeners = listeners.filter { $0 !== listener }
     }
     
     func add(directiveHandleInfos: DirectiveHandleInfos) {
@@ -172,21 +172,24 @@ private extension DirectiveSequencer {
     
     func notifyWillPrefetch(directive: Downstream.Directive, handler: DirectiveHandleInfo) {
         log.debug("\(directive.header)")
-        delegates.notify {
+        
+        listeners.forEach {
             $0.directiveSequencerWillPrefetch(directive: directive, blockingPolicy: handler.blockingPolicy)
         }
     }
     
     func notifyWillHandle(directive: Downstream.Directive, handler: DirectiveHandleInfo) {
         log.debug("\(directive.header)")
-        delegates.notify {
+        
+        listeners.forEach {
             $0.directiveSequencerWillHandle(directive: directive, blockingPolicy: handler.blockingPolicy)
         }
     }
     
     func notifyDidComplete(directive: Downstream.Directive, result: DirectiveHandleResult) {
         log.debug("\(directive.header): \(result)")
-        delegates.notify {
+        
+        listeners.forEach {
             $0.directiveSequencerDidComplete(directive: directive, result: result)
         }
     }

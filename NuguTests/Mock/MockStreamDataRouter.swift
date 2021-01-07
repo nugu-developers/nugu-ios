@@ -23,11 +23,11 @@ import Foundation
 import NuguCore
 
 class MockStreamDataRouter: StreamDataRoutable {
-    func add(delegate: StreamDataDelegate) {
+    func addListener(_ listener: StreamDataListener) {
         
     }
     
-    func remove(delegate: StreamDataDelegate) {
+    func remove(delegate: StreamDataListener) {
         
     }
     

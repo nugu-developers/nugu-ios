@@ -32,6 +32,8 @@ public class KeywordDetector {
     
     private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keyword_detector_wrapper")
     
+    private let contextManager: ContextManageable
+    
     /// <#Description#>
     private(set) public var state: KeywordDetectorState = .inactive {
         didSet {
@@ -61,9 +63,26 @@ public class KeywordDetector {
         }
     }
     
+    public lazy var contextInfo: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        guard let keyword = self.keywordSource?.keyword else {
+            completion(nil)
+            return
+        }
+        completion(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword))
+    }
+    
     /// <#Description#>
-    public init() {
+    public init(contextManager: ContextManageable) {
+        self.contextManager = contextManager
         engine.delegate = self
+        
+        contextManager.addProvider(contextInfo)
+    }
+    
+    deinit {
+        contextManager.removeProvider(contextInfo)
     }
     
     /// <#Description#>
@@ -113,15 +132,3 @@ extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
     }
 }
 
-// MARK: - ContextInfoDelegate
-
-/// :nodoc:
-extension KeywordDetector: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        guard let keyword = keywordSource?.keyword else {
-            completion(nil)
-            return
-        }
-        completion(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword))
-    }
-}

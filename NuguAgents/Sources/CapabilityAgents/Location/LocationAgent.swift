@@ -30,23 +30,27 @@ public final class LocationAgent: LocationAgentProtocol {
     public weak var delegate: LocationAgentDelegate?
     
     public init(contextManager: ContextManageable) {
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
     }
 }
 
 // MARK: - ContextInfoDelegate
 
-extension LocationAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        var payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version
-        ]
-        if let locationInfo = delegate?.locationAgentRequestLocationInfo() {
-            payload["current"] = [
-                "latitude": locationInfo.latitude,
-                "longitude": locationInfo.longitude
+extension LocationAgent: ContextInfoProvidable {
+    public var contextInfoProvider: ProvideContextInfo {
+        return { [weak self] completion in
+            guard let self = self else { return }
+            
+            var payload: [String: AnyHashable?] = [
+                "version": self.capabilityAgentProperty.version
             ]
+            if let locationInfo = self.delegate?.locationAgentRequestLocationInfo() {
+                payload["current"] = [
+                    "latitude": locationInfo.latitude,
+                    "longitude": locationInfo.longitude
+                ]
+            }
+            completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
         }
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
