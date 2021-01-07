@@ -20,12 +20,17 @@
 
 import Foundation
 
-/// <#Description#>
+/// An error that occurs while sending the event.
 public enum EventSenderError: Error, CustomStringConvertible {
+    /// Requested to send an event with a duplicate ID.
     case requestMultipleEvents
+    /// Requested to send an attachment without event.
     case noEventRequested
+    /// An error occurred while executing `OutputStream.write`.
     case streamBlocked
+    /// An error occurred while executing `OutputStream.write`.
     case streamError(_ streamError: Error)
+    /// An error occurred while executing `OutputStream.write`.
     case cannotBindMemory
     
     public var description: String {

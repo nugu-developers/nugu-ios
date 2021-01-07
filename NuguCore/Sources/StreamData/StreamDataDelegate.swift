@@ -20,29 +20,29 @@
 
 import Foundation
 
-/// <#Description#>
+/// A protocol for notifying events about stream data
 public protocol StreamDataDelegate: class {
-    /// <#Description#>
-    /// - Parameter direcive: <#direcive description#>
+    /// Invoked after receiving the directive.
+    /// - Parameter direcive: The received directive.
     func streamDataDidReceive(direcive: Downstream.Directive)
     
-    /// <#Description#>
-    /// - Parameter attachment: <#attachment description#>
+    /// Invoked after receiving the attachment.
+    /// - Parameter attachment: The received attachment.
     func streamDataDidReceive(attachment: Downstream.Attachment)
     
-    /// <#Description#>
-    /// - Parameter event: <#event description#>
+    /// Invoked before sending the event.
+    /// - Parameter event: The event to send.
     func streamDataWillSend(event: Upstream.Event)
     
-    /// <#Description#>
+    /// Invoked after sending the event.
     /// - Parameters:
-    ///   - event: <#event description#>
-    ///   - error: <#error description#>
+    ///   - event: The sent event.
+    ///   - error: An error object that indicates why the request failed, or nil if the request was successful.
     func streamDataDidSend(event: Upstream.Event, error: Error?)
     
-    /// <#Description#>
+    /// Invoked after sending the attachment.
     /// - Parameters:
-    ///   - attachment: <#attachment description#>
-    ///   - error: <#error description#>
+    ///   - attachment: The sent attachment.
+    ///   - error: An error object that indicates why the request failed, or nil if the request was successful.
     func streamDataDidSend(attachment: Upstream.Attachment, error: Error?)
 }
