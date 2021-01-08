@@ -41,5 +41,6 @@ public struct BlockingPolicy {
         case none
         case audio
         case visual
+        case any
     }
 }

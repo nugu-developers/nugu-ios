@@ -65,6 +65,8 @@ public class NuguClient {
     public let sessionAgent: SessionAgentProtocol
     /// <#Description#>
     public let chipsAgent: ChipsAgentProtocol
+    /// <#Description#>
+    public let utilityAgent: UtilityAgentProtocol
 
     // additional agents
     /// <#Description#>
@@ -187,6 +189,11 @@ public class NuguClient {
             contextManager: contextManager,
             directiveSequencer: directiveSequencer,
             sessionManager: sessionManager
+        )
+        
+        utilityAgent = UtilityAgent(
+            directiveSequencer: directiveSequencer,
+            contextManager: contextManager
         )
         
         backgroundFocusHolder = BackgroundFocusHolder(
