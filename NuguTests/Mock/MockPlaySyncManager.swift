@@ -24,11 +24,15 @@ import NuguCore
 import NuguUtils
 
 class MockPlaySyncManager: PlaySyncManageable {
-    func add(delegate: PlaySyncDelegate) {
+    lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        
+    }
+    
+    func addListener(_ listener: PlaySyncListener) {
         //
     }
     
-    func remove(delegate: PlaySyncDelegate) {
+    func removeListener(_ listener: PlaySyncListener) {
         //
     }
     

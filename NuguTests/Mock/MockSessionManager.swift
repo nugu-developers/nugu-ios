@@ -23,6 +23,8 @@ import Foundation
 import NuguAgents
 
 class MockSessionManager: SessionManageable {
+    var delegate: SessionDelegate?
+    
     var activeSessions: [Session] = []
     
     func set(session: Session) {

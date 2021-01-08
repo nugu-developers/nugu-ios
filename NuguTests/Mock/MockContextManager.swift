@@ -23,11 +23,11 @@ import Foundation
 import NuguCore
 
 class MockContextManager: ContextManageable {
-    func add(delegate: ContextInfoDelegate) {
+    func addProvider(_ provider: @escaping ProvideContextInfo) {
         //
     }
     
-    func remove(delegate: ContextInfoDelegate) {
+    func removeProvider(_ provider: @escaping ProvideContextInfo) {
         //
     }
     

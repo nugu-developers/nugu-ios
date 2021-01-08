@@ -21,12 +21,13 @@
 import Foundation
 
 import NuguAgents
+import NuguUtils
 
 class MockInteractionControlManager: InteractionControlManageable {
-    func add(delegate: InteractionControlDelegate) {
-    }
+    @Observing var state: InteractionState = .single
     
-    func remove(delegate: InteractionControlDelegate) {
+    var interactionStateObserverContainer: Observing<InteractionState>.ObserverContainer {
+        $state
     }
     
     func start(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {

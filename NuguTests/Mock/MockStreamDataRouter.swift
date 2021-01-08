@@ -27,7 +27,7 @@ class MockStreamDataRouter: StreamDataRoutable {
         
     }
     
-    func remove(delegate: StreamDataListener) {
+    func removeListener(_ listener: StreamDataListener) {
         
     }
     
