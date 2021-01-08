@@ -29,7 +29,7 @@ public struct AuthorizationCodeGrant {
     /// The `redirectUri` for OAuth authentication.
     public let redirectUri: String
     
-    let safariController: OAuthSafariController = OAuthSafariController()
+    let oauthHandler: OAuthHandler
     
     /// The initializer for `AuthorizationCodeGrant`.
     /// - Parameter clientId: The `clientId` for OAuth authentication.
@@ -39,5 +39,13 @@ public struct AuthorizationCodeGrant {
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.redirectUri = redirectUri
+        
+        if #available(iOS 12, *) {
+            self.oauthHandler = ASAuthenticationOAuthHandler()
+        } else if #available(iOS 11, *) {
+            self.oauthHandler = SFAuthenticationOAuthHandler()
+        } else {
+            self.oauthHandler = SFSafariOAuthHandler()
+        }
     }
 }
