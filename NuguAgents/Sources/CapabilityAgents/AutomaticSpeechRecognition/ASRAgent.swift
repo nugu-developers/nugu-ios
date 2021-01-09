@@ -55,7 +55,7 @@ public final class ASRAgent: ASRAgentProtocol {
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
-    private let asrDelegates = DelegateSet<ASRAgentDelegate>()
+    private let notificationCenter = NotificationCenter.default
     
     public var options: ASROptions = ASROptions(endPointing: .server)
     private(set) public var asrState: ASRState = .idle {
@@ -78,9 +78,7 @@ public final class ASRAgent: ASRAgentProtocol {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != asrState {
-                asrDelegates.notify { delegate in
-                    delegate.asrAgentDidChange(state: asrState)
-                }
+                notificationCenter.post(name: .asrAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: asrState])
             }
         }
     }
@@ -152,9 +150,8 @@ public final class ASRAgent: ASRAgentProtocol {
                 expectSpeech = nil
             }
             
-            asrDelegates.notify { (delegate) in
-                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
-            }
+            notificationCenter.post(name: .asrAgentResultDidReceive, object: self, userInfo: [ObservingFactor.Result.result: asrResult,
+                                                                                              ObservingFactor.Result.dialogRequestId: asrRequest.eventIdentifier.dialogRequestId])
         }
     }
     
@@ -239,14 +236,6 @@ public final class ASRAgent: ASRAgentProtocol {
 // MARK: - ASRAgentProtocol
 
 public extension ASRAgent {
-    func add(delegate: ASRAgentDelegate) {
-        asrDelegates.add(delegate)
-    }
-    
-    func remove(delegate: ASRAgentDelegate) {
-        asrDelegates.remove(delegate)
-    }
-    
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
         completion: ((StreamDataState) -> Void)?
@@ -714,5 +703,33 @@ private extension ASRAgent {
         }
         
         semaphore.wait()
+    }
+}
+
+// MARK: - Observers
+
+public extension Notification.Name {
+    static let asrAgentStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_state_did_chage")
+    static let asrAgentResultDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_result_did_receive")
+}
+
+extension ASRAgent: Observing {
+    public enum ObservingFactor {
+        public enum State: ObservingSpec {
+            case state
+            
+            public var name: Notification.Name {
+                .asrAgentStateDidChange
+            }
+        }
+        
+        public enum Result: ObservingSpec {
+            case result
+            case dialogRequestId
+            
+            public var name: Notification.Name {
+                .asrAgentResultDidReceive
+            }
+        }
     }
 }

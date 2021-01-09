@@ -22,14 +22,6 @@ import Foundation
 
 /// <#Description#>
 public protocol SessionManageable: class {
-    /// Adds a delegate to be notified of `Session` changes.
-    /// - Parameter delegate: The object to add.
-    func add(delegate: SessionDelegate)
-    
-    /// Removes a delegate from session-manager.
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: SessionDelegate)
-    
     /// <#Description#>
     var activeSessions: [Session] { get }
     

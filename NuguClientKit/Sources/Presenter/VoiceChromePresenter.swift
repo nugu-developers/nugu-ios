@@ -39,10 +39,13 @@ public class VoiceChromePresenter {
     private var isMultiturn: Bool = false
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
-    /// <#Description#>
     public weak var delegate: VoiceChromePresenterDelegate?
-    /// <#Description#>
     public var isHidden = true
+    
+    private let notificationCenter = NotificationCenter.default
+    private var interactionControlObserver: Any?
+    private var asrStateObserver: Any?
+    private var asrResultObserver: Any?
     
     /// <#Description#>
     /// - Parameters:
@@ -74,8 +77,24 @@ public class VoiceChromePresenter {
         self.nuguVoiceChrome = nuguVoiceChrome
         
         nuguClient.dialogStateAggregator.add(delegate: self)
-        nuguClient.asrAgent.add(delegate: self)
-        nuguClient.interactionControlManager.add(delegate: self)
+        
+        // Observers
+        addInteractionControlObserver(nuguClient.interactionControlManager)
+        addAsrAgentObserver(nuguClient.asrAgent)
+    }
+    
+    deinit {
+        if let interactionControlObserver = interactionControlObserver {
+            notificationCenter.removeObserver(interactionControlObserver)
+        }
+        
+        if let asrStateObserver = asrStateObserver {
+            notificationCenter.removeObserver(asrStateObserver)
+        }
+        
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
+        }
     }
 }
 
@@ -223,13 +242,28 @@ extension VoiceChromePresenter: DialogStateDelegate {
     }
 }
 
-// MARK: - AutomaticSpeechRecognitionDelegate
+// MARK: - Observers
 
 /// :nodoc:
-extension VoiceChromePresenter: ASRAgentDelegate {
-    public func asrAgentDidChange(state: ASRState) {
-        DispatchQueue.main.async { [weak self] in
+private extension VoiceChromePresenter {
+    func addInteractionControlObserver(_ object: InteractionControlManageable) {
+        interactionControlObserver = notificationCenter.addObserver(forName: InteractionControlManager.ObservingFactor.MultiTurn.multiTurn.name, object: object, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
+            guard let isMultiturn = notification.userInfo?[InteractionControlManager.ObservingFactor.MultiTurn.multiTurn] as? Bool else { return }
+            
+            self.isMultiturn = isMultiturn
+            if isMultiturn {
+                self.disableIdleTimer()
+            } else {
+                self.enableIdleTimer()
+            }
+        }
+    }
+    
+    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
+        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
             
             self.asrState = state
             switch state {
@@ -239,45 +273,24 @@ extension VoiceChromePresenter: ASRAgentDelegate {
                 self.disableIdleTimer()
             }
         }
-    }
-    
-    public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        switch result {
-        case .complete(let text, _):
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.setRecognizedText(text: text)
-            }
-        case .partial(let text, _):
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.setRecognizedText(text: text)
-            }
-        case .error(let error, _):
-            DispatchQueue.main.async { [weak self] in
+        
+        asrResultObserver = notificationCenter.addObserver(forName: .asrAgentResultDidReceive, object: object, queue: .main) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let result = notification.userInfo?[ASRAgent.ObservingFactor.Result.result] as? ASRResult else { return }
+            
+            switch result {
+            case .complete(let text, _):
+                self.nuguVoiceChrome.setRecognizedText(text: text)
+            case .partial(let text, _):
+                self.nuguVoiceChrome.setRecognizedText(text: text)
+            case .error(let error, _):
                 switch error {
                 case ASRError.listenFailed:
-                    self?.nuguVoiceChrome.changeState(state: .speakingError)
+                    self.nuguVoiceChrome.changeState(state: .speakingError)
                 default:
                     break
                 }
-            }
-        default: break
-        }
-    }
-}
-
-// MARK: - InteractionControlDelegate
-
-/// :nodoc:
-extension VoiceChromePresenter: InteractionControlDelegate {
-    public func interactionControlDidChange(isMultiturn: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.isMultiturn = isMultiturn
-            if isMultiturn {
-                self.disableIdleTimer()
-            } else {
-                self.enableIdleTimer()
+            default: break
             }
         }
     }

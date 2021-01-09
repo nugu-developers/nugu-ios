@@ -64,6 +64,10 @@ final class MainViewController: UIViewController {
         )
     }()
     
+    private let notificationCenter = NotificationCenter.default
+    private var asrStateObserver: Any?
+    private var asrResultObserver: Any?
+    
     // MARK: Override
     
     override func viewDidLoad() {
@@ -91,6 +95,14 @@ final class MainViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         NuguCentralManager.shared.stopMicInputProvider()
+        
+        if let asrStateObserver = asrStateObserver {
+            notificationCenter.removeObserver(asrStateObserver)
+        }
+        
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -204,7 +216,9 @@ private extension MainViewController {
         // Add delegates
         NuguCentralManager.shared.client.keywordDetector.delegate = self
         NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
-        NuguCentralManager.shared.client.asrAgent.add(delegate: self)
+        
+        // Observers
+        addAsrAgentObserver(NuguCentralManager.shared.client.asrAgent)
         
         // UI
         voiceChromePresenter.delegate = self
@@ -457,50 +471,56 @@ extension MainViewController: DialogStateDelegate {
     }
 }
 
-// MARK: - AutomaticSpeechRecognitionDelegate
+// MARK: - Observers
 
-extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState) {
-        switch state {
-        case .idle:
-            if UserDefaults.Standard.useWakeUpDetector == true {
-                NuguCentralManager.shared.startWakeUpDetector()
-            } else {
-                NuguCentralManager.shared.stopMicInputProvider()
-            }
-        case .listening:
-            NuguCentralManager.shared.stopWakeUpDetector()
-        case .expectingSpeech:
-            NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
-                guard success == true else {
-                    log.debug("startMicInputProvider failed!")
-                    NuguCentralManager.shared.stopRecognition()
-                    return
+private extension MainViewController {
+    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
+        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+            guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
+            
+            switch state {
+            case .idle:
+                if UserDefaults.Standard.useWakeUpDetector == true {
+                    NuguCentralManager.shared.startWakeUpDetector()
+                } else {
+                    NuguCentralManager.shared.stopMicInputProvider()
                 }
+            case .listening:
+                NuguCentralManager.shared.stopWakeUpDetector()
+            case .expectingSpeech:
+                NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
+                    guard success == true else {
+                        log.debug("startMicInputProvider failed!")
+                        NuguCentralManager.shared.stopRecognition()
+                        return
+                    }
+                }
+            default:
+                break
             }
-        default:
-            break
         }
-    }
-    
-    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        switch result {
-        case .complete:
-            DispatchQueue.main.async {
-                NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
-            }
-        case .error(let error, _):
-            DispatchQueue.main.async {
-                switch error {
-                case ASRError.listenFailed:
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
-                case ASRError.recognizeFailed:
-                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                default:
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+        
+        asrResultObserver = notificationCenter.addObserver(forName: .asrAgentResultDidReceive, object: object, queue: .main) { [weak self] (notification) in
+            guard let result = notification.userInfo?[ASRAgent.ObservingFactor.Result.result] as? ASRResult else { return }
+            
+            switch result {
+            case .complete:
+                DispatchQueue.main.async {
+                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
                 }
+            case .error(let error, _):
+                DispatchQueue.main.async {
+                    switch error {
+                    case ASRError.listenFailed:
+                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+                    case ASRError.recognizeFailed:
+                        NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                    default:
+                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+                    }
+                }
+            default: break
             }
-        default: break
         }
     }
 }

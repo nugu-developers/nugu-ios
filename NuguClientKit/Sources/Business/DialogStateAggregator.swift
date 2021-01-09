@@ -79,15 +79,40 @@ public class DialogStateAggregator {
         }
     }
     
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var asrStateObserver: Any?
+    private var chipsAgentObserver: Any?
+    private var interactionControlObserver: Any?
+    
     init(
         sessionManager: SessionManageable,
         interactionControlManager: InteractionControlManageable,
-        focusManager: FocusManageable
+        focusManager: FocusManageable,
+        asrAgent: ASRAgentProtocol,
+        chipsAgent: ChipsAgentProtocol
     ) {
         self.sessionManager = sessionManager
         self.focusManager = focusManager
         
-        interactionControlManager.add(delegate: self)
+        // Observers
+        addAsrAgentObserver(asrAgent)
+        addChipsAgentObserver(chipsAgent)
+        addInteractionControlObserver(interactionControlManager)
+    }
+    
+    deinit {
+        if let asrStateObserver = asrStateObserver {
+            notificationCenter.removeObserver(asrStateObserver)
+        }
+        
+        if let chipsAgentObserver = chipsAgentObserver {
+            notificationCenter.removeObserver(chipsAgentObserver)
+        }
+        
+        if let interactionControlObserver = interactionControlObserver {
+            notificationCenter.removeObserver(interactionControlObserver)
+        }
     }
 }
 
@@ -105,33 +130,6 @@ extension DialogStateAggregator {
     public func remove(delegate: DialogStateDelegate) {
         dialogStateDelegates.remove(delegate)
     }
-}
-
-// MARK: - ASRAgentDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: ASRAgentDelegate {
-    public func asrAgentDidChange(state: ASRState) {
-        dialogStateDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.asrState = state
-            switch state {
-            case .idle:
-                self.tryEnterIdleState()
-            case .listening:
-                self.dialogState = .listening
-            case .recognizing:
-                self.dialogState = .recognizing
-            case .busy:
-                self.dialogState = .thinking
-            case .expectingSpeech:
-                break
-            }
-        }
-    }
-    
-    public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {}
 }
 
 // MARK: - TTSAgentDelegate
@@ -153,21 +151,6 @@ extension DialogStateAggregator: TTSAgentDelegate {
                 self.dialogState = .speaking
             case .finished, .stopped:
                 self.tryEnterIdleState()
-            }
-        }
-    }
-}
-
-// MARK: - InteractionControlDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: InteractionControlDelegate {
-    public func interactionControlDidChange(isMultiturn: Bool) {
-        log.debug(isMultiturn)
-        dialogStateDispatchQueue.async { [weak self] in
-            self?.isMultiturn = isMultiturn
-            if isMultiturn == false {
-                self?.tryEnterIdleState()
             }
         }
     }
@@ -198,14 +181,57 @@ private extension DialogStateAggregator {
     }
 }
 
-// MARK: - ChipsAgentDelegate
+// MARK: - Observers
 
 /// :nodoc:
-extension DialogStateAggregator: ChipsAgentDelegate {
-    public func chipsAgentDidReceive(item: ChipsAgentItem, header: Downstream.Header) {
-        dialogStateDispatchQueue.async { [weak self] in
-            if item.target == .dialog {
-                self?.currentChips = (dialogRequestId: header.dialogRequestId, item: item)
+private extension DialogStateAggregator {
+    func addChipsAgentObserver(_ object: ChipsAgentProtocol) {
+        chipsAgentObserver = notificationCenter.addObserver(forName: .chipsAgentDidReceive, object: object, queue: nil) { [weak self] (notification) in
+            guard let item = notification.userInfo?[ChipsAgent.ObservingFactor.Receive.item] as? ChipsAgentItem,
+                  let header = notification.userInfo?[ChipsAgent.ObservingFactor.Receive.header] as? Downstream.Header else { return }
+            
+            self?.dialogStateDispatchQueue.async { [weak self] in
+                if item.target == .dialog {
+                    self?.currentChips = (dialogRequestId: header.dialogRequestId, item: item)
+                }
+            }
+        }
+    }
+    
+    func addInteractionControlObserver(_ object: InteractionControlManageable) {
+        interactionControlObserver = notificationCenter.addObserver(forName: .interactionControlDidChange, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let isMultiturn = notification.userInfo?[InteractionControlManager.ObservingFactor.MultiTurn.multiTurn] as? Bool else { return }
+            
+            log.debug(self.isMultiturn)
+            self.dialogStateDispatchQueue.async { [weak self] in
+                self?.isMultiturn = isMultiturn
+                if isMultiturn == false {
+                    self?.tryEnterIdleState()
+                }
+            }
+        }
+    }
+    
+    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
+        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+            self?.dialogStateDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
+                
+                self.asrState = state
+                switch state {
+                case .idle:
+                    self.tryEnterIdleState()
+                case .listening:
+                    self.dialogState = .listening
+                case .recognizing:
+                    self.dialogState = .recognizing
+                case .busy:
+                    self.dialogState = .thinking
+                case .expectingSpeech:
+                    break
+                }
             }
         }
     }

@@ -30,7 +30,7 @@ public final class ChipsAgent: ChipsAgentProtocol {
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
-    private let delegates = DelegateSet<ChipsAgentDelegate>()
+    private let notificationCenter = NotificationCenter.default
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -53,18 +53,6 @@ public final class ChipsAgent: ChipsAgentProtocol {
     }
 }
 
-// MARK: - ChipsAgent + ChipsAgentProtocol
-
-public extension ChipsAgent {
-    func add(delegate: ChipsAgentDelegate) {
-        delegates.add(delegate)
-    }
-    
-    func remove(delegate: ChipsAgentDelegate) {
-        delegates.remove(delegate)
-    }
-}
-
 // MARK: - ContextInfoDelegate
 
 extension ChipsAgent: ContextInfoDelegate {
@@ -84,15 +72,42 @@ extension ChipsAgent: ContextInfoDelegate {
 private extension ChipsAgent {
     func handleRender() -> HandleDirective {
         return { [weak self] directive, completion in
+            guard let self = self else { return }
             guard let item = try? JSONDecoder().decode(ChipsAgentItem.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
             defer { completion(.finished) }
+            
+            self.notificationCenter.post(name: .chipsAgentDidReceive, object: self, userInfo: [ObservingFactor.Receive.item: item,
+                                                                                               ObservingFactor.Receive.header: directive.header])
+        }
+    }
+}
 
-            self?.delegates.notify { delegate in
-                delegate.chipsAgentDidReceive(item: item, header: directive.header)
+// MARK: - Observer
+
+public extension Notification.Name {
+    static let chipsAgentDidReceive = Notification.Name("com.sktelecom.romain.notification.name.chips_agent_did_receive")
+}
+
+extension ChipsAgent: Observing {
+    public enum ObservingFactor {
+        public enum Receive: ObservingSpec {
+            case item
+            case header
+            
+            public var name: Notification.Name {
+                .chipsAgentDidReceive
             }
         }
     }
+}
+
+public protocol Observing {
+    associatedtype ObservingFactor
+}
+
+public protocol ObservingSpec: Hashable {
+    var name: Notification.Name { get }
 }
