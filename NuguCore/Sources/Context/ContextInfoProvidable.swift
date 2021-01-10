@@ -1,8 +1,8 @@
 //
-//  PlaySyncDelegate.swift
+//  ContextInfoProvidable.swift
 //  NuguCore
 //
-//  Created by MinChul Lee on 2019/07/16.
+//  Created by MinChul Lee on 25/04/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,12 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol PlaySyncDelegate: class {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - property: <#property description#>
-    ///   - messageId: <#messageId description#>
-    func playSyncDidRelease(property: PlaySyncProperty, messageId: String)
+public typealias ProvideContextInfo = (_ completion: @escaping (ContextInfo?) -> Void) -> Void
+
+/// ContextInfoProvidable may be capability agent whose context needs to be sent to the server.
+public protocol ContextInfoProvidable: class {
+     /// A request to provide the context.
+     ///
+     /// It should perform minimum processing and return quickly
+    var contextInfoProvider: ProvideContextInfo { get }
 }

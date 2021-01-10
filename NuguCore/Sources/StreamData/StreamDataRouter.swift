@@ -25,7 +25,7 @@ import NuguUtils
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
-    private var delegates = DelegateSet<StreamDataDelegate>()
+    private let notificationCenter = NotificationCenter.default
     
     private let delegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.stream_data_router_delegate")
     private let nuguApiProvider = NuguApiProvider()
@@ -40,14 +40,6 @@ public class StreamDataRouter: StreamDataRoutable {
     public init(directiveSequencer: DirectiveSequenceable) {
         serverInitiatedDirectiveRecever = ServerSideEventReceiver(apiProvider: nuguApiProvider)
         self.directiveSequencer = directiveSequencer
-    }
-    
-    public func add(delegate: StreamDataDelegate) {
-        delegates.add(delegate)
-    }
-    
-    public func remove(delegate: StreamDataDelegate) {
-        delegates.remove(delegate)
     }
 }
 
@@ -134,16 +126,19 @@ public extension StreamDataRouter {
             .subscribe(onCompleted: { [weak self] in
                 guard let self = self else { return }
                 
-                self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                    delegate.streamDataWillSend(event: event)
+                self.delegateDispatchQueue.async { [weak self] in
+                    self?.notificationCenter.post(name: .streamDataEventWillSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event])
                 }
+                
                 completion?(.sent)
             }, onError: { [weak self] (error) in
                 guard let self = self else { return }
                 
-                self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                    delegate.streamDataDidSend(event: event, error: error)
+                self.delegateDispatchQueue.async { [weak self] in
+                    self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event,
+                                                                                                         ObservingFactor.EventDidSend.error: error])
                 }
+                
                 completion?(.error(error))
             })
             .disposed(by: self.disposeBag)
@@ -157,16 +152,19 @@ public extension StreamDataRouter {
                     guard let self = self else { return }
                     
                     log.error("\(error.localizedDescription)")
-                    self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                        delegate.streamDataDidSend(event: event, error: error)
+                    self.delegateDispatchQueue.async { [weak self] in
+                        self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event,
+                                                                                                             ObservingFactor.EventDidSend.error: error])
                     }
+                    
                     completion?(.error(error))
                 }, onCompleted: { [weak self] in
                     guard let self = self else { return }
                     
-                    self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                        delegate.streamDataDidSend(event: event, error: nil)
+                    self.delegateDispatchQueue.async { [weak self] in
+                        self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event])
                     }
+                    
                     completion?(.finished)
                     // Send end_stream after receiving end_stream from server.
                     // ex> Send `ASR.Recoginze` event with invalid access token.
@@ -193,9 +191,11 @@ public extension StreamDataRouter {
      */
     func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[attachment.header.dialogRequestId] else {
-            delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                delegate.streamDataDidSend(attachment: attachment, error: EventSenderError.noEventRequested)
+            self.delegateDispatchQueue.async { [weak self] in
+                self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment,
+                                                                                                          ObservingFactor.AttachmentDidSend.error: EventSenderError.noEventRequested])
             }
+            
             completion?(.error(EventSenderError.noEventRequested))
             return
         }
@@ -208,17 +208,20 @@ public extension StreamDataRouter {
                 if attachment.isEnd {
                     eventSender.finish()
                 }
-                
-                self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                    delegate.streamDataDidSend(attachment: attachment, error: nil)
+
+                self.delegateDispatchQueue.async { [weak self] in
+                    self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment])
                 }
+
                 completion?(.sent)
             }, onError: { [weak self] (error) in
                 guard let self = self else { return }
                 
-                self.delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                    delegate.streamDataDidSend(attachment: attachment, error: error)
+                self.delegateDispatchQueue.async { [weak self] in
+                    self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment,
+                                                                                                               ObservingFactor.AttachmentDidSend.error: error])
                 }
+                
                 completion?(.error(error))
             })
             .disposed(by: disposeBag)
@@ -251,17 +254,19 @@ extension StreamDataRouter {
                 .compactMap(Downstream.Directive.init)
                 .forEach { directive in
                     log.debug("Directive: \(directive.header)")
-                    delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                        delegate.streamDataDidReceive(direcive: directive)
+                    self.delegateDispatchQueue.async { [weak self] in
+                        self?.notificationCenter.post(name: .streamDataDirectiveDidReceive, object: self, userInfo: [ObservingFactor.DirectiveDidReceive.directive: directive])
                     }
+                    
                     directiveSequencer.processDirective(directive)
                     completion?(.received(part: directive))
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
             log.debug("Attachment: \(attachment.header.dialogRequestId), \(attachment.header.type)")
-            delegates.notify(queue: self.delegateDispatchQueue) { (delegate) in
-                delegate.streamDataDidReceive(attachment: attachment)
+            self.delegateDispatchQueue.async { [weak self] in
+                self?.notificationCenter.post(name: .streamDataAttachmentDidReceive, object: self, userInfo: [ObservingFactor.AttachmentDidReceive.attachment: attachment])
             }
+            
             directiveSequencer.processAttachment(attachment)
         } else {
             log.error("Invalid data \(part.header)")
@@ -315,5 +320,61 @@ private extension Downstream.Header {
         }
         
         self.init(namespace: namespace, name: name, dialogRequestId: dialogRequestId, messageId: messageId, version: version)
+    }
+}
+
+// MARK: - Observer
+
+public extension Notification.Name {
+    static let streamDataDirectiveDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_directive_did_receive")
+    static let streamDataAttachmentDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.stread_data_attachment_did_receive")
+    static let streamDataEventWillSend = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_event_will_send")
+    static let streamDataEventDidSend = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_event_did_send")
+    static let streamDataAttachmentDidSend = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_attachment_did_send")
+}
+
+extension StreamDataRouter: Observing {
+    public enum ObservingFactor {
+        public enum DirectiveDidReceive: ObservingSpec {
+            case directive
+            
+            public var name: Notification.Name {
+                .streamDataDirectiveDidReceive
+            }
+        }
+        
+        public enum AttachmentDidReceive: ObservingSpec {
+            case attachment
+            
+            public var name: Notification.Name {
+                .streamDataAttachmentDidReceive
+            }
+        }
+        
+        public enum EventWillSend: ObservingSpec {
+            case event
+            
+            public var name: Notification.Name {
+                .streamDataEventWillSend
+            }
+        }
+        
+        public enum EventDidSend: ObservingSpec {
+            case event
+            case error
+            
+            public var name: Notification.Name {
+                .streamDataEventDidSend
+            }
+        }
+        
+        public enum AttachmentDidSend: ObservingSpec {
+            case attachment
+            case error
+            
+            public var name: Notification.Name {
+                .streamDataAttachmentDidSend
+            }
+        }
     }
 }

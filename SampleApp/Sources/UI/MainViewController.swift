@@ -64,9 +64,11 @@ final class MainViewController: UIViewController {
         )
     }()
     
+    // Observers
     private let notificationCenter = NotificationCenter.default
     private var asrStateObserver: Any?
     private var asrResultObserver: Any?
+    private var dialogStateObserver: Any?
     
     // MARK: Override
     
@@ -102,6 +104,10 @@ final class MainViewController: UIViewController {
         
         if let asrResultObserver = asrResultObserver {
             notificationCenter.removeObserver(asrResultObserver)
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            notificationCenter.removeObserver(dialogStateObserver)
         }
     }
     
@@ -213,12 +219,12 @@ private extension MainViewController {
         // Set AudioSession
         NuguAudioSessionManager.shared.updateAudioSession()
         
-        // Add delegates
+        // set delegate
         NuguCentralManager.shared.client.keywordDetector.delegate = self
-        NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
         
         // Observers
         addAsrAgentObserver(NuguCentralManager.shared.client.asrAgent)
+        addDialogStateObserver(NuguCentralManager.shared.client.dialogStateAggregator)
         
         // UI
         voiceChromePresenter.delegate = self
@@ -451,26 +457,6 @@ extension MainViewController: VoiceChromePresenterDelegate {
     }
 }
 
-// MARK: - DialogStateDelegate
-
-extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
-        switch state {
-        case .listening:
-            DispatchQueue.main.async {
-                NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
-            }
-        case .thinking:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguButton.pauseDeactivateAnimation()
-            }
-        default:
-            break
-        }
-    }
-}
-
 // MARK: - Observers
 
 private extension MainViewController {
@@ -520,6 +506,30 @@ private extension MainViewController {
                     }
                 }
             default: break
+            }
+        }
+    }
+    
+    func addDialogStateObserver(_ object: DialogStateAggregator) {
+        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState,
+                  let isMultiturn = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.multiturn] as? Bool else { return }
+            
+            let chips = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.chips] as? [ChipsAgentItem.Chip]
+            log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
+
+            switch state {
+            case .listening:
+                DispatchQueue.main.async {
+                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
+                }
+            case .thinking:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguButton.pauseDeactivateAnimation()
+                }
+            default:
+                break
             }
         }
     }

@@ -44,6 +44,7 @@ final class AudioPlayerDisplayManager {
     
     private let notificationCenter = NotificationCenter.default
     private var audioPlayerStateObserver: Any?
+    private var playSyncObserver: Any?
     
     private var disposeBag = DisposeBag()
     
@@ -74,12 +75,16 @@ final class AudioPlayerDisplayManager {
         
         // Observers
         addAudioPlayerAgentObserver(audioPlayerAgent)
-        playSyncManager.add(delegate: self)
+        addPlaySyncObserver(playSyncManager)
     }
     
     deinit {
         if let audioPlayerStateObserver = audioPlayerStateObserver {
             notificationCenter.removeObserver(audioPlayerStateObserver)
+        }
+        
+        if let playSyncObserver = playSyncObserver {
+            notificationCenter.removeObserver(playSyncObserver)
         }
     }
 }
@@ -205,20 +210,6 @@ extension AudioPlayerDisplayManager {
     }
 }
 
-// MARK: - PlaySyncDelegate
-
-extension AudioPlayerDisplayManager: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
-        displayDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard property == self.playSyncProperty, let item = self.currentItem, item.templateId == messageId else { return }
-            
-            self.currentItem = nil
-            self.delegate?.audioPlayerDisplayDidClear(template: item)
-        }
-    }
-}
-
 // MARK: - Observers
 
 private extension AudioPlayerDisplayManager {
@@ -230,6 +221,22 @@ private extension AudioPlayerDisplayManager {
                 guard let self = self else { return }
                 
                 self.audioPlayerState = state
+            }
+        }
+    }
+    
+    func addPlaySyncObserver(_ object: PlaySyncManageable) {
+        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
+                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
+            
+            self.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard property == self.playSyncProperty, let item = self.currentItem, item.templateId == messageId else { return }
+                
+                self.currentItem = nil
+                self.delegate?.audioPlayerDisplayDidClear(template: item)
             }
         }
     }

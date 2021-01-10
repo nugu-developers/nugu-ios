@@ -75,7 +75,10 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         audioPlayerAgent: self,
         playSyncManager: playSyncManager
     )
+    
+    // Observers
     private let notificationCenter = NotificationCenter.default
+    private var playSyncObserver: Any?
     
     private let audioPlayerDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent_delegate")
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
@@ -171,16 +174,49 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         self.directiveSequencer = directiveSequencer
         self.audioPlayerPauseTimeout = audioPlayerPauseTimeout
 
-        playSyncManager.add(delegate: self)
-        contextManager.add(delegate: self)
+        addPlaySyncObserver(playSyncManager)
+        contextManager.addProvider(contextInfoProvider)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
 
     deinit {
+        if let playSyncObserver = playSyncObserver {
+            notificationCenter.removeObserver(playSyncObserver)
+        }
+        
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         currentPlayer?.stop()
         prefetchPlayer?.stop()
+    }
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        var payload: [String: AnyHashable?] = [
+            "version": self.capabilityAgentProperty.version,
+            "playServiceId": self.currentPlayer?.payload.playServiceId,
+            "playerActivity": self.audioPlayerState.playerActivity,
+            // This is a mandatory in Play kit.
+            "offsetInMilliseconds": self.currentPlayer?.offset.truncatedMilliSeconds,
+            "token": self.currentPlayer?.payload.audioItem.stream.token,
+            "lyricsVisible": false
+        ]
+        payload["durationInMilliseconds"] = self.currentPlayer?.duration.truncatedMilliSeconds
+        
+        if let playServiceId = self.latestPlayer?.payload.playServiceId {
+            let semaphore = DispatchSemaphore(value: 0)
+            self.audioPlayerDisplayManager.isLyricsVisible(playServiceId: playServiceId) { result in
+                payload["lyricsVisible"] = result
+                semaphore.signal()
+            }
+            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
+                log.error("`isLyricsVisible` completion block does not called")
+            }
+        }
+        
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
@@ -369,51 +405,6 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
     
     public func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {
         notificationCenter.post(name: .audioPlayerAgentDurationDidChange, object: self, userInfo: [ObservingFactor.Duration.duration: duration.truncatedSeconds])
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension AudioPlayerAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        var payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version,
-            "playServiceId": currentPlayer?.payload.playServiceId,
-            "playerActivity": audioPlayerState.playerActivity,
-            // This is a mandatory in Play kit.
-            "offsetInMilliseconds": currentPlayer?.offset.truncatedMilliSeconds,
-            "token": currentPlayer?.payload.audioItem.stream.token,
-            "lyricsVisible": false
-        ]
-        payload["durationInMilliseconds"] = currentPlayer?.duration.truncatedMilliSeconds
-        
-        if let playServiceId = latestPlayer?.payload.playServiceId {
-            let semaphore = DispatchSemaphore(value: 0)
-            audioPlayerDisplayManager.isLyricsVisible(playServiceId: playServiceId) { result in
-                payload["lyricsVisible"] = result
-                semaphore.signal()
-            }
-            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
-                log.error("`isLyricsVisible` completion block does not called")
-            }
-        }
-        
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
-    }
-}
-
-// MARK: - PlaySyncDelegate
-
-extension AudioPlayerAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
-        audioPlayerDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard property == self.playSyncProperty,
-                  let player = self.latestPlayer, player.header.messageId == messageId else { return }
-            
-            log.debug(messageId)
-            self.stop(player: player, cancelAssociation: true)
-        }
     }
 }
 
@@ -822,6 +813,25 @@ extension AudioPlayerAgent: Observing {
             
             public var name: Notification.Name {
                 .audioPlayerAgentDurationDidChange
+            }
+        }
+    }
+}
+
+private extension AudioPlayerAgent {
+    func addPlaySyncObserver(_ object: PlaySyncManageable) {
+        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
+                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
+            
+            self.audioPlayerDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard property == self.playSyncProperty,
+                      let player = self.latestPlayer, player.header.messageId == messageId else { return }
+                
+                log.debug(messageId)
+                self.stop(player: player, cancelAssociation: true)
             }
         }
     }

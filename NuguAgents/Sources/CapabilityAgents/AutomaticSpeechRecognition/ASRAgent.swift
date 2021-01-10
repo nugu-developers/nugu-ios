@@ -55,7 +55,9 @@ public final class ASRAgent: ASRAgentProtocol {
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
+    // Observers
     private let notificationCenter = NotificationCenter.default
+    private var playSyncObserver: Any?
     
     public var options: ASROptions = ASROptions(endPointing: .server)
     private(set) public var asrState: ASRState = .idle {
@@ -222,14 +224,29 @@ public final class ASRAgent: ASRAgentProtocol {
         self.playSyncManager = playSyncManager
         self.interactionControlManager = interactionControlManager
         
-        playSyncManager.add(delegate: self)
-        contextManager.add(delegate: self)
+        addPlaySyncObserver(playSyncManager)
+        contextManager.addProvider(contextInfoProvider)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        if let playSyncObserver = playSyncObserver {
+            notificationCenter.removeObserver(playSyncObserver)
+        }
+        
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+    }
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable] = [
+            "version": self.capabilityAgentProperty.version,
+            "engine": "skt"
+        ]
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -325,18 +342,6 @@ extension ASRAgent: FocusChannelDelegate {
     }
 }
 
-// MARK: - ContextInfoDelegate
-
-extension ASRAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable] = [
-            "version": capabilityAgentProperty.version,
-            "engine": "skt"
-        ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
-    }
-}
-
 // MARK: - EndPointDetectorDelegate
 
 extension ASRAgent: EndPointDetectorDelegate {
@@ -400,19 +405,6 @@ extension ASRAgent: EndPointDetectorDelegate {
             self.upstreamDataSender.sendStream(attachment)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
-        }
-    }
-}
-
-// MARK: - PlaySyncDelegate
-
-extension ASRAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
-        asrDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard property == self.playSyncProperty, self.expectSpeech?.messageId == messageId else { return }
-            
-            self.stopRecognition()
         }
     }
 }
@@ -729,6 +721,23 @@ extension ASRAgent: Observing {
             
             public var name: Notification.Name {
                 .asrAgentResultDidReceive
+            }
+        }
+    }
+}
+
+private extension ASRAgent {
+    func addPlaySyncObserver(_ object: PlaySyncManageable) {
+        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
+                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
+            
+            self.asrDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard property == self.playSyncProperty, self.expectSpeech?.messageId == messageId else { return }
+                
+                self.stopRecognition()
             }
         }
     }

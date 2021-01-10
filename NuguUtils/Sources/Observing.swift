@@ -1,9 +1,9 @@
 //
-//  ContextInfoDelegate.swift
-//  NuguCore
+//  Observing.swift
+//  NuguUtils
 //
-//  Created by MinChul Lee on 25/04/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2021/01/10.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@
 
 import Foundation
 
-/// ContextInfoDelegate may be capability agent whose context needs to be sent to the server.
-public protocol ContextInfoDelegate: class {
-    /// A request to provide the context.
-    ///
-    /// It should perform minimum processing and return quickly
-    func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void)
+public protocol Observing {
+    associatedtype ObservingFactor
+}
+
+public protocol ObservingSpec: Hashable {
+    var name: Notification.Name { get }
 }

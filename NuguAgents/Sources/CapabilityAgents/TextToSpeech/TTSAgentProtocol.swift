@@ -42,16 +42,6 @@ public protocol TTSAgentProtocol: CapabilityAgentable {
     /// The cancellation policy when playback is implicitly stopped.
     var directiveCancelPolicy: DirectiveCancelPolicy { get set }
     
-    /// Adds a delegate to be notified of `TTSState` changes.
-    ///
-    /// - Parameter delegate: The object to add.
-    func add(delegate: TTSAgentDelegate)
-    
-    /// Removes a delegate from `TTSAgent`.
-    ///
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: TTSAgentDelegate)
-    
     /// Request voice synthesis and playback.
     ///
     /// - Parameter text: The obejct to request speech synthesis.

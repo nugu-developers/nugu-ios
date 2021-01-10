@@ -68,11 +68,19 @@ public final class TextAgent: TextAgentProtocol {
         self.dialogAttributeStore = dialogAttributeStore
         
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
     }
     
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        contextManager.removeProvider(contextInfoProvider)
+    }
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable] = ["version": self.capabilityAgentProperty.version]
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -96,9 +104,9 @@ extension TextAgent {
 
 // MARK: - ContextInfoDelegate
 
-extension TextAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]        
+extension TextAgent: ContextInfoProvidable {
+    public func requestContextInfo(completion: (ContextInfo?) -> Void) {
+        let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]
         completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }

@@ -44,25 +44,24 @@ public final class ChipsAgent: ChipsAgentProtocol {
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+        contextManager.removeProvider(contextInfoProvider)
     }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension ChipsAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] (completion) in
+        guard let self = self else { return }
+        
         let payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version
+            "version": self.capabilityAgentProperty.version
         ]
         
         completion(
-            ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload)
+            ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload)
         )
     }
 }
@@ -102,12 +101,4 @@ extension ChipsAgent: Observing {
             }
         }
     }
-}
-
-public protocol Observing {
-    associatedtype ObservingFactor
-}
-
-public protocol ObservingSpec: Hashable {
-    var name: Notification.Name { get }
 }

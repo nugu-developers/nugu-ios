@@ -42,10 +42,12 @@ public class VoiceChromePresenter {
     public weak var delegate: VoiceChromePresenterDelegate?
     public var isHidden = true
     
+    // Observers
     private let notificationCenter = NotificationCenter.default
     private var interactionControlObserver: Any?
     private var asrStateObserver: Any?
     private var asrResultObserver: Any?
+    private var dialogStateObserver: Any?
     
     /// <#Description#>
     /// - Parameters:
@@ -76,11 +78,10 @@ public class VoiceChromePresenter {
     private init(nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
         self.nuguVoiceChrome = nuguVoiceChrome
         
-        nuguClient.dialogStateAggregator.add(delegate: self)
-        
         // Observers
         addInteractionControlObserver(nuguClient.interactionControlManager)
         addAsrAgentObserver(nuguClient.asrAgent)
+        addDialogStateObserver(nuguClient.dialogStateAggregator)
     }
     
     deinit {
@@ -94,6 +95,10 @@ public class VoiceChromePresenter {
         
         if let asrResultObserver = asrResultObserver {
             notificationCenter.removeObserver(asrResultObserver)
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            notificationCenter.removeObserver(dialogStateObserver)
         }
     }
 }
@@ -184,64 +189,6 @@ private extension VoiceChromePresenter {
     }
 }
 
-// MARK: - DialogStateDelegate
-
-/// :nodoc:
-extension VoiceChromePresenter: DialogStateDelegate {
-    public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
-        switch state {
-        case .idle:
-            voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
-                self?.dismissVoiceChrome()
-            })
-            guard let voiceChromeDismissWorkItem = voiceChromeDismissWorkItem else { break }
-            DispatchQueue.main.async(execute: voiceChromeDismissWorkItem)
-        case .speaking:
-            voiceChromeDismissWorkItem?.cancel()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                guard isMultiturn == true else {
-                    self.dismissVoiceChrome()
-                    return
-                }
-                // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
-                try? self.showVoiceChrome()
-                self.nuguVoiceChrome.changeState(state: .speaking)
-                if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
-                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                    self.setChipsButton(actionList: actionList, normalList: normalList)
-                }
-            }
-        case .listening:
-            voiceChromeDismissWorkItem?.cancel()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
-                try? self.showVoiceChrome()
-                if isMultiturn || sessionActivated {
-                    self.nuguVoiceChrome.changeState(state: .listeningPassive)
-                    self.nuguVoiceChrome.setRecognizedText(text: nil)
-                }
-                if let chips = chips {
-                    let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
-                    let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                    self.setChipsButton(actionList: actionList, normalList: normalList)
-                }
-            }
-        case .recognizing:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.changeState(state: .listeningActive)
-            }
-        case .thinking:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguVoiceChrome.changeState(state: .processing)
-            }
-        }
-    }
-}
-
 // MARK: - Observers
 
 /// :nodoc:
@@ -291,6 +238,68 @@ private extension VoiceChromePresenter {
                     break
                 }
             default: break
+            }
+        }
+    }
+    
+    func addDialogStateObserver(_ object: DialogStateAggregator) {
+        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState,
+                  let isMultiturn = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.multiturn] as? Bool,
+                  let sessionActivated = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.sessionActivated] as? Bool else { return }
+            
+            let chips = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.chips] as? [ChipsAgentItem.Chip]
+            log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
+
+            switch state {
+            case .idle:
+                self.voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
+                    self?.dismissVoiceChrome()
+                })
+                guard let voiceChromeDismissWorkItem = self.voiceChromeDismissWorkItem else { break }
+                DispatchQueue.main.async(execute: voiceChromeDismissWorkItem)
+            case .speaking:
+                self.voiceChromeDismissWorkItem?.cancel()
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    guard isMultiturn == true else {
+                        self.dismissVoiceChrome()
+                        return
+                    }
+                    // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
+                    try? self.showVoiceChrome()
+                    self.nuguVoiceChrome.changeState(state: .speaking)
+                    if let chips = chips {
+                        let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
+                        let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
+                        self.setChipsButton(actionList: actionList, normalList: normalList)
+                    }
+                }
+            case .listening:
+                self.voiceChromeDismissWorkItem?.cancel()
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
+                    try? self.showVoiceChrome()
+                    if isMultiturn || sessionActivated {
+                        self.nuguVoiceChrome.changeState(state: .listeningPassive)
+                        self.nuguVoiceChrome.setRecognizedText(text: nil)
+                    }
+                    if let chips = chips {
+                        let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
+                        let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
+                        self.setChipsButton(actionList: actionList, normalList: normalList)
+                    }
+                }
+            case .recognizing:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.changeState(state: .listeningActive)
+                }
+            case .thinking:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.changeState(state: .processing)
+                }
             }
         }
     }

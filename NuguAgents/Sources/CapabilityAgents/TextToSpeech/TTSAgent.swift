@@ -59,10 +59,12 @@ public final class TTSAgent: TTSAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     
-    private let ttsDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate")
+    private let ttsDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate") // TODO: notification thread는 수신하는 쪽에서 결정하는 거싱므로 학제할 것
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
-    private let delegates = DelegateSet<TTSAgentDelegate>()
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var playSyncObserver: Any?
     
     private var ttsState: TTSState = .idle {
         didSet {
@@ -101,8 +103,9 @@ public final class TTSAgent: TTSAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != ttsState {
                 let state = ttsState
-                delegates.notify(queue: ttsDelegateDispatchQueue) { delegate in
-                    delegate.ttsAgentDidChange(state: state, header: player.header)
+                ttsDelegateDispatchQueue.async { [weak self] in
+                    self?.notificationCenter.post(name: .ttsAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: state,
+                                                                                                    ObservingFactor.State.header: player.header])
                 }
             }
         }
@@ -160,30 +163,39 @@ public final class TTSAgent: TTSAgentProtocol {
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        playSyncManager.add(delegate: self)
-        contextManager.add(delegate: self)
+        addPlaySyncObserver(playSyncManager)
+        contextManager.addProvider(contextInfoProvider)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        if let playSyncObserver = playSyncObserver {
+            notificationCenter.removeObserver(playSyncObserver)
+        }
+        
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         currentPlayer?.stop()
         prefetchPlayer?.stop()
+    }
+    
+    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable] = [
+            "ttsActivity": self.ttsState.value,
+            "version": self.capabilityAgentProperty.version,
+            "engine": "skt",
+            "token": self.currentPlayer?.payload.token
+        ]
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
 // MARK: - TTSAgentProtocol
 
 public extension TTSAgent {
-    func add(delegate: TTSAgentDelegate) {
-        delegates.add(delegate)
-    }
-    
-    func remove(delegate: TTSAgentDelegate) {
-        delegates.remove(delegate)
-    }
-    
     func requestTTS(
         text: String,
         playServiceId: String?,
@@ -250,20 +262,6 @@ extension TTSAgent: FocusChannelDelegate {
     }
 }
 
-// MARK: - ContextInfoDelegate
-
-extension TTSAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable] = [
-            "ttsActivity": ttsState.value,
-            "version": capabilityAgentProperty.version,
-            "engine": "skt",
-            "token": currentPlayer?.payload.token
-        ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
-    }
-}
-
 // MARK: - MediaPlayerDelegate
 
 extension TTSAgent: MediaPlayerDelegate {
@@ -323,20 +321,6 @@ extension TTSAgent: MediaPlayerDelegate {
                     referrerDialogRequestId: player.header.dialogRequestId
                 ).rx)
             }
-        }
-    }
-}
-
-// MARK: - PlaySyncDelegate
-
-extension TTSAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
-        ttsDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard property == self.playSyncProperty,
-                  let player = self.latestPlayer, player.header.messageId == messageId else { return }
-            
-            self.stop(player: player, cancelAssociation: true)
         }
     }
 }
@@ -402,8 +386,9 @@ private extension TTSAgent {
                 log.debug(directive.header.messageId)
                 self.currentPlayer = player
                 self.focusManager.requestFocus(channelDelegate: self)
-                self.delegates.notify(queue: self.ttsDelegateDispatchQueue) { delegate in
-                    delegate.ttsAgentDidReceive(text: player.payload.text, header: player.header)
+                self.ttsDelegateDispatchQueue.async { [weak self] in
+                    self?.notificationCenter.post(name: .ttsAgentResultDidReceive, object: self, userInfo: [ObservingFactor.Result.text: player.payload.text,
+                                                                                                      ObservingFactor.Result.header: player.header])
                 }
                 
                 self.ttsResultSubject
@@ -513,5 +498,52 @@ private extension TTSAgent {
             return
         }
         focusManager.releaseFocus(channelDelegate: self)
+    }
+}
+
+// MARK: - Observer
+
+public extension Notification.Name {
+    static let ttsAgentStateDidChange = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_state_did_change")
+    static let ttsAgentResultDidReceive = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_state_did_change")
+}
+
+extension TTSAgent: Observing {
+    public enum ObservingFactor {
+        public enum State: ObservingSpec {
+            case state
+            case header
+            
+            public var name: Notification.Name {
+                .ttsAgentStateDidChange
+            }
+        }
+        
+        public enum Result: ObservingSpec {
+            case text
+            case header
+            
+            public var name: Notification.Name {
+                .ttsAgentResultDidReceive
+            }
+        }
+    }
+}
+
+private extension TTSAgent {
+    func addPlaySyncObserver(_ object: PlaySyncManageable) {
+        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
+                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
+            
+            self.ttsDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard property == self.playSyncProperty,
+                      let player = self.latestPlayer, player.header.messageId == messageId else { return }
+                
+                self.stop(player: player, cancelAssociation: true)
+            }
+        }
     }
 }
