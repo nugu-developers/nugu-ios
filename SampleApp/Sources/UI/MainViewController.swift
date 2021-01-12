@@ -461,7 +461,7 @@ extension MainViewController: VoiceChromePresenterDelegate {
 
 private extension MainViewController {
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { (notification) in
             guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
             
             switch state {
@@ -486,7 +486,7 @@ private extension MainViewController {
             }
         }
         
-        asrResultObserver = notificationCenter.addObserver(forName: .asrAgentResultDidReceive, object: object, queue: .main) { [weak self] (notification) in
+        asrResultObserver = notificationCenter.addObserver(forName: .asrAgentResultDidReceive, object: object, queue: .main) { (notification) in
             guard let result = notification.userInfo?[ASRAgent.ObservingFactor.Result.result] as? ASRResult else { return }
             
             switch result {
