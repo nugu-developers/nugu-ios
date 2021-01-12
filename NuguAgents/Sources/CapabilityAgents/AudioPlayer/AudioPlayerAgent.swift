@@ -194,7 +194,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         prefetchPlayer?.stop()
     }
     
-    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
         guard let self = self else { return }
         
         var payload: [String: AnyHashable?] = [

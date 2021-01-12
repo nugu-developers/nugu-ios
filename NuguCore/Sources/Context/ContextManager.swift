@@ -31,7 +31,7 @@ public class ContextManager: ContextManageable {
         internalSerialQueueName: "com.sktelecom.romaine.context_manager"
     )
     
-    @Atomic private var providers = [ProvideContextInfo?]()
+    @Atomic private var providers = [ContextInfoProviderType?]()
     private let disposeBag = DisposeBag()
 
     public init() {}
@@ -40,13 +40,13 @@ public class ContextManager: ContextManageable {
 // MARK: - ContextManageable
 
 extension ContextManager {
-    public func addProvider(_ provider: @escaping ProvideContextInfo) {
+    public func addProvider(_ provider: @escaping ContextInfoProviderType) {
         _providers.mutate {
             $0.append(provider)
         }
     }
     
-    public func removeProvider(_ provider: @escaping ProvideContextInfo) {
+    public func removeProvider(_ provider: @escaping ContextInfoProviderType) {
         _providers.mutate {
             $0 = $0.filter { $0 as AnyObject !== provider as AnyObject }
         }
@@ -94,7 +94,7 @@ extension ContextManager {
 // MARK: - Private
 
 private extension ContextManager {
-    func getContext(from provider: @escaping ProvideContextInfo) -> Single<ContextInfo?> {
+    func getContext(from provider: @escaping ContextInfoProviderType) -> Single<ContextInfo?> {
         return Single<ContextInfo?>.create { event -> Disposable in
             provider { (contextInfo) in
                 event(.success(contextInfo))

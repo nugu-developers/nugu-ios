@@ -99,7 +99,7 @@ public final class SoundAgent: SoundAgentProtocol, ContextInfoProvidable {
         currentPlayer?.stop()
     }
     
-    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
         guard let self = self else { return }
         
         let payload: [String: AnyHashable] = ["version": self.capabilityAgentProperty.version]

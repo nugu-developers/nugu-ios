@@ -55,7 +55,7 @@ public class PlaySyncManager: PlaySyncManageable {
         contextManager.removeProvider(contextInfoProvider)
     }
     
-    public lazy var contextInfoProvider: ProvideContextInfo = { [weak self] completion in
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
         self?.playSyncDispatchQueue.async { [weak self] in
             guard let self = self else {
                 completion(nil)

@@ -24,7 +24,7 @@ import NuguCore
 import NuguUtils
 
 class MockPlaySyncManager: PlaySyncManageable {
-    let contextInfoProvider: ProvideContextInfo = { (completion) in
+    let contextInfoProvider: ContextInfoProviderType = { (completion) in
         completion(nil)
     }
     

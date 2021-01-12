@@ -61,20 +61,18 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
-    public lazy var contextInfoProvider: ProvideContextInfo = {
-        return { [weak self] completion in
-            guard let self = self else { return }
-            
-            let payload: [String: AnyHashable?] = [
-                "version": self.capabilityAgentProperty.version,
-                "data": self.delegate?.extensionAgentRequestContext()
-            ]
-            
-            completion(
-                ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
-            )
-        }
-    }()
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable?] = [
+            "version": self.capabilityAgentProperty.version,
+            "data": self.delegate?.extensionAgentRequestContext()
+        ]
+        
+        completion(
+            ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        )
+    }
 }
 
 // MARK: - ExtensionAgentProtocol

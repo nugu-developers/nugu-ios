@@ -27,11 +27,11 @@ public protocol ContextManageable: class {
     ///
     /// When the context manager receives a getContexts request it queries the registered `ContextInfoProvidable` for updated context.
     /// - Parameter provider: The object that acts as the provider of the ContextManager
-    func addProvider(_ provider: @escaping ProvideContextInfo)
+    func addProvider(_ provider: @escaping ContextInfoProviderType)
     
     /// Remove `ContextInfoProvidable` from `ContextManager`
     /// - Parameter provider: The object to remove
-    func removeProvider(_ provider: @escaping ProvideContextInfo)
+    func removeProvider(_ provider: @escaping ContextInfoProviderType)
     
     /// Request the `ContextManager` for context.
     ///

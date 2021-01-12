@@ -73,7 +73,7 @@ public class KeywordDetector {
         contextManager.removeProvider(contextInfo)
     }
     
-    public lazy var contextInfo: ProvideContextInfo = { [weak self] completion in
+    public lazy var contextInfo: ContextInfoProviderType = { [weak self] completion in
         guard let self = self else { return }
         
         guard let keyword = self.keywordSource?.keyword else {
