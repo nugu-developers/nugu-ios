@@ -27,7 +27,7 @@
 			<string>com.sktelecom.romaine.SampleApp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>nugu.user.app.sample.sdk.ios</string>
+				<string>TODO: Put your own scheme of redirect uri issued from https://developers.nugu.co.kr/#/sdk/pocList(ex> nugu.user.app.sample.sdk.ios)</string>
 			</array>
 		</dict>
 	</array>

@@ -59,7 +59,7 @@ public final class TTSAgent: TTSAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     
-    private let ttsDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_delegate") // TODO: notification thread는 수신하는 쪽에서 결정하는 거싱므로 학제할 것
+    private let ttsNotificationQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent_notification_queue")
     private let ttsDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.tts_agent", qos: .userInitiated)
     
     // Observers
@@ -103,7 +103,7 @@ public final class TTSAgent: TTSAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != ttsState {
                 let state = ttsState
-                ttsDelegateDispatchQueue.async { [weak self] in
+                ttsNotificationQueue.async { [weak self] in
                     self?.notificationCenter.post(name: .ttsAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: state,
                                                                                                     ObservingFactor.State.header: player.header])
                 }
@@ -386,7 +386,7 @@ private extension TTSAgent {
                 log.debug(directive.header.messageId)
                 self.currentPlayer = player
                 self.focusManager.requestFocus(channelDelegate: self)
-                self.ttsDelegateDispatchQueue.async { [weak self] in
+                self.ttsNotificationQueue.async { [weak self] in
                     self?.notificationCenter.post(name: .ttsAgentResultDidReceive, object: self, userInfo: [ObservingFactor.Result.text: player.payload.text,
                                                                                                       ObservingFactor.Result.header: player.header])
                 }

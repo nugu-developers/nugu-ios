@@ -26,8 +26,8 @@ import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
     private let notificationCenter = NotificationCenter.default
+    private let notificationQueue = DispatchQueue(label: "com.sktelecom.romaine.stream_data_router_notificaiton_queue")
     
-    private let delegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.stream_data_router_delegate")
     private let nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
     @Atomic private var eventSenders = [String: EventSender]()
@@ -126,7 +126,7 @@ public extension StreamDataRouter {
             .subscribe(onCompleted: { [weak self] in
                 guard let self = self else { return }
                 
-                self.delegateDispatchQueue.async { [weak self] in
+                self.notificationQueue.async { [weak self] in
                     self?.notificationCenter.post(name: .streamDataEventWillSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event])
                 }
                 
@@ -134,7 +134,7 @@ public extension StreamDataRouter {
             }, onError: { [weak self] (error) in
                 guard let self = self else { return }
                 
-                self.delegateDispatchQueue.async { [weak self] in
+                self.notificationQueue.async { [weak self] in
                     self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event,
                                                                                                          ObservingFactor.EventDidSend.error: error])
                 }
@@ -152,7 +152,7 @@ public extension StreamDataRouter {
                     guard let self = self else { return }
                     
                     log.error("\(error.localizedDescription)")
-                    self.delegateDispatchQueue.async { [weak self] in
+                    self.notificationQueue.async { [weak self] in
                         self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event,
                                                                                                              ObservingFactor.EventDidSend.error: error])
                     }
@@ -161,7 +161,7 @@ public extension StreamDataRouter {
                 }, onCompleted: { [weak self] in
                     guard let self = self else { return }
                     
-                    self.delegateDispatchQueue.async { [weak self] in
+                    self.notificationQueue.async { [weak self] in
                         self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event])
                     }
                     
@@ -191,7 +191,7 @@ public extension StreamDataRouter {
      */
     func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[attachment.header.dialogRequestId] else {
-            self.delegateDispatchQueue.async { [weak self] in
+            self.notificationQueue.async { [weak self] in
                 self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment,
                                                                                                           ObservingFactor.AttachmentDidSend.error: EventSenderError.noEventRequested])
             }
@@ -209,7 +209,7 @@ public extension StreamDataRouter {
                     eventSender.finish()
                 }
 
-                self.delegateDispatchQueue.async { [weak self] in
+                self.notificationQueue.async { [weak self] in
                     self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment])
                 }
 
@@ -217,7 +217,7 @@ public extension StreamDataRouter {
             }, onError: { [weak self] (error) in
                 guard let self = self else { return }
                 
-                self.delegateDispatchQueue.async { [weak self] in
+                self.notificationQueue.async { [weak self] in
                     self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment,
                                                                                                                ObservingFactor.AttachmentDidSend.error: error])
                 }
@@ -254,7 +254,7 @@ extension StreamDataRouter {
                 .compactMap(Downstream.Directive.init)
                 .forEach { directive in
                     log.debug("Directive: \(directive.header)")
-                    self.delegateDispatchQueue.async { [weak self] in
+                    self.notificationQueue.async { [weak self] in
                         self?.notificationCenter.post(name: .streamDataDirectiveDidReceive, object: self, userInfo: [ObservingFactor.DirectiveDidReceive.directive: directive])
                     }
                     
@@ -263,7 +263,7 @@ extension StreamDataRouter {
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
             log.debug("Attachment: \(attachment.header.dialogRequestId), \(attachment.header.type)")
-            self.delegateDispatchQueue.async { [weak self] in
+            self.notificationQueue.async { [weak self] in
                 self?.notificationCenter.post(name: .streamDataAttachmentDidReceive, object: self, userInfo: [ObservingFactor.AttachmentDidReceive.attachment: attachment])
             }
             

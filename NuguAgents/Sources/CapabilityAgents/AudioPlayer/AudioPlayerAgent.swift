@@ -80,7 +80,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private let notificationCenter = NotificationCenter.default
     private var playSyncObserver: Any?
     
-    private let audioPlayerDelegateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent_delegate")
+    private let audioPlayerNotificationQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent_notification_queue")
     private let audioPlayerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.audioplayer_agent", qos: .userInitiated)
     private lazy var audioPlayerScheduler = SerialDispatchQueueScheduler(
         queue: audioPlayerDispatchQueue,
@@ -117,8 +117,11 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             // Notify delegates only if the agent's status changes.
             if oldValue != audioPlayerState {
                 let state = audioPlayerState
-                notificationCenter.post(name: .audioPlayerAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: state,
-                                                                                                        ObservingFactor.State.header: player.header])
+                audioPlayerNotificationQueue.async { [weak self] in
+                    guard let self = self else { return }
+                    self.notificationCenter.post(name: .audioPlayerAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: state,
+                                                                                                                 ObservingFactor.State.header: player.header])
+                }
             }
         }
     }
@@ -404,7 +407,10 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
     }
     
     public func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {
-        notificationCenter.post(name: .audioPlayerAgentDurationDidChange, object: self, userInfo: [ObservingFactor.Duration.duration: duration.truncatedSeconds])
+        audioPlayerNotificationQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.notificationCenter.post(name: .audioPlayerAgentDurationDidChange, object: self, userInfo: [ObservingFactor.Duration.duration: duration.truncatedSeconds])
+        }
     }
 }
 
