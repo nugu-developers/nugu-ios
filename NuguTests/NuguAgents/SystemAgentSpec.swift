@@ -43,7 +43,7 @@ class SystemAgentSpec: QuickSpec {
                 var contextInfo: ContextInfo?
                 
                 waitUntil(timeout: 0.5) { (done) in
-                    systemAgent.contextInfoRequestContext { (context) in
+                    systemAgent.contextInfoProvider { (context) in
                         contextInfo = context
                         done()
                     }

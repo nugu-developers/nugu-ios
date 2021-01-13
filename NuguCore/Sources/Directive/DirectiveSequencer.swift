@@ -28,11 +28,13 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private var handlingDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     private var blockedDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     
-    private var delegates = DelegateSet<DirectiveSequencerDelegate>()
     @Atomic private var directiveHandleInfos = DirectiveHandleInfos()
     private var directiveCancelPolicies = [(dialogRequestId: String, policy: DirectiveCancelPolicy)]()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
     private let disposeBag = DisposeBag()
+    
+    // Observers
+    private let notificationCenter = NotificationCenter.default
 
     public init() { }
 }
@@ -40,14 +42,6 @@ public class DirectiveSequencer: DirectiveSequenceable {
 // MARK: - DirectiveSequenceable
 
 public extension DirectiveSequencer {
-    func add(delegate: DirectiveSequencerDelegate) {
-        delegates.add(delegate)
-    }
-    
-    func remove(delegate: DirectiveSequencerDelegate) {
-        delegates.remove(delegate)
-    }
-    
     func add(directiveHandleInfos: DirectiveHandleInfos) {
         log.debug(directiveHandleInfos)
         _directiveHandleInfos.mutate { (infos) in
@@ -195,22 +189,58 @@ private extension DirectiveSequencer {
     
     func notifyWillPrefetch(directive: Downstream.Directive, handler: DirectiveHandleInfo) {
         log.debug("\(directive.header)")
-        delegates.notify {
-            $0.directiveSequencerWillPrefetch(directive: directive, blockingPolicy: handler.blockingPolicy)
-        }
+        notificationCenter.post(name: .directiveSequencerWillPrefetch, object: self, userInfo: [ObservingFactor.Prefetch.directive: directive,
+                                                                                                ObservingFactor.Prefetch.blockingPolicy: handler.blockingPolicy])
     }
     
     func notifyWillHandle(directive: Downstream.Directive, handler: DirectiveHandleInfo) {
         log.debug("\(directive.header)")
-        delegates.notify {
-            $0.directiveSequencerWillHandle(directive: directive, blockingPolicy: handler.blockingPolicy)
-        }
+        notificationCenter.post(name: .directiveSequencerWillHandle, object: self, userInfo: [ObservingFactor.Handle.directive: directive,
+                                                                                                ObservingFactor.Handle.blockingPolicy: handler.blockingPolicy])
     }
     
     func notifyDidComplete(directive: Downstream.Directive, result: DirectiveHandleResult) {
         log.debug("\(directive.header): \(result)")
-        delegates.notify {
-            $0.directiveSequencerDidComplete(directive: directive, result: result)
+        notificationCenter.post(name: .directiveSequencerDidComplete, object: self, userInfo: [ObservingFactor.Complete.directive: directive,
+                                                                                               ObservingFactor.Complete.result: result])
+    }
+}
+
+// MARK: - Observers
+
+public extension Notification.Name {
+    static let directiveSequencerWillPrefetch = Notification.Name("com.sktelecom.romaine.notification.name.directive_sequencer_will_prefetch")
+    static let directiveSequencerWillHandle = Notification.Name("com.sktelecom.romaine.notification.name.directive_sequencer_will_handle")
+    static let directiveSequencerDidComplete = Notification.Name("com.sktelecom.romaine.notification.name.directive_sequencer_did_complete")
+}
+
+extension DirectiveSequencer: Observing {
+    public enum ObservingFactor {
+        public enum Prefetch: ObservingSpec {
+            case directive
+            case blockingPolicy
+            
+            public var name: Notification.Name {
+                .directiveSequencerWillPrefetch
+            }
+        }
+        
+        public enum Handle: ObservingSpec {
+            case directive
+            case blockingPolicy
+            
+            public var name: Notification.Name {
+                .directiveSequencerWillHandle
+            }
+        }
+        
+        public enum Complete: ObservingSpec {
+            case directive
+            case result
+            
+            public var name: Notification.Name {
+                .directiveSequencerDidComplete
+            }
         }
     }
 }

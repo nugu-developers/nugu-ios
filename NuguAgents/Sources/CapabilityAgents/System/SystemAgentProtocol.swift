@@ -23,11 +23,4 @@ import Foundation
 /// System-agent is responsible agent for the utilities of the system in the nugu.
 /// This agent is mandatory in SDK.
 public protocol SystemAgentProtocol: CapabilityAgentable {
-    /// <#Description#>
-    /// - Parameter systemAgentDelegate: <#systemAgentDelegate description#>
-    func add(systemAgentDelegate: SystemAgentDelegate)
-    
-    /// <#Description#>
-    /// - Parameter systemAgentDelegate: <#systemAgentDelegate description#>
-    func remove(systemAgentDelegate: SystemAgentDelegate)
 }

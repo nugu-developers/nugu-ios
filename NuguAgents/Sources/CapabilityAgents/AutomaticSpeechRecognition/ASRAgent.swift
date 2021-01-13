@@ -55,7 +55,9 @@ public final class ASRAgent: ASRAgentProtocol {
     
     private let asrDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_agent", qos: .userInitiated)
     
-    private let asrDelegates = DelegateSet<ASRAgentDelegate>()
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var playSyncObserver: Any?
     
     public var options: ASROptions = ASROptions(endPointing: .server)
     private(set) public var asrState: ASRState = .idle {
@@ -78,9 +80,7 @@ public final class ASRAgent: ASRAgentProtocol {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != asrState {
-                asrDelegates.notify { delegate in
-                    delegate.asrAgentDidChange(state: asrState)
-                }
+                notificationCenter.post(name: .asrAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: asrState])
             }
         }
     }
@@ -152,9 +152,8 @@ public final class ASRAgent: ASRAgentProtocol {
                 expectSpeech = nil
             }
             
-            asrDelegates.notify { (delegate) in
-                delegate.asrAgentDidReceive(result: asrResult, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
-            }
+            notificationCenter.post(name: .asrAgentResultDidReceive, object: self, userInfo: [ObservingFactor.Result.result: asrResult,
+                                                                                              ObservingFactor.Result.dialogRequestId: asrRequest.eventIdentifier.dialogRequestId])
         }
     }
     
@@ -225,28 +224,37 @@ public final class ASRAgent: ASRAgentProtocol {
         self.playSyncManager = playSyncManager
         self.interactionControlManager = interactionControlManager
         
-        playSyncManager.add(delegate: self)
-        contextManager.add(delegate: self)
+        addPlaySyncObserver(playSyncManager)
+        contextManager.addProvider(contextInfoProvider)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        if let playSyncObserver = playSyncObserver {
+            notificationCenter.removeObserver(playSyncObserver)
+        }
+        
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+    }
+    
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable] = [
+            "version": self.capabilityAgentProperty.version,
+            "engine": "skt",
+            "state": self.asrState.value,
+            "initiator": self.asrRequest?.initiator.value
+        ]
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
 // MARK: - ASRAgentProtocol
 
 public extension ASRAgent {
-    func add(delegate: ASRAgentDelegate) {
-        asrDelegates.add(delegate)
-    }
-    
-    func remove(delegate: ASRAgentDelegate) {
-        asrDelegates.remove(delegate)
-    }
-    
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
         completion: ((StreamDataState) -> Void)?
@@ -333,20 +341,6 @@ extension ASRAgent: FocusChannelDelegate {
     }
 }
 
-// MARK: - ContextInfoDelegate
-
-extension ASRAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version,
-            "engine": "skt",
-            "state": self.asrState.value,
-            "initiator": self.asrRequest?.initiator.value
-        ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
-    }
-}
-
 // MARK: - EndPointDetectorDelegate
 
 extension ASRAgent: EndPointDetectorDelegate {
@@ -410,19 +404,6 @@ extension ASRAgent: EndPointDetectorDelegate {
             self.upstreamDataSender.sendStream(attachment)
             self.attachmentSeq += 1
             log.debug("request seq: \(self.attachmentSeq-1)")
-        }
-    }
-}
-
-// MARK: - PlaySyncDelegate
-
-extension ASRAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
-        asrDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard property == self.playSyncProperty, self.expectSpeech?.messageId == messageId else { return }
-            
-            self.stopRecognition()
         }
     }
 }
@@ -712,5 +693,50 @@ private extension ASRAgent {
         }
         
         semaphore.wait()
+    }
+}
+
+// MARK: - Observers
+
+public extension Notification.Name {
+    static let asrAgentStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_state_did_chage")
+    static let asrAgentResultDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_result_did_receive")
+}
+
+extension ASRAgent: Observing {
+    public enum ObservingFactor {
+        public enum State: ObservingSpec {
+            case state
+            
+            public var name: Notification.Name {
+                .asrAgentStateDidChange
+            }
+        }
+        
+        public enum Result: ObservingSpec {
+            case result
+            case dialogRequestId
+            
+            public var name: Notification.Name {
+                .asrAgentResultDidReceive
+            }
+        }
+    }
+}
+
+private extension ASRAgent {
+    func addPlaySyncObserver(_ object: PlaySyncManageable) {
+        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
+                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
+            
+            self.asrDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard property == self.playSyncProperty, self.expectSpeech?.messageId == messageId else { return }
+                
+                self.stopRecognition()
+            }
+        }
     }
 }

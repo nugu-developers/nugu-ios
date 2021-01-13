@@ -50,7 +50,7 @@ class DisplayAgentSpec: QuickSpec {
                 
                 var contextInfo: ContextInfo?
                 waitUntil(timeout: 0.5) { (done) in
-                    displayAgent.contextInfoRequestContext { (context) in
+                    displayAgent.contextInfoProvider { (context) in
                         contextInfo = context
                         done()
                     }

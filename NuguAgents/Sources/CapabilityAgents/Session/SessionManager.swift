@@ -42,7 +42,7 @@ final public class SessionManager: SessionManageable {
     }
     
     // private
-    private let delegates = DelegateSet<SessionDelegate>()
+    private let notificationCenter = NotificationCenter.default
     private var activeTimers = [String: Disposable]()
     private var sessions = [String: Session]() {
         didSet {
@@ -58,14 +58,6 @@ final public class SessionManager: SessionManageable {
     
     public init() {}
     
-    public func add(delegate: SessionDelegate) {
-        delegates.add(delegate)
-    }
-    
-    public func remove(delegate: SessionDelegate) {
-        delegates.remove(delegate)
-    }
-    
     public func set(session: Session) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -74,9 +66,7 @@ final public class SessionManager: SessionManageable {
             self.addTimer(session: session)
             
             self.addActiveSession(dialogRequestId: session.dialogRequestId)
-            self.delegates.notify { (delegate) in
-                delegate.sessionDidSet(session: session)
-            }
+            self.notificationCenter.post(name: .sessionDidSet, object: self, userInfo: [ObservingFactor.Set.session: session])
         }
     }
     
@@ -116,9 +106,7 @@ private extension SessionManager {
             .subscribe(onSuccess: { [weak self] _ in
                 log.debug("Timer fired. \(session.dialogRequestId)")
                 self?.sessions[session.dialogRequestId] = nil
-                self?.delegates.notify { (delegate) in
-                    delegate.sessionDidUnset(session: session)
-                }
+                self?.notificationCenter.post(name: .sessionDidUnSet, object: self, userInfo: [ObservingFactor.Set.session: session])
             })
     }
     
@@ -137,6 +125,34 @@ private extension SessionManager {
     func updateActiveSession() {
         activeSessions.removeAll { (session) -> Bool in
             sessions[session.dialogRequestId] == nil || activeList[session.dialogRequestId] == nil
+        }
+    }
+}
+
+// MARK: - Observers
+
+// TODO: 세션 set/unset을 해당 session을 생성하지 않은 다른 곳에서 알 필요가 있는지? (session delegate는 session이 들고있어야 마땅한데, session manager가 여러 session delegate를 들고있으면서 모두에게 전달한 상황)
+extension Notification.Name {
+    static let sessionDidSet = Notification.Name("com.sktelecom.romaine.notification.name.session_did_set")
+    static let sessionDidUnSet = Notification.Name("com.sktelecom.romaine.notification.name.session_did_unset")
+}
+
+extension SessionManager: Observing {
+    public enum ObservingFactor {
+        public enum Set: ObservingSpec {
+            case session
+            
+            public var name: Notification.Name {
+                .sessionDidSet
+            }
+        }
+        
+        public enum Unset: ObservingSpec {
+            case session
+            
+            public var name: Notification.Name {
+                .sessionDidUnSet
+            }
         }
     }
 }

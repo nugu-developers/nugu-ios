@@ -29,6 +29,10 @@ import NuguUIKit
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     
+    private let notificationCenter = NotificationCenter.default
+    private var systemAgentExceptionObserver: Any?
+    private var systemAgentRevokeObserver: Any?
+    
     private var authorizationInfo: AuthorizationInfo? {
         didSet {
             guard let authorizationInfo = authorizationInfo else { return }
@@ -42,9 +46,11 @@ final class NuguCentralManager {
         let client = NuguClient(delegate: self)
         
         client.locationAgent.delegate = self
-        client.systemAgent.add(systemAgentDelegate: self)
         client.soundAgent.dataSource = self
         micInputProvider.delegate = client
+        
+        // Observers
+        addSystemAgentObserver(client.systemAgent)
         
         if let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") {
             client.asrAgent.options = ASROptions(endPointing: .client(epdFile: epdFile))
@@ -76,6 +82,16 @@ final class NuguCentralManager {
     private let micInputProvider = MicInputProvider()
     
     private init() {}
+    
+    deinit {
+        if let systemAgentExceptionObserver = systemAgentExceptionObserver {
+            notificationCenter.removeObserver(systemAgentExceptionObserver)
+        }
+        
+        if let systemAgentRevokeObserver = systemAgentRevokeObserver {
+            notificationCenter.removeObserver(systemAgentRevokeObserver)
+        }
+    }
 }
 
 // MARK: - Internal (Enable / Disable)
@@ -453,42 +469,50 @@ extension NuguCentralManager: LocationAgentDelegate {
     }
 }
 
-// MARK: - SystemAgentDelegate
-
-extension NuguCentralManager: SystemAgentDelegate {
-    func systemAgentDidReceiveExceptionFail(code: SystemAgentExceptionCode.Fail, header: Downstream.Header) {
-        switch code {
-        case .playRouterProcessingException:
-            localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
-        case .ttsSpeakingException:
-            localTTSAgent.playLocalTTS(type: .deviceGatewayTTSConnectionError)
-        case .unauthorizedRequestException:
-            refreshToken { [weak self] result in
-                switch result {
-                case .success:
-                    self?.enable()
-                case .failure(let sampleAppError):
-                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
-                }
-            }
-        case .internalServiceException:
-            DispatchQueue.main.async {
-                NuguToast.shared.showToast(message: SampleAppError.internalServiceException.errorDescription)
-            }
-        }
-    }
-    
-    func systemAgentDidReceiveRevokeDevice(reason: SystemAgentRevokeReason, header: Downstream.Header) {
-        clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
-    }
-}
-
 // MARK: - SoundAgentDataSource
 
 extension NuguCentralManager: SoundAgentDataSource {
     func soundAgentRequestUrl(beepName: SoundBeepName, header: Downstream.Header) -> URL? {
         switch beepName {
         case .responseFail: return Bundle.main.url(forResource: "responsefail", withExtension: "wav")
+        }
+    }
+}
+
+// MARK: - Observer
+
+private extension NuguCentralManager {
+    func addSystemAgentObserver(_ object: SystemAgentProtocol) {
+        systemAgentExceptionObserver = notificationCenter.addObserver(forName: .systemAgentDidReceiveExceptionFail, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let code = notification.userInfo?[SystemAgent.ObservingFactor.Exception.code] as? SystemAgentExceptionCode.Fail else { return }
+            
+            switch code {
+            case .playRouterProcessingException:
+                self.localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
+            case .ttsSpeakingException:
+                self.localTTSAgent.playLocalTTS(type: .deviceGatewayTTSConnectionError)
+            case .unauthorizedRequestException:
+                self.refreshToken { [weak self] result in
+                    switch result {
+                    case .success:
+                        self?.enable()
+                    case .failure(let sampleAppError):
+                        self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                    }
+                }
+            case .internalServiceException:
+                DispatchQueue.main.async {
+                    NuguToast.shared.showToast(message: SampleAppError.internalServiceException.errorDescription)
+                }
+            }
+        }
+        
+        systemAgentRevokeObserver = notificationCenter.addObserver(forName: .systemAgentDidReceiveRevokeDevice, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let reason = notification.userInfo?[SystemAgent.ObservingFactor.RevokeDevice.reason] as? SystemAgentRevokeReason else { return }
+            
+            self.clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
         }
     }
 }
