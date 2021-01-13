@@ -47,7 +47,7 @@ class TTSAgentSpec: QuickSpec {
                 var contextInfo: ContextInfo?
                 
                 waitUntil(timeout: 0.5) { (done) in
-                    ttsAgent.contextInfoRequestContext { (context) in
+                    ttsAgent.contextInfoProvider { (context) in
                         contextInfo = context
                         done()
                     }

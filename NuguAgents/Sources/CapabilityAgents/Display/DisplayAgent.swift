@@ -50,6 +50,10 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private var templateList = [DisplayTemplate]()
     private var updateTemplateList = [DisplayTemplate]()
     
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var playSyncObserver: Any?
+    
     private var disposeBag = DisposeBag()
     
     // Handleable Directives
@@ -97,42 +101,21 @@ public final class DisplayAgent: DisplayAgentProtocol {
         self.sessionManager = sessionManager
         self.interactionControlManager = interactionControlManager
         
-        playSyncManager.add(delegate: self)
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
+        addPlaySyncObserver(playSyncManager)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        contextManager.removeProvider(contextInfoProvider)
+        removePlaySyncObserver()
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-}
-
-// MARK: - DisplayAgentProtocol
-
-public extension DisplayAgent {
-    @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
-        return sendFullContextEvent(elementSelected(
-            templateId: templateId,
-            token: token,
-            postback: postback
-        ), completion: completion).dialogRequestId
-    }
     
-    func notifyUserInteraction() {
-        displayDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.templateList
-                .filter { $0.template.contextLayer != .overlay }
-                .forEach { self.playSyncManager.resetTimer(property: $0.template.playSyncProperty) }
-        }
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension DisplayAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: @escaping (ContextInfo?) -> Void) {
-        displayDispatchQueue.async { [weak self] in
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
+        guard let self = self else { return }
+        
+        self.displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             let item = self.templateList.first
             var payload: [String: AnyHashable?] = [
@@ -157,20 +140,23 @@ extension DisplayAgent: ContextInfoDelegate {
     }
 }
 
-// MARK: - PlaySyncDelegate
+// MARK: - DisplayAgentProtocol
 
-extension DisplayAgent: PlaySyncDelegate {
-    public func playSyncDidRelease(property: PlaySyncProperty, messageId: String) {
+public extension DisplayAgent {
+    @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?, completion: ((StreamDataState) -> Void)?) -> String {
+        return sendFullContextEvent(elementSelected(
+            templateId: templateId,
+            token: token,
+            postback: postback
+        ), completion: completion).dialogRequestId
+    }
+    
+    func notifyUserInteraction() {
         displayDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            
             self.templateList
-                .filter { $0.template.playSyncProperty == property && $0.templateId == messageId }
-                .forEach {
-                    if self.removeRenderedTemplate(item: $0) {
-                        self.delegate?.displayAgentDidClear(templateId: $0.templateId)
-                    }
-            }
+                .filter { $0.template.contextLayer != .overlay }
+                .forEach { self.playSyncManager.resetTimer(property: $0.template.playSyncProperty) }
         }
     }
 }
@@ -472,5 +458,35 @@ private extension DisplayAgent {
     func deactivateSession(dialogRequestId: String) {
         guard templateList.contains(where: { $0.dialogRequestId == dialogRequestId }) == false else { return }
         sessionManager.deactivate(dialogRequestId: dialogRequestId, category: .display)
+    }
+}
+
+// MARK: - Observers
+
+private extension DisplayAgent {
+    func addPlaySyncObserver(_ object: PlaySyncManageable) {
+        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
+                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
+            
+            self.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.templateList
+                    .filter { $0.template.playSyncProperty == property && $0.templateId == messageId }
+                    .forEach {
+                        if self.removeRenderedTemplate(item: $0) {
+                            self.delegate?.displayAgentDidClear(templateId: $0.templateId)
+                        }
+                }
+            }
+        }
+    }
+    
+    func removePlaySyncObserver() {
+        if let playSyncObserver = playSyncObserver {
+            notificationCenter.removeObserver(playSyncObserver)
+        }
     }
 }

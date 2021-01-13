@@ -47,19 +47,21 @@ public class UtilityAgent: UtilityAgentProtocol {
         self.directiveSequencer = directiveSequencer
         self.contextManager = contextManager
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension UtilityAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+    
+    deinit {
+        contextManager.removeProvider(contextInfoProvider)
+    }
+    
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] (completion) in
+        guard let self = self else { return }
+        
         let payload: [String: AnyHashable] = [
-            "version": capabilityAgentProperty.version
+            "version": self.capabilityAgentProperty.version
         ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload))
     }
 }
 

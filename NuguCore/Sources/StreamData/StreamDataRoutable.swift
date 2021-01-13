@@ -22,16 +22,6 @@ import Foundation
 
 /// Determine the destinations for receiving `Downstream` data and sending `Upstream` data.
 public protocol StreamDataRoutable: UpstreamDataSendable {
-    /// Adds a delegate to be notified of stream data handling states.
-    ///
-    /// - Parameter delegate: The object to add.
-    func add(delegate: StreamDataDelegate)
-    
-    /// Removes a delegate from stream-data-router.
-    ///
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: StreamDataDelegate)
-    
     /// Enable connection-oriented feature to receive server initiated directive.
     ///
     /// - Parameter completion: The completion handler. Pass `StreamDataState.error` when connection failed.

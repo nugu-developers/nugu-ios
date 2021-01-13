@@ -23,12 +23,6 @@ import Foundation
 import NuguAgents
 
 class MockInteractionControlManager: InteractionControlManageable {
-    func add(delegate: InteractionControlDelegate) {
-    }
-    
-    func remove(delegate: InteractionControlDelegate) {
-    }
-    
     func start(mode: InteractionControl.Mode, category: CapabilityAgentCategory) {
     }
     
