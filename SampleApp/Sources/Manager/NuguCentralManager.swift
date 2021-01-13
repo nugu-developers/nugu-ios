@@ -55,6 +55,10 @@ final class NuguCentralManager {
         return client
     }()
     
+    lazy private var audioSessionManager: AudioSessionManager = {
+        AudioSessionManager(nuguClient: self.client)
+    }()
+    
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
     lazy private(set) var asrBeepPlayer: ASRBeepPlayer = ASRBeepPlayer(focusManager: client.focusManager)
 
@@ -127,6 +131,11 @@ extension NuguCentralManager {
         client.stopReceiveServerInitiatedDirective()
         client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
+    }
+    
+    func startUsingAudioSessionManager() {
+        audioSessionManager.delegate = self
+        audioSessionManager.updateAudioSession()
     }
 }
 
@@ -316,13 +325,14 @@ private extension NuguCentralManager {
 extension NuguCentralManager {
     func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
         startMicWorkItem?.cancel()
-        DispatchQueue.main.async {
-            guard UIApplication.shared.applicationState == .active else {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  UIApplication.shared.applicationState == .active else {
                 completion(false)
                 return
             }
             
-            NuguAudioSessionManager.shared.requestRecordPermission { [unowned self] isGranted in
+            self.audioSessionManager.requestRecordPermission { [unowned self] isGranted in
                 guard isGranted else {
                     log.error("Record permission denied")
                     completion(false)
@@ -331,7 +341,7 @@ extension NuguCentralManager {
                 self.micQueue.async { [unowned self] in
                     defer {
                         log.debug("addEngineConfigurationChangeNotification")
-                        NuguAudioSessionManager.shared.registerAudioEngineConfigurationObserver()
+                        self.audioSessionManager.registerAudioEngineConfigurationObserver()
                     }
                     self.micInputProvider.stop()
                     
@@ -339,7 +349,7 @@ extension NuguCentralManager {
                     // To avoid adding mixWithOthers option when audio player is in paused state,
                     // update audioSession should be done only when requesting focus
                     if requestingFocus {
-                        NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
+                        self.audioSessionManager.updateAudioSession(requestingFocus: requestingFocus)
                     }
                     do {
                         try self.micInputProvider.start()
@@ -354,10 +364,10 @@ extension NuguCentralManager {
     }
     
     func stopMicInputProvider() {
-        micQueue.sync {
-            startMicWorkItem?.cancel()
-            micInputProvider.stop()
-            NuguAudioSessionManager.shared.removeAudioEngineConfigurationObserver()
+        micQueue.sync { [weak self] in
+            self?.startMicWorkItem?.cancel()
+            self?.micInputProvider.stop()
+            self?.audioSessionManager.removeAudioEngineConfigurationObserver()
         }
     }
 }
@@ -408,11 +418,11 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        return NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: true)
+        return audioSessionManager.updateAudioSession(requestingFocus: true)
     }
     
     func nuguClientDidReleaseAudioSession() {
-        NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
+        audioSessionManager.notifyAudioSessionDeactivation()
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {
@@ -489,6 +499,21 @@ extension NuguCentralManager: SoundAgentDataSource {
     func soundAgentRequestUrl(beepName: SoundBeepName, header: Downstream.Header) -> URL? {
         switch beepName {
         case .responseFail: return Bundle.main.url(forResource: "responsefail", withExtension: "wav")
+        }
+    }
+}
+
+// MARK: - AudioSessionManagerDelegate
+
+extension NuguCentralManager: AudioSessionManagerDelegate {
+    func micInputProviderShouldStop() {
+        stopMicInputProvider()
+    }
+    
+    func micInputProviderShouldStart() {
+        guard UserDefaults.Standard.useWakeUpDetector == true else { return }
+        startMicInputProvider(requestingFocus: false) { (success) in
+            log.debug("startMicInputProvider: \(success)")
         }
     }
 }

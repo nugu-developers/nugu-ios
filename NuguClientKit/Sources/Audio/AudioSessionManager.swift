@@ -1,9 +1,9 @@
 //
-//  NuguAudioSessionManager.swift
-//  SampleApp
+//  AudioSessionManager.swift
+//  NuguClientKit
 //
-//  Created by jin kim on 2019/11/29.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by 김진님/AI Assistant개발 Cell on 2021/01/07.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,26 +19,31 @@
 //
 
 import AVFoundation
-import UIKit
 
 import NuguAgents
 
-final class NuguAudioSessionManager {
-    static let shared = NuguAudioSessionManager()
+final public class AudioSessionManager {
+    public weak var delegate: AudioSessionManagerDelegate?
+    
+    private var nuguClient: NuguClient?
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
     private var audioSessionInterruptionObserver: Any?
     private var audioRouteObserver: Any?
     private var audioEngineConfigurationObserver: Any?
     var pausedByInterruption = false
     
-    init() {
+    /// Initialize
+    /// - Parameters:
+    ///   - nuguClient: NuguClient instance which should be passed for delegation.
+    public init(nuguClient: NuguClient) {
+        self.nuguClient = nuguClient
         registerAudioSessionObservers()
     }
 }
 
-// MARK: - Internal
+// MARK: - Public
 
-extension NuguAudioSessionManager {
+public extension AudioSessionManager {
     func isCarplayConnected() -> Bool {
         return AVAudioSession.sharedInstance().currentRoute.outputs.first?.portType == AVAudioSession.Port.carAudio
     }
@@ -132,15 +137,11 @@ extension NuguAudioSessionManager {
         // Defer statement for recovering audioSession and MicInputProvider
         defer {
             updateAudioSession()
-            if UserDefaults.Standard.useWakeUpDetector == true {
-                NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { success in
-                    log.debug("startMicInputProvider : \(success)")
-                }
-            }
+            delegate?.micInputProviderShouldStart()
         }
         do {
             // Clean up all I/O before deactivating audioSession
-            NuguCentralManager.shared.stopMicInputProvider()
+            delegate?.micInputProviderShouldStop()
             
             // Notify audio session deactivation to 3rd party apps
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
@@ -150,18 +151,14 @@ extension NuguAudioSessionManager {
     }
 }
 
-// MARK: - internal(AudioEngineObserver)
+// MARK: - Public(AudioEngineObserver)
 
-extension NuguAudioSessionManager {
+public extension AudioSessionManager {
     func registerAudioEngineConfigurationObserver() {
         removeAudioEngineConfigurationObserver()
         
-        audioEngineConfigurationObserver = NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: nil, using: { (_) in
-            if UserDefaults.Standard.useWakeUpDetector == true {
-                NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
-                    log.debug("startMicInputProvider: \(success)")
-                }
-            }
+        audioEngineConfigurationObserver = NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: nil, using: { [weak self] (_) in
+            self?.delegate?.micInputProviderShouldStart()
         })
     }
     
@@ -175,7 +172,7 @@ extension NuguAudioSessionManager {
 
 // MARK: - private(AudioSessionObserver)
 
-private extension NuguAudioSessionManager {
+private extension AudioSessionManager {
     func registerAudioSessionObservers() {
         removeAudioSessionObservers()
         
@@ -187,29 +184,25 @@ private extension NuguAudioSessionManager {
             case .began:
                 log.debug("Interruption began")
                 // Interruption began, take appropriate actions
-                if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
-                    NuguCentralManager.shared.client.audioPlayerAgent.pause()
+                if self?.nuguClient?.audioPlayerAgent.isPlaying == true {
+                    self?.nuguClient?.audioPlayerAgent.pause()
                     // PausedByInterruption flag should not be changed before paused delegate method has been called
                     // Giving small delay for changing flag value can be a solution for this situation
                     DispatchQueue.global().asyncAfter(deadline: .now()+0.1) { [weak self] in
                         self?.pausedByInterruption = true
                     }
                 }
-                NuguCentralManager.shared.client.ttsAgent.stopTTS(cancelAssociation: false)
-                NuguCentralManager.shared.client.asrAgent.stopRecognition()
-                NuguCentralManager.shared.stopMicInputProvider()
+                self?.nuguClient?.ttsAgent.stopTTS(cancelAssociation: false)
+                self?.nuguClient?.asrAgent.stopRecognition()
+                self?.delegate?.micInputProviderShouldStop()
             case .ended:
                 log.debug("Interruption ended")
                 if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                     let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                     if options.contains(.shouldResume) {
-                        if UserDefaults.Standard.useWakeUpDetector == true {
-                            NuguCentralManager.shared.startMicInputProvider(requestingFocus: false) { (success) in
-                                log.debug("startMicInputProvider: \(success)")
-                            }
-                        }
-                        if self?.pausedByInterruption == true || NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
-                            NuguCentralManager.shared.client.audioPlayerAgent.play()
+                        self?.delegate?.micInputProviderShouldStart()
+                        if self?.pausedByInterruption == true || self?.nuguClient?.audioPlayerAgent.isPlaying == true {
+                            self?.nuguClient?.audioPlayerAgent.play()
                         }
                     } else {
                         // Interruption Ended - playback should NOT resume
@@ -226,11 +219,11 @@ private extension NuguAudioSessionManager {
             switch reason {
             case .oldDeviceUnavailable:
                 log.debug("Route changed due to oldDeviceUnavailable")
-                if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying == true {
-                    NuguCentralManager.shared.client.audioPlayerAgent.pause()
+                if self?.nuguClient?.audioPlayerAgent.isPlaying == true {
+                    self?.nuguClient?.audioPlayerAgent.pause()
                 }
             case .newDeviceAvailable:
-                if NuguCentralManager.shared.client.audioPlayerAgent.isPlaying {
+                if self?.nuguClient?.audioPlayerAgent.isPlaying == true {
                     self?.updateAudioSessionToPlaybackIfNeeded()
                 }
             default: break

@@ -198,8 +198,8 @@ private extension MainViewController {
     /// AudioSession is required for using Nugu
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
-        // Set AudioSession
-        NuguAudioSessionManager.shared.updateAudioSession()
+        // Start using AudioSessionManager
+        NuguCentralManager.shared.startUsingAudioSessionManager()
         
         // Add delegates
         NuguCentralManager.shared.client.keywordDetector.delegate = self
