@@ -1,9 +1,9 @@
 //
-//  PlaySyncDelegate.swift
-//  NuguCore
+//  Observing.swift
+//  NuguUtils
 //
-//  Created by MinChul Lee on 2019/07/16.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2021/01/10.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,11 +20,10 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol PlaySyncDelegate: class {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - property: <#property description#>
-    ///   - messageId: <#messageId description#>
-    func playSyncDidRelease(property: PlaySyncProperty, messageId: String)
+public protocol Observing {
+    associatedtype ObservingFactor
+}
+
+public protocol ObservingSpec: Hashable {
+    var name: Notification.Name { get }
 }

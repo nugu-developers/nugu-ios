@@ -31,8 +31,7 @@ public class ContextManager: ContextManageable {
         internalSerialQueueName: "com.sktelecom.romaine.context_manager"
     )
     
-    private let provideContextDelegates = DelegateSet<ContextInfoDelegate>()
-    
+    @Atomic private var providers = [ContextInfoProviderType?]()
     private let disposeBag = DisposeBag()
 
     public init() {}
@@ -41,12 +40,16 @@ public class ContextManager: ContextManageable {
 // MARK: - ContextManageable
 
 extension ContextManager {
-    public func add(delegate: ContextInfoDelegate) {
-        provideContextDelegates.add(delegate)
+    public func addProvider(_ provider: @escaping ContextInfoProviderType) {
+        _providers.mutate {
+            $0.append(provider)
+        }
     }
-
-    public func remove(delegate: ContextInfoDelegate) {
-        provideContextDelegates.remove(delegate)
+    
+    public func removeProvider(_ provider: @escaping ContextInfoProviderType) {
+        _providers.mutate {
+            $0 = $0.filter { $0 as AnyObject !== provider as AnyObject }
+        }
     }
     
     public func getContexts(namespace: String, completion: @escaping ([ContextInfo]) -> Void) {
@@ -71,8 +74,8 @@ extension ContextManager {
     
     public func getContexts(completion: @escaping ([ContextInfo]) -> Void) {
         var requests = [Single<ContextInfo?>]()
-        provideContextDelegates.notify { delegate in
-            requests.append(getContext(delegate: delegate))
+        providers.compactMap { $0 }.forEach { (provider) in
+            requests.append(getContext(from: provider))
         }
         
         Single<ContextInfo?>.zip(requests)
@@ -91,11 +94,12 @@ extension ContextManager {
 // MARK: - Private
 
 private extension ContextManager {
-    func getContext(delegate: ContextInfoDelegate) -> Single<ContextInfo?> {
+    func getContext(from provider: @escaping ContextInfoProviderType) -> Single<ContextInfo?> {
         return Single<ContextInfo?>.create { event -> Disposable in
-            delegate.contextInfoRequestContext { (contextInfo) in
+            provider { (contextInfo) in
                 event(.success(contextInfo))
             }
+            
             return Disposables.create()
         }
     }

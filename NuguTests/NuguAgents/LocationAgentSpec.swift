@@ -40,7 +40,7 @@ class LocationAgentSpec: QuickSpec {
                 var contextInfo: ContextInfo?
                 
                 waitUntil(timeout: 0.5) { (done) in
-                    locationAgent.contextInfoRequestContext { (context) in
+                    locationAgent.contextInfoProvider { (context) in
                         contextInfo = context
                         done()
                     }

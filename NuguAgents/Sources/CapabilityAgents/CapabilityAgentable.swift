@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 /// <#Description#>
-public protocol CapabilityAgentable: ContextInfoDelegate {
+public protocol CapabilityAgentable: ContextInfoProvidable {
     /// <#Description#>
     var capabilityAgentProperty: CapabilityAgentProperty { get }
 }

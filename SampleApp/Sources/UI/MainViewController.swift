@@ -64,6 +64,12 @@ final class MainViewController: UIViewController {
         )
     }()
     
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var asrStateObserver: Any?
+    private var asrResultObserver: Any?
+    private var dialogStateObserver: Any?
+    
     // MARK: Override
     
     override func viewDidLoad() {
@@ -91,6 +97,18 @@ final class MainViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         NuguCentralManager.shared.stopMicInputProvider()
+        
+        if let asrStateObserver = asrStateObserver {
+            notificationCenter.removeObserver(asrStateObserver)
+        }
+        
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            notificationCenter.removeObserver(dialogStateObserver)
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -201,10 +219,12 @@ private extension MainViewController {
         // Set AudioSession
         NuguAudioSessionManager.shared.updateAudioSession()
         
-        // Add delegates
+        // set delegate
         NuguCentralManager.shared.client.keywordDetector.delegate = self
-        NuguCentralManager.shared.client.dialogStateAggregator.add(delegate: self)
-        NuguCentralManager.shared.client.asrAgent.add(delegate: self)
+        
+        // Observers
+        addAsrAgentObserver(NuguCentralManager.shared.client.asrAgent)
+        addDialogStateObserver(NuguCentralManager.shared.client.dialogStateAggregator)
         
         // UI
         voiceChromePresenter.delegate = self
@@ -437,70 +457,80 @@ extension MainViewController: VoiceChromePresenterDelegate {
     }
 }
 
-// MARK: - DialogStateDelegate
+// MARK: - Observers
 
-extension MainViewController: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
-        switch state {
-        case .listening:
-            DispatchQueue.main.async {
-                NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
-            }
-        case .thinking:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguButton.pauseDeactivateAnimation()
-            }
-        default:
-            break
-        }
-    }
-}
-
-// MARK: - AutomaticSpeechRecognitionDelegate
-
-extension MainViewController: ASRAgentDelegate {
-    func asrAgentDidChange(state: ASRState) {
-        switch state {
-        case .idle:
-            if UserDefaults.Standard.useWakeUpDetector == true {
-                NuguCentralManager.shared.startWakeUpDetector()
-            } else {
-                NuguCentralManager.shared.stopMicInputProvider()
-            }
-        case .listening:
-            NuguCentralManager.shared.stopWakeUpDetector()
-        case .expectingSpeech:
-            NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
-                guard success == true else {
-                    log.debug("startMicInputProvider failed!")
-                    NuguCentralManager.shared.stopRecognition()
-                    return
+private extension MainViewController {
+    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
+        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { (notification) in
+            guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
+            
+            switch state {
+            case .idle:
+                if UserDefaults.Standard.useWakeUpDetector == true {
+                    NuguCentralManager.shared.startWakeUpDetector()
+                } else {
+                    NuguCentralManager.shared.stopMicInputProvider()
                 }
+            case .listening:
+                NuguCentralManager.shared.stopWakeUpDetector()
+            case .expectingSpeech:
+                NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
+                    guard success == true else {
+                        log.debug("startMicInputProvider failed!")
+                        NuguCentralManager.shared.stopRecognition()
+                        return
+                    }
+                }
+            default:
+                break
             }
-        default:
-            break
+        }
+        
+        asrResultObserver = notificationCenter.addObserver(forName: .asrAgentResultDidReceive, object: object, queue: .main) { (notification) in
+            guard let result = notification.userInfo?[ASRAgent.ObservingFactor.Result.result] as? ASRResult else { return }
+            
+            switch result {
+            case .complete:
+                DispatchQueue.main.async {
+                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
+                }
+            case .error(let error, _):
+                DispatchQueue.main.async {
+                    switch error {
+                    case ASRError.listenFailed:
+                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+                    case ASRError.recognizeFailed:
+                        NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                    default:
+                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+                    }
+                }
+            default: break
+            }
         }
     }
     
-    func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {
-        switch result {
-        case .complete:
-            DispatchQueue.main.async {
-                NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
-            }
-        case .error(let error, _):
-            DispatchQueue.main.async {
-                switch error {
-                case ASRError.listenFailed:
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
-                case ASRError.recognizeFailed:
-                    NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                default:
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+    func addDialogStateObserver(_ object: DialogStateAggregator) {
+        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState,
+                  let isMultiturn = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.multiturn] as? Bool else { return }
+            
+            let chips = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.chips] as? [ChipsAgentItem.Chip]
+            log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
+
+            switch state {
+            case .listening:
+                DispatchQueue.main.async {
+                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
                 }
+            case .thinking:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguButton.pauseDeactivateAnimation()
+                }
+            default:
+                break
             }
-        default: break
         }
     }
 }

@@ -28,6 +28,15 @@ import NuguAgents
 public class NuguClient {
     private weak var delegate: NuguClientDelegate?
     
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var streamDataDirectiveDidReceive: Any?
+    private var streamDataAttachmentDidReceive: Any?
+    private var streamDataEventWillSend: Any?
+    private var streamDataEventDidSend: Any?
+    private var streamDataAttachmentDidSent: Any?
+    private var dialogStateObserver: Any?
+    
     // core
     /// <#Description#>
     public let contextManager: ContextManageable
@@ -105,12 +114,7 @@ public class NuguClient {
     )
     
     /// <#Description#>
-    public private(set) lazy var keywordDetector: KeywordDetector = {
-        let keywordDetector =  KeywordDetector()
-        contextManager.add(delegate: keywordDetector)
-        
-        return keywordDetector
-    }()
+    public private(set) lazy var keywordDetector: KeywordDetector = KeywordDetector(contextManager: contextManager)
     
     private let backgroundFocusHolder: BackgroundFocusHolder
     
@@ -168,11 +172,11 @@ public class NuguClient {
         dialogStateAggregator = DialogStateAggregator(
             sessionManager: sessionManager,
             interactionControlManager: interactionControlManager,
-            focusManager: focusManager
+            focusManager: focusManager,
+            asrAgent: asrAgent,
+            ttsAgent: ttsAgent,
+            chipsAgent: chipsAgent
         )
-        asrAgent.add(delegate: dialogStateAggregator)
-        ttsAgent.add(delegate: dialogStateAggregator)
-        chipsAgent.add(delegate: dialogStateAggregator)
         
         // audio player
         audioPlayerAgent = AudioPlayerAgent(
@@ -211,8 +215,13 @@ public class NuguClient {
         // setup additional roles
         setupAuthorizationStore()
         setupAudioSessionRequester()
-        setupDialogStateAggregator()
-        setupStreamDataRouter()
+        setupDialogStateAggregator(dialogStateAggregator)
+        setupStreamDataRouter(streamDataRouter)
+    }
+    
+    deinit {
+        removeStreamDataRouterObservers()
+        removeDialogStateObserver()
     }
 }
     
@@ -291,52 +300,95 @@ extension NuguClient: FocusDelegate {
     }
 }
 
-// MARK: - DialogStateDelegate
+// MARK: - Observers
 
 /// :nodoc:
-extension NuguClient: DialogStateDelegate {
-    private func setupDialogStateAggregator() {
-        dialogStateAggregator.add(delegate: self)
-    }
-    
-    public func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        switch state {
-        case .idle:
-            playSyncManager.resumeTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
-        case .listening:
-            playSyncManager.pauseTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
-        default:
-            break
+extension NuguClient {
+    private func setupStreamDataRouter(_ object: StreamDataRoutable) {
+        streamDataDirectiveDidReceive = notificationCenter.addObserver(forName: .streamDataDirectiveDidReceive, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let directive = notification.userInfo?[StreamDataRouter.ObservingFactor.DirectiveDidReceive.directive] as? Downstream.Directive else { return }
+            
+            self.delegate?.nuguClientDidReceive(direcive: directive)
+        }
+        
+        streamDataAttachmentDidReceive = notificationCenter.addObserver(forName: .streamDataAttachmentDidReceive, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let attachment = notification.userInfo?[StreamDataRouter.ObservingFactor.AttachmentDidReceive.attachment] as? Downstream.Attachment else { return }
+            
+            self.delegate?.nuguClientDidReceive(attachment: attachment)
+        }
+        
+        streamDataEventWillSend = notificationCenter.addObserver(forName: .streamDataEventWillSend, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let event = notification.userInfo?[StreamDataRouter.ObservingFactor.EventWillSend.event] as? Upstream.Event else { return }
+            
+            self.delegate?.nuguClientWillSend(event: event)
+        }
+        
+        streamDataEventDidSend = notificationCenter.addObserver(forName: .streamDataEventDidSend, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let event = notification.userInfo?[StreamDataRouter.ObservingFactor.EventDidSend.event] as? Upstream.Event else { return }
+
+            let error = notification.userInfo?[StreamDataRouter.ObservingFactor.EventDidSend.error] as? Error
+            self.delegate?.nuguClientDidSend(event: event, error: error)
+        }
+        
+        streamDataAttachmentDidSent = notificationCenter.addObserver(forName: .streamDataAttachmentDidSend, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let attachment = notification.userInfo?[StreamDataRouter.ObservingFactor.AttachmentDidSend.attachment] as? Upstream.Attachment else { return }
+            
+            let error = notification.userInfo?[StreamDataRouter.ObservingFactor.AttachmentDidSend.error] as? Error
+            self.delegate?.nuguClientDidSend(attachment: attachment, error: error)
         }
     }
-}
-
-// MARK: - StreamDataDelegate
-
-/// :nodoc:
-extension NuguClient: StreamDataDelegate {
-    private func setupStreamDataRouter() {
-        streamDataRouter.add(delegate: self)
+    
+    private func removeStreamDataRouterObservers() {
+        if let streamDataDirectiveDidReceive = streamDataDirectiveDidReceive {
+            notificationCenter.removeObserver(streamDataDirectiveDidReceive)
+        }
+        
+        if let streamDataAttachmentDidReceive = streamDataAttachmentDidReceive {
+            notificationCenter.removeObserver(streamDataAttachmentDidReceive)
+        }
+        
+        if let streamDataEventWillSend = streamDataEventWillSend {
+            notificationCenter.removeObserver(streamDataEventWillSend)
+        }
+        
+        if let streamDataEventDidSend = streamDataEventDidSend {
+            notificationCenter.removeObserver(streamDataEventDidSend)
+        }
+        
+        if let streamDataAttachmentDidSent = streamDataAttachmentDidSent {
+            notificationCenter.removeObserver(streamDataAttachmentDidSent)
+        }
     }
     
-    public func streamDataDidReceive(direcive: Downstream.Directive) {
-        delegate?.nuguClientDidReceive(direcive: direcive)
+    func setupDialogStateAggregator(_ object: DialogStateAggregator) {
+        addDialogStateObserver(object)
     }
     
-    public func streamDataDidReceive(attachment: Downstream.Attachment) {
-        delegate?.nuguClientDidReceive(attachment: attachment)
+    func addDialogStateObserver(_ object: DialogStateAggregator) {
+        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState else { return }
+            
+            switch state {
+            case .idle:
+                self.playSyncManager.resumeTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+            case .listening:
+                self.playSyncManager.pauseTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
+            default:
+                break
+            }
+        }
     }
     
-    public func streamDataWillSend(event: Upstream.Event) {
-        delegate?.nuguClientWillSend(event: event)
-    }
-    
-    public func streamDataDidSend(event: Upstream.Event, error: Error?) {
-        delegate?.nuguClientDidSend(event: event, error: error)
-    }
-    
-    public func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {
-        delegate?.nuguClientDidSend(attachment: attachment, error: error)
+    func removeDialogStateObserver() {
+        if let dialogStateObserver = dialogStateObserver {
+            notificationCenter.removeObserver(dialogStateObserver)
+        }
     }
 }
 

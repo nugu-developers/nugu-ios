@@ -39,6 +39,14 @@ class BackgroundFocusHolder {
     private var handlingSoundDirectives = Set<String>()
     private var dialogState: DialogState = .idle
     
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var eventWillSendObserver: Any?
+    private var eventDidSendObserver: Any?
+    private var dialogStateObserver: Any?
+    private var directivePrefetchObseerver: Any?
+    private var directiveCompleteObseerver: Any?
+    
     init(
         focusManager: FocusManageable,
         directiveSequener: DirectiveSequenceable,
@@ -48,9 +56,33 @@ class BackgroundFocusHolder {
         self.focusManager = focusManager
         
         focusManager.add(channelDelegate: self)
-        directiveSequener.add(delegate: self)
-        streamDataRouter.add(delegate: self)
-        dialogStateAggregator.add(delegate: self)
+        
+        // Observers
+        addStreamDataRouterObserver(streamDataRouter)
+        addDialogStateObserver(dialogStateAggregator)
+        addDirectiveSequencerObserver(directiveSequener)
+    }
+    
+    deinit {
+        if let eventWillSendObserver = eventWillSendObserver {
+            notificationCenter.removeObserver(eventWillSendObserver)
+        }
+
+        if let eventDidSendObserver = eventDidSendObserver {
+            notificationCenter.removeObserver(eventDidSendObserver)
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            notificationCenter.removeObserver(dialogStateObserver)
+        }
+        
+        if let directivePrefetchObseerver = directivePrefetchObseerver {
+            notificationCenter.removeObserver(directivePrefetchObseerver)
+        }
+        
+        if let directiveCompleteObseerver = directiveCompleteObseerver {
+            notificationCenter.removeObserver(directiveCompleteObseerver)
+        }
     }
 }
 
@@ -63,79 +95,6 @@ extension BackgroundFocusHolder: FocusChannelDelegate {
     
     func focusChannelDidChange(focusState: FocusState) {
         log.debug(focusState)
-    }
-}
-
-// MARK: - DirectiveSequencerDelegate
-
-extension BackgroundFocusHolder: DirectiveSequencerDelegate {
-    func directiveSequencerWillPrefetch(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
-            
-            if blockingPolicy.medium == .audio {
-                self.handlingSoundDirectives.insert(directive.header.messageId)
-                self.requestFocus()
-            }
-        }
-    }
-    
-    func directiveSequencerWillHandle(directive: Downstream.Directive, blockingPolicy: BlockingPolicy) {}
-    
-    func directiveSequencerDidComplete(directive: Downstream.Directive, result: DirectiveHandleResult) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
-            
-            if self.handlingSoundDirectives.remove(directive.header.messageId) != nil {
-                self.tryReleaseFocus()
-            }
-        }
-    }
-}
-
-// MARK: - StreamDataDelegate
-
-extension BackgroundFocusHolder: StreamDataDelegate {
-    func streamDataDidReceive(direcive: Downstream.Directive) {}
-    
-    func streamDataDidReceive(attachment: Downstream.Attachment) {}
-    
-    func streamDataWillSend(event: Upstream.Event) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
-            
-            if self.focusTargets.contains(event.header.type) {
-                self.handlingEvents.insert(event.header.messageId)
-                self.requestFocus()
-            }
-        }
-    }
-    
-    func streamDataDidSend(event: Upstream.Event, error: Error?) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
-            
-            if self.handlingEvents.remove(event.header.messageId) != nil {
-                self.tryReleaseFocus()
-            }
-        }
-    }
-    
-    func streamDataDidSend(attachment: Upstream.Attachment, error: Error?) {}
-}
-
-extension BackgroundFocusHolder: DialogStateDelegate {
-    func dialogStateDidChange(_ state: DialogState, isMultiturn: Bool, chips: [ChipsAgentItem.Chip]?, sessionActivated: Bool) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.dialogState = state
-            if state == .idle {
-                self.tryReleaseFocus()
-            } else {
-                self.requestFocus()
-            }
-        }
     }
 }
 
@@ -152,5 +111,82 @@ private extension BackgroundFocusHolder {
               dialogState == .idle else { return }
         
         focusManager.releaseFocus(channelDelegate: self)
+    }
+}
+
+// MARK: - Observers
+
+private extension BackgroundFocusHolder {
+    func addStreamDataRouterObserver(_ object: StreamDataRoutable) {
+        eventWillSendObserver = notificationCenter.addObserver(forName: .streamDataEventWillSend, object: object, queue: nil) { [weak self] (notification) in
+            self?.queue.async { [weak self] in
+                guard let self = self else { return }
+                guard let event = notification.userInfo?[StreamDataRouter.ObservingFactor.EventWillSend.event] as? Upstream.Event else { return }
+                
+                if self.focusTargets.contains(event.header.type) {
+                    self.handlingEvents.insert(event.header.messageId)
+                    self.requestFocus()
+                }
+            }
+        }
+        
+        eventDidSendObserver = notificationCenter.addObserver(forName: .streamDataEventDidSend, object: object, queue: nil) { [weak self] (notification) in
+            self?.queue.async { [weak self] in
+                guard let self = self else { return }
+                guard let event = notification.userInfo?[StreamDataRouter.ObservingFactor.EventWillSend.event] as? Upstream.Event else { return }
+                
+                if self.handlingEvents.remove(event.header.messageId) != nil {
+                    self.tryReleaseFocus()
+                }
+            }
+        }
+    }
+    
+    func addDialogStateObserver(_ object: DialogStateAggregator) {
+        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState else { return }
+            
+            self.queue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.dialogState = state
+                if state == .idle {
+                    self.tryReleaseFocus()
+                } else {
+                    self.requestFocus()
+                }
+            }
+        }
+    }
+    
+    func addDirectiveSequencerObserver(_ object: DirectiveSequenceable) {
+        directivePrefetchObseerver = notificationCenter.addObserver(forName: .directiveSequencerWillPrefetch, object: object, queue: nil) { [weak self] notification in
+            guard let self = self else { return }
+            guard let directive = notification.userInfo?[DirectiveSequencer.ObservingFactor.Prefetch.directive] as? Downstream.Directive,
+                  let blockingPolicy = notification.userInfo?[DirectiveSequencer.ObservingFactor.Prefetch.blockingPolicy] as? BlockingPolicy else { return }
+            
+            self.queue.async { [weak self] in
+                guard let self = self else { return }
+                
+                if blockingPolicy.medium == .audio {
+                    self.handlingSoundDirectives.insert(directive.header.messageId)
+                    self.requestFocus()
+                }
+            }
+        }
+        
+        directiveCompleteObseerver = notificationCenter.addObserver(forName: .directiveSequencerWillPrefetch, object: object, queue: nil) { [weak self] notification in
+            guard let self = self else { return }
+            guard let directive = notification.userInfo?[DirectiveSequencer.ObservingFactor.Prefetch.directive] as? Downstream.Directive else { return }
+
+            self.queue.async { [weak self] in
+                guard let self = self else { return }
+                
+                if self.handlingSoundDirectives.remove(directive.header.messageId) != nil {
+                    self.tryReleaseFocus()
+                }
+            }
+        }
     }
 }

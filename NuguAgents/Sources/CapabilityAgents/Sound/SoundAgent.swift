@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-public final class SoundAgent: SoundAgentProtocol {
+public final class SoundAgent: SoundAgentProtocol, ContextInfoProvidable {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .sound, version: "1.0")
     
@@ -88,14 +88,22 @@ public final class SoundAgent: SoundAgentProtocol {
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         focusManager.add(channelDelegate: self)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         currentPlayer?.stop()
+    }
+    
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable] = ["version": self.capabilityAgentProperty.version]
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -129,15 +137,6 @@ extension SoundAgent: FocusChannelDelegate {
                 break
             }
         }
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension SoundAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable] = ["version": capabilityAgentProperty.version]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
     }
 }
 

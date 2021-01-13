@@ -52,12 +52,26 @@ public final class ExtensionAgent: ExtensionAgentProtocol {
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
+    }
+    
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let payload: [String: AnyHashable?] = [
+            "version": self.capabilityAgentProperty.version,
+            "data": self.delegate?.extensionAgentRequestContext()
+        ]
+        
+        completion(
+            ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+        )
     }
 }
 
@@ -70,21 +84,6 @@ public extension ExtensionAgent {
             playServiceId: playServiceId,
             referrerDialogRequestId: nil
         ).rx, completion: completion).dialogRequestId
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension ExtensionAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version,
-            "data": delegate?.extensionAgentRequestContext()
-        ]
-        
-        completion(
-            ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
-        )
     }
 }
 

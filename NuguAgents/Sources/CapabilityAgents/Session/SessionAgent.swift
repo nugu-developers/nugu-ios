@@ -45,20 +45,19 @@ public final class SessionAgent: SessionAgentProtocol {
         self.directiveSequencer = directiveSequencer
         self.sessionManager = sessionManager
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension SessionAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let sessions = sessionManager.activeSessions
+    
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
+        guard let self = self else { return }
+        
+        let sessions = self.sessionManager.activeSessions
             .reduce(into: [Session]()) { (result, session) in
                 result.removeAll { $0.playServiceId == session.playServiceId }
                 result.append(session)
@@ -66,12 +65,12 @@ extension SessionAgent: ContextInfoDelegate {
             .map { ["sessionId": $0.sessionId, "playServiceId": $0.playServiceId] }
                 
         let payload: [String: AnyHashable?] = [
-            "version": capabilityAgentProperty.version,
+            "version": self.capabilityAgentProperty.version,
             "list": sessions
         ]
         
         completion(
-            ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
+            ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
         )
     }
 }
