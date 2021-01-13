@@ -29,14 +29,6 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
     /// Sets a delegate to be notified of `AudioPlayerDisplayTemplate` changes.
     var displayDelegate: AudioPlayerDisplayDelegate? { get set }
     
-    /// Adds a delegate to be notified of `AudioPlayerState` changes.
-    /// - Parameter delegate: The object to add.
-    func add(delegate: AudioPlayerAgentDelegate)
-    
-    /// Removes a delegate from AudioPlayerAgent.
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: AudioPlayerAgentDelegate)
-    
     /// Returns the current time of the current player item.
     ///
     /// This function retrieves the offset(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.

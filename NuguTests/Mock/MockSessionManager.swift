@@ -25,12 +25,6 @@ import NuguAgents
 class MockSessionManager: SessionManageable {
     var activeSessions: [Session] = []
     
-    func add(delegate: SessionDelegate) {
-    }
-    
-    func remove(delegate: SessionDelegate) {
-    }
-    
     func set(session: Session) {
     }
     

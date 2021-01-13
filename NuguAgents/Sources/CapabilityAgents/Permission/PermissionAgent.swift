@@ -45,19 +45,18 @@ public class PermissionAgent: PermissionAgentProtocol {
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension PermissionAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+    
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
+        guard let self = self else { return }
+        
         var payload = [String: AnyHashable?]()
         
         if let context = self.delegate?.permissionAgentRequestContext(),

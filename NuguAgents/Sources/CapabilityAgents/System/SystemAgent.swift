@@ -34,8 +34,8 @@ public final class SystemAgent: SystemAgentProtocol {
     private let streamDataRouter: StreamDataRoutable
     private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
+    private let notificationCenter = NotificationCenter.default
     
-    private let delegates = DelegateSet<SystemAgentDelegate>()
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -59,35 +59,22 @@ public final class SystemAgent: SystemAgentProtocol {
         self.streamDataRouter = streamDataRouter
         self.directiveSequencer = directiveSequencer
         
-        contextManager.add(delegate: self)
+        contextManager.addProvider(contextInfoProvider)
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     deinit {
+        contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-}
-
-// MARK: - SystemAgentProtocol
-
-public extension SystemAgent {
-    func add(systemAgentDelegate: SystemAgentDelegate) {
-        delegates.add(systemAgentDelegate)
-    }
     
-    func remove(systemAgentDelegate: SystemAgentDelegate) {
-        delegates.remove(systemAgentDelegate)
-    }
-}
-
-// MARK: - ContextInfoDelegate
-
-extension SystemAgent: ContextInfoDelegate {
-    public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
+        guard let self = self else { return }
+        
         let payload: [String: AnyHashable] = [
-            "version": capabilityAgentProperty.version
+            "version": self.capabilityAgentProperty.version
         ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload))
     }
 }
 
@@ -131,9 +118,8 @@ private extension SystemAgent {
             self?.systemDispatchQueue.async { [weak self] in
                 switch exceptionItem.code {
                 case .fail(let code):
-                    self?.delegates.notify { delegate in
-                        delegate.systemAgentDidReceiveExceptionFail(code: code, header: directive.header)
-                    }
+                    self?.notificationCenter.post(name: .systemAgentDidReceiveExceptionFail, object: self, userInfo: [ObservingFactor.Exception.code: code,
+                                                                                                                ObservingFactor.Exception.header: directive.header])
                 case .warning(let code):
                     log.debug("received warning code: \(code)")
                 }
@@ -150,9 +136,8 @@ private extension SystemAgent {
             defer { completion(.finished) }
 
             self?.systemDispatchQueue.async { [weak self] in
-                self?.delegates.notify { delegate in
-                    delegate.systemAgentDidReceiveRevokeDevice(reason: revokeItem.reason, header: directive.header)
-                }
+                self?.notificationCenter.post(name: .systemAgentDidReceiveRevokeDevice, object: self, userInfo: [ObservingFactor.RevokeDevice.reason: revokeItem.reason,
+                                                                                                                 ObservingFactor.RevokeDevice.header: directive.header])
             }
         }
     }
@@ -184,5 +169,34 @@ private extension SystemAgent {
             property: self.capabilityAgentProperty, completion: completion
         ).subscribe().disposed(by: disposeBag)
         return eventIdentifier
+    }
+}
+
+// MARK: - Observer
+
+public extension Notification.Name {
+    static let systemAgentDidReceiveExceptionFail = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_receive_exception_fail")
+        static let systemAgentDidReceiveRevokeDevice = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_revoke_device")
+}
+
+extension SystemAgent: Observing {
+    public enum ObservingFactor {
+        public enum Exception: ObservingSpec {
+            case code
+            case header
+            
+            public var name: Notification.Name {
+                .systemAgentDidReceiveExceptionFail
+            }
+        }
+        
+        public enum RevokeDevice: ObservingSpec {
+            case reason
+            case header
+            
+            public var name: Notification.Name {
+                .systemAgentDidReceiveRevokeDevice
+            }
+        }
     }
 }
