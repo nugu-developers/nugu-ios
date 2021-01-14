@@ -22,10 +22,9 @@ import AVFoundation
 
 import NuguAgents
 
-final public class AudioSessionManager {
-    public weak var delegate: AudioSessionManagerDelegate?
+final public class AudioSessionManager: AudioSessionManageable {
+    public var nuguClient: NuguClient
     
-    private var nuguClient: NuguClient?
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
     private var audioSessionInterruptionObserver: Any?
     private var audioRouteObserver: Any?
@@ -137,11 +136,11 @@ public extension AudioSessionManager {
         // Defer statement for recovering audioSession and MicInputProvider
         defer {
             updateAudioSession()
-            delegate?.micInputProviderShouldStart()
+            nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
         }
         do {
             // Clean up all I/O before deactivating audioSession
-            delegate?.micInputProviderShouldStop()
+            nuguClient.speechRecognizerAggregator?.stopListening()
             
             // Notify audio session deactivation to 3rd party apps
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
@@ -158,7 +157,7 @@ public extension AudioSessionManager {
         removeAudioEngineConfigurationObserver()
         
         audioEngineConfigurationObserver = NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: nil, using: { [weak self] (_) in
-            self?.delegate?.micInputProviderShouldStart()
+            self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
         })
     }
     
@@ -184,25 +183,24 @@ private extension AudioSessionManager {
             case .began:
                 log.debug("Interruption began")
                 // Interruption began, take appropriate actions
-                if self?.nuguClient?.audioPlayerAgent.isPlaying == true {
-                    self?.nuguClient?.audioPlayerAgent.pause()
+                if self?.nuguClient.audioPlayerAgent.isPlaying == true {
+                    self?.nuguClient.audioPlayerAgent.pause()
                     // PausedByInterruption flag should not be changed before paused delegate method has been called
                     // Giving small delay for changing flag value can be a solution for this situation
                     DispatchQueue.global().asyncAfter(deadline: .now()+0.1) { [weak self] in
                         self?.pausedByInterruption = true
                     }
                 }
-                self?.nuguClient?.ttsAgent.stopTTS(cancelAssociation: false)
-                self?.nuguClient?.asrAgent.stopRecognition()
-                self?.delegate?.micInputProviderShouldStop()
+                self?.nuguClient.ttsAgent.stopTTS(cancelAssociation: false)
+                self?.nuguClient.speechRecognizerAggregator?.stopListening()
             case .ended:
                 log.debug("Interruption ended")
                 if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                     let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                     if options.contains(.shouldResume) {
-                        self?.delegate?.micInputProviderShouldStart()
-                        if self?.pausedByInterruption == true || self?.nuguClient?.audioPlayerAgent.isPlaying == true {
-                            self?.nuguClient?.audioPlayerAgent.play()
+                        self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
+                        if self?.pausedByInterruption == true || self?.nuguClient.audioPlayerAgent.isPlaying == true {
+                            self?.nuguClient.audioPlayerAgent.play()
                         }
                     } else {
                         // Interruption Ended - playback should NOT resume
@@ -219,11 +217,11 @@ private extension AudioSessionManager {
             switch reason {
             case .oldDeviceUnavailable:
                 log.debug("Route changed due to oldDeviceUnavailable")
-                if self?.nuguClient?.audioPlayerAgent.isPlaying == true {
-                    self?.nuguClient?.audioPlayerAgent.pause()
+                if self?.nuguClient.audioPlayerAgent.isPlaying == true {
+                    self?.nuguClient.audioPlayerAgent.pause()
                 }
             case .newDeviceAvailable:
-                if self?.nuguClient?.audioPlayerAgent.isPlaying == true {
+                if self?.nuguClient.audioPlayerAgent.isPlaying == true {
                     self?.updateAudioSessionToPlaybackIfNeeded()
                 }
             default: break

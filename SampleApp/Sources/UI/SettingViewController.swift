@@ -106,6 +106,7 @@ extension SettingViewController: UITableViewDataSource {
                 cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useWakeUpDetector, isSwitchEnabled: switchEnableability)
                 cell.onSwitchValueChanged = { isOn in
                     UserDefaults.Standard.useWakeUpDetector = isOn
+                    NuguCentralManager.shared.speechRecognizerAggregator.useKeywordDetector = isOn
                 }
             case 2:
                 cell.configure(text: menuTitle, detailText: Keyword(rawValue: UserDefaults.Standard.wakeUpWord)?.description)

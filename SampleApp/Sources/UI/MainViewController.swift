@@ -66,7 +66,6 @@ final class MainViewController: UIViewController {
     
     // Observers
     private let notificationCenter = NotificationCenter.default
-    private var asrStateObserver: Any?
     private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
     
@@ -96,12 +95,8 @@ final class MainViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NuguCentralManager.shared.stopMicInputProvider()
-        
-        if let asrStateObserver = asrStateObserver {
-            notificationCenter.removeObserver(asrStateObserver)
-        }
-        
+        NuguCentralManager.shared.stopListening()
+
         if let asrResultObserver = asrResultObserver {
             notificationCenter.removeObserver(asrResultObserver)
         }
@@ -153,8 +148,7 @@ private extension MainViewController {
             if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
                 NuguCentralManager.shared.client.ttsAgent.stopTTS()
             }
-            NuguCentralManager.shared.client.asrAgent.stopRecognition()
-            NuguCentralManager.shared.stopMicInputProvider()
+            NuguCentralManager.shared.stopListening()
         })
         
         /**
@@ -193,7 +187,7 @@ private extension MainViewController {
 
 private extension MainViewController {
     @IBAction func showSettingsButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.stopMicInputProvider()
+        NuguCentralManager.shared.stopListening()
 
         performSegue(withIdentifier: "showSettings", sender: nil)
     }
@@ -317,14 +311,7 @@ private extension MainViewController {
         
         do {
             try voiceChromePresenter.presentVoiceChrome()
-            NuguCentralManager.shared.startRecognition(initiator: initiator)
-            NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { success in
-                guard success else {
-                    log.error("Start MicInputProvider failed")
-                    NuguCentralManager.shared.stopRecognition()
-                    return
-                }
-            }
+            NuguCentralManager.shared.startListening(initiator: initiator)
         } catch {
             switch error {
             case VoiceChromePresenterError.networkUnreachable:
@@ -461,31 +448,6 @@ extension MainViewController: VoiceChromePresenterDelegate {
 
 private extension MainViewController {
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { (notification) in
-            guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
-            
-            switch state {
-            case .idle:
-                if UserDefaults.Standard.useWakeUpDetector == true {
-                    NuguCentralManager.shared.startWakeUpDetector()
-                } else {
-                    NuguCentralManager.shared.stopMicInputProvider()
-                }
-            case .listening:
-                NuguCentralManager.shared.stopWakeUpDetector()
-            case .expectingSpeech:
-                NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
-                    guard success == true else {
-                        log.debug("startMicInputProvider failed!")
-                        NuguCentralManager.shared.stopRecognition()
-                        return
-                    }
-                }
-            default:
-                break
-            }
-        }
-        
         asrResultObserver = notificationCenter.addObserver(forName: .asrAgentResultDidReceive, object: object, queue: .main) { (notification) in
             guard let result = notification.userInfo?[ASRAgent.ObservingFactor.Result.result] as? ASRResult else { return }
             
