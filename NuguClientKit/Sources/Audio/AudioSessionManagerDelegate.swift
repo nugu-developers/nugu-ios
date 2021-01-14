@@ -22,6 +22,6 @@
 public protocol AudioSessionManagerDelegate: class {
     /// Delegate method called when mic input provider should start.
     func micInputProviderShouldStop()
-    /// Delegate method called when control center state should stop.
+    /// Delegate method called when mic input provider should stop.
     func micInputProviderShouldStart()
 }
