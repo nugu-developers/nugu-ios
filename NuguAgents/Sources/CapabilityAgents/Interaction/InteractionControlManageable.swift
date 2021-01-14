@@ -22,14 +22,6 @@ import Foundation
 
 /// <#Description#>
 public protocol InteractionControlManageable: class {
-    /// Adds a delegate to be notified of `InteractionControlManageable` state changes.
-    /// - Parameter delegate: The object to add.
-    func add(delegate: InteractionControlDelegate)
-    
-    /// Removes a delegate from `InteractionControlManageable`.
-    /// - Parameter delegate: The object to remove.
-    func remove(delegate: InteractionControlDelegate)
-    
     /// <#Description#>
     /// - Parameters:
     ///   - mode: <#mode description#>

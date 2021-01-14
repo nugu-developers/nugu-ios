@@ -23,15 +23,7 @@ import Foundation
 import NuguUtils
 
 /// <#Description#>
-public protocol PlaySyncManageable: ContextInfoDelegate {
-    /// Register `PlaySyncDelegate` to `PlaySyncManageable`.
-    /// - Parameter delegate: The object to register.
-    func add(delegate: PlaySyncDelegate)
-    
-    /// Unregister `PlaySyncDelegate` from `PlaySyncManageable`.
-    /// - Parameter delegate: The object to unregister.
-    func remove(delegate: PlaySyncDelegate)
-    
+public protocol PlaySyncManageable: ContextInfoProvidable {
     func startPlay(
         property: PlaySyncProperty,
         info: PlaySyncInfo

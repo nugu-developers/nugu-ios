@@ -27,7 +27,6 @@ import NuguUtils
 /// DialogStateAggregator aggregate several components state into one.
 public class DialogStateAggregator {
     private let dialogStateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.dialog_state_aggregator", qos: .userInitiated)
-    private let dialogStateDelegates = DelegateSet<DialogStateDelegate>()
     
     private let sessionManager: SessionManageable
     private let focusManager: FocusManageable
@@ -50,9 +49,15 @@ public class DialogStateAggregator {
                 // Delete the chips if it is not for the most recently active session.
                 currentChips = nil
             }
-            dialogStateDelegates.notify { delegate in
-                delegate.dialogStateDidChange(dialogState, isMultiturn: isMultiturn, chips: chipsItem?.chips, sessionActivated: sessionActivated)
+            
+            var userInfo: [AnyHashable: Any] = [ObservingFactor.State.state: dialogState,
+                                                ObservingFactor.State.multiturn: isMultiturn,
+                                                ObservingFactor.State.sessionActivated: sessionActivated]
+            if let chips = chipsItem?.chips {
+                userInfo[ObservingFactor.State.chips] = chips
             }
+            
+            notificationCenter.post(name: .dialogStateDidChange, object: self, userInfo: userInfo)
         }
     }
     private var asrState: ASRState = .idle
@@ -79,96 +84,51 @@ public class DialogStateAggregator {
         }
     }
     
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var asrStateObserver: Any?
+    private var ttsStateObserver: Any?
+    private var ttsResultObserver: Any?
+    private var chipsAgentObserver: Any?
+    private var interactionControlObserver: Any?
+    
     init(
         sessionManager: SessionManageable,
         interactionControlManager: InteractionControlManageable,
-        focusManager: FocusManageable
+        focusManager: FocusManageable,
+        asrAgent: ASRAgentProtocol,
+        ttsAgent: TTSAgentProtocol,
+        chipsAgent: ChipsAgentProtocol
     ) {
         self.sessionManager = sessionManager
         self.focusManager = focusManager
         
-        interactionControlManager.add(delegate: self)
-    }
-}
-
-// MARK: - DialogStateAggregatable
-
-extension DialogStateAggregator {
-    /// Adds a delegate to be notified of DialogStateAggregator state changes.
-    /// - Parameter delegate: The object to add.
-    public func add(delegate: DialogStateDelegate) {
-        dialogStateDelegates.add(delegate)
+        // Observers
+        addAsrAgentObserver(asrAgent)
+        addTtsAgentObserver(ttsAgent)
+        addChipsAgentObserver(chipsAgent)
+        addInteractionControlObserver(interactionControlManager)
     }
     
-    /// Removes a delegate from DialogStateAggregator.
-    /// - Parameter delegate: The object to remove.
-    public func remove(delegate: DialogStateDelegate) {
-        dialogStateDelegates.remove(delegate)
-    }
-}
-
-// MARK: - ASRAgentDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: ASRAgentDelegate {
-    public func asrAgentDidChange(state: ASRState) {
-        dialogStateDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.asrState = state
-            switch state {
-            case .idle:
-                self.tryEnterIdleState()
-            case .listening:
-                self.dialogState = .listening
-            case .recognizing:
-                self.dialogState = .recognizing
-            case .busy:
-                self.dialogState = .thinking
-            case .expectingSpeech:
-                break
-            }
+    deinit {
+        if let asrStateObserver = asrStateObserver {
+            notificationCenter.removeObserver(asrStateObserver)
         }
-    }
-    
-    public func asrAgentDidReceive(result: ASRResult, dialogRequestId: String) {}
-}
-
-// MARK: - TTSAgentDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: TTSAgentDelegate {
-    public func ttsAgentDidReceive(text: String, header: Downstream.Header) {
-    }
-    
-    public func ttsAgentDidChange(state: TTSState, header: Downstream.Header) {
-        dialogStateDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            self.ttsState = state
-            switch state {
-            case .idle:
-                break
-            case .playing:
-                self.dialogState = .speaking
-            case .finished, .stopped:
-                self.tryEnterIdleState()
-            }
+        
+        if let chipsAgentObserver = chipsAgentObserver {
+            notificationCenter.removeObserver(chipsAgentObserver)
         }
-    }
-}
-
-// MARK: - InteractionControlDelegate
-
-/// :nodoc:
-extension DialogStateAggregator: InteractionControlDelegate {
-    public func interactionControlDidChange(isMultiturn: Bool) {
-        log.debug(isMultiturn)
-        dialogStateDispatchQueue.async { [weak self] in
-            self?.isMultiturn = isMultiturn
-            if isMultiturn == false {
-                self?.tryEnterIdleState()
-            }
+        
+        if let interactionControlObserver = interactionControlObserver {
+            notificationCenter.removeObserver(interactionControlObserver)
+        }
+        
+        if let ttsStateObserver = ttsStateObserver {
+            notificationCenter.removeObserver(ttsStateObserver)
+        }
+        
+        if let ttsResultObserver = ttsResultObserver {
+            notificationCenter.removeObserver(ttsResultObserver)
         }
     }
 }
@@ -198,15 +158,102 @@ private extension DialogStateAggregator {
     }
 }
 
-// MARK: - ChipsAgentDelegate
+// MARK: - Observers
+
+public extension Notification.Name {
+    static let dialogStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.dialog_state_did_change")
+}
+
+extension DialogStateAggregator: Observing {
+    public enum ObservingFactor {
+        public enum State: ObservingSpec {
+            case state
+            case multiturn
+            case chips
+            case sessionActivated
+            
+            public var name: Notification.Name {
+                .dialogStateDidChange
+            }
+        }
+    }
+}
 
 /// :nodoc:
-extension DialogStateAggregator: ChipsAgentDelegate {
-    public func chipsAgentDidReceive(item: ChipsAgentItem, header: Downstream.Header) {
-        dialogStateDispatchQueue.async { [weak self] in
-            if item.target == .dialog {
-                self?.currentChips = (dialogRequestId: header.dialogRequestId, item: item)
+private extension DialogStateAggregator {
+    func addChipsAgentObserver(_ object: ChipsAgentProtocol) {
+        chipsAgentObserver = notificationCenter.addObserver(forName: .chipsAgentDidReceive, object: object, queue: nil) { [weak self] (notification) in
+            guard let item = notification.userInfo?[ChipsAgent.ObservingFactor.Receive.item] as? ChipsAgentItem,
+                  let header = notification.userInfo?[ChipsAgent.ObservingFactor.Receive.header] as? Downstream.Header else { return }
+            
+            self?.dialogStateDispatchQueue.async { [weak self] in
+                if item.target == .dialog {
+                    self?.currentChips = (dialogRequestId: header.dialogRequestId, item: item)
+                }
             }
+        }
+    }
+    
+    func addInteractionControlObserver(_ object: InteractionControlManageable) {
+        interactionControlObserver = notificationCenter.addObserver(forName: .interactionControlDidChange, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let isMultiturn = notification.userInfo?[InteractionControlManager.ObservingFactor.MultiTurn.multiTurn] as? Bool else { return }
+            
+            log.debug(self.isMultiturn)
+            self.dialogStateDispatchQueue.async { [weak self] in
+                self?.isMultiturn = isMultiturn
+                if isMultiturn == false {
+                    self?.tryEnterIdleState()
+                }
+            }
+        }
+    }
+    
+    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
+        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+            self?.dialogStateDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
+                
+                self.asrState = state
+                switch state {
+                case .idle:
+                    self.tryEnterIdleState()
+                case .listening:
+                    self.dialogState = .listening
+                case .recognizing:
+                    self.dialogState = .recognizing
+                case .busy:
+                    self.dialogState = .thinking
+                case .expectingSpeech:
+                    break
+                }
+            }
+        }
+    }
+    
+    func addTtsAgentObserver(_ object: TTSAgentProtocol) {
+        ttsStateObserver = notificationCenter.addObserver(forName: .ttsAgentStateDidChange, object: object, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let state = notification.userInfo?[TTSAgent.ObservingFactor.State.state] as? TTSState else { return }
+            
+            self.dialogStateDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.ttsState = state
+                switch state {
+                case .idle:
+                    break
+                case .playing:
+                    self.dialogState = .speaking
+                case .finished, .stopped:
+                    self.tryEnterIdleState()
+                }
+            }
+        }
+        
+        ttsResultObserver = notificationCenter.addObserver(forName: .ttsAgentResultDidReceive, object: object, queue: nil) { (notification) in
+            // Nothing to do
         }
     }
 }

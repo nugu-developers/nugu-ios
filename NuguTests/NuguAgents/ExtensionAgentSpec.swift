@@ -46,7 +46,7 @@ class ExtensionAgentSpec: QuickSpec {
                 var contextInfo: ContextInfo?
                 
                 waitUntil(timeout: 0.5) { (done) in
-                    extensionAgent.contextInfoRequestContext { (context) in
+                    extensionAgent.contextInfoProvider { (context) in
                         contextInfo = context
                         done()
                     }

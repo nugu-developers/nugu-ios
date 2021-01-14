@@ -27,7 +27,6 @@ import NuguCore
 
 /// AudioDisplayViewPresenter is a class which helps user for displaying AudioDisplayView more easily.
 public class AudioDisplayViewPresenter {
-
     public weak var delegate: AudioDisplayViewPresenterDelegate?
     
     private var audioDisplayView: AudioDisplayView?
@@ -37,6 +36,9 @@ public class AudioDisplayViewPresenter {
         superView ?? viewController?.view
     }
     private var nuguClient: NuguClient?
+    private let notificationCenter = NotificationCenter.default
+    private var audioPlayerStateObserver: Any?
+    private var audioPlayerDurationObserver: Any?
     
     /// Initialize with superView
     /// - Parameters:
@@ -62,8 +64,18 @@ public class AudioDisplayViewPresenter {
     private init(nuguClient: NuguClient) {
         self.nuguClient = nuguClient
         
-        nuguClient.audioPlayerAgent.add(delegate: self)
+        addAudioPlayerAgentObserver(nuguClient.audioPlayerAgent)
         nuguClient.audioPlayerAgent.displayDelegate = self
+    }
+    
+    deinit {
+        if let audioPlayerStateObserver = audioPlayerStateObserver {
+            notificationCenter.removeObserver(audioPlayerStateObserver)
+        }
+        
+        if let audioPlayerDurationObserver = audioPlayerDurationObserver {
+            notificationCenter.removeObserver(audioPlayerDurationObserver)
+        }
     }
 }
 
@@ -111,25 +123,6 @@ extension AudioDisplayViewPresenter: AudioPlayerDisplayDelegate {
     public func audioPlayerIsLyricsVisible(completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             completion(self?.audioDisplayView?.isLyricsVisible ?? false)
-        }
-    }
-}
-
-// MARK: - AudioPlayerAgentDelegate
-
-extension AudioDisplayViewPresenter: AudioPlayerAgentDelegate {
-    public func audioPlayerAgentDidChange(state: AudioPlayerState, header: Downstream.Header) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self,
-                let audioDisplayView = self.audioDisplayView else { return }
-            audioDisplayView.audioPlayerState = state
-            self.delegate?.displayControllerShouldUpdateState(state: state)
-        }
-    }
-    
-    public func audioPlayerAgentDidChange(duration: Int) {
-        DispatchQueue.main.async { [weak self] in
-            self?.delegate?.displayControllerShouldUpdateDuration(duration: duration)
         }
     }
 }
@@ -249,5 +242,27 @@ extension AudioDisplayViewPresenter: AudioDisplayViewDelegate {
     
     public func requestDuration() -> Int? {
         return nuguClient?.audioPlayerAgent.duration
+    }
+}
+
+// MARK: - Observers
+
+private extension AudioDisplayViewPresenter {
+    func addAudioPlayerAgentObserver(_ object: AudioPlayerAgentProtocol) {
+        audioPlayerStateObserver = notificationCenter.addObserver(forName: .audioPlayerAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+            guard let self = self,
+                let audioDisplayView = self.audioDisplayView else { return }
+            guard let state = notification.userInfo?[AudioPlayerAgent.ObservingFactor.State.state] as? AudioPlayerState else { return }
+            
+            audioDisplayView.audioPlayerState = state
+            self.delegate?.displayControllerShouldUpdateState(state: state)
+        }
+        
+        audioPlayerDurationObserver = notificationCenter.addObserver(forName: .audioPlayerAgentDurationDidChange, object: object, queue: .main) { [weak self] (notification) in
+            guard let self = self else { return }
+            guard let duration = notification.userInfo?[AudioPlayerAgent.ObservingFactor.Duration.duration] as? Int else { return }
+            
+            self.delegate?.displayControllerShouldUpdateDuration(duration: duration)
+        }
     }
 }
