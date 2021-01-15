@@ -29,9 +29,13 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     // Observers
     private let notificationCenter = NotificationCenter.default
     private var asrStateObserver: Any?
+    private var becomeActiveObserver: Any?
+    private var audioSessionInterruptionObserver: Any?
     
     private let nuguClient: NuguClient
     private let micInputProvider: MicInputProvider
+    private var audioSessionInterrupted = false
+    private var micInputProviderDelay: DispatchTime = .now()
     
     private var startMicWorkItem: DispatchWorkItem?
 
@@ -71,12 +75,28 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
                 break
             }
         }
+        
+        becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
+            guard let self = self else { return }
+            
+            // When mic has been activated before interruption end notification has been fired,
+            // Option's .shouldResume factor never comes in. (even when it has to be)
+            // Giving small delay for starting mic can be a solution for this situation
+            if self.audioSessionInterrupted == true {
+                self.micInputProviderDelay = .now() + 0.5
+            }
+        })
+        registerAudioSessionObservers()
     }
     
     deinit {
         if let asrStateObserver = asrStateObserver {
             notificationCenter.removeObserver(asrStateObserver)
         }
+        if let becomeActiveObserver = becomeActiveObserver {
+            notificationCenter.removeObserver(becomeActiveObserver)
+        }
+        removeAudioSessionObservers()
     }
 }
 
@@ -112,11 +132,8 @@ public extension SpeechRecognizerAggregator {
                 }
             })
             guard let startMicWorkItem = startMicWorkItem else { return }
-            // When mic has been activated before interruption end notification has been fired,
-            // Option's .shouldResume factor never comes in. (even when it has to be)
-            // Giving small delay for starting mic can be a solution for this situation
-            // FIXME: Do not delay every time.
-            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: startMicWorkItem)
+            
+            DispatchQueue.global().asyncAfter(deadline: micInputProviderDelay, execute: startMicWorkItem)
         } else {
             nuguClient.keywordDetector.stop()
             stopMicInputProvider()
@@ -193,6 +210,34 @@ extension SpeechRecognizerAggregator: MicInputProviderDelegate {
         
         if [.listening, .recognizing].contains(nuguClient.asrAgent.asrState) {
             nuguClient.asrAgent.putAudioBuffer(buffer: buffer)
+        }
+    }
+}
+
+// MARK: - private(AudioSessionObserver)
+
+private extension SpeechRecognizerAggregator {
+    func registerAudioSessionObservers() {
+        removeAudioSessionObservers()
+        
+        audioSessionInterruptionObserver = notificationCenter.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: nil, using: { [weak self] (notification) in
+            guard let userInfo = notification.userInfo,
+                  let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+                  let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
+            switch type {
+            case .began:
+                self?.audioSessionInterrupted = true
+            case .ended:
+                self?.audioSessionInterrupted = false
+            @unknown default: break
+            }
+        })
+    }
+    
+    func removeAudioSessionObservers() {
+        if let audioSessionInterruptionObserver = audioSessionInterruptionObserver {
+            NotificationCenter.default.removeObserver(audioSessionInterruptionObserver)
+            self.audioSessionInterruptionObserver = nil
         }
     }
 }
