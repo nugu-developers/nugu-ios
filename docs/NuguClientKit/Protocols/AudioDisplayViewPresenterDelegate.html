@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>AudioDisplayViewPresenterDelegate Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Protocol/AudioDisplayViewPresenterDelegate" class="dashAnchor"></a>
+    <a title="AudioDisplayViewPresenterDelegate Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">NUGU SDK iOS</a></p>
+        <p class="header-right"><a href="https://github.com/nugu-developers/nugu-ios"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        AudioDisplayViewPresenterDelegate Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Common.html">Common</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Common.html#/s:13NuguClientKit8logLevel8NattyLog0gE0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../NuguClient.html">NuguClient</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/NuguClient.html">NuguClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NuguClientDelegate.html">NuguClientDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../VoiceChromePresenter.html">VoiceChromePresenter</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/VoiceChromePresenter.html">VoiceChromePresenter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/VoiceChromePresenterDelegate.html">VoiceChromePresenterDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../VoiceChromePresenter.html#/s:13NuguClientKit25VoiceChromePresenterErrorO">VoiceChromePresenterError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../DialogStateAggregator.html">DialogStateAggregator</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/DialogStateAggregator.html">DialogStateAggregator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DialogStateDelegate.html">DialogStateDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DialogState.html">DialogState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../MicInputProvider.html">MicInputProvider</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/MicInputProvider.html">MicInputProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MicInputError.html">MicInputError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MicInputProviderDelegate.html">MicInputProviderDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../KeywordDetector.html">KeywordDetector</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/KeywordDetector.html">KeywordDetector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeywordDetectorDelegate.html">KeywordDetectorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeywordDetectorState.html">KeywordDetectorState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KeywordSource.html">KeywordSource</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Other%20Classes.html">Other Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AudioDisplayViewPresenter.html">AudioDisplayViewPresenter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ConfigurationStore.html">ConfigurationStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DisplayWebViewPresenter.html">DisplayWebViewPresenter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Other%20Global%20Variables.html">Other Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Other%20Global%20Variables.html#/s:13NuguClientKit10logEnabledSbvp">logEnabled</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Other%20Extensions.html">Other Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/AuthorizationInfo.html">AuthorizationInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NuguOAuthClient.html">NuguOAuthClient</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Other%20Protocols.html">Other Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioDisplayViewPresenterDelegate.html">AudioDisplayViewPresenterDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DisplayWebViewPresenterDelegate.html">DisplayWebViewPresenterDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>AudioDisplayViewPresenterDelegate</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AudioDisplayViewPresenterDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>A delegate that application can extend to observe <code><a href="../Classes/DisplayWebViewPresenter.html">DisplayWebViewPresenter</a></code> changes.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP37displayControllerShouldUpdateTemplate8templatey0A6Agents0d6PlayereM0V_tF"></a>
+                    <a name="//apple_ref/swift/Method/displayControllerShouldUpdateTemplate(template:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP37displayControllerShouldUpdateTemplate8templatey0A6Agents0d6PlayereM0V_tF">displayControllerShouldUpdateTemplate(template:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate method called when control center content should be updated.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">displayControllerShouldUpdateTemplate</span><span class="p">(</span><span class="nv">template</span><span class="p">:</span> <span class="kt">AudioPlayerDisplayTemplate</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP34displayControllerShouldUpdateState5statey0A6Agents0d6PlayerM0O_tF"></a>
+                    <a name="//apple_ref/swift/Method/displayControllerShouldUpdateState(state:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP34displayControllerShouldUpdateState5statey0A6Agents0d6PlayerM0O_tF">displayControllerShouldUpdateState(state:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate method called when control center state should be updated.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">displayControllerShouldUpdateState</span><span class="p">(</span><span class="nv">state</span><span class="p">:</span> <span class="kt">AudioPlayerState</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP37displayControllerShouldUpdateDuration8durationySi_tF"></a>
+                    <a name="//apple_ref/swift/Method/displayControllerShouldUpdateDuration(duration:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP37displayControllerShouldUpdateDuration8durationySi_tF">displayControllerShouldUpdateDuration(duration:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate method called when control center duration should be updated.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">displayControllerShouldUpdateDuration</span><span class="p">(</span><span class="nv">duration</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP29displayControllerShouldRemoveyyF"></a>
+                    <a name="//apple_ref/swift/Method/displayControllerShouldRemove()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP29displayControllerShouldRemoveyyF">displayControllerShouldRemove()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate method called when control center should be removed.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">displayControllerShouldRemove</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP02ondefA11ButtonClickyyF"></a>
+                    <a name="//apple_ref/swift/Method/onAudioDisplayViewNuguButtonClick()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP02ondefA11ButtonClickyyF">onAudioDisplayViewNuguButtonClick()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate method called when NuguButton in AudioDisplayView has been clicked.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">onAudioDisplayViewNuguButtonClick</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP02ondeF11ChipsSelect08selectedJ0y0A5UIKit0aJ6ButtonC0ajN4TypeOSg_tF"></a>
+                    <a name="//apple_ref/swift/Method/onAudioDisplayViewChipsSelect(selectedChips:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit33AudioDisplayViewPresenterDelegateP02ondeF11ChipsSelect08selectedJ0y0A5UIKit0aJ6ButtonC0ajN4TypeOSg_tF">onAudioDisplayViewChipsSelect(selectedChips:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate method called when chips button in AudioDisplayView has been clicked.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">onAudioDisplayViewChipsSelect</span><span class="p">(</span><span class="nv">selectedChips</span><span class="p">:</span> <span class="kt">NuguChipsButton</span><span class="o">.</span><span class="kt">NuguChipsButtonType</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>(c) 2020 SK Telecom Co., Ltd. All rights reserved.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
