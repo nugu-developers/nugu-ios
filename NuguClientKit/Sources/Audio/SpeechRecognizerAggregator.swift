@@ -133,7 +133,11 @@ public extension SpeechRecognizerAggregator {
             })
             guard let startMicWorkItem = startMicWorkItem else { return }
             
-            DispatchQueue.global().asyncAfter(deadline: micInputProviderDelay, execute: startMicWorkItem)
+            if self.micInputProviderDelay > .now() {
+                DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
+            } else {
+                DispatchQueue.global().async(execute: startMicWorkItem)
+            }
         } else {
             nuguClient.keywordDetector.stop()
             stopMicInputProvider()
