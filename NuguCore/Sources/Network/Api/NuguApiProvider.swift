@@ -35,6 +35,7 @@ class NuguApiProvider: NSObject {
                                                       delegate: self,
                                                       delegateQueue: sessionQueue)
     
+    // FIXME: ConfigurationStore 에서 NuguServerInfo.resourceServerAddress 를 수정해도 반영되지 않는 이슈.
     @Atomic var url: String? = NuguServerInfo.resourceServerAddress {
         didSet {
             log.debug("resource server url: \(url ?? "nil")")

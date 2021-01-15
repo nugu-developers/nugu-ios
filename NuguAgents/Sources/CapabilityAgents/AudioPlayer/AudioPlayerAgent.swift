@@ -229,7 +229,7 @@ public extension AudioPlayerAgent {
     func play() {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard let player = self.latestPlayer else {
+            guard let player = self.latestPlayer, player.internalPlayer != nil else {
                 log.debug("Skip, MediaPlayer not exist.")
                 return
             }

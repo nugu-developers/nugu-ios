@@ -26,7 +26,7 @@ import NuguAgents
 
 /// <#Description#>
 public class NuguClient {
-    private weak var delegate: NuguClientDelegate?
+    public weak var delegate: NuguClientDelegate?
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -115,14 +115,14 @@ public class NuguClient {
     
     /// <#Description#>
     public private(set) lazy var keywordDetector: KeywordDetector = KeywordDetector(contextManager: contextManager)
+
+    public var speechRecognizerAggregator: SpeechRecognizerAggregatable?
+    public var audioSessionManager: AudioSessionManageable?
     
     private let backgroundFocusHolder: BackgroundFocusHolder
     
     /// <#Description#>
-    /// - Parameter delegate: <#delegate description#>
-    public init(delegate: NuguClientDelegate) {
-        self.delegate = delegate
-        
+    public init() {
         // core
         contextManager = ContextManager()
         directiveSequencer = DirectiveSequencer()
@@ -211,6 +211,8 @@ public class NuguClient {
             streamDataRouter: streamDataRouter,
             dialogStateAggregator: dialogStateAggregator
         )
+        
+        keywordDetector = KeywordDetector(contextManager: contextManager)
 
         // setup additional roles
         setupAuthorizationStore()
@@ -224,7 +226,7 @@ public class NuguClient {
         removeDialogStateObserver()
     }
 }
-    
+
 // MARK: - Helper functions
 
 public extension NuguClient {
@@ -388,20 +390,6 @@ extension NuguClient {
     func removeDialogStateObserver() {
         if let dialogStateObserver = dialogStateObserver {
             notificationCenter.removeObserver(dialogStateObserver)
-        }
-    }
-}
-
-// MARK: - MicInputProviderDelegate
-
-extension NuguClient: MicInputProviderDelegate {
-    public func micInputProviderDidReceive(buffer: AVAudioPCMBuffer) {
-        if keywordDetector.state == .active {
-            keywordDetector.putAudioBuffer(buffer: buffer)
-        }
-        
-        if [.listening, .recognizing].contains(asrAgent.asrState) {
-            asrAgent.putAudioBuffer(buffer: buffer)
         }
     }
 }

@@ -1,8 +1,8 @@
 //
-//  AudioSessionManagerDelegate.swift
+//  SpeechRecognizerAggregatable.swift
 //  NuguClientKit
 //
-//  Created by 김진님/AI Assistant개발 Cell on 2021/01/07.
+//  Created by MinChul Lee on 2021/01/14.
 //  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,22 @@
 //  limitations under the License.
 //
 
-/// A delegate that application can extend to observe `AudioSessionManager`s mic related control changes.
-public protocol AudioSessionManagerDelegate: class {
-    /// Delegate method called when mic input provider should start.
-    func micInputProviderShouldStop()
-    /// Delegate method called when mic input provider should stop.
-    func micInputProviderShouldStart()
+import Foundation
+
+import NuguAgents
+import NuguCore
+
+public protocol SpeechRecognizerAggregatable {
+    var useKeywordDetector: Bool { get set }
+    
+    @discardableResult
+    func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)?) -> String
+    func startListeningWithTrigger()
+    func stopListening()
+}
+
+public extension SpeechRecognizerAggregatable {
+    func startListening(initiator: ASRInitiator) {
+        startListening(initiator: initiator, completion: nil)
+    }
 }
