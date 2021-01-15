@@ -19,27 +19,18 @@
 
 import Foundation
 
-/**
- State of Stream data.
- */
+
+/// State of Stream data.
 public enum StreamDataState {
-    /**
-     Data sent
-     */
+    /// Data sent
     case sent
     
-    /**
-     Response received
-     */
+    /// Response received
     case received(part: Downstream.Directive)
     
-    /**
-     All of responses are received and stream is closed.
-     */
+    /// All of responses are received and stream is closed.
     case finished
     
-    /**
-     Error occured
-     */
+    /// Error occured
     case error(_ error: Error)
 }

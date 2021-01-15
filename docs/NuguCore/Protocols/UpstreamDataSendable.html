@@ -92,6 +92,9 @@
                 <a href="../Enums/Upstream/Attachment.html">– Attachment</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/Upstream/Header.html">– Header</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/Downstream.html">Downstream</a>
               </li>
               <li class="nav-group-task">
@@ -199,7 +202,7 @@
 
                 </div>
               </div>
-            <p>&lt;#Description#&gt;</p>
+            <p>A protocol for sending <code><a href="../Enums/Upstream.html">Upstream</a></code> data to the server.</p>
 
           </section>
           <section class="section task-group-section">
@@ -229,6 +232,37 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>event</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The event to send.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The completion handler to call when the request is complete.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </section>
                   </div>
                 </li>
@@ -256,6 +290,37 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>event</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The event to send.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The completion handler to call when the request is complete.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </section>
                   </div>
                 </li>
@@ -274,8 +339,7 @@
                       <div class="abstract">
                         <p>Sends an attachment using the stream set before.</p>
 
-<p>Every event and attachment have <code>DialogRequestId</code>.
-This method finds the suitable stream using that id</p>
+<p>Every event and attachment have <code>DialogRequestId</code> and this method finds the suitable stream using that id.</p>
 
                       </div>
                       <div class="declaration">
@@ -285,6 +349,37 @@ This method finds the suitable stream using that id</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">sendStream</span><span class="p">(</span><span class="n">_</span> <span class="nv">attachment</span><span class="p">:</span> <span class="kt"><a href="../Enums/Upstream.html">Upstream</a></span><span class="o">.</span><span class="kt">Attachment</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Enums/StreamDataState.html">StreamDataState</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attachment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The attachmen to send.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The completion handler to call when the request is complete.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -325,7 +420,7 @@ This method finds the suitable stream using that id</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The <code>dialogRequestId</code> to cancel event.</p>
+                                  <p>The event&rsquo;s <code>dialogRequestId</code> to cancel.</p>
                                 </div>
                               </td>
                             </tr>
@@ -351,7 +446,7 @@ This method finds the suitable stream using that id</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>&lt;#Description#&gt;</p>
+                        <p>Sends an event.</p>
 
                       </div>
                       <div class="declaration">
@@ -374,7 +469,7 @@ This method finds the suitable stream using that id</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>&lt;#event description#&gt;</p>
+                                  <p>The event to send.</p>
                                 </div>
                               </td>
                             </tr>
@@ -400,7 +495,9 @@ This method finds the suitable stream using that id</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>&lt;#Description#&gt;</p>
+                        <p>Sends an attachment using the stream set before.</p>
+
+<p>Every event and attachment have <code>DialogRequestId</code> and this method finds the suitable stream using that id.</p>
 
                       </div>
                       <div class="declaration">
@@ -423,19 +520,7 @@ This method finds the suitable stream using that id</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>&lt;#attachment description#&gt;</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>dialogRequestId</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>&lt;#dialogRequestId description#&gt;</p>
+                                  <p>The attachmen to send.</p>
                                 </div>
                               </td>
                             </tr>
@@ -451,7 +536,7 @@ This method finds the suitable stream using that id</p>
         </section>
         <section id="footer">
           <p>(c) 2020 SK Telecom Co., Ltd. All rights reserved.</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

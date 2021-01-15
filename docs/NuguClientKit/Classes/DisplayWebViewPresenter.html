@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DisplayWebViewPresenter Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/DisplayWebViewPresenter" class="dashAnchor"></a>
+    <a title="DisplayWebViewPresenter Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">NUGU SDK iOS</a></p>
+        <p class="header-right"><a href="https://github.com/nugu-developers/nugu-ios"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">NUGU SDK Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        DisplayWebViewPresenter Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Common.html">Common</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Common.html#/s:13NuguClientKit8logLevel8NattyLog0gE0Ovp">logLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../NuguClient.html">NuguClient</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/NuguClient.html">NuguClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NuguClientDelegate.html">NuguClientDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../VoiceChromePresenter.html">VoiceChromePresenter</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/VoiceChromePresenter.html">VoiceChromePresenter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/VoiceChromePresenterDelegate.html">VoiceChromePresenterDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../VoiceChromePresenter.html#/s:13NuguClientKit25VoiceChromePresenterErrorO">VoiceChromePresenterError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../DialogStateAggregator.html">DialogStateAggregator</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/DialogStateAggregator.html">DialogStateAggregator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DialogStateDelegate.html">DialogStateDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DialogState.html">DialogState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../MicInputProvider.html">MicInputProvider</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/MicInputProvider.html">MicInputProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MicInputError.html">MicInputError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MicInputProviderDelegate.html">MicInputProviderDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../KeywordDetector.html">KeywordDetector</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/KeywordDetector.html">KeywordDetector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeywordDetectorDelegate.html">KeywordDetectorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeywordDetectorState.html">KeywordDetectorState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KeywordSource.html">KeywordSource</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Other%20Classes.html">Other Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AudioDisplayViewPresenter.html">AudioDisplayViewPresenter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ConfigurationStore.html">ConfigurationStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DisplayWebViewPresenter.html">DisplayWebViewPresenter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Other%20Global%20Variables.html">Other Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Other%20Global%20Variables.html#/s:13NuguClientKit10logEnabledSbvp">logEnabled</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Other%20Extensions.html">Other Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/AuthorizationInfo.html">AuthorizationInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NuguOAuthClient.html">NuguOAuthClient</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Other%20Protocols.html">Other Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioDisplayViewPresenterDelegate.html">AudioDisplayViewPresenterDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DisplayWebViewPresenterDelegate.html">DisplayWebViewPresenterDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>DisplayWebViewPresenter</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">DisplayWebViewPresenter</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">DisplayWebViewPresenter</span><span class="p">:</span> <span class="kt">DisplayAgentDelegate</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">DisplayWebViewPresenter</span><span class="p">:</span> <span class="kt">WKNavigationDelegate</span></code></pre>
+
+                </div>
+              </div>
+            <p>DisplayWebViewPresenter is a class which helps user for displaying DisplayWebView more easily.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit23DisplayWebViewPresenterC05superF004nuguB010clientInfoACSo6UIViewC_AA0aB0CSDyS2SGSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(superView:nuguClient:clientInfo:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit23DisplayWebViewPresenterC05superF004nuguB010clientInfoACSo6UIViewC_AA0aB0CSDyS2SGSgtcfc">init(superView:<wbr>nuguClient:<wbr>clientInfo:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initialize with superView</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">superView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="nv">nuguClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/NuguClient.html">NuguClient</a></span><span class="p">,</span> <span class="nv">clientInfo</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>superView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Target view for NuguDisplayWebView should be added to.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nuguClient</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>NuguClient instance which should be passed for delegation.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientInfo</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional and additional values which can be injected for pre-promised and customized layout.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13NuguClientKit23DisplayWebViewPresenterC14viewController04nuguB010clientInfoACSo06UIViewI0C_AA0aB0CSDyS2SGSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(viewController:nuguClient:clientInfo:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13NuguClientKit23DisplayWebViewPresenterC14viewController04nuguB010clientInfoACSo06UIViewI0C_AA0aB0CSDyS2SGSgtcfc">init(viewController:<wbr>nuguClient:<wbr>clientInfo:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initialize with viewController</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">nuguClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/NuguClient.html">NuguClient</a></span><span class="p">,</span> <span class="nv">clientInfo</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>viewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Target viewController for NuguDisplayWebView should be added to.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nuguClient</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>NuguClient instance which should be passed for delegation.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientInfo</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional and additional values which can be injected for pre-promised and customized layout.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/DisplayAgentDelegate"></a>
+                <a name="//apple_ref/swift/Section/DisplayAgentDelegate" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/DisplayAgentDelegate"></a>
+                  <h3 class="section-name"><p>DisplayAgentDelegate</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents20DisplayAgentDelegateP07displayD14RequestContext10templateId10completionySS_yAA0cH0VSgctF"></a>
+                    <a name="//apple_ref/swift/Method/displayAgentRequestContext(templateId:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents20DisplayAgentDelegateP07displayD14RequestContext10templateId10completionySS_yAA0cH0VSgctF">displayAgentRequestContext(templateId:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">displayAgentRequestContext</span><span class="p">(</span><span class="nv">templateId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">DisplayContext</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents20DisplayAgentDelegateP07displayD12ShouldRender8template10completionyAA0C8TemplateV_yyXlSgctF"></a>
+                    <a name="//apple_ref/swift/Method/displayAgentShouldRender(template:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents20DisplayAgentDelegateP07displayD12ShouldRender8template10completionyAA0C8TemplateV_yyXlSgctF">displayAgentShouldRender(template:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">displayAgentShouldRender</span><span class="p">(</span><span class="nv">template</span><span class="p">:</span> <span class="kt">DisplayTemplate</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">AnyObject</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents20DisplayAgentDelegateP07displayD12ShouldUpdate10templateId0I0ySS_AA0C8TemplateVtF"></a>
+                    <a name="//apple_ref/swift/Method/displayAgentShouldUpdate(templateId:template:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents20DisplayAgentDelegateP07displayD12ShouldUpdate10templateId0I0ySS_AA0C8TemplateVtF">displayAgentShouldUpdate(templateId:<wbr>template:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">displayAgentShouldUpdate</span><span class="p">(</span><span class="nv">templateId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">template</span><span class="p">:</span> <span class="kt">DisplayTemplate</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents20DisplayAgentDelegateP07displayD8DidClear10templateIdySS_tF"></a>
+                    <a name="//apple_ref/swift/Method/displayAgentDidClear(templateId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents20DisplayAgentDelegateP07displayD8DidClear10templateIdySS_tF">displayAgentDidClear(templateId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">displayAgentDidClear</span><span class="p">(</span><span class="nv">templateId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents20DisplayAgentDelegateP07displayD15ShouldMoveFocus10templateId9direction6header10completionySS_AA0C14ControlPayloadV9DirectionO0A4Core10DownstreamO6HeaderVySbctF"></a>
+                    <a name="//apple_ref/swift/Method/displayAgentShouldMoveFocus(templateId:direction:header:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents20DisplayAgentDelegateP07displayD15ShouldMoveFocus10templateId9direction6header10completionySS_AA0C14ControlPayloadV9DirectionO0A4Core10DownstreamO6HeaderVySbctF">displayAgentShouldMoveFocus(templateId:<wbr>direction:<wbr>header:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">displayAgentShouldMoveFocus</span><span class="p">(</span><span class="nv">templateId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">direction</span><span class="p">:</span> <span class="kt">DisplayControlPayload</span><span class="o">.</span><span class="kt">Direction</span><span class="p">,</span> <span class="nv">header</span><span class="p">:</span> <span class="kt">Downstream</span><span class="o">.</span><span class="kt">Header</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10NuguAgents20DisplayAgentDelegateP07displayD12ShouldScroll10templateId9direction6header10completionySS_AA0C14ControlPayloadV9DirectionO0A4Core10DownstreamO6HeaderVySbctF"></a>
+                    <a name="//apple_ref/swift/Method/displayAgentShouldScroll(templateId:direction:header:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10NuguAgents20DisplayAgentDelegateP07displayD12ShouldScroll10templateId9direction6header10completionySS_AA0C14ControlPayloadV9DirectionO0A4Core10DownstreamO6HeaderVySbctF">displayAgentShouldScroll(templateId:<wbr>direction:<wbr>header:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">displayAgentShouldScroll</span><span class="p">(</span><span class="nv">templateId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">direction</span><span class="p">:</span> <span class="kt">DisplayControlPayload</span><span class="o">.</span><span class="kt">Direction</span><span class="p">,</span> <span class="nv">header</span><span class="p">:</span> <span class="kt">Downstream</span><span class="o">.</span><span class="kt">Header</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>(c) 2020 SK Telecom Co., Ltd. All rights reserved.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

@@ -92,6 +92,9 @@
                 <a href="../Enums/Upstream/Attachment.html">– Attachment</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/Upstream/Header.html">– Header</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/Downstream.html">Downstream</a>
               </li>
               <li class="nav-group-task">
@@ -199,12 +202,147 @@
 
                 </div>
               </div>
-            <p>&lt;#Description#&gt;</p>
+            <p>An error that occurs while sending the event.</p>
 
           </section>
           <section class="section task-group-section">
             <div class="task-group">
               <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore16EventSenderErrorO21requestMultipleEventsyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/requestMultipleEvents" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore16EventSenderErrorO21requestMultipleEventsyA2CmF">requestMultipleEvents</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Requested to send an event with a duplicate ID.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">requestMultipleEvents</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore16EventSenderErrorO02noC9RequestedyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/noEventRequested" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore16EventSenderErrorO02noC9RequestedyA2CmF">noEventRequested</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Requested to send an attachment without event.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">noEventRequested</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore16EventSenderErrorO13streamBlockedyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/streamBlocked" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore16EventSenderErrorO13streamBlockedyA2CmF">streamBlocked</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An error occurred while executing <code>OutputStream.write</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">streamBlocked</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore16EventSenderErrorO06streamE0yACs0E0_pcACmF"></a>
+                    <a name="//apple_ref/swift/Element/streamError(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore16EventSenderErrorO06streamE0yACs0E0_pcACmF">streamError(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An error occurred while executing <code>OutputStream.write</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">streamError</span><span class="p">(</span><span class="nv">_</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8NuguCore16EventSenderErrorO16cannotBindMemoryyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/cannotBindMemory" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8NuguCore16EventSenderErrorO16cannotBindMemoryyA2CmF">cannotBindMemory</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An error occurred while executing <code>OutputStream.write</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">cannotBindMemory</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -237,7 +375,7 @@
         </section>
         <section id="footer">
           <p>(c) 2020 SK Telecom Co., Ltd. All rights reserved.</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>
