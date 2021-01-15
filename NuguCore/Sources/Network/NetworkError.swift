@@ -20,29 +20,33 @@
 
 import Foundation
 
-/// <#Description#>
+/// An error that occurs while processing network request.
 public enum NetworkError: Error {
-    /// <#Description#>
+    /// An error occurred due to a failure to connect to the server.
+    ///
+    /// This error only occurs when using connection-oriented feature..
     case noSuitableResourceServer
-    /// <#Description#>
+    /// An error occurred due to a failure to connect to the server.
+    ///
+    /// This error only occurs when using connection-oriented feature
     case invalidParameter
-    /// <#Description#>
+    /// An error occurred due to a failure to connect to the server.
+    ///
+    /// This error only occurs when using connection-oriented feature
     case badRequest
-    /// <#Description#>
+    /// Rejected due to authorization error.
     case authError
-    /// <#Description#>
+    /// An error occurred due to a failure to open `InputSteram`.
     case streamInitializeFailed
-    /// <#Description#>
+    /// No has response.
     case nilResponse
-    /// <#Description#>
+    /// The request timed out.
     case timeout
-    /// <#Description#>
+    /// An error occurred while processing received data.
     case invalidMessageReceived
-    /// <#Description#>
-    case unavailable
-    /// <#Description#>
+    /// The error occurs on the server.
     case serverError
-    /// <#Description#>
+    /// The error occurs by unknown or complicated issue.
     case unknown
 }
 
@@ -65,8 +69,6 @@ extension NetworkError: LocalizedError {
             return "Request timeout"
         case .invalidMessageReceived:
             return "Invalid message has received"
-        case .unavailable:
-            return "Server status unavailable"
         case .serverError:
             return "server error"
         case .unknown:

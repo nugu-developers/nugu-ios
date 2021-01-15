@@ -20,43 +20,52 @@
 
 import Foundation
 
-/// <#Description#>
+/// A protocol for sending `Upstream` data to the server.
 public protocol UpstreamDataSendable: class {
-    /**
-     Sends an event.
-     */
+    /// Sends an event.
+    ///
+    /// - Parameters:
+    ///   - event: The event to send.
+    ///   - completion: The completion handler to call when the request is complete.
     func sendEvent(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)?)
-
-    /**
-     Sends an event and keep the stream for future attachment
-     */
+    
+    /// Sends an event and keep the stream for future attachment
+    ///
+    /// - Parameters:
+    ///   - event: The event to send.
+    ///   - completion: The completion handler to call when the request is complete.
     func sendStream(_ event: Upstream.Event, completion: ((StreamDataState) -> Void)?)
     
-    /**
-     Sends an attachment using the stream set before.
-     
-     Every event and attachment have `DialogRequestId`.
-     This method finds the suitable stream using that id
-     */
+    /// Sends an attachment using the stream set before.
+    ///
+    /// Every event and attachment have `DialogRequestId` and this method finds the suitable stream using that id.
+    ///
+    /// - Parameters:
+    ///   - attachment: The attachmen to send.
+    ///   - completion: The completion handler to call when the request is complete.
     func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)?)
     
     /// Cancels an event.
     ///
-    /// - Parameter dialogRequestId: The `dialogRequestId` to cancel event.
+    /// - Parameter dialogRequestId: The event's `dialogRequestId` to cancel.
     func cancelEvent(dialogRequestId: String)
 }
 
 public extension UpstreamDataSendable {
-    /// <#Description#>
-    /// - Parameter event: <#event description#>
+    /// Sends an event.
+    ///
+    /// - Parameters:
+    ///   - event: The event to send.
     func sendEvent(_ event: Upstream.Event) {
         sendEvent(event, completion: nil)
     }
     
-    /// <#Description#>
+    /// Sends an attachment using the stream set before.
+    ///
+    /// Every event and attachment have `DialogRequestId` and this method finds the suitable stream using that id.
+    ///
     /// - Parameters:
-    ///   - attachment: <#attachment description#>
-    ///   - dialogRequestId: <#dialogRequestId description#>
+    ///   - attachment: The attachmen to send.
     func sendStream(_ attachment: Upstream.Attachment) {
         sendStream(attachment, completion: nil)
     }
