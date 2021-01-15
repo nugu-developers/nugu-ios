@@ -58,17 +58,12 @@ final class NuguCentralManager {
         }
     }()
     
-    let audioSessionManager: AudioSessionManager
-    let speechRecognizerAggregator: SpeechRecognizerAggregator
-    
     private init() {
         client = NuguClient()
-        audioSessionManager = AudioSessionManager(nuguClient: client)
-        speechRecognizerAggregator = SpeechRecognizerAggregator(
-            asrAgent: client.asrAgent,
-            keywordDetector: client.keywordDetector,
-            micInputProvider: MicInputProvider(),
-            audioSessionManager: audioSessionManager
+        client.audioSessionManager = AudioSessionManager(nuguClient: client)
+        client.speechRecognizerAggregator = SpeechRecognizerAggregator(
+            nuguClient: client,
+            micInputProvider: MicInputProvider()
         )
         
         client.delegate = self
@@ -90,9 +85,7 @@ final class NuguCentralManager {
             log.error("EPD model file not exist")
         }
         
-        speechRecognizerAggregator.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
-        client.audioSessionManager = audioSessionManager
-        client.speechRecognizerAggregator = speechRecognizerAggregator
+        client.speechRecognizerAggregator?.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
     }
     
     deinit {
@@ -130,7 +123,7 @@ extension NuguCentralManager {
     }
     
     func startUsingAudioSessionManager() {
-        audioSessionManager.updateAudioSession()
+        client.audioSessionManager?.updateAudioSession()
     }
 }
 
@@ -317,15 +310,15 @@ private extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startListening(initiator: ASRInitiator) {
-        speechRecognizerAggregator.startListening(initiator: initiator)
+        client.speechRecognizerAggregator?.startListening(initiator: initiator)
     }
     
     func startListeningWithTrigger() {
-        speechRecognizerAggregator.startListeningWithTrigger()
+        client.speechRecognizerAggregator?.startListeningWithTrigger()
     }
     
     func stopListening() {
-        speechRecognizerAggregator.stopListening()
+        client.speechRecognizerAggregator?.stopListening()
     }
 }
 
@@ -351,11 +344,11 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        return audioSessionManager.updateAudioSession(requestingFocus: true)
+        return client.audioSessionManager?.updateAudioSession(requestingFocus: true) ?? false
     }
     
     func nuguClientDidReleaseAudioSession() {
-        audioSessionManager.notifyAudioSessionDeactivation()
+        client.audioSessionManager?.notifyAudioSessionDeactivation()
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {

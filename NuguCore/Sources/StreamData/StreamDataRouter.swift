@@ -28,17 +28,16 @@ public class StreamDataRouter: StreamDataRoutable {
     private let notificationCenter = NotificationCenter.default
     private let notificationQueue = DispatchQueue(label: "com.sktelecom.romaine.stream_data_router_notificaiton_queue")
     
-    private let nuguApiProvider = NuguApiProvider()
+    private lazy var nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
     @Atomic private var eventSenders = [String: EventSender]()
     @Atomic private var eventDisposables = [String: Disposable]()
-    private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
+    private lazy var serverInitiatedDirectiveRecever = ServerSideEventReceiver(apiProvider: nuguApiProvider)
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
     public init(directiveSequencer: DirectiveSequenceable) {
-        serverInitiatedDirectiveRecever = ServerSideEventReceiver(apiProvider: nuguApiProvider)
         self.directiveSequencer = directiveSequencer
     }
 }

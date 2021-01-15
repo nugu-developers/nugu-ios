@@ -30,10 +30,8 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     private let notificationCenter = NotificationCenter.default
     private var asrStateObserver: Any?
     
-    private let asrAgent: ASRAgentProtocol
-    private let keywordDetector: KeywordDetector
+    private let nuguClient: NuguClient
     private let micInputProvider: MicInputProvider
-    private let audioSessionManager: AudioSessionManageable
     
     private var startMicWorkItem: DispatchWorkItem?
 
@@ -42,32 +40,30 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     
     public var useKeywordDetector = true
     
-    public init(asrAgent: ASRAgentProtocol, keywordDetector: KeywordDetector, micInputProvider: MicInputProvider, audioSessionManager: AudioSessionManageable) {
-        self.asrAgent = asrAgent
-        self.keywordDetector = keywordDetector
+    public init(nuguClient: NuguClient, micInputProvider: MicInputProvider) {
+        self.nuguClient = nuguClient
         self.micInputProvider = micInputProvider
-        self.audioSessionManager = audioSessionManager
         
         micInputProvider.delegate = self
         
-        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: asrAgent, queue: .main) { [weak self] (notification) in
+        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: nuguClient.asrAgent, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
             guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
             
             switch state {
             case .idle:
                 if self.useKeywordDetector == true {
-                    keywordDetector.start()
+                    nuguClient.keywordDetector.start()
                 } else {
-                    keywordDetector.stop()
+                    nuguClient.keywordDetector.stop()
                 }
             case .listening:
-                keywordDetector.stop()
+                nuguClient.keywordDetector.stop()
             case .expectingSpeech:
                 self.startMicInputProvider(requestingFocus: true) { (success) in
                     guard success == true else {
                         log.debug("startMicInputProvider failed!")
-                        asrAgent.stopRecognition()
+                        nuguClient.asrAgent.stopRecognition()
                         return
                     }
                 }
@@ -89,11 +85,11 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
 public extension SpeechRecognizerAggregator {
     @discardableResult
     func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)? = nil) -> String {
-        let dialogRequestId = asrAgent.startRecognition(initiator: initiator, completion: completion)
+        let dialogRequestId = nuguClient.asrAgent.startRecognition(initiator: initiator, completion: completion)
         startMicInputProvider(requestingFocus: true) { [weak self] success in
             guard success else {
                 log.error("Start MicInputProvider failed")
-                self?.asrAgent.stopRecognition()
+                self?.nuguClient.asrAgent.stopRecognition()
                 return
             }
         }
@@ -102,8 +98,8 @@ public extension SpeechRecognizerAggregator {
     }
     
     func startListeningWithTrigger() {
-        if useKeywordDetector, keywordDetector.keywordSource != nil {
-            keywordDetector.start()
+        if useKeywordDetector, nuguClient.keywordDetector.keywordSource != nil {
+            nuguClient.keywordDetector.start()
             
             startMicWorkItem?.cancel()
             startMicWorkItem = DispatchWorkItem(block: { [weak self] in
@@ -122,15 +118,15 @@ public extension SpeechRecognizerAggregator {
             // FIXME: Do not delay every time.
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: startMicWorkItem)
         } else {
-            keywordDetector.stop()
+            nuguClient.keywordDetector.stop()
             stopMicInputProvider()
         }
     }
     
     func stopListening() {
-        keywordDetector.stop()
+        nuguClient.keywordDetector.stop()
         stopMicInputProvider()
-        asrAgent.stopRecognition()
+        nuguClient.asrAgent.stopRecognition()
     }
 }
 
@@ -146,7 +142,7 @@ extension SpeechRecognizerAggregator {
                 return
             }
             
-            self.audioSessionManager.requestRecordPermission { [weak self] isGranted in
+            self.nuguClient.audioSessionManager?.requestRecordPermission { [weak self] isGranted in
                 guard let self = self else { return }
                 guard isGranted else {
                     log.error("Record permission denied")
@@ -156,7 +152,7 @@ extension SpeechRecognizerAggregator {
                 self.micQueue.async { [unowned self] in
                     defer {
                         log.debug("addEngineConfigurationChangeNotification")
-                        self.audioSessionManager.registerAudioEngineConfigurationObserver()
+                        self.nuguClient.audioSessionManager?.registerAudioEngineConfigurationObserver()
                     }
                     self.micInputProvider.stop()
                     
@@ -164,7 +160,7 @@ extension SpeechRecognizerAggregator {
                     // To avoid adding mixWithOthers option when audio player is in paused state,
                     // update audioSession should be done only when requesting focus
                     if requestingFocus {
-                        self.audioSessionManager.updateAudioSession(requestingFocus: requestingFocus)
+                        self.nuguClient.audioSessionManager?.updateAudioSession(requestingFocus: requestingFocus)
                     }
                     do {
                         try self.micInputProvider.start()
@@ -182,7 +178,7 @@ extension SpeechRecognizerAggregator {
         micQueue.sync {
             startMicWorkItem?.cancel()
             micInputProvider.stop()
-            audioSessionManager.removeAudioEngineConfigurationObserver()
+            nuguClient.audioSessionManager?.removeAudioEngineConfigurationObserver()
         }
     }
 }
@@ -191,12 +187,12 @@ extension SpeechRecognizerAggregator {
 
 extension SpeechRecognizerAggregator: MicInputProviderDelegate {
     public func micInputProviderDidReceive(buffer: AVAudioPCMBuffer) {
-        if keywordDetector.state == .active {
-            keywordDetector.putAudioBuffer(buffer: buffer)
+        if nuguClient.keywordDetector.state == .active {
+            nuguClient.keywordDetector.putAudioBuffer(buffer: buffer)
         }
         
-        if [.listening, .recognizing].contains(asrAgent.asrState) {
-            asrAgent.putAudioBuffer(buffer: buffer)
+        if [.listening, .recognizing].contains(nuguClient.asrAgent.asrState) {
+            nuguClient.asrAgent.putAudioBuffer(buffer: buffer)
         }
     }
 }
