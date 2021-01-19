@@ -132,7 +132,7 @@ public final class ASRAgent: ASRAgentProtocol {
                     ).rx)
                 case ASRError.listeningTimeout:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
-                    sendCompactContextEvent(Event(
+                    sendFullContextEvent(Event(
                         typeInfo: .listenTimeout,
                         dialogAttributes: dialogAttributeStore.attributes,
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
@@ -536,6 +536,21 @@ private extension ASRAgent {
             event,
             eventIdentifier: eventIdentifier,
             context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
+    }
+    
+    @discardableResult func sendFullContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
+        let eventIdentifier = EventIdentifier()
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(),
             property: self.capabilityAgentProperty,
             completion: completion
         ).subscribe().disposed(by: disposeBag)
