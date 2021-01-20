@@ -30,7 +30,6 @@ public final class ChipsAgent: ChipsAgentProtocol {
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
-    private let notificationCenter = NotificationCenter.default
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -78,27 +77,24 @@ private extension ChipsAgent {
             }
             defer { completion(.finished) }
             
-            self.notificationCenter.post(name: .chipsAgentDidReceive, object: self, userInfo: [ObservingFactor.Receive.item: item,
-                                                                                               ObservingFactor.Receive.header: directive.header])
+            self.post(NuguAgentNotification.Chips.Receive(item: item, header: directive.header))
         }
     }
 }
 
 // MARK: - Observer
 
-public extension Notification.Name {
+extension Notification.Name {
     static let chipsAgentDidReceive = Notification.Name("com.sktelecom.romain.notification.name.chips_agent_did_receive")
 }
 
-extension ChipsAgent: Observing {
-    public enum ObservingFactor {
-        public enum Receive: ObservingSpec {
-            case item
-            case header
+public extension NuguAgentNotification {
+    enum Chips {
+        public struct Receive: TypedNotification {
+            public let item: ChipsAgentItem
+            public let header: Downstream.Header
             
-            public var name: Notification.Name {
-                .chipsAgentDidReceive
-            }
+            public static let name: Notification.Name = .chipsAgentDidReceive
         }
     }
 }

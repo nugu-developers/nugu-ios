@@ -483,11 +483,11 @@ extension NuguCentralManager: SoundAgentDataSource {
 
 private extension NuguCentralManager {
     func addSystemAgentObserver(_ object: SystemAgentProtocol) {
-        systemAgentExceptionObserver = notificationCenter.addObserver(forName: .systemAgentDidReceiveExceptionFail, object: object, queue: nil) { [weak self] (notification) in
+        systemAgentExceptionObserver = notificationCenter.addObserver(forName: NuguAgentNotification.System.Exception.name, object: object, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let code = notification.userInfo?[SystemAgent.ObservingFactor.Exception.code] as? SystemAgentExceptionCode.Fail else { return }
+            guard let exception = try? JSONDecoder().decode(NuguAgentNotification.System.Exception.self, from: notification.userInfo as! [String: Any]) else { return }
             
-            switch code {
+            switch exception.code {
             case .playRouterProcessingException:
                 self.localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
             case .ttsSpeakingException:
@@ -508,11 +508,13 @@ private extension NuguCentralManager {
             }
         }
         
-        systemAgentRevokeObserver = notificationCenter.addObserver(forName: .systemAgentDidReceiveRevokeDevice, object: object, queue: nil) { [weak self] (notification) in
+        systemAgentRevokeObserver = notificationCenter.addObserver(forName: NuguAgentNotification.System.RevokeDevice.name, object: object, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let reason = notification.userInfo?[SystemAgent.ObservingFactor.RevokeDevice.reason] as? SystemAgentRevokeReason else { return }
+            guard let revokeDevice = try? JSONDecoder().decode(
+                    NuguAgentNotification.System.RevokeDevice.self,
+                    from: notification.userInfo) else { return }
             
-            self.clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
+            self.clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: revokeDevice.reason))
         }
     }
 }

@@ -80,7 +80,7 @@ public final class ASRAgent: ASRAgentProtocol {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != asrState {
-                notificationCenter.post(name: .asrAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: asrState])
+                post(NuguAgentNotification.ASR.State(state: asrState))
             }
         }
     }
@@ -152,8 +152,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 expectSpeech = nil
             }
             
-            notificationCenter.post(name: .asrAgentResultDidReceive, object: self, userInfo: [ObservingFactor.Result.result: asrResult,
-                                                                                              ObservingFactor.Result.dialogRequestId: asrRequest.eventIdentifier.dialogRequestId])
+            post(NuguAgentNotification.ASR.Result(result: asrResult, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId))
         }
     }
     
@@ -700,42 +699,32 @@ private extension ASRAgent {
 
 // MARK: - Observers
 
-public extension Notification.Name {
+extension Notification.Name {
     static let asrAgentStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_state_did_chage")
     static let asrAgentResultDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_result_did_receive")
 }
 
-extension ASRAgent: Observing {
-    public enum ObservingFactor {
-        public enum State: ObservingSpec {
-            case state
-            
-            public var name: Notification.Name {
-                .asrAgentStateDidChange
-            }
+public extension NuguAgentNotification {
+    enum ASR {
+        public struct State: TypedNotification {
+            public static let name: Notification.Name = .asrAgentStateDidChange
+            public let state: ASRState
         }
         
-        public enum Result: ObservingSpec {
-            case result
-            case dialogRequestId
-            
-            public var name: Notification.Name {
-                .asrAgentResultDidReceive
-            }
+        public struct Result: TypedNotification {
+            public static let name: Notification.Name = .asrAgentResultDidReceive
+            public let result: ASRResult
+            public let dialogRequestId: String
         }
     }
 }
 
 private extension ASRAgent {
     func addPlaySyncObserver(_ object: PlaySyncManageable) {
-        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
-                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
-            
-            self.asrDispatchQueue.async { [weak self] in
+        playSyncObserver = object.observe(NuguCoreNotification.PlaySync.ReleasedProperty.self, queue: nil) { [weak self] (notification) in
+            self?.asrDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard property == self.playSyncProperty, self.expectSpeech?.messageId == messageId else { return }
+                guard notification.property == self.playSyncProperty, self.expectSpeech?.messageId == notification.messageId else { return }
                 
                 self.stopRecognition()
             }

@@ -1,8 +1,8 @@
 //
-//  Observing.swift
+//  JSONDecoder+decodeFromDictionary.swift
 //  NuguUtils
 //
-//  Created by childc on 2021/01/10.
+//  Created by childc on 2021/01/18.
 //  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,11 @@
 
 import Foundation
 
-public protocol Observing {
-    associatedtype ObservingFactor
-}
-
-public protocol ObservingSpec: Hashable {
-    var name: Notification.Name { get }
+public extension JSONDecoder {
+    func decode<T>(_ type: T.Type, from dictionary: [AnyHashable: Any]?) throws -> T where T: Decodable {
+        guard let dictionary = dictionary as? [String: Any] else { throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Unmatched dictionary"))}
+        
+        let data = try JSONSerialization.data(withJSONObject: dictionary, options: [])
+        return try decode(type, from: data)
+    }
 }

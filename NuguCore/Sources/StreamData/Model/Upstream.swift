@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 /// An enum that contains the data structures to be send to the server.
 public enum Upstream {
     /// A structure that contains a event and contexts.
@@ -50,7 +52,7 @@ public enum Upstream {
     /// A structure that contains data and headers for the attachment.
     ///
     /// This is sub-data of `Event`
-    public struct Attachment {
+    public struct Attachment: Codable {
         /// A structure that contains header fields for the attachment.
         public let header: Header
         /// The sequence number of attachment.
@@ -158,6 +160,31 @@ extension Upstream.Event {
         }
         
         return contextString
+    }
+}
+
+extension Upstream.Event: Codable {
+    enum CodingKeys: CodingKey {
+        case payload
+        case header
+        case httpHeaderFields
+        case contextPayload
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        payload = try container.decode([String: AnyHashable].self, forKey: .payload)
+        header = try container.decode(Upstream.Header.self, forKey: .header)
+        httpHeaderFields = try container.decode([String: String].self, forKey: .httpHeaderFields)
+        contextPayload = try container.decode([ContextInfo].self, forKey: .contextPayload)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(payloadString, forKey: .payload)
+        try container.encode(header, forKey: .header)
+        try container.encode(httpHeaderFields, forKey: .httpHeaderFields)
+        try container.encode(contextString, forKey: .contextPayload)
     }
 }
 

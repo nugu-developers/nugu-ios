@@ -35,8 +35,6 @@ public class InteractionControlManager: InteractionControlManageable {
     private var interactionControls = Set<CapabilityAgentCategory>()
     private var timeoutTimers = [String: Disposable]()
     
-    private let notificationCenter = NotificationCenter.default
-    
     public init() {}
 }
 
@@ -51,7 +49,7 @@ public extension InteractionControlManager {
             self.addTimer(category: category)
             self.interactionControls.insert(category)
             if self.interactionControls.count == 1 {
-                self.notificationCenter.post(name: .interactionControlDidChange, object: self, userInfo: [ObservingFactor.MultiTurn.multiTurn: true])
+                self.post(NuguAgentNotification.InteractionControl.MultiTurn(multiTurn: true))
             }
         }
     }
@@ -64,7 +62,7 @@ public extension InteractionControlManager {
             self.removeTimer(category: category)
             self.interactionControls.remove(category)
             if self.interactionControls.isEmpty {
-                self.notificationCenter.post(name: .interactionControlDidChange, object: self, userInfo: [ObservingFactor.MultiTurn.multiTurn: false])
+                self.post(NuguAgentNotification.InteractionControl.MultiTurn(multiTurn: false))
             }
         }
     }
@@ -80,7 +78,7 @@ private extension InteractionControlManager {
                 log.debug("Timer fired. \(category)")
                 self.interactionControls.remove(category)
                 if self.interactionControls.isEmpty {
-                    self.notificationCenter.post(name: .interactionControlDidChange, object: self, userInfo: [ObservingFactor.MultiTurn.multiTurn: false])
+                    self.post(NuguAgentNotification.InteractionControl.MultiTurn(multiTurn: false))
                 }
             })
     }
@@ -94,18 +92,15 @@ private extension InteractionControlManager {
 
 // MARK: - Observer
 
-public extension Notification.Name {
+extension Notification.Name {
     static let interactionControlDidChange = Notification.Name("com.sktelecom.romain.notification.name.interaction_control_did_change")
 }
 
-extension InteractionControlManager: Observing {
-    public enum ObservingFactor {
-        public enum MultiTurn: ObservingSpec {
-            case multiTurn
-            
-            public var name: Notification.Name {
-                .interactionControlDidChange
-            }
+public extension NuguAgentNotification {
+    enum InteractionControl {
+        public struct MultiTurn: TypedNotification {
+            public static let name: Notification.Name = .interactionControlDidChange
+            public let multiTurn: Bool
         }
     }
 }

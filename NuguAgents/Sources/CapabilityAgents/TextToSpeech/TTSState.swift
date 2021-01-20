@@ -21,7 +21,7 @@
 import Foundation
 
 /// Identifies the player state.
-public enum TTSState {
+public enum TTSState: String, Codable {
     /// Initial state, prior to acting on the first Play directive.
     case idle
     /// Indicates that audio is currently playing.

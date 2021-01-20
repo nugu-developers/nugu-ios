@@ -20,6 +20,8 @@
 
 import Foundation
 
+import NuguUtils
+
 /// An error that occurs while sending the event.
 public enum EventSenderError: Error, CustomStringConvertible {
     /// Requested to send an event with a duplicate ID.
@@ -45,6 +47,60 @@ public enum EventSenderError: Error, CustomStringConvertible {
             return "Stream error: \(error)"
         case .cannotBindMemory:
             return "Cannot bind memory"
+        }
+    }
+}
+
+extension EventSenderError: CodableError {
+    enum CodingKeys: CodingKey {
+        case code
+        case associatedValue
+    }
+    
+    public var code: Int {
+        switch self {
+        case .requestMultipleEvents:
+            return 0
+        case .noEventRequested:
+            return 1
+        case .streamBlocked:
+            return 2
+        case .streamError:
+            return 3
+        case .cannotBindMemory:
+            return 4
+        }
+    }
+    
+    public var name: String {
+        return self.description
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let code = try container.decode(CodableError.Code.self, forKey: .code)
+        switch code {
+        case 0:
+            self = .requestMultipleEvents
+        case 1:
+            self = .noEventRequested
+        case 2:
+            self = .streamBlocked
+        case 3:
+            self = .streamError(try container.decode(NSError.self, forKey: .associatedValue))
+        case 4:
+            self = .cannotBindMemory
+        default:
+            throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Unmatched case"))
+        }
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.code, forKey: .code)
+        
+        if case let .streamError(error) = self {
+            try container.encode(error as NSError, forKey: .associatedValue)
         }
     }
 }

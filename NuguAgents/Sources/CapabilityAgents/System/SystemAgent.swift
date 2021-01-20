@@ -4,19 +4,7 @@
 //
 //  Created by yonghoonKwon on 24/05/2019.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-//
+
 
 import Foundation
 
@@ -34,8 +22,6 @@ public final class SystemAgent: SystemAgentProtocol {
     private let streamDataRouter: StreamDataRoutable
     private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
-    private let notificationCenter = NotificationCenter.default
-    
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -118,8 +104,7 @@ private extension SystemAgent {
             self?.systemDispatchQueue.async { [weak self] in
                 switch exceptionItem.code {
                 case .fail(let code):
-                    self?.notificationCenter.post(name: .systemAgentDidReceiveExceptionFail, object: self, userInfo: [ObservingFactor.Exception.code: code,
-                                                                                                                ObservingFactor.Exception.header: directive.header])
+                    self?.post(NuguAgentNotification.System.Exception(code: code, header: directive.header))
                 case .warning(let code):
                     log.debug("received warning code: \(code)")
                 }
@@ -136,8 +121,7 @@ private extension SystemAgent {
             defer { completion(.finished) }
 
             self?.systemDispatchQueue.async { [weak self] in
-                self?.notificationCenter.post(name: .systemAgentDidReceiveRevokeDevice, object: self, userInfo: [ObservingFactor.RevokeDevice.reason: revokeItem.reason,
-                                                                                                                 ObservingFactor.RevokeDevice.header: directive.header])
+                self?.post(NuguAgentNotification.System.RevokeDevice(reason: revokeItem.reason, header: directive.header))
             }
         }
     }
@@ -174,29 +158,23 @@ private extension SystemAgent {
 
 // MARK: - Observer
 
-public extension Notification.Name {
+extension Notification.Name {
     static let systemAgentDidReceiveExceptionFail = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_receive_exception_fail")
-        static let systemAgentDidReceiveRevokeDevice = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_revoke_device")
+    static let systemAgentDidReceiveRevokeDevice = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_revoke_device")
 }
 
-extension SystemAgent: Observing {
-    public enum ObservingFactor {
-        public enum Exception: ObservingSpec {
-            case code
-            case header
-            
-            public var name: Notification.Name {
-                .systemAgentDidReceiveExceptionFail
-            }
+public extension NuguAgentNotification {
+    enum System {
+        public struct Exception: Codable, TypedNotification {
+            public static let name: Notification.Name = .systemAgentDidReceiveExceptionFail
+            public let code: SystemAgentExceptionCode.Fail
+            public let header: Downstream.Header
         }
         
-        public enum RevokeDevice: ObservingSpec {
-            case reason
-            case header
-            
-            public var name: Notification.Name {
-                .systemAgentDidReceiveRevokeDevice
-            }
+        public struct RevokeDevice: Codable, TypedNotification {
+            static public var name: Notification.Name = .systemAgentDidReceiveRevokeDevice
+            public let reason: SystemAgentRevokeReason
+            public let header: Downstream.Header
         }
     }
 }

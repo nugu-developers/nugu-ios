@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct DirectiveCancelPolicy {
+public struct DirectiveCancelPolicy: Codable {
     /// <#Description#>
     public let cancelAll: Bool
     /// <#Description#>

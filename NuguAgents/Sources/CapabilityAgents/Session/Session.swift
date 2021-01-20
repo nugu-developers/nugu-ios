@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct Session: Equatable {
+public struct Session: Equatable, Codable {
     /// <#Description#>
     public let sessionId: String
     /// <#Description#>

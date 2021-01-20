@@ -23,7 +23,7 @@ import Foundation
 import NuguAgents
 
 /// Identifies the dialog state.
-public enum DialogState {
+public enum DialogState: String, Codable {
     /// Ready for an interaction.
     case idle
     /// Passively listening.

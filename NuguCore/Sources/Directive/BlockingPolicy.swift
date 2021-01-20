@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct BlockingPolicy {
+public struct BlockingPolicy: Codable {
     /// <#Description#>
     public let medium: Medium
     /// <#Description#>
@@ -37,7 +37,7 @@ public struct BlockingPolicy {
     }
     
     /// <#Description#>
-    public enum Medium: CaseIterable {
+    public enum Medium: String, CaseIterable, Codable {
         case none
         case audio
         case visual

@@ -21,7 +21,7 @@
 import Foundation
 
 /// Identifies the `ASRAgent` state.
-public enum ASRState {
+public enum ASRState: String, Codable {
     /// In this state, the `ASRAgent` is not waiting for or transmitting speech.
     case idle
     /// In this state, the `ASRAgent` is waiting for a call to `recognize()`.

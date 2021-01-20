@@ -20,8 +20,10 @@
 
 import Foundation
 
+import NuguUtils
+
 /// Identifies the player state.
-public enum AudioPlayerState {
+public enum AudioPlayerState: CodableEnum {
     /// Initial state, prior to acting on the first Play directive.
     case idle
     /// Indicates that audio is currently playing.
@@ -37,6 +39,28 @@ public enum AudioPlayerState {
     case paused(temporary: Bool)
     /// Indicates that playback has finished.
     case finished
+    
+    public static var allCases: [AudioPlayerState] {
+        return [.idle, .playing, .stopped, .paused(temporary: false), .paused(temporary: true), .finished]
+    }
+    
+    enum CodingKeys: CodingKey {
+        case index
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let caseIndex = try container.decode(CodableEnum.Index.self, forKey: .index)
+        self = AudioPlayerState.allCases[caseIndex]
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        guard let caseIndex = AudioPlayerState.allCases.firstIndex(of: self) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Unmatched case"))
+        }
+        try container.encode(caseIndex, forKey: .index)
+    }
 }
 
 extension AudioPlayerState {

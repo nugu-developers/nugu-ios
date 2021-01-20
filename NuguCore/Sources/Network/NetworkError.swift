@@ -20,8 +20,10 @@
 
 import Foundation
 
+import NuguUtils
+
 /// An error that occurs while processing network request.
-public enum NetworkError: Error {
+public enum NetworkError: String, CodableError, CaseIterable {
     /// An error occurred due to a failure to connect to the server.
     ///
     /// This error only occurs when using connection-oriented feature..
@@ -48,6 +50,14 @@ public enum NetworkError: Error {
     case serverError
     /// The error occurs by unknown or complicated issue.
     case unknown
+    
+    public var code: Int {
+        return NetworkError.allCases.firstIndex(of: self)!
+    }
+    
+    public var name: String {
+        return self.rawValue
+    }
 }
 
 // MARK: - LocalizedError

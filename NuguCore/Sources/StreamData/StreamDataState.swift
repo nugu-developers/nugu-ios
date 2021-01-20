@@ -19,6 +19,7 @@
 
 import Foundation
 
+import NuguUtils
 
 /// State of Stream data.
 public enum StreamDataState {

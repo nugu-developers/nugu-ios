@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct PlaySyncProperty {
+public struct PlaySyncProperty: Codable {
     /// <#Description#>
     public let layerType: LayerType
     /// <#Description#>
@@ -47,7 +47,7 @@ public struct PlaySyncProperty {
     }
     
     /// <#Description#>
-    public enum ContextType: String {
+    public enum ContextType: String, Codable {
         case sound
         case display
     }

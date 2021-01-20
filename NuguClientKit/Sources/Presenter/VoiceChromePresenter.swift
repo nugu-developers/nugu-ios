@@ -24,6 +24,7 @@ import UIKit
 import NuguAgents
 import NuguUIKit
 import NuguUtils
+import NuguCore
 
 /// <#Description#>
 public class VoiceChromePresenter {
@@ -194,12 +195,11 @@ private extension VoiceChromePresenter {
 /// :nodoc:
 private extension VoiceChromePresenter {
     func addInteractionControlObserver(_ object: InteractionControlManageable) {
-        interactionControlObserver = notificationCenter.addObserver(forName: InteractionControlManager.ObservingFactor.MultiTurn.multiTurn.name, object: object, queue: .main) { [weak self] (notification) in
+        interactionControlObserver = object.observe(NuguAgentNotification.InteractionControl.MultiTurn.self, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let isMultiturn = notification.userInfo?[InteractionControlManager.ObservingFactor.MultiTurn.multiTurn] as? Bool else { return }
             
-            self.isMultiturn = isMultiturn
-            if isMultiturn {
+            self.isMultiturn = notification.multiTurn
+            if notification.multiTurn {
                 self.disableIdleTimer()
             } else {
                 self.enableIdleTimer()
@@ -208,12 +208,11 @@ private extension VoiceChromePresenter {
     }
     
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+        asrStateObserver = object.observe(NuguAgentNotification.ASR.State.self, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
             
-            self.asrState = state
-            switch state {
+            self.asrState = notification.state
+            switch self.asrState {
             case .idle:
                 self.enableIdleTimer()
             default:
@@ -221,11 +220,10 @@ private extension VoiceChromePresenter {
             }
         }
         
-        asrResultObserver = notificationCenter.addObserver(forName: .asrAgentResultDidReceive, object: object, queue: .main) { [weak self] (notification) in
+        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let result = notification.userInfo?[ASRAgent.ObservingFactor.Result.result] as? ASRResult else { return }
             
-            switch result {
+            switch notification.result {
             case .complete(let text, _):
                 self.nuguVoiceChrome.setRecognizedText(text: text)
             case .partial(let text, _):
@@ -243,16 +241,11 @@ private extension VoiceChromePresenter {
     }
     
     func addDialogStateObserver(_ object: DialogStateAggregator) {
-        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
+        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState,
-                  let isMultiturn = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.multiturn] as? Bool,
-                  let sessionActivated = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.sessionActivated] as? Bool else { return }
-            
-            let chips = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.chips] as? [ChipsAgentItem.Chip]
-            log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
+            log.debug("\(notification.state) \(notification.multiTurn), \(notification.chips.debugDescription)")
 
-            switch state {
+            switch notification.state {
             case .idle:
                 self.voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
                     self?.dismissVoiceChrome()
@@ -263,14 +256,14 @@ private extension VoiceChromePresenter {
                 self.voiceChromeDismissWorkItem?.cancel()
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    guard isMultiturn == true else {
+                    guard notification.multiTurn == true else {
                         self.dismissVoiceChrome()
                         return
                     }
                     // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
                     try? self.showVoiceChrome()
                     self.nuguVoiceChrome.changeState(state: .speaking)
-                    if let chips = chips {
+                    if let chips = notification.chips {
                         let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                         self.setChipsButton(actionList: actionList, normalList: normalList)
@@ -282,11 +275,11 @@ private extension VoiceChromePresenter {
                     guard let self = self else { return }
                     // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
                     try? self.showVoiceChrome()
-                    if isMultiturn || sessionActivated {
+                    if notification.multiTurn || notification.sessionActivated {
                         self.nuguVoiceChrome.changeState(state: .listeningPassive)
                         self.nuguVoiceChrome.setRecognizedText(text: nil)
                     }
-                    if let chips = chips {
+                    if let chips = notification.chips {
                         let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                         self.setChipsButton(actionList: actionList, normalList: normalList)

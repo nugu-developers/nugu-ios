@@ -118,9 +118,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             if oldValue != audioPlayerState {
                 let state = audioPlayerState
                 audioPlayerNotificationQueue.async { [weak self] in
-                    guard let self = self else { return }
-                    self.notificationCenter.post(name: .audioPlayerAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: state,
-                                                                                                                 ObservingFactor.State.header: player.header])
+                    self?.post(NuguAgentNotification.AudioPlayer.State(state: state, header: player.header))
                 }
             }
         }
@@ -408,8 +406,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
     
     public func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {
         audioPlayerNotificationQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.notificationCenter.post(name: .audioPlayerAgentDurationDidChange, object: self, userInfo: [ObservingFactor.Duration.duration: duration.truncatedSeconds])
+            self?.post(NuguAgentNotification.AudioPlayer.Duration(duration: duration.truncatedMilliSeconds))
         }
     }
 }
@@ -798,45 +795,36 @@ private extension AudioPlayerAgent {
 
 // MARK: - Observers
 
-public extension Notification.Name {
+extension Notification.Name {
     static let audioPlayerAgentStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.audio_player_agent_state_did_change")
     static let audioPlayerAgentDurationDidChange = Notification.Name("com.sktelecom.romaine.notification.name.audio_player_agent_duration_did_change")
 }
 
-extension AudioPlayerAgent: Observing {
-    public enum ObservingFactor {
-        public enum State: ObservingSpec {
-            case state
-            case header
-            
-            public var name: Notification.Name {
-                .audioPlayerAgentStateDidChange
-            }
+public extension NuguAgentNotification {
+    enum AudioPlayer {
+        public struct State: TypedNotification {
+            public let state: AudioPlayerState
+            public let header: Downstream.Header
+            public static let name: Notification.Name = .audioPlayerAgentStateDidChange
         }
         
-        public enum Duration: ObservingSpec {
-            case duration
-            
-            public var name: Notification.Name {
-                .audioPlayerAgentDurationDidChange
-            }
+        public struct Duration: TypedNotification {
+            public let duration: Int
+            public static let name: Notification.Name = .audioPlayerAgentDurationDidChange
         }
     }
 }
 
 private extension AudioPlayerAgent {
     func addPlaySyncObserver(_ object: PlaySyncManageable) {
-        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
-                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
-            
-            self.audioPlayerDispatchQueue.async { [weak self] in
+        playSyncObserver = object.observe(NuguCoreNotification.PlaySync.ReleasedProperty.self, queue: nil) { [weak self] (notification) in
+            self?.audioPlayerDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard property == self.playSyncProperty,
-                      let player = self.latestPlayer, player.header.messageId == messageId else { return }
                 
-                log.debug(messageId)
+                guard notification.property == self.playSyncProperty,
+                      let player = self.latestPlayer, player.header.messageId == notification.messageId else { return }
+                
+                log.debug(notification.messageId)
                 self.stop(player: player, cancelAssociation: true)
             }
         }

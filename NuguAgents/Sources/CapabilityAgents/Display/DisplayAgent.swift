@@ -465,16 +465,12 @@ private extension DisplayAgent {
 
 private extension DisplayAgent {
     func addPlaySyncObserver(_ object: PlaySyncManageable) {
-        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
-                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
-            
-            self.displayDispatchQueue.async { [weak self] in
+        playSyncObserver = object.observe(NuguCoreNotification.PlaySync.ReleasedProperty.self, queue: nil) { [weak self] (notification) in
+            self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
                 self.templateList
-                    .filter { $0.template.playSyncProperty == property && $0.templateId == messageId }
+                    .filter { $0.template.playSyncProperty == notification.property && $0.templateId == notification.messageId }
                     .forEach {
                         if self.removeRenderedTemplate(item: $0) {
                             self.delegate?.displayAgentDidClear(templateId: $0.templateId)

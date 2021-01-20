@@ -21,9 +21,10 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 /// The `AudioPlayerAgent` handles directives for controlling audio playback.
-public protocol AudioPlayerAgentProtocol: CapabilityAgentable {
+public protocol AudioPlayerAgentProtocol: CapabilityAgentable, TypedNotifyable {
     var isPlaying: Bool { get }
     
     /// Sets a delegate to be notified of `AudioPlayerDisplayTemplate` changes.

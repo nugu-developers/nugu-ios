@@ -42,3 +42,25 @@ public struct ContextInfo {
         self.payload = payload
     }
 }
+
+extension ContextInfo: Codable {
+    enum CodingKeys: CodingKey {
+        case contextType
+        case name
+        case payload
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        contextType = try container.decode(ContextType.self, forKey: .contextType)
+        name = try container.decode(String.self, forKey: .name)
+        payload = try container.decode([AnyHashable].self, forKey: .payload)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(contextType, forKey: .contextType)
+        try container.encode(name, forKey: .name)
+        try container.encode(payload, forKey: .payload)
+    }
+}

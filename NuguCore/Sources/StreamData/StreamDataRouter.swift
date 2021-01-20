@@ -25,7 +25,6 @@ import NuguUtils
 import RxSwift
 
 public class StreamDataRouter: StreamDataRoutable {
-    private let notificationCenter = NotificationCenter.default
     private let notificationQueue = DispatchQueue(label: "com.sktelecom.romaine.stream_data_router_notificaiton_queue")
     
     private let nuguApiProvider = NuguApiProvider()
@@ -125,9 +124,9 @@ public extension StreamDataRouter {
         eventSender.send(event)
             .subscribe(onCompleted: { [weak self] in
                 guard let self = self else { return }
-                
+
                 self.notificationQueue.async { [weak self] in
-                    self?.notificationCenter.post(name: .streamDataEventWillSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event])
+                    self?.post(NuguCoreNotification.StreamDataRoute.ToBeSentEvent(event: event))
                 }
                 
                 completion?(.sent)
@@ -135,8 +134,7 @@ public extension StreamDataRouter {
                 guard let self = self else { return }
                 
                 self.notificationQueue.async { [weak self] in
-                    self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event,
-                                                                                                         ObservingFactor.EventDidSend.error: error])
+                    self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: error as? NetworkError))
                 }
                 
                 completion?(.error(error))
@@ -153,8 +151,7 @@ public extension StreamDataRouter {
                     
                     log.error("\(error.localizedDescription)")
                     self.notificationQueue.async { [weak self] in
-                        self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event,
-                                                                                                             ObservingFactor.EventDidSend.error: error])
+                        self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: error as? NetworkError))
                     }
                     
                     completion?(.error(error))
@@ -162,7 +159,7 @@ public extension StreamDataRouter {
                     guard let self = self else { return }
                     
                     self.notificationQueue.async { [weak self] in
-                        self?.notificationCenter.post(name: .streamDataEventDidSend, object: self, userInfo: [ObservingFactor.EventWillSend.event: event])
+                        self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: nil))
                     }
                     
                     completion?(.finished)
@@ -191,11 +188,6 @@ public extension StreamDataRouter {
      */
     func sendStream(_ attachment: Upstream.Attachment, completion: ((StreamDataState) -> Void)? = nil) {
         guard let eventSender = eventSenders[attachment.header.dialogRequestId] else {
-            self.notificationQueue.async { [weak self] in
-                self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment,
-                                                                                                          ObservingFactor.AttachmentDidSend.error: EventSenderError.noEventRequested])
-            }
-            
             completion?(.error(EventSenderError.noEventRequested))
             return
         }
@@ -210,7 +202,7 @@ public extension StreamDataRouter {
                 }
 
                 self.notificationQueue.async { [weak self] in
-                    self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment])
+                    self?.post(NuguCoreNotification.StreamDataRoute.SentAttachment(attachment: attachment, error: nil))
                 }
 
                 completion?(.sent)
@@ -218,8 +210,7 @@ public extension StreamDataRouter {
                 guard let self = self else { return }
                 
                 self.notificationQueue.async { [weak self] in
-                    self?.notificationCenter.post(name: .streamDataAttachmentDidSend, object: self, userInfo: [ObservingFactor.AttachmentDidSend.attachment: attachment,
-                                                                                                               ObservingFactor.AttachmentDidSend.error: error])
+                    self?.post(NuguCoreNotification.StreamDataRoute.SentAttachment(attachment: attachment, error: error as? NetworkError))
                 }
                 
                 completion?(.error(error))
@@ -255,7 +246,7 @@ extension StreamDataRouter {
                 .forEach { directive in
                     log.debug("Directive: \(directive.header)")
                     self.notificationQueue.async { [weak self] in
-                        self?.notificationCenter.post(name: .streamDataDirectiveDidReceive, object: self, userInfo: [ObservingFactor.DirectiveDidReceive.directive: directive])
+                        self?.post(NuguCoreNotification.StreamDataRoute.ReceivedDirective(directive: directive))
                     }
                     
                     directiveSequencer.processDirective(directive)
@@ -264,7 +255,7 @@ extension StreamDataRouter {
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
             log.debug("Attachment: \(attachment.header.dialogRequestId), \(attachment.header.type)")
             self.notificationQueue.async { [weak self] in
-                self?.notificationCenter.post(name: .streamDataAttachmentDidReceive, object: self, userInfo: [ObservingFactor.AttachmentDidReceive.attachment: attachment])
+                self?.post(NuguCoreNotification.StreamDataRoute.ReceivedAttachment(attachment: attachment))
             }
             
             directiveSequencer.processAttachment(attachment)
@@ -325,7 +316,7 @@ private extension Downstream.Header {
 
 // MARK: - Observer
 
-public extension Notification.Name {
+extension Notification.Name {
     static let streamDataDirectiveDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_directive_did_receive")
     static let streamDataAttachmentDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.stread_data_attachment_did_receive")
     static let streamDataEventWillSend = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_event_will_send")
@@ -333,48 +324,33 @@ public extension Notification.Name {
     static let streamDataAttachmentDidSend = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_attachment_did_send")
 }
 
-extension StreamDataRouter: Observing {
-    public enum ObservingFactor {
-        public enum DirectiveDidReceive: ObservingSpec {
-            case directive
-            
-            public var name: Notification.Name {
-                .streamDataDirectiveDidReceive
-            }
+public extension NuguCoreNotification {
+    enum StreamDataRoute {
+        public struct ReceivedDirective: TypedNotification {
+            public static var name: Notification.Name = .streamDataDirectiveDidReceive
+            public let directive: Downstream.Directive
         }
         
-        public enum AttachmentDidReceive: ObservingSpec {
-            case attachment
-            
-            public var name: Notification.Name {
-                .streamDataAttachmentDidReceive
-            }
+        public struct ReceivedAttachment: TypedNotification {
+            public static var name: Notification.Name = .streamDataAttachmentDidReceive
+            public let attachment: Downstream.Attachment
         }
         
-        public enum EventWillSend: ObservingSpec {
-            case event
-            
-            public var name: Notification.Name {
-                .streamDataEventWillSend
-            }
+        public struct ToBeSentEvent: TypedNotification {
+            public static let name: Notification.Name = .streamDataEventWillSend
+            public let event: Upstream.Event
         }
         
-        public enum EventDidSend: ObservingSpec {
-            case event
-            case error
-            
-            public var name: Notification.Name {
-                .streamDataEventDidSend
-            }
+        public struct SentEvent: TypedNotification {
+            public static var name: Notification.Name = .streamDataEventDidSend
+            public let event: Upstream.Event
+            public let error: NetworkError?
         }
         
-        public enum AttachmentDidSend: ObservingSpec {
-            case attachment
-            case error
-            
-            public var name: Notification.Name {
-                .streamDataAttachmentDidSend
-            }
+        public struct SentAttachment: TypedNotification {
+            public static var name: Notification.Name = .streamDataAttachmentDidSend
+            public let attachment: Upstream.Attachment
+            public let error: NetworkError?
         }
     }
 }

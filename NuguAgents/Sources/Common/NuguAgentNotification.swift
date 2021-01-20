@@ -1,9 +1,9 @@
 //
-//  ContextType.swift
-//  NuguCore
+//  NuguAgentNotification.swift
+//  NuguAgents
 //
-//  Created by MinChul Lee on 2019/08/09.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2021/01/18.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,10 +20,7 @@
 
 import Foundation
 
-/// <#Description#>
-public enum ContextType: String, Codable {
-    /// The element of supportedInterfaces in context.
-    case capability
-    /// The element of client in context.
-    case client
-}
+/**
+ Information about Notification from agents.
+ */
+public enum NuguAgentNotification {}
