@@ -21,6 +21,7 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 import RxSwift
 
@@ -30,7 +31,6 @@ public final class SoundAgent: SoundAgentProtocol, ContextInfoProvidable {
     
     // SoundAgentProtocol
     public weak var dataSource: SoundAgentDataSource?
-    public weak var delegate: SoundAgentDelegate?
     public var volume: Float = 1.0 {
         didSet {
             currentPlayer?.volume = volume
@@ -63,7 +63,12 @@ public final class SoundAgent: SoundAgentProtocol, ContextInfoProvidable {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != soundState {
-                delegate?.soundAgentDidChange(state: soundState, header: media.header)
+                NotificationCenter.default.post(
+                    name: .soundAgentDidChange,
+                    object: self,
+                    userInfo: [ObservingFactor.Receive.state: soundState,
+                               ObservingFactor.Receive.header: media.header]
+                )
             }
         }
     }
@@ -271,5 +276,24 @@ private extension SoundAgent {
             return
         }
         focusManager.releaseFocus(channelDelegate: self)
+    }
+}
+
+// MARK: - Observer
+
+public extension Notification.Name {
+    static let soundAgentDidChange = Notification.Name("com.sktelecom.romain.notification.name.sound_agent_did_change")
+}
+
+extension SoundAgent: Observing {
+    public enum ObservingFactor {
+        public enum Receive: ObservingSpec {
+            case state
+            case header
+            
+            public var name: Notification.Name {
+                .soundAgentDidChange
+            }
+        }
     }
 }

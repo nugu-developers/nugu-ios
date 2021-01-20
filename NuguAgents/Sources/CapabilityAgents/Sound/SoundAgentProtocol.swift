@@ -25,9 +25,6 @@ public protocol SoundAgentProtocol: CapabilityAgentable {
     /// The data source for the beep.
     var dataSource: SoundAgentDataSource? { get set }
     
-    /// Specifies the receiver’s delegate object.
-    var delegate: SoundAgentDelegate? { get set }
-    
     /// The beep playback volume for the player.
     ///
     /// This function retrieves the volume of the current `MediaPlayable` handled by the sound-agent.

@@ -41,7 +41,6 @@ class SoundAgentSpec: QuickSpec {
                 contextManager: contextManager,
                 directiveSequencer: directiveSequencer
             )
-            soundAgent.delegate = self
             soundAgent.dataSource = self
             
             describe("context") {
@@ -108,13 +107,5 @@ class SoundAgentSpec: QuickSpec {
 extension SoundAgentSpec: SoundAgentDataSource {
     func soundAgentRequestUrl(beepName: SoundBeepName, header: Downstream.Header) -> URL? {
         return Bundle(for: type(of: self)).url(forResource: "responsefail", withExtension: "wav")
-    }
-}
-
-// MARK: - SoundAgentDelegate
-
-extension SoundAgentSpec: SoundAgentDelegate {
-    func soundAgentDidChange(state: SoundState, header: Downstream.Header) {
-        self.state.append(state)
     }
 }
