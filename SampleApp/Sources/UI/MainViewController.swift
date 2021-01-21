@@ -36,9 +36,6 @@ final class MainViewController: UIViewController {
     @IBOutlet private weak var settingButton: UIButton!
     @IBOutlet private weak var watermarkLabel: UILabel!
     @IBOutlet private weak var textInputTextField: UITextField!
-        
-    private weak var displayView: NuguDisplayWebView?
-    private weak var displayAudioPlayerView: AudioDisplayView?
     
     private lazy var nuguVoiceChrome: NuguVoiceChrome = {
         NuguVoiceChrome(frame: CGRect())
