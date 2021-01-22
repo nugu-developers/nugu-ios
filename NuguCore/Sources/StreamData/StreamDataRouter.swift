@@ -134,7 +134,7 @@ public extension StreamDataRouter {
                 guard let self = self else { return }
                 
                 self.notificationQueue.async { [weak self] in
-                    self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: error as? NetworkError))
+                    self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: error))
                 }
                 
                 completion?(.error(error))
@@ -151,7 +151,7 @@ public extension StreamDataRouter {
                     
                     log.error("\(error.localizedDescription)")
                     self.notificationQueue.async { [weak self] in
-                        self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: error as? NetworkError))
+                        self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: error))
                     }
                     
                     completion?(.error(error))
@@ -214,7 +214,7 @@ public extension StreamDataRouter {
                 guard let self = self else { return }
                 
                 self.notificationQueue.async { [weak self] in
-                    self?.post(NuguCoreNotification.StreamDataRoute.SentAttachment(attachment: attachment, error: error as? NetworkError))
+                    self?.post(NuguCoreNotification.StreamDataRoute.SentAttachment(attachment: attachment, error: error))
                 }
                 
                 completion?(.error(error))
