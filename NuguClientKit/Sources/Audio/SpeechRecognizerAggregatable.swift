@@ -26,13 +26,27 @@ import NuguCore
 public protocol SpeechRecognizerAggregatable {
     var useKeywordDetector: Bool { get set }
     
+    /// Start ASR(`ASRAgentProcotol`) with microphone.
+    /// - Parameters:
+    ///   - initiator: The options for recognition.
+    ///   - completion: The completion handler to call when the request is complete.
     @discardableResult
     func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)?) -> String
+    
+    /// Start keyword detector with microphone.
+    /// - Parameters:
+    ///   - initiator: The options for recognition.
+    ///   - completion: The completion handler to call when the request is complete.
     func startListeningWithTrigger()
+    
+    /// Stop microphone, keyword detector and ASR.
     func stopListening()
 }
 
 public extension SpeechRecognizerAggregatable {
+    /// Start recording from the microphone and call `ASRAgentProtocol.startRecognition(initiator:completion:)`
+    /// - Parameters:
+    ///   - initiator: The options for recognition.
     func startListening(initiator: ASRInitiator) {
         startListening(initiator: initiator, completion: nil)
     }
