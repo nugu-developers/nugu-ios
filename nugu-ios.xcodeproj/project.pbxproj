@@ -22,8 +22,6 @@
 		064FD88D25A2DC8B00DE6454 /* UtilityBlockItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064FD88C25A2DC8B00DE6454 /* UtilityBlockItem.swift */; };
 		065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */; };
 		065DF8C825637D58009CF99E /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8C725637D57009CF99E /* Attachable.swift */; };
-		066B774C25870E9A00AE9CFE /* DelegateDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066B774A25870E9A00AE9CFE /* DelegateDictionary.swift */; };
-		066B774D25870E9A00AE9CFE /* DelegateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066B774B25870E9A00AE9CFE /* DelegateSet.swift */; };
 		066C9D1A25553EDE000C7800 /* NCObjcExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E553C7925132E66008E4D89 /* NCObjcExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		066C9D2425553EE2000C7800 /* NCObjcExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E553C7825132E66008E4D89 /* NCObjcExceptionCatcher.m */; };
 		066C9D2E25553EF0000C7800 /* MicInputProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3192375707000C9A177 /* MicInputProvider.swift */; };
@@ -246,7 +244,6 @@
 		7315302923E11EDF00F843C3 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF27D2375703000C9A177 /* NetworkError.swift */; };
 		7315306F23E1248300F843C3 /* ASRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2552375703000C9A177 /* ASRError.swift */; };
 		7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2542375703000C9A177 /* ASRExpectSpeech.swift */; };
-		7329679925636E240077C3C4 /* DispatchQueue+safeSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7329679825636E240077C3C4 /* DispatchQueue+safeSync.swift */; };
 		732967B9256377190077C3C4 /* EndedUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732967B8256377190077C3C4 /* EndedUp.swift */; };
 		732967F6256383AB0077C3C4 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		73296856256394580077C3C4 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
@@ -351,7 +348,6 @@
 		7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */; };
 		739078FD241A3E0C007D753F /* ServerSideEventReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */; };
 		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
-		73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C9F526256664370011DD65 /* WeakDictionary.swift */; };
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
 		75021E4E259431B50014537C /* DisplayWebViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021E4D259431B50014537C /* DisplayWebViewPresenter.swift */; };
 		75021E64259436930014537C /* DisplayWebViewPresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021E63259436930014537C /* DisplayWebViewPresenterDelegate.swift */; };
@@ -725,8 +721,6 @@
 		06500CCC2578821B0088F776 /* NuguUtils.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguUtils.podspec; sourceTree = "<group>"; };
 		065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Attachable+makeAttachmentMessage.swift"; sourceTree = "<group>"; };
 		065DF8C725637D57009CF99E /* Attachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachable.swift; sourceTree = "<group>"; };
-		066B774A25870E9A00AE9CFE /* DelegateDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegateDictionary.swift; sourceTree = "<group>"; };
-		066B774B25870E9A00AE9CFE /* DelegateSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegateSet.swift; sourceTree = "<group>"; };
 		067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterDelegate.swift; sourceTree = "<group>"; };
 		067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterError.swift; sourceTree = "<group>"; };
 		068C3C502581F80800EC0BEE /* MicInputProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicInputProviderDelegate.swift; sourceTree = "<group>"; };
@@ -964,7 +958,6 @@
 		73152F9C23E0405900F843C3 /* NuguAgents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguAgents.h; sourceTree = "<group>"; };
 		73152F9D23E0405900F843C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73152FDB23E0451900F843C3 /* NuguAgents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAgents.swift; sourceTree = "<group>"; };
-		7329679825636E240077C3C4 /* DispatchQueue+safeSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+safeSync.swift"; sourceTree = "<group>"; };
 		732967B8256377190077C3C4 /* EndedUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndedUp.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
 		7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngine.swift; sourceTree = "<group>"; };
@@ -1064,7 +1057,6 @@
 		7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClientDelegate.swift; sourceTree = "<group>"; };
 		739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiver.swift; sourceTree = "<group>"; };
 		739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiverState.swift; sourceTree = "<group>"; };
-		73C9F526256664370011DD65 /* WeakDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakDictionary.swift; sourceTree = "<group>"; };
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
 		7500490F24766B1500B73DD8 /* AudioDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayView.swift; sourceTree = "<group>"; };
 		75021E4D259431B50014537C /* DisplayWebViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayWebViewPresenter.swift; sourceTree = "<group>"; };
@@ -1355,15 +1347,6 @@
 				064FD88C25A2DC8B00DE6454 /* UtilityBlockItem.swift */,
 			);
 			path = Utility;
-			sourceTree = "<group>";
-		};
-		066B774925870E9A00AE9CFE /* Delegate */ = {
-			isa = PBXGroup;
-			children = (
-				066B774A25870E9A00AE9CFE /* DelegateDictionary.swift */,
-				066B774B25870E9A00AE9CFE /* DelegateSet.swift */,
-			);
-			path = Delegate;
 			sourceTree = "<group>";
 		};
 		067CB4B0256E66DC00D57AF0 /* Network */ = {
@@ -1800,7 +1783,6 @@
 		1FFFF3252375707000C9A177 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				066B774925870E9A00AE9CFE /* Delegate */,
 				1FFFF3262375707000C9A177 /* TimeUUID.swift */,
 			);
 			path = Util;
@@ -2452,7 +2434,6 @@
 				7303C68923C5C00F00610343 /* BoundStreams.swift */,
 				75082BC7243ACA280027D76D /* CryptoUtil.swift */,
 				732967B8256377190077C3C4 /* EndedUp.swift */,
-				73C9F526256664370011DD65 /* WeakDictionary.swift */,
 				75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */,
 				7378FD9825B810D300AB9764 /* TypedNotifyable.swift */,
 			);
@@ -2512,7 +2493,6 @@
 				1F862F08252DB2590069C310 /* JSONCodingKey.swift */,
 				1FFFF3242375707000C9A177 /* KeyedDecodingContainerExtension.swift */,
 				1F862EF4252DAB040069C310 /* KeyedEncodingContainerExtension.swift */,
-				7329679825636E240077C3C4 /* DispatchQueue+safeSync.swift */,
 				7378FD7625B55D2400AB9764 /* JSONDecoder+decodeFromDictionary.swift */,
 				7378FDC225B817BB00AB9764 /* Encodable+dictionary.swift */,
 			);
@@ -3667,17 +3647,13 @@
 				7314E031255E4491004882BB /* Publish.swift in Sources */,
 				7378FDC325B817BB00AB9764 /* Encodable+dictionary.swift in Sources */,
 				7378FD7725B55D2400AB9764 /* JSONDecoder+decodeFromDictionary.swift in Sources */,
-				7329679925636E240077C3C4 /* DispatchQueue+safeSync.swift in Sources */,
 				73752B5425B8867B005C27DA /* JSONCodingKey.swift in Sources */,
 				7314DFA8255E3F33004882BB /* NuguTimeInterval.swift in Sources */,
-				066B774D25870E9A00AE9CFE /* DelegateSet.swift in Sources */,
 				73752B4925B88641005C27DA /* KeyedDecodingContainerExtension.swift in Sources */,
-				066B774C25870E9A00AE9CFE /* DelegateDictionary.swift in Sources */,
 				A19EC87625761343003E53A9 /* WeakScriptMessageHandler.swift in Sources */,
 				7378FD9925B810D300AB9764 /* TypedNotifyable.swift in Sources */,
 				7314DF87255E3F27004882BB /* CryptoUtil.swift in Sources */,
 				7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */,
-				73C9F527256664370011DD65 /* WeakDictionary.swift in Sources */,
 				73752B4825B88641005C27DA /* KeyedEncodingContainerExtension.swift in Sources */,
 				7314E030255E4491004882BB /* Atomic.swift in Sources */,
 				060DDE88256E67DC006B4F59 /* NetworkReachabilityManager.swift in Sources */,

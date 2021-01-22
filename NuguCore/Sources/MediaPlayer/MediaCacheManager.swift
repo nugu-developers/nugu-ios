@@ -18,7 +18,6 @@
 //  limitations under the License.
 //
 
-import UIKit
 import AVFoundation
 
 import NuguUtils
