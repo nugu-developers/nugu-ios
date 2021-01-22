@@ -20,8 +20,10 @@
 
 import Foundation
 
+import NuguUtils
+
 /// Determine the destinations for receiving `Downstream` data and sending `Upstream` data.
-public protocol StreamDataRoutable: UpstreamDataSendable {
+public protocol StreamDataRoutable: UpstreamDataSendable, TypedNotifyable {
     /// Enable connection-oriented feature to receive server initiated directive.
     ///
     /// - Parameter completion: The completion handler. Pass `StreamDataState.error` when connection failed.

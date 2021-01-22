@@ -104,8 +104,7 @@ public final class TTSAgent: TTSAgentProtocol {
             if oldValue != ttsState {
                 let state = ttsState
                 ttsNotificationQueue.async { [weak self] in
-                    self?.notificationCenter.post(name: .ttsAgentStateDidChange, object: self, userInfo: [ObservingFactor.State.state: state,
-                                                                                                    ObservingFactor.State.header: player.header])
+                    self?.post(NuguAgentNotification.TTS.State(state: state, header: player.header))
                 }
             }
         }
@@ -387,8 +386,7 @@ private extension TTSAgent {
                 self.currentPlayer = player
                 self.focusManager.requestFocus(channelDelegate: self)
                 self.ttsNotificationQueue.async { [weak self] in
-                    self?.notificationCenter.post(name: .ttsAgentResultDidReceive, object: self, userInfo: [ObservingFactor.Result.text: player.payload.text,
-                                                                                                      ObservingFactor.Result.header: player.header])
+                    self?.post(NuguAgentNotification.TTS.Result(text: player.payload.text, header: player.header))
                 }
                 
                 self.ttsResultSubject
@@ -503,44 +501,50 @@ private extension TTSAgent {
 
 // MARK: - Observer
 
-public extension Notification.Name {
+extension Notification.Name {
     static let ttsAgentStateDidChange = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_state_did_change")
-    static let ttsAgentResultDidReceive = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_state_did_change")
+    static let ttsAgentResultDidReceive = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_result_did_receive")
 }
 
-extension TTSAgent: Observing {
-    public enum ObservingFactor {
-        public enum State: ObservingSpec {
-            case state
-            case header
+public extension NuguAgentNotification {
+    enum TTS {
+        public struct State: TypedNotification {
+            public static var name: Notification.Name = .ttsAgentStateDidChange
+            public let state: TTSState
+            public let header: Downstream.Header
             
-            public var name: Notification.Name {
-                .ttsAgentStateDidChange
+            public static func make(from: [String : Any]) -> State? {
+                guard let state = from["state"] as? TTSState,
+                      let header = from["header"] as? Downstream.Header else { return nil }
+                
+                return State(state: state, header: header)
             }
         }
-        
-        public enum Result: ObservingSpec {
-            case text
-            case header
             
-            public var name: Notification.Name {
-                .ttsAgentResultDidReceive
+        public struct Result: TypedNotification {
+            public static var name: Notification.Name = .ttsAgentResultDidReceive
+            public let text: String
+            public let header: Downstream.Header
+            
+            public static func make(from: [String : Any]) -> Result? {
+                guard let text = from["text"] as? String,
+                      let header = from["header"] as? Downstream.Header else { return nil }
+                
+                return Result(text: text, header: header)
             }
         }
     }
+
 }
 
 private extension TTSAgent {
     func addPlaySyncObserver(_ object: PlaySyncManageable) {
-        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
-                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
-            
-            self.ttsDispatchQueue.async { [weak self] in
+        playSyncObserver = object.observe(NuguCoreNotification.PlaySync.ReleasedProperty.self, queue: nil) { [weak self] (notification) in
+            self?.ttsDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard property == self.playSyncProperty,
-                      let player = self.latestPlayer, player.header.messageId == messageId else { return }
+                guard notification.property == self.playSyncProperty,
+                      let player = self.latestPlayer,
+                      player.header.messageId == notification.messageId else { return }
                 
                 self.stop(player: player, cancelAssociation: true)
             }

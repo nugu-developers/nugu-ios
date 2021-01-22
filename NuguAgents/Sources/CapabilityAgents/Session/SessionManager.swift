@@ -42,7 +42,6 @@ final public class SessionManager: SessionManageable {
     }
     
     // private
-    private let notificationCenter = NotificationCenter.default
     private var activeTimers = [String: Disposable]()
     private var sessions = [String: Session]() {
         didSet {
@@ -66,7 +65,7 @@ final public class SessionManager: SessionManageable {
             self.addTimer(session: session)
             
             self.addActiveSession(dialogRequestId: session.dialogRequestId)
-            self.notificationCenter.post(name: .sessionDidSet, object: self, userInfo: [ObservingFactor.Set.session: session])
+            self.post(NuguAgentNotification.Session.Set(session: session))
         }
     }
     
@@ -106,7 +105,7 @@ private extension SessionManager {
             .subscribe(onSuccess: { [weak self] _ in
                 log.debug("Timer fired. \(session.dialogRequestId)")
                 self?.sessions[session.dialogRequestId] = nil
-                self?.notificationCenter.post(name: .sessionDidUnSet, object: self, userInfo: [ObservingFactor.Set.session: session])
+                self?.post(NuguAgentNotification.Session.UnSet(session: session))
             })
     }
     
@@ -131,27 +130,32 @@ private extension SessionManager {
 
 // MARK: - Observers
 
-// TODO: 세션 set/unset을 해당 session을 생성하지 않은 다른 곳에서 알 필요가 있는지? (session delegate는 session이 들고있어야 마땅한데, session manager가 여러 session delegate를 들고있으면서 모두에게 전달한 상황)
 extension Notification.Name {
     static let sessionDidSet = Notification.Name("com.sktelecom.romaine.notification.name.session_did_set")
     static let sessionDidUnSet = Notification.Name("com.sktelecom.romaine.notification.name.session_did_unset")
 }
 
-extension SessionManager: Observing {
-    public enum ObservingFactor {
-        public enum Set: ObservingSpec {
-            case session
+public extension NuguAgentNotification {
+    enum Session {
+        public struct Set: TypedNotification {
+            public static let name: Notification.Name = .sessionDidSet
+            public let session: NuguAgents.Session
             
-            public var name: Notification.Name {
-                .sessionDidSet
+            public static func make(from: [String : Any]) -> Set? {
+                guard let session = from["session"] as? NuguAgents.Session else { return nil }
+                
+                return Set(session: session)
             }
         }
         
-        public enum Unset: ObservingSpec {
-            case session
-            
-            public var name: Notification.Name {
-                .sessionDidUnSet
+        public struct UnSet: TypedNotification {
+            public static let name: Notification.Name = .sessionDidUnSet
+            public let session: NuguAgents.Session
+
+            public static func make(from: [String : Any]) -> UnSet? {
+                guard let session = from["session"] as? NuguAgents.Session else { return nil }
+                
+                return UnSet(session: session)
             }
         }
     }

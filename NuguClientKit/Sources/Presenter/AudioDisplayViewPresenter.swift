@@ -36,6 +36,8 @@ public class AudioDisplayViewPresenter {
         superView ?? viewController?.view
     }
     private var nuguClient: NuguClient?
+    
+    // Observers
     private let notificationCenter = NotificationCenter.default
     private var audioPlayerStateObserver: Any?
     private var audioPlayerDurationObserver: Any?
@@ -249,20 +251,13 @@ extension AudioDisplayViewPresenter: AudioDisplayViewDelegate {
 
 private extension AudioDisplayViewPresenter {
     func addAudioPlayerAgentObserver(_ object: AudioPlayerAgentProtocol) {
-        audioPlayerStateObserver = notificationCenter.addObserver(forName: .audioPlayerAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
-            guard let self = self,
-                let audioDisplayView = self.audioDisplayView else { return }
-            guard let state = notification.userInfo?[AudioPlayerAgent.ObservingFactor.State.state] as? AudioPlayerState else { return }
-            
-            audioDisplayView.audioPlayerState = state
-            self.delegate?.displayControllerShouldUpdateState(state: state)
+        audioPlayerStateObserver = object.observe(NuguAgentNotification.AudioPlayer.State.self, queue: .main) { [weak self] (notification) in
+            self?.audioDisplayView?.audioPlayerState = notification.state
+            self?.delegate?.displayControllerShouldUpdateState(state: notification.state)
         }
         
-        audioPlayerDurationObserver = notificationCenter.addObserver(forName: .audioPlayerAgentDurationDidChange, object: object, queue: .main) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let duration = notification.userInfo?[AudioPlayerAgent.ObservingFactor.Duration.duration] as? Int else { return }
-            
-            self.delegate?.displayControllerShouldUpdateDuration(duration: duration)
+        audioPlayerDurationObserver = object.observe(NuguAgentNotification.AudioPlayer.Duration.self, queue: .main) { [weak self] (notification) in
+            self?.delegate?.displayControllerShouldUpdateDuration(duration: notification.duration)
         }
     }
 }

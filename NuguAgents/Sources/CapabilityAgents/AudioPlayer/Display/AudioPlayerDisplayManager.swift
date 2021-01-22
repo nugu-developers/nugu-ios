@@ -42,6 +42,7 @@ final class AudioPlayerDisplayManager {
     // Current display info
     private var currentItem: AudioPlayerDisplayTemplate?
     
+    // Observers
     private let notificationCenter = NotificationCenter.default
     private var audioPlayerStateObserver: Any?
     private var playSyncObserver: Any?
@@ -214,26 +215,18 @@ extension AudioPlayerDisplayManager {
 
 private extension AudioPlayerDisplayManager {
     func addAudioPlayerAgentObserver(_ object: AudioPlayerAgentProtocol) {
-        audioPlayerStateObserver = notificationCenter.addObserver(forName: .audioPlayerAgentStateDidChange, object: object, queue: nil) { [weak self] (notification) in
-            guard let state = notification.userInfo?[AudioPlayerAgent.ObservingFactor.State.state] as? AudioPlayerState else { return }
-            
+        audioPlayerStateObserver = object.observe(NuguAgentNotification.AudioPlayer.State.self, queue: nil) { [weak self] (notification) in
             self?.displayDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                
-                self.audioPlayerState = state
+                self?.audioPlayerState = notification.state
             }
         }
     }
     
     func addPlaySyncObserver(_ object: PlaySyncManageable) {
-        playSyncObserver = notificationCenter.addObserver(forName: .playSyncPropertyDidRelease, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let property = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.property] as? PlaySyncProperty,
-                  let messageId = notification.userInfo?[PlaySyncManager.ObservingFactor.Property.messageId] as? String else { return }
-            
-            self.displayDispatchQueue.async { [weak self] in
+        playSyncObserver = object.observe(NuguCoreNotification.PlaySync.ReleasedProperty.self, queue: nil) { [weak self] (notification) in
+            self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard property == self.playSyncProperty, let item = self.currentItem, item.templateId == messageId else { return }
+                guard notification.property == self.playSyncProperty, let item = self.currentItem, item.templateId == notification.messageId else { return }
                 
                 self.currentItem = nil
                 self.delegate?.audioPlayerDisplayDidClear(template: item)
