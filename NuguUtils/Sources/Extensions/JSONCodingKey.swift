@@ -1,9 +1,9 @@
 //
-//  SystemAgentProtocol.swift
-//  NuguAgents
+//  JSONCodingKey.swift
+//  NuguUtils
 //
-//  Created by yonghoonKwon on 24/05/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/10/07.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,9 +20,16 @@
 
 import Foundation
 
-import NuguUtils
+public struct JSONCodingKey: CodingKey {
+    public var stringValue: String
+    public var intValue: Int?
 
-/// System-agent is responsible agent for the utilities of the system in the nugu.
-/// This agent is mandatory in SDK.
-public protocol SystemAgentProtocol: CapabilityAgentable, TypedNotifyable {
+    public init?(stringValue: String) {
+        self.stringValue = stringValue
+    }
+
+    public init?(intValue: Int) {
+        self.intValue = intValue
+        self.stringValue = String(intValue)
+    }
 }
