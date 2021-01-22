@@ -118,24 +118,22 @@ private extension BackgroundFocusHolder {
 
 private extension BackgroundFocusHolder {
     func addStreamDataRouterObserver(_ object: StreamDataRoutable) {
-        eventWillSendObserver = notificationCenter.addObserver(forName: .streamDataEventWillSend, object: object, queue: nil) { [weak self] (notification) in
+        eventWillSendObserver = object.observe(NuguCoreNotification.StreamDataRoute.ToBeSentEvent.self, queue: nil) { [weak self] (notification) in
             self?.queue.async { [weak self] in
                 guard let self = self else { return }
-                guard let event = notification.userInfo?[StreamDataRouter.ObservingFactor.EventWillSend.event] as? Upstream.Event else { return }
                 
-                if self.focusTargets.contains(event.header.type) {
-                    self.handlingEvents.insert(event.header.messageId)
+                if self.focusTargets.contains(notification.event.header.type) {
+                    self.handlingEvents.insert(notification.event.header.messageId)
                     self.requestFocus()
                 }
             }
         }
         
-        eventDidSendObserver = notificationCenter.addObserver(forName: .streamDataEventDidSend, object: object, queue: nil) { [weak self] (notification) in
+        eventDidSendObserver = object.observe(NuguCoreNotification.StreamDataRoute.SentEvent.self, queue: nil) { [weak self] (notification) in
             self?.queue.async { [weak self] in
                 guard let self = self else { return }
-                guard let event = notification.userInfo?[StreamDataRouter.ObservingFactor.EventWillSend.event] as? Upstream.Event else { return }
                 
-                if self.handlingEvents.remove(event.header.messageId) != nil {
+                if self.handlingEvents.remove(notification.event.header.messageId) != nil {
                     self.tryReleaseFocus()
                 }
             }
@@ -143,15 +141,12 @@ private extension BackgroundFocusHolder {
     }
     
     func addDialogStateObserver(_ object: DialogStateAggregator) {
-        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState else { return }
-            
-            self.queue.async { [weak self] in
+        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
+            self?.queue.async { [weak self] in
                 guard let self = self else { return }
                 
-                self.dialogState = state
-                if state == .idle {
+                self.dialogState = notification.state
+                if notification.state == .idle {
                     self.tryReleaseFocus()
                 } else {
                     self.requestFocus()
@@ -161,29 +156,22 @@ private extension BackgroundFocusHolder {
     }
     
     func addDirectiveSequencerObserver(_ object: DirectiveSequenceable) {
-        directivePrefetchObseerver = notificationCenter.addObserver(forName: .directiveSequencerWillPrefetch, object: object, queue: nil) { [weak self] notification in
-            guard let self = self else { return }
-            guard let directive = notification.userInfo?[DirectiveSequencer.ObservingFactor.Prefetch.directive] as? Downstream.Directive,
-                  let blockingPolicy = notification.userInfo?[DirectiveSequencer.ObservingFactor.Prefetch.blockingPolicy] as? BlockingPolicy else { return }
-            
-            self.queue.async { [weak self] in
+        directivePrefetchObseerver = object.observe(NuguCoreNotification.DirectiveSquencer.Prefetch.self, queue: nil) { [weak self] notification in
+            self?.queue.async { [weak self] in
                 guard let self = self else { return }
                 
-                if blockingPolicy.medium == .audio {
-                    self.handlingSoundDirectives.insert(directive.header.messageId)
+                if notification.blockingPolicy.medium == .audio {
+                    self.handlingSoundDirectives.insert(notification.directive.header.messageId)
                     self.requestFocus()
                 }
             }
         }
         
-        directiveCompleteObseerver = notificationCenter.addObserver(forName: .directiveSequencerWillPrefetch, object: object, queue: nil) { [weak self] notification in
-            guard let self = self else { return }
-            guard let directive = notification.userInfo?[DirectiveSequencer.ObservingFactor.Prefetch.directive] as? Downstream.Directive else { return }
-
-            self.queue.async { [weak self] in
+        directiveCompleteObseerver = object.observe(NuguCoreNotification.DirectiveSquencer.Complete.self, queue: nil)  { [weak self] notification in
+            self?.queue.async { [weak self] in
                 guard let self = self else { return }
                 
-                if self.handlingSoundDirectives.remove(directive.header.messageId) != nil {
+                if self.handlingSoundDirectives.remove(notification.directive.header.messageId) != nil {
                     self.tryReleaseFocus()
                 }
             }

@@ -25,7 +25,7 @@ import NuguAgents
 import NuguUtils
 
 /// DialogStateAggregator aggregate several components state into one.
-public class DialogStateAggregator {
+public class DialogStateAggregator: TypedNotifyable {
     private let dialogStateDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.dialog_state_aggregator", qos: .userInitiated)
     
     private let sessionManager: SessionManageable
@@ -50,14 +50,8 @@ public class DialogStateAggregator {
                 currentChips = nil
             }
             
-            var userInfo: [AnyHashable: Any] = [ObservingFactor.State.state: dialogState,
-                                                ObservingFactor.State.multiturn: isMultiturn,
-                                                ObservingFactor.State.sessionActivated: sessionActivated]
-            if let chips = chipsItem?.chips {
-                userInfo[ObservingFactor.State.chips] = chips
-            }
-            
-            notificationCenter.post(name: .dialogStateDidChange, object: self, userInfo: userInfo)
+            let typedNotification = NuguClientNotification.DialogState.State(state: dialogState, multiTurn: isMultiturn, chips: chipsItem?.chips, sessionActivated: sessionActivated)
+            notificationCenter.post(name: .dialogStateDidChange, object: self, userInfo: typedNotification.dictionary)
         }
     }
     private var asrState: ASRState = .idle
@@ -160,20 +154,26 @@ private extension DialogStateAggregator {
 
 // MARK: - Observers
 
-public extension Notification.Name {
+extension Notification.Name {
     static let dialogStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.dialog_state_did_change")
 }
 
-extension DialogStateAggregator: Observing {
-    public enum ObservingFactor {
-        public enum State: ObservingSpec {
-            case state
-            case multiturn
-            case chips
-            case sessionActivated
+public extension NuguClientNotification {
+    enum DialogState {
+        public struct State: TypedNotification {
+            public static let name: Notification.Name = .dialogStateDidChange
+            public let state: NuguClientKit.DialogState
+            public let multiTurn: Bool
+            public let chips: [ChipsAgentItem.Chip]?
+            public let sessionActivated: Bool
             
-            public var name: Notification.Name {
-                .dialogStateDidChange
+            public static func make(from: [String : Any]) -> State? {
+                guard let state = from["state"] as? NuguClientKit.DialogState,
+                      let multiTurn = from["multiTurn"] as? Bool,
+                      let sessionActivated = from["sessionActivated"] as? Bool else { return nil }
+                
+                let chips = from["chips"] as? [ChipsAgentItem.Chip]
+                return State(state: state, multiTurn: multiTurn, chips: chips, sessionActivated: sessionActivated)
             }
         }
     }
@@ -182,27 +182,23 @@ extension DialogStateAggregator: Observing {
 /// :nodoc:
 private extension DialogStateAggregator {
     func addChipsAgentObserver(_ object: ChipsAgentProtocol) {
-        chipsAgentObserver = notificationCenter.addObserver(forName: .chipsAgentDidReceive, object: object, queue: nil) { [weak self] (notification) in
-            guard let item = notification.userInfo?[ChipsAgent.ObservingFactor.Receive.item] as? ChipsAgentItem,
-                  let header = notification.userInfo?[ChipsAgent.ObservingFactor.Receive.header] as? Downstream.Header else { return }
-            
+        chipsAgentObserver = object.observe(NuguAgentNotification.Chips.Receive.self, queue: nil) { [weak self] (notification) in
             self?.dialogStateDispatchQueue.async { [weak self] in
-                if item.target == .dialog {
-                    self?.currentChips = (dialogRequestId: header.dialogRequestId, item: item)
+                if notification.item.target == .dialog {
+                    self?.currentChips = (dialogRequestId: notification.header.dialogRequestId, item: notification.item)
                 }
             }
         }
     }
     
     func addInteractionControlObserver(_ object: InteractionControlManageable) {
-        interactionControlObserver = notificationCenter.addObserver(forName: .interactionControlDidChange, object: object, queue: nil) { [weak self] (notification) in
+        interactionControlObserver = object.observe(NuguAgentNotification.InteractionControl.MultiTurn.self, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let isMultiturn = notification.userInfo?[InteractionControlManager.ObservingFactor.MultiTurn.multiTurn] as? Bool else { return }
             
             log.debug(self.isMultiturn)
             self.dialogStateDispatchQueue.async { [weak self] in
-                self?.isMultiturn = isMultiturn
-                if isMultiturn == false {
+                self?.isMultiturn = notification.multiTurn
+                if notification.multiTurn == false {
                     self?.tryEnterIdleState()
                 }
             }
@@ -210,13 +206,12 @@ private extension DialogStateAggregator {
     }
     
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+        asrStateObserver = object.observe(NuguAgentNotification.ASR.State.self, queue: nil) { [weak self] (notification) in
             self?.dialogStateDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
-                guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
                 
-                self.asrState = state
-                switch state {
+                self.asrState = notification.state
+                switch notification.state {
                 case .idle:
                     self.tryEnterIdleState()
                 case .listening:
@@ -233,15 +228,12 @@ private extension DialogStateAggregator {
     }
     
     func addTtsAgentObserver(_ object: TTSAgentProtocol) {
-        ttsStateObserver = notificationCenter.addObserver(forName: .ttsAgentStateDidChange, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let state = notification.userInfo?[TTSAgent.ObservingFactor.State.state] as? TTSState else { return }
-            
-            self.dialogStateDispatchQueue.async { [weak self] in
+        ttsStateObserver = object.observe(NuguAgentNotification.TTS.State.self, queue: nil) { [weak self] (notification) in
+            self?.dialogStateDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                self.ttsState = state
-                switch state {
+                self.ttsState = notification.state
+                switch self.ttsState {
                 case .idle:
                     break
                 case .playing:
@@ -250,10 +242,6 @@ private extension DialogStateAggregator {
                     self.tryEnterIdleState()
                 }
             }
-        }
-        
-        ttsResultObserver = notificationCenter.addObserver(forName: .ttsAgentResultDidReceive, object: object, queue: nil) { (notification) in
-            // Nothing to do
         }
     }
 }

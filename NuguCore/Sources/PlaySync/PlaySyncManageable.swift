@@ -23,7 +23,7 @@ import Foundation
 import NuguUtils
 
 /// <#Description#>
-public protocol PlaySyncManageable: ContextInfoProvidable {
+public protocol PlaySyncManageable: ContextInfoProvidable, TypedNotifyable {
     func startPlay(
         property: PlaySyncProperty,
         info: PlaySyncInfo

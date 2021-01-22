@@ -1,9 +1,9 @@
 //
-//  JSONCodingKey.swift
-//  NuguAgents
+//  Encodable+dictionary.swift
+//  NuguUtils
 //
-//  Created by yonghoonKwon on 2020/10/07.
-//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2021/01/20.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,16 +20,11 @@
 
 import Foundation
 
-struct JSONCodingKey: CodingKey {
-    var stringValue: String
-    var intValue: Int?
+fileprivate let jsonEncoder = JSONEncoder()
 
-    init?(stringValue: String) {
-        self.stringValue = stringValue
-    }
-
-    init?(intValue: Int) {
-        self.intValue = intValue
-        self.stringValue = String(intValue)
+public extension Encodable {
+    var dictionary: [String: Any]? {
+        guard let data = try? jsonEncoder.encode(self) else { return nil }
+        return (try? JSONSerialization.jsonObject(with: data, options: [])).flatMap { $0 as? [String: Any] }
     }
 }
