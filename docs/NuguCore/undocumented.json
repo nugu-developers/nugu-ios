@@ -1,250 +1,208 @@
 {
   "warnings": [
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Authorization/AuthorizationStore.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Authorization/AuthorizationStore.swift",
       "line": 23,
       "symbol": "AuthorizationStore",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Context/ContextManager.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Context/ContextManager.swift",
       "line": 27,
       "symbol": "ContextManager",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Context/ContextManager.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Context/ContextManager.swift",
       "line": 43,
       "symbol": "ContextManager",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/BlockingPolicy.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/BlockingPolicy.swift",
       "line": 41,
       "symbol": "BlockingPolicy.Medium.none",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/BlockingPolicy.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/BlockingPolicy.swift",
       "line": 42,
       "symbol": "BlockingPolicy.Medium.audio",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/BlockingPolicy.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/BlockingPolicy.swift",
       "line": 43,
       "symbol": "BlockingPolicy.Medium.visual",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/DirectiveHandleInfo.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/BlockingPolicy.swift",
+      "line": 44,
+      "symbol": "BlockingPolicy.Medium.any",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/DirectiveHandleInfo.swift",
       "line": 97,
       "symbol": "Array.asDictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/DirectiveHandleResult.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/DirectiveHandleResult.swift",
       "line": 25,
       "symbol": "DirectiveHandleResult.failed(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/DirectiveHandleResult.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/DirectiveHandleResult.swift",
       "line": 26,
       "symbol": "DirectiveHandleResult.canceled",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/DirectiveHandleResult.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/DirectiveHandleResult.swift",
       "line": 27,
       "symbol": "DirectiveHandleResult.stopped(directiveCancelPolicy:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/DirectiveHandleResult.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/DirectiveHandleResult.swift",
       "line": 28,
       "symbol": "DirectiveHandleResult.finished",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/DirectiveSequencer.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/DirectiveSequencer.swift",
       "line": 27,
       "symbol": "DirectiveSequencer",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Directive/DirectiveSequencer.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Directive/DirectiveSequencer.swift",
       "line": 42,
       "symbol": "DirectiveSequencer",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Focus/FocusChannelInfo.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Focus/FocusChannelInfo.swift",
       "line": 30,
       "symbol": "FocusChannelInfo",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Focus/FocusChannelPriority.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Focus/FocusChannelPriority.swift",
       "line": 28,
       "symbol": "FocusChannelPriority.requestPriority",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Focus/FocusChannelPriority.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Focus/FocusChannelPriority.swift",
       "line": 29,
       "symbol": "FocusChannelPriority.maintainPriority",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Focus/FocusManager.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Focus/FocusManager.swift",
       "line": 25,
       "symbol": "FocusManager",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Focus/FocusManager.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Focus/FocusManager.swift",
       "line": 40,
       "symbol": "FocusManager",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Network/Api/NuguApi.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Network/Api/NuguApi.swift",
       "line": 31,
       "symbol": "NuguApi",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Network/Api/NuguApiProvider.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Network/Api/NuguApiProvider.swift",
       "line": 297,
       "symbol": "NuguApiProvider",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Network/HTTP/Model/Policy.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Network/HTTP/Model/Policy.swift",
       "line": 23,
       "symbol": "Policy",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/PropertyWrappers/NuguUserDefault.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/PropertyWrappers/NuguUserDefault.swift",
       "line": 24,
       "symbol": "NuguUserDefault",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/PropertyWrappers/NuguUserDefault.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/PropertyWrappers/NuguUserDefault.swift",
       "line": 41,
       "symbol": "UserDefaults.nugu",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Store/UserDefaults+Nugu.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Store/UserDefaults+Nugu.swift",
       "line": 24,
       "symbol": "UserDefaults.Nugu",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/Store/UserDefaults+Nugu.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/Store/UserDefaults+Nugu.swift",
       "line": 32,
       "symbol": "UserDefaults.Nugu",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/EventSenderError.swift",
-      "line": 25,
-      "symbol": "EventSenderError.requestMultipleEvents",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/EventSenderError.swift",
-      "line": 26,
-      "symbol": "EventSenderError.noEventRequested",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/EventSenderError.swift",
-      "line": 27,
-      "symbol": "EventSenderError.streamBlocked",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/EventSenderError.swift",
-      "line": 28,
-      "symbol": "EventSenderError.streamError(_:)",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/EventSenderError.swift",
-      "line": 29,
-      "symbol": "EventSenderError.cannotBindMemory",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/Model/Upstream.swift",
-      "line": 80,
-      "symbol": "Upstream.Header",
-      "symbol_kind": "source.lang.swift.decl.struct",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/Model/Upstream.swift",
-      "line": 163,
-      "symbol": "Upstream.Header",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/StreamDataRouter.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/StreamData/StreamDataRouter.swift",
       "line": 27,
       "symbol": "StreamDataRouter",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/StreamDataRouter.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/StreamData/StreamDataRouter.swift",
       "line": 56,
       "symbol": "StreamDataRouter",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol/NuguCore/Sources/StreamData/StreamDataRouter.swift",
+      "file": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios/NuguCore/Sources/StreamData/StreamDataRouter.swift",
       "line": 101,
       "symbol": "StreamDataRouter",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/1110476/Developer/workspace/SKTelecom/Github/nugu-ios-minddol"
+  "source_directory": "/Users/minchullee/Developer/workspace/SKTelecom/github/Minddol/nugu-ios"
 }

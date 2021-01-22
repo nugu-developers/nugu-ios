@@ -20,8 +20,10 @@
 
 import Foundation
 
+import NuguUtils
+
 /// <#Description#>
-public protocol InteractionControlManageable: class {
+public protocol InteractionControlManageable: class, TypedNotifyable {
     /// <#Description#>
     /// - Parameters:
     ///   - mode: <#mode description#>

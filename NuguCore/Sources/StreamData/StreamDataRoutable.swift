@@ -20,19 +20,23 @@
 
 import Foundation
 
-/// <#Description#>
-public protocol StreamDataRoutable: UpstreamDataSendable {
-    /// <#Description#>
-    /// - Parameter completion: <#completion description#>
+import NuguUtils
+
+/// Determine the destinations for receiving `Downstream` data and sending `Upstream` data.
+public protocol StreamDataRoutable: UpstreamDataSendable, TypedNotifyable {
+    /// Enable connection-oriented feature to receive server initiated directive.
+    ///
+    /// - Parameter completion: The completion handler. Pass `StreamDataState.error` when connection failed.
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)?)
     
-    /// <#Description#>
-    /// - Parameter serverPolicy: <#serverPolicy description#>
+    /// Enable connection-oriented feature with specific policy.
+    ///
+    /// - Parameter serverPolicy: The policy for connecting to the server.
     func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy)
     
-    /// <#Description#>
+    /// Refersh the policy for connecting to the server.
     func restartReceiveServerInitiatedDirective()
     
-    /// <#Description#>
+    /// Disable connection-oriented feature.
     func stopReceiveServerInitiatedDirective()
 }

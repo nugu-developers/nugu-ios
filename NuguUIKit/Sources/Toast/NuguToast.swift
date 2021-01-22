@@ -23,6 +23,13 @@ import UIKit
 /// <#Description#>
 final public class NuguToast {
     
+    // MARK: - NuguToast.Duration
+    
+    public enum Duration: Int {
+        case short = 4
+        case long = 7
+    }
+    
     // MARK: - NuguToast.Const
     
     private struct ToastConst {
@@ -33,7 +40,6 @@ final public class NuguToast {
         static let viewMargin = 8.0
         static let bottomMargin = 88.0
         static let animationDuration = 0.3
-        static let showingDuration = 7.0
         static let textColor = UIColor.white
         static let textFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
         static let backgroundColor = UIColor(red: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0)
@@ -59,7 +65,7 @@ public extension NuguToast {
     /// - Parameters:
     ///   - message: <#message description#>
     ///   - bottomMargin: <#bottomMargin description#>
-    func showToast(message: String?, bottomMargin: CGFloat? = nil) {
+    func showToast(message: String?, bottomMargin: CGFloat? = nil, duration: Duration = .short) {
         guard let window = UIApplication.shared.keyWindow else { return }
         guard let toastMessage = message, toastMessage.count > 0 else { return }
     
@@ -110,7 +116,7 @@ public extension NuguToast {
             },
             completion: { [weak self] _ in
                 if let hideAnimationWorkItem = self?.hideAnimationWorkItem {
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ToastConst.showingDuration,
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.seconds(duration.rawValue),
                                                   execute: hideAnimationWorkItem)
                 }
         })
