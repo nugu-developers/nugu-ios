@@ -310,41 +310,24 @@ extension NuguClient: FocusDelegate {
 /// :nodoc:
 extension NuguClient {
     private func setupStreamDataRouter(_ object: StreamDataRoutable) {
-        streamDataDirectiveDidReceive = notificationCenter.addObserver(forName: .streamDataDirectiveDidReceive, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let directive = notification.userInfo?[StreamDataRouter.ObservingFactor.DirectiveDidReceive.directive] as? Downstream.Directive else { return }
-            
-            self.delegate?.nuguClientDidReceive(direcive: directive)
+        streamDataDirectiveDidReceive = object.observe(NuguCoreNotification.StreamDataRoute.ReceivedDirective.self, queue: nil) { [weak self] (notification) in
+            self?.delegate?.nuguClientDidReceive(direcive: notification.directive)
         }
         
-        streamDataAttachmentDidReceive = notificationCenter.addObserver(forName: .streamDataAttachmentDidReceive, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let attachment = notification.userInfo?[StreamDataRouter.ObservingFactor.AttachmentDidReceive.attachment] as? Downstream.Attachment else { return }
-            
-            self.delegate?.nuguClientDidReceive(attachment: attachment)
+        streamDataAttachmentDidReceive = object.observe(NuguCoreNotification.StreamDataRoute.ReceivedAttachment.self, queue: nil) { [weak self] (notification) in
+            self?.delegate?.nuguClientDidReceive(attachment: notification.attachment)
         }
         
-        streamDataEventWillSend = notificationCenter.addObserver(forName: .streamDataEventWillSend, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let event = notification.userInfo?[StreamDataRouter.ObservingFactor.EventWillSend.event] as? Upstream.Event else { return }
-            
-            self.delegate?.nuguClientWillSend(event: event)
+        streamDataEventWillSend = object.observe(NuguCoreNotification.StreamDataRoute.ToBeSentEvent.self, queue: nil) { [weak self] (notification) in
+            self?.delegate?.nuguClientWillSend(event: notification.event)
         }
         
-        streamDataEventDidSend = notificationCenter.addObserver(forName: .streamDataEventDidSend, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let event = notification.userInfo?[StreamDataRouter.ObservingFactor.EventDidSend.event] as? Upstream.Event else { return }
-
-            let error = notification.userInfo?[StreamDataRouter.ObservingFactor.EventDidSend.error] as? Error
-            self.delegate?.nuguClientDidSend(event: event, error: error)
+        streamDataEventDidSend = object.observe(NuguCoreNotification.StreamDataRoute.SentEvent.self, queue: nil) { [weak self] (notification) in
+            self?.delegate?.nuguClientDidSend(event: notification.event, error: notification.error)
         }
         
-        streamDataAttachmentDidSent = notificationCenter.addObserver(forName: .streamDataAttachmentDidSend, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let attachment = notification.userInfo?[StreamDataRouter.ObservingFactor.AttachmentDidSend.attachment] as? Upstream.Attachment else { return }
-            
-            let error = notification.userInfo?[StreamDataRouter.ObservingFactor.AttachmentDidSend.error] as? Error
-            self.delegate?.nuguClientDidSend(attachment: attachment, error: error)
+        streamDataAttachmentDidSent = object.observe(NuguCoreNotification.StreamDataRoute.SentAttachment.self, queue: nil) { [weak self] (notification) in
+            self?.delegate?.nuguClientDidSend(attachment: notification.attachment, error: notification.error)
         }
     }
     
@@ -375,11 +358,10 @@ extension NuguClient {
     }
     
     func addDialogStateObserver(_ object: DialogStateAggregator) {
-        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
+        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState else { return }
             
-            switch state {
+            switch notification.state {
             case .idle:
                 self.playSyncManager.resumeTimer(property: PlaySyncProperty(layerType: .info, contextType: .display))
             case .listening:

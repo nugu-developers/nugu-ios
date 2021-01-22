@@ -20,8 +20,10 @@
 
 import Foundation
 
+import NuguUtils
+
 /// <#Description#>
-public protocol SessionManageable: class {
+public protocol SessionManageable: class, TypedNotifyable {
     /// <#Description#>
     var activeSessions: [Session] { get }
     

@@ -31,7 +31,6 @@ public class PlaySyncManager: PlaySyncManageable {
         internalSerialQueueName: "com.sktelecom.romaine.play_sync"
     )
     
-    private let notificationCenter = NotificationCenter.default
     private let contextManager: ContextManageable
     
     private var playStack = PlayStack()
@@ -233,8 +232,7 @@ private extension PlaySyncManager {
         
         playStack[property] = nil
         
-        notificationCenter.post(name: .playSyncPropertyDidRelease, object: self, userInfo: [ObservingFactor.Property.property: property,
-                                                                                            ObservingFactor.Property.messageId: play.messageId])
+        post(NuguCoreNotification.PlaySync.ReleasedProperty(property: property, messageId: play.messageId))
     }
     
     func addTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
@@ -265,18 +263,22 @@ private extension PlaySyncManager {
 
 // MARK: - Observer
 
-public extension Notification.Name {
+extension Notification.Name {
     static let playSyncPropertyDidRelease = Notification.Name("com.sktelecom.romaine.notification.name.play_sync_property_did_release")
 }
 
-extension PlaySyncManager: Observing {
-    public enum ObservingFactor {
-        public enum Property: ObservingSpec {
-            case property
-            case messageId
+public extension NuguCoreNotification {
+    enum PlaySync {
+        public struct ReleasedProperty: TypedNotification {
+            public static var name: Notification.Name = .playSyncPropertyDidRelease
+            public let property: PlaySyncProperty
+            public let messageId: String
             
-            public var name: Notification.Name {
-                .playSyncPropertyDidRelease
+            public static func make(from: [String : Any]) -> ReleasedProperty? {
+                guard let property = from["property"] as? PlaySyncProperty,
+                      let messageId = from["messageId"] as? String else { return nil }
+                
+                return ReleasedProperty(property: property, messageId: messageId)
             }
         }
     }

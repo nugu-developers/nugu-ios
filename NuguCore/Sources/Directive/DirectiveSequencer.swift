@@ -33,10 +33,7 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
     private let disposeBag = DisposeBag()
     
-    // Observers
-    private let notificationCenter = NotificationCenter.default
-
-    public init() { }
+    public init() {}
 }
 
 // MARK: - DirectiveSequenceable
@@ -189,57 +186,66 @@ private extension DirectiveSequencer {
     
     func notifyWillPrefetch(directive: Downstream.Directive, handler: DirectiveHandleInfo) {
         log.debug("\(directive.header)")
-        notificationCenter.post(name: .directiveSequencerWillPrefetch, object: self, userInfo: [ObservingFactor.Prefetch.directive: directive,
-                                                                                                ObservingFactor.Prefetch.blockingPolicy: handler.blockingPolicy])
+        post(NuguCoreNotification.DirectiveSquencer.Prefetch(directive: directive, blockingPolicy: handler.blockingPolicy))
     }
     
     func notifyWillHandle(directive: Downstream.Directive, handler: DirectiveHandleInfo) {
         log.debug("\(directive.header)")
-        notificationCenter.post(name: .directiveSequencerWillHandle, object: self, userInfo: [ObservingFactor.Handle.directive: directive,
-                                                                                                ObservingFactor.Handle.blockingPolicy: handler.blockingPolicy])
+        post(NuguCoreNotification.DirectiveSquencer.Handle(directive: directive, blockingPolicy: handler.blockingPolicy))
     }
     
     func notifyDidComplete(directive: Downstream.Directive, result: DirectiveHandleResult) {
         log.debug("\(directive.header): \(result)")
-        notificationCenter.post(name: .directiveSequencerDidComplete, object: self, userInfo: [ObservingFactor.Complete.directive: directive,
-                                                                                               ObservingFactor.Complete.result: result])
+        post(NuguCoreNotification.DirectiveSquencer.Complete(directive: directive, result: result))
     }
 }
 
 // MARK: - Observers
 
-public extension Notification.Name {
+extension Notification.Name {
     static let directiveSequencerWillPrefetch = Notification.Name("com.sktelecom.romaine.notification.name.directive_sequencer_will_prefetch")
     static let directiveSequencerWillHandle = Notification.Name("com.sktelecom.romaine.notification.name.directive_sequencer_will_handle")
     static let directiveSequencerDidComplete = Notification.Name("com.sktelecom.romaine.notification.name.directive_sequencer_did_complete")
 }
 
-extension DirectiveSequencer: Observing {
-    public enum ObservingFactor {
-        public enum Prefetch: ObservingSpec {
-            case directive
-            case blockingPolicy
+public extension NuguCoreNotification {
+    enum DirectiveSquencer {
+        public struct Prefetch: TypedNotification {
+            public static var name: Notification.Name = .directiveSequencerWillPrefetch
+            public let directive: Downstream.Directive
+            public let blockingPolicy: BlockingPolicy
             
-            public var name: Notification.Name {
-                .directiveSequencerWillPrefetch
+            public static func make(from: [String : Any]) -> Prefetch? {
+                guard let directive = from["directive"] as? Downstream.Directive,
+                      let blockingPolicy = from["blockingPolicy"] as? BlockingPolicy else { return nil }
+
+                return Prefetch(directive: directive, blockingPolicy: blockingPolicy)
             }
         }
         
-        public enum Handle: ObservingSpec {
-            case directive
-            case blockingPolicy
+        public struct Handle: TypedNotification {
+            public static var name: Notification.Name = .directiveSequencerWillHandle
+            public let directive: Downstream.Directive
+            public let blockingPolicy: BlockingPolicy
             
-            public var name: Notification.Name {
-                .directiveSequencerWillHandle
+            public static func make(from: [String : Any]) -> Handle? {
+                guard let directive = from["directive"] as? Downstream.Directive,
+                      let blockingPolicy = from["blockingPolicy"] as? BlockingPolicy else { return nil }
+
+                return Handle(directive: directive, blockingPolicy: blockingPolicy)
             }
         }
         
-        public enum Complete: ObservingSpec {
-            case directive
-            case result
+        public struct Complete: TypedNotification {
+            public static var name: Notification.Name = .directiveSequencerDidComplete
+            public let directive: Downstream.Directive
+            public let result: DirectiveHandleResult
             
-            public var name: Notification.Name {
-                .directiveSequencerDidComplete
+            public static func make(from: [String : Any]) -> Complete? {
+                guard let directive = from["directive"] as? Downstream.Directive,
+                      let result = from["result"] as? DirectiveHandleResult else { return nil }
+
+                return Complete(directive: directive, result: result)
             }
         }
     }

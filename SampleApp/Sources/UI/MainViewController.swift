@@ -463,10 +463,8 @@ extension MainViewController: VoiceChromePresenterDelegate {
 
 private extension MainViewController {
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: object, queue: .main) { (notification) in
-            guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
-            
-            switch state {
+        asrStateObserver = object.observe(NuguAgentNotification.ASR.State.self, queue: .main) { (notification) in
+            switch notification.state {
             case .idle:
                 if UserDefaults.Standard.useWakeUpDetector == true {
                     NuguCentralManager.shared.startWakeUpDetector()
@@ -488,10 +486,8 @@ private extension MainViewController {
             }
         }
         
-        asrResultObserver = notificationCenter.addObserver(forName: .asrAgentResultDidReceive, object: object, queue: .main) { (notification) in
-            guard let result = notification.userInfo?[ASRAgent.ObservingFactor.Result.result] as? ASRResult else { return }
-            
-            switch result {
+        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { (notification) in
+            switch notification.result {
             case .complete:
                 DispatchQueue.main.async {
                     NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
@@ -513,15 +509,10 @@ private extension MainViewController {
     }
     
     func addDialogStateObserver(_ object: DialogStateAggregator) {
-        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChange, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let state = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.state] as? DialogState,
-                  let isMultiturn = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.multiturn] as? Bool else { return }
-            
-            let chips = notification.userInfo?[DialogStateAggregator.ObservingFactor.State.chips] as? [ChipsAgentItem.Chip]
-            log.debug("\(state) \(isMultiturn), \(chips.debugDescription)")
+        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
+            log.debug("dialog satate: \(notification.state), multiTurn: \(notification.multiTurn), chips: \(notification.chips.debugDescription)")
 
-            switch state {
+            switch notification.state {
             case .listening:
                 DispatchQueue.main.async {
                     NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)

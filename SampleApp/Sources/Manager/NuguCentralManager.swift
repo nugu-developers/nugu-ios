@@ -498,11 +498,10 @@ extension NuguCentralManager: SoundAgentDataSource {
 
 private extension NuguCentralManager {
     func addSystemAgentObserver(_ object: SystemAgentProtocol) {
-        systemAgentExceptionObserver = notificationCenter.addObserver(forName: .systemAgentDidReceiveExceptionFail, object: object, queue: nil) { [weak self] (notification) in
+        systemAgentExceptionObserver = object.observe(NuguAgentNotification.System.Exception.self, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let code = notification.userInfo?[SystemAgent.ObservingFactor.Exception.code] as? SystemAgentExceptionCode.Fail else { return }
             
-            switch code {
+            switch notification.code {
             case .playRouterProcessingException:
                 self.localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
             case .ttsSpeakingException:
@@ -522,12 +521,9 @@ private extension NuguCentralManager {
                 }
             }
         }
-        
-        systemAgentRevokeObserver = notificationCenter.addObserver(forName: .systemAgentDidReceiveRevokeDevice, object: object, queue: nil) { [weak self] (notification) in
-            guard let self = self else { return }
-            guard let reason = notification.userInfo?[SystemAgent.ObservingFactor.RevokeDevice.reason] as? SystemAgentRevokeReason else { return }
-            
-            self.clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: reason))
+
+        systemAgentRevokeObserver = object.observe(NuguAgentNotification.System.RevokeDevice.self, queue: nil) { [weak self] (notification) in
+            self?.clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: notification.reason))
         }
     }
 }

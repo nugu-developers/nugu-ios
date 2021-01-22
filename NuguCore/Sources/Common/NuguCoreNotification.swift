@@ -1,9 +1,9 @@
 //
-//  SystemAgentProtocol.swift
-//  NuguAgents
+//  NuguCoreNotification.swift
+//  NuguCore
 //
-//  Created by yonghoonKwon on 24/05/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2021/01/21.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,9 +20,4 @@
 
 import Foundation
 
-import NuguUtils
-
-/// System-agent is responsible agent for the utilities of the system in the nugu.
-/// This agent is mandatory in SDK.
-public protocol SystemAgentProtocol: CapabilityAgentable, TypedNotifyable {
-}
+public enum NuguCoreNotification {}

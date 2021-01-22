@@ -22,9 +22,10 @@ import Foundation
 import AVFoundation
 
 import NuguCore
+import NuguUtils
 
 /// ASR (AutomaticSpeechRecognition) is responsible for capturing the audio and delivering it to the server and receiving the result of speech recognition.
-public protocol ASRAgentProtocol: CapabilityAgentable {
+public protocol ASRAgentProtocol: CapabilityAgentable, TypedNotifyable {
     var options: ASROptions { get set }
     var asrState: ASRState { get }
     
