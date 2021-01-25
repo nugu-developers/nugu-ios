@@ -42,6 +42,11 @@ class SoundAgentSpec: QuickSpec {
                 directiveSequencer: directiveSequencer
             )
             soundAgent.dataSource = self
+            _ = soundAgent.observe(NuguAgentNotification.Sound.State.self, queue: nil) { [weak self] (notification) in
+                guard let self = self else { return }
+                
+                self.state.append(notification.state)
+            }
             
             describe("context") {
                 var contextInfo: ContextInfo?
