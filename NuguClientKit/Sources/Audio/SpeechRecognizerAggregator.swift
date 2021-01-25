@@ -50,11 +50,10 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
         
         micInputProvider.delegate = self
         
-        asrStateObserver = notificationCenter.addObserver(forName: .asrAgentStateDidChange, object: nuguClient.asrAgent, queue: .main) { [weak self] (notification) in
+        asrStateObserver = nuguClient.asrAgent.observe(NuguAgentNotification.ASR.State.self, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let state = notification.userInfo?[ASRAgent.ObservingFactor.State.state] as? ASRState else { return }
             
-            switch state {
+            switch notification.state {
             case .idle:
                 if self.useKeywordDetector == true {
                     nuguClient.keywordDetector.start()

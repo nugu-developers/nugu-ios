@@ -269,10 +269,10 @@ private extension AudioSessionManager {
 
 private extension AudioSessionManager {
     func addAudioPlayerAgentObserver(_ object: AudioPlayerAgentProtocol) {
-        audioPlayerStateObserver = notificationCenter.addObserver(forName: .audioPlayerAgentStateDidChange, object: object, queue: .main) { [weak self] (notification) in
+        audioPlayerStateObserver = object.observe(NuguAgentNotification.AudioPlayer.State.self, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
-            guard let state = notification.userInfo?[AudioPlayerAgent.ObservingFactor.State.state] as? AudioPlayerState else { return }
-            if state == .playing && self.isCarplayConnected() == true {
+            
+            if notification.state == .playing && self.isCarplayConnected() == true {
                 self.updateAudioSessionToPlaybackIfNeeded()
             }
         }
