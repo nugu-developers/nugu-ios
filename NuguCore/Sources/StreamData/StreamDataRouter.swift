@@ -334,7 +334,7 @@ public extension NuguCoreNotification {
             public static var name: Notification.Name = .streamDataDirectiveDidReceive
             public let directive: Downstream.Directive
             
-            public static func make(from: [String : Any]) -> ReceivedDirective? {
+            public static func make(from: [String: Any]) -> ReceivedDirective? {
                 guard let directive = from["directive"] as? Downstream.Directive else { return nil }
                 
                 return ReceivedDirective(directive: directive)
@@ -345,7 +345,7 @@ public extension NuguCoreNotification {
             public static var name: Notification.Name = .streamDataAttachmentDidReceive
             public let attachment: Downstream.Attachment
             
-            public static func make(from: [String : Any]) -> ReceivedAttachment? {
+            public static func make(from: [String: Any]) -> ReceivedAttachment? {
                 guard let attachment = from["attachment"] as? Downstream.Attachment else { return nil }
                 
                 return ReceivedAttachment(attachment: attachment)
@@ -356,7 +356,7 @@ public extension NuguCoreNotification {
             public static let name: Notification.Name = .streamDataEventWillSend
             public let event: Upstream.Event
             
-            public static func make(from: [String : Any]) -> ToBeSentEvent? {
+            public static func make(from: [String: Any]) -> ToBeSentEvent? {
                 guard let event = from["event"] as? Upstream.Event else { return nil }
                 
                 return ToBeSentEvent(event: event)
@@ -368,7 +368,7 @@ public extension NuguCoreNotification {
             public let event: Upstream.Event
             public let error: Error?
             
-            public static func make(from: [String : Any]) -> SentEvent? {
+            public static func make(from: [String: Any]) -> SentEvent? {
                 guard let event = from["event"] as? Upstream.Event else { return nil }
                 
                 let error = from["error"] as? Error
@@ -381,7 +381,7 @@ public extension NuguCoreNotification {
             public let attachment: Upstream.Attachment
             public let error: Error?
             
-            public static func make(from: [String : Any]) -> SentAttachment? {
+            public static func make(from: [String: Any]) -> SentAttachment? {
                 guard let attachment = from["attachment"] as? Upstream.Attachment else { return nil }
                 
                 let error = from["error"] as? Error

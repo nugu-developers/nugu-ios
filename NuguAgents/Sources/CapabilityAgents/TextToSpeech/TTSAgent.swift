@@ -513,7 +513,7 @@ public extension NuguAgentNotification {
             public let state: TTSState
             public let header: Downstream.Header
             
-            public static func make(from: [String : Any]) -> State? {
+            public static func make(from: [String: Any]) -> State? {
                 guard let state = from["state"] as? TTSState,
                       let header = from["header"] as? Downstream.Header else { return nil }
                 
@@ -526,7 +526,7 @@ public extension NuguAgentNotification {
             public let text: String
             public let header: Downstream.Header
             
-            public static func make(from: [String : Any]) -> Result? {
+            public static func make(from: [String: Any]) -> Result? {
                 guard let text = from["text"] as? String,
                       let header = from["header"] as? Downstream.Header else { return nil }
                 

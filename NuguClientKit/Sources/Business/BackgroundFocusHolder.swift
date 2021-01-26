@@ -167,7 +167,7 @@ private extension BackgroundFocusHolder {
             }
         }
         
-        directiveCompleteObseerver = object.observe(NuguCoreNotification.DirectiveSquencer.Complete.self, queue: nil)  { [weak self] notification in
+        directiveCompleteObseerver = object.observe(NuguCoreNotification.DirectiveSquencer.Complete.self, queue: nil) { [weak self] notification in
             self?.queue.async { [weak self] in
                 guard let self = self else { return }
                 

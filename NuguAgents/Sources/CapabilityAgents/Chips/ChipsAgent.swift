@@ -95,7 +95,7 @@ public extension NuguAgentNotification {
             public let item: ChipsAgentItem
             public let header: Downstream.Header
             
-            public static func make(from: [String : Any]) -> Receive? {
+            public static func make(from: [String: Any]) -> Receive? {
                 guard let item = from["item"] as? ChipsAgentItem,
                       let header = from["header"] as? Downstream.Header else { return nil }
                 
