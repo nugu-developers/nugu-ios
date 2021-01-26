@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct MessageCandidatesItem: Codable {
+public struct MessageCandidatesItem {
     /// <#Description#>
     public let playServiceId: String
     /// <#Description#>
@@ -33,28 +33,32 @@ public struct MessageCandidatesItem: Codable {
     public let candidates: [MessageCandidatesItem]?
     /// <#Description#>
     public let messageToSend: MessageToSendItem?
-    
     /// <#Description#>
-    /// - Parameters:
-    ///   - playServiceId: <#playServiceId description#>
-    ///   - intent: <#intent description#>
-    ///   - recipientIntended: <#recipientIntended description#>
-    ///   - searchScene: <#searchScene description#>
-    ///   - candidates: <#candidates description#>
-    ///   - messageToSend: <#messageToSend description#>
-    public init(
-        playServiceId: String,
-        intent: String?,
-        recipientIntended: MessageRecipientIntended?,
-        searchScene: String?,
-        candidates: [MessageCandidatesItem]?,
-        messageToSend: MessageToSendItem?
-    ) {
-        self.playServiceId = playServiceId
-        self.intent = intent
-        self.recipientIntended = recipientIntended
-        self.searchScene = searchScene
-        self.candidates = candidates
-        self.messageToSend = messageToSend
+    public let interactionControl: InteractionControl?
+}
+
+// MARK: - MessageCandidatesItem + Codable
+
+extension MessageCandidatesItem: Codable {
+    enum CodingKeys: String, CodingKey {
+        case playServiceId
+        case intent
+        case recipientIntended
+        case searchScene
+        case candidates
+        case messageToSend
+        case interactionControl
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        intent = try? container.decode(String.self, forKey: .intent)
+        recipientIntended = try? container.decode(MessageRecipientIntended.self, forKey: .recipientIntended)
+        searchScene = try? container.decode(String.self, forKey: .searchScene)
+        candidates = try? container.decode([MessageCandidatesItem].self, forKey: .candidates)
+        messageToSend = try? container.decode(MessageToSendItem.self, forKey: .messageToSend)
+        interactionControl = try? container.decode(InteractionControl.self, forKey: .interactionControl)
     }
 }
