@@ -20,8 +20,10 @@
 
 import Foundation
 
+import NuguUtils
+
 /// <#Description#>
-public protocol DirectiveSequenceable {
+public protocol DirectiveSequenceable: TypedNotifyable {
     /**
      Add directive handler.
      

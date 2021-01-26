@@ -34,8 +34,6 @@ public final class SystemAgent: SystemAgentProtocol {
     private let streamDataRouter: StreamDataRoutable
     private let directiveSequencer: DirectiveSequenceable
     private let systemDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.system_agent", qos: .userInitiated)
-    private let notificationCenter = NotificationCenter.default
-    
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -118,8 +116,7 @@ private extension SystemAgent {
             self?.systemDispatchQueue.async { [weak self] in
                 switch exceptionItem.code {
                 case .fail(let code):
-                    self?.notificationCenter.post(name: .systemAgentDidReceiveExceptionFail, object: self, userInfo: [ObservingFactor.Exception.code: code,
-                                                                                                                ObservingFactor.Exception.header: directive.header])
+                    self?.post(NuguAgentNotification.System.Exception(code: code, header: directive.header))
                 case .warning(let code):
                     log.debug("received warning code: \(code)")
                 }
@@ -136,8 +133,7 @@ private extension SystemAgent {
             defer { completion(.finished) }
 
             self?.systemDispatchQueue.async { [weak self] in
-                self?.notificationCenter.post(name: .systemAgentDidReceiveRevokeDevice, object: self, userInfo: [ObservingFactor.RevokeDevice.reason: revokeItem.reason,
-                                                                                                                 ObservingFactor.RevokeDevice.header: directive.header])
+                self?.post(NuguAgentNotification.System.RevokeDevice(reason: revokeItem.reason, header: directive.header))
             }
         }
     }
@@ -174,28 +170,36 @@ private extension SystemAgent {
 
 // MARK: - Observer
 
-public extension Notification.Name {
+extension Notification.Name {
     static let systemAgentDidReceiveExceptionFail = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_receive_exception_fail")
-        static let systemAgentDidReceiveRevokeDevice = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_revoke_device")
+    static let systemAgentDidReceiveRevokeDevice = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_revoke_device")
 }
 
-extension SystemAgent: Observing {
-    public enum ObservingFactor {
-        public enum Exception: ObservingSpec {
-            case code
-            case header
+public extension NuguAgentNotification {
+    enum System {
+        public struct Exception: TypedNotification {
+            public static let name: Notification.Name = .systemAgentDidReceiveExceptionFail
+            public let code: SystemAgentExceptionCode.Fail
+            public let header: Downstream.Header
             
-            public var name: Notification.Name {
-                .systemAgentDidReceiveExceptionFail
+            public static func make(from: [String : Any]) -> Exception? {
+                guard let code = from["code"] as? SystemAgentExceptionCode.Fail,
+                      let header = from["header"] as? Downstream.Header else { return nil }
+                
+                return Exception(code: code, header: header)
             }
         }
         
-        public enum RevokeDevice: ObservingSpec {
-            case reason
-            case header
+        public struct RevokeDevice: TypedNotification {
+            static public var name: Notification.Name = .systemAgentDidReceiveRevokeDevice
+            public let reason: SystemAgentRevokeReason
+            public let header: Downstream.Header
             
-            public var name: Notification.Name {
-                .systemAgentDidReceiveRevokeDevice
+            public static func make(from: [String : Any]) -> RevokeDevice? {
+                guard let reason = from["reason"] as? SystemAgentRevokeReason,
+                      let header = from["header"] as? Downstream.Header else { return nil }
+                
+                return RevokeDevice(reason: reason, header: header)
             }
         }
     }

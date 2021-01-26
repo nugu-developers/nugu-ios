@@ -21,9 +21,10 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 /// The `TTSAgent` handles directives for controlling speech playback.
-public protocol TTSAgentProtocol: CapabilityAgentable {
+public protocol TTSAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// Returns the current time of the current player item.
     ///
     /// This function retrieves the offset(seconds) of the current `MediaPlayable` handled by the `TTSAgent`.
