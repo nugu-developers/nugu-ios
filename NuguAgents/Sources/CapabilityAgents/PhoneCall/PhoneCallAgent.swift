@@ -72,13 +72,14 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
         guard let self = self else { return }
         
         var payload = [String: AnyHashable?]()
-        payload["version"] = self.capabilityAgentProperty.version
         
         if let context = self.delegate?.phoneCallAgentRequestContext(),
             let contextData = try? JSONEncoder().encode(context),
             let contextDictionary = try? JSONSerialization.jsonObject(with: contextData, options: []) as? [String: AnyHashable] {
             payload = contextDictionary
         }
+        
+        payload["version"] = self.capabilityAgentProperty.version
         
         completion(
             ContextInfo(
