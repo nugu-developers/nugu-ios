@@ -1,9 +1,9 @@
 //
-//  ChipsAgentDelegate.swift
-//  NuguAgents
+//  OAuthHandler.swift
+//  NuguLoginKit
 //
-//  Created by MinChul Lee on 2020/05/26.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by yonghoonKwon on 2020/11/21.
+//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,15 +18,15 @@
 //  limitations under the License.
 //
 
-import Foundation
+import UIKit
 
-import NuguCore
-
-/// An delegate that appllication can extend to observe chips changes.
-public protocol ChipsAgentDelegate: class {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - item: <#item description#>
-    ///   - header: The header of the originally handled directive.   
-    func chipsAgentDidReceive(item: ChipsAgentItem, header: Downstream.Header)
+protocol OAuthHandler {
+    var currentState: String? { get set }
+    
+    func handle(_ url: URL, callbackURLScheme: String?, from parentViewController: UIViewController?)
+    
+    @discardableResult
+    func makeState() -> String
+    
+    func clear()
 }

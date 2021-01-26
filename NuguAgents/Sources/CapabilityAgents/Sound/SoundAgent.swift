@@ -21,16 +21,16 @@
 import Foundation
 
 import NuguCore
+import NuguUtils
 
 import RxSwift
 
-public final class SoundAgent: SoundAgentProtocol, ContextInfoProvidable {
+public final class SoundAgent: SoundAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .sound, version: "1.0")
     
     // SoundAgentProtocol
     public weak var dataSource: SoundAgentDataSource?
-    public weak var delegate: SoundAgentDelegate?
     public var volume: Float = 1.0 {
         didSet {
             currentPlayer?.volume = volume
@@ -63,7 +63,7 @@ public final class SoundAgent: SoundAgentProtocol, ContextInfoProvidable {
             
             // Notify delegates only if the agent's status changes.
             if oldValue != soundState {
-                delegate?.soundAgentDidChange(state: soundState, header: media.header)
+                post(NuguAgentNotification.Sound.State(state: soundState, header: media.header))
             }
         }
     }
@@ -271,5 +271,28 @@ private extension SoundAgent {
             return
         }
         focusManager.releaseFocus(channelDelegate: self)
+    }
+}
+
+// MARK: - Observer
+
+extension Notification.Name {
+    static let soundAgentDidChange = Notification.Name("com.sktelecom.romain.notification.name.sound_agent_did_change")
+}
+
+public extension NuguAgentNotification {
+    enum Sound {
+        public struct State: TypedNotification {
+            public static let name: Notification.Name = .soundAgentDidChange
+            public let state: SoundState
+            public let header: Downstream.Header
+
+            public static func make(from: [String : Any]) -> State? {
+                guard let state = from["state"] as? SoundState,
+                      let header = from["header"] as? Downstream.Header else { return nil }
+                
+                return State(state: state, header: header)
+            }
+        }
     }
 }
