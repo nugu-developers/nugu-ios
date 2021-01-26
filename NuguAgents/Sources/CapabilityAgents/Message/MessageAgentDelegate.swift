@@ -30,13 +30,13 @@ public protocol MessageAgentDelegate: class {
     /// <#Description#>
     /// - Parameters:
     ///   - item: <#item description#>
-    ///   - header: <#header description#>
+    ///   - header: The header of the originally handled directive.
     func messageAgentDidReceiveSendCandidates(item: MessageCandidatesItem, header: Downstream.Header)
     
     /// <#Description#>
     /// - Parameters:
     ///   - recipient: <#recipient description#>
-    ///   - header: <#header description#>
+    ///   - header: The header of the originally handled directive.
     /// - Returns: If have an error, the error-code is returned, otherwise it returns `nil`.
     func messageAgentDidReceiveSendMessage(recipient: MessageAgentContact, header: Downstream.Header) -> String?
 }
