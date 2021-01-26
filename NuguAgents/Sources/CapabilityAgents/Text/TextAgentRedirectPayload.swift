@@ -25,4 +25,5 @@ struct TextAgentRedirectPayload: Decodable {
     let token: String
     let playServiceId: String
     let targetPlayServiceId: String?
+    let interactionControl: InteractionControl?
 }

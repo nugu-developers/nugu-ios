@@ -35,6 +35,7 @@ public final class TextAgent: TextAgentProtocol {
     private let upstreamDataSender: UpstreamDataSendable
     private let directiveSequencer: DirectiveSequenceable
     private let dialogAttributeStore: DialogAttributeStoreable
+    private let interactionControlManager: InteractionControlManageable
     
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
@@ -60,12 +61,14 @@ public final class TextAgent: TextAgentProtocol {
         contextManager: ContextManageable,
         upstreamDataSender: UpstreamDataSendable,
         directiveSequencer: DirectiveSequenceable,
-        dialogAttributeStore: DialogAttributeStoreable
+        dialogAttributeStore: DialogAttributeStoreable,
+        interactionControlManager: InteractionControlManageable
     ) {
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.directiveSequencer = directiveSequencer
         self.dialogAttributeStore = dialogAttributeStore
+        self.interactionControlManager = interactionControlManager
         
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         contextManager.addProvider(contextInfoProvider)
@@ -158,12 +161,28 @@ private extension TextAgent {
             defer { completion(.finished) }
             
             self?.textDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
-                guard self.delegate?.textAgentShouldHandleTextRedirect(directive: directive) != false else {
+                guard let self = self, let delegate = self.delegate else { return }
+                
+                if let interactionControl = payload.interactionControl {
+                    self.interactionControlManager.start(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
+                }
+                let completion = { [weak self] (state: StreamDataState) in
+                    guard let self = self else { return }
+                    
+                    switch state {
+                    case .finished, .error:
+                        if let interactionControl = payload.interactionControl {
+                            self.interactionControlManager.finish(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
+                        }
+                    default:
+                        break
+                    }
+                }
+                guard delegate.textAgentShouldHandleTextRedirect(directive: directive) != false else {
                     self.sendCompactContextEvent(Event(
                         typeInfo: .textRedirectFailed(token: payload.token, playServiceId: payload.playServiceId, errorCode: "NOT_SUPPORTED_STATE"),
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    ).rx)
+                    ).rx, completion: completion)
                     return
                 }
                 
@@ -179,7 +198,7 @@ private extension TextAgent {
                     token: payload.token,
                     requestType: requestType,
                     referrerDialogRequestId: directive.header.dialogRequestId
-                ))
+                ), completion: completion)
             }
         }
     }
