@@ -270,7 +270,6 @@
 		737388C424A46C110018DDD2 /* CapabilityAgentProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388C124A46C110018DDD2 /* CapabilityAgentProperty.swift */; };
 		737388C524A46C110018DDD2 /* CapabilityAgentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388C224A46C110018DDD2 /* CapabilityAgentable.swift */; };
 		737388C924A46C1D0018DDD2 /* ChipsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388C624A46C1D0018DDD2 /* ChipsAgentProtocol.swift */; };
-		737388CA24A46C1D0018DDD2 /* ChipsAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388C724A46C1D0018DDD2 /* ChipsAgentDelegate.swift */; };
 		737388CB24A46C1D0018DDD2 /* ChipsAgentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388C824A46C1D0018DDD2 /* ChipsAgentItem.swift */; };
 		737388D124A46C2B0018DDD2 /* SessionManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388CD24A46C2B0018DDD2 /* SessionManageable.swift */; };
 		737388D224A46C2B0018DDD2 /* SessionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388CE24A46C2B0018DDD2 /* SessionAgentProtocol.swift */; };
@@ -278,7 +277,6 @@
 		737388D924A46C3C0018DDD2 /* SoundState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388D424A46C3C0018DDD2 /* SoundState.swift */; };
 		737388DA24A46C3C0018DDD2 /* SoundAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388D524A46C3C0018DDD2 /* SoundAgentProtocol.swift */; };
 		737388DB24A46C3C0018DDD2 /* SoundAgentDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388D624A46C3C0018DDD2 /* SoundAgentDataSource.swift */; };
-		737388DC24A46C3C0018DDD2 /* SoundAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388D724A46C3C0018DDD2 /* SoundAgentDelegate.swift */; };
 		737388DD24A46C3C0018DDD2 /* SoundBeepName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388D824A46C3C0018DDD2 /* SoundBeepName.swift */; };
 		737388E024A46C4A0018DDD2 /* ExtensionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388DE24A46C4A0018DDD2 /* ExtensionAgentProtocol.swift */; };
 		737388E124A46C4A0018DDD2 /* ExtensionAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737388DF24A46C4A0018DDD2 /* ExtensionAgentDelegate.swift */; };
@@ -985,7 +983,6 @@
 		737388C124A46C110018DDD2 /* CapabilityAgentProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityAgentProperty.swift; sourceTree = "<group>"; };
 		737388C224A46C110018DDD2 /* CapabilityAgentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapabilityAgentable.swift; sourceTree = "<group>"; };
 		737388C624A46C1D0018DDD2 /* ChipsAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChipsAgentProtocol.swift; sourceTree = "<group>"; };
-		737388C724A46C1D0018DDD2 /* ChipsAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChipsAgentDelegate.swift; sourceTree = "<group>"; };
 		737388C824A46C1D0018DDD2 /* ChipsAgentItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChipsAgentItem.swift; sourceTree = "<group>"; };
 		737388CD24A46C2B0018DDD2 /* SessionManageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManageable.swift; sourceTree = "<group>"; };
 		737388CE24A46C2B0018DDD2 /* SessionAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionAgentProtocol.swift; sourceTree = "<group>"; };
@@ -993,7 +990,6 @@
 		737388D424A46C3C0018DDD2 /* SoundState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundState.swift; sourceTree = "<group>"; };
 		737388D524A46C3C0018DDD2 /* SoundAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundAgentProtocol.swift; sourceTree = "<group>"; };
 		737388D624A46C3C0018DDD2 /* SoundAgentDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundAgentDataSource.swift; sourceTree = "<group>"; };
-		737388D724A46C3C0018DDD2 /* SoundAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundAgentDelegate.swift; sourceTree = "<group>"; };
 		737388D824A46C3C0018DDD2 /* SoundBeepName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundBeepName.swift; sourceTree = "<group>"; };
 		737388DE24A46C4A0018DDD2 /* ExtensionAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionAgentProtocol.swift; sourceTree = "<group>"; };
 		737388DF24A46C4A0018DDD2 /* ExtensionAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionAgentDelegate.swift; sourceTree = "<group>"; };
@@ -2707,7 +2703,6 @@
 				7E5F4895243C3C8A00118054 /* SoundAgent.swift */,
 				7E5F4899243C44AF00118054 /* SoundAgent+Event.swift */,
 				737388D524A46C3C0018DDD2 /* SoundAgentProtocol.swift */,
-				737388D724A46C3C0018DDD2 /* SoundAgentDelegate.swift */,
 				737388D624A46C3C0018DDD2 /* SoundAgentDataSource.swift */,
 				737388D424A46C3C0018DDD2 /* SoundState.swift */,
 				7E5F4897243C40EB00118054 /* SoundMedia.swift */,
@@ -2754,7 +2749,6 @@
 			children = (
 				7EE2DCA9247CCFD90005DE17 /* ChipsAgent.swift */,
 				737388C624A46C1D0018DDD2 /* ChipsAgentProtocol.swift */,
-				737388C724A46C1D0018DDD2 /* ChipsAgentDelegate.swift */,
 				737388C824A46C1D0018DDD2 /* ChipsAgentItem.swift */,
 			);
 			path = Chips;
@@ -3736,7 +3730,6 @@
 				1F9EF1EE2488C4EA000786E5 /* AudioPlayerDisplayRenderingInfo.swift in Sources */,
 				737388F524A46C800018DDD2 /* ASROptions.swift in Sources */,
 				737388D924A46C3C0018DDD2 /* SoundState.swift in Sources */,
-				737388DC24A46C3C0018DDD2 /* SoundAgentDelegate.swift in Sources */,
 				737388E124A46C4A0018DDD2 /* ExtensionAgentDelegate.swift in Sources */,
 				73152FCB23E0415B00F843C3 /* DisplayAgent+Event.swift in Sources */,
 				7E284DA124DD482800BF9640 /* InteractionControlConst.swift in Sources */,
@@ -3761,7 +3754,6 @@
 				737388ED24A46C680018DDD2 /* AudioPlayerDisplayControlPayload.swift in Sources */,
 				1FD5D1A224FF7035007BA384 /* TextAgentRequestType.swift in Sources */,
 				7373891524A46CB90018DDD2 /* TextAgentProtocol.swift in Sources */,
-				737388CA24A46C1D0018DDD2 /* ChipsAgentDelegate.swift in Sources */,
 				737388FF24A46C930018DDD2 /* SystemAgentExceptionCode.swift in Sources */,
 				7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */,
 				064FD86B25A2CEB800DE6454 /* UtilityAgentProtocol.swift in Sources */,
