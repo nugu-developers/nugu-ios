@@ -251,11 +251,10 @@ private extension NuguOAuthClient {
         additionalQueries: [URLQueryItem]? = nil,
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
-        grant.safariController.completion = completion
-        let state = grant.safariController.makeState()
+        let state = grant.oauthHandler.makeState()
         var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/v1/auth/oauth/authorize")
         
-        var queries = [URLQueryItem]()
+        var queries = [URLQueryItem]() 
         queries.append(URLQueryItem(name: "response_type", value: "code"))
         queries.append(URLQueryItem(name: "state", value: state))
         queries.append(URLQueryItem(name: "client_id", value: grant.clientId))
@@ -269,18 +268,19 @@ private extension NuguOAuthClient {
         urlComponents?.queryItems = queries
         
         guard let url = urlComponents?.url else {
-            grant.safariController.completion?(.failure(NuguLoginKitError.invalidRequestURL))
-            grant.safariController.clearState()
+            completion?(.failure(NuguLoginKitError.invalidRequestURL))
+            grant.oauthHandler.clear()
             return
         }
         
         // Complete function
         func complete(result: Result<AuthorizationInfo, NuguLoginKitError>) {
-            DispatchQueue.main.async {
-                grant.safariController.dismissSafariViewController(completion: {
-                    grant.safariController.completion?(result)
-                    grant.safariController.clearState()
-                })
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                grant.oauthHandler.clear()
+                completion?(result)
+                NotificationCenter.default.removeObserver(self.observer as Any)
             }
         }
         
@@ -288,74 +288,75 @@ private extension NuguOAuthClient {
             forName: .authorization,
             object: nil,
             queue: .main) { [weak self] (notification) in
-                guard let self = self else {
-                    complete(result: .failure(NuguLoginKitError.unknown(description: "self is nil")))
-                    return
-                }
-                
-                guard let url = notification.userInfo?["url"] as? URL else {
-                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
-                    return
-                }
-                
-                // Get URLComponent
-                guard let urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
-                    return
-                }
-                
-                let scheme = urlComponent.scheme ?? ""
-                let host = urlComponent.host ?? ""
-                
-                // Validate Redirect URI
-                guard grant.redirectUri == "\(scheme)://\(host)" else {
-                    complete(result: .failure(NuguLoginKitError.invalidOpenURL))
-                    return
-                }
-                
-                // Get authorization code
-                guard let authorizationCode = urlComponent.queryItems?.first(where: { $0.name == "code" })?.value else {
-                    complete(result: .failure(NuguLoginKitError.noAuthorizationCode))
-                    return
-                }
-                
-                // Validate state
-                guard
-                    let state = urlComponent.queryItems?.first(where: { $0.name == "state" })?.value,
-                    state == grant.safariController.currentState else {
-                        complete(result: .failure(NuguLoginKitError.invalidState))
-                        return
-                }
-                
-                // Acquire token
-                let api = NuguOAuthTokenApi(
-                    clientId: grant.clientId,
-                    clientSecret: grant.clientSecret,
-                    deviceUniqueId: self.deviceUniqueId,
-                    grantTypeInfo: .authorizationCode(code: authorizationCode, redirectUri: grant.redirectUri)
+            guard let self = self else {
+                complete(result: .failure(NuguLoginKitError.unknown(description: "self is nil")))
+                return
+            }
+            
+            guard let url = notification.userInfo?["url"] as? URL else {
+                complete(result: .failure(NuguLoginKitError.invalidOpenURL))
+                return
+            }
+            
+            // Get URLComponent
+            guard let urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+                complete(result: .failure(NuguLoginKitError.invalidOpenURL))
+                return
+            }
+            
+            let scheme = urlComponent.scheme ?? ""
+            let host = urlComponent.host ?? ""
+            
+            // Validate Redirect URI
+            guard grant.redirectUri == "\(scheme)://\(host)" else {
+                complete(result: .failure(NuguLoginKitError.invalidOpenURL))
+                return
+            }
+            
+            // Get authorization code
+            guard let authorizationCode = urlComponent.queryItems?.first(where: { $0.name == "code" })?.value else {
+                complete(result: .failure(NuguLoginKitError.noAuthorizationCode))
+                return
+            }
+            
+            // Validate state
+            guard
+                let state = urlComponent.queryItems?.first(where: { $0.name == "state" })?.value,
+                state == grant.oauthHandler.currentState else {
+                complete(result: .failure(NuguLoginKitError.invalidState))
+                return
+            }
+            
+            // Acquire token
+            let api = NuguOAuthTokenApi(
+                clientId: grant.clientId,
+                clientSecret: grant.clientSecret,
+                deviceUniqueId: self.deviceUniqueId,
+                grantTypeInfo: .authorizationCode(code: authorizationCode, redirectUri: grant.redirectUri)
+            )
+            
+            api.request { (result) in
+                complete(result: result.flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
+                    guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
+                        return .failure(.parsingFailed(data))
+                    }
+                    return .success(authorizationInfo)
+                })
+                .mapError({ NuguLoginKitError.apiError(error: $0) })
                 )
-                
-                api.request { (result) in
-                    complete(result: result
-                        .flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
-                            guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
-                                return .failure(.parsingFailed(data))
-                            }
-                            return .success(authorizationInfo)
-                        })
-                        .mapError({ NuguLoginKitError.apiError(error: $0) })
-                    )
-                }
+            }
         }
+            
+        let redirectURLComponents = URLComponents(string: grant.redirectUri)
         
         DispatchQueue.main.async {
-            grant.safariController.presentSafariViewController(url: url, from: parentViewController)
+            grant.oauthHandler.handle(url, callbackURLScheme: redirectURLComponents?.scheme, from: parentViewController)
         }
     }
 }
 
 // MARK: - Notification.Name (for authorization-code grant)
 
-private extension Notification.Name {
+extension Notification.Name {
     static let authorization = Notification.Name(rawValue: "com.sktelecom.romaine.authorization")
 }
