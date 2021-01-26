@@ -34,6 +34,7 @@ public final class MessageAgent: MessageAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
+    private let interactionControlManager: InteractionControlManageable
     
     private lazy var disposeBag = DisposeBag()
     
@@ -50,11 +51,13 @@ public final class MessageAgent: MessageAgentProtocol {
     public init(
         directiveSequencer: DirectiveSequenceable,
         contextManager: ContextManageable,
-        upstreamDataSender: UpstreamDataSendable
+        upstreamDataSender: UpstreamDataSendable,
+        interactionControlManager: InteractionControlManageable
     ) {
         self.directiveSequencer = directiveSequencer
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
+        self.interactionControlManager = interactionControlManager
     }
     
     public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
@@ -88,8 +91,18 @@ public extension MessageAgent {
             referrerDialogRequestId: header?.dialogRequestId
         )
         
-        return sendFullContextEvent(event.rx) { state in
+        return sendFullContextEvent(event.rx) { [weak self] state in
             completion?(state)
+            guard let self = self else { return }
+            switch state {
+            case .finished, .error:
+                self.interactionControlManager.finish(
+                    mode: .multiTurn,
+                    category: self.capabilityAgentProperty.category
+                )
+            default:
+                break
+            }
         }.dialogRequestId
     }
 }
@@ -116,6 +129,12 @@ private extension MessageAgent {
             }
             
             defer { completion(.finished) }
+            
+            // TODO: Check interaction mode in payload.
+            self.interactionControlManager.start(
+                mode: .multiTurn,
+                category: self.capabilityAgentProperty.category
+            )
             
             delegate.messageAgentDidReceiveSendCandidates(
                 item: candidatesItem,
