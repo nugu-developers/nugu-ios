@@ -58,6 +58,9 @@ public final class MessageAgent: MessageAgentProtocol {
         self.contextManager = contextManager
         self.upstreamDataSender = upstreamDataSender
         self.interactionControlManager = interactionControlManager
+        
+        contextManager.addProvider(contextInfoProvider)
+        directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
     
     public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
