@@ -212,9 +212,7 @@ private extension AudioSessionManager {
                 if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                     let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                     if options.contains(.shouldResume) {
-                        if self?.nuguClient.speechRecognizerAggregator?.useKeywordDetector == true {
-                            self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
-                        }
+                        self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
                         if self?.pausedByInterruption == true || self?.nuguClient.audioPlayerAgent.isPlaying == true {
                             self?.nuguClient.audioPlayerAgent.play()
                         }

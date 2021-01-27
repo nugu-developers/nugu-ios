@@ -50,6 +50,9 @@ final class SettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NuguCentralManager.shared.client.speechRecognizerAggregator?.useKeywordDetector = false
+        
         tableView.reloadData()
         
         updateTid()
@@ -106,7 +109,6 @@ extension SettingViewController: UITableViewDataSource {
                 cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useWakeUpDetector, isSwitchEnabled: switchEnableability)
                 cell.onSwitchValueChanged = { isOn in
                     UserDefaults.Standard.useWakeUpDetector = isOn
-                    NuguCentralManager.shared.client.speechRecognizerAggregator?.useKeywordDetector = isOn
                 }
             case 2:
                 cell.configure(text: menuTitle, detailText: Keyword(rawValue: UserDefaults.Standard.wakeUpWord)?.description)
@@ -203,6 +205,7 @@ extension SettingViewController: UITableViewDelegate {
 
 private extension SettingViewController {
     @IBAction func closeButtonDidClick(_ button: UIButton) {
+        NuguCentralManager.shared.client.speechRecognizerAggregator?.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
         dismiss(animated: true)
     }
 }
