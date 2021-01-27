@@ -125,6 +125,10 @@ extension NuguCentralManager {
     func startUsingAudioSessionManager() {
         client.audioSessionManager?.updateAudioSession()
     }
+    
+    func stopUsingAudioSessionManager() {
+        client.audioSessionManager = nil
+    }
 }
 
 // MARK: - Internal (OAuth)
@@ -214,6 +218,7 @@ extension NuguCentralManager {
         authorizationInfo = nil
         popToRootViewController()
         disable()
+        stopUsingAudioSessionManager()
         UserDefaults.Standard.clear()
         UserDefaults.Nugu.clear()
     }
@@ -259,6 +264,7 @@ private extension NuguCentralManager {
                 self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
                     self?.authorizationInfo = nil
                     self?.disable()
+                    self?.stopUsingAudioSessionManager()
                     UserDefaults.Standard.clear()
                     UserDefaults.Nugu.clear()
                 })
@@ -266,6 +272,7 @@ private extension NuguCentralManager {
                 self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
                     self?.authorizationInfo = nil
                     self?.disable()
+                    self?.stopUsingAudioSessionManager()
                     UserDefaults.Standard.clear()
                     UserDefaults.Nugu.clear()
                 })

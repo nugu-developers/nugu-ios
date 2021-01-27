@@ -93,14 +93,6 @@ final class MainViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         NuguCentralManager.shared.stopListening()
-
-        if let asrResultObserver = asrResultObserver {
-            notificationCenter.removeObserver(asrResultObserver)
-        }
-        
-        if let dialogStateObserver = dialogStateObserver {
-            notificationCenter.removeObserver(dialogStateObserver)
-        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -126,6 +118,13 @@ final class MainViewController: UIViewController {
     
     deinit {
         removeObservers()
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            notificationCenter.removeObserver(dialogStateObserver)
+        }
     }
 }
 

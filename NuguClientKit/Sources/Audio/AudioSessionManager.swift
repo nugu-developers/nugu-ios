@@ -23,7 +23,7 @@ import AVFoundation
 import NuguAgents
 
 final public class AudioSessionManager: AudioSessionManageable {
-    public var nuguClient: NuguClient
+    private unowned var nuguClient: NuguClient
     
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
     private var audioSessionInterruptionObserver: Any?
@@ -31,7 +31,7 @@ final public class AudioSessionManager: AudioSessionManageable {
     private var audioEngineConfigurationObserver: Any?
     private let notificationCenter = NotificationCenter.default
     private var audioPlayerStateObserver: Any?
-    var pausedByInterruption = false
+    private var pausedByInterruption = false
     
     /// Initialize
     /// - Parameters:
@@ -212,7 +212,9 @@ private extension AudioSessionManager {
                 if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                     let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                     if options.contains(.shouldResume) {
-                        self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
+                        if self?.nuguClient.speechRecognizerAggregator?.useKeywordDetector == true {
+                            self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
+                        }
                         if self?.pausedByInterruption == true || self?.nuguClient.audioPlayerAgent.isPlaying == true {
                             self?.nuguClient.audioPlayerAgent.play()
                         }
