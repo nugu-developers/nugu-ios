@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AudioPlayer2View" customModule="SampleApp" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AudioPlayer2View" customModule="NuguUIKit" customModuleProvider="target">
             <connections>
                 <outlet property="albumImageContainerView" destination="Zlv-FV-ep8" id="GwQ-G9-mcc"/>
                 <outlet property="albumImageView" destination="vnv-ly-bzE" id="Xj4-DT-9K2"/>
                 <outlet property="albumImageViewShadowView" destination="Dqa-vx-tCH" id="UaG-qN-kwM"/>
                 <outlet property="audioPlayerBarView" destination="8G0-8O-pRZ" id="2dt-x7-11V"/>
                 <outlet property="audioPlayerBarViewContainerView" destination="TTt-Mo-EwR" id="2L7-WW-f4R"/>
+                <outlet property="barTypeButton" destination="WKv-Zq-kfE" id="TF6-VC-36a"/>
                 <outlet property="durationTimeLabel" destination="ipZ-cW-S1O" id="YL6-vX-juS"/>
                 <outlet property="elapsedTimeLabel" destination="DBJ-mZ-1YZ" id="PZp-d4-1as"/>
                 <outlet property="favoriteButton" destination="VOG-tE-myi" id="5fz-ud-x3C"/>
@@ -44,7 +45,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EP1-Pl-EFV" userLabel="FullAudioPlayerContainerView">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pH6-Ca-81Z" customClass="DisplayTitleView" customModule="SampleApp" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pH6-Ca-81Z" customClass="DisplayTitleView" customModule="NuguUIKit" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="76"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="76" id="kx0-XE-aJx"/>
@@ -168,7 +169,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="veS-tW-n4N">
-                                    <rect key="frame" x="20" y="660" width="374" height="2"/>
+                                    <rect key="frame" x="20" y="658" width="374" height="4"/>
                                     <color key="progressTintColor" red="0.0" green="0.61568627450000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="trackTintColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
                                 </progressView>
@@ -256,7 +257,7 @@
                                         <constraint firstAttribute="trailing" secondItem="HMj-fF-Skf" secondAttribute="trailing" constant="30" id="y69-7p-oh8"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pG4-6i-DuM" customClass="DisplayIdleBar" customModule="SampleApp" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pG4-6i-DuM" customClass="DisplayIdleBar" customModule="NuguUIKit" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="750" width="414" height="68"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="68" id="hYW-Wu-zAv"/>
@@ -293,7 +294,7 @@
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TTt-Mo-EwR" userLabel="BarAudioPlayerContainerView">
                     <rect key="frame" x="0.0" y="804" width="414" height="92"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8G0-8O-pRZ" customClass="AudioPlayerBarView" customModule="SampleApp" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8G0-8O-pRZ" customClass="AudioPlayerBarView" customModule="NuguUIKit" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="58"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="58" id="iw4-xl-ZqS"/>
@@ -308,6 +309,7 @@
                     </constraints>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="ZaX-GT-Q7R"/>
             <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="jXW-9x-vgp" firstAttribute="leading" secondItem="ZaX-GT-Q7R" secondAttribute="leading" id="0Ye-FB-Fk2"/>
@@ -319,7 +321,6 @@
                 <constraint firstItem="jXW-9x-vgp" firstAttribute="trailing" secondItem="ZaX-GT-Q7R" secondAttribute="trailing" id="giI-dd-afX"/>
                 <constraint firstItem="TTt-Mo-EwR" firstAttribute="trailing" secondItem="jXW-9x-vgp" secondAttribute="trailing" id="yap-vu-ERv"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="ZaX-GT-Q7R"/>
             <point key="canvasLocation" x="128.98550724637681" y="135.9375"/>
         </view>
     </objects>
