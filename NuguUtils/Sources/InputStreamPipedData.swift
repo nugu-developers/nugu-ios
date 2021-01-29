@@ -34,11 +34,8 @@ public class InputStreamPipedData {
     public func append(_ other: Data) {
         guard isOpened else { return }
 
-        print("=== try append cnt: \(other.count)")
         self._data.mutate {
-            print("=== append cnt: \(other.count)")
             $0.append(other)
-
             internalInputStream.notify(event: .hasBytesAvailable)
         }
     }
@@ -47,13 +44,11 @@ public class InputStreamPipedData {
         var data: Data?
         _data.mutate {
             let length = min($0.count, count)
-            print("=== total: \($0.count) range: 0..<\(length)")
             guard 0 < length else { return }
             
             data = $0[..<length]
             $0.removeSubrange(..<length)
 
-            print("=== remains: \($0.count)")
             guard 0 < $0.count else {
                 if isOpened == false {
                     internalInputStream.finish()
@@ -69,7 +64,6 @@ public class InputStreamPipedData {
     }
 
     public func finish() {
-        print("=== finish")
         isOpened = false
     }
 }
@@ -108,7 +102,6 @@ extension InputStreamPipedData {
         }
 
         override func open() {
-            print("=== open")
             internalStatus = .open
             notify(event: .openCompleted)
 
@@ -118,7 +111,6 @@ extension InputStreamPipedData {
         }
 
         override func close() {
-            print("=== close")
             internalStatus = .closed
         }
 
@@ -128,10 +120,9 @@ extension InputStreamPipedData {
             }
 
             internalStatus = .reading
-            print("=== read request: \(len)")
             guard let data = base.detach(count: len) else { return 0}
+
             data.copyBytes(to: buffer, from: 0..<data.count)
-            print("=== read: \(data.count)")
             return data.count
         }
 
@@ -141,7 +132,6 @@ extension InputStreamPipedData {
             }
 
             internalStatus = .reading
-            print("=== getBuffer")
             guard len.pointee <= base.data.count,
                   let data = base.detach(count: len.pointee) else { return false }
 
@@ -164,7 +154,6 @@ extension InputStreamPipedData {
         }
 
         func finish() {
-            print("=== finish")
             internalStatus = .atEnd
             notify(event: .endEncountered)
         }
@@ -173,7 +162,6 @@ extension InputStreamPipedData {
             guard streamStatus != .notOpen else { return }
             runLoop.perform(inModes: [runLoopMode]) { [weak self] in
                 guard let self = self else { return }
-                print("=== notify: \(event) thread: \(Thread.current)")
                 self.delegate?.stream?(self, handle: event)
             }
         }
