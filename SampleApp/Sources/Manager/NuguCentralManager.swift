@@ -157,7 +157,7 @@ extension NuguCentralManager {
         
         switch loginMethod {
         case .type1:
-            oauthClient.authorizeWithTid(parentViewController: viewController) { [weak self] (result) in
+            oauthClient.loginWithTid(parentViewController: viewController) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -168,7 +168,7 @@ extension NuguCentralManager {
                 }
             }
         case .type2:
-            oauthClient.authorize { [weak self] (result) in
+            oauthClient.loginAnonymously { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -194,7 +194,7 @@ extension NuguCentralManager {
         
         switch loginMethod {
         case .type1:
-            oauthClient.refreshToken(refreshToken: refreshToken) { [weak self] (result) in
+            oauthClient.loginSilentlyWithTid(refreshToken: refreshToken) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -205,7 +205,7 @@ extension NuguCentralManager {
                 }
             }
         case .type2:
-            oauthClient.authorize { [weak self] (result) in
+            oauthClient.loginAnonymously { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
