@@ -211,8 +211,6 @@ public class NuguClient {
             streamDataRouter: streamDataRouter,
             dialogStateAggregator: dialogStateAggregator
         )
-        
-        keywordDetector = KeywordDetector(contextManager: contextManager)
 
         // setup additional roles
         setupAuthorizationStore()
