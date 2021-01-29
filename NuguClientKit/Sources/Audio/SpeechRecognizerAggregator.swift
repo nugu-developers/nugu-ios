@@ -32,7 +32,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     private var becomeActiveObserver: Any?
     private var audioSessionInterruptionObserver: Any?
     
-    private let nuguClient: NuguClient
+    private unowned let nuguClient: NuguClient
     private let micInputProvider: MicInputProvider
     private var audioSessionInterrupted = false
     private var micInputProviderDelay: DispatchTime = .now()
