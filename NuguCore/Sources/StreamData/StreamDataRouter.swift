@@ -27,16 +27,17 @@ import RxSwift
 public class StreamDataRouter: StreamDataRoutable {
     private let notificationQueue = DispatchQueue(label: "com.sktelecom.romaine.stream_data_router_notificaiton_queue")
     
-    private lazy var nuguApiProvider = NuguApiProvider()
+    private let nuguApiProvider = NuguApiProvider()
     private let directiveSequencer: DirectiveSequenceable
     @Atomic private var eventSenders = [String: EventSender]()
     @Atomic private var eventDisposables = [String: Disposable]()
-    private lazy var serverInitiatedDirectiveReceiver = ServerSideEventReceiver(apiProvider: nuguApiProvider)
+    private var serverInitiatedDirectiveReceiver: ServerSideEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
     public init(directiveSequencer: DirectiveSequenceable) {
+        serverInitiatedDirectiveReceiver = ServerSideEventReceiver(apiProvider: nuguApiProvider)
         self.directiveSequencer = directiveSequencer
     }
 }

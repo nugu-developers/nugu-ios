@@ -26,7 +26,7 @@ import NuguAgents
 
 /// <#Description#>
 public class NuguClient {
-    public weak var delegate: NuguClientDelegate?
+    private weak var delegate: NuguClientDelegate?
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -122,7 +122,9 @@ public class NuguClient {
     private let backgroundFocusHolder: BackgroundFocusHolder
     
     /// <#Description#>
-    public init() {
+    public init(delegate: NuguClientDelegate) {
+        self.delegate = delegate
+        
         // core
         contextManager = ContextManager()
         directiveSequencer = DirectiveSequencer()

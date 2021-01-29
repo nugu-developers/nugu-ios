@@ -42,7 +42,36 @@ final class NuguCentralManager {
         }
     }
     
-    let client: NuguClient
+    lazy var client: NuguClient = {
+        let client = NuguClient(delegate: self)
+        
+        client.audioSessionManager = AudioSessionManager(nuguClient: client)
+        client.speechRecognizerAggregator = SpeechRecognizerAggregator(
+            nuguClient: client,
+            micInputProvider: MicInputProvider()
+        )
+        
+        client.locationAgent.delegate = self
+        client.soundAgent.dataSource = self
+        
+        // Observers
+        addSystemAgentObserver(client.systemAgent)
+        
+        if let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") {
+            client.asrAgent.options = ASROptions(endPointing: .client(epdFile: epdFile))
+        } else {
+            log.error("EPD model file not exist")
+        }
+        
+        // Set Last WakeUp Keyword
+        // If you don't want to use saved wakeup-word, don't need to be implemented
+        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+            client.keywordDetector.keywordSource = keyword.keywordSource
+        }
+        client.speechRecognizerAggregator?.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
+        
+        return client
+    }()
     
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
     lazy private(set) var asrBeepPlayer: ASRBeepPlayer = ASRBeepPlayer(focusManager: client.focusManager)
@@ -59,33 +88,6 @@ final class NuguCentralManager {
     }()
     
     private init() {
-        client = NuguClient()
-        client.audioSessionManager = AudioSessionManager(nuguClient: client)
-        client.speechRecognizerAggregator = SpeechRecognizerAggregator(
-            nuguClient: client,
-            micInputProvider: MicInputProvider()
-        )
-        
-        client.delegate = self
-        client.locationAgent.delegate = self
-        client.soundAgent.dataSource = self
-        
-        // Set Last WakeUp Keyword
-        // If you don't want to use saved wakeup-word, don't need to be implemented
-        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
-            client.keywordDetector.keywordSource = keyword.keywordSource
-        }
-        
-        // Observers
-        addSystemAgentObserver(client.systemAgent)
-        
-        if let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.asrAgent.options = ASROptions(endPointing: .client(epdFile: epdFile))
-        } else {
-            log.error("EPD model file not exist")
-        }
-        
-        client.speechRecognizerAggregator?.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
     }
     
     deinit {
