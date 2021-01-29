@@ -122,6 +122,7 @@ public class NuguClient {
     private let backgroundFocusHolder: BackgroundFocusHolder
     
     /// <#Description#>
+    /// - Parameter delegate: <#delegate description#>
     public init(delegate: NuguClientDelegate) {
         self.delegate = delegate
         

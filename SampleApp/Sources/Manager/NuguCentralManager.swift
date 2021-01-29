@@ -42,7 +42,7 @@ final class NuguCentralManager {
         }
     }
     
-    lazy var client: NuguClient = {
+    lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
         
         client.audioSessionManager = AudioSessionManager(nuguClient: client)
