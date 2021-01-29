@@ -69,13 +69,13 @@ private extension IntroViewController {
 // MARK: - IBAction
 
 private extension IntroViewController {
-    @IBAction func type1LoginButtonDidClick(_ button: UIButton) {
-        UserDefaults.Standard.loginMethod = SampleApp.LoginMethod.type1.rawValue
+    @IBAction func tidLoginButtonDidClick(_ button: UIButton) {
+        UserDefaults.Standard.loginMethod = SampleApp.LoginMethod.tid.rawValue
         logIn()
     }
     
-    @IBAction func type2LoginButtonDidClick(_ button: UIButton) {
-        UserDefaults.Standard.loginMethod = SampleApp.LoginMethod.type2.rawValue
+    @IBAction func anonymousLoginButtonDidClick(_ button: UIButton) {
+        UserDefaults.Standard.loginMethod = SampleApp.LoginMethod.anonymous.rawValue
         logIn()
     }
 }

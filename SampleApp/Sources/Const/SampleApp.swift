@@ -40,14 +40,14 @@ private var nattyConfiguration: NattyConfiguration {
 struct SampleApp {
     enum LoginMethod: Int, CaseIterable {
         /// Nugu App Link
-        case type1 = 0
+        case tid = 0
         /// Anonymous
-        case type2 = 1
+        case anonymous = 1
         
         var name: String {
             switch self {
-            case .type1: return "Type 1"
-            case .type2: return "Type 2"
+            case .tid: return "T-ID"
+            case .anonymous: return "Anonymous"
             }
         }
     }

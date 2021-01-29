@@ -63,8 +63,8 @@ extension UserDefaults {
         // MARK: LoginType
         
         /// Not neccesary for your app.
-        /// It is only needed for the login type(type1, type2) in the sample app.
-        /// Default value is type1.
+        /// It is only needed for the login type(tid, anonymous) in the sample app.
+        /// Default value is tid.
         @UserDefault(userDefaults: .standard, key: "currentloginMethod", defaultValue: 0)
         static var currentloginMethod: Int
         
