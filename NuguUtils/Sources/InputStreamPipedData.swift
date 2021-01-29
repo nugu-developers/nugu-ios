@@ -71,7 +71,7 @@ public class InputStreamPipedData {
 extension InputStreamPipedData {
     private class InputStream: Foundation.InputStream {
         private weak var base: InputStreamPipedData!
-        @Atomic private var runLoop = RunLoop.main
+        private var runLoop = RunLoop.main
         private var runLoopMode = RunLoop.Mode.default
         
         private weak var internalDelegate: StreamDelegate?
@@ -95,10 +95,10 @@ extension InputStreamPipedData {
                 internalStatus = newValue
             }
         }
-
-        init(base: InputStreamPipedData) {
+        
+        convenience init(base: InputStreamPipedData) {
+            self.init()
             self.base = base
-            super.init(data: Data())
         }
 
         override func open() {
@@ -147,10 +147,8 @@ extension InputStreamPipedData {
         }
 
         override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
-            _runLoop.mutate {
-                $0 = aRunLoop
-                runLoopMode = mode
-            }
+            runLoop = aRunLoop
+            runLoopMode = mode
         }
 
         func finish() {
