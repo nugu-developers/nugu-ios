@@ -23,7 +23,7 @@ import AVFoundation
 import NuguAgents
 
 final public class AudioSessionManager: AudioSessionManageable {
-    private unowned var nuguClient: NuguClient
+    private unowned let nuguClient: NuguClient
     
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
     private var audioSessionInterruptionObserver: Any?
