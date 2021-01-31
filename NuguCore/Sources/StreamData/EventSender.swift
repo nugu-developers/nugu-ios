@@ -22,8 +22,6 @@ import Foundation
 
 import NuguUtils
 
-import RxSwift
-
 /**
  Send event through Full Duplex stream.
  send MultiPart body and receive MultiPart response.
@@ -35,8 +33,7 @@ class EventSender {
     public let id: Int
     private let boundary: String
     private let streamQueue: DispatchQueue
-    private let disposeBag = DisposeBag()
-    let streams = InputStreamPipedData()
+    let inputStream = DataBoundInputStream(data: Data())
     
     #if DEBUG
     private var sentData = Data()
@@ -64,7 +61,7 @@ class EventSender {
      */
     func send(_ event: Upstream.Event) {
         log.debug("[\(id)] try send event")
-        streams.append(makeMultipartData(event))
+        inputStream.appendData(makeMultipartData(event))
     }
     
     /**
@@ -72,7 +69,7 @@ class EventSender {
      */
     public func send(_ attachment: Upstream.Attachment) {
         log.debug("[\(id)] send attachment")
-        streams.append(makeMultipartData(attachment))
+        inputStream.appendData(makeMultipartData(attachment))
     }
     
     /**
@@ -87,8 +84,8 @@ class EventSender {
         partData.append(HTTPConst.crlfData)
         
         log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
-        streams.append(partData)
-        streams.finish()
+        inputStream.appendData(partData)
+        inputStream.lastDataAppended()
         
         #if DEBUG
         do {

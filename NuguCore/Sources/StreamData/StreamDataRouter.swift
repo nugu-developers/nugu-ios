@@ -130,7 +130,7 @@ public extension StreamDataRouter {
         
         // request event as multi part stream
         _eventDisposables.mutate {
-            $0[event.header.dialogRequestId] = nuguApiProvider.events(boundary: boundary, httpHeaderFields: event.httpHeaderFields, inputStream: eventSender.streams.input)
+            $0[event.header.dialogRequestId] = nuguApiProvider.events(boundary: boundary, httpHeaderFields: event.httpHeaderFields, inputStream: eventSender.inputStream)
                 .subscribe(onNext: { [weak self] (part) in
                     self?.notifyMessage(with: part, completion: completion)
                 }, onError: { [weak self] (error) in
