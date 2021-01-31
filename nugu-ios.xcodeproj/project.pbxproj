@@ -196,7 +196,6 @@
 		7314DF4B255E3EA2004882BB /* NuguUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7314DF49255E3EA2004882BB /* NuguUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7314DF4E255E3EA2004882BB /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		7314DF4F255E3EA2004882BB /* NuguUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		7314DF68255E3F21004882BB /* BoundStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7303C68923C5C00F00610343 /* BoundStreams.swift */; };
 		7314DF87255E3F27004882BB /* CryptoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75082BC7243ACA280027D76D /* CryptoUtil.swift */; };
 		7314DFA8255E3F33004882BB /* NuguTimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100995238795FF00D90FEE /* NuguTimeInterval.swift */; };
 		7314DFA9255E3F33004882BB /* TimeIntervallic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F100990238529C100D90FEE /* TimeIntervallic.swift */; };
@@ -950,7 +949,6 @@
 		7303C68323C5BFD400610343 /* EndPointDetectorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectorDelegate.swift; sourceTree = "<group>"; };
 		7303C68423C5BFD400610343 /* EndPointDetectorState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointDetectorState.swift; sourceTree = "<group>"; };
 		7303C68523C5BFD400610343 /* ClientEndPointDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientEndPointDetector.swift; sourceTree = "<group>"; };
-		7303C68923C5C00F00610343 /* BoundStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundStreams.swift; sourceTree = "<group>"; };
 		7314DF47255E3EA2004882BB /* NuguUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7314DF49255E3EA2004882BB /* NuguUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguUtils.h; sourceTree = "<group>"; };
 		7314DF4A255E3EA2004882BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2433,7 +2431,6 @@
 				7329679725636E240077C3C4 /* Extensions */,
 				7314E02F255E4474004882BB /* PropertyWrappers */,
 				1F1009982387969600D90FEE /* TimeInterval */,
-				7303C68923C5C00F00610343 /* BoundStreams.swift */,
 				75082BC7243ACA280027D76D /* CryptoUtil.swift */,
 				732967B8256377190077C3C4 /* EndedUp.swift */,
 				75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */,
@@ -3661,7 +3658,6 @@
 				73752B4825B88641005C27DA /* KeyedEncodingContainerExtension.swift in Sources */,
 				7314E030255E4491004882BB /* Atomic.swift in Sources */,
 				060DDE88256E67DC006B4F59 /* NetworkReachabilityManager.swift in Sources */,
-				7314DF68255E3F21004882BB /* BoundStreams.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
