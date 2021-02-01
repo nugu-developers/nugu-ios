@@ -57,6 +57,16 @@ final class AudioPlayer2View: AudioDisplayView {
             self?.delegate?.onNuguButtonClick()
         }
         audioPlayerBarView.delegate = self
+        
+        barTypeButton.setImage(UIImage(named: "btn_down", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        favoriteButton.setImage(UIImage(named: "btn_like_off", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        favoriteButton.setImage(UIImage(named: "btn_like_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
+        prevButton.setImage(UIImage(named: "btn_skip_previous", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        playPauseButton.setImage(UIImage(named: "btn_play", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        playPauseButton.setImage(UIImage(named: "btn_pause", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
+        nextButton.setImage(UIImage(named: "btn_skip_next", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        shuffleButton.setImage(UIImage(named: "btn_random_off", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        shuffleButton.setImage(UIImage(named: "btn_random_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
     }
 
     override var displayPayload: [String: AnyHashable]? {

@@ -24,8 +24,10 @@ final class AudioPlayerBarView: UIView {
     @IBOutlet weak var imageVIew: UIImageView!
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var bodyLabel: UILabel!
-    
+    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var prevButton: UIButton!
     @IBOutlet weak var playPauseButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
     
     @IBOutlet weak var progressView: UIProgressView!
     
@@ -52,6 +54,12 @@ final class AudioPlayerBarView: UIView {
         addSubview(view)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewDidTap(gestureRecognizer:)))
         addGestureRecognizer(tapRecognizer)
+
+        prevButton.setImage(UIImage(named: "btn_skip_previous", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        playPauseButton.setImage(UIImage(named: "btn_play", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        playPauseButton.setImage(UIImage(named: "btn_pause", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
+        nextButton.setImage(UIImage(named: "btn_skip_next", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
+        closeButton.setImage(UIImage(named: "btn_close", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
     }
     
     func setData(imageUrl: String?, headerText: String?, bodyText: String?) {
