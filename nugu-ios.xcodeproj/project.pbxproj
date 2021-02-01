@@ -411,6 +411,7 @@
 		75A46F882572A09E004BB472 /* AudioPlayerBarViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A46F872572A09E004BB472 /* AudioPlayerBarViewDelegate.swift */; };
 		75AE7FFB245173BC00E20E8C /* NuguChipsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */; };
 		75AE8023245190CC00E20E8C /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75ABAB06244EFD8600B4BB2D /* Lottie.framework */; };
+		75AEA7CE25AFE5DB009E1B5E /* AudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AEA7CC25AFE5DB009E1B5E /* AudioSessionManager.swift */; };
 		75C61BB324C6DB8700265228 /* 05_processing.json in Resources */ = {isa = PBXBuildFile; fileRef = 75C61BAC24C6DB8700265228 /* 05_processing.json */; };
 		75C61BB424C6DB8700265228 /* 04_active.json in Resources */ = {isa = PBXBuildFile; fileRef = 75C61BAD24C6DB8700265228 /* 04_active.json */; };
 		75C61BB524C6DB8700265228 /* 01_intro.json in Resources */ = {isa = PBXBuildFile; fileRef = 75C61BAE24C6DB8700265228 /* 01_intro.json */; };
@@ -432,6 +433,9 @@
 		7E284DA324DD533E00BF9640 /* MockInteractionControlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */; };
 		7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */; };
 		7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2DFE9D24B8510900792529 /* PlayStackControl.swift */; };
+		7E341F3D25AFEEFD00734A45 /* SpeechRecognizerAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E341F3C25AFEEFD00734A45 /* SpeechRecognizerAggregator.swift */; };
+		7E341F6F25AFFA0600734A45 /* AudioSessionManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E341F6E25AFFA0600734A45 /* AudioSessionManageable.swift */; };
+		7E341F8525AFFA1400734A45 /* SpeechRecognizerAggregatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E341F8425AFFA1400734A45 /* SpeechRecognizerAggregatable.swift */; };
 		7E35D79024622B4E003289A2 /* EventIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF2A42375703000C9A177 /* EventIdentifier.swift */; };
 		7E35D79424623444003289A2 /* MultiPartProcessable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79324623444003289A2 /* MultiPartProcessable.swift */; };
 		7E35D79824623A22003289A2 /* TTSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79724623A22003289A2 /* TTSError.swift */; };
@@ -484,7 +488,6 @@
 		A19EC9FE2578CEA5003E53A9 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
 		A19ECA022578CEA5003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		A19ECA1A2578CED3003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
-		A1B86FF82390B3C100F6BD11 /* NuguAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */; };
 		A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -1119,6 +1122,7 @@
 		75A46F872572A09E004BB472 /* AudioPlayerBarViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerBarViewDelegate.swift; sourceTree = "<group>"; };
 		75ABAB06244EFD8600B4BB2D /* Lottie.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lottie.framework; path = Carthage/Build/iOS/Lottie.framework; sourceTree = "<group>"; };
 		75AE7FFA245173BC00E20E8C /* NuguChipsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguChipsButton.swift; sourceTree = "<group>"; };
+		75AEA7CC25AFE5DB009E1B5E /* AudioSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioSessionManager.swift; sourceTree = "<group>"; };
 		75C61BAC24C6DB8700265228 /* 05_processing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 05_processing.json; sourceTree = "<group>"; };
 		75C61BAD24C6DB8700265228 /* 04_active.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 04_active.json; sourceTree = "<group>"; };
 		75C61BAE24C6DB8700265228 /* 01_intro.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 01_intro.json; sourceTree = "<group>"; };
@@ -1142,6 +1146,9 @@
 		7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInteractionControlManager.swift; sourceTree = "<group>"; };
 		7E2A516A2474E62F0099875D /* SystemAgentRevokeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAgentRevokeItem.swift; sourceTree = "<group>"; };
 		7E2DFE9D24B8510900792529 /* PlayStackControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayStackControl.swift; sourceTree = "<group>"; };
+		7E341F3C25AFEEFD00734A45 /* SpeechRecognizerAggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerAggregator.swift; sourceTree = "<group>"; };
+		7E341F6E25AFFA0600734A45 /* AudioSessionManageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManageable.swift; sourceTree = "<group>"; };
+		7E341F8425AFFA1400734A45 /* SpeechRecognizerAggregatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerAggregatable.swift; sourceTree = "<group>"; };
 		7E35D79324623444003289A2 /* MultiPartProcessable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartProcessable.swift; sourceTree = "<group>"; };
 		7E35D79724623A22003289A2 /* TTSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSError.swift; sourceTree = "<group>"; };
 		7E35D79924623B53003289A2 /* MicInputError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicInputError.swift; sourceTree = "<group>"; };
@@ -1194,7 +1201,6 @@
 		A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
 		A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeAreaUtil.swift; sourceTree = "<group>"; };
-		A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAudioSessionManager.swift; sourceTree = "<group>"; };
 		A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguLocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1654,6 +1660,10 @@
 		1FD4A98223A22302002EB56D /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				7E341F6E25AFFA0600734A45 /* AudioSessionManageable.swift */,
+				75AEA7CC25AFE5DB009E1B5E /* AudioSessionManager.swift */,
+				7E341F8425AFFA1400734A45 /* SpeechRecognizerAggregatable.swift */,
+				7E341F3C25AFEEFD00734A45 /* SpeechRecognizerAggregator.swift */,
 				1FFFF3182375707000C9A177 /* MicInputProvider */,
 				1F2E803623966B2900569C59 /* KeywordDetector */,
 			);
@@ -2303,7 +2313,6 @@
 			children = (
 				A1ED44582384FD24002A1F75 /* NuguLocationManager.swift */,
 				1FFFF4CA237672F100C9A177 /* NuguCentralManager.swift */,
-				A1B86FF72390B3C100F6BD11 /* NuguAudioSessionManager.swift */,
 				1FFFF4CB237672F100C9A177 /* NuguDisplayPlayerController.swift */,
 			);
 			path = Manager;
@@ -3517,8 +3526,11 @@
 				062CD13B2574D1FC00A04B22 /* ConfigurationMetadata.swift in Sources */,
 				73752BC725B8AFA6005C27DA /* NuguClientNotification.swift in Sources */,
 				066C9D2425553EE2000C7800 /* NCObjcExceptionCatcher.m in Sources */,
+				75AEA7CE25AFE5DB009E1B5E /* AudioSessionManager.swift in Sources */,
+				7E341F8525AFFA1400734A45 /* SpeechRecognizerAggregatable.swift in Sources */,
 				7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */,
 				068C3C512581F80800EC0BEE /* MicInputProviderDelegate.swift in Sources */,
+				7E341F6F25AFFA0600734A45 /* AudioSessionManageable.swift in Sources */,
 				066C9D2F25553EF0000C7800 /* MicInputError.swift in Sources */,
 				75021E64259436930014537C /* DisplayWebViewPresenterDelegate.swift in Sources */,
 				0600C3572570E4CF0071AEF3 /* Configuration.swift in Sources */,
@@ -3536,6 +3548,7 @@
 				067CB473256E582200D57AF0 /* VoiceChromePresenterError.swift in Sources */,
 				06AC3D372592EA7900A71716 /* NuguOAuthClient+Convenience.swift in Sources */,
 				066C9D3025553EF0000C7800 /* MicInputConst.swift in Sources */,
+				7E341F3D25AFEEFD00734A45 /* SpeechRecognizerAggregator.swift in Sources */,
 				0600C3582570E4CF0071AEF3 /* ConfigurationStore.swift in Sources */,
 				066C9D2E25553EF0000C7800 /* MicInputProvider.swift in Sources */,
 				7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */,
@@ -3636,7 +3649,6 @@
 				7E3C570F2450049C00FF36DF /* Keyword.swift in Sources */,
 				A17B06D4239E28EB00D739E9 /* LocalTTSAgent.swift in Sources */,
 				7525AD0824AD6054006800A3 /* NuguServiceWebViewController.swift in Sources */,
-				A1B86FF82390B3C100F6BD11 /* NuguAudioSessionManager.swift in Sources */,
 				1FFFF4DF237672F100C9A177 /* SettingViewController.swift in Sources */,
 				1FFFF4FE237672F100C9A177 /* AppDelegate.swift in Sources */,
 				1FFFF4E0237672F100C9A177 /* IntroViewController.swift in Sources */,
