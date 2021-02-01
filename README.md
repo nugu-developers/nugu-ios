@@ -38,9 +38,6 @@ To install it for easy use, simply add the following line to your `Podfile`:
 
 ```ruby
 pod 'NuguClientKit'
-pod 'NuguLoginKit'
-pod 'NuguUIKit'
-pod 'NuguServiceKit' 
 ```
 
 ### Carthage
