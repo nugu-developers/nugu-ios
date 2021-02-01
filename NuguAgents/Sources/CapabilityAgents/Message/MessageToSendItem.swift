@@ -1,8 +1,8 @@
 //
-//  PhoneCallAgentProtocol.swift
+//  MessageToSendItem.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/04/29.
+//  Created by yonghoonKwon on 2021/01/11.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,21 +20,19 @@
 
 import Foundation
 
-import NuguCore
-
 /// <#Description#>
-public protocol PhoneCallAgentProtocol: CapabilityAgentable {
+public struct MessageToSendItem: Codable {
     /// <#Description#>
-    var delegate: PhoneCallAgentDelegate? { get set }
+    public let text: String
+    /// <#Description#>
+    public let type: String?
     
     /// <#Description#>
     /// - Parameters:
-    ///   - candidatesItem: <#candidatesItem description#>
-    ///   - header: <#header description#>
-    ///   - completion: <#completion description#>
-    @discardableResult func requestSendCandidates(
-        candidatesItem: PhoneCallCandidatesItem,
-        header: Downstream.Header?,
-        completion: ((StreamDataState) -> Void)?
-    ) -> String
+    ///   - text: <#text description#>
+    ///   - type: <#type description#>
+    public init(text: String, type: String?) {
+        self.text = text
+        self.type = type
+    }
 }
