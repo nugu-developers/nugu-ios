@@ -23,13 +23,13 @@ Default Instances for Nugu service
   s.source_files = 'NuguClientKit/Sources/**/*', 'NuguClientKit/Sources-ObjC/*.{h,m}', 'NuguClientKit/NuguClientKit.h'
   s.public_header_files = 'NuguClientKit/Sources-ObjC/*.h', 'NuguClientKit/NuguClientKit.h'
 
-  s.dependency 'NuguCore', '~> 0'
-  s.dependency 'NuguAgents', '~> 0'
-  s.dependency 'KeenSense', '~> 0'
-  s.dependency 'NuguLoginKit', '~> 0'
-  s.dependency 'NuguUIKit', '~> 0'
-  s.dependency 'NuguUtils', '~> 0'
-  s.dependency 'NuguServiceKit', '~> 0'
+  s.dependency 'NuguCore', s.version.to_s
+  s.dependency 'NuguAgents', s.version.to_s
+  s.dependency 'KeenSense', s.version.to_s
+  s.dependency 'NuguLoginKit', s.version.to_s
+  s.dependency 'NuguUIKit', s.version.to_s
+  s.dependency 'NuguUtils', s.version.to_s
+  s.dependency 'NuguServiceKit', s.version.to_s
 
   s.dependency 'NattyLog', '~> 1'
 end
