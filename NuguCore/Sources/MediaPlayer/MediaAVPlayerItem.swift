@@ -138,14 +138,14 @@ private extension MediaAVPlayerItem {
 
 private extension MediaAVPlayerItem {
     func addNotificationObservers() {
-        playToEndTimeObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: { [weak self] _ in
+        playToEndTimeObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self, queue: nil, using: { [weak self] _ in
             log.debug("Did play to end time")
             guard let self = self else { return }
             
             self.delegate?.mediaAVPlayerItemDidPlayToEndTime(self)
         })
         
-        playbackStalledObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemPlaybackStalled, object: nil, queue: nil, using: { [weak self] _ in
+        playbackStalledObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemPlaybackStalled, object: self, queue: nil, using: { [weak self] _ in
             log.debug("Playback Stalled")
             guard let self = self else { return }
             
@@ -153,7 +153,7 @@ private extension MediaAVPlayerItem {
         })
         
         // Maybe called by network issue
-        failedToPlayEndTimeObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: nil, queue: nil, using: { [weak self] notification in
+        failedToPlayEndTimeObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: self, queue: nil, using: { [weak self] notification in
             log.debug("Failed to play end time")
             guard let self = self else { return }
             
@@ -164,7 +164,7 @@ private extension MediaAVPlayerItem {
             self.delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .failed(error: failedToPlayToEndTimeError))
         })
         
-        newErrorLogEntryObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemNewErrorLogEntry, object: nil, queue: nil, using: { [weak self] _ in
+        newErrorLogEntryObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemNewErrorLogEntry, object: self, queue: nil, using: { [weak self] _ in
             // CHECK-ME: errorLog 잘 출력되는지 확인 필요
             log.info("playerItem has new error log: \(String(describing: self?.errorLog()))")
         })
