@@ -31,13 +31,13 @@ public class StreamDataRouter: StreamDataRoutable {
     private let directiveSequencer: DirectiveSequenceable
     @Atomic private var eventSenders = [String: EventSender]()
     @Atomic private var eventDisposables = [String: Disposable]()
-    private var serverInitiatedDirectiveRecever: ServerSideEventReceiver
+    private var serverInitiatedDirectiveReceiver: ServerSideEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
     public init(directiveSequencer: DirectiveSequenceable) {
-        serverInitiatedDirectiveRecever = ServerSideEventReceiver(apiProvider: nuguApiProvider)
+        serverInitiatedDirectiveReceiver = ServerSideEventReceiver(apiProvider: nuguApiProvider)
         self.directiveSequencer = directiveSequencer
     }
 }
@@ -53,7 +53,7 @@ public extension StreamDataRouter {
         log.debug("start receive server initiated directives")
 
         serverInitiatedDirectiveDisposable?.dispose()
-        serverInitiatedDirectiveDisposable = serverInitiatedDirectiveRecever.directive
+        serverInitiatedDirectiveDisposable = serverInitiatedDirectiveReceiver.directive
             .subscribe(onNext: { [weak self] in
                     self?.notifyMessage(with: $0, completion: completion)
                 }, onError: {
@@ -67,14 +67,14 @@ public extension StreamDataRouter {
     
     func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy) {
         log.debug("change resource server to: https://\(serverPolicy.hostname).\(serverPolicy.port)")
-        serverInitiatedDirectiveRecever.serverPolicies = [serverPolicy]
+        serverInitiatedDirectiveReceiver.serverPolicies = [serverPolicy]
         
         // Use stored completion closure before.
         startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
     }
     
     func restartReceiveServerInitiatedDirective() {
-        serverInitiatedDirectiveRecever.serverPolicies = []
+        serverInitiatedDirectiveReceiver.serverPolicies = []
         
         // Use stored completion closure before.
         startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)

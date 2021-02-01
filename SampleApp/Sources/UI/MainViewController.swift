@@ -63,7 +63,6 @@ final class MainViewController: UIViewController {
     
     // Observers
     private let notificationCenter = NotificationCenter.default
-    private var asrStateObserver: Any?
     private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
     
@@ -93,19 +92,7 @@ final class MainViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NuguCentralManager.shared.stopMicInputProvider()
-        
-        if let asrStateObserver = asrStateObserver {
-            notificationCenter.removeObserver(asrStateObserver)
-        }
-        
-        if let asrResultObserver = asrResultObserver {
-            notificationCenter.removeObserver(asrResultObserver)
-        }
-        
-        if let dialogStateObserver = dialogStateObserver {
-            notificationCenter.removeObserver(dialogStateObserver)
-        }
+        NuguCentralManager.shared.stopListening()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -131,6 +118,13 @@ final class MainViewController: UIViewController {
     
     deinit {
         removeObservers()
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            notificationCenter.removeObserver(dialogStateObserver)
+        }
     }
 }
 
@@ -150,8 +144,7 @@ private extension MainViewController {
             if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
                 NuguCentralManager.shared.client.ttsAgent.stopTTS()
             }
-            NuguCentralManager.shared.client.asrAgent.stopRecognition()
-            NuguCentralManager.shared.stopMicInputProvider()
+            NuguCentralManager.shared.stopListening()
         })
         
         /**
@@ -190,7 +183,7 @@ private extension MainViewController {
 
 private extension MainViewController {
     @IBAction func showSettingsButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.stopMicInputProvider()
+        NuguCentralManager.shared.stopListening()
 
         performSegue(withIdentifier: "showSettings", sender: nil)
     }
@@ -213,8 +206,8 @@ private extension MainViewController {
     /// AudioSession is required for using Nugu
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
-        // Set AudioSession
-        NuguAudioSessionManager.shared.updateAudioSession()
+        // Start using AudioSessionManager
+        NuguCentralManager.shared.startUsingAudioSessionManager()
         
         // set delegate
         NuguCentralManager.shared.client.keywordDetector.delegate = self
@@ -314,14 +307,7 @@ private extension MainViewController {
         
         do {
             try voiceChromePresenter.presentVoiceChrome()
-            NuguCentralManager.shared.startRecognition(initiator: initiator)
-            NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { success in
-                guard success else {
-                    log.error("Start MicInputProvider failed")
-                    NuguCentralManager.shared.stopRecognition()
-                    return
-                }
-            }
+            NuguCentralManager.shared.startListening(initiator: initiator)
         } catch {
             switch error {
             case VoiceChromePresenterError.networkUnreachable:
@@ -458,29 +444,6 @@ extension MainViewController: VoiceChromePresenterDelegate {
 
 private extension MainViewController {
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrStateObserver = object.observe(NuguAgentNotification.ASR.State.self, queue: .main) { (notification) in
-            switch notification.state {
-            case .idle:
-                if UserDefaults.Standard.useWakeUpDetector == true {
-                    NuguCentralManager.shared.startWakeUpDetector()
-                } else {
-                    NuguCentralManager.shared.stopMicInputProvider()
-                }
-            case .listening:
-                NuguCentralManager.shared.stopWakeUpDetector()
-            case .expectingSpeech:
-                NuguCentralManager.shared.startMicInputProvider(requestingFocus: true) { (success) in
-                    guard success == true else {
-                        log.debug("startMicInputProvider failed!")
-                        NuguCentralManager.shared.stopRecognition()
-                        return
-                    }
-                }
-            default:
-                break
-            }
-        }
-        
         asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { (notification) in
             switch notification.result {
             case .complete:
