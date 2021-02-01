@@ -22,5 +22,5 @@ Framework for login using OAuth 2.0
 
   s.source_files = 'NuguLoginKit/Sources/**/*'
 
-  s.dependency 'NuguUtils', '~> 0'
+  s.dependency 'NuguUtils', s.version.to_s
 end
