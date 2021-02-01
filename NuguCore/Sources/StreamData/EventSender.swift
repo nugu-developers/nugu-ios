@@ -22,8 +22,6 @@ import Foundation
 
 import NuguUtils
 
-import RxSwift
-
 /**
  Send event through Full Duplex stream.
  send MultiPart body and receive MultiPart response.
@@ -35,10 +33,7 @@ class EventSender {
     public let id: Int
     private let boundary: String
     private let streamQueue: DispatchQueue
-    private var streamDelegator: DataStreamDelegator?
-    private let streamStateSubject = BehaviorSubject<Bool>(value: false)
-    private let disposeBag = DisposeBag()
-    let streams = BoundStreams()
+    let inputStream = DataBoundInputStream(data: Data())
     
     #if DEBUG
     private var sentData = Data()
@@ -53,17 +48,8 @@ class EventSender {
         
         self.boundary = boundary
         streamQueue = DispatchQueue(label: "com.sktelecom.romaine.event_sender_stream_\(boundary)")
+
         log.debug("[\(id)] initiated")
-        
-        streamQueue.async { [weak self] in
-            guard let self = self else { return }
-            log.debug("[\(self.id)] network bound stream task start.")
-            
-            self.streamDelegator = DataStreamDelegator(sender: self)
-            CFWriteStreamSetDispatchQueue(self.streams.output, self.streamQueue)
-            self.streams.output.delegate = self.streamDelegator
-            self.streams.output.open()
-        }
     }
     
     /**
@@ -73,37 +59,17 @@ class EventSender {
      
      - Parameter event: UpstreamEventMessage you want to send.
      */
-    func send(_ event: Upstream.Event) -> Completable {
+    func send(_ event: Upstream.Event) {
         log.debug("[\(id)] try send event")
-        
-        return streamStateSubject
-            .filter { $0 }
-            .take(1)
-            .asSingle()
-            .flatMapCompletable { [weak self] _ in
-                // send UpstreamEventMessage as a part data
-                guard let self = self else { return Completable.empty() }
-                return self.sendData(self.makeMultipartData(event))
-        }
-        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_event_\(event.header.dialogRequestId)"))
+        inputStream.appendData(makeMultipartData(event))
     }
     
     /**
      Send attachment through pre-opened stream
      */
-    public func send(_ attachment: Upstream.Attachment) -> Completable {
+    public func send(_ attachment: Upstream.Attachment) {
         log.debug("[\(id)] send attachment")
-        
-        return streamStateSubject
-            .filter { $0 }
-            .take(1)
-            .asSingle()
-            .flatMapCompletable { [weak self] _ in
-                guard let self = self else { return Completable.empty() }
-                return self.sendData(self.makeMultipartData(attachment))
-        }
-        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_attachment_\(attachment.seq)"))
-        
+        inputStream.appendData(makeMultipartData(attachment))
     }
     
     /**
@@ -112,82 +78,25 @@ class EventSender {
     func finish() {
         log.debug("[\(id)] finish")
         
-        streamStateSubject
-            .filter { $0 }
-            .take(1)
-            .asSingle()
-            .flatMapCompletable { [weak self] _ in
-                guard let self = self else { return Completable.empty() }
-                
-                var partData = Data()
-                partData.append(HTTPConst.crlfData)
-                partData.append("--\(self.boundary)--".data(using: .utf8)!)
-                partData.append(HTTPConst.crlfData)
-                
-                log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
-                return self.sendData(partData)
-        }
-        .subscribeOn(SerialDispatchQueueScheduler(queue: streamQueue, internalSerialQueueName: "\(streamQueue.label)_finish"))
-        .subscribe { [weak self] _ in
-            guard let self = self else { return }
-            
-            #if DEBUG
-            do {
-                let sentFilename = FileManager.default.urls(for: .documentDirectory,
-                                                            in: .userDomainMask)[0].appendingPathComponent("sent_event.dat")
-                try self.sentData.write(to: sentFilename)
-                log.debug("[\(self.id)] sent event data to file :\(sentFilename)")
-            } catch {
-                log.debug("[\(self.id)] write sent event data failed: \(error)")
-            }
-            #endif
-            
-            self.streamStateSubject.dispose()
-            self.streams.output.close()
-            self.streams.output.delegate = nil
-            self.streamDelegator = nil
-        }
-        .disposed(by: disposeBag)
-    }
-    
-    /**
-     Write data to output stream.
-     */
-    private func sendData(_ data: Data) -> Completable {
-        log.debug("[\(id)] try to send data stream")
+        var partData = Data()
+        partData.append(HTTPConst.crlfData)
+        partData.append("--\(self.boundary)--".data(using: .utf8)!)
+        partData.append(HTTPConst.crlfData)
         
-        return Completable.create { [weak self] (event) -> Disposable in
-            let disposable = Disposables.create()
-            guard let self = self else { return disposable }
-            
-            #if DEBUG
-            self.sentData.append(data)
-            #endif
-            
-            let result = data.withUnsafeBytes { ptrBuffer -> Int in
-                guard let ptrData = ptrBuffer.bindMemory(to: UInt8.self).baseAddress else {
-                    return -1
-                }
-                
-                return self.streams.output.write(ptrData, maxLength: data.count)
-            }
-            
-            switch result {
-            case ..<0:
-                guard let error = self.streams.output.streamError else {
-                    event(.error(EventSenderError.cannotBindMemory))
-                    return disposable
-                }
-                
-                event(.error(EventSenderError.streamError(error)))
-            case 0:
-                event(.error(EventSenderError.streamBlocked))
-            default:
-                event(.completed)
-            }
-            
-            return disposable
+        log.debug("\n\(String(data: partData, encoding: .utf8) ?? "")")
+        inputStream.appendData(partData)
+        inputStream.lastDataAppended()
+        
+        #if DEBUG
+        do {
+            let sentFilename = FileManager.default.urls(for: .documentDirectory,
+                                                        in: .userDomainMask)[0].appendingPathComponent("sent_event.dat")
+            try self.sentData.write(to: sentFilename)
+            log.debug("[\(self.id)] sent event data to file :\(sentFilename)")
+        } catch {
+            log.debug("[\(self.id)] write sent event data failed: \(error)")
         }
+        #endif
     }
 }
 
@@ -239,35 +148,5 @@ private extension EventSender {
 
         log.debug("[\(id)] Data(\(attachment.content)):\n\(String(data: partData, encoding: .utf8) ?? "")")
         return partData
-    }
-}
-
-// MARK: - StreamDelegate
-
-extension EventSender {
-    private class DataStreamDelegator: NSObject, StreamDelegate {
-        private let sender: EventSender
-        
-        init(sender: EventSender) {
-            self.sender = sender
-        }
-        
-        func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-            guard let outputStream = aStream as? OutputStream,
-                outputStream === sender.streams.output else {
-                    return
-            }
-            
-            switch eventCode {
-            case .hasSpaceAvailable:
-                sender.streamStateSubject.onNext(true)
-            case .endEncountered,
-                 .errorOccurred:
-                sender.streamStateSubject.onNext(false)
-                sender.streamStateSubject.onCompleted()
-            default:
-                break
-            }
-        }
     }
 }
