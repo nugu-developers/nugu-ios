@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayTitleView" customModule="SampleApp" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DisplayTitleView" customModule="NuguUIKit" customModuleProvider="target">
             <connections>
+                <outlet property="closeButton" destination="EiA-AV-psA" id="0GP-kt-dWT"/>
                 <outlet property="logoImageView" destination="Zxt-H7-dbK" id="1EP-Kb-lRT"/>
                 <outlet property="titleContainerView" destination="RCu-8e-0xr" id="vNW-vT-Mwb"/>
                 <outlet property="titleLabel" destination="dsb-gk-jQ1" id="eit-K9-HVL"/>
@@ -63,6 +64,7 @@
                     </connections>
                 </button>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="Yh7-Re-l4k"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="EiA-AV-psA" secondAttribute="trailing" constant="20" id="LDP-fH-8be"/>
                 <constraint firstItem="RCu-8e-0xr" firstAttribute="centerX" secondItem="QJf-e0-h4a" secondAttribute="centerX" id="PDJ-ez-5td"/>
@@ -70,7 +72,6 @@
                 <constraint firstItem="EiA-AV-psA" firstAttribute="centerY" secondItem="RCu-8e-0xr" secondAttribute="centerY" id="cfo-0K-vRH"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="Yh7-Re-l4k"/>
             <point key="canvasLocation" x="131.15942028985509" y="116.18303571428571"/>
         </view>
     </objects>

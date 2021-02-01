@@ -23,6 +23,7 @@ final class DisplayTitleView: UIView {
     @IBOutlet weak var titleContainerView: UIView!
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var closeButton: UIButton!
     
     var onCloseButtonClick: (() -> Void)?
     
@@ -43,6 +44,8 @@ final class DisplayTitleView: UIView {
         view.frame = CGRect(origin: view.frame.origin, size: CGSize(width: UIScreen.main.bounds.size.width, height: view.frame.size.height))
         addSubview(view)
         backgroundColor = .clear
+        
+        closeButton.setImage(UIImage(named: "btn_close", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
     }
     
     func setData(titleData: DisplayCommonTemplate.Common.Title) {
