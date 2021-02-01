@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.28.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.2)
+Released on 2021-02-01
+### SDK
+#### Fixed
+Use `ResourceBundle` images in `NuguUIKit` (#718)
+
+#### Update
+- Update browser for authentication (#699)
+
 ## [0.28.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.1)
 Released on 2021-01-06
 ### SDK
