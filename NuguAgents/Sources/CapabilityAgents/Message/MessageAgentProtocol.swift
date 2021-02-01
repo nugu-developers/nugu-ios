@@ -29,11 +29,11 @@ public protocol MessageAgentProtocol: CapabilityAgentable {
     
     /// <#Description#>
     /// - Parameters:
-    ///   - playServiceId: <#playServiceId description#>
+    ///   - candidatesItem: <#candidatesItem description#>
     ///   - header: <#header description#>
     ///   - completion: <#completion description#>
     @discardableResult func requestSendCandidates(
-        playServiceId: String,
+        candidatesItem: MessageCandidatesItem,
         header: Downstream.Header?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
