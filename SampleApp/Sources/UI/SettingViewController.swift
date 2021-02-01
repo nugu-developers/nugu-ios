@@ -22,10 +22,7 @@ import UIKit
 
 import NuguClientKit
 
-import KeenSense
-
 final class SettingViewController: UIViewController {
-    
     // MARK: - Properties
     
     @IBOutlet private weak var tableView: UITableView!
@@ -202,6 +199,8 @@ extension SettingViewController: UITableViewDelegate {
         }
     }
 }
+
+// MARK: - Private (IBAction)
 
 private extension SettingViewController {
     @IBAction func closeButtonDidClick(_ button: UIButton) {

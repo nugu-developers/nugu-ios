@@ -21,12 +21,11 @@
 import UIKit
 
 final class WebViewController: UIViewController {
+    var initialURL: URL?
     
     // MARK: Properties
     
     @IBOutlet private weak var webView: NuguWebView!
-    
-    var initialURL: URL?
     
     // MARK: Override
     
