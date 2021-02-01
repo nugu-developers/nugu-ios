@@ -121,29 +121,16 @@ public extension StreamDataRouter {
         
         // write event data to the stream
         log.debug("Event: \(event.header.dialogRequestId), \(event.header.namespace).\(event.header.name)")
+        self.notificationQueue.async { [weak self] in
+            self?.post(NuguCoreNotification.StreamDataRoute.ToBeSentEvent(event: event))
+        }
+        
         eventSender.send(event)
-            .subscribe(onCompleted: { [weak self] in
-                guard let self = self else { return }
-
-                self.notificationQueue.async { [weak self] in
-                    self?.post(NuguCoreNotification.StreamDataRoute.ToBeSentEvent(event: event))
-                }
-                
-                completion?(.sent)
-            }, onError: { [weak self] (error) in
-                guard let self = self else { return }
-                
-                self.notificationQueue.async { [weak self] in
-                    self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: error))
-                }
-                
-                completion?(.error(error))
-            })
-            .disposed(by: self.disposeBag)
+        completion?(.sent)
         
         // request event as multi part stream
         _eventDisposables.mutate {
-            $0[event.header.dialogRequestId] = nuguApiProvider.events(boundary: boundary, httpHeaderFields: event.httpHeaderFields, inputStream: eventSender.streams.input)
+            $0[event.header.dialogRequestId] = nuguApiProvider.events(boundary: boundary, httpHeaderFields: event.httpHeaderFields, inputStream: eventSender.inputStream)
                 .subscribe(onNext: { [weak self] (part) in
                     self?.notifyMessage(with: part, completion: completion)
                 }, onError: { [weak self] (error) in
@@ -163,11 +150,6 @@ public extension StreamDataRouter {
                     }
                     
                     completion?(.finished)
-                    // Send end_stream after receiving end_stream from server.
-                    // ex> Send `ASR.Recoginze` event with invalid access token.
-                    if eventSender.streams.output.streamStatus != .closed {
-                        eventSender.streams.output.close()
-                    }
                 }, onDisposed: { [weak self] in
                     self?._eventDisposables.mutate {
                         $0[event.header.dialogRequestId] = nil
@@ -198,28 +180,16 @@ public extension StreamDataRouter {
 
         log.debug("Attachment: \(attachment)")
         eventSender.send(attachment)
-            .subscribe(onCompleted: { [weak self] in
-                guard let self = self else { return }
-                
-                if attachment.isEnd {
-                    eventSender.finish()
-                }
+        
+        if attachment.isEnd {
+            eventSender.finish()
+        }
 
-                self.notificationQueue.async { [weak self] in
-                    self?.post(NuguCoreNotification.StreamDataRoute.SentAttachment(attachment: attachment, error: nil))
-                }
+        self.notificationQueue.async { [weak self] in
+            self?.post(NuguCoreNotification.StreamDataRoute.SentAttachment(attachment: attachment, error: nil))
+        }
 
-                completion?(.sent)
-            }, onError: { [weak self] (error) in
-                guard let self = self else { return }
-                
-                self.notificationQueue.async { [weak self] in
-                    self?.post(NuguCoreNotification.StreamDataRoute.SentAttachment(attachment: attachment, error: error))
-                }
-                
-                completion?(.error(error))
-            })
-            .disposed(by: disposeBag)
+        completion?(.sent)
     }
     
     func cancelEvent(dialogRequestId: String) {
