@@ -83,6 +83,17 @@
 		1F5E4EF725A77B860089B6D7 /* ASAuthenticationOAuthHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5E4EF625A77B860089B6D7 /* ASAuthenticationOAuthHandler.swift */; };
 		1F721C66241767E100023EF8 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F721C64241767E100023EF8 /* Quick.framework */; };
 		1F721C67241767E100023EF8 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F721C65241767E100023EF8 /* Nimble.framework */; };
+		1F862EF5252DAB040069C310 /* KeyedEncodingContainerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F862EF4252DAB040069C310 /* KeyedEncodingContainerExtension.swift */; };
+		1F862F09252DB2590069C310 /* JSONCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F862F08252DB2590069C310 /* JSONCodingKey.swift */; };
+		1F9336CA25B68CC000CEBF66 /* MessageAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9336C925B68CC000CEBF66 /* MessageAgentProtocol.swift */; };
+		1F9336D625B68D4100CEBF66 /* MessageAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9336D525B68D4100CEBF66 /* MessageAgent.swift */; };
+		1F9336E225B68D4D00CEBF66 /* MessageAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9336E125B68D4D00CEBF66 /* MessageAgentDelegate.swift */; };
+		1F93375D25BEB8CE00CEBF66 /* MessageAgentContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93375C25BEB8CE00CEBF66 /* MessageAgentContext.swift */; };
+		1F93377325BEB95800CEBF66 /* MessageAgentContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93377225BEB95800CEBF66 /* MessageAgentContact.swift */; };
+		1F93377F25BF12D600CEBF66 /* MessageCandidatesItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93377E25BF12D600CEBF66 /* MessageCandidatesItem.swift */; };
+		1F93378B25BF135700CEBF66 /* MessageRecipientIntended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93378A25BF135700CEBF66 /* MessageRecipientIntended.swift */; };
+		1F93379725BF182400CEBF66 /* MessageToSendItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93379625BF182400CEBF66 /* MessageToSendItem.swift */; };
+		1F9337AD25BF265200CEBF66 /* MessageAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9337AC25BF265200CEBF66 /* MessageAgent+Event.swift */; };
 		1F9C5B5E23C30B4B0086CC04 /* NuguOAuthTokenApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B5D23C30B4B0086CC04 /* NuguOAuthTokenApi.swift */; };
 		1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7323F2B3270086CC04 /* MockStreamDataRouter.swift */; };
 		1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9C5B7523F2BF560086CC04 /* MockDirectiveSequencer.swift */; };
@@ -779,6 +790,15 @@
 		1F721C65241767E100023EF8 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 		1F862EF4252DAB040069C310 /* KeyedEncodingContainerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedEncodingContainerExtension.swift; sourceTree = "<group>"; };
 		1F862F08252DB2590069C310 /* JSONCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCodingKey.swift; sourceTree = "<group>"; };
+		1F9336C925B68CC000CEBF66 /* MessageAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgentProtocol.swift; sourceTree = "<group>"; };
+		1F9336D525B68D4100CEBF66 /* MessageAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgent.swift; sourceTree = "<group>"; };
+		1F9336E125B68D4D00CEBF66 /* MessageAgentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgentDelegate.swift; sourceTree = "<group>"; };
+		1F93375C25BEB8CE00CEBF66 /* MessageAgentContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgentContext.swift; sourceTree = "<group>"; };
+		1F93377225BEB95800CEBF66 /* MessageAgentContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgentContact.swift; sourceTree = "<group>"; };
+		1F93377E25BF12D600CEBF66 /* MessageCandidatesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCandidatesItem.swift; sourceTree = "<group>"; };
+		1F93378A25BF135700CEBF66 /* MessageRecipientIntended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRecipientIntended.swift; sourceTree = "<group>"; };
+		1F93379625BF182400CEBF66 /* MessageToSendItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageToSendItem.swift; sourceTree = "<group>"; };
+		1F9337AC25BF265200CEBF66 /* MessageAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageAgent+Event.swift"; sourceTree = "<group>"; };
 		1F9C5B5D23C30B4B0086CC04 /* NuguOAuthTokenApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguOAuthTokenApi.swift; sourceTree = "<group>"; };
 		1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguAgents.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		1F9C5B6B23EBEF810086CC04 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .travis.yml; sourceTree = "<group>"; };
@@ -1496,6 +1516,22 @@
 			path = KeywordDetector;
 			sourceTree = "<group>";
 		};
+		1F9336C825B68CA500CEBF66 /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				1F9336D525B68D4100CEBF66 /* MessageAgent.swift */,
+				1F9337AC25BF265200CEBF66 /* MessageAgent+Event.swift */,
+				1F9336C925B68CC000CEBF66 /* MessageAgentProtocol.swift */,
+				1F9336E125B68D4D00CEBF66 /* MessageAgentDelegate.swift */,
+				1F93375C25BEB8CE00CEBF66 /* MessageAgentContext.swift */,
+				1F93377225BEB95800CEBF66 /* MessageAgentContact.swift */,
+				1F93377E25BF12D600CEBF66 /* MessageCandidatesItem.swift */,
+				1F93379625BF182400CEBF66 /* MessageToSendItem.swift */,
+				1F93378A25BF135700CEBF66 /* MessageRecipientIntended.swift */,
+			);
+			path = Message;
+            sourceTree = "<group>";
+        };
 		1F5E4EBD25A77B330089B6D7 /* Handler */ = {
 			isa = PBXGroup;
 			children = (
@@ -1527,6 +1563,7 @@
 				1FFFF3592375707000C9A177 /* Text */,
 				1FFFF3402375707000C9A177 /* Location */,
 				680EF95F24B30D8D003DE266 /* MediaPlayer */,
+				1F9336C825B68CA500CEBF66 /* Message */,
 				7E284D9024DD255C00BF9640 /* Interaction */,
 				7ED37D4726043DF3009A0A24 /* Permission */,
 			);
@@ -3715,6 +3752,7 @@
 				73152FB523E0413F00F843C3 /* AudioPlayerAgent+PlayEvent.swift in Sources */,
 				7373891A24A46CC20018DDD2 /* LocationAgentDelegate.swift in Sources */,
 				737388E724A46C5D0018DDD2 /* AudioPlayerState.swift in Sources */,
+				1F9337AD25BF265200CEBF66 /* MessageAgent+Event.swift in Sources */,
 				06FE563F253E9EC0002FAC9B /* TTSPlayer.swift in Sources */,
 				06301FBC256B853D00FD97E8 /* TextAgentRedirectPayload.swift in Sources */,
 				73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */,
@@ -3723,6 +3761,7 @@
 				737388E024A46C4A0018DDD2 /* ExtensionAgentProtocol.swift in Sources */,
 				1FD5D17A24A99993007BA384 /* PhoneCallAgentDelegate.swift in Sources */,
 				7373891424A46CB90018DDD2 /* TextAgentDelegate.swift in Sources */,
+				1F93379725BF182400CEBF66 /* MessageToSendItem.swift in Sources */,
 				1FBA3B7624596E1A001E5828 /* PhoneCallAgent+Event.swift in Sources */,
 				7EE2DCAA247CCFD90005DE17 /* ChipsAgent.swift in Sources */,
 				737388DA24A46C3C0018DDD2 /* SoundAgentProtocol.swift in Sources */,
@@ -3735,7 +3774,10 @@
 				737388F724A46C800018DDD2 /* ASRState.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
 				737388C424A46C110018DDD2 /* CapabilityAgentProperty.swift in Sources */,
+				1F9336CA25B68CC000CEBF66 /* MessageAgentProtocol.swift in Sources */,
+				1F9336E225B68D4D00CEBF66 /* MessageAgentDelegate.swift in Sources */,
 				737388EC24A46C680018DDD2 /* AudioPlayerDisplayDelegate.swift in Sources */,
+				1F93377F25BF12D600CEBF66 /* MessageCandidatesItem.swift in Sources */,
 				737388D124A46C2B0018DDD2 /* SessionManageable.swift in Sources */,
 				1FD5D18F24C82224007BA384 /* MediaPlayerAgentSong.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
@@ -3781,6 +3823,7 @@
 				737388CB24A46C1D0018DDD2 /* ChipsAgentItem.swift in Sources */,
 				1F31FD7A241F5774009593EB /* TextAgentSourceItem.swift in Sources */,
 				737388F624A46C800018DDD2 /* ASRResult.swift in Sources */,
+				1F93378B25BF135700CEBF66 /* MessageRecipientIntended.swift in Sources */,
 				064FD88125A2CEE000DE6454 /* UtilityAgent.swift in Sources */,
 				7EDCF97C24BC11CB0036805C /* DisplayTemplateDuration.swift in Sources */,
 				7EB81CD724C04F3B000910A9 /* Eventable.swift in Sources */,
@@ -3790,7 +3833,9 @@
 				7373891524A46CB90018DDD2 /* TextAgentProtocol.swift in Sources */,
 				737388FF24A46C930018DDD2 /* SystemAgentExceptionCode.swift in Sources */,
 				7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */,
+				1F93377325BEB95800CEBF66 /* MessageAgentContact.swift in Sources */,
 				064FD86B25A2CEB800DE6454 /* UtilityAgentProtocol.swift in Sources */,
+				1F93375D25BEB8CE00CEBF66 /* MessageAgentContext.swift in Sources */,
 				1FD5D18024A99993007BA384 /* PhoneCallErrorCode.swift in Sources */,
 				73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */,
 				73152FBC23E0414700F843C3 /* ASRAgent+Event.swift in Sources */,
@@ -3809,6 +3854,7 @@
 				737388C524A46C110018DDD2 /* CapabilityAgentable.swift in Sources */,
 				737388D324A46C2B0018DDD2 /* Session.swift in Sources */,
 				737388E624A46C5D0018DDD2 /* AudioPlayerAgentProtocol.swift in Sources */,
+				1F9336D625B68D4100CEBF66 /* MessageAgent.swift in Sources */,
 				7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */,
 				73152FC323E0414F00F843C3 /* SystemAgent+Event.swift in Sources */,
 				7E8050AA2518A69300994786 /* ASRInitiator.swift in Sources */,

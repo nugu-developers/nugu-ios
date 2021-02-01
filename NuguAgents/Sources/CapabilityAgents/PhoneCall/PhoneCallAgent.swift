@@ -95,13 +95,13 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 
 public extension PhoneCallAgent {
     @discardableResult func requestSendCandidates(
-        playServiceId: String,
+        candidatesItem: PhoneCallCandidatesItem,
         header: Downstream.Header?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         let event = Event(
             typeInfo: .candidatesListed,
-            playServiceId: playServiceId,
+            playServiceId: candidatesItem.playServiceId,
             referrerDialogRequestId: header?.dialogRequestId
         )
         
@@ -110,7 +110,12 @@ public extension PhoneCallAgent {
             guard let self = self else { return }
             switch state {
             case .finished, .error:
-                self.interactionControlManager.finish(mode: .multiTurn, category: self.capabilityAgentProperty.category)
+                if let interactionControl = candidatesItem.interactionControl {
+                    self.interactionControlManager.finish(
+                        mode: interactionControl.mode,
+                        category: self.capabilityAgentProperty.category
+                    )
+                }
             default:
                 break
             }
