@@ -45,9 +45,14 @@ final class NuguCentralManager {
     lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
         
+        client.audioSessionManager = AudioSessionManager(nuguClient: client)
+        client.speechRecognizerAggregator = SpeechRecognizerAggregator(
+            nuguClient: client,
+            micInputProvider: MicInputProvider()
+        )
+        
         client.locationAgent.delegate = self
         client.soundAgent.dataSource = self
-        micInputProvider.delegate = client
         
         // Observers
         addSystemAgentObserver(client.systemAgent)
@@ -57,6 +62,13 @@ final class NuguCentralManager {
         } else {
             log.error("EPD model file not exist")
         }
+        
+        // Set Last WakeUp Keyword
+        // If you don't want to use saved wakeup-word, don't need to be implemented
+        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+            client.keywordDetector.keywordSource = keyword.keywordSource
+        }
+        client.speechRecognizerAggregator?.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
         
         return client
     }()
@@ -75,13 +87,8 @@ final class NuguCentralManager {
         }
     }()
     
-    private var startMicWorkItem: DispatchWorkItem?
-
-    // Audio input source
-    private let micQueue = DispatchQueue(label: "central_manager_mic_input_queue")
-    private let micInputProvider = MicInputProvider()
-    
-    private init() {}
+    private init() {
+    }
     
     deinit {
         if let systemAgentExceptionObserver = systemAgentExceptionObserver {
@@ -106,43 +113,23 @@ extension NuguCentralManager {
         }
 
         NuguLocationManager.shared.startUpdatingLocation()
-        
-        // Set Last WakeUp Keyword
-        // If you don't want to use saved wakeup-word, don't need to be implemented
-        if UserDefaults.Standard.useWakeUpDetector,
-            let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
-            client.keywordDetector.keywordSource = keyword.keywordSource
-            startWakeUpDetector()
-            
-            startMicWorkItem?.cancel()
-            startMicWorkItem = DispatchWorkItem(block: { [weak self] in
-                log.debug("startMicWorkItem start")
-                self?.startMicInputProvider(requestingFocus: false) { (success) in
-                    guard success else {
-                        log.debug("startMicWorkItem failed!")
-                        return
-                    }
-                }
-            })
-            guard let startMicWorkItem = startMicWorkItem else { return }
-            // When mic has been activated before interruption end notification has been fired,
-            // Option's .shouldResume factor never comes in. (even when it has to be)
-            // Giving small delay for starting mic can be a solution for this situation
-            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: startMicWorkItem)
-        } else {
-            stopWakeUpDetector()
-            stopMicInputProvider()
-        }
+        startListeningWithTrigger()
     }
     
     func disable() {
         log.debug("")
-        stopWakeUpDetector()
-        stopMicInputProvider()
-        stopRecognition()
+        stopListening()
         client.stopReceiveServerInitiatedDirective()
         client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
+    }
+    
+    func startUsingAudioSessionManager() {
+        client.audioSessionManager?.updateAudioSession()
+    }
+    
+    func stopUsingAudioSessionManager() {
+        client.audioSessionManager = nil
     }
 }
 
@@ -233,6 +220,7 @@ extension NuguCentralManager {
         authorizationInfo = nil
         popToRootViewController()
         disable()
+        stopUsingAudioSessionManager()
         UserDefaults.Standard.clear()
         UserDefaults.Nugu.clear()
     }
@@ -278,6 +266,7 @@ private extension NuguCentralManager {
                 self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
                     self?.authorizationInfo = nil
                     self?.disable()
+                    self?.stopUsingAudioSessionManager()
                     UserDefaults.Standard.clear()
                     UserDefaults.Nugu.clear()
                 })
@@ -285,6 +274,7 @@ private extension NuguCentralManager {
                 self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
                     self?.authorizationInfo = nil
                     self?.disable()
+                    self?.stopUsingAudioSessionManager()
                     UserDefaults.Standard.clear()
                     UserDefaults.Nugu.clear()
                 })
@@ -327,78 +317,17 @@ private extension NuguCentralManager {
     }
 }
 
-// MARK: - Internal (MicInputProvider)
-
 extension NuguCentralManager {
-    func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
-        startMicWorkItem?.cancel()
-        DispatchQueue.main.async {
-            guard UIApplication.shared.applicationState == .active else {
-                completion(false)
-                return
-            }
-            
-            NuguAudioSessionManager.shared.requestRecordPermission { [unowned self] isGranted in
-                guard isGranted else {
-                    log.error("Record permission denied")
-                    completion(false)
-                    return
-                }
-                self.micQueue.async { [unowned self] in
-                    defer {
-                        log.debug("addEngineConfigurationChangeNotification")
-                        NuguAudioSessionManager.shared.registerAudioEngineConfigurationObserver()
-                    }
-                    self.micInputProvider.stop()
-                    
-                    // Control center does not work properly when mixWithOthers option has been included.
-                    // To avoid adding mixWithOthers option when audio player is in paused state,
-                    // update audioSession should be done only when requesting focus
-                    if requestingFocus {
-                        NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: requestingFocus)
-                    }
-                    do {
-                        try self.micInputProvider.start()
-                        completion(true)
-                    } catch {
-                        log.error(error)
-                        completion(false)
-                    }
-                }
-            }
-        }
+    func startListening(initiator: ASRInitiator) {
+        client.speechRecognizerAggregator?.startListening(initiator: initiator)
     }
     
-    func stopMicInputProvider() {
-        micQueue.sync {
-            startMicWorkItem?.cancel()
-            micInputProvider.stop()
-            NuguAudioSessionManager.shared.removeAudioEngineConfigurationObserver()
-        }
-    }
-}
- 
-// MARK: - Internal (WakeUpDetector)
-
-extension NuguCentralManager {
-    func startWakeUpDetector() {
-        client.keywordDetector.start()
+    func startListeningWithTrigger() {
+        client.speechRecognizerAggregator?.startListeningWithTrigger()
     }
     
-    func stopWakeUpDetector() {
-        client.keywordDetector.stop()
-    }
-}
-
-// MARK: - Internal (ASR)
-
-extension NuguCentralManager {
-    func startRecognition(initiator: ASRInitiator) {
-        client.asrAgent.startRecognition(initiator: initiator)
-    }
-    
-    func stopRecognition() {
-        client.asrAgent.stopRecognition()
+    func stopListening() {
+        client.speechRecognizerAggregator?.stopListening()
     }
 }
 
@@ -424,11 +353,11 @@ extension NuguCentralManager: NuguClientDelegate {
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        return NuguAudioSessionManager.shared.updateAudioSession(requestingFocus: true)
+        return client.audioSessionManager?.updateAudioSession(requestingFocus: true) ?? false
     }
     
     func nuguClientDidReleaseAudioSession() {
-        NuguAudioSessionManager.shared.notifyAudioSessionDeactivation()
+        client.audioSessionManager?.notifyAudioSessionDeactivation()
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {

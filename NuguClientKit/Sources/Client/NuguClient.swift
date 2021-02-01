@@ -115,6 +115,9 @@ public class NuguClient {
     
     /// <#Description#>
     public private(set) lazy var keywordDetector: KeywordDetector = KeywordDetector(contextManager: contextManager)
+
+    public var speechRecognizerAggregator: SpeechRecognizerAggregatable?
+    public var audioSessionManager: AudioSessionManageable?
     
     private let backgroundFocusHolder: BackgroundFocusHolder
     
@@ -224,7 +227,7 @@ public class NuguClient {
         removeDialogStateObserver()
     }
 }
-    
+
 // MARK: - Helper functions
 
 public extension NuguClient {
@@ -370,20 +373,6 @@ extension NuguClient {
     func removeDialogStateObserver() {
         if let dialogStateObserver = dialogStateObserver {
             notificationCenter.removeObserver(dialogStateObserver)
-        }
-    }
-}
-
-// MARK: - MicInputProviderDelegate
-
-extension NuguClient: MicInputProviderDelegate {
-    public func micInputProviderDidReceive(buffer: AVAudioPCMBuffer) {
-        if keywordDetector.state == .active {
-            keywordDetector.putAudioBuffer(buffer: buffer)
-        }
-        
-        if [.listening, .recognizing].contains(asrAgent.asrState) {
-            asrAgent.putAudioBuffer(buffer: buffer)
         }
     }
 }
