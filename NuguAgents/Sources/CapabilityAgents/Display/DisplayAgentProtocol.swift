@@ -24,7 +24,7 @@ import NuguCore
 
 /// The `DisplayAgent` handles directives for controlling template display.
 public protocol DisplayAgentProtocol: CapabilityAgentable {
-    /// The object that acts as the delegate of extension-agent
+    /// The object that acts as the delegate of `DisplayAgent`
     var delegate: DisplayAgentDelegate? { get set }
     
     /// The object to set the default duration of `DisplayTemplate`.
@@ -47,12 +47,6 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
 // MARK: - Default
 
 public extension DisplayAgentProtocol {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - templateId: <#templateId description#>
-    ///   - token: <#token description#>
-    ///   - postback: <#postback description#>
-    /// - Returns: <#description#>
     @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?) -> String {
         return elementDidSelect(templateId: templateId, token: token, postback: postback, completion: nil)
     }

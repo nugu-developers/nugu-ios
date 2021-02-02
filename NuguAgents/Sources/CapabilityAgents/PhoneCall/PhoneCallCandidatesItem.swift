@@ -20,30 +20,21 @@
 
 import Foundation
 
-/// <#Description#>
+/// An Item received through the 'SendCandidates' directive in `PhoneCallAgent`.
 public struct PhoneCallCandidatesItem {
-    
-    // MARK: SearchTarget
-    
-    /// <#Description#>
-    public enum SearchTarget {
-        case contact
-        case exchange
-        case t114
-        case unknown
-    }
-    
-    /// <#Description#>
+    /// The unique identifier to specify play service.
     public let playServiceId: String
-    /// <#Description#>
+    /// The intent of candidates in `PhoneCallAgent`
     public let intent: PhoneCallIntent
-    /// <#Description#>
+    /// Types of phone-call
     public let callType: PhoneCallType?
-    /// <#Description#>
+    /// Recipient information analyzed from utterance
     public let recipientIntended: PhoneCallRecipientIntended?
-    /// <#Description#>
+    /// The candidate searched for play service.
+    ///
+    /// If nil, there are no search results.
     public let candidates: [PhoneCallPerson]?
-    /// <#Description#>
+    /// The scene of search target and display tempate
     public let searchScene: String?
     /// <#Description#>
     public let interactionControl: InteractionControl?
@@ -72,40 +63,5 @@ extension PhoneCallCandidatesItem: Codable {
         candidates = try? container.decode([PhoneCallPerson].self, forKey: .candidates)
         searchScene = try? container.decode(String.self, forKey: .searchScene)
         interactionControl = try? container.decode(InteractionControl.self, forKey: .interactionControl)
-    }
-}
-
-// MARK: - PhoneCallCandidatesItem.SearchTarget + Codable
-
-extension PhoneCallCandidatesItem.SearchTarget: Codable {
-    enum CodingKeys: CodingKey {
-        case contact, exchange, t114, unknown
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        
-        let value = try container.decode(String.self)
-        switch value {
-        case "CONTACT": self = .contact
-        case "EXCHANGE": self = .exchange
-        case "T114": self = .t114
-        default: self = .unknown
-        }
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        
-        switch self {
-        case .contact:
-            try container.encode("CONTACT")
-        case .exchange:
-            try container.encode("EXCHANGE")
-        case .t114:
-            try container.encode("T114")
-        case .unknown:
-            try container.encode("UNKNOWN")
-        }
     }
 }

@@ -20,6 +20,6 @@
 
 import Foundation
 
-/// Session-agent is needed to manage session.
+/// `SessionAgent` is needed to manage session.
 public protocol SessionAgentProtocol: CapabilityAgentable {
 }

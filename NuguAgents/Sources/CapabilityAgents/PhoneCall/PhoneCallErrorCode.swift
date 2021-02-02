@@ -20,7 +20,7 @@
 
 import Foundation
 
-/// <#Description#>
+/// The error code to send to 'MakeCallFailed' event
 public enum PhoneCallErrorCode: String {
     case noSystemPermission = "NO_SYSTEM_PERMISSION"
     case callTypeNotSupported = "CALL_TYPE_NOT_SUPPORTED"

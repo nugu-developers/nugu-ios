@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct MediaPlayerAgentSong: Codable {
+public struct MediaPlayerAgentSong {
     /// <#Description#>
     public let category: String
     /// <#Description#>
@@ -41,33 +41,7 @@ public struct MediaPlayerAgentSong: Codable {
     /// <#Description#>
     public let etc: [String: AnyHashable]?
     
-    enum CodingKeys: String, CodingKey {
-        case category
-        case theme
-        case genre
-        case artist
-        case album
-        case title
-        case duration
-        case issueDate
-        case etc
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        category = try container.decode(String.self, forKey: .category)
-        theme = try container.decodeIfPresent(String.self, forKey: .theme)
-        genre = try container.decodeIfPresent([String].self, forKey: .genre)
-        artist = try container.decodeIfPresent([String].self, forKey: .artist)
-        album = try container.decodeIfPresent(String.self, forKey: .album)
-        title = try container.decodeIfPresent(String.self, forKey: .title)
-        duration = try container.decodeIfPresent(String.self, forKey: .duration)
-        issueDate = try container.decodeIfPresent(String.self, forKey: .issueDate)
-        etc = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .etc)
-    }
-    
-    /// <#Description#>
+    /// The initializer for `MediaPlayerAgentSong`.
     /// - Parameters:
     ///   - category: <#category description#>
     ///   - theme: <#theme description#>
@@ -98,6 +72,36 @@ public struct MediaPlayerAgentSong: Codable {
         self.duration = duration
         self.issueDate = issueDate
         self.etc = etc
+    }
+}
+
+// MARK: - MediaPlayerAgentSong + Codable
+
+extension MediaPlayerAgentSong: Codable {
+    enum CodingKeys: String, CodingKey {
+        case category
+        case theme
+        case genre
+        case artist
+        case album
+        case title
+        case duration
+        case issueDate
+        case etc
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        category = try container.decode(String.self, forKey: .category)
+        theme = try container.decodeIfPresent(String.self, forKey: .theme)
+        genre = try container.decodeIfPresent([String].self, forKey: .genre)
+        artist = try container.decodeIfPresent([String].self, forKey: .artist)
+        album = try container.decodeIfPresent(String.self, forKey: .album)
+        title = try container.decodeIfPresent(String.self, forKey: .title)
+        duration = try container.decodeIfPresent(String.self, forKey: .duration)
+        issueDate = try container.decodeIfPresent(String.self, forKey: .issueDate)
+        etc = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .etc)
     }
     
     public func encode(to encoder: Encoder) throws {

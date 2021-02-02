@@ -22,21 +22,26 @@ import Foundation
 
 import NuguCore
 
-/// <#Description#>
+/// The `PhoneCallAgentDelegate` protocol defines methods that a delegate of a `PhoneCallAgent` object can implement to receive directives or request context.
 public protocol PhoneCallAgentDelegate: class {
-    /// <#Description#>
+    
+    /// Provide a context of `PhoneCallAgent`.
+    ///
+    /// This function should return as soon as possible to reduce request delay.
+    /// - Returns: The context for `PhoneCallAgent`
     func phoneCallAgentRequestContext() -> PhoneCallContext
     
-    /// <#Description#>
+    /// Called method when a directive 'SendCandidates' is received.
     /// - Parameters:
-    ///   - item: <#item description#>
+    ///   - item: The item of `PhoneCallCandidatesItem`
     ///   - header: The header of the originally handled directive.
     func phoneCallAgentDidReceiveSendCandidates(item: PhoneCallCandidatesItem, header: Downstream.Header)
     
-    /// <#Description#>
+    /// Called method when a directive 'MakeCall' is received.
     /// - Parameters:
-    ///   - callType: <#callType description#>
-    ///   - recipient: <#recipient description#>
+    ///   - callType: Types of phone calls
+    ///   - recipient: An contact about the recipient(callee)
     ///   - header: The header of the originally handled directive.
+    /// - Returns: If have an error, the error-code is returned, otherwise it returns `nil`.
     func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson, header: Downstream.Header) -> PhoneCallErrorCode?
 }
