@@ -139,7 +139,6 @@
 		1FFFF02823753F8A00C9A177 /* NuguUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF02623753F8A00C9A177 /* NuguUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF03523753FA200C9A177 /* JadeMarble.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF03323753FA200C9A177 /* JadeMarble.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FFFF04223753FB200C9A177 /* KeenSense.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFFF04023753FB200C9A177 /* KeenSense.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FFFF37E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */; };
 		1FFFF3802375707000C9A177 /* MediaAVPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3102375707000C9A177 /* MediaAVPlayerItem.swift */; };
 		1FFFF3812375707000C9A177 /* MediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3112375707000C9A177 /* MediaPlayer.swift */; };
 		1FFFF38C2375707000C9A177 /* Collection+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3212375707000C9A177 /* Collection+Convenience.swift */; };
@@ -860,7 +859,6 @@
 		1FFFF28D2375703000C9A177 /* DialogState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogState.swift; sourceTree = "<group>"; };
 		1FFFF2A02375703000C9A177 /* AuthorizationStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationStore.swift; sourceTree = "<group>"; };
 		1FFFF2A42375703000C9A177 /* EventIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventIdentifier.swift; sourceTree = "<group>"; };
-		1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaAVPlayerItemDelegate.swift; sourceTree = "<group>"; };
 		1FFFF3102375707000C9A177 /* MediaAVPlayerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaAVPlayerItem.swift; sourceTree = "<group>"; };
 		1FFFF3112375707000C9A177 /* MediaPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPlayer.swift; sourceTree = "<group>"; };
 		1FFFF3192375707000C9A177 /* MicInputProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MicInputProvider.swift; sourceTree = "<group>"; };
@@ -1798,7 +1796,6 @@
 				1FFFF3112375707000C9A177 /* MediaPlayer.swift */,
 				1FFFF22D2375703000C9A177 /* MediaPlayableError.swift */,
 				1FFFF3102375707000C9A177 /* MediaAVPlayerItem.swift */,
-				1FFFF30E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift */,
 				75082BC3243AC5B20027D76D /* MediaCacheManager.swift */,
 			);
 			path = MediaPlayer;
@@ -3502,7 +3499,6 @@
 				735A4CBF241172F1004E7A41 /* ServerSideEventProcessor.swift in Sources */,
 				7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */,
 				735A4CE1241173F4004E7A41 /* EventSender.swift in Sources */,
-				1FFFF37E2375707000C9A177 /* MediaAVPlayerItemDelegate.swift in Sources */,
 				7373894B24A46E720018DDD2 /* DirectiveHandleInfo.swift in Sources */,
 				7373895624A473A60018DDD2 /* FocusDelegate.swift in Sources */,
 			);
