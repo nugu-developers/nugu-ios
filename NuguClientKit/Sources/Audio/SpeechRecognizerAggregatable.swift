@@ -23,7 +23,7 @@ import Foundation
 import NuguAgents
 import NuguCore
 
-public protocol SpeechRecognizerAggregatable {
+public protocol SpeechRecognizerAggregatable: class {
     var useKeywordDetector: Bool { get set }
     
     /// Start ASR(`ASRAgentProcotol`) with microphone.

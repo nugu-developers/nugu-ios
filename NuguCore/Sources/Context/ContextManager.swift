@@ -80,9 +80,9 @@ extension ContextManager {
         
         Single<ContextInfo?>.zip(requests)
             .subscribeOn(contextScheduler)
-            .map({ (contextInfos) -> [ContextInfo] in
-                return contextInfos.compactMap({ $0 })
-            })
+            .map { (contextInfos) -> [ContextInfo] in
+                return contextInfos.compactMap { $0 }
+            }
             .subscribe(
                 onSuccess: { (contextInfos) in
                     completion(contextInfos)

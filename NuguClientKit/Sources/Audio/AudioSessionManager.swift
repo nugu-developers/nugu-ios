@@ -23,28 +23,31 @@ import AVFoundation
 import NuguAgents
 
 final public class AudioSessionManager: AudioSessionManageable {
-    private unowned let nuguClient: NuguClient
-    
+    public weak var delegate: AudioSessionManagerDelegate?
+    private let audioPlayerAgent: AudioPlayerAgentProtocol
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
+    
+    // observers
+    private let notificationCenter = NotificationCenter.default
     private var audioSessionInterruptionObserver: Any?
     private var audioRouteObserver: Any?
-    private var audioEngineConfigurationObserver: Any?
-    private let notificationCenter = NotificationCenter.default
     private var audioPlayerStateObserver: Any?
     private var pausedByInterruption = false
     
     /// Initialize
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    public init(nuguClient: NuguClient) {
-        self.nuguClient = nuguClient
-        addAudioPlayerAgentObserver(nuguClient.audioPlayerAgent)
+    public init(audioPlayerAgent: AudioPlayerAgentProtocol) {
+        self.audioPlayerAgent = audioPlayerAgent
+        addAudioPlayerAgentObserver(audioPlayerAgent)
+        
         // When no other audio is playing, audio session can not detect car play connectivity status even if car play has been already connected.
         // To resolve this problem, activating audio session should be done in prior to detecting car play connectivity.
         if AVAudioSession.sharedInstance().isOtherAudioPlaying == false {
             try? AVAudioSession.sharedInstance().setActive(true)
         }
-        registerAudioSessionObservers()
+        
+        addAudioSessionObservers()
     }
     
     deinit {
@@ -150,11 +153,11 @@ public extension AudioSessionManager {
         // Defer statement for recovering audioSession and MicInputProvider
         defer {
             updateAudioSession()
-            nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
+            delegate?.audioSessionDidDeactivate()
         }
         do {
             // Clean up all I/O before deactivating audioSession
-            nuguClient.speechRecognizerAggregator?.stopListening()
+            delegate?.audioSessionWillDeactivate()
             
             // Notify audio session deactivation to 3rd party apps
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
@@ -164,61 +167,27 @@ public extension AudioSessionManager {
     }
 }
 
-// MARK: - Public (AudioEngineObserver)
-
-public extension AudioSessionManager {
-    func registerAudioEngineConfigurationObserver() {
-        removeAudioEngineConfigurationObserver()
-        
-        audioEngineConfigurationObserver = NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: nil, using: { [weak self] (_) in
-            self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
-        })
-    }
-    
-    func removeAudioEngineConfigurationObserver() {
-        if let audioEngineConfigurationObserver = audioEngineConfigurationObserver {
-            NotificationCenter.default.removeObserver(audioEngineConfigurationObserver)
-            self.audioEngineConfigurationObserver = nil
-        }
-    }
-}
-
 // MARK: - private (AudioSessionObserver)
 
 private extension AudioSessionManager {
-    func registerAudioSessionObservers() {
+    func addAudioSessionObservers() {
         removeAudioSessionObservers()
         
         audioSessionInterruptionObserver = NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: nil, using: { [weak self] (notification) in
             guard let userInfo = notification.userInfo,
                   let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
                   let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
+            
             switch type {
             case .began:
                 log.debug("Interruption began")
                 // Interruption began, take appropriate actions
-                if self?.nuguClient.audioPlayerAgent.isPlaying == true {
-                    self?.nuguClient.audioPlayerAgent.pause()
-                    // PausedByInterruption flag should not be changed before paused delegate method has been called
-                    // Giving small delay for changing flag value can be a solution for this situation
-                    DispatchQueue.global().asyncAfter(deadline: .now()+0.1) { [weak self] in
-                        self?.pausedByInterruption = true
-                    }
-                }
-                self?.nuguClient.ttsAgent.stopTTS(cancelAssociation: false)
-                self?.nuguClient.speechRecognizerAggregator?.stopListening()
+                self?.delegate?.audioSessionInterrupted(type: .began)
             case .ended:
                 log.debug("Interruption ended")
                 if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                     let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
-                    if options.contains(.shouldResume) {
-                        self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
-                        if self?.pausedByInterruption == true || self?.nuguClient.audioPlayerAgent.isPlaying == true {
-                            self?.nuguClient.audioPlayerAgent.play()
-                        }
-                    } else {
-                        // Interruption Ended - playback should NOT resume
-                    }
+                    self?.delegate?.audioSessionInterrupted(type: .ended(options: options))
                 }
             @unknown default: break
             }
@@ -228,23 +197,24 @@ private extension AudioSessionManager {
             guard let userInfo = notification.userInfo,
                 let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
                 let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
+            
             switch reason {
             case .oldDeviceUnavailable:
                 log.debug("Route changed due to oldDeviceUnavailable")
-                if self?.nuguClient.audioPlayerAgent.isPlaying == true {
-                    self?.nuguClient.audioPlayerAgent.pause()
-                }
-                if let previousRoute = userInfo[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription,
-                   previousRoute.outputs.first?.portType == .carAudio {
+                let previousRoute = userInfo[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription
+                if previousRoute?.outputs.first?.portType == .carAudio {
                     self?.updateAudioSession()
-                    self?.nuguClient.speechRecognizerAggregator?.startListeningWithTrigger()
                 }
+                
+                self?.delegate?.audioSessionRouteChanged(reason: .oldDeviceUnavailable(previousRoute: previousRoute))
             case .newDeviceAvailable:
+                self?.delegate?.audioSessionRouteChanged(reason: .newDeviceAvailable)
+                
                 if self?.isCarplayConnected() == true {
-                    self?.nuguClient.speechRecognizerAggregator?.stopListening()
                     self?.updateAudioSession()
                 }
-                if self?.nuguClient.audioPlayerAgent.isPlaying == true {
+                
+                if self?.audioPlayerAgent.isPlaying == true {
                     self?.updateAudioSessionToPlaybackIfNeeded()
                 }
             default: break
@@ -276,5 +246,17 @@ private extension AudioSessionManager {
                 self.updateAudioSessionToPlaybackIfNeeded()
             }
         }
+    }
+}
+
+public extension AudioSessionManager {
+    enum AudioSessionInterruptionType {
+        case began
+        case ended(options: AVAudioSession.InterruptionOptions)
+    }
+    
+    enum AudioSessionRouteChangeReason {
+        case newDeviceAvailable
+        case oldDeviceUnavailable(previousRoute: AVAudioSessionRouteDescription?)
     }
 }

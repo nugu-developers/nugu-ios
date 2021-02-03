@@ -20,16 +20,15 @@
 
 import Foundation
 
-public protocol AudioSessionManageable {
+public protocol AudioSessionManageable: class {
+    var delegate: AudioSessionManagerDelegate? { get set }
+    
     func isCarplayConnected() -> Bool
     func requestRecordPermission(_ response: @escaping (Bool) -> Void)
     @discardableResult func updateAudioSessionToPlaybackIfNeeded(mixWithOthers: Bool) -> Bool
     @discardableResult func updateAudioSessionWhenCarplayConnected(requestingFocus: Bool) -> Bool
     @discardableResult func updateAudioSession(requestingFocus: Bool) -> Bool
     func notifyAudioSessionDeactivation()
-    
-    func registerAudioEngineConfigurationObserver()
-    func removeAudioEngineConfigurationObserver()
 }
 
 public extension AudioSessionManageable {
