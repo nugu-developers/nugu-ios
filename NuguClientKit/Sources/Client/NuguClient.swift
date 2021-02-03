@@ -26,7 +26,7 @@ import NuguAgents
 
 /// <#Description#>
 public class NuguClient {
-    private weak var delegate: NuguClientDelegate?
+    public weak var delegate: NuguClientDelegate?
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -38,95 +38,70 @@ public class NuguClient {
     private var dialogStateObserver: Any?
     
     // core
-    /// <#Description#>
     public let contextManager: ContextManageable
-    /// <#Description#>
     public let focusManager: FocusManageable
-    /// <#Description#>
     public let streamDataRouter: StreamDataRoutable
-    /// <#Description#>
     public let directiveSequencer: DirectiveSequenceable
-    /// <#Description#>
     public let playSyncManager: PlaySyncManageable
-    /// <#Description#>
     public let dialogAttributeStore: DialogAttributeStoreable
-    /// <#Description#>
     public let sessionManager: SessionManageable
-    /// <#Description#>
     public let systemAgent: SystemAgentProtocol
-    /// <#Description#>
     public let interactionControlManager: InteractionControlManageable
     
-    // default agents
-    /// <#Description#>
-    public let dialogStateAggregator: DialogStateAggregator
-    /// <#Description#>
+    // agents
     public let asrAgent: ASRAgentProtocol
-    /// <#Description#>
     public let ttsAgent: TTSAgentProtocol
-    /// <#Description#>
     public let textAgent: TextAgentProtocol
-    /// <#Description#>
     public let audioPlayerAgent: AudioPlayerAgentProtocol
-    /// <#Description#>
+    public let mediaPlayerAgent: MediaPlayerAgentProtocol
     public let soundAgent: SoundAgentProtocol
-    /// <#Description#>
     public let sessionAgent: SessionAgentProtocol
-    /// <#Description#>
     public let chipsAgent: ChipsAgentProtocol
-    /// <#Description#>
     public let utilityAgent: UtilityAgentProtocol
-
-    // additional agents
-    /// <#Description#>
-    public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
-        upstreamDataSender: streamDataRouter,
-        playSyncManager: playSyncManager,
-        contextManager: contextManager,
-        directiveSequencer: directiveSequencer,
-        sessionManager: sessionManager,
-        interactionControlManager: interactionControlManager
-    )
+    public let displayAgent: DisplayAgentProtocol
+    public let extensionAgent: ExtensionAgentProtocol
+    public let locationAgent: LocationAgentProtocol
+    public let phoneCallAgent: PhoneCallAgentProtocol
     
-    /// <#Description#>
-    public lazy var extensionAgent: ExtensionAgentProtocol = ExtensionAgent(
-        upstreamDataSender: streamDataRouter,
-        contextManager: contextManager,
-        directiveSequencer: directiveSequencer
-    )
+    // supports
+    public let dialogStateAggregator: DialogStateAggregator
+    public let speechRecognizerAggregator: SpeechRecognizerAggregatable
+    public let audioSessionManager: AudioSessionManageable?
+    public let keywordDetector: KeywordDetector
     
-    /// <#Description#>
-    public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
-    
-    /// <#Description#>
-    public lazy var phoneCallAgent: PhoneCallAgentProtocol = PhoneCallAgent(
-        directiveSequencer: directiveSequencer,
-        contextManager: contextManager,
-        upstreamDataSender: streamDataRouter,
-        interactionControlManager: interactionControlManager
-    )
-    
-    /// <#Description#>
-    public lazy var mediaPlayerAgent: MediaPlayerAgentProtocol = MediaPlayerAgent(
-        directiveSequencer: directiveSequencer,
-        contextManager: contextManager,
-        upstreamDataSender: streamDataRouter
-    )
-    
-    /// <#Description#>
-    public private(set) lazy var keywordDetector: KeywordDetector = KeywordDetector(contextManager: contextManager)
-
-    public var speechRecognizerAggregator: SpeechRecognizerAggregatable?
-    public var audioSessionManager: AudioSessionManageable?
-    
+    // private
+    private var pausedByInterruption = false
     private let backgroundFocusHolder: BackgroundFocusHolder
     
-    /// <#Description#>
-    /// - Parameter delegate: <#delegate description#>
-    public init(delegate: NuguClientDelegate) {
-        self.delegate = delegate
-        
+    init(
+        contextManager: ContextManageable,
+        focusManager: FocusManageable,
+        streamDataRouter: StreamDataRoutable,
+        directiveSequencer: DirectiveSequenceable,
+        playSyncManager: PlaySyncManageable,
+        dialogAttributeStore: DialogAttributeStoreable,
+        sessionManager: SessionManageable,
+        systemAgent: SystemAgentProtocol,
+        interactionControlManager: InteractionControlManageable,
+        asrAgent: ASRAgentProtocol,
+        ttsAgent: TTSAgentProtocol,
+        textAgent: TextAgentProtocol,
+        audioPlayerAgent: AudioPlayerAgentProtocol,
+        mediaPlayerAgent: MediaPlayerAgentProtocol,
+        soundAgent: SoundAgentProtocol,
+        sessionAgent: SessionAgentProtocol,
+        chipsAgent: ChipsAgentProtocol,
+        utilityAgent: UtilityAgentProtocol,
+        displayAgent: DisplayAgentProtocol,
+        extensionAgent: ExtensionAgentProtocol,
+        locationAgent: LocationAgentProtocol,
+        phoneCallAgent: PhoneCallAgentProtocol,
+        audioSessionManager: AudioSessionManageable?,
+        keywordDetector: KeywordDetector,
+        speechRecognizerAggregator: SpeechRecognizerAggregatable
+    ) {
         // core
+<<<<<<< HEAD
         contextManager = ContextManager()
         directiveSequencer = DirectiveSequencer()
         focusManager = FocusManager()
@@ -172,6 +147,17 @@ public class NuguClient {
             contextManager: contextManager,
             directiveSequencer: directiveSequencer
         )
+=======
+        self.contextManager = contextManager
+        self.directiveSequencer = directiveSequencer
+        self.focusManager = focusManager
+        self.streamDataRouter = streamDataRouter
+        self.playSyncManager = playSyncManager
+        self.dialogAttributeStore = dialogAttributeStore
+        self.sessionManager = sessionManager
+        self.interactionControlManager = interactionControlManager
+        self.systemAgent = systemAgent
+>>>>>>> 58627a4... Apply Builder pattern on `NuguClient`
         
         dialogStateAggregator = DialogStateAggregator(
             sessionManager: sessionManager,
@@ -182,33 +168,6 @@ public class NuguClient {
             chipsAgent: chipsAgent
         )
         
-        // audio player
-        audioPlayerAgent = AudioPlayerAgent(
-            focusManager: focusManager,
-            upstreamDataSender: streamDataRouter,
-            playSyncManager: playSyncManager,
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer
-        )
-        
-        soundAgent = SoundAgent(
-            focusManager: focusManager,
-            upstreamDataSender: streamDataRouter,
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer
-        )
-        
-        sessionAgent = SessionAgent(
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer,
-            sessionManager: sessionManager
-        )
-        
-        utilityAgent = UtilityAgent(
-            directiveSequencer: directiveSequencer,
-            contextManager: contextManager
-        )
-        
         backgroundFocusHolder = BackgroundFocusHolder(
             focusManager: focusManager,
             directiveSequener: directiveSequencer,
@@ -216,7 +175,28 @@ public class NuguClient {
             dialogStateAggregator: dialogStateAggregator
         )
 
-        // setup additional roles
+        // agents
+        self.asrAgent = asrAgent
+        self.ttsAgent = ttsAgent
+        self.textAgent = textAgent
+        self.audioPlayerAgent = audioPlayerAgent
+        self.mediaPlayerAgent = mediaPlayerAgent
+        self.soundAgent = soundAgent
+        self.sessionAgent = sessionAgent
+        self.chipsAgent = chipsAgent
+        self.utilityAgent = utilityAgent
+        self.displayAgent = displayAgent
+        self.extensionAgent = extensionAgent
+        self.locationAgent = locationAgent
+        self.phoneCallAgent = phoneCallAgent
+        
+        // supports
+        self.audioSessionManager = audioSessionManager
+        self.keywordDetector = keywordDetector
+        self.speechRecognizerAggregator = speechRecognizerAggregator
+        
+        // wiring
+        setupAudioSessionManager()
         setupAuthorizationStore()
         setupAudioSessionRequester()
         setupDialogStateAggregator(dialogStateAggregator)
@@ -296,11 +276,21 @@ extension NuguClient: FocusDelegate {
     }
     
     public func focusShouldAcquire() -> Bool {
-        delegate?.nuguClientWillRequireAudioSession() == true
+        guard let audioSessionManager = audioSessionManager else {
+            return delegate?.nuguClientWillRequireAudioSession() == true
+        }
+
+        return audioSessionManager.updateAudioSession(requestingFocus: true) == true
     }
     
     public func focusShouldRelease() {
-        delegate?.nuguClientDidReleaseAudioSession()
+        guard let audioSessionManager = audioSessionManager else {
+            delegate?.nuguClientDidReleaseAudioSession()
+            return
+        }
+        
+        audioSessionManager.notifyAudioSessionDeactivation()
+
     }
 }
 
@@ -375,5 +365,66 @@ extension NuguClient {
         if let dialogStateObserver = dialogStateObserver {
             notificationCenter.removeObserver(dialogStateObserver)
         }
+    }
+}
+
+// MARK: - AudioSessionManagerDelegate
+
+extension NuguClient: AudioSessionManagerDelegate {
+    private func setupAudioSessionManager() {
+        audioSessionManager?.delegate = self
+    }
+    
+    public func audioSessionInterrupted(type: AudioSessionManager.AudioSessionInterruptionType) {
+        switch type {
+        case .began:
+            log.debug("Interruption began")
+            // Interruption began, take appropriate actions
+
+            if audioPlayerAgent.isPlaying == true {
+                audioPlayerAgent.pause()
+                // PausedByInterruption flag should not be changed before paused delegate method has been called
+                // Giving small delay for changing flag value can be a solution for this situation
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    self?.pausedByInterruption = true
+                }
+            }
+            ttsAgent.stopTTS(cancelAssociation: false)
+            speechRecognizerAggregator.stopListening()
+        case .ended(let options):
+            log.debug("Interruption ended")
+            if options.contains(.shouldResume) {
+                speechRecognizerAggregator.startListeningWithTrigger()
+                if pausedByInterruption == true || audioPlayerAgent.isPlaying == true {
+                    audioPlayerAgent.play()
+                }
+            }
+        }
+    }
+    
+    public func audioSessionRouteChanged(reason: AudioSessionManager.AudioSessionRouteChangeReason) {
+        switch reason {
+        case .oldDeviceUnavailable(let previousRoute):
+            log.debug("Route changed due to oldDeviceUnavailable")
+            if audioPlayerAgent.isPlaying == true {
+                audioPlayerAgent.pause()
+            }
+            
+            if previousRoute?.outputs.first?.portType == .carAudio {
+                speechRecognizerAggregator.startListeningWithTrigger()
+            }
+        case .newDeviceAvailable:
+            if audioSessionManager?.isCarplayConnected() == true {
+                speechRecognizerAggregator.stopListening()
+            }
+        }
+    }
+    
+    public func audioSessionWillDeactivate() {
+        speechRecognizerAggregator.stopListening()
+    }
+    
+    public func audioSessionDidDeactivate() {
+        speechRecognizerAggregator.startListeningWithTrigger()
     }
 }
