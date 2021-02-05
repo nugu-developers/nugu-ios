@@ -197,6 +197,7 @@ public class NuguClient {
         
         // wiring
         setupAudioSessionManager()
+        setupSpeechRecognizerAggregator()
         setupAuthorizationStore()
         setupAudioSessionRequester()
         setupDialogStateAggregator(dialogStateAggregator)
@@ -426,5 +427,21 @@ extension NuguClient: AudioSessionManagerDelegate {
     
     public func audioSessionDidDeactivate() {
         speechRecognizerAggregator.startListeningWithTrigger()
+    }
+}
+
+// MARK: - SpeechRecognizerAggregatorDelegate
+extension NuguClient: SpeechRecognizerAggregatorDelegate {
+    private func setupSpeechRecognizerAggregator() {
+        speechRecognizerAggregator.delegate = self
+    }
+    
+    public func speechRecognizerWillUseMic() {
+        guard let audioSessionManager = audioSessionManager else {
+            delegate?.nuguClientWillUseMic()
+            return
+        }
+
+        audioSessionManager.updateAudioSession()
     }
 }

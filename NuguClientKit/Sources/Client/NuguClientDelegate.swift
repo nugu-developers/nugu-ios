@@ -25,35 +25,38 @@ import NuguCore
 /// <#Description#>
 public protocol NuguClientDelegate: class {
     // audio session related
-    /// <#Description#>
+    /// Notify that  nugu client will play some audio
     func nuguClientWillRequireAudioSession() -> Bool
     
-    /// <#Description#>
+    /// Notify that  nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
     
+    /// Notify that  nugu client need to get mic input
+    func nuguClientWillUseMic()
+    
     // nugu server related
-    /// <#Description#>
-    /// - Parameter direcive: <#direcive description#>
+    /// Notify that  nugu client received directive
+    /// - Parameter direcive: Response from server
     func nuguClientDidReceive(direcive: Downstream.Directive)
     
-    /// <#Description#>
-    /// - Parameter attachment: <#attachment description#>
+    /// Notify that nugu client received some data which is attached the directive
+    /// - Parameter attachment: Data to be processed in the response
     func nuguClientDidReceive(attachment: Downstream.Attachment)
     
-    /// <#Description#>
-    /// - Parameter event: <#event description#>
+    /// Notify that nugu client will send a event
+    /// - Parameter event: Request
     func nuguClientWillSend(event: Upstream.Event)
     
-    /// <#Description#>
+    /// Notify that the request is sent
     /// - Parameters:
-    ///   - event: <#event description#>
-    ///   - error: <#error description#>
+    ///   - event: Request
+    ///   - error: Error during sending an event description
     func nuguClientDidSend(event: Upstream.Event, error: Error?)
     
-    /// <#Description#>
+    /// Notify that the data to be processed is sent
     /// - Parameters:
-    ///   - attachment: <#attachment description#>
-    ///   - error: <#error description#>
+    ///   - attachment: Data to be processed on server
+    ///   - error: Error during sending an event data
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?)
     
     // authorization related

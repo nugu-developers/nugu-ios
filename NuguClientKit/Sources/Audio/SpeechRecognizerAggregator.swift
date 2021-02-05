@@ -26,6 +26,8 @@ import NuguAgents
 import NuguCore
 
 public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
+    public weak var delegate: SpeechRecognizerAggregatorDelegate?
+    
     // Observers
     private let notificationCenter = NotificationCenter.default
     private var asrStateObserver: Any?

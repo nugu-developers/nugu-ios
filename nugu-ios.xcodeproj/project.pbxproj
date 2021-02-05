@@ -254,6 +254,7 @@
 		732967B9256377190077C3C4 /* EndedUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732967B8256377190077C3C4 /* EndedUp.swift */; };
 		732967F6256383AB0077C3C4 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		73296856256394580077C3C4 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
+		732B538225CD119A00126FE4 /* SpeechRecognizerAggregatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732B538125CD119A00126FE4 /* SpeechRecognizerAggregatorDelegate.swift */; };
 		7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */; };
 		7330CD8A237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */; };
 		7330CD8D237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */; };
@@ -979,6 +980,7 @@
 		73152F9D23E0405900F843C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73152FDB23E0451900F843C3 /* NuguAgents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguAgents.swift; sourceTree = "<group>"; };
 		732967B8256377190077C3C4 /* EndedUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndedUp.swift; sourceTree = "<group>"; };
+		732B538125CD119A00126FE4 /* SpeechRecognizerAggregatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerAggregatorDelegate.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
 		7330CD87237A77F900FCD6E9 /* TycheEndPointDetectorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheEndPointDetectorEngine.swift; sourceTree = "<group>"; };
 		7330CD8B237A784500FCD6E9 /* TycheKeywordDetectorEngineDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TycheKeywordDetectorEngineDelegate.swift; sourceTree = "<group>"; };
@@ -1675,6 +1677,7 @@
 				73F0B72E25CAC4930025FC6A /* AudioSessionManagerDelegate.swift */,
 				7E341F8425AFFA1400734A45 /* SpeechRecognizerAggregatable.swift */,
 				7E341F3C25AFEEFD00734A45 /* SpeechRecognizerAggregator.swift */,
+				732B538125CD119A00126FE4 /* SpeechRecognizerAggregatorDelegate.swift */,
 				1FFFF3182375707000C9A177 /* MicInputProvider */,
 				1F2E803623966B2900569C59 /* KeywordDetector */,
 			);
@@ -3538,6 +3541,7 @@
 				75021E4E259431B50014537C /* DisplayWebViewPresenter.swift in Sources */,
 				1FFFF3DE2375735E00C9A177 /* NuguClient.swift in Sources */,
 				1FD4A97C23A0C2FD002EB56D /* NuguClientKit.swift in Sources */,
+				732B538225CD119A00126FE4 /* SpeechRecognizerAggregatorDelegate.swift in Sources */,
 				0600C3562570E4CF0071AEF3 /* ConfigurationError.swift in Sources */,
 				067CB451256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift in Sources */,
 				067CB473256E582200D57AF0 /* VoiceChromePresenterError.swift in Sources */,
