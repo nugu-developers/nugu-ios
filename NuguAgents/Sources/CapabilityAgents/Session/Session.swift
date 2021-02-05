@@ -33,7 +33,7 @@ public struct Session: Equatable {
     /// - Parameters:
     ///   - sessionId: <#sessionId description#>
     ///   - dialogRequestId: <#dialogRequestId description#>
-    ///   - playServiceId: <#playServiceId description#>
+    ///   - playServiceId: The unique identifier to specify play service.
     public init(sessionId: String, dialogRequestId: String, playServiceId: String) {
         self.sessionId = sessionId
         self.dialogRequestId = dialogRequestId

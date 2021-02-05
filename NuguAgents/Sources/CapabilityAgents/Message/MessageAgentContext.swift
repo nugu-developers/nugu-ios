@@ -42,7 +42,7 @@ public struct MessageAgentContext: Codable {
         /// <#Description#>
         public let messageToSend: MessageToSendItem?
         
-        /// <#Description#>
+        /// The initializer for `MessageAgentContext`.
         /// - Parameters:
         ///   - info: <#info description#>
         ///   - recipientIntended: <#recipientIntended description#>

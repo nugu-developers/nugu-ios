@@ -22,20 +22,22 @@ import Foundation
 
 import NuguCore
 
-/// <#Description#>
+/// The `MessageAgentDelegate` protocol defines methods that a delegate of a `MessageAgent` object can implement to receive directives or request context.
 public protocol MessageAgentDelegate: class {
-    /// <#Description#>
+    
+    /// Provide a context of `MessageAgent`.
+    /// This function should return as soon as possible to reduce request delay.
     func messageAgentRequestContext() -> MessageAgentContext?
     
-    /// <#Description#>
+    /// Called method when a directive 'SendCandidates' is received.
     /// - Parameters:
-    ///   - item: <#item description#>
+    ///   - item: The item of `MessageCandidatesItem`
     ///   - header: The header of the originally handled directive.
     func messageAgentDidReceiveSendCandidates(item: MessageCandidatesItem, header: Downstream.Header)
     
-    /// <#Description#>
+    /// Called method when a directive 'SendMessasge' is received.
     /// - Parameters:
-    ///   - recipient: <#recipient description#>
+    ///   - recipient: An contact about the recipient.
     ///   - header: The header of the originally handled directive.
     /// - Returns: If have an error, the error-code is returned, otherwise it returns `nil`.
     func messageAgentDidReceiveSendMessage(recipient: MessageAgentContact, header: Downstream.Header) -> String?

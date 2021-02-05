@@ -22,7 +22,7 @@ import Foundation
 
 import NuguUtils
 
-/// Sound-agent is needed to play beep sound.
+/// `SoundAgent` is needed to play beep sound.
 public protocol SoundAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// The data source for the beep.
     var dataSource: SoundAgentDataSource? { get set }

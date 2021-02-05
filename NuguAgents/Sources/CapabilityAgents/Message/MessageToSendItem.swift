@@ -27,7 +27,7 @@ public struct MessageToSendItem: Codable {
     /// <#Description#>
     public let type: String?
     
-    /// <#Description#>
+    /// The initializer for `MessageToSendItem`.
     /// - Parameters:
     ///   - text: <#text description#>
     ///   - type: <#type description#>
