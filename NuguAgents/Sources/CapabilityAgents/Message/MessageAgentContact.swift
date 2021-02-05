@@ -30,7 +30,7 @@ public struct MessageAgentContact: Codable {
         /// <#Description#>
         public let type: String
         
-        /// <#Description#>
+        /// The initializer for `MessageAgentContact.Message`.
         /// - Parameters:
         ///   - text: <#text description#>
         ///   - type: <#type description#>
@@ -61,7 +61,7 @@ public struct MessageAgentContact: Codable {
     /// <#Description#>
     public let score: String?
     
-    /// <#Description#>
+    /// The initializer for `MessageAgentContact`.
     /// - Parameters:
     ///   - name: <#name description#>
     ///   - type: <#type description#>

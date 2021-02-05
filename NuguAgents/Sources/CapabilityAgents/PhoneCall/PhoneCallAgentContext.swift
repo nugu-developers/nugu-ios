@@ -21,10 +21,10 @@
 import Foundation
 
 /// <#Description#>
-public struct PhoneCallContext: Codable {
+public struct PhoneCallContext {
     
     /// <#Description#>
-    public struct Template: Codable {
+    public struct Template {
         /// <#Description#>
         public let intent: PhoneCallIntent?
         /// <#Description#>
@@ -36,7 +36,7 @@ public struct PhoneCallContext: Codable {
         
         public let searchScene: String?
         
-        /// <#Description#>
+        /// The initializer for `PhoneCallContext.Template`.
         /// - Parameters:
         ///   - intent: <#intent description#>
         ///   - callType: <#callType description#>
@@ -59,15 +59,7 @@ public struct PhoneCallContext: Codable {
     }
 
     /// <#Description#>
-    public struct Recipient: Codable {
-        
-        enum CodingKeys: String, CodingKey {
-            case name
-            case token
-            case isMobile
-            case isRecentMissed
-        }
-        
+    public struct Recipient {
         /// <#Description#>
         public let name: String?
         /// <#Description#>
@@ -77,26 +69,33 @@ public struct PhoneCallContext: Codable {
         /// <#Description#>
         public let isRecentMissed: Bool?
         
-        public func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-
-            try container.encodeIfPresent(name, forKey: .name)
-            try container.encodeIfPresent(token, forKey: .token)
-            
-            if let isMobileValue = isMobile {
-                try container.encodeIfPresent(isMobileValue ? "TRUE": "FALSE", forKey: .isMobile)
-            }
-            
-            if let isRecentMissedValue = isRecentMissed {
-                try container.encodeIfPresent(isRecentMissedValue ? "TRUE": "FALSE", forKey: .isMobile)
-            }
+        /// The initializer for `PhoneCallContext.Recipient`.
+        /// - Parameters:
+        ///   - name: <#name description#>
+        ///   - token: <#token description#>
+        ///   - isMobile: <#isMobile description#>
+        ///   - isRecentMissed: <#isRecentMissed description#>
+        public init(
+            name: String?,
+            token: String?,
+            isMobile: Bool?,
+            isRecentMissed: Bool?
+        ) {
+            self.name = name
+            self.token = token
+            self.isMobile = isMobile
+            self.isRecentMissed = isRecentMissed
         }
     }
-
+    
+    /// <#Description#>
     public let state: PhoneCallState
+    /// <#Description#>
     public let template: PhoneCallContext.Template?
+    /// <#Description#>
     public let recipient: PhoneCallContext.Recipient?
     
+    /// The initializer for `PhoneCallContext`.
     public init(
         state: PhoneCallState,
         template: PhoneCallContext.Template?,
@@ -105,5 +104,39 @@ public struct PhoneCallContext: Codable {
         self.state = state
         self.template = template
         self.recipient = recipient
+    }
+}
+
+// MARK: - PhoneCallContext + Codable
+
+extension PhoneCallContext: Codable {}
+
+// MARK: - PhoneCallContext.Template + Codable
+
+extension PhoneCallContext.Template: Codable {}
+
+// MARK: - PhoneCallContext.Recipient + Codable
+
+extension PhoneCallContext.Recipient: Codable {
+    enum CodingKeys: String, CodingKey {
+        case name
+        case token
+        case isMobile
+        case isRecentMissed
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encodeIfPresent(name, forKey: .name)
+        try container.encodeIfPresent(token, forKey: .token)
+        
+        if let isMobileValue = isMobile {
+            try container.encodeIfPresent(isMobileValue ? "TRUE": "FALSE", forKey: .isMobile)
+        }
+        
+        if let isRecentMissedValue = isRecentMissed {
+            try container.encodeIfPresent(isRecentMissedValue ? "TRUE": "FALSE", forKey: .isMobile)
+        }
     }
 }

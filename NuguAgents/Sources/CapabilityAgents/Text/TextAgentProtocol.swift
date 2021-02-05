@@ -22,9 +22,9 @@ import Foundation
 
 import NuguCore
 
-/// Text-agent is needed to send event-based text recognition.
+/// `TextAgent` is needed to send event-based text recognition.
 public protocol TextAgentProtocol: CapabilityAgentable {
-    /// The object that acts as the delegate of text-agent
+    /// The object that acts as the delegate of `TextAgent`
     var delegate: TextAgentDelegate? { get set }
     
     /// Send event that needs a text-based recognition
@@ -43,12 +43,6 @@ public protocol TextAgentProtocol: CapabilityAgentable {
 // MARK: - Default
 
 public extension TextAgentProtocol {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - text: <#text description#>
-    ///   - token: <#token description#>
-    ///   - requestType: <#requestType description#>
-    /// - Returns: <#description#>
     @discardableResult func requestTextInput(
         text: String,
         token: String? = nil,
@@ -62,12 +56,6 @@ public extension TextAgentProtocol {
         )
     }
     
-    /// <#Description#>
-    /// - Parameters:
-    ///   - text: <#text description#>
-    ///   - requestType: <#requestType description#>
-    ///   - completion: <#completion description#>
-    /// - Returns: <#description#>
     @discardableResult func requestTextInput(
         text: String,
         requestType: TextAgentRequestType,
