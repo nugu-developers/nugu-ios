@@ -30,31 +30,40 @@ final public class AudioSessionManager: AudioSessionManageable {
     // observers
     private let notificationCenter = NotificationCenter.default
     private var audioSessionInterruptionObserver: Any?
-    private var audioRouteObserver: Any?
+    private var audioSessionRouteObserver: Any?
     private var audioPlayerStateObserver: Any?
-    private var pausedByInterruption = false
     
     /// Initialize
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     public init(audioPlayerAgent: AudioPlayerAgentProtocol) {
         self.audioPlayerAgent = audioPlayerAgent
+
+        // observers
         addAudioPlayerAgentObserver(audioPlayerAgent)
+        addAudioSessionObservers()
         
         // When no other audio is playing, audio session can not detect car play connectivity status even if car play has been already connected.
         // To resolve this problem, activating audio session should be done in prior to detecting car play connectivity.
         if AVAudioSession.sharedInstance().isOtherAudioPlaying == false {
             try? AVAudioSession.sharedInstance().setActive(true)
         }
-        
-        addAudioSessionObservers()
     }
     
     deinit {
-        if let audioPlayerStateObserver = audioPlayerStateObserver {
-            notificationCenter.removeObserver(audioPlayerStateObserver)
-        }
+        disable()
     }
+    
+    public func enable() {
+        addAudioPlayerAgentObserver(audioPlayerAgent)
+        addAudioSessionObservers()
+    }
+    
+    public func disable() {
+        removeAudioPlayerAgentObserver()
+        removeAudioSessionObservers()
+    }
+    
 }
 
 // MARK: - Public
@@ -193,7 +202,7 @@ private extension AudioSessionManager {
             }
         })
         
-        audioRouteObserver = NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: nil, using: { [weak self] (notification) in
+        audioSessionRouteObserver = NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: nil, using: { [weak self] (notification) in
             guard let userInfo = notification.userInfo,
                 let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
                 let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
@@ -228,9 +237,9 @@ private extension AudioSessionManager {
             self.audioSessionInterruptionObserver = nil
         }
         
-        if let audioRouteObserver = audioRouteObserver {
+        if let audioRouteObserver = audioSessionRouteObserver {
             NotificationCenter.default.removeObserver(audioRouteObserver)
-            self.audioRouteObserver = nil
+            self.audioSessionRouteObserver = nil
         }
     }
 }
@@ -246,6 +255,14 @@ private extension AudioSessionManager {
                 self.updateAudioSessionToPlaybackIfNeeded()
             }
         }
+    }
+    
+    func removeAudioPlayerAgentObserver() {
+        if let audioPlayerStateObserver = audioPlayerStateObserver {
+            notificationCenter.removeObserver(audioPlayerStateObserver)
+        }
+        
+        audioPlayerStateObserver = nil
     }
 }
 

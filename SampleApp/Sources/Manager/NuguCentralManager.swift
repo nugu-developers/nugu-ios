@@ -109,6 +109,7 @@ extension NuguCentralManager {
 
         NuguLocationManager.shared.startUpdatingLocation()
         startListeningWithTrigger()
+        client.audioSessionManager?.enable()
     }
     
     func disable() {
@@ -117,6 +118,7 @@ extension NuguCentralManager {
         client.stopReceiveServerInitiatedDirective()
         client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
+        client.audioSessionManager?.disable()
     }
 }
 
