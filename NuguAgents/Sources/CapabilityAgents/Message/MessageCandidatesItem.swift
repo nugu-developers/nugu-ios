@@ -20,18 +20,21 @@
 
 import Foundation
 
+/// An Item received through the 'SendCandidates' directive in `MessageAgent`. 
 public struct MessageCandidatesItem {
-    /// <#Description#>
+    /// The unique identifier to specify play service.
     public let playServiceId: String
-    /// <#Description#>
+    /// The intent of candidates in `MessageAgent`.
     public let intent: String?
-    /// <#Description#>
+    /// Recipient information analyzed from utterance.
     public let recipientIntended: MessageRecipientIntended?
-    /// <#Description#>
+    /// The scene of search target and display tempate.
     public let searchScene: String?
-    /// <#Description#>
+    /// The candidate searched for play service.
+    ///
+    /// If nil, there are no search results.
     public let candidates: [MessageCandidatesItem]?
-    /// <#Description#>
+    /// The message to be used for outgoing.
     public let messageToSend: MessageToSendItem?
     /// <#Description#>
     public let interactionControl: InteractionControl?

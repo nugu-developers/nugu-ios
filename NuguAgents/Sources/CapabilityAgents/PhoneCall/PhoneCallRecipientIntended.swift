@@ -20,17 +20,17 @@
 
 import Foundation
 
-/// <#Description#>
+/// Recipient information analyzed from utterance
 public struct PhoneCallRecipientIntended: Codable {
-    /// <#Description#>
+    /// The name of recipient intended from an utterance.
     public let name: String?
-    /// <#Description#>
+    /// The label of recipient intended from an utterance.
     public let label: String?
     
-    /// <#Description#>
+    /// The initializer for `PhoneCallRecipientIntended`.
     /// - Parameters:
-    ///   - name: <#name description#>
-    ///   - label: <#label description#>
+    ///   - name: The name of recipient intended from an utterance.
+    ///   - label: The label of recipient intended from an utterance.
     public init(name: String?, label: String?) {
         self.name = name
         self.label = label

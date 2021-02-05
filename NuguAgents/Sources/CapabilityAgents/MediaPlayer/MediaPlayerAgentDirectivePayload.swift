@@ -26,9 +26,12 @@ public struct MediaPlayerAgentDirectivePayload {
     // MARK: Play
     
     /// <#Description#>
-    public struct Play: Codable {
+    public struct Play {
+        
+        // MARK: Play.Toggle
+        
         /// <#Description#>
-        public struct Toggle: Codable {
+        public struct Toggle {
             /// <#Description#>
             public let `repeat`: String?
             /// <#Description#>
@@ -49,47 +52,12 @@ public struct MediaPlayerAgentDirectivePayload {
         public let toggle: Toggle?
         /// <#Description#>
         public let data: [String: AnyHashable]?
-        
-        /// <#Description#>
-        enum CodingKeys: String, CodingKey {
-            case playServiceId
-            case token
-            case action
-            case asrText
-            case song
-            case toggle
-            case data
-        }
-        
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            
-            playServiceId = try container.decode(String.self, forKey: .playServiceId)
-            token = try container.decode(String.self, forKey: .token)
-            action = try container.decode(String.self, forKey: .action)
-            asrText = try container.decodeIfPresent(String.self, forKey: .asrText)
-            song = try container.decodeIfPresent(MediaPlayerAgentSong.self, forKey: .song)
-            toggle = try container.decodeIfPresent(Toggle.self, forKey: .toggle)
-            data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
-        }
-        
-        public func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-
-            try container.encode(playServiceId, forKey: .playServiceId)
-            try container.encode(token, forKey: .token)
-            try container.encode(action, forKey: .action)
-            try container.encode(asrText, forKey: .asrText)
-            try container.encode(song, forKey: .song)
-            try container.encode(toggle, forKey: .toggle)
-            try container.encodeIfPresent(data, forKey: .data)
-        }
     }
     
     // MARK: Search
     
     /// <#Description#>
-    public struct Search: Codable {
+    public struct Search {
         /// <#Description#>
         public let playServiceId: String
         /// <#Description#>
@@ -103,55 +71,23 @@ public struct MediaPlayerAgentDirectivePayload {
     // MARK: Previous
     
     /// <#Description#>
-    public struct Previous: Codable {
+    public struct Previous {
         /// <#Description#>
-        public enum CodingKeys: String, CodingKey {
-            case playServiceId
-            case token
-            case action
-            case target
-            case data
-        }
-        
         public let playServiceId: String
+        /// <#Description#>
         public let token: String
+        /// <#Description#>
         public let action: String
+        /// <#Description#>
         public let target: String
+        /// <#Description#>
         public let data: [String: AnyHashable]?
-        
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            
-            playServiceId = try container.decode(String.self, forKey: .playServiceId)
-            token = try container.decode(String.self, forKey: .token)
-            action = try container.decode(String.self, forKey: .action)
-            target = try container.decode(String.self, forKey: .target)
-            data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
-        }
-        
-        public func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            
-            try container.encode(playServiceId, forKey: .playServiceId)
-            try container.encode(token, forKey: .token)
-            try container.encode(action, forKey: .action)
-            try container.encode(target, forKey: .target)
-            try container.encodeIfPresent(data, forKey: .data)
-        }
     }
     
     // MARK: Next
     
     /// <#Description#>
-    public struct Next: Codable {
-        public enum CodingKeys: String, CodingKey {
-            case playServiceId
-            case token
-            case action
-            case target
-            case data
-        }
-        
+    public struct Next {
         /// <#Description#>
         public let playServiceId: String
         /// <#Description#>
@@ -162,32 +98,12 @@ public struct MediaPlayerAgentDirectivePayload {
         public let target: String
         /// <#Description#>
         public let data: [String: AnyHashable]?
-        
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            
-            playServiceId = try container.decode(String.self, forKey: .playServiceId)
-            token = try container.decode(String.self, forKey: .token)
-            action = try container.decode(String.self, forKey: .action)
-            target = try container.decode(String.self, forKey: .target)
-            data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
-        }
-        
-        public func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            
-            try container.encode(playServiceId, forKey: .playServiceId)
-            try container.encode(token, forKey: .token)
-            try container.encode(action, forKey: .action)
-            try container.encode(target, forKey: .target)
-            try container.encodeIfPresent(data, forKey: .data)
-        }
     }
     
     // MARK: Move
     
     /// <#Description#>
-    public struct Move: Codable {
+    public struct Move {
         /// <#Description#>
         public let playServiceId: String
         /// <#Description#>
@@ -201,11 +117,134 @@ public struct MediaPlayerAgentDirectivePayload {
     // MARK: Toggle
     
     /// <#Description#>
-    public struct Toggle: Codable {
+    public struct Toggle {
+        /// <#Description#>
         public let playServiceId: String
+        /// <#Description#>
         public let token: String
+        /// <#Description#>
         public let `repeat`: String?
+        /// <#Description#>
         public let like: String?
+        /// <#Description#>
         public let shuffle: String?
     }
 }
+
+// MARK: - MediaPlayerAgentDirectivePayload.Play + Codable
+
+extension MediaPlayerAgentDirectivePayload.Play: Codable {
+    enum CodingKeys: String, CodingKey {
+        case playServiceId
+        case token
+        case action
+        case asrText
+        case song
+        case toggle
+        case data
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        token = try container.decode(String.self, forKey: .token)
+        action = try container.decode(String.self, forKey: .action)
+        asrText = try container.decodeIfPresent(String.self, forKey: .asrText)
+        song = try container.decodeIfPresent(MediaPlayerAgentSong.self, forKey: .song)
+        toggle = try container.decodeIfPresent(Toggle.self, forKey: .toggle)
+        data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(playServiceId, forKey: .playServiceId)
+        try container.encode(token, forKey: .token)
+        try container.encode(action, forKey: .action)
+        try container.encode(asrText, forKey: .asrText)
+        try container.encode(song, forKey: .song)
+        try container.encode(toggle, forKey: .toggle)
+        try container.encodeIfPresent(data, forKey: .data)
+    }
+}
+
+// MARK: - MediaPlayerAgentDirectivePayload.Play.Toggle + Codable
+
+extension MediaPlayerAgentDirectivePayload.Play.Toggle: Codable {}
+
+// MARK: - MediaPlayerAgentDirectivePayload.Search + Codable
+
+extension MediaPlayerAgentDirectivePayload.Search: Codable {}
+
+// MARK: - MediaPlayerAgentDirectivePayload.Previous + Codable
+
+extension MediaPlayerAgentDirectivePayload.Previous: Codable {
+    public enum CodingKeys: String, CodingKey {
+        case playServiceId
+        case token
+        case action
+        case target
+        case data
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        token = try container.decode(String.self, forKey: .token)
+        action = try container.decode(String.self, forKey: .action)
+        target = try container.decode(String.self, forKey: .target)
+        data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(playServiceId, forKey: .playServiceId)
+        try container.encode(token, forKey: .token)
+        try container.encode(action, forKey: .action)
+        try container.encode(target, forKey: .target)
+        try container.encodeIfPresent(data, forKey: .data)
+    }
+}
+
+// MARK: - MediaPlayerAgentDirectivePayload.Next + Codable
+
+extension MediaPlayerAgentDirectivePayload.Next: Codable {
+    public enum CodingKeys: String, CodingKey {
+        case playServiceId
+        case token
+        case action
+        case target
+        case data
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        token = try container.decode(String.self, forKey: .token)
+        action = try container.decode(String.self, forKey: .action)
+        target = try container.decode(String.self, forKey: .target)
+        data = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .data)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(playServiceId, forKey: .playServiceId)
+        try container.encode(token, forKey: .token)
+        try container.encode(action, forKey: .action)
+        try container.encode(target, forKey: .target)
+        try container.encodeIfPresent(data, forKey: .data)
+    }
+}
+
+// MARK: - MediaPlayerAgentDirectivePayload.Move + Codable
+
+extension MediaPlayerAgentDirectivePayload.Move: Codable {}
+
+// MARK: - MediaPlayerAgentDirectivePayload.Toggle + Codable
+
+extension MediaPlayerAgentDirectivePayload.Toggle: Codable {}

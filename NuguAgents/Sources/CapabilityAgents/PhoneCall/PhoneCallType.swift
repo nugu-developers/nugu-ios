@@ -20,7 +20,7 @@
 
 import Foundation
 
-/// <#Description#>
+/// Types of phone-call.
 public enum PhoneCallType: String, Codable {
     case normal = "NORMAL"
     case speaker = "SPEAKER"

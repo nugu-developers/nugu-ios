@@ -22,5 +22,5 @@ import Foundation
 
 import NuguUtils
 
-/// Chips-agent handles directives for displaying grammer guide on voice chrome view.
+/// `ChipsAgent` handles directives for displaying grammer guide on voice chrome view.
 public protocol ChipsAgentProtocol: CapabilityAgentable, TypedNotifyable {}

@@ -27,7 +27,7 @@ public struct MessageRecipientIntended: Codable {
     /// <#Description#>
     public let label: String?
     
-    /// <#Description#>
+    /// The initializer for `MessageRecipientIntended`.
     /// - Parameters:
     ///   - name: <#name description#>
     ///   - label: <#label description#>

@@ -27,7 +27,7 @@ public struct MediaPlayerAgentPlaylist: Codable {
     /// <#Description#>
     public let number: String
     
-    /// <#Description#>
+    /// The initializer for `MediaPlayerAgentPlaylist`.
     /// - Parameters:
     ///   - name: <#name description#>
     ///   - number: <#number description#>
