@@ -29,18 +29,11 @@ import NuguUIKit
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     
+    let displayPlayerController = NuguDisplayPlayerController()
+    
     private let notificationCenter = NotificationCenter.default
     private var systemAgentExceptionObserver: Any?
     private var systemAgentRevokeObserver: Any?
-    
-    private var authorizationInfo: AuthorizationInfo? {
-        didSet {
-            guard let authorizationInfo = authorizationInfo else { return }
-            
-            UserDefaults.Standard.accessToken = authorizationInfo.accessToken
-            UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
-        }
-    }
     
     lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
@@ -51,7 +44,7 @@ final class NuguCentralManager {
             micInputProvider: MicInputProvider()
         )
         
-        client.locationAgent.delegate = self
+        client.locationAgent.delegate = NuguLocationManager.shared
         client.soundAgent.dataSource = self
         
         // Observers
@@ -75,8 +68,6 @@ final class NuguCentralManager {
     
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
     lazy private(set) var asrBeepPlayer: ASRBeepPlayer = ASRBeepPlayer(focusManager: client.focusManager)
-
-    let displayPlayerController = NuguDisplayPlayerController()
     
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {
@@ -87,8 +78,16 @@ final class NuguCentralManager {
         }
     }()
     
-    private init() {
+    private var authorizationInfo: AuthorizationInfo? {
+        didSet {
+            guard let authorizationInfo = authorizationInfo else { return }
+            
+            UserDefaults.Standard.accessToken = authorizationInfo.accessToken
+            UserDefaults.Standard.refreshToken = authorizationInfo.refreshToken
+        }
     }
+    
+    private init() {}
     
     deinit {
         if let systemAgentExceptionObserver = systemAgentExceptionObserver {
@@ -387,14 +386,6 @@ extension NuguCentralManager: NuguClientDelegate {
         // Use some analytics SDK(or API) here.
         // Error: EventSenderError
         log.debug("\(error?.localizedDescription ?? ""): \(attachment.seq)")
-    }
-}
-
-// MARK: - LocationAgentDelegate
-
-extension NuguCentralManager: LocationAgentDelegate {
-    func locationAgentRequestLocationInfo() -> LocationInfo? {
-        return NuguLocationManager.shared.cachedLocationInfo
     }
 }
 

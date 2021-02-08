@@ -58,17 +58,6 @@ struct SampleApp {
     }
 }
 
-extension SampleApp {
-    static var bottomSafeAreaHeight: CGFloat {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
-        if #available(iOS 11.0, *) {
-            return rootViewController.view.safeAreaInsets.bottom
-        } else {
-            return rootViewController.bottomLayoutGuide.length
-        }
-    }
-}
-
 // MARK: - Notification.Name
 
 extension Notification.Name {
