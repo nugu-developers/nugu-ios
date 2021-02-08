@@ -98,7 +98,7 @@ private extension MediaAVPlayerItem {
             case .failed:
                 log.debug("playback failed reason: \(self.error.debugDescription)")
                 self.delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .failed(error: self.error))
-            default: //Contains unknown
+            default: // Contains unknown
                 self.delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .unknown)
             }
         }

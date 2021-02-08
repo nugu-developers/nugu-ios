@@ -807,7 +807,7 @@ public extension NuguAgentNotification {
             public let state: AudioPlayerState
             public let header: Downstream.Header
 
-            public static func make(from: [String : Any]) -> State? {
+            public static func make(from: [String: Any]) -> State? {
                 guard let state = from["state"] as? AudioPlayerState,
                       let header = from["header"] as? Downstream.Header else { return nil }
                 
@@ -819,7 +819,7 @@ public extension NuguAgentNotification {
             public static let name: Notification.Name = .audioPlayerAgentDurationDidChange
             public let duration: Int
             
-            public static func make(from: [String : Any]) -> Duration? {
+            public static func make(from: [String: Any]) -> Duration? {
                 guard let duration = from["duration"] as? Int else { return nil }
                 
                 return Duration(duration: duration)

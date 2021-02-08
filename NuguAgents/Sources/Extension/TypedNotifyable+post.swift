@@ -23,7 +23,7 @@ import Foundation
 import NuguUtils
 
 extension TypedNotifyable {
-    func post<Notification : TypedNotification>(_ notification: Notification) {
+    func post<Notification: TypedNotification>(_ notification: Notification) {
         NotificationCenter.default.post(name: Notification.name, object: self, userInfo: notification.dictionary)
     }
 }
