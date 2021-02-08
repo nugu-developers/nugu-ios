@@ -42,6 +42,21 @@ public class MediaPlayer: NSObject, MediaPlayable {
     private var sessionHasFinishedLoading: Bool?
     private var pendingRequests = Set<AVAssetResourceLoadingRequest>()
     private var pendingRequestQueue = DispatchQueue(label: "com.sktelecom.romain.pendingRequest")
+    
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var playToEndTimeObserver: Any?
+    private var playbackStalledObserver: Any?
+    private var failedToPlayEndTimeObserver: Any?
+    private var newErrorLogEntryObserver: Any?
+    private var playerStatusObserver: NSKeyValueObservation?
+    private var playbackBufferEmptyObserver: NSKeyValueObservation?
+    private var playbackLikelyToKeepUpObserver: NSKeyValueObservation?
+    private var playbackBufferFullObserver: NSKeyValueObservation?
+    
+    deinit {
+        removePlayerItemObserver()
+    }
 }
 
 // MARK: - MediaPlayable
@@ -66,7 +81,7 @@ extension MediaPlayer {
         }
         
         mediaPlayer.replaceCurrentItem(with: nil)
-        playerItem?.delegate = nil  // CHECK-ME: 타이밍 이슈 없을지 확인
+        removePlayerItemObserver()  // CHECK-ME: 타이밍 이슈 없을지 확인
         
         playerItem = nil
         player = nil
@@ -183,13 +198,17 @@ extension MediaPlayer: MediaUrlDataSource {
             playerItem = MediaAVPlayerItem(url: url)
         }
         
-        playerItem?.cacheKey = cacheKey
-        playerItem?.delegate = self
+        if let item = playerItem {
+            item.cacheKey = cacheKey
+            addPlayerItemObserver(object: item)
+        }
+
         player = AVQueuePlayer(playerItem: playerItem)
         
         if offset.seconds > 0 {
             player?.seek(to: offset.cmTime)
         }
+
     }
 }
 
@@ -420,47 +439,133 @@ extension MediaPlayer: URLSessionDataDelegate {
     }
 }
 
-// MARK: - MediaAVPlayerItemDelegate
+// MARK: - Observer
+private extension MediaPlayer {
+    func addPlayerItemObserver(object: MediaAVPlayerItem) {
+        // KVO
+        playerStatusObserver = object.observe(\.status, options: .new) { [weak self] (_, change) in
+            guard let self = self else { return }
+            guard change.oldValue != change.newValue else { return } // This closure will be called on iOS 12. Though old and new value are nil.
 
-extension MediaPlayer: MediaAVPlayerItemDelegate {
-    func mediaAVPlayerItem(_ playerItem: MediaAVPlayerItem,
-                           didChangePlaybackStatus status: MediaAVPlayerItem.PlaybackStatus) {
-        switch status {
-        case .failed(let error):
-            guard let playerItemError = error else {
-                delegate?.mediaPlayerStateDidChange(.error(error: MediaPlayableError.unknown), mediaPlayer: self)
+            log.debug("playback status changed: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
+            switch change.newValue {
+            case .readyToPlay:
+                if let cacheKey = object.cacheKey {
+                    MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
+                }
+
+            case .failed:
+                log.debug("playback failed reason: \(object.error.debugDescription)")
+                self.delegate?.mediaPlayerStateDidChange(.error(error: object.error ?? MediaPlayableError.unknown), mediaPlayer: self)
+
+            default:
                 break
             }
-            
-            delegate?.mediaPlayerStateDidChange(.error(error: playerItemError), mediaPlayer: self)
-        case .readyToPlay:
-            if let cacheKey = playerItem.cacheKey {
-                MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
-            }
-        default:
-            break
         }
+        
+        playbackBufferEmptyObserver = object.observe(\.isPlaybackBufferEmpty, options: .new, changeHandler: { [weak self] (_, change) in
+            guard let self = self else { return }
+            guard change.oldValue != change.newValue else { return }
+
+            log.debug("isBufferEmpty: \(change.oldValue.debugDescription) --> \(change.newValue.debugDescription)")
+            if change.newValue == true {
+                self.delegate?.mediaPlayerStateDidChange(.bufferUnderrun, mediaPlayer: self)
+            }
+        })
+        
+        playbackLikelyToKeepUpObserver = object.observe(\.isPlaybackLikelyToKeepUp, options: .new, changeHandler: { [weak self] (_, change) in
+            guard let self = self else { return }
+            guard change.oldValue != change.newValue else { return }
+            
+            log.debug("isLikelyToKeepUp: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
+            if change.newValue == true {
+                self.delegate?.mediaPlayerStateDidChange(.bufferRefilled, mediaPlayer: self)
+            }
+        })
+        
+        playbackBufferFullObserver = object.observe(\.isPlaybackBufferFull, options: .new, changeHandler: { [weak self] (_, change) in
+            guard let self = self else { return }
+            guard change.oldValue != change.newValue else { return }
+            
+            log.debug("isBufferFull: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
+            if change.newValue == true {
+                self.delegate?.mediaPlayerStateDidChange(.bufferRefilled, mediaPlayer: self)
+            }
+        })
+        
+        // Notification Observer
+        playToEndTimeObserver = notificationCenter.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: object, queue: nil, using: { [weak self] _ in
+            log.debug("Did play to end time")
+            guard let self = self else { return }
+            
+            self.delegate?.mediaPlayerStateDidChange(.finish, mediaPlayer: self)
+        })
+        
+        // Maybe called by network issue
+        failedToPlayEndTimeObserver = notificationCenter.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: object, queue: nil, using: { [weak self] notification in
+            log.debug("Failed to play end time")
+            guard let self = self else { return }
+            
+            let failedToPlayToEndTimeError = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
+            log.info("playerItem failed to play to endTime, reason: \(String(describing: failedToPlayToEndTimeError))")
+            
+            // CHECK-ME: Failed State로 주는게 맞을지 검토 필요
+            guard let playerItemError = failedToPlayToEndTimeError else {
+                self.delegate?.mediaPlayerStateDidChange(.error(error: MediaPlayableError.unknown), mediaPlayer: self)
+                return
+            }
+            
+            self.delegate?.mediaPlayerStateDidChange(.error(error: playerItemError), mediaPlayer: self)
+        })
+        
+        newErrorLogEntryObserver = notificationCenter.addObserver(forName: .AVPlayerItemNewErrorLogEntry, object: object, queue: nil, using: { _ in
+            // CHECK-ME: errorLog 잘 출력되는지 확인 필요
+            log.info("playerItem has new error log: \(String(describing: object.errorLog()))")
+        })
     }
     
-    func mediaAVPlayerItem(_ playerItem: MediaAVPlayerItem,
-                           didChangeBufferState status: MediaAVPlayerItem.BufferState) {
-        delegate?.mediaPlayerStateDidChange(status.mediaPlayerState, mediaPlayer: self)
-    }
-    
-    func mediaAVPlayerItemPlaybackStalled(_ playerItem: MediaAVPlayerItem) {}
-    
-    func mediaAVPlayerItemDidPlayToEndTime(_ playerItem: MediaAVPlayerItem) {
-        delegate?.mediaPlayerStateDidChange(.finish, mediaPlayer: self)
+    func removePlayerItemObserver() {
+        // KVO
+        playerStatusObserver = nil
+        playbackBufferEmptyObserver = nil
+        playbackLikelyToKeepUpObserver = nil
+        playbackBufferFullObserver = nil
+        
+        // Notification
+        if let playToEndTimeObserver = playToEndTimeObserver {
+            NotificationCenter.default.removeObserver(playToEndTimeObserver)
+            self.playToEndTimeObserver = nil
+        }
+        
+        if let playbackStalledObserver = playbackStalledObserver {
+            NotificationCenter.default.removeObserver(playbackStalledObserver)
+            self.playbackStalledObserver = nil
+        }
+        
+        if let failedToPlayEndTimeObserver = failedToPlayEndTimeObserver {
+            NotificationCenter.default.removeObserver(failedToPlayEndTimeObserver)
+            self.failedToPlayEndTimeObserver = nil
+        }
+        
+        if let newErrorLogEntryObserver = newErrorLogEntryObserver {
+            NotificationCenter.default.removeObserver(newErrorLogEntryObserver)
+            self.newErrorLogEntryObserver = nil
+        }
     }
 }
 
-// MARK: - MediaAVPlayerItem.BufferState + MediaPlayerState
 
-private extension MediaAVPlayerItem.BufferState {
-    var mediaPlayerState: MediaPlayerState {
+// MARK: - AVPlayerItem.Status extension
+
+extension AVPlayerItem.Status: CustomStringConvertible {
+    public var description: String {
         switch self {
-        case .bufferFinished: return .bufferRefilled
-        case .buffering: return .bufferUnderrun
+        case .readyToPlay:
+            return "readyToPlay"
+        case .failed:
+            return "failed"
+        default:
+            return "unknown"
         }
     }
 }
