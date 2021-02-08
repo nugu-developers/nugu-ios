@@ -21,15 +21,11 @@
 import UIKit
 import MediaPlayer
 
-import NuguCore
 import NuguAgents
 import NuguClientKit
 import NuguUIKit
 
 final class MainViewController: UIViewController {
-    var resignActiveObserver: Any?
-    var becomeActiveObserver: Any?
-    
     // MARK: Properties
     
     @IBOutlet private weak var nuguButton: NuguButton!
@@ -61,8 +57,11 @@ final class MainViewController: UIViewController {
         )
     }()
     
-    // Observers
+    // MARK: Observers
+
     private let notificationCenter = NotificationCenter.default
+    private var resignActiveObserver: Any?
+    private var becomeActiveObserver: Any?
     private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
     

@@ -23,15 +23,15 @@ import AVFoundation
 import NuguCore
 
 final class ASRBeepPlayer {
+    private let focusManager: FocusManageable
+    
     private let beepQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_beep_player")
     
-    // MARK: ASRBeepPlayer
+    // MARK: AVAudioPlayer
     
     private lazy var startBeepPlayer = BeepType.start.makeAudioPlayer()
     private lazy var successBeepPlayer = BeepType.success.makeAudioPlayer()
     private lazy var failBeepPlayer = BeepType.fail.makeAudioPlayer()
-    
-    private let focusManager: FocusManageable
     
     init(focusManager: FocusManageable) {
         self.focusManager = focusManager

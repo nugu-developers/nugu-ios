@@ -29,7 +29,7 @@ final class NuguLocationManager: NSObject {
     
     /// `LocationAgent` v1.0 can not be provided in asynchronous way
     /// So the `LocationAgent` expects for client to pass lastest cached value of `LocationInfo`
-    var cachedLocationInfo: LocationInfo?
+    private var cachedLocationInfo: LocationInfo?
     
     override init() {
         super.init()
@@ -109,5 +109,13 @@ extension NuguLocationManager: CLLocationManagerDelegate {
         default:
             cachedLocationInfo = nil
         }
+    }
+}
+
+// MARK: - LocationAgentDelegate
+
+extension NuguLocationManager: LocationAgentDelegate {
+    func locationAgentRequestLocationInfo() -> LocationInfo? {
+        return cachedLocationInfo
     }
 }

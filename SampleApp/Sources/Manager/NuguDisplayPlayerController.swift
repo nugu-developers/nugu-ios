@@ -22,7 +22,6 @@ import Foundation
 import MediaPlayer
 
 import NuguAgents
-import NuguClientKit
 import NuguUIKit
 
 final class NuguDisplayPlayerController {
@@ -31,6 +30,10 @@ final class NuguDisplayPlayerController {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         }
     }
+    private let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+    private let remoteCommandCenter = MPRemoteCommandCenter.shared()
+    
+    private let nowPlayInfoCenterQueue = DispatchQueue(label: "com.sktelecom.romaine.now_playing_info_update_queue")
     
     private var playCommandTarget: Any?
     private var pauseCommandTarget: Any?
@@ -38,9 +41,6 @@ final class NuguDisplayPlayerController {
     private var previousCommandTarget: Any?
     private var nextCommandTarget: Any?
     private var seekCommandTarget: Any?
-    private let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
-    private let remoteCommandCenter = MPRemoteCommandCenter.shared()
-    private let nowPlayInfoCenterQueue = DispatchQueue(label: "com.sktelecom.romaine.now_playing_info_update_queue")
     
     private var mediaArtWorkDownloadDataTask: URLSessionDataTask?
     

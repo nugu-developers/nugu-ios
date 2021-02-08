@@ -22,13 +22,19 @@ import UIKit
 import SafariServices
 
 import NuguServiceKit
-import NuguClientKit
 
 final class NuguServiceWebViewController: UIViewController {
     var initialURLString: String?
-    var authObserver: Any?
+    
+    // MARK: Properties
     
     @IBOutlet private weak var nuguServiceWebView: NuguServiceWebView!
+    
+    // MARK: Observers
+    
+    private var authObserver: Any?
+    
+    // MARK: Override
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +48,8 @@ final class NuguServiceWebViewController: UIViewController {
             self?.nuguServiceWebView.reload()
         })
     }
+    
+    // MARK: Deinitialize
     
     deinit {
         if let authObserver = authObserver {
