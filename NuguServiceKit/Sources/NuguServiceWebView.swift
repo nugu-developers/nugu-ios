@@ -58,10 +58,10 @@ final public class NuguServiceWebView: WKWebView {
     required init?(coder: NSCoder) {
         let webViewConfiguration = WKWebViewConfiguration()
 
-        //UserController
+        // UserController
         let userContentController = WKUserContentController()
         
-        //Preference
+        // Preference
         let preferences = WKPreferences()
         preferences.javaScriptCanOpenWindowsAutomatically = true
         

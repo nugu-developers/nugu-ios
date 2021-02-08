@@ -215,7 +215,7 @@ public extension NuguCoreNotification {
             public let directive: Downstream.Directive
             public let blockingPolicy: BlockingPolicy
             
-            public static func make(from: [String : Any]) -> Prefetch? {
+            public static func make(from: [String: Any]) -> Prefetch? {
                 guard let directive = from["directive"] as? Downstream.Directive,
                       let blockingPolicy = from["blockingPolicy"] as? BlockingPolicy else { return nil }
 
@@ -228,7 +228,7 @@ public extension NuguCoreNotification {
             public let directive: Downstream.Directive
             public let blockingPolicy: BlockingPolicy
             
-            public static func make(from: [String : Any]) -> Handle? {
+            public static func make(from: [String: Any]) -> Handle? {
                 guard let directive = from["directive"] as? Downstream.Directive,
                       let blockingPolicy = from["blockingPolicy"] as? BlockingPolicy else { return nil }
 
@@ -241,7 +241,7 @@ public extension NuguCoreNotification {
             public let directive: Downstream.Directive
             public let result: DirectiveHandleResult
             
-            public static func make(from: [String : Any]) -> Complete? {
+            public static func make(from: [String: Any]) -> Complete? {
                 guard let directive = from["directive"] as? Downstream.Directive,
                       let result = from["result"] as? DirectiveHandleResult else { return nil }
 
