@@ -169,7 +169,8 @@ public class NuguClient {
             contextManager: contextManager,
             upstreamDataSender: streamDataRouter,
             directiveSequencer: directiveSequencer,
-            dialogAttributeStore: dialogAttributeStore
+            dialogAttributeStore: dialogAttributeStore,
+            interactionControlManager: interactionControlManager
         )
         
         chipsAgent = ChipsAgent(
