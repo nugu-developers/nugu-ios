@@ -32,7 +32,7 @@ public struct MediaPlayerAgentContext: Codable {
         /// <#Description#>
         public let hasVoucher: String
         
-        /// <#Description#>
+        /// The initializer for `MediaPlayerAgentContext.User`.
         /// - Parameters:
         ///   - isLogIn: <#isLogIn description#>
         ///   - hasVoucher: <#hasVoucher description#>
@@ -57,7 +57,7 @@ public struct MediaPlayerAgentContext: Codable {
         /// <#Description#>
         public let currentSongOrder: String
         
-        /// <#Description#>
+        /// The initializer for `MediaPlayerAgentContext.Playlist`.
         /// - Parameters:
         ///   - type: <#type description#>
         ///   - name: <#name description#>
@@ -88,7 +88,7 @@ public struct MediaPlayerAgentContext: Codable {
         /// <#Description#>
         public let shuffle: String?
         
-        /// <#Description#>
+        /// The initializer for `MediaPlayerAgentContext.Toggle`.
         /// - Parameters:
         ///   - repeat: <#repeat description#>
         ///   - shuffle: <#shuffle description#>
@@ -114,7 +114,7 @@ public struct MediaPlayerAgentContext: Codable {
     /// <#Description#>
     public let toggle: Toggle?
     
-    /// <#Description#>
+    /// The initializer for `MediaPlayerAgentContext`.
     /// - Parameters:
     ///   - appStatus: <#appStatus description#>
     ///   - playerActivity: <#playerActivity description#>

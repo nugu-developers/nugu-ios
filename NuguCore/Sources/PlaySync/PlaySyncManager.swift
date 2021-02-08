@@ -274,7 +274,7 @@ public extension NuguCoreNotification {
             public let property: PlaySyncProperty
             public let messageId: String
             
-            public static func make(from: [String : Any]) -> ReleasedProperty? {
+            public static func make(from: [String: Any]) -> ReleasedProperty? {
                 guard let property = from["property"] as? PlaySyncProperty,
                       let messageId = from["messageId"] as? String else { return nil }
                 

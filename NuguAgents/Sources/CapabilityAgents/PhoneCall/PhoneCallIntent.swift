@@ -20,7 +20,7 @@
 
 import Foundation
 
-/// <#Description#>
+/// The intent of candidates in `PhoneCallAgent`
 public enum PhoneCallIntent: String, Codable {
     case call = "CALL"
     case search = "SEARCH"

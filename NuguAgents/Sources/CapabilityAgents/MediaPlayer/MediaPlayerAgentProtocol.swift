@@ -20,8 +20,10 @@
 
 import Foundation
 
-/// <#Description#>
+/// `MediaPlayerAgent` handles directives for media-player.
+///
+/// `MediaPlayerAgent` is used when playing media directly in the app.
 public protocol MediaPlayerAgentProtocol: CapabilityAgentable {
-    /// <#Description#>
+    /// The object that acts as the delegate of `MediaPlayerAgent`
     var delegate: MediaPlayerAgentDelegate? { get set }
 }

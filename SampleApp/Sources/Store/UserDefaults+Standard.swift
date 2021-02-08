@@ -23,6 +23,7 @@ import Foundation
 extension UserDefaults {
     enum Standard {
         // MARK: Setting
+        
         @UserDefault(userDefaults: .standard, key: "loginMethod", defaultValue: -1)
         static var loginMethod: Int
         

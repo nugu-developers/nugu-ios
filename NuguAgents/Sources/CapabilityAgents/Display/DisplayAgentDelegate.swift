@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-/// The `DisplayAgent` delegate is used to notify observers when a template directive is received.
+/// The `DisplayAgentDelegate`  is used to notify observers when a template directive is received.
 public protocol DisplayAgentDelegate: class {
     /// Tells the delegate that the specified template should be displayed.
     ///

@@ -22,7 +22,7 @@ import Foundation
 
 import NuguUtils
 
-/// System-agent is responsible agent for the utilities of the system in the nugu.
+/// `SystemAgent` is responsible agent for the utilities of the system in the nugu.
 /// This agent is mandatory in SDK.
 public protocol SystemAgentProtocol: CapabilityAgentable, TypedNotifyable {
 }

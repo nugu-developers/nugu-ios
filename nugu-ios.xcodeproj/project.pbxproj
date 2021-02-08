@@ -83,8 +83,6 @@
 		1F5E4EF725A77B860089B6D7 /* ASAuthenticationOAuthHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5E4EF625A77B860089B6D7 /* ASAuthenticationOAuthHandler.swift */; };
 		1F721C66241767E100023EF8 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F721C64241767E100023EF8 /* Quick.framework */; };
 		1F721C67241767E100023EF8 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F721C65241767E100023EF8 /* Nimble.framework */; };
-		1F862EF5252DAB040069C310 /* KeyedEncodingContainerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F862EF4252DAB040069C310 /* KeyedEncodingContainerExtension.swift */; };
-		1F862F09252DB2590069C310 /* JSONCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F862F08252DB2590069C310 /* JSONCodingKey.swift */; };
 		1F9336CA25B68CC000CEBF66 /* MessageAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9336C925B68CC000CEBF66 /* MessageAgentProtocol.swift */; };
 		1F9336D625B68D4100CEBF66 /* MessageAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9336D525B68D4100CEBF66 /* MessageAgent.swift */; };
 		1F9336E225B68D4D00CEBF66 /* MessageAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9336E125B68D4D00CEBF66 /* MessageAgentDelegate.swift */; };
@@ -1366,8 +1364,8 @@
 		064FD86925A2CE7800DE6454 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				064FD86A25A2CEB800DE6454 /* UtilityAgentProtocol.swift */,
 				064FD88025A2CEE000DE6454 /* UtilityAgent.swift */,
+				064FD86A25A2CEB800DE6454 /* UtilityAgentProtocol.swift */,
 				064FD88C25A2DC8B00DE6454 /* UtilityBlockItem.swift */,
 			);
 			path = Utility;
@@ -1504,6 +1502,17 @@
 			path = KeywordDetector;
 			sourceTree = "<group>";
 		};
+		1F5E4EBD25A77B330089B6D7 /* Handler */ = {
+			isa = PBXGroup;
+			children = (
+				1F5E4ED425A77B550089B6D7 /* OAuthHandler.swift */,
+				1F5E4EBE25A77B490089B6D7 /* SFSafariOAuthHandler.swift */,
+				1F5E4EE025A77B710089B6D7 /* SFAuthenticationOAuthHandler.swift */,
+				1F5E4EF625A77B860089B6D7 /* ASAuthenticationOAuthHandler.swift */,
+			);
+			path = Handler;
+			sourceTree = "<group>";
+		};
 		1F9336C825B68CA500CEBF66 /* Message */ = {
 			isa = PBXGroup;
 			children = (
@@ -1518,17 +1527,6 @@
 				1F93378A25BF135700CEBF66 /* MessageRecipientIntended.swift */,
 			);
 			path = Message;
-            sourceTree = "<group>";
-        };
-		1F5E4EBD25A77B330089B6D7 /* Handler */ = {
-			isa = PBXGroup;
-			children = (
-				1F5E4ED425A77B550089B6D7 /* OAuthHandler.swift */,
-				1F5E4EBE25A77B490089B6D7 /* SFSafariOAuthHandler.swift */,
-				1F5E4EE025A77B710089B6D7 /* SFAuthenticationOAuthHandler.swift */,
-				1F5E4EF625A77B860089B6D7 /* ASAuthenticationOAuthHandler.swift */,
-			);
-			path = Handler;
 			sourceTree = "<group>";
 		};
 		1F9C5B6823E42D740086CC04 /* CapabilityAgents */ = {
@@ -2434,10 +2432,10 @@
 			isa = PBXGroup;
 			children = (
 				680EF96024B30DA4003DE266 /* MediaPlayerAgent.swift */,
+				1FD5D19024C82F3B007BA384 /* MediaPlayerAgent+Event.swift */,
 				680EF96224B30DAE003DE266 /* MediaPlayerAgentProtocol.swift */,
 				680EF96424B30DBB003DE266 /* MediaPlayerAgentDelegate.swift */,
 				1FD5D19224D2A0F0007BA384 /* MediaPlayerAgentContext.swift */,
-				1FD5D19024C82F3B007BA384 /* MediaPlayerAgent+Event.swift */,
 				1FD5D18E24C82224007BA384 /* MediaPlayerAgentSong.swift */,
 				1FD5D19524D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift */,
 				1FD5D19D24D35281007BA384 /* MediaPlayerAgentPlaylist.swift */,
@@ -3401,7 +3399,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/opt/homebrew/bin/carthage copy-frameworks\n";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 		1F2E8010238FCD8E00569C59 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

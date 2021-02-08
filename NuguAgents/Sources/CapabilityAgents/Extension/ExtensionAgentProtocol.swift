@@ -22,18 +22,18 @@ import Foundation
 
 import NuguCore
 
-/// Extension-agent handles directives that not defined by other capability-agents
+/// `ExtensionAgent` handles directives that not defined by other capability-agents
 public protocol ExtensionAgentProtocol: CapabilityAgentable {
-    /// The object that acts as the delegate of extension-agent
+    /// The object that acts as the delegate of `ExtensionAgent`
     var delegate: ExtensionAgentDelegate? { get set }
     
-    // Send event to specific play with custom data.
+    /// Send event to specific play with custom data.
     ///
     /// [JSONSerialization.isValidJSONObject]: apple-reference-documentation://hsLgkBvV03
     /// - Parameters:
     ///   - data: Custom data as a Dictionary. Should be available converting JSON format.
     ///           see [JSONSerialization.isValidJSONObject].
-    ///   - playServiceId: The play's unique id
+    ///   - playServiceId: The unique identifier to specify play service.
     ///   - completion: The completion handler to call when the request is complete.
     /// - Returns: The dialogRequestId for request.
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String, completion: ((StreamDataState) -> Void)?) -> String
@@ -42,11 +42,6 @@ public protocol ExtensionAgentProtocol: CapabilityAgentable {
 // MARK: - Default
 
 public extension ExtensionAgentProtocol {
-    /// <#Description#>
-    /// - Parameters:
-    ///   - data: <#data description#>
-    ///   - playServiceId: <#playServiceId description#>
-    /// - Returns: <#description#>
     @discardableResult func requestCommand(data: [String: AnyHashable], playServiceId: String) -> String {
         return requestCommand(data: data, playServiceId: playServiceId, completion: nil)
     }

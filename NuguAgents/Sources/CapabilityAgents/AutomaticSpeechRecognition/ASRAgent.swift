@@ -502,7 +502,7 @@ private extension ASRAgent {
     }
     
     func handleCancelRecognize() -> HandleDirective {
-        return { [weak self] directive, completion in
+        return { [weak self] _, completion in
             guard let self = self else {
                 completion(.canceled)
                 return
@@ -725,7 +725,7 @@ public extension NuguAgentNotification {
             public static let name: Notification.Name = .asrAgentStateDidChange
             public let state: ASRState
             
-            public static func make(from: [String : Any]) -> State? {
+            public static func make(from: [String: Any]) -> State? {
                 guard let state = from["state"] as? ASRState else { return nil }
                 
                 return State(state: state)
@@ -737,7 +737,7 @@ public extension NuguAgentNotification {
             public let result: ASRResult
             public let dialogRequestId: String
             
-            public static func make(from: [String : Any]) -> Result? {
+            public static func make(from: [String: Any]) -> Result? {
                 guard let result = from["result"] as? ASRResult,
                       let dialogRequestId = from["dialogRequestId"] as? String else { return nil }
                 

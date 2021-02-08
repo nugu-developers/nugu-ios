@@ -19,5 +19,6 @@
 
 import Foundation
 
+/// `UtilityAgent` handles directives for utility.
 public protocol UtilityAgentProtocol: CapabilityAgentable {
 }

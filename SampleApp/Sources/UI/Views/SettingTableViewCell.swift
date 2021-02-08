@@ -21,10 +21,11 @@
 import UIKit
 
 final class SettingTableViewCell: UITableViewCell {
-
-    @IBOutlet private weak var menuSwitch: UISwitch!
-    
     var onSwitchValueChanged: ((_ isOn: Bool) -> Void)?
+
+    // MARK: Properties
+    
+    @IBOutlet private weak var menuSwitch: UISwitch!
     
     func configure(text: String, isSwitchOn: Bool? = nil, isSwitchEnabled: Bool = false, detailText: String? = nil) {
         textLabel?.text = text

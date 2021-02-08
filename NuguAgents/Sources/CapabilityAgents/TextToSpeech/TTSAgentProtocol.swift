@@ -47,6 +47,8 @@ public protocol TTSAgentProtocol: CapabilityAgentable, TypedNotifyable {
     ///
     /// - Parameter text: The obejct to request speech synthesis.
     /// - Parameter playServiceId: The unique identifier to specify play service.
+    /// - Parameter handler: <#handler description#>
+    /// - Returns: The dialogRequestId for request.
     @discardableResult func requestTTS(
         text: String,
         playServiceId: String?,
@@ -61,27 +63,14 @@ public protocol TTSAgentProtocol: CapabilityAgentable, TypedNotifyable {
 // MARK: - Default
 
 public extension TTSAgentProtocol {
-    /// Request voice synthesis and playback.
-    ///
-    /// - Parameter text: The obejct to request speech synthesis.
     @discardableResult func requestTTS(text: String) -> String {
         return requestTTS(text: text, playServiceId: nil, handler: nil)
     }
     
-    /// <#Description#>
-    /// - Parameters:
-    ///   - text: <#text description#>
-    ///   - playServiceId: <#playServiceId description#>
-    /// - Returns: <#description#>
     @discardableResult func requestTTS(text: String, playServiceId: String?) -> String {
         return requestTTS(text: text, playServiceId: playServiceId, handler: nil)
     }
     
-    /// <#Description#>
-    /// - Parameters:
-    ///   - text: <#text description#>
-    ///   - handler: <#handler description#>
-    /// - Returns: <#description#>
     @discardableResult func requestTTS(text: String, handler: ((_ ttsResult: TTSResult, _ dialogRequestId: String) -> Void)? = nil) -> String {
         return requestTTS(text: text, playServiceId: nil, handler: handler)
     }

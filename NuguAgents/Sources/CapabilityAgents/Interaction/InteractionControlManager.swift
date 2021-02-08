@@ -102,7 +102,7 @@ public extension NuguAgentNotification {
             public static let name: Notification.Name = .interactionControlDidChange
             public let multiTurn: Bool
             
-            public static func make(from: [String : Any]) -> MultiTurn? {
+            public static func make(from: [String: Any]) -> MultiTurn? {
                 guard let multiTurn = from["multiTurn"] as? Bool else { return nil }
                 
                 return MultiTurn(multiTurn: multiTurn)

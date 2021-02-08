@@ -19,7 +19,6 @@
 
 import Foundation
 
-
 /// State of Stream data.
 public enum StreamDataState {
     /// Data sent

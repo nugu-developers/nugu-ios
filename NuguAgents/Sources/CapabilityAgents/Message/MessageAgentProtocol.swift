@@ -22,16 +22,17 @@ import Foundation
 
 import NuguCore
 
-/// <#Description#>
+/// `MessageAgent` handles directives for message.
 public protocol MessageAgentProtocol: CapabilityAgentable {
-    /// <#Description#>
+    /// The object that acts as the delegate of `MessageAgent`
     var delegate: MessageAgentDelegate? { get set }
     
-    /// <#Description#>
+    /// Send 'CandidatesListed' event with `candidatesItem` received 'SendCandidates' directive.
     /// - Parameters:
-    ///   - candidatesItem: <#candidatesItem description#>
-    ///   - header: <#header description#>
-    ///   - completion: <#completion description#>
+    ///   - candidatesItem: A payload received 'SendCandidates' directive.
+    ///   - header: The header of the originally handled directive.
+    ///   - completion: The completion handler to call when the request is complete.
+    /// - Returns: The `dialogRequestId` for request.
     @discardableResult func requestSendCandidates(
         candidatesItem: MessageCandidatesItem,
         header: Downstream.Header?,
