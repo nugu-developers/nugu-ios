@@ -287,7 +287,7 @@ public extension NuguAgentNotification {
             public let state: SoundState
             public let header: Downstream.Header
 
-            public static func make(from: [String : Any]) -> State? {
+            public static func make(from: [String: Any]) -> State? {
                 guard let state = from["state"] as? SoundState,
                       let header = from["header"] as? Downstream.Header else { return nil }
                 

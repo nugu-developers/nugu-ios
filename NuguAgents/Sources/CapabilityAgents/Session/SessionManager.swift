@@ -141,7 +141,7 @@ public extension NuguAgentNotification {
             public static let name: Notification.Name = .sessionDidSet
             public let session: NuguAgents.Session
             
-            public static func make(from: [String : Any]) -> Set? {
+            public static func make(from: [String: Any]) -> Set? {
                 guard let session = from["session"] as? NuguAgents.Session else { return nil }
                 
                 return Set(session: session)
@@ -152,7 +152,7 @@ public extension NuguAgentNotification {
             public static let name: Notification.Name = .sessionDidUnSet
             public let session: NuguAgents.Session
 
-            public static func make(from: [String : Any]) -> UnSet? {
+            public static func make(from: [String: Any]) -> UnSet? {
                 guard let session = from["session"] as? NuguAgents.Session else { return nil }
                 
                 return UnSet(session: session)

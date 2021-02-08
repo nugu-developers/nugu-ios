@@ -139,7 +139,7 @@ private extension SystemAgent {
     }
     
     func handleResetConnection() -> HandleDirective {
-        return { [weak self] directive, completion in
+        return { [weak self] _, completion in
             defer { completion(.finished) }
             
             self?.systemDispatchQueue.async { [weak self] in
@@ -182,7 +182,7 @@ public extension NuguAgentNotification {
             public let code: SystemAgentExceptionCode.Fail
             public let header: Downstream.Header
             
-            public static func make(from: [String : Any]) -> Exception? {
+            public static func make(from: [String: Any]) -> Exception? {
                 guard let code = from["code"] as? SystemAgentExceptionCode.Fail,
                       let header = from["header"] as? Downstream.Header else { return nil }
                 
@@ -195,7 +195,7 @@ public extension NuguAgentNotification {
             public let reason: SystemAgentRevokeReason
             public let header: Downstream.Header
             
-            public static func make(from: [String : Any]) -> RevokeDevice? {
+            public static func make(from: [String: Any]) -> RevokeDevice? {
                 guard let reason = from["reason"] as? SystemAgentRevokeReason,
                       let header = from["header"] as? Downstream.Header else { return nil }
                 

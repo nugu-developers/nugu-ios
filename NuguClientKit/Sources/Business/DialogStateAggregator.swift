@@ -167,7 +167,7 @@ public extension NuguClientNotification {
             public let chips: [ChipsAgentItem.Chip]?
             public let sessionActivated: Bool
             
-            public static func make(from: [String : Any]) -> State? {
+            public static func make(from: [String: Any]) -> State? {
                 guard let state = from["state"] as? NuguClientKit.DialogState,
                       let multiTurn = from["multiTurn"] as? Bool,
                       let sessionActivated = from["sessionActivated"] as? Bool else { return nil }
