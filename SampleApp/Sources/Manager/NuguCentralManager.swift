@@ -143,8 +143,8 @@ extension NuguCentralManager {
         }
         
         switch loginMethod {
-        case .type1:
-            oauthClient.authorizeWithTid(parentViewController: viewController) { [weak self] (result) in
+        case .tid:
+            oauthClient.loginWithTid(parentViewController: viewController) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -154,8 +154,8 @@ extension NuguCentralManager {
                     completion(.failure(sampleAppError))
                 }
             }
-        case .type2:
-            oauthClient.authorize { [weak self] (result) in
+        case .anonymous:
+            oauthClient.loginAnonymously { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -180,8 +180,8 @@ extension NuguCentralManager {
         }
         
         switch loginMethod {
-        case .type1:
-            oauthClient.refreshToken(refreshToken: refreshToken) { [weak self] (result) in
+        case .tid:
+            oauthClient.loginSilentlyWithTid(refreshToken: refreshToken) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -191,8 +191,8 @@ extension NuguCentralManager {
                     completion(.failure(sampleAppError))
                 }
             }
-        case .type2:
-            oauthClient.authorize { [weak self] (result) in
+        case .anonymous:
+            oauthClient.loginAnonymously { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -230,8 +230,8 @@ extension NuguCentralManager {
     }
     
     func showTidInfo(parentViewController: UIViewController, completion: @escaping () -> Void) {
-        guard SampleApp.loginMethod == SampleApp.LoginMethod.type1 else {
-            log.error("loginMethod is not type1")
+        guard SampleApp.loginMethod == SampleApp.LoginMethod.tid else {
+            log.error("loginMethod is not tid")
             completion()
             return
         }
