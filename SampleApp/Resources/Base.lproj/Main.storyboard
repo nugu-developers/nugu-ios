@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
     <device id="retina5_9" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -53,16 +53,16 @@
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XU5-aF-uOi">
                                         <rect key="frame" x="0.0" y="51" width="180" height="30"/>
-                                        <state key="normal" title="Type1 로그인"/>
+                                        <state key="normal" title="T-ID 로그인"/>
                                         <connections>
-                                            <action selector="type1LoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="lvJ-8m-bGL"/>
+                                            <action selector="tidLoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="lvJ-8m-bGL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PRw-WW-UgU">
                                         <rect key="frame" x="0.0" y="81" width="180" height="30"/>
-                                        <state key="normal" title="Type2 로그인"/>
+                                        <state key="normal" title="Anonymous 로그인"/>
                                         <connections>
-                                            <action selector="type2LoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="wvY-om-K77"/>
+                                            <action selector="anonymousLoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="wvY-om-K77"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -103,7 +103,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ns-b9-eTf">
-                                <rect key="frame" x="14.999999999999998" y="49" width="26.333333333333329" height="12"/>
+                                <rect key="frame" x="15.000000000000002" y="49" width="26.666666666666671" height="12"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" red="1" green="0.2274509804" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>

@@ -71,7 +71,10 @@ public extension NuguOAuthClient {
     /// `ConfigurationStore` must be configured.
     /// - Parameter parentViewController: The `parentViewController` will present a safariViewController.
     /// - Parameter completion: The closure to receive result for authorization.
-    func authorizeWithTid(parentViewController: UIViewController, completion: @escaping (Result<AuthorizationInfo, NuguLoginKitError>) -> Void) {
+    func loginWithTid(
+        parentViewController: UIViewController,
+        completion: @escaping (Result<AuthorizationInfo, NuguLoginKitError>) -> Void
+    ) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             completion(.failure(.unknown(description: "ConfigurationStore is not configured")))
             return
@@ -90,7 +93,10 @@ public extension NuguOAuthClient {
     /// `ConfigurationStore` must be configured.
     /// - Parameter refreshToken: The `refreshToken` for OAuth authentication.
     /// - Parameter completion: The closure to receive result for authorization.
-    func refreshToken(refreshToken: String, completion: @escaping (Result<AuthorizationInfo, NuguLoginKitError>) -> Void) {
+    func loginSilentlyWithTid(
+        refreshToken: String,
+        completion: @escaping (Result<AuthorizationInfo, NuguLoginKitError>) -> Void
+    ) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             completion(.failure(.unknown(description: "ConfigurationStore is not configured")))
             return
@@ -108,7 +114,7 @@ public extension NuguOAuthClient {
     ///
     /// `ConfigurationStore` must be configured.
     /// - Parameter completion: The closure to receive result for authorization.
-    func authorize(completion: @escaping (Result<AuthorizationInfo, NuguLoginKitError>) -> Void) {
+    func loginAnonymously(completion: @escaping (Result<AuthorizationInfo, NuguLoginKitError>) -> Void) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             completion(.failure(.unknown(description: "ConfigurationStore is not configured")))
             return
