@@ -173,14 +173,13 @@ extension NuguCentralManager {
             completion(.failure(SampleAppError.nilValue(description: "loginMethod is nil")))
             return
         }
+        guard let refreshToken = UserDefaults.Standard.refreshToken else {
+            completion(.failure(SampleAppError.nilValue(description: "RefreshToken is nil")))
+            return
+        }
         
         switch loginMethod {
         case .tid:
-            guard let refreshToken = UserDefaults.Standard.refreshToken else {
-                completion(.failure(SampleAppError.nilValue(description: "RefreshToken is nil")))
-                return
-            }
-            
             oauthClient.loginSilentlyWithTid(refreshToken: refreshToken) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
