@@ -98,14 +98,14 @@ private extension ServerSideEventReceiver {
 
                             self.serverPolicies = networkPolicies.serverPolicies
                             let currentPolicy = self.serverPolicies.removeFirst()
-                            self.apiProvider.url = "https://\(currentPolicy.hostname):\(currentPolicy.port)"
+                            self.apiProvider.loadBalancedUrl = "https://\(currentPolicy.hostname):\(currentPolicy.port)"
                             
                             return index
                         }
                 }
                 
                 let policy = self.serverPolicies.removeFirst()
-                self.apiProvider.url = "https://\(policy.hostname):\(policy.port)"
+                self.apiProvider.loadBalancedUrl = "https://\(policy.hostname):\(policy.port)"
                 return Observable<Int>.timer(.seconds(0), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
                     .take(1)
         }
