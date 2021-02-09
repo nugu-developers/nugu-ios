@@ -104,8 +104,8 @@ final class MainViewController: UIViewController {
         
         switch segueId {
         case "mainToGuideWeb":
-            guard let webViewController = segue.destination as? WebViewController else { return }
-            webViewController.initialURL = sender as? URL
+            guard let guideWebViewController = segue.destination as? GuideWebViewController else { return }
+            guideWebViewController.initialURLString = sender as? String
             
             UserDefaults.Standard.hasSeenGuideWeb = true
         default:
@@ -233,9 +233,7 @@ private extension MainViewController {
         ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { [weak self] (result) in
             switch result {
             case .success(let urlString):
-                if let url = URL(string: urlString) {
-                    self?.performSegue(withIdentifier: "mainToGuideWeb", sender: url)
-                }
+                self?.performSegue(withIdentifier: "mainToGuideWeb", sender: urlString)
             case .failure(let error):
                 log.error(error)
             }
@@ -290,9 +288,9 @@ private extension MainViewController {
     }
 }
 
-// MARK: - Private (Voice Chrome)
+// MARK: - Internal (Voice Chrome)
 
-private extension MainViewController {
+extension MainViewController {
     func presentVoiceChrome(initiator: ASRInitiator) {
         nuguVoiceChrome.setChipsData(chipsData: [
             NuguChipsButton.NuguChipsButtonType.action(text: "오늘 날씨 알려줘", token: nil),

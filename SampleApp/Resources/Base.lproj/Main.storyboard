@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
     <device id="retina5_9" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -184,15 +184,15 @@
             </objects>
             <point key="canvasLocation" x="1934" y="18"/>
         </scene>
-        <!--Web View Controller-->
+        <!--Guide Web View Controller-->
         <scene sceneID="zmX-Cp-jdd">
             <objects>
-                <viewController storyboardIdentifier="LogInResultWebViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gGQ-jV-Gla" customClass="WebViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GuideWebViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gGQ-jV-Gla" customClass="GuideWebViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="l79-V0-KsH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KPO-NT-hDI" customClass="NuguWebView" customModule="SampleApp" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KPO-NT-hDI" customClass="NuguServiceWebView" customModule="NuguServiceKit">
                                 <rect key="frame" x="0.0" y="50" width="375" height="708"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -222,7 +222,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="webView" destination="KPO-NT-hDI" id="ed4-cw-i5e"/>
+                        <outlet property="nuguServiceWebView" destination="KPO-NT-hDI" id="Zpf-xu-QeI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FRi-HF-hev" userLabel="First Responder" sceneMemberID="firstResponder"/>

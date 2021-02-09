@@ -181,8 +181,7 @@
 		1FFFF4DF237672F100C9A177 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A5237672F100C9A177 /* SettingViewController.swift */; };
 		1FFFF4E0237672F100C9A177 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A6237672F100C9A177 /* IntroViewController.swift */; };
 		1FFFF4E1237672F100C9A177 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A7237672F100C9A177 /* MainViewController.swift */; };
-		1FFFF4E2237672F100C9A177 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A8237672F100C9A177 /* WebViewController.swift */; };
-		1FFFF4E3237672F100C9A177 /* NuguWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4AA237672F100C9A177 /* NuguWebView.swift */; };
+		1FFFF4E2237672F100C9A177 /* GuideWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4A8237672F100C9A177 /* GuideWebViewController.swift */; };
 		1FFFF4F9237672F100C9A177 /* SampleAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4C6237672F100C9A177 /* SampleAppError.swift */; };
 		1FFFF4FA237672F100C9A177 /* SampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4C7237672F100C9A177 /* SampleApp.swift */; };
 		1FFFF4FC237672F100C9A177 /* NuguCentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4CA237672F100C9A177 /* NuguCentralManager.swift */; };
@@ -932,8 +931,7 @@
 		1FFFF4A5237672F100C9A177 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		1FFFF4A6237672F100C9A177 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		1FFFF4A7237672F100C9A177 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		1FFFF4A8237672F100C9A177 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
-		1FFFF4AA237672F100C9A177 /* NuguWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguWebView.swift; sourceTree = "<group>"; };
+		1FFFF4A8237672F100C9A177 /* GuideWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideWebViewController.swift; sourceTree = "<group>"; };
 		1FFFF4B7237672F100C9A177 /* DisplayCommonTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayCommonTemplate.swift; sourceTree = "<group>"; };
 		1FFFF4C1237672F100C9A177 /* UIColor+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Convenience.swift"; sourceTree = "<group>"; };
 		1FFFF4C2237672F100C9A177 /* Int+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Convenience.swift"; sourceTree = "<group>"; };
@@ -2261,7 +2259,7 @@
 				1FFFF4A6237672F100C9A177 /* IntroViewController.swift */,
 				7525AD0724AD6054006800A3 /* NuguServiceWebViewController.swift */,
 				1FFFF4A7237672F100C9A177 /* MainViewController.swift */,
-				1FFFF4A8237672F100C9A177 /* WebViewController.swift */,
+				1FFFF4A8237672F100C9A177 /* GuideWebViewController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2269,7 +2267,6 @@
 		1FFFF4A9237672F100C9A177 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1FFFF4AA237672F100C9A177 /* NuguWebView.swift */,
 				75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */,
 			);
 			path = Views;
@@ -3642,10 +3639,9 @@
 				1FFFF4E0237672F100C9A177 /* IntroViewController.swift in Sources */,
 				1FFFF4F9237672F100C9A177 /* SampleAppError.swift in Sources */,
 				A1ED44592384FD24002A1F75 /* NuguLocationManager.swift in Sources */,
-				1FFFF4E3237672F100C9A177 /* NuguWebView.swift in Sources */,
 				1FFFF4FC237672F100C9A177 /* NuguCentralManager.swift in Sources */,
 				1FFFF501237672F100C9A177 /* UserDefaults+Standard.swift in Sources */,
-				1FFFF4E2237672F100C9A177 /* WebViewController.swift in Sources */,
+				1FFFF4E2237672F100C9A177 /* GuideWebViewController.swift in Sources */,
 				1FFFF4FA237672F100C9A177 /* SampleApp.swift in Sources */,
 				A17B06D2239E28DB00D739E9 /* ASRBeepPlayer.swift in Sources */,
 				75D069C4247F76CC000B5D1F /* SettingTableViewCell.swift in Sources */,
