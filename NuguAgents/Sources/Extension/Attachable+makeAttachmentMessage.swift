@@ -23,6 +23,7 @@ import Foundation
 import NuguCore
 
 extension Attachable {
+    // swiftlint:disable function_parameter_count
     func makeAttachmentMessage(
         property: CapabilityAgentProperty,
         dialogRequestId: String,

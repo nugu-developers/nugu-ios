@@ -493,7 +493,7 @@ private extension ASRAgent {
                 case .error:
                     self.asrResult = .error(ASRError.recognizeFailed, header: directive.header)
                 default:
-                    // TODO 추후 Server EPD 개발시 구현
+                    // TODO: after server preparation.
                     break
                 }
             }
