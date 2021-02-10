@@ -28,6 +28,7 @@ public struct ConfigurationMetadata: Codable {
     public let responseTypesSupported: [String]?
     public let grantTypesSupported: [String]?
     public let introspectionEndpoint: String?
+    // swiftlint:disable identifier_name
     public let introspectionEndpointAuthMethodsSupported: [String]?
     public let revocationEndpoint: String?
     public let revocationEndpointAuthMethodsSupported: [String]?
@@ -48,6 +49,7 @@ public struct ConfigurationMetadata: Codable {
         case responseTypesSupported = "response_types_supported"
         case grantTypesSupported = "grant_types_supported"
         case introspectionEndpoint = "introspection_endpoint"
+        // swiftlint:disable identifier_name
         case introspectionEndpointAuthMethodsSupported = "introspection_endpoint_auth_methods_supported"
         case revocationEndpoint = "revocation_endpoint"
         case revocationEndpointAuthMethodsSupported = "revocation_endpoint_auth_methods_supported"

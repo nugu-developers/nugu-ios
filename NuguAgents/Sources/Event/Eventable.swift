@@ -35,6 +35,7 @@ public extension Eventable {
 // MARK: - RxSwift
 
 extension Eventable {
+    // swiftlint:disable identifier_name
     var rx: Single<Eventable> {
         Single.just(self)
     }
