@@ -132,7 +132,7 @@ public extension SpeechRecognizerAggregator {
             })
             guard let startMicWorkItem = startMicWorkItem else { return }
             
-            if self.micInputProviderDelay > .now() {
+            if self.micInputProviderDelay > DispatchTime.now() {
                 DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
             } else {
                 DispatchQueue.global().async(execute: startMicWorkItem)
