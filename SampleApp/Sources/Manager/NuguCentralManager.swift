@@ -44,7 +44,6 @@ final class NuguCentralManager {
             micInputProvider: MicInputProvider()
         )
         
-        client.locationAgent.delegate = NuguLocationManager.shared
         client.soundAgent.dataSource = self
         
         // Observers
@@ -111,7 +110,6 @@ extension NuguCentralManager {
             client.stopReceiveServerInitiatedDirective()
         }
 
-        NuguLocationManager.shared.startUpdatingLocation()
         startListeningWithTrigger()
     }
     
