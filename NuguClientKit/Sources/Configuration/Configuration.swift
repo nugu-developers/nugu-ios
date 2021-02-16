@@ -29,6 +29,7 @@ public struct Configuration: Decodable {
     public var authRedirectUri: String
     public var pocId: String
     public var deviceTypeCode: String
+    public var theme: String
 
     enum CodingKeys: String, CodingKey {
         case authServerUrl = "OAuthServerUrl"
@@ -37,6 +38,7 @@ public struct Configuration: Decodable {
         case authRedirectUri = "OAuthRedirectUri"
         case pocId = "PoCId"
         case deviceTypeCode = "DeviceTypeCode"
+        case theme = "Theme"
     }
     
     public init(
@@ -45,7 +47,8 @@ public struct Configuration: Decodable {
         authClientSecret: String,
         authRedirectUri: String,
         pocId: String,
-        deviceTypeCode: String
+        deviceTypeCode: String,
+        theme: String
     ) {
         self.authServerUrl = authServerUrl
         self.authClientId = authClientId
@@ -53,6 +56,7 @@ public struct Configuration: Decodable {
         self.authRedirectUri = authRedirectUri
         self.pocId = pocId
         self.deviceTypeCode = deviceTypeCode
+        self.theme = theme
     }
 }
 
