@@ -37,7 +37,7 @@ public class NuguClient {
     private var streamDataAttachmentDidSent: Any?
     private var dialogStateObserver: Any?
     
-    // core
+    // Core
     public let contextManager: ContextManageable
     public let focusManager: FocusManageable
     public let streamDataRouter: StreamDataRoutable
@@ -48,20 +48,44 @@ public class NuguClient {
     public let systemAgent: SystemAgentProtocol
     public let interactionControlManager: InteractionControlManageable
     
-    // agents
+    // Default Agents
     public let asrAgent: ASRAgentProtocol
     public let ttsAgent: TTSAgentProtocol
     public let textAgent: TextAgentProtocol
     public let audioPlayerAgent: AudioPlayerAgentProtocol
-    public let mediaPlayerAgent: MediaPlayerAgentProtocol
-    public let soundAgent: SoundAgentProtocol
     public let sessionAgent: SessionAgentProtocol
     public let chipsAgent: ChipsAgentProtocol
     public let utilityAgent: UtilityAgentProtocol
     public let displayAgent: DisplayAgentProtocol
-    public let extensionAgent: ExtensionAgentProtocol
     public let locationAgent: LocationAgentProtocol
-    public let phoneCallAgent: PhoneCallAgentProtocol
+
+    
+    // Additional Agents
+    public lazy var mediaPlayerAgent: MediaPlayerAgentProtocol = MediaPlayerAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
+    public lazy var extensionAgent: ExtensionAgentProtocol = ExtensionAgent(
+        upstreamDataSender: streamDataRouter,
+        contextManager: contextManager,
+        directiveSequencer: directiveSequencer
+    )
+    
+    public lazy var phoneCallAgent: PhoneCallAgentProtocol = PhoneCallAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter,
+        interactionControlManager: interactionControlManager
+    )
+    
+    public lazy var soundAgent: SoundAgentProtocol = SoundAgent(
+        focusManager: focusManager,
+        upstreamDataSender: streamDataRouter,
+        contextManager: contextManager,
+        directiveSequencer: directiveSequencer
+    )
     
     // supports
     public let dialogStateAggregator: DialogStateAggregator
@@ -87,67 +111,19 @@ public class NuguClient {
         ttsAgent: TTSAgentProtocol,
         textAgent: TextAgentProtocol,
         audioPlayerAgent: AudioPlayerAgentProtocol,
-        mediaPlayerAgent: MediaPlayerAgentProtocol,
-        soundAgent: SoundAgentProtocol,
         sessionAgent: SessionAgentProtocol,
         chipsAgent: ChipsAgentProtocol,
         utilityAgent: UtilityAgentProtocol,
         displayAgent: DisplayAgentProtocol,
-        extensionAgent: ExtensionAgentProtocol,
         locationAgent: LocationAgentProtocol,
-        phoneCallAgent: PhoneCallAgentProtocol,
         audioSessionManager: AudioSessionManageable?,
         keywordDetector: KeywordDetector,
-        speechRecognizerAggregator: SpeechRecognizerAggregatable
+        speechRecognizerAggregator: SpeechRecognizerAggregatable,
+        mediaPlayerAgent: MediaPlayerAgentProtocol?,
+        extensionAgent: ExtensionAgentProtocol?,
+        phoneCallAgent: PhoneCallAgentProtocol?,
+        soundAgent: SoundAgentProtocol?
     ) {
-        // core
-<<<<<<< HEAD
-        contextManager = ContextManager()
-        directiveSequencer = DirectiveSequencer()
-        focusManager = FocusManager()
-        streamDataRouter = StreamDataRouter(directiveSequencer: directiveSequencer)
-        playSyncManager = PlaySyncManager(contextManager: contextManager)
-        dialogAttributeStore = DialogAttributeStore()
-        sessionManager = SessionManager()
-        interactionControlManager = InteractionControlManager()
-        
-        systemAgent = SystemAgent(contextManager: contextManager,
-                                  streamDataRouter: streamDataRouter,
-                                  directiveSequencer: directiveSequencer)
-        
-        // dialog
-        asrAgent = ASRAgent(
-            focusManager: focusManager,
-            upstreamDataSender: streamDataRouter,
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer,
-            dialogAttributeStore: dialogAttributeStore,
-            sessionManager: sessionManager,
-            playSyncManager: playSyncManager,
-            interactionControlManager: interactionControlManager
-        )
-        
-        ttsAgent = TTSAgent(
-            focusManager: focusManager,
-            upstreamDataSender: streamDataRouter,
-            playSyncManager: playSyncManager,
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer
-        )
-        
-        textAgent = TextAgent(
-            contextManager: contextManager,
-            upstreamDataSender: streamDataRouter,
-            directiveSequencer: directiveSequencer,
-            dialogAttributeStore: dialogAttributeStore,
-            interactionControlManager: interactionControlManager
-        )
-        
-        chipsAgent = ChipsAgent(
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer
-        )
-=======
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         self.focusManager = focusManager
@@ -157,7 +133,6 @@ public class NuguClient {
         self.sessionManager = sessionManager
         self.interactionControlManager = interactionControlManager
         self.systemAgent = systemAgent
->>>>>>> 58627a4... Apply Builder pattern on `NuguClient`
         
         dialogStateAggregator = DialogStateAggregator(
             sessionManager: sessionManager,
@@ -175,25 +150,39 @@ public class NuguClient {
             dialogStateAggregator: dialogStateAggregator
         )
 
-        // agents
+        // Default Agents
         self.asrAgent = asrAgent
         self.ttsAgent = ttsAgent
         self.textAgent = textAgent
         self.audioPlayerAgent = audioPlayerAgent
-        self.mediaPlayerAgent = mediaPlayerAgent
-        self.soundAgent = soundAgent
         self.sessionAgent = sessionAgent
         self.chipsAgent = chipsAgent
         self.utilityAgent = utilityAgent
         self.displayAgent = displayAgent
-        self.extensionAgent = extensionAgent
         self.locationAgent = locationAgent
-        self.phoneCallAgent = phoneCallAgent
         
         // supports
         self.audioSessionManager = audioSessionManager
         self.keywordDetector = keywordDetector
         self.speechRecognizerAggregator = speechRecognizerAggregator
+        
+        // Additional Agents
+        // These agents are not initiated
+        if let mediaPlayerAgent = mediaPlayerAgent {
+            self.mediaPlayerAgent = mediaPlayerAgent
+        }
+        
+        if let soundAgent = soundAgent {
+            self.soundAgent = soundAgent
+        }
+        
+        if let extensionAgent = extensionAgent {
+            self.extensionAgent = extensionAgent
+        }
+
+        if let phoneCallAgent = phoneCallAgent {
+            self.phoneCallAgent = phoneCallAgent
+        }
         
         // wiring
         setupAudioSessionManager()

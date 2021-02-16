@@ -51,10 +51,11 @@ final class NuguCentralManager {
         // If you want to use built-in keyword detector, set this value as true
         nuguBuilder.speechRecognizerAggregator.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
         
+        nuguBuilder.setDelegate(NuguLocationManager.shared)
+            .setDataSource(self)
+        
         let client = nuguBuilder.build()
         client.delegate = self
-        client.locationAgent.delegate = NuguLocationManager.shared
-        client.soundAgent.dataSource = self
         
         // Observers
         addSystemAgentObserver(client.systemAgent)
@@ -334,6 +335,10 @@ extension NuguCentralManager {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
+    func nuguClientWillUseMic() {
+        log.debug("nuguClientWillUseMic")
+    }
+    
     func nuguClientRequestAccessToken() -> String? {
         return UserDefaults.Standard.accessToken
     }

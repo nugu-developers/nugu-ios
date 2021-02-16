@@ -26,7 +26,7 @@ import NuguAgents
 
 public extension NuguClient {
     class Builder {
-        // core
+        // Core
         public let contextManager: ContextManageable
         public let focusManager: FocusManageable
         public let directiveSequencer: DirectiveSequenceable
@@ -37,7 +37,7 @@ public extension NuguClient {
         public let interactionControlManager: InteractionControlManageable
         public let systemAgent: SystemAgentProtocol
         
-        // default agents
+        // Default Agents
         public lazy var asrAgent: ASRAgentProtocol = ASRAgent(
             focusManager: focusManager,
             upstreamDataSender: streamDataRouter,
@@ -61,7 +61,8 @@ public extension NuguClient {
             contextManager: contextManager,
             upstreamDataSender: streamDataRouter,
             directiveSequencer: directiveSequencer,
-            dialogAttributeStore: dialogAttributeStore
+            dialogAttributeStore: dialogAttributeStore,
+            interactionControlManager: interactionControlManager
         )
         
         public lazy var chipsAgent: ChipsAgentProtocol = ChipsAgent(
@@ -77,13 +78,6 @@ public extension NuguClient {
             directiveSequencer: directiveSequencer
         )
         
-        public lazy var soundAgent: SoundAgentProtocol = SoundAgent(
-            focusManager: focusManager,
-            upstreamDataSender: streamDataRouter,
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer
-        )
-        
         public lazy var sessionAgent: SessionAgentProtocol = SessionAgent(
             contextManager: contextManager,
             directiveSequencer: directiveSequencer,
@@ -95,7 +89,6 @@ public extension NuguClient {
             contextManager: contextManager
         )
         
-        // additional agents
         public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
             upstreamDataSender: streamDataRouter,
             playSyncManager: playSyncManager,
@@ -105,26 +98,13 @@ public extension NuguClient {
             interactionControlManager: interactionControlManager
         )
         
-        public lazy var extensionAgent: ExtensionAgentProtocol = ExtensionAgent(
-            upstreamDataSender: streamDataRouter,
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer
-        )
-        
         public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
         
-        public lazy var phoneCallAgent: PhoneCallAgentProtocol = PhoneCallAgent(
-            directiveSequencer: directiveSequencer,
-            contextManager: contextManager,
-            upstreamDataSender: streamDataRouter,
-            interactionControlManager: interactionControlManager
-        )
-        
-        public lazy var mediaPlayerAgent: MediaPlayerAgentProtocol = MediaPlayerAgent(
-            directiveSequencer: directiveSequencer,
-            contextManager: contextManager,
-            upstreamDataSender: streamDataRouter
-        )
+        // Additional Agents
+        public var soundAgent: SoundAgentProtocol?
+        public var phoneCallAgent: PhoneCallAgentProtocol?
+        public var mediaPlayerAgent: MediaPlayerAgentProtocol?
+        public var extensionAgent: ExtensionAgentProtocol?
         
         // supports
         /**
@@ -156,6 +136,64 @@ public extension NuguClient {
                 directiveSequencer: directiveSequencer
             )
         }
+
+        /**
+         Set the instance as a delegator.
+         
+         - note: You can set multiple delegate at once.
+         */
+        @discardableResult public func setDelegate<Delegate>(_ delegate: Delegate) -> Self {
+            // Because `delegate` instance can be a Multi-Delegator, We don't use switch statement.
+            if delegate is PhoneCallAgentDelegate {
+                phoneCallAgent = PhoneCallAgent(
+                    directiveSequencer: directiveSequencer,
+                    contextManager: contextManager,
+                    upstreamDataSender: streamDataRouter,
+                    interactionControlManager: interactionControlManager
+                )
+                phoneCallAgent?.delegate = delegate as? PhoneCallAgentDelegate
+            }
+            
+            if delegate is MediaPlayerAgentDelegate {
+                mediaPlayerAgent = MediaPlayerAgent(
+                    directiveSequencer: directiveSequencer,
+                    contextManager: contextManager,
+                    upstreamDataSender: streamDataRouter
+                )
+                mediaPlayerAgent?.delegate = delegate as? MediaPlayerAgentDelegate
+            }
+            
+            if delegate is ExtensionAgentDelegate {
+                extensionAgent = ExtensionAgent(
+                    upstreamDataSender: streamDataRouter,
+                    contextManager: contextManager,
+                    directiveSequencer: directiveSequencer
+                )
+                extensionAgent?.delegate = delegate as? ExtensionAgentDelegate
+            }
+            
+            return self
+        }
+        
+        /**
+         Set the instance as a data source.
+         
+         - note: You can set multiple data source at once.
+         */
+        @discardableResult public func setDataSource<DataSource>(_ dataSource: DataSource) -> Self {
+            // Because `dataSource` instance can be a Multi-Source, We don't use switch statement.
+            if dataSource is SoundAgentDataSource {
+                soundAgent = SoundAgent(
+                    focusManager: focusManager,
+                    upstreamDataSender: streamDataRouter,
+                    contextManager: contextManager,
+                    directiveSequencer: directiveSequencer
+                )
+                soundAgent?.dataSource = dataSource as? SoundAgentDataSource
+            }
+            
+            return self
+        }
         
         public func build() -> NuguClient {
             return NuguClient(
@@ -172,18 +210,18 @@ public extension NuguClient {
                 ttsAgent: ttsAgent,
                 textAgent: textAgent,
                 audioPlayerAgent: audioPlayerAgent,
-                mediaPlayerAgent: mediaPlayerAgent,
-                soundAgent: soundAgent,
                 sessionAgent: sessionAgent,
                 chipsAgent: chipsAgent,
                 utilityAgent: utilityAgent,
                 displayAgent: displayAgent,
-                extensionAgent: extensionAgent,
                 locationAgent: locationAgent,
-                phoneCallAgent: phoneCallAgent,
                 audioSessionManager: audioSessionManager,
                 keywordDetector: keywordDetector,
-                speechRecognizerAggregator: speechRecognizerAggregator
+                speechRecognizerAggregator: speechRecognizerAggregator,
+                mediaPlayerAgent: mediaPlayerAgent,
+                extensionAgent: extensionAgent,
+                phoneCallAgent: phoneCallAgent,
+                soundAgent: soundAgent
             )
         }
     }
