@@ -20,14 +20,32 @@
 
 import Foundation
 
+import NuguUIKit
+
 /// A delegate that application can extend to observe `VoiceChromePresenter` changes.
 public protocol VoiceChromePresenterDelegate: class {
     /// Notifies the `NuguVoiceChrome` to be shown.
     func voiceChromeWillShow()
+    
     /// Notifies the `NuguVoiceChrome` to be hidden.
     func voiceChromeWillHide()
+    
     /// Determines whether to set `UIApplication.shared.isIdleTimerDisabled` to true.
     func voiceChromeShouldDisableIdleTimer() -> Bool
+    
     /// Determines whether to set `UIApplication.shared.isIdleTimerDisabled` to false.
     func voiceChromeShouldEnableIdleTimer() -> Bool
+    
+    /// Delegate method called when chips has been selected.
+    func voiceChromeChipsDidClick(chips: NuguChipsButton.NuguChipsButtonType)
+}
+
+public extension VoiceChromePresenterDelegate {
+    func voiceChromeShouldDisableIdleTimer() -> Bool {
+        return true
+    }
+    
+    func voiceChromeShouldEnableIdleTimer() -> Bool {
+        return true
+    }
 }
