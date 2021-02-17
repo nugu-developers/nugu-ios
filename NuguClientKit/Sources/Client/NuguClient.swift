@@ -95,13 +95,13 @@ public class NuguClient {
     
     public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
     
-    // supports
+    // Supports
     public let dialogStateAggregator: DialogStateAggregator
     public let speechRecognizerAggregator: SpeechRecognizerAggregatable
     public let audioSessionManager: AudioSessionManageable?
     public let keywordDetector: KeywordDetector
     
-    // private
+    // Private
     private var pausedByInterruption = false
     private let backgroundFocusHolder: BackgroundFocusHolder
     
@@ -132,6 +132,7 @@ public class NuguClient {
         displayAgent: DisplayAgentProtocol?,
         locationAgent: LocationAgentProtocol?
     ) {
+        // Core
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
         self.focusManager = focusManager
@@ -167,13 +168,13 @@ public class NuguClient {
         self.chipsAgent = chipsAgent
         self.utilityAgent = utilityAgent
         
-        // supports
+        // Supports
         self.audioSessionManager = audioSessionManager
         self.keywordDetector = keywordDetector
         self.speechRecognizerAggregator = speechRecognizerAggregator
         
         // Additional Agents
-        // These agents are not initiated
+        // These agents won't be initiated before accessing
         if let mediaPlayerAgent = mediaPlayerAgent {
             self.mediaPlayerAgent = mediaPlayerAgent
         }
@@ -198,7 +199,7 @@ public class NuguClient {
             self.locationAgent = locationAgent
         }
         
-        // wiring
+        // Wiring
         setupAudioSessionManager()
         setupSpeechRecognizerAggregator()
         setupAuthorizationStore()
@@ -439,12 +440,17 @@ extension NuguClient: SpeechRecognizerAggregatorDelegate {
         speechRecognizerAggregator.delegate = self
     }
     
-    public func speechRecognizerWillUseMic() {
+    public func speechRecognizerWillUseMic(requestingFocus: Bool) {
         guard let audioSessionManager = audioSessionManager else {
             delegate?.nuguClientWillUseMic()
             return
         }
 
-        audioSessionManager.updateAudioSession()
+        // Control center does not work properly when mixWithOthers option has been included.
+        // To avoid adding mixWithOthers option when audio player is in paused state,
+        // update audioSession should be done only when requesting focus
+        if requestingFocus {
+            audioSessionManager.updateAudioSession(requestingFocus: true)
+        }
     }
 }

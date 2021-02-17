@@ -96,15 +96,25 @@ public extension NuguClient {
         public var locationAgent: LocationAgentProtocol?
         public var displayAgent: DisplayAgentProtocol?
         
-        // supports
+        // Supports
         /**
          AudioSessionManager.
          
-         - note: If you want to control AVAudioSession, Set this property to nil.
+         - note: If you want to control AVAudioSession yourself, Set this property to nil.
          Then NuguClientDelegate method will be called when the AVAudioSession is required.
          */
         public lazy var audioSessionManager: AudioSessionManageable? = AudioSessionManager(audioPlayerAgent: audioPlayerAgent)
+        
+        /**
+         Keyword Detector.
+         It detects an "aria" statement.
+         */
         public lazy var keywordDetector: KeywordDetector = KeywordDetector(contextManager: contextManager)
+        
+        /**
+         It manages `KeywordDetector`, `ASRAgent`, `Mic`
+         So you don't have to care about the ASR setting.
+         */
         public lazy var speechRecognizerAggregator: SpeechRecognizerAggregatable = SpeechRecognizerAggregator(
             keywordDetector: keywordDetector,
             asrAgent: asrAgent
@@ -130,10 +140,10 @@ public extension NuguClient {
         /**
          Set the instance as a delegator.
          
-         - note: You can set multiple delegate at once.
+         - note: You can set multiple delegates that this instance conforms at once.
          */
         @discardableResult public func setDelegate<Delegate>(_ delegate: Delegate) -> Self {
-            // Because `delegate` instance can be a Multi-Delegator, We don't use switch statement.
+            // Because `delegate` instance can be a Multi-Delegator, We don't use switch syntax.
             if delegate is PhoneCallAgentDelegate {
                 phoneCallAgent = PhoneCallAgent(
                     directiveSequencer: directiveSequencer,
@@ -173,7 +183,7 @@ public extension NuguClient {
         /**
          Set the instance as a data source.
          
-         - note: You can set multiple data source at once.
+         - note: You can set multiple data sources that this instance conforms at once.
          */
         @discardableResult public func setDataSource<DataSource>(_ dataSource: DataSource) -> Self {
             // Because `dataSource` instance can be a Multi-Source, We don't use switch statement.

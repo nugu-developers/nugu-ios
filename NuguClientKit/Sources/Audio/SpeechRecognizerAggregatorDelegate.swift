@@ -21,5 +21,5 @@
 import Foundation
 
 public protocol SpeechRecognizerAggregatorDelegate: class {
-    func speechRecognizerWillUseMic()
+    func speechRecognizerWillUseMic(requestingFocus: Bool)
 }

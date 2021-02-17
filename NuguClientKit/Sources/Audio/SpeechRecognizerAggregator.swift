@@ -177,14 +177,7 @@ extension SpeechRecognizerAggregator {
                 }
                 self.micQueue.async { [unowned self] in
                     self.micInputProvider.stop()
-                    
-                    // TODO: 꼭 여기서 해야하는가???
-                    // Control center does not work properly when mixWithOthers option has been included.
-                    // To avoid adding mixWithOthers option when audio player is in paused state,
-                    // update audioSession should be done only when requesting focus
-//                    if requestingFocus {
-//                        self.audioSessionManager?.updateAudioSession(requestingFocus: requestingFocus)
-//                    }
+                    self.delegate?.speechRecognizerWillUseMic(requestingFocus: requestingFocus)
                     do {
                         try self.micInputProvider.start()
                         completion(true)
