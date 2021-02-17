@@ -38,38 +38,118 @@ public class NuguClient {
     private var dialogStateObserver: Any?
     
     // Core
+    /**
+     Gether the contexts from providers
+     
+     - seeAlso: `getContext` method
+     */
     public let contextManager: ContextManageable
+
+    /**
+     Manage audio focus.
+     
+     You can adjust the audio when you've got multiple audio sources at once.
+     */
     public let focusManager: FocusManageable
+
+    /**
+     Send an event to the server and Receive a directive from the server.
+     */
     public let streamDataRouter: StreamDataRoutable
+    
+    /**
+     Dispatch the directives to the registered agent.
+     */
     public let directiveSequencer: DirectiveSequenceable
+    
+    /**
+     TODO: 입력부탁
+     */
     public let playSyncManager: PlaySyncManageable
+    
+    /**
+     TODO: 입력부탁
+     */
     public let dialogAttributeStore: DialogAttributeStoreable
+    
+    /**
+     TODO: 입력부탁
+     */
     public let sessionManager: SessionManageable
+    
+    /**
+     Process the directives which is related to system.
+     
+     ex) Change the server to resolve bottle neck.
+     */
     public let systemAgent: SystemAgentProtocol
+    
+    /**
+     Indicates the scene(Play) state.
+     TODO: 확인부탁
+     */
     public let interactionControlManager: InteractionControlManageable
     
     // Default Agents
+    /**
+     Automatic Speech Recognition
+     
+     Request to process ASR using the voice data you pass.
+     */
     public let asrAgent: ASRAgentProtocol
+    
+    /**
+     Text To Speech
+     
+     Request Voice data which is synthesized from the text.
+     */
     public let ttsAgent: TTSAgentProtocol
+    
+    /**
+     Request the intents as a text
+     */
     public let textAgent: TextAgentProtocol
+    
+    /**
+     Built-In Player that wraps AVPlayer
+     */
     public let audioPlayerAgent: AudioPlayerAgentProtocol
+    
+    // TODO: 입력부탁
     public let sessionAgent: SessionAgentProtocol
+    
+    /**
+     Recommend the other intents that are considered useful.
+     */
     public let chipsAgent: ChipsAgentProtocol
+    
+    // TODO: 입력부탁
     public let utilityAgent: UtilityAgentProtocol
 
     // Additional Agents
+    /**
+     Play your own audio contents
+     
+     - seeAlso: `AudioPlayerAgent`
+     */
     public lazy var mediaPlayerAgent: MediaPlayerAgentProtocol = MediaPlayerAgent(
         directiveSequencer: directiveSequencer,
         contextManager: contextManager,
         upstreamDataSender: streamDataRouter
     )
     
+    /**
+     Receive custom directives you made.
+     */
     public lazy var extensionAgent: ExtensionAgentProtocol = ExtensionAgent(
         upstreamDataSender: streamDataRouter,
         contextManager: contextManager,
         directiveSequencer: directiveSequencer
     )
     
+    /**
+     Make a phone call
+     */
     public lazy var phoneCallAgent: PhoneCallAgentProtocol = PhoneCallAgent(
         directiveSequencer: directiveSequencer,
         contextManager: contextManager,
@@ -77,6 +157,9 @@ public class NuguClient {
         interactionControlManager: interactionControlManager
     )
     
+    /**
+     Play some special sound on the special occasion
+     */
     public lazy var soundAgent: SoundAgentProtocol = SoundAgent(
         focusManager: focusManager,
         upstreamDataSender: streamDataRouter,
@@ -84,6 +167,9 @@ public class NuguClient {
         directiveSequencer: directiveSequencer
     )
     
+    /**
+     Show Graphical User Interface
+     */
     public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
         upstreamDataSender: streamDataRouter,
         playSyncManager: playSyncManager,
@@ -93,12 +179,34 @@ public class NuguClient {
         interactionControlManager: interactionControlManager
     )
     
+    /**
+     Send a location information
+     */
     public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
     
     // Supports
+    /**
+     Indicates the dialog state.
+     */
     public let dialogStateAggregator: DialogStateAggregator
+    
+    /**
+     ASR helper that manages `KeywordDetector`, `ASRAgent` and `Mic`
+     
+     You don't have to care about the ASR, KeywordDetector and Mic status. If you use this helper
+     */
     public let speechRecognizerAggregator: SpeechRecognizerAggregatable
+    
+    /**
+     Manage `AVAudioSession`
+     */
     public let audioSessionManager: AudioSessionManageable?
+    
+    /**
+     Keyword Detector.
+     
+     Detects an "aria" statement.
+     */
     public let keywordDetector: KeywordDetector
     
     // Private
@@ -216,14 +324,20 @@ public class NuguClient {
 
 // MARK: - Helper functions
 
+// Wraps frequently used functions of agents
 public extension NuguClient {
-    /// <#Description#>
-    /// - Parameter completion: <#completion description#>
+    /**
+     Connect to the server and keep it.
+     
+     The server can send some directives at certain times.
+     */
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
         streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
     }
     
-    /// <#Description#>
+    /**
+     Stop receiving server-initiated-directive.
+     */
     func stopReceiveServerInitiatedDirective() {
         streamDataRouter.stopReceiveServerInitiatedDirective()
     }
@@ -435,6 +549,7 @@ extension NuguClient: AudioSessionManagerDelegate {
 }
 
 // MARK: - SpeechRecognizerAggregatorDelegate
+
 extension NuguClient: SpeechRecognizerAggregatorDelegate {
     private func setupSpeechRecognizerAggregator() {
         speechRecognizerAggregator.delegate = self

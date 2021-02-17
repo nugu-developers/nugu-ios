@@ -89,11 +89,36 @@ public extension NuguClient {
         )
         
         // Additional Agents
+        /**
+         Play some special sound on the special occasion
+         */
         public var soundAgent: SoundAgentProtocol?
+        
+        /**
+         Make a phone call
+         */
         public var phoneCallAgent: PhoneCallAgentProtocol?
+        
+        /**
+         Play your own audio contents
+         
+         - seeAlso: `AudioPlayerAgent`
+         */
         public var mediaPlayerAgent: MediaPlayerAgentProtocol?
+        
+        /**
+         Receive custom directives you made.
+         */
         public var extensionAgent: ExtensionAgentProtocol?
+        
+        /**
+         Send a location information
+         */
         public var locationAgent: LocationAgentProtocol?
+        
+        /**
+         Show Graphical User Interface
+         */
         public var displayAgent: DisplayAgentProtocol?
         
         // Supports
@@ -107,7 +132,8 @@ public extension NuguClient {
         
         /**
          Keyword Detector.
-         It detects an "aria" statement.
+         
+         Detects an "aria" statement.
          */
         public lazy var keywordDetector: KeywordDetector = KeywordDetector(contextManager: contextManager)
         
@@ -200,6 +226,12 @@ public extension NuguClient {
             return self
         }
         
+        /**
+         Instantiate the NuguClient.
+         
+         The core components and default agents will be initiated automatically.
+         But, Additional agents won't be initiated before you access them.
+         */
         public func build() -> NuguClient {
             return NuguClient(
                 contextManager: contextManager,
