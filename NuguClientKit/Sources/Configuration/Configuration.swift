@@ -58,6 +58,18 @@ public struct Configuration: Decodable {
         self.deviceTypeCode = deviceTypeCode
         self.theme = theme
     }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        authServerUrl = try container.decode(String.self, forKey: .authServerUrl)
+        authClientId = try container.decode(String.self, forKey: .authClientId)
+        authClientSecret = try container.decode(String.self, forKey: .authClientSecret)
+        authRedirectUri = try container.decode(String.self, forKey: .authRedirectUri)
+        pocId = try container.decode(String.self, forKey: .pocId)
+        deviceTypeCode = try container.decode(String.self, forKey: .deviceTypeCode)
+        theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? "LIGHT" // Default: LIGHT
+    }
 }
 
 // MAKR: - Url
