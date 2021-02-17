@@ -51,8 +51,8 @@ final class NuguCentralManager {
         // If you want to use built-in keyword detector, set this value as true
         nuguBuilder.speechRecognizerAggregator.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
         
-        nuguBuilder.setDelegate(NuguLocationManager.shared)
-            .setDataSource(self)
+        // Set DataSource for SoundAgent
+        nuguBuilder.setDataSource(self)
         
         let client = nuguBuilder.build()
         client.delegate = self
@@ -108,7 +108,6 @@ extension NuguCentralManager {
             client.stopReceiveServerInitiatedDirective()
         }
 
-        NuguLocationManager.shared.startUpdatingLocation()
         startListeningWithTrigger()
         client.audioSessionManager?.enable()
     }

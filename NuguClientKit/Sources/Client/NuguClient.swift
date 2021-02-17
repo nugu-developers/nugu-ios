@@ -57,9 +57,7 @@ public class NuguClient {
     public let chipsAgent: ChipsAgentProtocol
     public let utilityAgent: UtilityAgentProtocol
     public let displayAgent: DisplayAgentProtocol
-    public let locationAgent: LocationAgentProtocol
 
-    
     // Additional Agents
     public lazy var mediaPlayerAgent: MediaPlayerAgentProtocol = MediaPlayerAgent(
         directiveSequencer: directiveSequencer,
@@ -86,6 +84,8 @@ public class NuguClient {
         contextManager: contextManager,
         directiveSequencer: directiveSequencer
     )
+    
+    public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
     
     // supports
     public let dialogStateAggregator: DialogStateAggregator
@@ -115,14 +115,14 @@ public class NuguClient {
         chipsAgent: ChipsAgentProtocol,
         utilityAgent: UtilityAgentProtocol,
         displayAgent: DisplayAgentProtocol,
-        locationAgent: LocationAgentProtocol,
         audioSessionManager: AudioSessionManageable?,
         keywordDetector: KeywordDetector,
         speechRecognizerAggregator: SpeechRecognizerAggregatable,
         mediaPlayerAgent: MediaPlayerAgentProtocol?,
         extensionAgent: ExtensionAgentProtocol?,
         phoneCallAgent: PhoneCallAgentProtocol?,
-        soundAgent: SoundAgentProtocol?
+        soundAgent: SoundAgentProtocol?,
+        locationAgent: LocationAgentProtocol?
     ) {
         self.contextManager = contextManager
         self.directiveSequencer = directiveSequencer
@@ -159,7 +159,6 @@ public class NuguClient {
         self.chipsAgent = chipsAgent
         self.utilityAgent = utilityAgent
         self.displayAgent = displayAgent
-        self.locationAgent = locationAgent
         
         // supports
         self.audioSessionManager = audioSessionManager
@@ -182,6 +181,10 @@ public class NuguClient {
 
         if let phoneCallAgent = phoneCallAgent {
             self.phoneCallAgent = phoneCallAgent
+        }
+        
+        if let locationAgent = locationAgent {
+            self.locationAgent = locationAgent
         }
         
         // wiring

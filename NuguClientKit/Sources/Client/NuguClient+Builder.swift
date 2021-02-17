@@ -18,7 +18,6 @@
 //  limitations under the License.
 //
 
-
 import Foundation
 
 import NuguCore
@@ -98,13 +97,12 @@ public extension NuguClient {
             interactionControlManager: interactionControlManager
         )
         
-        public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
-        
         // Additional Agents
         public var soundAgent: SoundAgentProtocol?
         public var phoneCallAgent: PhoneCallAgentProtocol?
         public var mediaPlayerAgent: MediaPlayerAgentProtocol?
         public var extensionAgent: ExtensionAgentProtocol?
+        public var locationAgent: LocationAgentProtocol?
         
         // supports
         /**
@@ -172,6 +170,11 @@ public extension NuguClient {
                 extensionAgent?.delegate = delegate as? ExtensionAgentDelegate
             }
             
+            if delegate is LocationAgentDelegate {
+                locationAgent = LocationAgent(contextManager: contextManager)
+                locationAgent?.delegate = delegate as? LocationAgentDelegate
+            }
+            
             return self
         }
         
@@ -214,14 +217,14 @@ public extension NuguClient {
                 chipsAgent: chipsAgent,
                 utilityAgent: utilityAgent,
                 displayAgent: displayAgent,
-                locationAgent: locationAgent,
                 audioSessionManager: audioSessionManager,
                 keywordDetector: keywordDetector,
                 speechRecognizerAggregator: speechRecognizerAggregator,
                 mediaPlayerAgent: mediaPlayerAgent,
                 extensionAgent: extensionAgent,
                 phoneCallAgent: phoneCallAgent,
-                soundAgent: soundAgent
+                soundAgent: soundAgent,
+                locationAgent: locationAgent
             )
         }
     }
