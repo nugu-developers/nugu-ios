@@ -95,6 +95,12 @@ public class NuguClient {
      Automatic Speech Recognition
      
      Request to process ASR using the voice data you pass.
+     
+     ~~~
+     asrAgent.startRecognition(initiator: .user) { _ in
+     // your codes
+     }
+     ~~~
      */
     public let asrAgent: ASRAgentProtocol
     
@@ -102,11 +108,19 @@ public class NuguClient {
      Text To Speech
      
      Request Voice data which is synthesized from the text.
+     
+     ~~~
+     ttsAgent.reqeustTts("Hello World")
+     ~~~
      */
     public let ttsAgent: TTSAgentProtocol
     
     /**
      Request the intents as a text
+     
+     ~~~
+     textAgent,requestTextInput(text: "Play some music", requestType: .normal)
+     ~~~
      */
     public let textAgent: TextAgentProtocol
     
@@ -193,12 +207,22 @@ public class NuguClient {
     /**
      ASR helper that manages `KeywordDetector`, `ASRAgent` and `Mic`
      
-     You don't have to care about the ASR, KeywordDetector and Mic status. If you use this helper
+     You don't have to care about the ASR, KeywordDetector and Mic status. If you use this helper.
+     
+     And use this helper rather than `AsrAgent`
+     
+     ~~~
+     speechRecognizerAggregator.startListening(initiator: .user)
+     ~~~
      */
     public let speechRecognizerAggregator: SpeechRecognizerAggregatable
     
     /**
      Manage `AVAudioSession`
+     
+     ~~~
+     let isUpdated = audioSessionManager.updateAudioSessionToPlaybackIfNeeded(mixWithOthers: true)
+     ~~~
      */
     public let audioSessionManager: AudioSessionManageable?
     
@@ -206,6 +230,10 @@ public class NuguClient {
      Keyword Detector.
      
      Detects an "aria" statement.
+     
+     ~~~
+     keywordDetector.start()
+     ~~~
      */
     public let keywordDetector: KeywordDetector
     

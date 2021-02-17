@@ -139,6 +139,7 @@ public extension NuguClient {
         
         /**
          It manages `KeywordDetector`, `ASRAgent`, `Mic`
+         
          So you don't have to care about the ASR setting.
          */
         public lazy var speechRecognizerAggregator: SpeechRecognizerAggregatable = SpeechRecognizerAggregator(
