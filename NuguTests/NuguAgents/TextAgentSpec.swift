@@ -43,6 +43,8 @@ class TextAgentSpec: QuickSpec {
                 dialogAttributeStore: dialogAttributeStore,
                 interactionControlManager: interactionControlManager
             )
+            let mockTextAgentDelegate = MockTextAgentDelegate()
+            textAgent.delegate = mockTextAgentDelegate
             
             describe("context") {
                 var contextInfo: ContextInfo?
@@ -81,5 +83,17 @@ class TextAgentSpec: QuickSpec {
                 // TODO: -
             }
         }
+    }
+}
+
+// MARK: - TextAgentDelegate
+
+class MockTextAgentDelegate: TextAgentDelegate {
+    func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool {
+        true
+    }
+    
+    func textAgentShouldHandleTextRedirect(directive: Downstream.Directive) -> Bool {
+        true
     }
 }
