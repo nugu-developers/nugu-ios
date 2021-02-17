@@ -34,11 +34,17 @@ class NuguApiProvider: NSObject {
     private lazy var session: URLSession = URLSession(configuration: sessionConfig,
                                                       delegate: self,
                                                       delegateQueue: sessionQueue)
-    
-    // FIXME: ConfigurationStore 에서 NuguServerInfo.resourceServerAddress 를 수정해도 반영되지 않는 이슈.
-    @Atomic var url: String? = NuguServerInfo.resourceServerAddress {
+    @Atomic var loadBalancedUrl: String? {
         didSet {
-            log.debug("resource server url: \(url ?? "nil")")
+            log.debug("loadBalancedUrl: \(loadBalancedUrl ?? "nil")")
+        }
+    }
+    
+    private var resourceServerAddress: String? {
+        if isCSLBEnabled {
+            return loadBalancedUrl
+        } else {
+            return NuguServerInfo.resourceServerAddress
         }
     }
 
@@ -56,7 +62,7 @@ class NuguApiProvider: NSObject {
             }
             
             if oldValue == false, isCSLBEnabled == true {
-                url = nil
+                loadBalancedUrl = nil
             }
         }
     }
@@ -123,7 +129,7 @@ class NuguApiProvider: NSObject {
                 // enable client side load balance and find new resource server for directive and event both.
                 self.isCSLBEnabled = true
                 
-                guard let resourceServerUrl = self.url else {
+                guard let resourceServerUrl = self.resourceServerAddress else {
                     single(.error(NetworkError.noSuitableResourceServer))
                     return
                 }
@@ -168,7 +174,6 @@ class NuguApiProvider: NSObject {
                 
                 if error == nil {
                     self?.isCSLBEnabled = false
-                    self?.url = NuguServerInfo.resourceServerAddress
                 }
             }
         })
@@ -209,7 +214,7 @@ extension NuguApiProvider {
                     return
                 }
                 
-                guard let resourceServerUrl = self.url else {
+                guard let resourceServerUrl = self.resourceServerAddress else {
                     single(.error(NetworkError.noSuitableResourceServer))
                     return
                 }
@@ -274,7 +279,7 @@ extension NuguApiProvider {
      Send ping data to keep stream of server side event
      */
     var ping: Completable {
-        guard let baseUrl = url,
+        guard let baseUrl = resourceServerAddress,
               let pingUrl = URL(string: NuguApi.ping.uri(baseUrl: baseUrl)) else {
             log.error("no resource server url")
             return Completable.error(NetworkError.noSuitableResourceServer)
