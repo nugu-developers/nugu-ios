@@ -88,21 +88,13 @@ public extension NuguClient {
             contextManager: contextManager
         )
         
-        public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
-            upstreamDataSender: streamDataRouter,
-            playSyncManager: playSyncManager,
-            contextManager: contextManager,
-            directiveSequencer: directiveSequencer,
-            sessionManager: sessionManager,
-            interactionControlManager: interactionControlManager
-        )
-        
         // Additional Agents
         public var soundAgent: SoundAgentProtocol?
         public var phoneCallAgent: PhoneCallAgentProtocol?
         public var mediaPlayerAgent: MediaPlayerAgentProtocol?
         public var extensionAgent: ExtensionAgentProtocol?
         public var locationAgent: LocationAgentProtocol?
+        public var displayAgent: DisplayAgentProtocol?
         
         // supports
         /**
@@ -216,7 +208,6 @@ public extension NuguClient {
                 sessionAgent: sessionAgent,
                 chipsAgent: chipsAgent,
                 utilityAgent: utilityAgent,
-                displayAgent: displayAgent,
                 audioSessionManager: audioSessionManager,
                 keywordDetector: keywordDetector,
                 speechRecognizerAggregator: speechRecognizerAggregator,
@@ -224,6 +215,7 @@ public extension NuguClient {
                 extensionAgent: extensionAgent,
                 phoneCallAgent: phoneCallAgent,
                 soundAgent: soundAgent,
+                displayAgent: displayAgent,
                 locationAgent: locationAgent
             )
         }

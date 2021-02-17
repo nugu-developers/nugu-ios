@@ -56,7 +56,6 @@ public class NuguClient {
     public let sessionAgent: SessionAgentProtocol
     public let chipsAgent: ChipsAgentProtocol
     public let utilityAgent: UtilityAgentProtocol
-    public let displayAgent: DisplayAgentProtocol
 
     // Additional Agents
     public lazy var mediaPlayerAgent: MediaPlayerAgentProtocol = MediaPlayerAgent(
@@ -83,6 +82,15 @@ public class NuguClient {
         upstreamDataSender: streamDataRouter,
         contextManager: contextManager,
         directiveSequencer: directiveSequencer
+    )
+    
+    public lazy var displayAgent: DisplayAgentProtocol = DisplayAgent(
+        upstreamDataSender: streamDataRouter,
+        playSyncManager: playSyncManager,
+        contextManager: contextManager,
+        directiveSequencer: directiveSequencer,
+        sessionManager: sessionManager,
+        interactionControlManager: interactionControlManager
     )
     
     public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
@@ -114,7 +122,6 @@ public class NuguClient {
         sessionAgent: SessionAgentProtocol,
         chipsAgent: ChipsAgentProtocol,
         utilityAgent: UtilityAgentProtocol,
-        displayAgent: DisplayAgentProtocol,
         audioSessionManager: AudioSessionManageable?,
         keywordDetector: KeywordDetector,
         speechRecognizerAggregator: SpeechRecognizerAggregatable,
@@ -122,6 +129,7 @@ public class NuguClient {
         extensionAgent: ExtensionAgentProtocol?,
         phoneCallAgent: PhoneCallAgentProtocol?,
         soundAgent: SoundAgentProtocol?,
+        displayAgent: DisplayAgentProtocol?,
         locationAgent: LocationAgentProtocol?
     ) {
         self.contextManager = contextManager
@@ -158,7 +166,6 @@ public class NuguClient {
         self.sessionAgent = sessionAgent
         self.chipsAgent = chipsAgent
         self.utilityAgent = utilityAgent
-        self.displayAgent = displayAgent
         
         // supports
         self.audioSessionManager = audioSessionManager
@@ -181,6 +188,10 @@ public class NuguClient {
 
         if let phoneCallAgent = phoneCallAgent {
             self.phoneCallAgent = phoneCallAgent
+        }
+        
+        if let displayAgent = displayAgent {
+            self.displayAgent = displayAgent
         }
         
         if let locationAgent = locationAgent {
