@@ -344,6 +344,7 @@ extension NuguCentralManager: NuguClientDelegate {
     
     func nuguClientWillRequireAudioSession() -> Bool {
         // If you set AudioSessionManager to nil, You should implement this
+        // And return NUGU SDK can use the audio session or not.
         return false
     }
     
