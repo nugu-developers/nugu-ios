@@ -1,9 +1,9 @@
 //
-//  MicInputProviderDelegate.swift
+//  SpeechRecognizerAggregatorDelegate.swift
 //  NuguClientKit
 //
-//  Created by 이민철님/AI Assistant개발Cell on 2020/12/10.
-//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2021/02/05.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,14 +19,7 @@
 //
 
 import Foundation
-import AVFoundation
 
-/// An delegate to processing audio buffers.
-public protocol MicInputProviderDelegate: class {
-    /// Tells the delegate that the audio buffer has been received.
-    /// - Parameter buffer: The new audio buffer.
-    func micInputProviderDidReceive(buffer: AVAudioPCMBuffer)
-    
-    /// Tells the delegate that the AVAudioEngine configuration is changed.
-    func audioEngineConfigurationChanged()
+public protocol SpeechRecognizerAggregatorDelegate: class {
+    func speechRecognizerWillUseMic(requestingFocus: Bool)
 }

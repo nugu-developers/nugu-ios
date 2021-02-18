@@ -45,6 +45,11 @@ public class StreamDataRouter: StreamDataRoutable {
 // MARK: - APIs for Server side event
 
 public extension StreamDataRouter {
+    /**
+     Connect to the server and keep it.
+     
+     The server can send some directives at certain times.
+     */
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
         // Store completion closure to use continuously.
         // Though the resource is changed by handoff command from server.
@@ -65,6 +70,10 @@ public extension StreamDataRouter {
         serverInitiatedDirectiveDisposable?.disposed(by: disposeBag)
     }
     
+    /**
+     Connect to the server with specific policy and keep it.
+     The server can send some directives at certain times.
+     */
     func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy) {
         log.debug("change resource server to: https://\(serverPolicy.hostname).\(serverPolicy.port)")
         serverInitiatedDirectiveReceiver.serverPolicies = [serverPolicy]
@@ -73,6 +82,9 @@ public extension StreamDataRouter {
         startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
     }
     
+    /**
+     Reset exist connection policy and request new connection
+     */
     func restartReceiveServerInitiatedDirective() {
         serverInitiatedDirectiveReceiver.serverPolicies = []
         
@@ -80,6 +92,9 @@ public extension StreamDataRouter {
         startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
     }
     
+    /**
+     Stop receiving server-initiated-directive.
+     */
     func stopReceiveServerInitiatedDirective() {
         log.debug("stop receive server initiated directives")
         serverInitiatedDirectiveDisposable?.dispose()
@@ -192,6 +207,9 @@ public extension StreamDataRouter {
         completion?(.sent)
     }
     
+    /**
+     Cancel sending event.
+     */
     func cancelEvent(dialogRequestId: String) {
         eventSenders[dialogRequestId]?.finish()
         eventDisposables[dialogRequestId]?.dispose()
