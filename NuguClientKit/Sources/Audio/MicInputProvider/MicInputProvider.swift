@@ -36,6 +36,10 @@ public class MicInputProvider {
     private let audioEngine = AVAudioEngine()
     private let audioQueue = DispatchQueue(label: "romain_mic_input_audio_queue")
     
+    // observers
+    private let notificationCenter = NotificationCenter.default
+    private var audioEngineConfigurationObserver: Any?
+    
     /// Creates an instance of an MicInputProvider.
     /// - Parameter inputFormat: The format of the PCM audio to be contained in the buffer.
     public init(inputFormat: AVAudioFormat? = nil) {
@@ -48,6 +52,10 @@ public class MicInputProvider {
         }
         
         self.audioFormat = inputFormat
+    }
+    
+    deinit {
+        removeAudioEngineConfigurationObserver()
     }
     
     /// Starts recording from the microphone.
@@ -80,6 +88,7 @@ public class MicInputProvider {
     /// Stops recording from the microphone.
     public func stop() {
         log.debug("try to stop")
+        removeAudioEngineConfigurationObserver()
         
         if let error = NCObjcExceptionCatcher.objcTry({
             audioEngine.inputNode.removeTap(onBus: audioBus)
@@ -164,9 +173,27 @@ public class MicInputProvider {
         audioEngine.prepare()
         do {
             try audioEngine.start()
+            addAudioEngineConfigurationObserver()
         } catch {
             log.error(error.localizedDescription)
             throw error
+        }
+    }
+}
+
+extension MicInputProvider {
+    func addAudioEngineConfigurationObserver() {
+        removeAudioEngineConfigurationObserver()
+        
+        audioEngineConfigurationObserver = notificationCenter.addObserver(forName: .AVAudioEngineConfigurationChange, object: audioEngine, queue: nil) { [weak self] (_) in
+            self?.delegate?.audioEngineConfigurationChanged()
+        }
+    }
+    
+    func removeAudioEngineConfigurationObserver() {
+        if let audioEngineConfigurationObserver = audioEngineConfigurationObserver {
+            notificationCenter.removeObserver(audioEngineConfigurationObserver)
+            self.audioEngineConfigurationObserver = nil
         }
     }
 }
