@@ -318,7 +318,6 @@ private extension VoiceChromePresenter {
     }
 }
 
-
 // MARK: - UIGestureRecognizerDelegate
 
 extension VoiceChromePresenter: UIGestureRecognizerDelegate {
