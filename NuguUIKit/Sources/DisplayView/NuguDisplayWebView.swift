@@ -106,13 +106,6 @@ private extension NuguDisplayWebView {
         preferences.javaScriptEnabled = true
         webViewConfiguration.preferences = preferences
         
-        let store = WKWebsiteDataStore.default()
-        store.removeData(
-            ofTypes: Set([WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]),
-            modifiedSince: Date(timeIntervalSince1970: 0),
-            completionHandler: {}
-        )
-        webViewConfiguration.websiteDataStore = store
         makeWebView(webViewConfiguration)
     }
     

@@ -67,13 +67,7 @@ final public class NuguServiceWebView: WKWebView {
         
         webViewConfiguration.preferences = preferences
         webViewConfiguration.userContentController = userContentController
-        
-        let store = WKWebsiteDataStore.default()
-        store.removeData(ofTypes: Set([WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]),
-                         modifiedSince: Date(timeIntervalSince1970: 0),
-                         completionHandler: {})
-        webViewConfiguration.websiteDataStore = store
-        
+                
         super.init(frame: .zero, configuration: webViewConfiguration)
         translatesAutoresizingMaskIntoConstraints = false
         
