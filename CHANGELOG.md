@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.28.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.3)
+Released on 2021-02-22
+### Sample Application
+#### Fixed
+- Fix crash in UserDefaults when setting a nil value. (#734)
+
+### SDK
+#### Fixed
+- Support dynamic allocation of resource server URL. (#733)
+- Add "+" excluded character set for percentEncoding (#744)
+- Remove `WKWebsiteDataStore` configuration in NUGU SDK (#745)
+
 ## [0.28.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.2)
 Released on 2021-02-01
 ### SDK
