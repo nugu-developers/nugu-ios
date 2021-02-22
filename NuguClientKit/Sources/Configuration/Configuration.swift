@@ -29,6 +29,7 @@ public struct Configuration: Decodable {
     public var authRedirectUri: String
     public var pocId: String
     public var deviceTypeCode: String
+    public var theme: String
 
     enum CodingKeys: String, CodingKey {
         case authServerUrl = "OAuthServerUrl"
@@ -37,6 +38,7 @@ public struct Configuration: Decodable {
         case authRedirectUri = "OAuthRedirectUri"
         case pocId = "PoCId"
         case deviceTypeCode = "DeviceTypeCode"
+        case theme = "Theme"
     }
     
     public init(
@@ -45,7 +47,8 @@ public struct Configuration: Decodable {
         authClientSecret: String,
         authRedirectUri: String,
         pocId: String,
-        deviceTypeCode: String
+        deviceTypeCode: String,
+        theme: String
     ) {
         self.authServerUrl = authServerUrl
         self.authClientId = authClientId
@@ -53,6 +56,19 @@ public struct Configuration: Decodable {
         self.authRedirectUri = authRedirectUri
         self.pocId = pocId
         self.deviceTypeCode = deviceTypeCode
+        self.theme = theme
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        authServerUrl = try container.decode(String.self, forKey: .authServerUrl)
+        authClientId = try container.decode(String.self, forKey: .authClientId)
+        authClientSecret = try container.decode(String.self, forKey: .authClientSecret)
+        authRedirectUri = try container.decode(String.self, forKey: .authRedirectUri)
+        pocId = try container.decode(String.self, forKey: .pocId)
+        deviceTypeCode = try container.decode(String.self, forKey: .deviceTypeCode)
+        theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? "LIGHT" // Default: LIGHT
     }
 }
 
