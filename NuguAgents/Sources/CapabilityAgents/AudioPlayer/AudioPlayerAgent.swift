@@ -407,7 +407,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
     
     public func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {
         audioPlayerNotificationQueue.async { [weak self] in
-            self?.post(NuguAgentNotification.AudioPlayer.Duration(duration: duration.truncatedMilliSeconds))
+            self?.post(NuguAgentNotification.AudioPlayer.Duration(duration: duration.truncatedSeconds))
         }
     }
 }
