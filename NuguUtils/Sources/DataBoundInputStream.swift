@@ -97,7 +97,14 @@ public class DataBoundInputStream: InputStream {
     }
     
     public override func getBuffer(_ buffer: UnsafeMutablePointer<UnsafeMutablePointer<UInt8>?>, length len: UnsafeMutablePointer<Int>) -> Bool {
-        return super.getBuffer(buffer, length: len)
+        return data.withUnsafeBytes { (ptrRawBuffer: UnsafeRawBufferPointer) -> Bool in
+            let copiedBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count)
+            data.copyBytes(to: copiedBuffer, from: 0..<data.count)
+            buffer.pointee = copiedBuffer
+            len.pointee = data.count
+            
+            return true
+        }
     }
     
     public override var hasBytesAvailable: Bool {
@@ -107,6 +114,11 @@ public class DataBoundInputStream: InputStream {
     public override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
         runLoop = aRunLoop
         runLoopMode = mode
+    }
+    
+    public override func remove(from aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
+        runLoop = RunLoop.main
+        runLoopMode = RunLoop.Mode.default
     }
 
     func notify(event: Stream.Event) {
