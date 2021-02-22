@@ -97,6 +97,8 @@ public class DataBoundInputStream: InputStream {
     }
     
     public override func getBuffer(_ buffer: UnsafeMutablePointer<UnsafeMutablePointer<UInt8>?>, length len: UnsafeMutablePointer<Int>) -> Bool {
+        guard 0 < data.count else { return false }
+        
         let copiedBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count)
         data.copyBytes(to: copiedBuffer, from: 0..<data.count)
         buffer.pointee = copiedBuffer
