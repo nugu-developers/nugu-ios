@@ -63,7 +63,13 @@ public extension NuguOAuthClient {
             clientSecret: configuration.authClientSecret,
             redirectUri: configuration.authRedirectUri
         )
-        showTidInfo(grant: grant, token: token, parentViewController: parentViewController, completion: completion)
+        showTidInfo(
+            grant: grant,
+            token: token,
+            parentViewController: parentViewController,
+            theme: WebTheme(rawValue: configuration.theme) ?? .light,
+            completion: completion
+        )
     }
     
     /// Authorize with `AuthorizationCode` grant type.
@@ -85,7 +91,12 @@ public extension NuguOAuthClient {
             clientSecret: configuration.authClientSecret,
             redirectUri: configuration.authRedirectUri
         )
-        authorize(grant: grant, parentViewController: parentViewController, completion: completion)
+        authorize(
+            grant: grant,
+            parentViewController: parentViewController,
+            theme: WebTheme(rawValue: configuration.theme) ?? .light,
+            completion: completion
+        )
     }
     
     /// Authorize with `RefreshToken` grant type.
