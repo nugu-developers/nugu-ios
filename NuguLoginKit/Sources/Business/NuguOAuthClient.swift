@@ -102,9 +102,10 @@ public extension NuguOAuthClient {
     func authorize(
         grant: AuthorizationCodeGrant,
         parentViewController: UIViewController,
+        theme: WebTheme = .light,
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
-        presentAuthorize(grant: grant, parentViewController: parentViewController, completion: completion)
+        presentAuthorize(grant: grant, parentViewController: parentViewController, theme: theme, completion: completion)
     }
     
     /// Shows web-page where TID information can be modified with `AuthorizationCode` grant type.
@@ -117,13 +118,14 @@ public extension NuguOAuthClient {
         grant: AuthorizationCodeGrant,
         token: String,
         parentViewController: UIViewController,
+        theme: WebTheme = .light,
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
         var queries = [URLQueryItem]()
         queries.append(URLQueryItem(name: "prompt", value: "mypage"))
         queries.append(URLQueryItem(name: "access_token", value: token))
         
-        presentAuthorize(grant: grant, parentViewController: parentViewController, additionalQueries: queries, completion: completion)
+        presentAuthorize(grant: grant, parentViewController: parentViewController, additionalQueries: queries, theme: theme, completion: completion)
     }
     
     /// Get some NUGU member information.
@@ -249,6 +251,7 @@ private extension NuguOAuthClient {
         grant: AuthorizationCodeGrant,
         parentViewController: UIViewController,
         additionalQueries: [URLQueryItem]? = nil,
+        theme: WebTheme = .light,
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
         let state = grant.oauthHandler.makeState()
@@ -259,7 +262,7 @@ private extension NuguOAuthClient {
         queries.append(URLQueryItem(name: "state", value: state))
         queries.append(URLQueryItem(name: "client_id", value: grant.clientId))
         queries.append(URLQueryItem(name: "redirect_uri", value: grant.redirectUri))
-        queries.append(URLQueryItem(name: "data", value: "{\"deviceSerialNumber\":\"\(deviceUniqueId)\"}"))
+        queries.append(URLQueryItem(name: "data", value: "{\"deviceSerialNumber\":\"\(deviceUniqueId)\", \"theme\":\"\(theme.rawValue)\"}"))
         
         if let additionalQueries = additionalQueries {
             queries.append(contentsOf: additionalQueries)
