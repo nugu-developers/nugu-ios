@@ -241,6 +241,7 @@ private extension NuguCentralManager {
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
                 let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
+            
             rootNavigationViewController.popToRootViewController(animated: true)
         }
     }
@@ -275,31 +276,27 @@ private extension NuguCentralManager {
 
 private extension NuguCentralManager {
     func handleNetworkError(error: Error) {
-        // Handle Nugu's predefined NetworkError
-        if let networkError = error as? NetworkError {
-            switch networkError {
-            case .authError:
-                refreshToken { [weak self] result in
-                    switch result {
-                    case .success:
-                        self?.enable()
-                    case .failure(let sampleAppError):
-                        self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
-                    }
+        // Handle Nugu's predefined NetworkError        
+        switch error {
+        case NetworkError.authError:
+            refreshToken { [weak self] result in
+                switch result {
+                case .success:
+                    self?.enable()
+                case .failure(let sampleAppError):
+                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
                 }
-            case .timeout:
-                localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
-            default:
-                localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
             }
-        } else { // Handle URLError
-            guard let urlError = error as? URLError else { return }
-            switch urlError.code {
-            case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
-                localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
-            default: // Handle other URLErrors with your own way
-                break
-            }
+        case NetworkError.timeout:
+            localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
+        case is NetworkError:
+            localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
+        case let urlError as URLError where [.networkConnectionLost, .notConnectedToInternet].contains(urlError.code):
+            // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
+            localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+        default:
+            // Handle other URLErrors with your own way
+            break
         }
     }
 }
