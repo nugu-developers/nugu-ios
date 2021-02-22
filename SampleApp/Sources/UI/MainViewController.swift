@@ -30,28 +30,20 @@ final class MainViewController: UIViewController {
     
     @IBOutlet private weak var nuguButton: NuguButton!
     @IBOutlet private weak var settingButton: UIButton!
-    @IBOutlet private weak var watermarkLabel: UILabel!
-    @IBOutlet private weak var textInputTextField: UITextField!
     
-    private lazy var voiceChromePresenter: VoiceChromePresenter = {
-        VoiceChromePresenter(
-            viewController: self,
-            nuguClient: NuguCentralManager.shared.client
-        )
-    }()
-    private lazy var displayWebViewPresenter: DisplayWebViewPresenter = {
-        DisplayWebViewPresenter(
-            viewController: self,
-            nuguClient: NuguCentralManager.shared.client,
-            clientInfo: ["buttonColor": "white"]
-        )
-    }()
-    private lazy var audioDisplayViewPresenter: AudioDisplayViewPresenter = {
-        AudioDisplayViewPresenter(
-            viewController: self,
-            nuguClient: NuguCentralManager.shared.client
-        )
-    }()
+    private lazy var voiceChromePresenter = VoiceChromePresenter(
+        viewController: self,
+        nuguClient: NuguCentralManager.shared.client
+    )
+    private lazy var displayWebViewPresenter = DisplayWebViewPresenter(
+        viewController: self,
+        nuguClient: NuguCentralManager.shared.client,
+        clientInfo: ["buttonColor": "white"]
+    )
+    private lazy var audioDisplayViewPresenter = AudioDisplayViewPresenter(
+        viewController: self,
+        nuguClient: NuguCentralManager.shared.client
+    )
     
     // MARK: Observers
 
@@ -66,7 +58,6 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addWatermarkLabel()
         initializeNugu()
         registerObservers()
     }
@@ -178,12 +169,6 @@ private extension MainViewController {
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
         presentVoiceChrome(initiator: .tap)
     }
-    
-    @IBAction func sendTextInput(_ button: UIButton) {
-        guard let textInput = textInputTextField.text else { return }
-        textInputTextField.resignFirstResponder()
-        NuguCentralManager.shared.requestTextInput(text: textInput, requestType: .normal)
-    }
 }
 
 // MARK: - Private (Nugu)
@@ -209,6 +194,7 @@ private extension MainViewController {
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
         guard UserDefaults.Standard.hasSeenGuideWeb == false else { return }
+        
         ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { [weak self] (result) in
             switch result {
             case .success(let urlString):
@@ -245,30 +231,13 @@ private extension MainViewController {
     }
 }
 
-// MARK: - Private (View)
-
-private extension MainViewController {
-    /// Not neccesary (just need for watermark)
-    func addWatermarkLabel() {
-        guard let currentloginMethod = SampleApp.LoginMethod(rawValue: UserDefaults.Standard.currentloginMethod) else {
-            watermarkLabel.text = "오류"
-            return
-        }
-        
-        watermarkLabel.text = "\(currentloginMethod.name) mode"
-    }
-}
-
 // MARK: - Private (Voice Chrome)
 
 private extension MainViewController {
     func presentVoiceChrome(initiator: ASRInitiator) {
         do {
             try voiceChromePresenter.presentVoiceChrome(chipsData: [
-                NuguChipsButton.NuguChipsButtonType.action(text: "오늘 날씨 알려줘", token: nil),
-                NuguChipsButton.NuguChipsButtonType.normal(text: "라디오 목록 알려줘", token: nil),
-                NuguChipsButton.NuguChipsButtonType.normal(text: "멜론 틀어줘", token: nil),
-                NuguChipsButton.NuguChipsButtonType.normal(text: "NUGU 토픽 알려줘", token: nil)
+                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
             ])
             NuguCentralManager.shared.startListening(initiator: initiator)
         } catch {
