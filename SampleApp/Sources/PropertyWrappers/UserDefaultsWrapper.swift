@@ -30,13 +30,23 @@ struct UserDefault<T> {
         get {
             return userDefaults.object(forKey: key) as? T ?? defaultValue
         } set {
-            userDefaults.set(newValue, forKey: key)
+            if let value = newValue as? OptionalProtocol, value.isNil() {
+                userDefaults.removeObject(forKey: key)
+            } else {
+                userDefaults.set(newValue, forKey: key)
+            }
         }
     }
 }
 
-// MARK: - Custom
+// MARK: - OptionalProtocol
 
-extension UserDefaults {
-    static let romaine = UserDefaults(suiteName: "group.com.sktelecom.romaine")!
+private protocol OptionalProtocol {
+    func isNil() -> Bool
+}
+
+// MARK: - Optional+OptionalProtocol
+
+extension Optional: OptionalProtocol {
+    func isNil() -> Bool { self == nil }
 }
