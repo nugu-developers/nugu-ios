@@ -123,7 +123,7 @@ public extension SpeechRecognizerAggregator {
     }
     
     func startListeningWithTrigger() {
-        if useKeywordDetector, keywordDetector.keywordSource != nil {
+        if useKeywordDetector {
             keywordDetector.start()
             
             startMicWorkItem?.cancel()
