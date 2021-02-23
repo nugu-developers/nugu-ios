@@ -34,7 +34,7 @@ public class MicInputProvider {
     public var audioFormat: AVAudioFormat?
     private let audioBus = 0
     private let audioEngine = AVAudioEngine()
-    private let audioQueue = DispatchQueue(label: "romain_mic_input_audio_queue")
+    private let audioQueue = DispatchQueue(label: "com.sktelecom.romaine_mic_input_audio_queue")
     
     // observers
     private let notificationCenter = NotificationCenter.default
