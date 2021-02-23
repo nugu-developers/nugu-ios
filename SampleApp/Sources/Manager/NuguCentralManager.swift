@@ -38,15 +38,12 @@ final class NuguCentralManager {
     lazy private(set) var client: NuguClient = {
         let nuguBuilder = NuguClient.Builder()
 
-        if let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") {
-            nuguBuilder.asrAgent.options = ASROptions(endPointing: .client(epdFile: epdFile))
-        } else {
-            log.error("EPD model file not exist")
-        }
-        
         // Set Last WakeUp Keyword
-        // If you don't want to use saved wakeup-word, don't need to be implemented
-        nuguBuilder.keywordDetector.keywordSource = Keyword(rawValue: UserDefaults.Standard.wakeUpWord)?.keywordSource
+        // If you don't want to use saved wakeup-word, don't need to be implemented.
+        // Because `aria` is set as a default keyword
+        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+            nuguBuilder.keywordDetector.keyword = keyword
+        }
         
         // If you want to use built-in keyword detector, set this value as true
         nuguBuilder.speechRecognizerAggregator.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector

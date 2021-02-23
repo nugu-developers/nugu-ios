@@ -28,15 +28,14 @@ import AVFoundation
  so you can do Speaker Recognition, enhance the recognizing rate and so on using this data.
  */
 public class TycheKeywordDetectorEngine {
+    public weak var delegate: TycheKeywordDetectorEngineDelegate?
     private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keensense.tyche_key_word_detector")
     private var engineHandle: WakeupHandle?
     
     /// Window buffer for user's voice. This will help extract certain section of speaking keyword
     private var detectingData = ShiftingData(capacity: Int(KeywordDetectorConst.sampleRate*5*2))
     
-    private var netFilePath: String?
-    private var searchFilePath: String?
-    public weak var delegate: TycheKeywordDetectorEngineDelegate?
+    /// Tyche Keyword detector engine state
     public var state: TycheKeywordDetectorEngine.State = .inactive {
         didSet {
             if oldValue != state {
@@ -46,6 +45,20 @@ public class TycheKeywordDetectorEngine {
         }
     }
     
+    /// Keyword to detect
+    public var keyword: Keyword {
+        get {
+            internalKeyword
+        }
+        
+        set {
+            kwdQueue.async { [weak self] in
+                self?.internalKeyword = newValue
+            }
+        }
+    }
+    private var internalKeyword: Keyword = .aria
+    
     #if DEBUG
     private let filename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("detecting.raw")
     #endif
@@ -54,17 +67,6 @@ public class TycheKeywordDetectorEngine {
     
     deinit {
         internalStop()
-    }
-    
-    /**
-     Set Tyche source files
-     */
-    public func setSource(netFilePath: String?, searchFilePath: String?) {
-        kwdQueue.async { [weak self] in
-            log.debug("set the keyword detector's source file")
-            self?.netFilePath = netFilePath
-            self?.searchFilePath = searchFilePath
-        }
     }
     
     /**
@@ -147,10 +149,8 @@ extension TycheKeywordDetectorEngine {
             Wakeup_Destroy(engineHandle)
         }
         
-        guard let netFilePath = netFilePath,
-            let searchFilePath = searchFilePath,
-            let wakeUpHandle = Wakeup_Create(netFilePath, searchFilePath, 0) else {
-                throw KeywordDetectorError.initEngineFailed
+        guard let wakeUpHandle = Wakeup_Create(keyword.netFilePath, keyword.searchFilePath, 0) else {
+            throw KeywordDetectorError.initEngineFailed
         }
         
         engineHandle = wakeUpHandle

@@ -101,3 +101,38 @@ public enum KeywordDetectorError: Error {
     case noDataAvailable
     case alreadyActivated
 }
+
+// MARK: Keyword
+
+public enum Keyword: Int, CustomStringConvertible, CaseIterable {
+    case aria = 0 // ɑriɑ
+    case tinkerbell = 3 // tɪŋkəbel
+    
+    public var description: String {
+        switch self {
+        case .aria:
+            return "아리아"
+        case .tinkerbell:
+            return "팅커벨"
+        }
+    }
+    
+    var netFilePath: String {
+        switch self {
+        case .aria:
+            return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_am_aria", withExtension: "raw")!.path
+        case .tinkerbell:
+            return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw")!.path
+        }
+    }
+    
+    var searchFilePath: String {
+        switch self {
+        case .aria:
+            return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_search_aria", withExtension: "raw")!.path
+        case .tinkerbell:
+            return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw")!.path
+        }
+    }
+}
+
