@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
   s.source_files = 'KeenSense/Sources/**/*.swift', 'KeenSense/Libraries/include/*.h'
   s.public_header_files = 'KeenSense/Libraries/include/*.h'
   s.vendored_libraries = 'KeenSense/Libraries/libTycheWakeupCommon.a', 'KeenSense/Libraries/libTycheWakeup.a', 'KeenSense/Libraries/libTycheWakeupSpeex.a'
+  s.resource = 'KeenSense/Resources/*'
   s.preserve_paths = 'KeenSense/Libraries/**'
   s.libraries = 'c++'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/KeenSense/KeenSense/Libraries/**'}

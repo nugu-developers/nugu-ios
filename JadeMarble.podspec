@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
   s.source_files = 'JadeMarble/Sources/**/*.swift', 'JadeMarble/Libraries/**/*.h'
   s.public_header_files = 'JadeMarble/Libraries/include/*.h'
   s.vendored_libraries = 'JadeMarble/Libraries/libTycheEpdCommon.a', 'JadeMarble/Libraries/libTycheEpd.a', 'JadeMarble/Libraries/libTycheEpdSpeex.a'
+  s.resources = 'JadeMarble/Resources/*'
   s.preserve_paths = 'JadeMarble/Libraries/**'
   s.libraries = 'c++'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/JadeMarble/JadeMarble/Libraries/**' }

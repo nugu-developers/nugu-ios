@@ -68,12 +68,7 @@ class SomeClass: NuguClientDelegate {
 
 #### Using ASRAgent (Automatic Speech Recognition Agent)
 ```swift
-guard let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") else {
-    log.error("EPD model file not exist")
-    return
-}
-let options = ASROptions(initiator: .user, endPointing: .client(epdFile: epdFile))
-client.asrAgent.startRecognition(options: options)
+client.asrAgent.startRecognition(initiator: .user)
 ```
 
 ### See also

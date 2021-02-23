@@ -163,7 +163,7 @@ extension SettingViewController: UITableViewDelegate {
                 let action = UIAlertAction(
                     title: keyword.description,
                     style: .default) { [weak self] _ in
-                        NuguCentralManager.shared.client.keywordDetector.keywordSource = keyword.keywordSource
+                        NuguCentralManager.shared.client.keywordDetector.keyword = keyword
                         UserDefaults.Standard.wakeUpWord = keyword.rawValue
                         self?.tableView.reloadData()
                 }
