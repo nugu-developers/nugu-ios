@@ -44,14 +44,14 @@ public class NuguClient {
      - seeAlso: `getContext` method
      */
     public let contextManager: ContextManageable
-
+    
     /**
      Manage audio focus.
      
      You can adjust the audio when you've got multiple audio sources at once.
      */
     public let focusManager: FocusManageable
-
+    
     /**
      Send an event to the server and Receive a directive from the server.
      */
@@ -139,7 +139,7 @@ public class NuguClient {
     
     // TODO: 입력부탁
     public let utilityAgent: UtilityAgentProtocol
-
+    
     // Additional Agents
     /**
      Play your own audio contents
@@ -165,6 +165,17 @@ public class NuguClient {
      Make a phone call
      */
     public lazy var phoneCallAgent: PhoneCallAgentProtocol = PhoneCallAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter,
+        interactionControlManager: interactionControlManager
+    )
+    
+    /**
+     Send a message (SMS)
+     */
+    
+    public lazy var messageAgent: MessageAgentProtocol = MessageAgent(
         directiveSequencer: directiveSequencer,
         contextManager: contextManager,
         upstreamDataSender: streamDataRouter,
@@ -270,6 +281,7 @@ public class NuguClient {
         mediaPlayerAgent: MediaPlayerAgentProtocol?,
         extensionAgent: ExtensionAgentProtocol?,
         phoneCallAgent: PhoneCallAgentProtocol?,
+        messageAgent: MessageAgentProtocol?,
         soundAgent: SoundAgentProtocol?,
         displayAgent: DisplayAgentProtocol?,
         locationAgent: LocationAgentProtocol?,
@@ -301,7 +313,7 @@ public class NuguClient {
             streamDataRouter: streamDataRouter,
             dialogStateAggregator: dialogStateAggregator
         )
-
+        
         // Default Agents
         self.asrAgent = asrAgent
         self.ttsAgent = ttsAgent
@@ -329,9 +341,13 @@ public class NuguClient {
         if let extensionAgent = extensionAgent {
             self.extensionAgent = extensionAgent
         }
-
+        
         if let phoneCallAgent = phoneCallAgent {
             self.phoneCallAgent = phoneCallAgent
+        }
+        
+        if let messageAgent = messageAgent {
+            self.messageAgent = messageAgent
         }
         
         if let displayAgent = displayAgent {
@@ -394,7 +410,7 @@ public extension NuguClient {
     /// - Returns: The dialogRequestId for request.
     @discardableResult func requestTextInput(text: String, token: String? = nil, requestType: TextAgentRequestType, completion: ((StreamDataState) -> Void)? = nil) -> String {
         dialogStateAggregator.isChipsRequestInProgress = true
-
+        
         return textAgent.requestTextInput(
             text: text,
             token: token,
@@ -437,7 +453,7 @@ extension NuguClient: FocusDelegate {
         guard let audioSessionManager = audioSessionManager else {
             return delegate?.nuguClientWillRequireAudioSession() == true
         }
-
+        
         return audioSessionManager.updateAudioSession(requestingFocus: true) == true
     }
     
@@ -448,7 +464,7 @@ extension NuguClient: FocusDelegate {
         }
         
         audioSessionManager.notifyAudioSessionDeactivation()
-
+        
     }
 }
 
@@ -538,7 +554,7 @@ extension NuguClient: AudioSessionManagerDelegate {
         case .began:
             log.debug("Interruption began")
             // Interruption began, take appropriate actions
-
+            
             if audioPlayerAgent.isPlaying == true {
                 audioPlayerAgent.pause()
                 // PausedByInterruption flag should not be changed before paused delegate method has been called
@@ -599,7 +615,7 @@ extension NuguClient: SpeechRecognizerAggregatorDelegate {
             delegate?.nuguClientWillUseMic()
             return
         }
-
+        
         // Control center does not work properly when mixWithOthers option has been included.
         // To avoid adding mixWithOthers option when audio player is in paused state,
         // update audioSession should be done only when requesting focus
