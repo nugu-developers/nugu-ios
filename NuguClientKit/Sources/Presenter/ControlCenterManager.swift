@@ -56,6 +56,7 @@ public extension ControlCenterManager {
             var nowPlayingInfo = self.nowPlayingInfoCenter.nowPlayingInfo ?? [:]
             nowPlayingInfo[MPMediaItemPropertyTitle] = parsedPayload.title
             nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = parsedPayload.albumTitle
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.audioPlayerAgent.isPlaying ? 1.0 : 0.0
             
             // Set song title and album title first. Because getting album art must be processed asynchronouly.
             self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
