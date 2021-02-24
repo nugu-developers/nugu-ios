@@ -554,7 +554,6 @@ private extension MediaPlayer {
     }
 }
 
-
 // MARK: - AVPlayerItem.Status extension
 
 extension AVPlayerItem.Status: CustomStringConvertible {

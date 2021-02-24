@@ -21,8 +21,11 @@
 import Foundation
 import AVFoundation
 
+import NuguUtils
 import NuguCore
 import KeenSense
+
+public typealias Keyword = KeenSense.Keyword
 
 /// <#Description#>
 public class KeywordDetector {
@@ -30,7 +33,6 @@ public class KeywordDetector {
     /// <#Description#>
     public weak var delegate: KeywordDetectorDelegate?
     private let contextManager: ContextManageable
-    private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keyword_detector_wrapper")
     
     /// <#Description#>
     private(set) public var state: KeywordDetectorState = .inactive {
@@ -39,25 +41,11 @@ public class KeywordDetector {
         }
     }
     
-    private var internalKeywordSource: KeywordSource? = nil {
-        didSet {
-            log.debug("set keyword source")
-            engine.setSource(netFilePath: internalKeywordSource?.netFileUrl.path, searchFilePath: internalKeywordSource?.searchFileUrl.path)
-        }
-    }
-    
     /// Must set `keywordSource` for using `KeywordDetector`
-    public var keywordSource: KeywordSource? {
-        get {
-            return kwdQueue.sync {
-                return internalKeywordSource
-            }
-        }
-        
-        set {
-            kwdQueue.sync {
-                internalKeywordSource = newValue
-            }
+    @Atomic public var keyword: Keyword = .aria {
+        didSet {
+            log.debug("set keyword: \(keyword)")
+            engine.keyword = keyword
         }
     }
     
@@ -76,11 +64,7 @@ public class KeywordDetector {
     public lazy var contextInfo: ContextInfoProviderType = { [weak self] completion in
         guard let self = self else { return }
         
-        guard let keyword = self.keywordSource?.keyword else {
-            completion(nil)
-            return
-        }
-        completion(ContextInfo(contextType: .client, name: "wakeupWord", payload: keyword))
+        completion(ContextInfo(contextType: .client, name: "wakeupWord", payload: self.keyword.description))
     }
     
     /// <#Description#>
@@ -111,7 +95,7 @@ public class KeywordDetector {
 /// :nodoc:
 extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
     public func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int) {
-        delegate?.keywordDetectorDidDetect(keyword: keywordSource?.keyword, data: data, start: start, end: end, detection: detection)
+        delegate?.keywordDetectorDidDetect(keyword: keyword.description, data: data, start: start, end: end, detection: detection)
         stop()
     }
     

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
-    <device id="retina5_9" orientation="portrait" appearance="dark"/>
+    <device id="retina5_9" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
@@ -29,11 +29,11 @@
             <objects>
                 <viewController id="xTl-xO-463" customClass="IntroViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KvA-tF-gRF">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="4iW-66-i8q">
-                                <rect key="frame" x="97.666666666666686" y="355.66666666666669" width="180" height="111"/>
+                                <rect key="frame" x="316" y="121.66666666666669" width="180" height="111"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Method" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dfr-R9-Oqn">
                                         <rect key="frame" x="0.0" y="0.0" width="180" height="50"/>
@@ -45,24 +45,24 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ocq-it-8x0">
-                                        <rect key="frame" x="0.0" y="50" width="180" height="1"/>
+                                        <rect key="frame" x="0.0" y="49.999999999999986" width="180" height="1"/>
                                         <color key="backgroundColor" red="1" green="0.50663307371269251" blue="0.40323486555803068" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="X0j-hR-cNe"/>
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XU5-aF-uOi">
-                                        <rect key="frame" x="0.0" y="51" width="180" height="30"/>
-                                        <state key="normal" title="Type1 로그인"/>
+                                        <rect key="frame" x="0.0" y="50.999999999999986" width="180" height="30"/>
+                                        <state key="normal" title="T-ID 로그인"/>
                                         <connections>
-                                            <action selector="type1LoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="lvJ-8m-bGL"/>
+                                            <action selector="tidLoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="lvJ-8m-bGL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PRw-WW-UgU">
-                                        <rect key="frame" x="0.0" y="81" width="180" height="30"/>
-                                        <state key="normal" title="Type2 로그인"/>
+                                        <rect key="frame" x="0.0" y="80.999999999999986" width="180" height="30"/>
+                                        <state key="normal" title="Anonymous 로그인"/>
                                         <connections>
-                                            <action selector="type2LoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="wvY-om-K77"/>
+                                            <action selector="anonymousLoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="wvY-om-K77"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -92,24 +92,18 @@
             <objects>
                 <viewController storyboardIdentifier="MainViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CDe-cd-LHH" customClass="MainViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wlV-sa-ViT">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H7A-kt-fwH">
-                                <rect key="frame" x="276" y="94" width="49" height="30"/>
+                                <rect key="frame" x="669" y="50" width="49" height="30"/>
                                 <state key="normal" title="Setting"/>
                                 <connections>
                                     <action selector="showSettingsButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="b1X-Ed-Vkj"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ns-b9-eTf">
-                                <rect key="frame" x="14.999999999999998" y="49" width="26.333333333333329" height="12"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <color key="textColor" red="1" green="0.2274509804" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pN-zT-foV" customClass="NuguButton" customModule="NuguUIKit">
-                                <rect key="frame" x="151.66666666666666" y="686" width="72" height="72"/>
+                                <rect key="frame" x="370" y="262" width="72" height="72"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="72" id="JUG-kC-aCN"/>
                                     <constraint firstAttribute="height" constant="72" id="qlP-Rt-7cq"/>
@@ -118,42 +112,20 @@
                                     <action selector="startRecognizeButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="188-nt-X30"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G3T-6h-BDk">
-                                <rect key="frame" x="268.66666666666669" y="154" width="64" height="30"/>
-                                <state key="normal" title="send text"/>
-                                <connections>
-                                    <action selector="sendTextInput:" destination="CDe-cd-LHH" eventType="touchUpInside" id="wCp-Sl-nj0"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8kh-3V-rnE">
-                                <rect key="frame" x="19.999999999999986" y="152" width="218.66666666666663" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Fng-5l-cHx"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.72941176470588232" green="0.7803921568627451" blue="0.82745098039215681" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="bottom" secondItem="1pN-zT-foV" secondAttribute="bottom" constant="20" id="2kg-rq-IoR"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" secondItem="H7A-kt-fwH" secondAttribute="trailing" constant="50" id="4Tm-uC-Cli"/>
-                            <constraint firstItem="G3T-6h-BDk" firstAttribute="leading" secondItem="8kh-3V-rnE" secondAttribute="trailing" constant="30" id="DcZ-cJ-nCC"/>
-                            <constraint firstItem="2Ns-b9-eTf" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="5" id="HWk-vD-Fki"/>
-                            <constraint firstItem="G3T-6h-BDk" firstAttribute="centerX" secondItem="H7A-kt-fwH" secondAttribute="centerX" id="Kkh-yT-Q5s"/>
-                            <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2Ns-b9-eTf" secondAttribute="trailing" symbolic="YES" id="RUL-G7-INd"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fng-5l-cHx" secondAttribute="leading" symbolic="YES" id="Tv9-i1-zVn"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="50" id="cjZ-E8-mLe"/>
-                            <constraint firstItem="8kh-3V-rnE" firstAttribute="centerY" secondItem="G3T-6h-BDk" secondAttribute="centerY" id="qNq-eV-1Ue"/>
-                            <constraint firstItem="8kh-3V-rnE" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="20" id="sVa-RI-eEA"/>
-                            <constraint firstItem="G3T-6h-BDk" firstAttribute="top" secondItem="H7A-kt-fwH" secondAttribute="bottom" constant="30" id="vU5-Ap-X4A"/>
-                            <constraint firstItem="2Ns-b9-eTf" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="15" id="yv9-4H-Zba"/>
                             <constraint firstItem="1pN-zT-foV" firstAttribute="centerX" secondItem="Fng-5l-cHx" secondAttribute="centerX" id="ziq-Ma-Uj5"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="nuguButton" destination="1pN-zT-foV" id="esl-yf-Cut"/>
                         <outlet property="settingButton" destination="H7A-kt-fwH" id="wvw-g1-c4g"/>
-                        <outlet property="textInputTextField" destination="8kh-3V-rnE" id="E3J-0d-nPO"/>
-                        <outlet property="watermarkLabel" destination="2Ns-b9-eTf" id="hCm-cA-CbZ"/>
                         <segue destination="gGQ-jV-Gla" kind="presentation" identifier="mainToGuideWeb" id="HfI-PN-nmd"/>
                         <segue destination="GR6-bJ-aiM" kind="presentation" identifier="showSettings" modalPresentationStyle="fullScreen" id="XSP-sM-tXK"/>
                     </connections>
@@ -189,7 +161,7 @@
             <objects>
                 <viewController storyboardIdentifier="GuideWebViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gGQ-jV-Gla" customClass="GuideWebViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="l79-V0-KsH">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KPO-NT-hDI" customClass="NuguServiceWebView" customModule="NuguServiceKit">
@@ -197,7 +169,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AN6-wp-3m1" userLabel="CloseButton">
-                                <rect key="frame" x="331" y="19" width="28" height="28"/>
+                                <rect key="frame" x="724" y="19" width="28" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="3pH-36-wle"/>
                                     <constraint firstAttribute="width" constant="28" id="n5c-Th-T2R"/>
@@ -234,18 +206,18 @@
             <objects>
                 <viewController storyboardIdentifier="SettingViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YYF-Xk-QMg" customClass="SettingViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pr5-Ye-xcI">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="64" estimatedRowHeight="64" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="4mt-z8-MSl">
-                                <rect key="frame" x="0.0" y="99" width="375" height="713"/>
+                                <rect key="frame" x="44" y="55" width="724" height="320"/>
                                 <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingTableViewCell" textLabel="8rE-G9-Qs6" detailTextLabel="ASl-iC-Voj" rowHeight="64" style="IBUITableViewCellStyleValue1" id="upZ-qj-1B3" customClass="SettingTableViewCell" customModule="SampleApp" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="55.333332061767578" width="343" height="64"/>
+                                        <rect key="frame" x="16" y="55.333332061767578" width="692" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="upZ-qj-1B3" id="EWO-Fg-cre">
-                                            <rect key="frame" x="0.0" y="0.0" width="343" height="64"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="692" height="64"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8rE-G9-Qs6">
@@ -256,7 +228,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ASl-iC-Voj">
-                                                    <rect key="frame" x="283.33333333333331" y="22" width="43.666666666666664" height="20.333333333333332"/>
+                                                    <rect key="frame" x="632.33333333333337" y="22" width="43.666666666666664" height="20.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -283,7 +255,7 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Jm-a3-ikb" userLabel="CloseButton">
-                                <rect key="frame" x="331" y="63" width="28" height="28"/>
+                                <rect key="frame" x="724" y="19" width="28" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="28" id="2VC-9B-NtQ"/>
                                     <constraint firstAttribute="height" constant="28" id="3hT-yq-IyV"/>
@@ -322,11 +294,11 @@
             <objects>
                 <viewController storyboardIdentifier="NuguServiceWebViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7aI-qm-ARe" customClass="NuguServiceWebViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Lto-Ie-wFf">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxj-7v-TqU" userLabel="CloseButton">
-                                <rect key="frame" x="331" y="63" width="28" height="28"/>
+                                <rect key="frame" x="724" y="19" width="28" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="28" id="vwU-Rj-ak8"/>
                                     <constraint firstAttribute="height" constant="28" id="zkY-tk-Hdi"/>
@@ -339,7 +311,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kZk-Wb-I15" customClass="NuguServiceWebView" customModule="NuguServiceKit">
-                                <rect key="frame" x="0.0" y="101" width="375" height="711"/>
+                                <rect key="frame" x="44" y="57" width="724" height="318"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                         </subviews>

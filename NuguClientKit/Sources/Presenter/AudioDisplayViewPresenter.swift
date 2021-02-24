@@ -35,7 +35,7 @@ public class AudioDisplayViewPresenter {
     private var targetView: UIView? {
         superView ?? viewController?.view
     }
-    private var nuguClient: NuguClient?
+    private weak var nuguClient: NuguClient?
     
     // Observers
     private let notificationCenter = NotificationCenter.default

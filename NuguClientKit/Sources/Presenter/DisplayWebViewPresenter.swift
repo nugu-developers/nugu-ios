@@ -37,7 +37,7 @@ public class DisplayWebViewPresenter: NSObject {
     private var targetView: UIView? {
         superView ?? viewController?.view
     }
-    private var nuguClient: NuguClient?
+    private weak var nuguClient: NuguClient?
     private var clientInfo: [String: String]?
     private var addWebViewCompletion: (() -> Void)?
     

@@ -36,32 +36,26 @@ final class NuguCentralManager {
     private var systemAgentRevokeObserver: Any?
     
     lazy private(set) var client: NuguClient = {
-        let client = NuguClient(delegate: self)
+        let nuguBuilder = NuguClient.Builder()
+
+        // Set Last WakeUp Keyword
+        // If you don't want to use saved wakeup-word, don't need to be implemented.
+        // Because `aria` is set as a default keyword
+        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+            nuguBuilder.keywordDetector.keyword = keyword
+        }
         
-        client.audioSessionManager = AudioSessionManager(nuguClient: client)
-        client.speechRecognizerAggregator = SpeechRecognizerAggregator(
-            nuguClient: client,
-            micInputProvider: MicInputProvider()
-        )
+        // If you want to use built-in keyword detector, set this value as true
+        nuguBuilder.speechRecognizerAggregator.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
         
-        client.locationAgent.delegate = NuguLocationManager.shared
-        client.soundAgent.dataSource = self
+        // Set DataSource for SoundAgent
+        nuguBuilder.setDataSource(self)
+        
+        let client = nuguBuilder.build()
+        client.delegate = self
         
         // Observers
         addSystemAgentObserver(client.systemAgent)
-        
-        if let epdFile = Bundle.main.url(forResource: "skt_epd_model", withExtension: "raw") {
-            client.asrAgent.options = ASROptions(endPointing: .client(epdFile: epdFile))
-        } else {
-            log.error("EPD model file not exist")
-        }
-        
-        // Set Last WakeUp Keyword
-        // If you don't want to use saved wakeup-word, don't need to be implemented
-        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
-            client.keywordDetector.keywordSource = keyword.keywordSource
-        }
-        client.speechRecognizerAggregator?.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
         
         return client
     }()
@@ -111,8 +105,8 @@ extension NuguCentralManager {
             client.stopReceiveServerInitiatedDirective()
         }
 
-        NuguLocationManager.shared.startUpdatingLocation()
         startListeningWithTrigger()
+        client.audioSessionManager?.enable()
     }
     
     func disable() {
@@ -121,14 +115,7 @@ extension NuguCentralManager {
         client.stopReceiveServerInitiatedDirective()
         client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
-    }
-    
-    func startUsingAudioSessionManager() {
-        client.audioSessionManager?.updateAudioSession()
-    }
-    
-    func stopUsingAudioSessionManager() {
-        client.audioSessionManager = nil
+        client.audioSessionManager?.disable()
     }
 }
 
@@ -142,8 +129,8 @@ extension NuguCentralManager {
         }
         
         switch loginMethod {
-        case .type1:
-            oauthClient.authorizeWithTid(parentViewController: viewController) { [weak self] (result) in
+        case .tid:
+            oauthClient.loginWithTid(parentViewController: viewController) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -153,8 +140,8 @@ extension NuguCentralManager {
                     completion(.failure(sampleAppError))
                 }
             }
-        case .type2:
-            oauthClient.authorize { [weak self] (result) in
+        case .anonymous:
+            oauthClient.loginAnonymously { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -173,14 +160,15 @@ extension NuguCentralManager {
             completion(.failure(SampleAppError.nilValue(description: "loginMethod is nil")))
             return
         }
-        guard let refreshToken = UserDefaults.Standard.refreshToken else {
-            completion(.failure(SampleAppError.nilValue(description: "RefreshToken is nil")))
-            return
-        }
         
         switch loginMethod {
-        case .type1:
-            oauthClient.refreshToken(refreshToken: refreshToken) { [weak self] (result) in
+        case .tid:
+            guard let refreshToken = UserDefaults.Standard.refreshToken else {
+                completion(.failure(SampleAppError.nilValue(description: "RefreshToken is nil")))
+                return
+            }
+            
+            oauthClient.loginSilentlyWithTid(refreshToken: refreshToken) { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -190,8 +178,8 @@ extension NuguCentralManager {
                     completion(.failure(sampleAppError))
                 }
             }
-        case .type2:
-            oauthClient.authorize { [weak self] (result) in
+        case .anonymous:
+            oauthClient.loginAnonymously { [weak self] (result) in
                 switch result {
                 case .success(let authInfo):
                     self?.authorizationInfo = authInfo
@@ -219,7 +207,6 @@ extension NuguCentralManager {
         authorizationInfo = nil
         popToRootViewController()
         disable()
-        stopUsingAudioSessionManager()
         UserDefaults.Standard.clear()
         UserDefaults.Nugu.clear()
     }
@@ -229,8 +216,8 @@ extension NuguCentralManager {
     }
     
     func showTidInfo(parentViewController: UIViewController, completion: @escaping () -> Void) {
-        guard SampleApp.loginMethod == SampleApp.LoginMethod.type1 else {
-            log.error("loginMethod is not type1")
+        guard SampleApp.loginMethod == SampleApp.LoginMethod.tid else {
+            log.error("loginMethod is not tid")
             completion()
             return
         }
@@ -251,6 +238,7 @@ private extension NuguCentralManager {
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
                 let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
+            
             rootNavigationViewController.popToRootViewController(animated: true)
         }
     }
@@ -265,7 +253,6 @@ private extension NuguCentralManager {
                 self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
                     self?.authorizationInfo = nil
                     self?.disable()
-                    self?.stopUsingAudioSessionManager()
                     UserDefaults.Standard.clear()
                     UserDefaults.Nugu.clear()
                 })
@@ -273,7 +260,6 @@ private extension NuguCentralManager {
                 self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
                     self?.authorizationInfo = nil
                     self?.disable()
-                    self?.stopUsingAudioSessionManager()
                     UserDefaults.Standard.clear()
                     UserDefaults.Nugu.clear()
                 })
@@ -287,46 +273,42 @@ private extension NuguCentralManager {
 
 private extension NuguCentralManager {
     func handleNetworkError(error: Error) {
-        // Handle Nugu's predefined NetworkError
-        if let networkError = error as? NetworkError {
-            switch networkError {
-            case .authError:
-                refreshToken { [weak self] result in
-                    switch result {
-                    case .success:
-                        self?.enable()
-                    case .failure(let sampleAppError):
-                        self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
-                    }
+        // Handle Nugu's predefined NetworkError        
+        switch error {
+        case NetworkError.authError:
+            refreshToken { [weak self] result in
+                switch result {
+                case .success:
+                    self?.enable()
+                case .failure(let sampleAppError):
+                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
                 }
-            case .timeout:
-                localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
-            default:
-                localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
             }
-        } else { // Handle URLError
-            guard let urlError = error as? URLError else { return }
-            switch urlError.code {
-            case .networkConnectionLost, .notConnectedToInternet: // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
-                localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
-            default: // Handle other URLErrors with your own way
-                break
-            }
+        case NetworkError.timeout:
+            localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
+        case is NetworkError:
+            localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
+        case let urlError as URLError where [.networkConnectionLost, .notConnectedToInternet].contains(urlError.code):
+            // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
+            localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+        default:
+            // Handle other URLErrors with your own way
+            break
         }
     }
 }
 
 extension NuguCentralManager {
     func startListening(initiator: ASRInitiator) {
-        client.speechRecognizerAggregator?.startListening(initiator: initiator)
+        client.speechRecognizerAggregator.startListening(initiator: initiator)
     }
     
     func startListeningWithTrigger() {
-        client.speechRecognizerAggregator?.startListeningWithTrigger()
+        client.speechRecognizerAggregator.startListeningWithTrigger()
     }
     
     func stopListening() {
-        client.speechRecognizerAggregator?.stopListening()
+        client.speechRecognizerAggregator.stopListening()
     }
 }
 
@@ -347,16 +329,22 @@ extension NuguCentralManager {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
+    func nuguClientWillUseMic() {
+        log.debug("nuguClientWillUseMic")
+    }
+    
     func nuguClientRequestAccessToken() -> String? {
         return UserDefaults.Standard.accessToken
     }
     
     func nuguClientWillRequireAudioSession() -> Bool {
-        return client.audioSessionManager?.updateAudioSession(requestingFocus: true) ?? false
+        // If you set AudioSessionManager to nil, You should implement this
+        // And return NUGU SDK can use the audio session or not.
+        return false
     }
     
     func nuguClientDidReleaseAudioSession() {
-        client.audioSessionManager?.notifyAudioSessionDeactivation()
+        // If you set AudioSessionManager to nil, You should implement this
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {

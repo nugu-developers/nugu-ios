@@ -1,8 +1,8 @@
 //
-//  Eventable.swift
-//  NuguAgents
+//  WebTheme.swift
+//  NuguLoginKit
 //
-//  Created by yonghoonKwon on 10/06/2019.
+//  Created by YONG HOON KWON on 2021/02/15.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,23 +20,7 @@
 
 import Foundation
 
-import RxSwift
-
-public protocol Eventable {
-    var payload: [String: AnyHashable] { get }
-    var name: String { get }
-    var referrerDialogRequestId: String? { get }
-}
-
-public extension Eventable {
-    var referrerDialogRequestId: String? { nil }
-}
-
-// MARK: - RxSwift
-
-extension Eventable {
-    // swiftlint:disable identifier_name
-    var rx: Single<Eventable> {
-        Single.just(self)
-    }
+public enum WebTheme: String {
+    case light = "LIGHT"
+    case dark = "DARK"
 }

@@ -26,10 +26,11 @@ import NuguUIKit
 import NuguUtils
 import NuguCore
 
-/// <#Description#>
-public class VoiceChromePresenter {
+/// `VoiceChromePresenter` is a class which helps user for displaying `NuguVoiceChrome` more easily.
+public class VoiceChromePresenter: NSObject {
     private let nuguVoiceChrome: NuguVoiceChrome
     
+    private weak var nuguClient: NuguClient?
     private weak var viewController: UIViewController?
     private weak var superView: UIView?
     private var targetView: UIView? {
@@ -40,8 +41,23 @@ public class VoiceChromePresenter {
     private var isMultiturn: Bool = false
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
+    private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
+        tapGestureRecognizer.delegate = self
+        
+        return tapGestureRecognizer
+    }()
+    
     public weak var delegate: VoiceChromePresenterDelegate?
-    public var isHidden = true
+    public var isHidden = true {
+        didSet {
+            if isHidden {
+                targetView?.removeGestureRecognizer(tapGestureRecognizer)
+            } else {
+                targetView?.addGestureRecognizer(tapGestureRecognizer)
+            }
+        }
+    }
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -50,34 +66,33 @@ public class VoiceChromePresenter {
     private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
     
-    /// <#Description#>
+    /// Initialize with superView
     /// - Parameters:
-    ///   - superView: <#superView description#>
-    ///   - nuguVoiceChrome: <#nuguVoiceChrome description#>
-    ///   - nuguClient: <#nuguClient description#>
-    public convenience init(superView: UIView, nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
+    ///   - superView: Target view for `NuguVoiceChrome` should be added to.
+    ///   - nuguVoiceChrome: `NuguVoiceChrome` to be managed by `VoiceChromePresenter`. If nil, it is initiated internally.
+    ///   - nuguClient: `NuguClient` instance which should be passed for delegation.
+    public convenience init(superView: UIView, nuguVoiceChrome: NuguVoiceChrome? = nil, nuguClient: NuguClient) {
         self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient)
         
         self.superView = superView
     }
     
-    /// <#Description#>
+    /// Initialize with superView
     /// - Parameters:
-    ///   - viewController: <#viewController description#>
-    ///   - nuguVoiceChrome: <#nuguVoiceChrome description#>
-    ///   - nuguClient: <#nuguClient description#>
-    public convenience init(viewController: UIViewController, nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
+    ///   - viewController: Target `ViewController` for `NuguVoiceChrome` should be added to.
+    ///   - nuguVoiceChrome: `NuguVoiceChrome` to be managed by `VoiceChromePresenter`. If nil, it is initiated internally.
+    ///   - nuguClient: `NuguClient` instance which should be passed for delegation.
+    public convenience init(viewController: UIViewController, nuguVoiceChrome: NuguVoiceChrome? = nil, nuguClient: NuguClient) {
         self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient)
         
         self.viewController = viewController
     }
     
-    /// <#Description#>
-    /// - Parameters:
-    ///   - nuguVoiceChrome: <#nuguVoiceChrome description#>
-    ///   - nuguClient: <#nuguClient description#>
-    private init(nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
-        self.nuguVoiceChrome = nuguVoiceChrome
+    private init(nuguVoiceChrome: NuguVoiceChrome?, nuguClient: NuguClient) {
+        self.nuguVoiceChrome = nuguVoiceChrome ?? NuguVoiceChrome(frame: CGRect())
+        self.nuguClient = nuguClient
+        
+        super.init()
         
         // Observers
         addInteractionControlObserver(nuguClient.interactionControlManager)
@@ -107,12 +122,17 @@ public class VoiceChromePresenter {
 // MARK: - Public (Voice Chrome)
 
 public extension VoiceChromePresenter {
-    /// <#Description#>
-    /// - Throws: <#description#>
-    func presentVoiceChrome() throws {
+    /// Present `NuguVoiceChrome`
+    ///
+    /// - Parameter chipsData:
+    /// - Throws: An error of type `VoiceChromePresenterError`
+    func presentVoiceChrome(chipsData: [NuguChipsButton.NuguChipsButtonType]? = nil) throws {
         guard NetworkReachabilityManager.shared.isReachable else { throw VoiceChromePresenterError.networkUnreachable }
         log.debug("")
         
+        if let chipsData = chipsData {
+            nuguVoiceChrome.setChipsData(chipsData: chipsData)
+        }
         voiceChromeDismissWorkItem?.cancel()
         nuguVoiceChrome.removeFromSuperview()
         nuguVoiceChrome.changeState(state: .listeningPassive)
@@ -120,7 +140,7 @@ public extension VoiceChromePresenter {
         try showVoiceChrome()
     }
     
-    /// <#Description#>
+    /// Dismiss `NuguVoiceChrome`
     func dismissVoiceChrome() {
         log.debug("")
         delegate?.voiceChromeWillHide()
@@ -295,5 +315,23 @@ private extension VoiceChromePresenter {
                 }
             }
         }
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+
+extension VoiceChromePresenter: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        let touchLocation = touch.location(in: gestureRecognizer.view)
+        return !nuguVoiceChrome.frame.contains(touchLocation)
+    }
+}
+
+@objc private extension VoiceChromePresenter {
+    func didTapForStopRecognition() {
+        guard let nuguClient = nuguClient else { return }
+        
+        guard [.listening, .recognizing].contains(nuguClient.asrAgent.asrState) else { return }
+        nuguClient.asrAgent.stopRecognition()
     }
 }

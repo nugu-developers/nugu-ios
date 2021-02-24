@@ -30,32 +30,20 @@ final class MainViewController: UIViewController {
     
     @IBOutlet private weak var nuguButton: NuguButton!
     @IBOutlet private weak var settingButton: UIButton!
-    @IBOutlet private weak var watermarkLabel: UILabel!
-    @IBOutlet private weak var textInputTextField: UITextField!
     
-    private lazy var nuguVoiceChrome: NuguVoiceChrome = {
-        NuguVoiceChrome(frame: CGRect())
-    }()
-    private lazy var voiceChromePresenter: VoiceChromePresenter = {
-        VoiceChromePresenter(
-            viewController: self,
-            nuguVoiceChrome: nuguVoiceChrome,
-            nuguClient: NuguCentralManager.shared.client
-        )
-    }()
-    private lazy var displayWebViewPresenter: DisplayWebViewPresenter = {
-        DisplayWebViewPresenter(
-            viewController: self,
-            nuguClient: NuguCentralManager.shared.client,
-            clientInfo: ["buttonColor": "white"]
-        )
-    }()
-    private lazy var audioDisplayViewPresenter: AudioDisplayViewPresenter = {
-        AudioDisplayViewPresenter(
-            viewController: self,
-            nuguClient: NuguCentralManager.shared.client
-        )
-    }()
+    private lazy var voiceChromePresenter = VoiceChromePresenter(
+        viewController: self,
+        nuguClient: NuguCentralManager.shared.client
+    )
+    private lazy var displayWebViewPresenter = DisplayWebViewPresenter(
+        viewController: self,
+        nuguClient: NuguCentralManager.shared.client,
+        clientInfo: ["buttonColor": "white"]
+    )
+    private lazy var audioDisplayViewPresenter = AudioDisplayViewPresenter(
+        viewController: self,
+        nuguClient: NuguCentralManager.shared.client
+    )
     
     // MARK: Observers
 
@@ -70,8 +58,6 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setGradientBackground()
-        addWatermarkLabel()
         initializeNugu()
         registerObservers()
     }
@@ -170,13 +156,6 @@ private extension MainViewController {
         }
     }
 }
-    
-@objc private extension MainViewController {
-    func didTapForStopRecognition() {
-        guard [.listening, .recognizing].contains(NuguCentralManager.shared.client.asrAgent.asrState) else { return }
-        NuguCentralManager.shared.client.asrAgent.stopRecognition()
-    }
-}
 
 // MARK: - Private (IBAction)
 
@@ -190,12 +169,6 @@ private extension MainViewController {
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
         presentVoiceChrome(initiator: .user)
     }
-    
-    @IBAction func sendTextInput(_ button: UIButton) {
-        guard let textInput = textInputTextField.text else { return }
-        textInputTextField.resignFirstResponder()
-        NuguCentralManager.shared.requestTextInput(text: textInput, requestType: .normal)
-    }
 }
 
 // MARK: - Private (Nugu)
@@ -205,10 +178,7 @@ private extension MainViewController {
     /// AudioSession is required for using Nugu
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
-        // Start using AudioSessionManager
-        NuguCentralManager.shared.startUsingAudioSessionManager()
-        
-        // set delegate
+        // keyword detector delegate
         NuguCentralManager.shared.client.keywordDetector.delegate = self
         
         // Observers
@@ -219,17 +189,12 @@ private extension MainViewController {
         voiceChromePresenter.delegate = self
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
-        nuguVoiceChrome.onChipsSelect = { [weak self] selectedChips in
-            self?.chipsDidSelect(selectedChips: selectedChips)
-        }
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
-        tapGestureRecognizer.delegate = self
-        view.addGestureRecognizer(tapGestureRecognizer)
     }
     
     /// Show nugu usage guide webpage after successful login process
     func showGuideWebIfNeeded() {
         guard UserDefaults.Standard.hasSeenGuideWeb == false else { return }
+        
         ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { [weak self] (result) in
             switch result {
             case .success(let urlString):
@@ -264,46 +229,14 @@ private extension MainViewController {
     }
 }
 
-// MARK: - Private (View)
-
-private extension MainViewController {
-    func setGradientBackground() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.startPoint = CGPoint(x: 1.0, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
-        gradientLayer.colors = [UIColor(rgbHexValue: 0x798492).cgColor, UIColor(rgbHexValue: 0xbac7d7).cgColor]
-        gradientLayer.locations =  [0, 1.0]
-        gradientLayer.frame = view.frame
-        view.layer.insertSublayer(gradientLayer, at: 0)
-    }
-    
-    /// Not neccesary (just need for watermark)
-    func addWatermarkLabel() {
-        guard let currentloginMethod = SampleApp.LoginMethod(rawValue: UserDefaults.Standard.currentloginMethod) else {
-            watermarkLabel.text = "오류"
-            return
-        }
-        
-        watermarkLabel.text = "\(currentloginMethod.name) mode"
-    }
-}
-
 // MARK: - Internal (Voice Chrome)
 
 extension MainViewController {
     func presentVoiceChrome(initiator: ASRInitiator) {
-        nuguVoiceChrome.setChipsData(chipsData: [
-            NuguChipsButton.NuguChipsButtonType.action(text: "오늘 날씨 알려줘", token: nil),
-            NuguChipsButton.NuguChipsButtonType.action(text: "습도 알려줘", token: nil),
-            NuguChipsButton.NuguChipsButtonType.normal(text: "라디오 목록 알려줘", token: nil),
-            NuguChipsButton.NuguChipsButtonType.normal(text: "주말 날씨 알려줘", token: nil),
-            NuguChipsButton.NuguChipsButtonType.normal(text: "오존 농도 알려줘", token: nil),
-            NuguChipsButton.NuguChipsButtonType.normal(text: "멜론 틀어줘", token: nil),
-            NuguChipsButton.NuguChipsButtonType.normal(text: "NUGU 토픽 알려줘", token: nil)
-        ])
-        
         do {
-            try voiceChromePresenter.presentVoiceChrome()
+            try voiceChromePresenter.presentVoiceChrome(chipsData: [
+                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
+            ])
             NuguCentralManager.shared.startListening(initiator: initiator)
         } catch {
             switch error {
@@ -335,15 +268,6 @@ private extension MainViewController {
                 indicator.removeFromSuperview()
             }
         }
-    }
-}
-
-// MARK: - UIGestureRecognizerDelegate
-
-extension MainViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        let touchLocation = touch.location(in: gestureRecognizer.view)
-        return !nuguVoiceChrome.frame.contains(touchLocation)
     }
 }
 
@@ -428,12 +352,8 @@ extension MainViewController: VoiceChromePresenterDelegate {
         nuguButton.isActivated = true
     }
     
-    func voiceChromeShouldDisableIdleTimer() -> Bool {
-        true
-    }
-    
-    func voiceChromeShouldEnableIdleTimer() -> Bool {
-        true
+    func voiceChromeChipsDidClick(chips: NuguChipsButton.NuguChipsButtonType) {
+        chipsDidSelect(selectedChips: chips)
     }
 }
 

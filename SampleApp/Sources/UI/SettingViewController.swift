@@ -48,7 +48,7 @@ final class SettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NuguCentralManager.shared.client.speechRecognizerAggregator?.useKeywordDetector = false
+        NuguCentralManager.shared.client.speechRecognizerAggregator.useKeywordDetector = false
         
         tableView.reloadData()
         
@@ -163,7 +163,7 @@ extension SettingViewController: UITableViewDelegate {
                 let action = UIAlertAction(
                     title: keyword.description,
                     style: .default) { [weak self] _ in
-                        NuguCentralManager.shared.client.keywordDetector.keywordSource = keyword.keywordSource
+                        NuguCentralManager.shared.client.keywordDetector.keyword = keyword
                         UserDefaults.Standard.wakeUpWord = keyword.rawValue
                         self?.tableView.reloadData()
                 }
@@ -204,7 +204,7 @@ extension SettingViewController: UITableViewDelegate {
 
 private extension SettingViewController {
     @IBAction func closeButtonDidClick(_ button: UIButton) {
-        NuguCentralManager.shared.client.speechRecognizerAggregator?.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
+        NuguCentralManager.shared.client.speechRecognizerAggregator.useKeywordDetector = UserDefaults.Standard.useWakeUpDetector
         dismiss(animated: true)
     }
 }

@@ -106,13 +106,6 @@ private extension NuguDisplayWebView {
         preferences.javaScriptEnabled = true
         webViewConfiguration.preferences = preferences
         
-        let store = WKWebsiteDataStore.default()
-        store.removeData(
-            ofTypes: Set([WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]),
-            modifiedSince: Date(timeIntervalSince1970: 0),
-            completionHandler: {}
-        )
-        webViewConfiguration.websiteDataStore = store
         makeWebView(webViewConfiguration)
     }
     
@@ -185,6 +178,8 @@ private extension NuguDisplayWebView {
     func getQueryString(params: [String: Any]) -> String {
         var url = URLComponents()
         url.queryItems = params.map { URLQueryItem(name: $0.key, value: $0.value as? String) }
+        let plusExcludedCharacterSet = CharacterSet(charactersIn: "/+").inverted
+        url.percentEncodedQuery = url.percentEncodedQuery?.addingPercentEncoding(withAllowedCharacters: plusExcludedCharacterSet)
         return url.percentEncodedQuery ?? ""
     }
     

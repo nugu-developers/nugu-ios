@@ -59,7 +59,7 @@ public final class ASRAgent: ASRAgentProtocol {
     private let notificationCenter = NotificationCenter.default
     private var playSyncObserver: Any?
     
-    public var options: ASROptions = ASROptions(endPointing: .server)
+    public var options: ASROptions = ASROptions(endPointing: .client)
     private(set) public var asrState: ASRState = .idle {
         didSet {
             log.info("From:\(oldValue) To:\(asrState)")
@@ -494,7 +494,7 @@ private extension ASRAgent {
                 case .error:
                     self.asrResult = .error(ASRError.recognizeFailed, header: directive.header)
                 default:
-                    // TODO 추후 Server EPD 개발시 구현
+                    // TODO: after server preparation.
                     break
                 }
             }
@@ -619,8 +619,8 @@ private extension ASRAgent {
         
         attachmentSeq = 0
         switch asrRequest.options.endPointing {
-        case .client(let epdFile):
-            endPointDetector = ClientEndPointDetector(asrOptions: asrRequest.options, epdFile: epdFile)
+        case .client:
+            endPointDetector = ClientEndPointDetector(asrOptions: asrRequest.options)
         case .server:
             // TODO: after server preparation.
             log.error("Server side end point detector does not support yet.")
