@@ -29,7 +29,9 @@ import NuguUIKit
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     
-    let displayPlayerController = NuguDisplayPlayerController()
+    lazy var controlCenterManager = ControlCenterManager(
+        audioPlayerAgent: self.client.audioPlayerAgent
+    )
     
     private let notificationCenter = NotificationCenter.default
     private var systemAgentExceptionObserver: Any?

@@ -285,19 +285,19 @@ extension MainViewController: DisplayWebViewPresenterDelegate {
 
 extension MainViewController: AudioDisplayViewPresenterDelegate {
     func displayControllerShouldUpdateTemplate(template: AudioPlayerDisplayTemplate) {
-        NuguCentralManager.shared.displayPlayerController.update(template)
+        NuguCentralManager.shared.controlCenterManager.update(template)
     }
     
     func displayControllerShouldUpdateState(state: AudioPlayerState) {
-        NuguCentralManager.shared.displayPlayerController.update(state)
+        NuguCentralManager.shared.controlCenterManager.update(state)
     }
     
     func displayControllerShouldUpdateDuration(duration: Int) {
-        NuguCentralManager.shared.displayPlayerController.update(duration)
+        NuguCentralManager.shared.controlCenterManager.update(duration)
     }
     
     func displayControllerShouldRemove() {
-        NuguCentralManager.shared.displayPlayerController.remove()
+        NuguCentralManager.shared.controlCenterManager.remove()
     }
     
     func onAudioDisplayViewNuguButtonClick() {
