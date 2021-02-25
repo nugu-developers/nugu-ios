@@ -100,6 +100,11 @@ public extension NuguClient {
         public var phoneCallAgent: PhoneCallAgentProtocol?
         
         /**
+         Send a text message (SMS)
+         */
+        public var messageAgent: MessageAgentProtocol?
+        
+        /**
          Play your own audio contents
          
          - seeAlso: `AudioPlayerAgent`
@@ -181,6 +186,16 @@ public extension NuguClient {
                 phoneCallAgent?.delegate = delegate as? PhoneCallAgentDelegate
             }
             
+            if delegate is MessageAgentDelegate {
+                messageAgent = MessageAgent(
+                    directiveSequencer: directiveSequencer,
+                    contextManager: contextManager,
+                    upstreamDataSender: streamDataRouter,
+                    interactionControlManager: interactionControlManager
+                )
+                messageAgent?.delegate = delegate as? MessageAgentDelegate
+            }
+            
             if delegate is MediaPlayerAgentDelegate {
                 mediaPlayerAgent = MediaPlayerAgent(
                     directiveSequencer: directiveSequencer,
@@ -257,6 +272,7 @@ public extension NuguClient {
                 mediaPlayerAgent: mediaPlayerAgent,
                 extensionAgent: extensionAgent,
                 phoneCallAgent: phoneCallAgent,
+                messageAgent: messageAgent,
                 soundAgent: soundAgent,
                 displayAgent: displayAgent,
                 locationAgent: locationAgent

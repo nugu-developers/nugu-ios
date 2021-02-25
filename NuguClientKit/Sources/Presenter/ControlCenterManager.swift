@@ -32,6 +32,7 @@ final class ControlCenterManager {
     
     private var playCommandTarget: Any?
     private var pauseCommandTarget: Any?
+    private var toggleCommandTarget: Any?
     private var previousCommandTarget: Any?
     private var nextCommandTarget: Any?
     private var seekCommandTarget: Any?
@@ -139,8 +140,14 @@ extension ControlCenterManager {
 
 private extension ControlCenterManager {
     func addRemoteCommands(seekable isSeekable: Bool) {
+        // These commands below will be sent from a wireless earset.
         addPlayCommand()
         addPauseCommand()
+        
+        // Toggle command will be sent from a hard wired earset.
+        addTogglePlayPauseComand()
+        
+        // These commands below will be sent from wired and wireless earset both.
         addPreviousTrackCommand()
         addNextTackCommand()
         
@@ -154,6 +161,7 @@ private extension ControlCenterManager {
     func removeRemoteCommands() {
         removePlayCommand()
         removePauseCommand()
+        removeTogglePlayPauseCommand()
         removePreviousTrackCommand()
         removeNextTrackCommand()
         removeChangePlaybackPositionCommand()
@@ -211,6 +219,15 @@ private extension ControlCenterManager {
         }
     }
     
+    func addTogglePlayPauseComand() {
+        toggleCommandTarget = remoteCommandCenter
+            .togglePlayPauseCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
+                let audioPlayerAgent = NuguCentralManager.shared.client.audioPlayerAgent
+                audioPlayerAgent.isPlaying ? audioPlayerAgent.pause() : audioPlayerAgent.play()
+                return .success
+            }
+    }
+    
     func addPreviousTrackCommand() {
         guard previousCommandTarget == nil else { return }
         
@@ -252,6 +269,11 @@ private extension ControlCenterManager {
     func removePauseCommand() {
         remoteCommandCenter.pauseCommand.removeTarget(pauseCommandTarget)
         pauseCommandTarget = nil
+    }
+    
+    func removeTogglePlayPauseCommand() {
+        remoteCommandCenter.togglePlayPauseCommand.removeTarget(toggleCommandTarget)
+        toggleCommandTarget = nil
     }
     
     func removePreviousTrackCommand() {
