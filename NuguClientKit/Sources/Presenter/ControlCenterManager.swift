@@ -24,7 +24,7 @@ import MediaPlayer
 import NuguAgents
 import NuguUIKit
 
-final public class ControlCenterManager {
+final class ControlCenterManager {
     private let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
     private let remoteCommandCenter = MPRemoteCommandCenter.shared()
     
@@ -43,7 +43,9 @@ final public class ControlCenterManager {
     }
 }
 
-public extension ControlCenterManager {
+// MARK: - Internal (update)
+
+extension ControlCenterManager {
     func update(_ template: AudioPlayerDisplayTemplate) {
         nowPlayInfoCenterQueue.async { [weak self] in
             guard let self = self else { return }
