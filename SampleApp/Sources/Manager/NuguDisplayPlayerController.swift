@@ -61,8 +61,8 @@ final class NuguDisplayPlayerController {
             self.nowPlayingInfo = nowPlayingInfoForUpdate
             
             // Set MPMediaItemArtwork if imageUrl exists
+            self.mediaArtWorkDownloadDataTask?.cancel()
             if let imageUrl = parsedPayload.imageUrl, let artWorkUrl = URL(string: imageUrl) {
-                self.mediaArtWorkDownloadDataTask?.cancel()
                 self.mediaArtWorkDownloadDataTask = ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
                     guard case let .success(imageData) = result,
                           let artWorkImage = UIImage(data: imageData),
@@ -126,6 +126,7 @@ final class NuguDisplayPlayerController {
     
     func remove() {
         nowPlayInfoCenterQueue.async { [weak self] in
+            self?.mediaArtWorkDownloadDataTask?.cancel()
             self?.removeRemoteCommands()
             self?.nowPlayingInfo = [:]
         }
