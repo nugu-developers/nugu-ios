@@ -36,6 +36,7 @@ public class VoiceChromePresenter: NSObject {
     private var targetView: UIView? {
         superView ?? viewController?.view
     }
+    private var asrBeepPlayer: ASRBeepPlayer?
     
     private var asrState: ASRState = .idle
     private var isMultiturn: Bool = false
@@ -59,6 +60,22 @@ public class VoiceChromePresenter: NSObject {
         }
     }
     
+    public var isStartBeepEnabled = true {
+        didSet {
+            ASRBeepPlayer.isStartBeepEnabled = isStartBeepEnabled
+        }
+    }
+    public var isSuccessBeepEnabled = true {
+        didSet {
+            ASRBeepPlayer.isSuccessBeepEnabled = isSuccessBeepEnabled
+        }
+    }
+    public var isFailBeepEnabled = true {
+        didSet {
+            ASRBeepPlayer.isFailBeepEnabled = isFailBeepEnabled
+        }
+    }
+    
     // Observers
     private let notificationCenter = NotificationCenter.default
     private var interactionControlObserver: Any?
@@ -71,8 +88,14 @@ public class VoiceChromePresenter: NSObject {
     ///   - superView: Target view for `NuguVoiceChrome` should be added to.
     ///   - nuguVoiceChrome: `NuguVoiceChrome` to be managed by `VoiceChromePresenter`. If nil, it is initiated internally.
     ///   - nuguClient: `NuguClient` instance which should be passed for delegation.
-    public convenience init(superView: UIView, nuguVoiceChrome: NuguVoiceChrome? = nil, nuguClient: NuguClient) {
-        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient)
+    ///   - asrBeepPlayerResourcesURL: `ASRBeepPlayerResourcesURL` instance for setting custom url path of beep resources
+    public convenience init(
+        superView: UIView,
+        nuguVoiceChrome: NuguVoiceChrome? = nil,
+        nuguClient: NuguClient,
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL()
+    ) {
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL)
         
         self.superView = superView
     }
@@ -82,15 +105,26 @@ public class VoiceChromePresenter: NSObject {
     ///   - viewController: Target `ViewController` for `NuguVoiceChrome` should be added to.
     ///   - nuguVoiceChrome: `NuguVoiceChrome` to be managed by `VoiceChromePresenter`. If nil, it is initiated internally.
     ///   - nuguClient: `NuguClient` instance which should be passed for delegation.
-    public convenience init(viewController: UIViewController, nuguVoiceChrome: NuguVoiceChrome? = nil, nuguClient: NuguClient) {
-        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient)
+    ///   - asrBeepPlayerResourcesURL: `ASRBeepPlayerResourcesURL` instance for setting custom url path of beep resources
+    public convenience init(
+        viewController: UIViewController,
+        nuguVoiceChrome: NuguVoiceChrome? = nil,
+        nuguClient: NuguClient,
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL()
+    ) {
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL)
         
         self.viewController = viewController
     }
     
-    private init(nuguVoiceChrome: NuguVoiceChrome?, nuguClient: NuguClient) {
+    private init(
+        nuguVoiceChrome: NuguVoiceChrome?,
+        nuguClient: NuguClient,
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL
+    ) {
         self.nuguVoiceChrome = nuguVoiceChrome ?? NuguVoiceChrome(frame: CGRect())
         self.nuguClient = nuguClient
+        self.asrBeepPlayer = ASRBeepPlayer(focusManager: nuguClient.focusManager, resourcesUrl: asrBeepPlayerResourcesURL)
         
         super.init()
         
@@ -246,14 +280,18 @@ private extension VoiceChromePresenter {
             switch notification.result {
             case .complete(let text, _):
                 self.nuguVoiceChrome.setRecognizedText(text: text)
+                self.asrBeepPlayer?.beep(type: .success)
             case .partial(let text, _):
                 self.nuguVoiceChrome.setRecognizedText(text: text)
             case .error(let error, _):
                 switch error {
                 case ASRError.listenFailed:
                     self.nuguVoiceChrome.changeState(state: .speakingError)
-                default:
+                    self.asrBeepPlayer?.beep(type: .fail)
+                case ASRError.recognizeFailed:
                     break
+                default:
+                    self.asrBeepPlayer?.beep(type: .fail)
                 }
             default: break
             }
@@ -304,6 +342,7 @@ private extension VoiceChromePresenter {
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                         self.setChipsButton(actionList: actionList, normalList: normalList)
                     }
+                    self.asrBeepPlayer?.beep(type: .start)
                 }
             case .recognizing:
                 DispatchQueue.main.async { [weak self] in

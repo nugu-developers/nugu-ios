@@ -61,7 +61,6 @@ final class NuguCentralManager {
     }()
     
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
-    lazy private(set) var asrBeepPlayer: ASRBeepPlayer = ASRBeepPlayer(focusManager: client.focusManager)
     
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {

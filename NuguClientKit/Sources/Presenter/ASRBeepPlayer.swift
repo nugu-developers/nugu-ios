@@ -1,6 +1,6 @@
 //
 //  ASRBeepPlayer.swift
-//  SampleApp
+//  NuguClientKit
 //
 //  Created by jin kim on 2019/12/09.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
@@ -23,6 +23,12 @@ import AVFoundation
 import NuguCore
 
 final class ASRBeepPlayer {
+    static var isStartBeepEnabled: Bool = true
+    static var isSuccessBeepEnabled: Bool = true
+    static var isFailBeepEnabled: Bool = true
+    
+    static var resourcesUrl: ASRBeepPlayerResourcesURL!
+    
     private let focusManager: FocusManageable
     
     private let beepQueue = DispatchQueue(label: "com.sktelecom.romaine.asr_beep_player")
@@ -33,10 +39,14 @@ final class ASRBeepPlayer {
     private lazy var successBeepPlayer = BeepType.success.makeAudioPlayer()
     private lazy var failBeepPlayer = BeepType.fail.makeAudioPlayer()
     
-    init(focusManager: FocusManageable) {
+    init(
+        focusManager: FocusManageable,
+        resourcesUrl: ASRBeepPlayerResourcesURL
+    ) {
         self.focusManager = focusManager
-        
         focusManager.add(channelDelegate: self)
+        
+        ASRBeepPlayer.resourcesUrl = resourcesUrl
     }
     
     // MARK: BeepType
@@ -50,7 +60,7 @@ final class ASRBeepPlayer {
     // MARK: Internal (beep)
     
     func beep(type: BeepType) {
-        guard type.isEnabled == true else { return }
+        guard type.isEnabled() == true else { return }
         play(type: type)
         focusManager.requestFocus(channelDelegate: self)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
@@ -63,37 +73,36 @@ final class ASRBeepPlayer {
 
 // MARK: - Private(AVAudioPlayer)
 
-private extension ASRBeepPlayer.BeepType {
-    var isEnabled: Bool {
-        switch self {
-        case .start: return UserDefaults.Standard.useAsrStartSound
-        case .success: return UserDefaults.Standard.useAsrSuccessSound
-        case .fail: return UserDefaults.Standard.useAsrFailSound
-        }
-    }
-    
-    var fileName: String {
+extension ASRBeepPlayer.BeepType {
+    func isEnabled() -> Bool {
         switch self {
         case .start:
-            return "listening_start"
+            return ASRBeepPlayer.isStartBeepEnabled
         case .success:
-            return "listening_end"
+            return ASRBeepPlayer.isSuccessBeepEnabled
         case .fail:
-            return "responsefail"
+            return ASRBeepPlayer.isFailBeepEnabled
         }
-    }
-        
-    var extention: String {
-        return "wav"
-    }
-    
-    var fileTypeHint: String {
-        return AVFileType.wav.rawValue
     }
     
     func makeAudioPlayer() -> AVAudioPlayer? {
-        guard let failBeepUrl = Bundle.main.url(forResource: fileName, withExtension: extention) else { return nil }
-        return try? AVAudioPlayer(contentsOf: failBeepUrl, fileTypeHint: fileTypeHint)
+        switch self {
+        case .start:
+            guard let startBeepResourceUrl = ASRBeepPlayer.resourcesUrl.startBeepResourceUrl else {
+                return nil
+            }
+            return try? AVAudioPlayer(contentsOf: startBeepResourceUrl, fileTypeHint: AVFileType.wav.rawValue)
+        case .success:
+            guard let successBeepResourceUrl = ASRBeepPlayer.resourcesUrl.successBeepResourceUrl else {
+                return nil
+            }
+            return try? AVAudioPlayer(contentsOf: successBeepResourceUrl, fileTypeHint: AVFileType.wav.rawValue)
+        case .fail:
+            guard let failBeepResourceUrl = ASRBeepPlayer.resourcesUrl.failBeepResourceUrl else {
+                return nil
+            }
+            return try? AVAudioPlayer(contentsOf: failBeepResourceUrl, fileTypeHint: AVFileType.wav.rawValue)
+        }
     }
 }
 
@@ -119,11 +128,11 @@ private extension ASRBeepPlayer {
 // MARK: - FocusChannelDelegate
 
 extension ASRBeepPlayer: FocusChannelDelegate {
-    func focusChannelPriority() -> FocusChannelPriority {
+    public func focusChannelPriority() -> FocusChannelPriority {
         return .beep
     }
     
-    func focusChannelDidChange(focusState: FocusState) {
+    public func focusChannelDidChange(focusState: FocusState) {
         log.debug(focusState)
     }
 }

@@ -66,6 +66,10 @@ final class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         
         refreshNugu()
+        
+        voiceChromePresenter.isStartBeepEnabled = UserDefaults.Standard.useAsrStartSound
+        voiceChromePresenter.isSuccessBeepEnabled = UserDefaults.Standard.useAsrSuccessSound
+        voiceChromePresenter.isFailBeepEnabled = UserDefaults.Standard.useAsrFailSound
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -365,19 +369,13 @@ private extension MainViewController {
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
         asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { (notification) in
             switch notification.result {
-            case .complete:
-                DispatchQueue.main.async {
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
-                }
             case .error(let error, _):
                 DispatchQueue.main.async {
                     switch error {
-                    case ASRError.listenFailed:
-                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
                     case ASRError.recognizeFailed:
                         NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
                     default:
-                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+                        break
                     }
                 }
             default: break
@@ -390,10 +388,6 @@ private extension MainViewController {
             log.debug("dialog satate: \(notification.state), multiTurn: \(notification.multiTurn), chips: \(notification.chips.debugDescription)")
 
             switch notification.state {
-            case .listening:
-                DispatchQueue.main.async {
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
-                }
             case .thinking:
                 DispatchQueue.main.async { [weak self] in
                     self?.nuguButton.pauseDeactivateAnimation()
