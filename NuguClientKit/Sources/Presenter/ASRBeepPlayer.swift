@@ -60,7 +60,7 @@ final class ASRBeepPlayer {
     // MARK: Internal (beep)
     
     func beep(type: BeepType) {
-        guard type.isEnabled() == true else { return }
+        guard type.isEnabled == true else { return }
         play(type: type)
         focusManager.requestFocus(channelDelegate: self)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
@@ -74,7 +74,7 @@ final class ASRBeepPlayer {
 // MARK: - Private(AVAudioPlayer)
 
 extension ASRBeepPlayer.BeepType {
-    func isEnabled() -> Bool {
+    var isEnabled: Bool {
         switch self {
         case .start:
             return ASRBeepPlayer.isStartBeepEnabled
