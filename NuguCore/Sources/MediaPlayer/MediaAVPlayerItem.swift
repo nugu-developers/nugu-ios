@@ -78,6 +78,7 @@ final class MediaAVPlayerItem: AVPlayerItem {
     }
     
     deinit {
+        removePlayerItemObservers()
         removeNotificationObservers()
     }
 }
@@ -131,6 +132,24 @@ private extension MediaAVPlayerItem {
                 self.delegate?.mediaAVPlayerItem(self, didChangeBufferState: .bufferFinished)
             }
         })
+    }
+    
+    func removePlayerItemObservers() {
+        if playerStatusObserver != nil {
+            playerStatusObserver = nil
+        }
+        
+        if  playbackBufferEmptyObserver != nil {
+            playbackBufferEmptyObserver = nil
+        }
+        
+        if playbackLikelyToKeepUpObserver != nil {
+            playbackLikelyToKeepUpObserver = nil
+        }
+        
+        if playbackBufferFullObserver != nil {
+            playbackBufferFullObserver = nil
+        }
     }
 }
 
