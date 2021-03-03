@@ -131,7 +131,9 @@ public extension VoiceChromePresenter {
         log.debug("")
         
         if let chipsData = chipsData {
-            nuguVoiceChrome.setChipsData(chipsData: chipsData)
+            nuguVoiceChrome.setChipsData(chipsData: chipsData) { [weak self] chips in
+                self?.delegate?.voiceChromeChipsDidClick(chips: chips)
+            }
         }
         voiceChromeDismissWorkItem?.cancel()
         nuguVoiceChrome.removeFromSuperview()
@@ -189,7 +191,9 @@ private extension VoiceChromePresenter {
         chipsButtonList.append(contentsOf: actionButtonList)
         let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0.text, token: $0.token) }
         chipsButtonList.append(contentsOf: normalButtonList)
-        nuguVoiceChrome.setChipsData(chipsData: chipsButtonList)
+        nuguVoiceChrome.setChipsData(chipsData: chipsButtonList) { [weak self] chips in
+            self?.delegate?.voiceChromeChipsDidClick(chips: chips)
+        }
     }
     
     func disableIdleTimer() {
