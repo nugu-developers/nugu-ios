@@ -25,7 +25,12 @@ import NuguAgents
 import NuguUIKit
 
 final class ControlCenterManager {
-    private let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+    private var nowPlayingInfo: [String: Any] = [:] {
+        didSet {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        }
+    }
+    
     private let remoteCommandCenter = MPRemoteCommandCenter.shared()
     
     private let nowPlayInfoCenterQueue = DispatchQueue(label: "com.sktelecom.romaine.now_playing_info_update_queue")
@@ -36,6 +41,8 @@ final class ControlCenterManager {
     private var previousCommandTarget: Any?
     private var nextCommandTarget: Any?
     private var seekCommandTarget: Any?
+    
+    private var mediaArtWorkDownloadDataTask: URLSessionDataTask?
     
     private let audioPlayerAgent: AudioPlayerAgentProtocol
     
@@ -56,30 +63,30 @@ extension ControlCenterManager {
             }
             
             // Set nowPlayingInfo display properties
-            var nowPlayingInfo = self.nowPlayingInfoCenter.nowPlayingInfo ?? [:]
-            nowPlayingInfo[MPMediaItemPropertyTitle] = parsedPayload.title
-            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = parsedPayload.albumTitle
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.audioPlayerAgent.isPlaying ? 1.0 : 0.0
+            var nowPlayingInfoForUpdate = self.nowPlayingInfo
+            nowPlayingInfoForUpdate[MPMediaItemPropertyTitle] = parsedPayload.title
+            nowPlayingInfoForUpdate[MPMediaItemPropertyAlbumTitle] = parsedPayload.albumTitle
+            nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyPlaybackRate] = self.audioPlayerAgent.isPlaying ? 1.0 : 0.0
             
             // Set song title and album title first. Because getting album art must be processed asynchronouly.
-            self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+            self.nowPlayingInfo = nowPlayingInfoForUpdate
             
             // Set MPMediaItemArtwork if imageUrl exists
+            self.mediaArtWorkDownloadDataTask?.cancel()
             if let imageUrl = parsedPayload.imageUrl, let artWorkUrl = URL(string: imageUrl) {
-                ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
+                self.mediaArtWorkDownloadDataTask = ImageDataLoader.shared.load(imageUrl: artWorkUrl) { [weak self] (result) in
                     guard case let .success(imageData) = result,
-                          let artWorkImage = UIImage(data: imageData) else {
-                        self?.nowPlayingInfoCenter.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
+                          let artWorkImage = UIImage(data: imageData),
+                          var nowPlayingInfoForUpdate = self?.nowPlayingInfo else {
+                        self?.nowPlayingInfo[MPMediaItemPropertyArtwork] = nil
                         return
                     }
-
                     let artWork = MPMediaItemArtwork(boundsSize: artWorkImage.size) { _ in artWorkImage }
-                    var playingInfo = self?.nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
-                    playingInfo[MPMediaItemPropertyArtwork] = artWork
-                    self?.nowPlayingInfoCenter.nowPlayingInfo = playingInfo
+                    nowPlayingInfoForUpdate[MPMediaItemPropertyArtwork] = artWork
+                    self?.nowPlayingInfo = nowPlayingInfoForUpdate
                 }
             } else {
-                self.nowPlayingInfoCenter.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
+                self.nowPlayingInfo[MPMediaItemPropertyArtwork] = nil
             }
             self.addRemoteCommands(seekable: template.isSeekable)
         }
@@ -89,31 +96,31 @@ extension ControlCenterManager {
         nowPlayInfoCenterQueue.async { [weak self] in
             guard let self = self else { return }
             
-            var nowPlayingInfo = self.nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
+            var nowPlayingInfoForUpdate = self.nowPlayingInfo
             
             switch state {
             case .playing:
                 // Set playbackTime as current offset, set playbackRate as 1
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioPlayerAgent.offset ?? 0
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = self.audioPlayerAgent.duration ?? 0
+                nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioPlayerAgent.offset ?? 0
+                nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+                nowPlayingInfoForUpdate[MPMediaItemPropertyPlaybackDuration] = self.audioPlayerAgent.duration ?? 0
                 
             case .paused:
                 // Set playbackRate as 0, set playbackTime as current offset
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioPlayerAgent.offset ?? 0
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
+                nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioPlayerAgent.offset ?? 0
+                nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
             default:
                 // Set playbackRate as 0, set playbackTime as 0
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = 0
+                nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0
+                nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
+                nowPlayingInfoForUpdate[MPMediaItemPropertyPlaybackDuration] = 0
             }
             
             if self.seekCommandTarget == nil {
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = 0
+                nowPlayingInfoForUpdate[MPMediaItemPropertyPlaybackDuration] = 0
             }
-            
-            self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+                        
+            self.nowPlayingInfo = nowPlayingInfoForUpdate
         }
     }
     
@@ -121,17 +128,18 @@ extension ControlCenterManager {
         nowPlayInfoCenterQueue.async { [weak self] in
             guard let self = self else { return }
 
-            var nowPlayingInfo = self.nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = (self.seekCommandTarget != nil) ? duration : 0
+            var nowPlayingInfoForUpdate = self.nowPlayingInfo
+            nowPlayingInfoForUpdate[MPMediaItemPropertyPlaybackDuration] = (self.seekCommandTarget != nil) ? duration : 0
             
-            self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+            self.nowPlayingInfo = nowPlayingInfoForUpdate
         }
     }
     
     func remove() {
         nowPlayInfoCenterQueue.async { [weak self] in
+            self?.mediaArtWorkDownloadDataTask?.cancel()
             self?.removeRemoteCommands()
-            self?.nowPlayingInfoCenter.nowPlayingInfo = nil
+            self?.nowPlayingInfo = [:]
         }
     }
 }
@@ -221,9 +229,9 @@ private extension ControlCenterManager {
     
     func addTogglePlayPauseComand() {
         toggleCommandTarget = remoteCommandCenter
-            .togglePlayPauseCommand.addTarget { _ -> MPRemoteCommandHandlerStatus in
-                let audioPlayerAgent = NuguCentralManager.shared.client.audioPlayerAgent
-                audioPlayerAgent.isPlaying ? audioPlayerAgent.pause() : audioPlayerAgent.play()
+            .togglePlayPauseCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
+                guard let self = self else { return .commandFailed }
+                self.audioPlayerAgent.isPlaying ? self.audioPlayerAgent.pause() : self.audioPlayerAgent.play()
                 return .success
             }
     }

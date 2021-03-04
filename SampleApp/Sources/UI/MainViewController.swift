@@ -66,6 +66,10 @@ final class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         
         refreshNugu()
+        
+        voiceChromePresenter.isStartBeepEnabled = UserDefaults.Standard.useAsrStartSound
+        voiceChromePresenter.isSuccessBeepEnabled = UserDefaults.Standard.useAsrSuccessSound
+        voiceChromePresenter.isFailBeepEnabled = UserDefaults.Standard.useAsrFailSound
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -90,8 +94,8 @@ final class MainViewController: UIViewController {
         
         switch segueId {
         case "mainToGuideWeb":
-            guard let webViewController = segue.destination as? WebViewController else { return }
-            webViewController.initialURL = sender as? URL
+            guard let guideWebViewController = segue.destination as? GuideWebViewController else { return }
+            guideWebViewController.initialURLString = sender as? String
             
             UserDefaults.Standard.hasSeenGuideWeb = true
         default:
@@ -198,9 +202,7 @@ private extension MainViewController {
         ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { [weak self] (result) in
             switch result {
             case .success(let urlString):
-                if let url = URL(string: urlString) {
-                    self?.performSegue(withIdentifier: "mainToGuideWeb", sender: url)
-                }
+                self?.performSegue(withIdentifier: "mainToGuideWeb", sender: urlString)
             case .failure(let error):
                 log.error(error)
             }
@@ -231,9 +233,9 @@ private extension MainViewController {
     }
 }
 
-// MARK: - Private (Voice Chrome)
+// MARK: - Internal (Voice Chrome)
 
-private extension MainViewController {
+extension MainViewController {
     func presentVoiceChrome(initiator: ASRInitiator) {
         do {
             try voiceChromePresenter.presentVoiceChrome(chipsData: [
@@ -349,19 +351,13 @@ private extension MainViewController {
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
         asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { (notification) in
             switch notification.result {
-            case .complete:
-                DispatchQueue.main.async {
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .success)
-                }
             case .error(let error, _):
                 DispatchQueue.main.async {
                     switch error {
-                    case ASRError.listenFailed:
-                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
                     case ASRError.recognizeFailed:
                         NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
                     default:
-                        NuguCentralManager.shared.asrBeepPlayer.beep(type: .fail)
+                        break
                     }
                 }
             default: break
@@ -374,10 +370,6 @@ private extension MainViewController {
             log.debug("dialog satate: \(notification.state), multiTurn: \(notification.multiTurn), chips: \(notification.chips.debugDescription)")
 
             switch notification.state {
-            case .listening:
-                DispatchQueue.main.async {
-                    NuguCentralManager.shared.asrBeepPlayer.beep(type: .start)
-                }
             case .thinking:
                 DispatchQueue.main.async { [weak self] in
                     self?.nuguButton.pauseDeactivateAnimation()
