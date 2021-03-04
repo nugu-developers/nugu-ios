@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="983-bK-Hnw">
-    <device id="retina5_9" orientation="landscape" appearance="light"/>
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
@@ -29,11 +29,11 @@
             <objects>
                 <viewController id="xTl-xO-463" customClass="IntroViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KvA-tF-gRF">
-                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="4iW-66-i8q">
-                                <rect key="frame" x="316" y="121.66666666666669" width="180" height="111"/>
+                                <rect key="frame" x="97.666666666666686" y="355.66666666666669" width="180" height="111"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Method" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dfr-R9-Oqn">
                                         <rect key="frame" x="0.0" y="0.0" width="180" height="50"/>
@@ -45,21 +45,21 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ocq-it-8x0">
-                                        <rect key="frame" x="0.0" y="49.999999999999986" width="180" height="1"/>
+                                        <rect key="frame" x="0.0" y="50" width="180" height="1"/>
                                         <color key="backgroundColor" red="1" green="0.50663307371269251" blue="0.40323486555803068" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="X0j-hR-cNe"/>
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XU5-aF-uOi">
-                                        <rect key="frame" x="0.0" y="50.999999999999986" width="180" height="30"/>
+                                        <rect key="frame" x="0.0" y="51" width="180" height="30"/>
                                         <state key="normal" title="T-ID 로그인"/>
                                         <connections>
                                             <action selector="tidLoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="lvJ-8m-bGL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PRw-WW-UgU">
-                                        <rect key="frame" x="0.0" y="80.999999999999986" width="180" height="30"/>
+                                        <rect key="frame" x="0.0" y="81" width="180" height="30"/>
                                         <state key="normal" title="Anonymous 로그인"/>
                                         <connections>
                                             <action selector="anonymousLoginButtonDidClick:" destination="xTl-xO-463" eventType="touchUpInside" id="wvY-om-K77"/>
@@ -92,18 +92,18 @@
             <objects>
                 <viewController storyboardIdentifier="MainViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CDe-cd-LHH" customClass="MainViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wlV-sa-ViT">
-                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H7A-kt-fwH">
-                                <rect key="frame" x="669" y="50" width="49" height="30"/>
+                                <rect key="frame" x="276" y="94" width="49" height="30"/>
                                 <state key="normal" title="Setting"/>
                                 <connections>
                                     <action selector="showSettingsButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="b1X-Ed-Vkj"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pN-zT-foV" customClass="NuguButton" customModule="NuguUIKit">
-                                <rect key="frame" x="370" y="262" width="72" height="72"/>
+                                <rect key="frame" x="151.66666666666666" y="686" width="72" height="72"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="72" id="JUG-kC-aCN"/>
                                     <constraint firstAttribute="height" constant="72" id="qlP-Rt-7cq"/>
@@ -161,7 +161,7 @@
             <objects>
                 <viewController storyboardIdentifier="GuideWebViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gGQ-jV-Gla" customClass="GuideWebViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="l79-V0-KsH">
-                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KPO-NT-hDI" customClass="NuguServiceWebView" customModule="NuguServiceKit">
@@ -169,7 +169,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AN6-wp-3m1" userLabel="CloseButton">
-                                <rect key="frame" x="724" y="19" width="28" height="28"/>
+                                <rect key="frame" x="331" y="19" width="28" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="3pH-36-wle"/>
                                     <constraint firstAttribute="width" constant="28" id="n5c-Th-T2R"/>
@@ -206,18 +206,18 @@
             <objects>
                 <viewController storyboardIdentifier="SettingViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YYF-Xk-QMg" customClass="SettingViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pr5-Ye-xcI">
-                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="64" estimatedRowHeight="64" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="4mt-z8-MSl">
-                                <rect key="frame" x="44" y="55" width="724" height="320"/>
+                                <rect key="frame" x="0.0" y="99" width="375" height="713"/>
                                 <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingTableViewCell" textLabel="8rE-G9-Qs6" detailTextLabel="ASl-iC-Voj" rowHeight="64" style="IBUITableViewCellStyleValue1" id="upZ-qj-1B3" customClass="SettingTableViewCell" customModule="SampleApp" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="55.333332061767578" width="692" height="64"/>
+                                        <rect key="frame" x="16" y="55.333332061767578" width="343" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="upZ-qj-1B3" id="EWO-Fg-cre">
-                                            <rect key="frame" x="0.0" y="0.0" width="692" height="64"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="64"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8rE-G9-Qs6">
@@ -228,7 +228,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ASl-iC-Voj">
-                                                    <rect key="frame" x="632.33333333333337" y="22" width="43.666666666666664" height="20.333333333333332"/>
+                                                    <rect key="frame" x="283.33333333333331" y="22" width="43.666666666666664" height="20.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -255,7 +255,7 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Jm-a3-ikb" userLabel="CloseButton">
-                                <rect key="frame" x="724" y="19" width="28" height="28"/>
+                                <rect key="frame" x="331" y="63" width="28" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="28" id="2VC-9B-NtQ"/>
                                     <constraint firstAttribute="height" constant="28" id="3hT-yq-IyV"/>
@@ -294,11 +294,11 @@
             <objects>
                 <viewController storyboardIdentifier="NuguServiceWebViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7aI-qm-ARe" customClass="NuguServiceWebViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Lto-Ie-wFf">
-                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxj-7v-TqU" userLabel="CloseButton">
-                                <rect key="frame" x="724" y="19" width="28" height="28"/>
+                                <rect key="frame" x="331" y="63" width="28" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="28" id="vwU-Rj-ak8"/>
                                     <constraint firstAttribute="height" constant="28" id="zkY-tk-Hdi"/>
@@ -311,7 +311,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kZk-Wb-I15" customClass="NuguServiceWebView" customModule="NuguServiceKit">
-                                <rect key="frame" x="44" y="57" width="724" height="318"/>
+                                <rect key="frame" x="0.0" y="101" width="375" height="711"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                         </subviews>

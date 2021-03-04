@@ -24,14 +24,6 @@ import NuguUIKit
 
 /// A delegate that application can extend to observe `DisplayWebViewPresenter` changes.
 public protocol AudioDisplayViewPresenterDelegate: class {
-    /// Delegate method called when control center content should be updated.
-    func displayControllerShouldUpdateTemplate(template: AudioPlayerDisplayTemplate)
-    /// Delegate method called when control center state should be updated.
-    func displayControllerShouldUpdateState(state: AudioPlayerState)
-    /// Delegate method called when control center duration should be updated.
-    func displayControllerShouldUpdateDuration(duration: Int)
-    /// Delegate method called when control center should be removed.
-    func displayControllerShouldRemove()
     /// Delegate method called when NuguButton in AudioDisplayView has been clicked.
     func onAudioDisplayViewNuguButtonClick()
     /// Delegate method called when chips button in AudioDisplayView has been clicked.
