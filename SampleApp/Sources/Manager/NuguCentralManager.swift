@@ -29,8 +29,6 @@ import NuguUIKit
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     
-    let displayPlayerController = NuguDisplayPlayerController()
-    
     private let notificationCenter = NotificationCenter.default
     private var systemAgentExceptionObserver: Any?
     private var systemAgentRevokeObserver: Any?
