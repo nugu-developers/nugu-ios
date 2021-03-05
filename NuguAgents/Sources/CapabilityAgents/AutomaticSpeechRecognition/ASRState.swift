@@ -21,7 +21,7 @@
 import Foundation
 
 /// Identifies the `ASRAgent` state.
-public enum ASRState {
+public enum ASRState: String {
     /// In this state, the `ASRAgent` is not waiting for or transmitting speech.
     case idle
     /// In this state, the `ASRAgent` is waiting for a call to `recognize()`.
@@ -33,3 +33,16 @@ public enum ASRState {
     /// In this state, the `ASRAgent` has finished streaming and is waiting for completion of an Event.
     case busy
 }
+
+extension ASRState {
+    var value: String {
+        switch self {
+        case .idle: return "IDLE"
+        case .expectingSpeech: return "EXPECTING_SPEECH"
+        case .listening: return "LISTENING"
+        case .recognizing: return "RECOGNIZING"
+        case .busy: return "BUSY"
+        }
+    }
+}
+
