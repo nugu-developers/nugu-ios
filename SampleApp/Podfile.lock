@@ -36,7 +36,7 @@ PODS:
     - NuguUtils (= 0.28.0)
   - NuguUtils (0.28.0):
     - RxSwift (~> 5)
-  - RxSwift (5.1.1)
+  - RxSwift (5.1.2)
   - SilverTray (1.2.6)
 
 DEPENDENCIES:
@@ -89,7 +89,7 @@ SPEC CHECKSUMS:
   NuguServiceKit: b1f048802e3c59564f33ae5f497a23a40386b0d4
   NuguUIKit: 0aab53c269f53a39dbacb7d54824008c2cbf0dc0
   NuguUtils: ca9f19db4a192de734bfd92893f0c7bef9129165
-  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  RxSwift: 1e2e1f9570186967f617e49128ed26ccf1bafc8e
   SilverTray: d006036dd35c1b898497c28dbf06eddce6f1745d
 
 PODFILE CHECKSUM: 8298bfb0e4bcda25cb6083e09d051b8025ea2dee
