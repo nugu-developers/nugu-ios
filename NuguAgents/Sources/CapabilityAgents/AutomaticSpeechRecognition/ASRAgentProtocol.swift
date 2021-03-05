@@ -49,6 +49,11 @@ public protocol ASRAgentProtocol: CapabilityAgentable, TypedNotifyable {
     ///
     /// This function can be called in any state, and will end any Event which is currently in progress.
     func stopRecognition()
+    
+    /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
+    ///
+    /// This function can only be called in the LISTENING and RECOGNIZING state.
+    func stopSpeech()
 }
 
 // MARK: - Default

@@ -29,8 +29,6 @@ import NuguUIKit
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     
-    let displayPlayerController = NuguDisplayPlayerController()
-    
     private let notificationCenter = NotificationCenter.default
     private var systemAgentExceptionObserver: Any?
     private var systemAgentRevokeObserver: Any?
@@ -61,7 +59,6 @@ final class NuguCentralManager {
     }()
     
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
-    lazy private(set) var asrBeepPlayer: ASRBeepPlayer = ASRBeepPlayer(focusManager: client.focusManager)
     
     lazy private(set) var oauthClient: NuguOAuthClient = {
         do {

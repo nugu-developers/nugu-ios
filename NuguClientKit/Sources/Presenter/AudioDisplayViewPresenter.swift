@@ -42,6 +42,8 @@ public class AudioDisplayViewPresenter {
     private var audioPlayerStateObserver: Any?
     private var audioPlayerDurationObserver: Any?
     
+    private var controlCenterManager: ControlCenterManager?
+    
     /// Initialize with superView
     /// - Parameters:
     ///   - superView: Target view for AudioDisplayView should be added to.
@@ -66,6 +68,8 @@ public class AudioDisplayViewPresenter {
     private init(nuguClient: NuguClient) {
         self.nuguClient = nuguClient
         
+        controlCenterManager = ControlCenterManager(audioPlayerAgent: nuguClient.audioPlayerAgent)
+        
         addAudioPlayerAgentObserver(nuguClient.audioPlayerAgent)
         nuguClient.audioPlayerAgent.displayDelegate = self
     }
@@ -87,14 +91,14 @@ extension AudioDisplayViewPresenter: AudioPlayerDisplayDelegate {
     public func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         DispatchQueue.main.async { [weak self] in
             self?.addDisplayAudioPlayerView(audioPlayerDisplayTemplate: template, completion: completion)
-            self?.delegate?.displayControllerShouldUpdateTemplate(template: template)
+            self?.controlCenterManager?.update(template)
         }
     }
     
     public func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
         DispatchQueue.main.async { [weak self] in
             self?.dismissDisplayAudioPlayerView()
-            self?.delegate?.displayControllerShouldRemove()
+            self?.controlCenterManager?.remove()
         }
     }
     
@@ -253,11 +257,11 @@ private extension AudioDisplayViewPresenter {
     func addAudioPlayerAgentObserver(_ object: AudioPlayerAgentProtocol) {
         audioPlayerStateObserver = object.observe(NuguAgentNotification.AudioPlayer.State.self, queue: .main) { [weak self] (notification) in
             self?.audioDisplayView?.audioPlayerState = notification.state
-            self?.delegate?.displayControllerShouldUpdateState(state: notification.state)
+            self?.controlCenterManager?.update(notification.state)
         }
         
         audioPlayerDurationObserver = object.observe(NuguAgentNotification.AudioPlayer.Duration.self, queue: .main) { [weak self] (notification) in
-            self?.delegate?.displayControllerShouldUpdateDuration(duration: notification.duration)
+            self?.controlCenterManager?.update(notification.duration)
         }
     }
 }
