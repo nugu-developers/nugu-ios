@@ -24,6 +24,7 @@ import AVFoundation
 /// <#Description#>
 public enum MicInputError: Error {
     case audioFormatError
+    case audioHardwareError
     case resamplerError(source: AVAudioFormat, dest: AVAudioFormat)
 }
 
@@ -34,6 +35,8 @@ extension MicInputError: LocalizedError {
         switch self {
         case .audioFormatError:
             return "audio format error"
+        case .audioHardwareError:
+            return "audio hardware is not available"
         case .resamplerError(let source, let dest):
             return "cannot resample. source(\(source)) or destnation (\(dest)) sample may be wrong"
         }

@@ -113,10 +113,16 @@ public class MicInputProvider {
             throw error
         }
         
-        guard 0 < inputFormat.channelCount,
-            let recordingFormat = audioFormat else {
-                log.error("AudioFormat is not available")
-                throw MicInputError.audioFormatError
+        guard 0 < inputFormat.channelCount, 0 < inputFormat.sampleRate else {
+            log.error("Audio hardware is not available now."
+                        + "\ncurrent input node channelCount: \(inputFormat.channelCount), sampleRate: \(inputFormat.sampleRate)"
+                        + "\naudio session input data source: \(AVAudioSession.sharedInstance().inputDataSource?.debugDescription ?? "nil")")
+            throw MicInputError.audioHardwareError
+        }
+        
+        guard let recordingFormat = audioFormat else {
+            log.error("AudioFormat is not available")
+            throw MicInputError.audioFormatError
         }
         
         log.info("convert from: \(String(describing: inputFormat)) to: \(recordingFormat)")
