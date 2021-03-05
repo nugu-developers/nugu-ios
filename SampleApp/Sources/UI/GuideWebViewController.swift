@@ -94,7 +94,7 @@ extension GuideWebViewController: NuguServiceWebJavascriptDelegate {
                 return
             }
             dismiss(animated: true) {
-                mainViewController.presentVoiceChrome(initiator: .user)
+                mainViewController.presentVoiceChrome(initiator: .tap)
             }
         } else {
             dismiss(animated: true)

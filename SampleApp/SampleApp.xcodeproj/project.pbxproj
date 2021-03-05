@@ -10,16 +10,13 @@
 		73F284DF23815CC9004EBBDF /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A523815CC9004EBBDF /* SettingViewController.swift */; };
 		73F284E023815CC9004EBBDF /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A623815CC9004EBBDF /* IntroViewController.swift */; };
 		73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A723815CC9004EBBDF /* MainViewController.swift */; };
-		73F284E223815CC9004EBBDF /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A823815CC9004EBBDF /* WebViewController.swift */; };
-		73F284E323815CC9004EBBDF /* NuguWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284AA23815CC9004EBBDF /* NuguWebView.swift */; };
 		73F284F923815CC9004EBBDF /* SampleAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C623815CC9004EBBDF /* SampleAppError.swift */; };
 		73F284FA23815CC9004EBBDF /* SampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284C723815CC9004EBBDF /* SampleApp.swift */; };
 		73F284FC23815CC9004EBBDF /* NuguCentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CA23815CC9004EBBDF /* NuguCentralManager.swift */; };
-		73F284FD23815CC9004EBBDF /* NuguDisplayPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CB23815CC9004EBBDF /* NuguDisplayPlayerController.swift */; };
 		73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284CC23815CC9004EBBDF /* AppDelegate.swift */; };
 		73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */; };
+		7E06776625F216340065F2F0 /* GuideWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06776525F216340065F2F0 /* GuideWebViewController.swift */; };
 		7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */; };
-		7E6A0B0C2410849C00C7A19E /* ASRBeepPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */; };
 		7E6A0B0D2410849C00C7A19E /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */; };
 		7E6A0B14241084C000C7A19E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B0F241084C000C7A19E /* Assets.xcassets */; };
 		7E6A0B15241084C000C7A19E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B10241084C000C7A19E /* LaunchScreen.storyboard */; };
@@ -46,18 +43,15 @@
 		73F284A523815CC9004EBBDF /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		73F284A623815CC9004EBBDF /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		73F284A723815CC9004EBBDF /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		73F284A823815CC9004EBBDF /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
-		73F284AA23815CC9004EBBDF /* NuguWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguWebView.swift; sourceTree = "<group>"; };
 		73F284C623815CC9004EBBDF /* SampleAppError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleAppError.swift; sourceTree = "<group>"; };
 		73F284C723815CC9004EBBDF /* SampleApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleApp.swift; sourceTree = "<group>"; };
 		73F284CA23815CC9004EBBDF /* NuguCentralManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguCentralManager.swift; sourceTree = "<group>"; };
-		73F284CB23815CC9004EBBDF /* NuguDisplayPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguDisplayPlayerController.swift; sourceTree = "<group>"; };
 		73F284CC23815CC9004EBBDF /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		73F284D023815CC9004EBBDF /* UserDefaults+Standard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Standard.swift"; sourceTree = "<group>"; };
 		73F284D223815CC9004EBBDF /* SampleApp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SampleApp.entitlements; sourceTree = "<group>"; };
 		73F284D823815CC9004EBBDF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7E06776525F216340065F2F0 /* GuideWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideWebViewController.swift; sourceTree = "<group>"; };
 		7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
-		7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		7E6A0B0A2410849C00C7A19E /* UserDefaultsWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsWrapper.swift; sourceTree = "<group>"; };
 		7E6A0B0F241084C000C7A19E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7E6A0B11241084C000C7A19E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -143,11 +137,11 @@
 		73F284A423815CC9004EBBDF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				7E06776525F216340065F2F0 /* GuideWebViewController.swift */,
 				7E91D18F24AF281E00E48017 /* NuguServiceWebViewController.swift */,
 				73F284A523815CC9004EBBDF /* SettingViewController.swift */,
 				73F284A623815CC9004EBBDF /* IntroViewController.swift */,
 				73F284A723815CC9004EBBDF /* MainViewController.swift */,
-				73F284A823815CC9004EBBDF /* WebViewController.swift */,
 				73F284A923815CC9004EBBDF /* Views */,
 			);
 			path = UI;
@@ -157,7 +151,6 @@
 			isa = PBXGroup;
 			children = (
 				7E6D116F249C6E1800E3580C /* SettingTableViewCell.swift */,
-				73F284AA23815CC9004EBBDF /* NuguWebView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -175,7 +168,6 @@
 			isa = PBXGroup;
 			children = (
 				73F284CA23815CC9004EBBDF /* NuguCentralManager.swift */,
-				73F284CB23815CC9004EBBDF /* NuguDisplayPlayerController.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -202,7 +194,6 @@
 			isa = PBXGroup;
 			children = (
 				7E6A0B072410849C00C7A19E /* LocalTTSAgent.swift */,
-				7E6A0B082410849C00C7A19E /* ASRBeepPlayer.swift */,
 			);
 			path = MediaPlayer;
 			sourceTree = "<group>";
@@ -384,20 +375,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */,
-				73F284FD23815CC9004EBBDF /* NuguDisplayPlayerController.swift in Sources */,
 				7E91D19024AF281E00E48017 /* NuguServiceWebViewController.swift in Sources */,
 				7E6D1170249C6E1800E3580C /* SettingTableViewCell.swift in Sources */,
 				73F284DF23815CC9004EBBDF /* SettingViewController.swift in Sources */,
 				73F284FE23815CC9004EBBDF /* AppDelegate.swift in Sources */,
 				7E6A0B0D2410849C00C7A19E /* UserDefaultsWrapper.swift in Sources */,
+				7E06776625F216340065F2F0 /* GuideWebViewController.swift in Sources */,
 				73F284E023815CC9004EBBDF /* IntroViewController.swift in Sources */,
 				73F284F923815CC9004EBBDF /* SampleAppError.swift in Sources */,
-				73F284E323815CC9004EBBDF /* NuguWebView.swift in Sources */,
 				73F284FC23815CC9004EBBDF /* NuguCentralManager.swift in Sources */,
 				73F2850123815CC9004EBBDF /* UserDefaults+Standard.swift in Sources */,
-				73F284E223815CC9004EBBDF /* WebViewController.swift in Sources */,
 				73F284FA23815CC9004EBBDF /* SampleApp.swift in Sources */,
-				7E6A0B0C2410849C00C7A19E /* ASRBeepPlayer.swift in Sources */,
 				7E6A0B0B2410849C00C7A19E /* LocalTTSAgent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
