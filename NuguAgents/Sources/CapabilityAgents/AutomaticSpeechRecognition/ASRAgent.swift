@@ -30,7 +30,7 @@ import RxSwift
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.4")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.5")
     private let playSyncProperty = PlaySyncProperty(layerType: .asr, contextType: .sound)
     
     // Private
@@ -268,10 +268,7 @@ public extension ASRAgent {
         return eventIdentifier.dialogRequestId
     }
     
-    /// This function asks the ASRAgent to stop streaming audio and end an ongoing Recognize Event, which transitions it to the BUSY state.
-    ///
-    /// This function can only be called in the LISTENING and RECOGNIZING state.
-    private func stopSpeech() {
+    func stopSpeech() {
         log.debug("")
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -307,7 +304,7 @@ public extension ASRAgent {
 extension ASRAgent: FocusChannelDelegate {
     public func focusChannelPriority() -> FocusChannelPriority {
         switch asrRequest?.initiator {
-        case .scenario: return .dmRecognition
+        case .expectSpeech: return .dmRecognition
         default: return .userRecognition
         }
     }
@@ -340,11 +337,13 @@ extension ASRAgent: FocusChannelDelegate {
 
 extension ASRAgent: ContextInfoDelegate {
     public func contextInfoRequestContext(completion: (ContextInfo?) -> Void) {
-        let payload: [String: AnyHashable] = [
+        let payload: [String: AnyHashable?] = [
             "version": capabilityAgentProperty.version,
-            "engine": "skt"
+            "engine": "skt",
+            "state": self.asrState.value,
+            "initiator": self.asrRequest?.initiator.value
         ]
-        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload))
+        completion(ContextInfo(contextType: .capability, name: capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }
 
@@ -477,7 +476,7 @@ private extension ASRAgent {
                 }
                 
                 self.asrState = .expectingSpeech
-                self.startRecognition(initiator: .scenario, eventIdentifier: EventIdentifier(), completion: nil)
+                self.startRecognition(initiator: .expectSpeech, eventIdentifier: EventIdentifier(), completion: nil)
             }
         }
     }
@@ -633,7 +632,7 @@ private extension ASRAgent {
 //            endPointDetector = ServerEndPointDetector(asrOptions: asrRequest.options)
 //
 //            // send wake up voice data
-//            if case let .wakeUpKeyword(_, data, _, _, _) = asrRequest.options.initiator {
+//            if case let .wakeUpWord(_, data, _, _, _) = asrRequest.options.initiator {
 //                do {
 //                    let speexData = try SpeexEncoder(sampleRate: Int(asrRequest.options.sampleRate), inputType: .linearPcm16).encode(data: data)
 //
@@ -682,6 +681,25 @@ private extension ASRAgent {
         completion: ((StreamDataState) -> Void)?
     ) {
         let semaphore = DispatchSemaphore(value: 0)
+        let options: ASROptions
+        if let epd = self.expectSpeech?.payload.epd {
+            options = ASROptions(
+                maxDuration: epd.maxDuration ?? self.options.maxDuration,
+                timeout: epd.timeout ?? self.options.timeout,
+                pauseLength: epd.pauseLength ?? self.options.pauseLength,
+                encoding: self.options.encoding,
+                endPointing: self.options.endPointing
+            )
+        } else {
+            options = self.options
+        }
+        asrRequest = ASRRequest(
+            eventIdentifier: eventIdentifier,
+            initiator: initiator,
+            options: options,
+            referrerDialogRequestId: expectSpeech?.dialogRequestId,
+            completion: completion
+        )
         self.contextManager.getContexts { [weak self] contextPayload in
             defer {
                 semaphore.signal()
@@ -689,27 +707,7 @@ private extension ASRAgent {
             
             guard let self = self else { return }
             
-            let options: ASROptions
-            if let epd = self.expectSpeech?.payload.epd {
-                options = ASROptions(
-                    maxDuration: epd.maxDuration ?? self.options.maxDuration,
-                    timeout: epd.timeout ?? self.options.timeout,
-                    pauseLength: epd.pauseLength ?? self.options.pauseLength,
-                    encoding: self.options.encoding,
-                    endPointing: self.options.endPointing
-                )
-            } else {
-                options = self.options
-            }
-            self.asrRequest = ASRRequest(
-                contextPayload: contextPayload,
-                eventIdentifier: eventIdentifier,
-                initiator: initiator,
-                options: options,
-                referrerDialogRequestId: self.expectSpeech?.dialogRequestId,
-                completion: completion
-            )
-            
+            self.asrRequest?.contextPayload = contextPayload
             self.focusManager.requestFocus(channelDelegate: self)
         }
         

@@ -181,7 +181,7 @@ private extension MainViewController {
     }
     
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
-        presentVoiceChrome(initiator: .user)
+        presentVoiceChrome(initiator: .tap)
     }
     
     @IBAction func sendTextInput(_ button: UIButton) {
@@ -351,7 +351,7 @@ extension MainViewController: UIGestureRecognizerDelegate {
 
 extension MainViewController: DisplayWebViewPresenterDelegate {    
     func onDisplayWebViewNuguButtonClick() {
-        presentVoiceChrome(initiator: .user)
+        presentVoiceChrome(initiator: .tap)
     }
 }
 
@@ -375,7 +375,7 @@ extension MainViewController: AudioDisplayViewPresenterDelegate {
     }
     
     func onAudioDisplayViewNuguButtonClick() {
-        presentVoiceChrome(initiator: .user)
+        presentVoiceChrome(initiator: .tap)
     }
     
     func onAudioDisplayViewChipsSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
@@ -388,7 +388,7 @@ extension MainViewController: AudioDisplayViewPresenterDelegate {
 extension MainViewController: KeywordDetectorDelegate {
     func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
         DispatchQueue.main.async { [weak self] in
-            self?.presentVoiceChrome(initiator: .wakeUpKeyword(
+            self?.presentVoiceChrome(initiator: .wakeUpWord(
                 keyword: keyword,
                 data: data,
                 start: start,
