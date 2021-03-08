@@ -23,10 +23,11 @@ import Foundation
 import NuguCore
 
 struct ASRRequest {
-    let contextPayload: [ContextInfo]
     let eventIdentifier: EventIdentifier
     let initiator: ASRInitiator
     let options: ASROptions
     let referrerDialogRequestId: String?
     let completion: ((StreamDataState) -> Void)?
+    
+    var contextPayload: [ContextInfo] = []
 }

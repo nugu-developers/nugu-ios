@@ -22,7 +22,21 @@ import Foundation
 
 /// <#Description#>
 public enum ASRInitiator: Equatable {
-    case wakeUpKeyword(keyword: String?, data: Data, start: Int, end: Int, detection: Int)
-    case user
-    case scenario
+    case wakeUpWord(keyword: String?, data: Data, start: Int, end: Int, detection: Int)
+    case pressAndHold
+    case tap
+    case expectSpeech
+    case earset
+}
+
+extension ASRInitiator {
+    var value: String {
+        switch self {
+        case .wakeUpWord: return "WAKE_UP_WORD"
+        case .pressAndHold: return "PRESS_AND_HOLD"
+        case .tap: return "TAP"
+        case .expectSpeech: return "EXPECT_SPEECH"
+        case .earset: return "EARSET"
+        }
+    }
 }

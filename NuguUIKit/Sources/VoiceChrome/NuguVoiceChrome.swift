@@ -217,7 +217,7 @@ public extension NuguVoiceChrome {
     /// - Parameters:
     ///   - chipsData: <#chipsData description#>
     ///   - onChipsSelect: <#onChipsSelect description#>
-    func setChipsData(chipsData: [NuguChipsButton.NuguChipsButtonType], onChipsSelect: @escaping ((_ selectedChips: NuguChipsButton.NuguChipsButtonType) -> Void)) {
+    func setChipsData(_ chipsData: [NuguChipsButton.NuguChipsButtonType], onChipsSelect: @escaping ((_ selectedChips: NuguChipsButton.NuguChipsButtonType) -> Void)) {
         recognizedTextLabel.text = nil
         chipsView.chipsData = chipsData
         chipsView.isHidden = false
@@ -228,7 +228,7 @@ public extension NuguVoiceChrome {
         }
     }
     
-    func setChipsData(chipsData: [NuguChipsButton.NuguChipsButtonType]) {
+    func setChipsData(_ chipsData: [NuguChipsButton.NuguChipsButtonType]) {
         recognizedTextLabel.text = nil
         chipsView.chipsData = chipsData
         chipsView.isHidden = false
