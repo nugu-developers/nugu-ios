@@ -20,7 +20,7 @@
 
 import UIKit
 
-final class AudioPlayer2View: AudioDisplayView {
+final class AudioPlayer2View: AudioDisplayView {    
     // Intialize
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -82,6 +82,15 @@ final class AudioPlayer2View: AudioDisplayView {
             albumImageView.loadImage(from: template.content.imageUrl)
             titleLabel.text = template.content.title
             subtitle1Label.text = template.content.subtitle
+            subtitle2Label.text = template.content.subtitle1
+            
+            lyricsData = template.content.lyrics
+            lyricsView.isHidden = lyricsData?.lyricsType == .none
+            lyricsView.gestureRecognizers?.forEach { lyricsView.removeGestureRecognizer($0) }
+            let tapGestureRecognizeView = UITapGestureRecognizer(target: self, action: #selector(lyricsViewDidTap(_:)))
+            lyricsView.addGestureRecognizer(tapGestureRecognizeView)
+            updateLyrics()
+            replaceFullLyrics()
             
             favoriteButtonContainerView.isHidden = true
             repeatButton.isHidden = true
@@ -109,6 +118,30 @@ final class AudioPlayer2View: AudioDisplayView {
                 headerText: template.content.title,
                 bodyText: template.content.subtitle
             )
+        }
+    }
+    
+    override func updateLyrics() {
+        super.updateLyrics()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            guard self.lyricsData?.lyricsType != "NONE" else {
+                self.lyricsView.isHidden = true
+                return
+            }
+            
+            self.lyricsView.isHidden = false
+                        
+            if self.lyricsData?.lyricsType == "NON_SYNC" {
+                self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
+                if let showButtonText = self.lyricsData?.showButton?.text {
+                    self.currentLyricsLabel.text = showButtonText
+                } else {
+                    self.currentLyricsLabel.text = "요약문 보기"
+                }
+                self.fullLyricsView?.updateLyricsFocus(lyricsIndex: nil)
+                return
+            }
         }
     }
 }

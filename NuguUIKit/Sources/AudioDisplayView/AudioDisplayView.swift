@@ -35,6 +35,8 @@ public class AudioDisplayView: UIView {
     @IBOutlet weak var albumImageView: UIImageView!
     @IBOutlet weak var albumImageViewShadowView: UIView!
     
+    @IBOutlet weak var contentStackView: UIStackView!
+    
     @IBOutlet weak var favoriteButtonContainerView: UIView!
     @IBOutlet weak var favoriteButton: UIButton!
     
@@ -47,6 +49,9 @@ public class AudioDisplayView: UIView {
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var shuffleButton: UIButton!
+    
+    @IBOutlet weak var lyricsView: UIView!
+    @IBOutlet weak var currentLyricsLabel: UILabel!
     
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var elapsedTimeLabel: UILabel!
@@ -63,7 +68,7 @@ public class AudioDisplayView: UIView {
         return audioPlayerBarViewContainerView.isHidden == false
     }
     public var isLyricsVisible: Bool {
-        return false
+        return !lyricsView.isHidden
     }
     public var audioPlayerState: AudioPlayerState? {
         didSet {
@@ -75,6 +80,9 @@ public class AudioDisplayView: UIView {
     public var displayPayload: [String: AnyHashable]?
     
     // Internal Properties
+    var lyricsData: AudioPlayerLyricsTemplate?
+    var fullLyricsView: FullLyricsView?
+    
     var isSeekable: Bool = false
     var repeatMode: AudioPlayerDisplayRepeat? {
         didSet {
@@ -101,11 +109,14 @@ public class AudioDisplayView: UIView {
     
     // Overridable Public Methods    
     public func shouldShowLyrics() -> Bool {
-        return false
+        showLyrics()
+        return true
     }
     
     public func shouldHideLyrics() -> Bool {
-        return false
+        fullLyricsView?.removeFromSuperview()
+        contentStackView.isHidden = false
+        return true
     }
     
     // MARK: - Progress Setting
@@ -144,6 +155,62 @@ public class AudioDisplayView: UIView {
         audioProgressTimer?.cancel()
         audioProgressTimer = nil
     }
+    
+    // MARK: - Lyrics
+    
+    @objc func lyricsViewDidTap(_ gestureRecognizer: UITapGestureRecognizer) {
+        showLyrics()
+    }
+    
+    func replaceFullLyrics() {
+        guard let fullLyricsView = self.fullLyricsView,
+              fullAudioPlayerContainerView.subviews.contains(fullLyricsView) == true else {
+            return
+        }
+        
+        guard lyricsData?.lyricsInfoList != nil,
+              lyricsData?.lyricsType != "NONE" else {
+            fullLyricsView.removeFromSuperview()
+            contentStackView.isHidden = false
+            return
+        }
+        
+        fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
+        fullLyricsView.headerLabel.text = lyricsData?.title
+        lyricsData?.lyricsInfoList.forEach { lyricsInfo in
+            let label = UILabel()
+            label.numberOfLines = 0
+            label.textAlignment = .center
+            label.text = lyricsInfo.text
+            label.font = UIFont.systemFont(ofSize: 16)
+            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
+            fullLyricsView.stackView.addArrangedSubview(label)
+        }
+    }
+    
+    func showLyrics() {
+        contentStackView.isHidden = true
+        fullLyricsView = FullLyricsView(frame: CGRect(origin: contentStackView.frame.origin, size: CGSize(width: contentStackView.frame.size.width, height: self.progressView.frame.origin.y - contentStackView.frame.origin.y - 40)))
+        fullLyricsView?.headerLabel.text = lyricsData?.title
+        lyricsData?.lyricsInfoList.forEach { lyricsInfo in
+            let label = UILabel()
+            label.numberOfLines = 0
+            label.textAlignment = .center
+            label.text = lyricsInfo.text
+            label.font = UIFont.systemFont(ofSize: 16)
+            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
+            fullLyricsView?.stackView.addArrangedSubview(label)
+        }
+        fullLyricsView?.onViewDidTap = { [weak self] in
+            self?.fullLyricsView?.removeFromSuperview()
+            self?.contentStackView.isHidden = false
+        }
+        if let fullLyricsView = fullLyricsView {
+            fullAudioPlayerContainerView.addSubview(fullLyricsView)
+        }
+    }
+    
+    func updateLyrics() {}
 }
 
 // MARK: - Public Methods

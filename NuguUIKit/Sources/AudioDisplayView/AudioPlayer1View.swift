@@ -22,10 +22,6 @@ import UIKit
 
 final class AudioPlayer1View: AudioDisplayView {
     // Private Properties
-    @IBOutlet private weak var contentStackView: UIStackView!
-    
-    @IBOutlet private weak var lyricsView: UIView!
-    @IBOutlet private weak var currentLyricsLabel: UILabel!
     @IBOutlet private weak var nextLyricsLabel: UILabel!
     
     @IBOutlet private weak var badgeImageView: UIImageView!
@@ -33,15 +29,7 @@ final class AudioPlayer1View: AudioDisplayView {
     
     private var lyricsTimer: DispatchSourceTimer?
     private let lyricsTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioPlayer1View.lyrics")
-    private var lyricsData: AudioPlayerLyricsTemplate?
     private var lyricsIndex = 0
-    
-    private var fullLyricsView: FullLyricsView?
-    
-    // Public Properties
-    public override var isLyricsVisible: Bool {
-        return !lyricsView.isHidden
-    }
     
     override var displayPayload: [String: AnyHashable]? {
         didSet {
@@ -173,18 +161,7 @@ final class AudioPlayer1View: AudioDisplayView {
         shuffleButton.setImage(UIImage(named: "btn_random_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
     }
     
-    // MARK: - Show / Hide lyrics
-    
-    override func shouldShowLyrics() -> Bool {
-        showLyrics()
-        return true
-    }
-    
-    override func shouldHideLyrics() -> Bool {
-        fullLyricsView?.removeFromSuperview()
-        contentStackView.isHidden = false
-        return true
-    }
+    // MARK: - Override (ProgressTimer)
     
     override func startProgressTimer() {
         super.startProgressTimer()
@@ -204,86 +181,43 @@ final class AudioPlayer1View: AudioDisplayView {
         lyricsTimer?.cancel()
         lyricsTimer = nil
     }
-}
-
-// MARK: - Private (Selector)
-
-private extension AudioPlayer1View {
-    @objc func lyricsViewDidTap(_ gestureRecognizer: UITapGestureRecognizer) {
-        showLyrics()
-    }
-}
-
-// MARK: - Private (Lyrics)
-
-private extension AudioPlayer1View {
-    func replaceFullLyrics() {
-        guard let fullLyricsView = self.fullLyricsView,
-              fullAudioPlayerContainerView.subviews.contains(fullLyricsView) == true else {
-            return
-        }
-        
-        guard lyricsData?.lyricsInfoList != nil,
-              lyricsData?.lyricsType != "NONE" else {
-            fullLyricsView.removeFromSuperview()
-            contentStackView.isHidden = false
-            return
-        }
-        
-        fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
-        fullLyricsView.headerLabel.text = lyricsData?.title
-        lyricsData?.lyricsInfoList.forEach { lyricsInfo in
-            let label = UILabel()
-            label.textAlignment = .center
-            label.text = lyricsInfo.text
-            label.font = UIFont.systemFont(ofSize: 16)
-            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
-            fullLyricsView.stackView.addArrangedSubview(label)
-        }
+    
+    // MARK: - Override (Lyrics)
+    
+    override func replaceFullLyrics() {
+        super.replaceFullLyrics()
         if lyricsIndex != -1 {
-            fullLyricsView.updateLyricsFocus(lyricsIndex: lyricsIndex)
+            fullLyricsView?.updateLyricsFocus(lyricsIndex: lyricsIndex)
         }
     }
     
-    func showLyrics() {
-        contentStackView.isHidden = true
-        fullLyricsView = FullLyricsView(frame: contentStackView.frame)
-        fullLyricsView?.headerLabel.text = lyricsData?.title
-        lyricsData?.lyricsInfoList.forEach { lyricsInfo in
-            let label = UILabel()
-            label.textAlignment = .center
-            label.text = lyricsInfo.text
-            label.font = UIFont.systemFont(ofSize: 16)
-            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
-            fullLyricsView?.stackView.addArrangedSubview(label)
-        }
-        fullLyricsView?.onViewDidTap = { [weak self] in
-            self?.fullLyricsView?.removeFromSuperview()
-            self?.contentStackView.isHidden = false
-        }
-        if let fullLyricsView = fullLyricsView {
-            fullAudioPlayerContainerView.addSubview(fullLyricsView)
-        }
+    override func showLyrics() {
+        super.showLyrics()
         if self.lyricsIndex != -1 {
             fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
         }
     }
     
-    func updateLyrics() {
+    override func updateLyrics() {
+        super.updateLyrics()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             guard let lyricsInfoList = self.lyricsData?.lyricsInfoList,
                   let offSet = self.delegate?.requestOffset(),
-                self.lyricsData?.lyricsType != "NONE" else {
-                    self.lyricsView.isHidden = true
-                    return
+                  self.lyricsData?.lyricsType != "NONE" else {
+                self.lyricsView.isHidden = true
+                return
             }
             
             self.lyricsView.isHidden = false
-            
+                        
             if self.lyricsData?.lyricsType == "NON_SYNC" {
                 self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
-                self.currentLyricsLabel.text = "전체 가사보기"
+                if let showButtonText = self.lyricsData?.showButton?.text {
+                    self.currentLyricsLabel.text = showButtonText
+                } else {
+                    self.currentLyricsLabel.text = "전체 가사보기"
+                }
                 self.nextLyricsLabel.text = nil
                 self.fullLyricsView?.updateLyricsFocus(lyricsIndex: nil)
                 return
@@ -319,7 +253,7 @@ private extension AudioPlayer1View {
             guard self.lyricsIndex != currentLyricsIndex else { return }
             self.lyricsIndex = currentLyricsIndex
                                     
-            self.fullLyricsView?.updateLyricsFocus(lyricsIndex: currentLyricsIndex)  
+            self.fullLyricsView?.updateLyricsFocus(lyricsIndex: currentLyricsIndex)
             self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
             self.currentLyricsLabel.text = lyricsInfoList[currentLyricsIndex].text
             self.nextLyricsLabel.text = lyricsInfoList[nextLyricsIndex].text
