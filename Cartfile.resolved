@@ -1,6 +1,6 @@
 github "Quick/Nimble" "v8.1.2"
 github "Quick/Quick" "v2.2.1"
-github "ReactiveX/RxSwift" "5.1.1"
+github "ReactiveX/RxSwift" "5.1.2"
 github "airbnb/lottie-ios" "3.2.1"
-github "nugu-developers/natty-log-ios" "1.2.1"
+github "nugu-developers/natty-log-ios" "1.2.2"
 github "nugu-developers/silvertray-ios" "1.2.6"

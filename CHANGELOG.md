@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.28.4](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.4)
+Released on 2021-03-05
+### Sample Application
+#### Fixed
+- Resolve control center issue (#758)
+
+#### Update
+- Add `togglePlayAndPauseCommand` target for a wired earset (#754)
+
+### SDK
+#### Fixed
+- Release `PlayerItemObservers` during `MediaAVPlayerItem` deinitializing (#765)
+
+#### Update
+- Separate Audio hardware issue and format issue (#773)
+
 ## [0.28.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.3)
 Released on 2021-02-22
 ### Sample Application
