@@ -186,15 +186,21 @@ final class AudioPlayer1View: AudioDisplayView {
     
     override func replaceFullLyrics() {
         super.replaceFullLyrics()
-        if lyricsIndex != -1 {
-            fullLyricsView?.updateLyricsFocus(lyricsIndex: lyricsIndex)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.lyricsIndex != -1 {
+                self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
+            }
         }
     }
     
     override func showLyrics() {
         super.showLyrics()
-        if self.lyricsIndex != -1 {
-            fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.lyricsIndex != -1 {
+                self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
+            }
         }
     }
     

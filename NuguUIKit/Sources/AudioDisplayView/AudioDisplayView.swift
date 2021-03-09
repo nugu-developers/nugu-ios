@@ -68,7 +68,7 @@ public class AudioDisplayView: UIView {
         return audioPlayerBarViewContainerView.isHidden == false
     }
     public var isLyricsVisible: Bool {
-        return !lyricsView.isHidden
+        return lyricsView.isHidden == false
     }
     public var audioPlayerState: AudioPlayerState? {
         didSet {
@@ -109,11 +109,17 @@ public class AudioDisplayView: UIView {
     
     // Overridable Public Methods    
     public func shouldShowLyrics() -> Bool {
+        guard isBarMode == false else {
+            return false
+        }
         showLyrics()
         return true
     }
     
     public func shouldHideLyrics() -> Bool {
+        guard isBarMode == false else {
+            return false
+        }
         fullLyricsView?.removeFromSuperview()
         contentStackView.isHidden = false
         return true
@@ -163,50 +169,63 @@ public class AudioDisplayView: UIView {
     }
     
     func replaceFullLyrics() {
-        guard let fullLyricsView = self.fullLyricsView,
-              fullAudioPlayerContainerView.subviews.contains(fullLyricsView) == true else {
-            return
-        }
-        
-        guard lyricsData?.lyricsInfoList != nil,
-              lyricsData?.lyricsType != "NONE" else {
-            fullLyricsView.removeFromSuperview()
-            contentStackView.isHidden = false
-            return
-        }
-        
-        fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
-        fullLyricsView.headerLabel.text = lyricsData?.title
-        lyricsData?.lyricsInfoList.forEach { lyricsInfo in
-            let label = UILabel()
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = lyricsInfo.text
-            label.font = UIFont.systemFont(ofSize: 16)
-            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
-            fullLyricsView.stackView.addArrangedSubview(label)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            guard let fullLyricsView = self.fullLyricsView,
+                  self.fullAudioPlayerContainerView.subviews.contains(fullLyricsView) == true else {
+                return
+            }
+            
+            guard self.lyricsData?.lyricsInfoList != nil,
+                  self.lyricsData?.lyricsType != "NONE" else {
+                fullLyricsView.removeFromSuperview()
+                self.contentStackView.isHidden = false
+                return
+            }
+            
+            fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
+            fullLyricsView.headerLabel.text = self.lyricsData?.title
+            self.lyricsData?.lyricsInfoList.forEach { lyricsInfo in
+                let label = UILabel()
+                label.numberOfLines = 0
+                label.textAlignment = .center
+                label.text = lyricsInfo.text
+                label.font = UIFont.systemFont(ofSize: 16)
+                label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
+                fullLyricsView.stackView.addArrangedSubview(label)
+            }
         }
     }
     
     func showLyrics() {
-        contentStackView.isHidden = true
-        fullLyricsView = FullLyricsView(frame: CGRect(origin: contentStackView.frame.origin, size: CGSize(width: contentStackView.frame.size.width, height: self.progressView.frame.origin.y - contentStackView.frame.origin.y - 40)))
-        fullLyricsView?.headerLabel.text = lyricsData?.title
-        lyricsData?.lyricsInfoList.forEach { lyricsInfo in
-            let label = UILabel()
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = lyricsInfo.text
-            label.font = UIFont.systemFont(ofSize: 16)
-            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
-            fullLyricsView?.stackView.addArrangedSubview(label)
-        }
-        fullLyricsView?.onViewDidTap = { [weak self] in
-            self?.fullLyricsView?.removeFromSuperview()
-            self?.contentStackView.isHidden = false
-        }
-        if let fullLyricsView = fullLyricsView {
-            fullAudioPlayerContainerView.addSubview(fullLyricsView)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.contentStackView.isHidden = true
+            let fullLyricsView = FullLyricsView(
+                frame: CGRect(
+                    origin: self.contentStackView.frame.origin,
+                    size: CGSize(
+                        width: self.contentStackView.frame.size.width,
+                        height: self.progressView.frame.origin.y - self.contentStackView.frame.origin.y - 40
+                    )
+                )
+            )
+            fullLyricsView.headerLabel.text = self.lyricsData?.title
+            self.lyricsData?.lyricsInfoList.forEach { lyricsInfo in
+                let label = UILabel()
+                label.numberOfLines = 0
+                label.textAlignment = .center
+                label.text = lyricsInfo.text
+                label.font = UIFont.systemFont(ofSize: 16)
+                label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
+                fullLyricsView.stackView.addArrangedSubview(label)
+            }
+            fullLyricsView.onViewDidTap = { [weak self] in
+                self?.fullLyricsView?.removeFromSuperview()
+                self?.contentStackView.isHidden = false
+            }
+            self.fullAudioPlayerContainerView.addSubview(fullLyricsView)
+            self.fullLyricsView = fullLyricsView
         }
     }
     
