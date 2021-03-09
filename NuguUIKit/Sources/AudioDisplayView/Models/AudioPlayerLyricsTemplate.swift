@@ -22,9 +22,14 @@ struct AudioPlayerLyricsTemplate: Decodable {
     let title: String
     let lyricsType: String
     let lyricsInfoList: [LyricsInfo]
+    let showButton: ShowButton?
     
     struct LyricsInfo: Decodable {
         let time: Int?
+        let text: String
+    }
+    
+    struct ShowButton: Decodable {
         let text: String
     }
 }

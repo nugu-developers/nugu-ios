@@ -48,9 +48,9 @@ extension AudioPlayerAgent.LyricsEvent: Eventable {
         ]
         switch typeInfo {
         case .controlLyricsPageSucceeded(let direction):
-            eventPayload["direction"] = direction
+            eventPayload["direction"] = direction.rawValue
         case .controlLyricsPageFailed(let direction):
-            eventPayload["direction"] = direction
+            eventPayload["direction"] = direction.rawValue
         default:
             break
         }

@@ -16,12 +16,15 @@
                 <outlet property="audioPlayerBarView" destination="8G0-8O-pRZ" id="2dt-x7-11V"/>
                 <outlet property="audioPlayerBarViewContainerView" destination="TTt-Mo-EwR" id="2L7-WW-f4R"/>
                 <outlet property="barTypeButton" destination="WKv-Zq-kfE" id="TF6-VC-36a"/>
+                <outlet property="contentStackView" destination="BDu-BH-ASv" id="T0H-yc-MCZ"/>
+                <outlet property="currentLyricsLabel" destination="FN9-yP-bMa" id="pO0-JS-wpp"/>
                 <outlet property="durationTimeLabel" destination="ipZ-cW-S1O" id="YL6-vX-juS"/>
                 <outlet property="elapsedTimeLabel" destination="DBJ-mZ-1YZ" id="PZp-d4-1as"/>
                 <outlet property="favoriteButton" destination="VOG-tE-myi" id="5fz-ud-x3C"/>
                 <outlet property="favoriteButtonContainerView" destination="H3S-Fg-aNW" id="u0T-Oi-C8h"/>
                 <outlet property="fullAudioPlayerContainerView" destination="EP1-Pl-EFV" id="Mu1-VW-da4"/>
                 <outlet property="idleBar" destination="pG4-6i-DuM" id="QVP-Nb-ZUl"/>
+                <outlet property="lyricsView" destination="gHw-Yo-7OU" id="Dv3-N6-tdE"/>
                 <outlet property="nextButton" destination="YE8-JB-xca" id="eNb-Wt-RVp"/>
                 <outlet property="playPauseButton" destination="YUI-1h-wfS" id="UY9-8c-euk"/>
                 <outlet property="prevButton" destination="lMn-Hj-Wwq" id="DcY-zT-7l3"/>
@@ -65,7 +68,7 @@
                                     </connections>
                                 </button>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="BDu-BH-ASv">
-                                    <rect key="frame" x="20" y="76" width="374" height="488"/>
+                                    <rect key="frame" x="20" y="76" width="374" height="388"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zlv-FV-ep8" userLabel="ContentImageContainerView">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="200"/>
@@ -121,20 +124,20 @@
                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hum-J7-DtM" userLabel="subtitle1Label">
-                                            <rect key="frame" x="0.0" y="297" width="374" height="50"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hum-J7-DtM" userLabel="subtitle1Label">
+                                            <rect key="frame" x="0.0" y="297" width="374" height="0.0"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2b-8e-szm" userLabel="subtitle2Label">
-                                            <rect key="frame" x="0.0" y="366" width="374" height="50"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2b-8e-szm" userLabel="subtitle2Label">
+                                            <rect key="frame" x="0.0" y="316" width="374" height="0.0"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" red="0.46666666670000001" green="0.46666666670000001" blue="0.46666666670000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gHw-Yo-7OU" userLabel="LyricsView">
-                                            <rect key="frame" x="0.0" y="435" width="374" height="53"/>
+                                            <rect key="frame" x="0.0" y="335" width="374" height="53"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FN9-yP-bMa">
                                                     <rect key="frame" x="0.0" y="10" width="374" height="41"/>
