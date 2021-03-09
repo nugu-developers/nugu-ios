@@ -36,9 +36,12 @@ public struct AudioPlayer2Template: Decodable {
         public struct Content: Decodable {
             public let title: String
             public let subtitle: String
+            public let subtitle1: String?
             public let imageUrl: String
             public let durationSec: String?
             public let backgroundColor: String?
+            
+            let lyrics: AudioPlayerLyricsTemplate?
         }
     }
 }
