@@ -3,6 +3,66 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.29.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.29.0)
+Released on 2021-03-10
+### Sample Application
+#### Update
+- `ASRAgent` 1.5 (upgrade capability-agent) (#767)
+
+### SDK
+#### Update
+- `ASRAgent` 1.5 (upgrade capability-agent) (#767)
+- Upgrade `AudioPlayerAgent` to 1.6 #774
+
+## [0.28.4](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.4)
+Released on 2021-03-09
+### Sample Application
+#### Fixed
+- Resolve control center issue (#758)
+
+#### Update
+- Add `togglePlayAndPauseCommand` target for a wired earset (#754)
+
+### SDK
+#### Fixed
+- Release `PlayerItemObservers` during `MediaAVPlayerItem` deinitializing (#765)
+
+#### Update
+- Separate Audio hardware issue and format issue (#773)
+
+## [0.28.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.3)
+Released on 2021-02-22
+### Sample Application
+#### Fixed
+- Fix crash in UserDefaults when setting a nil value. (#734)
+
+### SDK
+#### Fixed
+- Support dynamic allocation of resource server URL. (#733)
+- Add "+" excluded character set for percentEncoding (#744)
+- Remove `WKWebsiteDataStore` configuration in NUGU SDK (#745)
+
+## [0.28.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.2)
+Released on 2021-02-01
+### SDK
+#### Fixed
+Use `ResourceBundle` images in `NuguUIKit` (#718)
+
+#### Update
+- Update browser for authentication (#699)
+
+## [0.28.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.1)
+Released on 2021-01-06
+### SDK
+#### Added
+- Revert removed url variables in `NuguServiceWebView` (#697)
+
+#### Fixed
+- Handle exception on creating "AVAudioInputNode". (#696)
+
+#### Update
+- Modify protection level of `DialogStateAggregator.isChipsRequestInProgress` for backward compatibility. (#698)
+
 ## [0.28.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.0)
 Released on 2020-12-30
 ### Sample Application
