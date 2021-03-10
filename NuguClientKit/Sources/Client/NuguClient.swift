@@ -140,6 +140,9 @@ public class NuguClient {
     // TODO: 입력부탁
     public let utilityAgent: UtilityAgentProtocol
     
+    // TODO: 입력부탁
+    public let routineAgent: RoutineAgentProtocol
+    
     // Additional Agents
     /**
      Play your own audio contents
@@ -275,6 +278,7 @@ public class NuguClient {
         sessionAgent: SessionAgentProtocol,
         chipsAgent: ChipsAgentProtocol,
         utilityAgent: UtilityAgentProtocol,
+        routineAgent: RoutineAgentProtocol,
         audioSessionManager: AudioSessionManageable?,
         keywordDetector: KeywordDetector,
         speechRecognizerAggregator: SpeechRecognizerAggregatable,
@@ -322,6 +326,7 @@ public class NuguClient {
         self.sessionAgent = sessionAgent
         self.chipsAgent = chipsAgent
         self.utilityAgent = utilityAgent
+        self.routineAgent = routineAgent
         
         // Supports
         self.audioSessionManager = audioSessionManager
