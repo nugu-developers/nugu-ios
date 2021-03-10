@@ -3,8 +3,19 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.29.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.29.0)
+Released on 2021-03-10
+### Sample Application
+#### Update
+- `ASRAgent` 1.5 (upgrade capability-agent) (#767)
+
+### SDK
+#### Update
+- `ASRAgent` 1.5 (upgrade capability-agent) (#767)
+- Upgrade `AudioPlayerAgent` to 1.6 #774
+
 ## [0.28.4](https://github.com/nugu-developers/nugu-ios/releases/tag/0.28.4)
-Released on 2021-03-05
+Released on 2021-03-09
 ### Sample Application
 #### Fixed
 - Resolve control center issue (#758)
