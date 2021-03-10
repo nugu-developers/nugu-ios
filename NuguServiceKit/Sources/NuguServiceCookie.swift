@@ -31,19 +31,22 @@ public struct NuguServiceCookie: Encodable {
     let phoneModelName: String = UIDevice.current.model
     let theme: String // DARK or LIGHT
     let oauthRedirectUri: String
+    let deviceUniqueId: String
 
     public init(
         authToken: String,
         appVersion: String,
         pocId: String,
         theme: String,
-        oauthRedirectUri: String
+        oauthRedirectUri: String,
+        deviceUniqueId: String
     ) {
         self.authToken = authToken
         self.appVersion = appVersion
         self.pocId = pocId
         self.theme = theme
         self.oauthRedirectUri = oauthRedirectUri
+        self.deviceUniqueId = deviceUniqueId
     }
     
     enum CodingKeys: String, CodingKey {
@@ -55,6 +58,7 @@ public struct NuguServiceCookie: Encodable {
         case phoneModelName = "Phone-Model-Name"
         case theme = "Theme"
         case oauthRedirectUri = "Oauth-Redirect-Uri"
+        case deviceUniqueId = "Device-Unique-Id"
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -67,5 +71,6 @@ public struct NuguServiceCookie: Encodable {
         try container.encode(phoneModelName, forKey: .phoneModelName)
         try container.encode(theme, forKey: .theme)
         try container.encode(oauthRedirectUri, forKey: .oauthRedirectUri)
+        try container.encode(deviceUniqueId, forKey: .deviceUniqueId)
     }
 }
