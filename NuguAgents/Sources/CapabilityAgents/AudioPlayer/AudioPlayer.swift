@@ -112,8 +112,10 @@ final class AudioPlayer {
     
     // Keep the offset and duration to be sent with playback events.
     private func saveCurrentPlayerState() {
-        lastOffset = internalPlayer?.offset
-        lastDuration = internalPlayer?.duration
+        guard let player = internalPlayer else { return }
+        
+        lastOffset = player.offset
+        lastDuration = player.duration
     }
     
     func pause(reason: PauseReason) {
