@@ -26,9 +26,9 @@ import NuguUtils
 public class NudgeAgent: NudgeAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
-    private var playSyncObserver: Any?
     private var nudgeInfo: [String: AnyHashable]?
     private var dialogRequestId: String?
+    
     public let capabilityAgentProperty = CapabilityAgentProperty(category: .nudge, version: "1.0")
     public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] (completion) in
         guard let self = self else { return }
@@ -40,6 +40,10 @@ public class NudgeAgent: NudgeAgentProtocol {
         
         completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
+    
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var playSyncObserver: Any?
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
@@ -67,6 +71,11 @@ public class NudgeAgent: NudgeAgentProtocol {
     deinit {
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         contextManager.removeProvider(contextInfoProvider)
+        
+        if let playSyncObserver = playSyncObserver {
+            notificationCenter.removeObserver(playSyncObserver)
+            self.playSyncObserver = nil
+        }
     }
 }
 
