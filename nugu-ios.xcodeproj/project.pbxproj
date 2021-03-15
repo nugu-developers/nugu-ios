@@ -107,6 +107,9 @@
 		1F9EF1F8248A4BD1000786E5 /* NuguUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */; };
 		1FBA3B702459669B001E5828 /* PhoneCallAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA3B6F2459669B001E5828 /* PhoneCallAgent.swift */; };
 		1FBA3B7624596E1A001E5828 /* PhoneCallAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */; };
+		1FCAE15725FF0C59001C8061 /* AlertsAgentDirectivePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCAE15625FF0C59001C8061 /* AlertsAgentDirectivePayload.swift */; };
+		1FCAE16325FF1168001C8061 /* AlertsAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCAE16225FF1168001C8061 /* AlertsAsset.swift */; };
+		1FCAE16F25FF1178001C8061 /* AlertsRepeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCAE16E25FF1178001C8061 /* AlertsRepeat.swift */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -817,6 +820,9 @@
 		1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguUserInfo.swift; sourceTree = "<group>"; };
 		1FBA3B6F2459669B001E5828 /* PhoneCallAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallAgent.swift; sourceTree = "<group>"; };
 		1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneCallAgent+Event.swift"; sourceTree = "<group>"; };
+		1FCAE15625FF0C59001C8061 /* AlertsAgentDirectivePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsAgentDirectivePayload.swift; sourceTree = "<group>"; };
+		1FCAE16225FF1168001C8061 /* AlertsAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsAsset.swift; sourceTree = "<group>"; };
+		1FCAE16E25FF1178001C8061 /* AlertsRepeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsRepeat.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -1711,6 +1717,9 @@
 				1FFBC8BF25EDFC2100DFD0D6 /* AlertsAgent+Event.swift */,
 				1FFBC8CB25EDFC2D00DFD0D6 /* AlertsAgentDelegate.swift */,
 				1FFBC8D725EDFC3C00DFD0D6 /* AlertsAgentContext.swift */,
+				1FCAE15625FF0C59001C8061 /* AlertsAgentDirectivePayload.swift */,
+				1FCAE16E25FF1178001C8061 /* AlertsRepeat.swift */,
+				1FCAE16225FF1168001C8061 /* AlertsAsset.swift */,
 			);
 			path = Alerts;
 			sourceTree = "<group>";
@@ -3812,6 +3821,7 @@
 				1F9336E225B68D4D00CEBF66 /* MessageAgentDelegate.swift in Sources */,
 				737388EC24A46C680018DDD2 /* AudioPlayerDisplayDelegate.swift in Sources */,
 				1F93377F25BF12D600CEBF66 /* MessageCandidatesItem.swift in Sources */,
+				1FCAE16F25FF1178001C8061 /* AlertsRepeat.swift in Sources */,
 				737388D124A46C2B0018DDD2 /* SessionManageable.swift in Sources */,
 				1FD5D18F24C82224007BA384 /* MediaPlayerAgentSong.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
@@ -3859,6 +3869,7 @@
 				1FFBC8B425EDFC0D00DFD0D6 /* AlertsAgentProtocol.swift in Sources */,
 				1FFBC8CC25EDFC2D00DFD0D6 /* AlertsAgentDelegate.swift in Sources */,
 				737388F624A46C800018DDD2 /* ASRResult.swift in Sources */,
+				1FCAE16325FF1168001C8061 /* AlertsAsset.swift in Sources */,
 				1F93378B25BF135700CEBF66 /* MessageRecipientIntended.swift in Sources */,
 				064FD88125A2CEE000DE6454 /* UtilityAgent.swift in Sources */,
 				7EDCF97C24BC11CB0036805C /* DisplayTemplateDuration.swift in Sources */,
@@ -3896,6 +3907,7 @@
 				7E8050AA2518A69300994786 /* ASRInitiator.swift in Sources */,
 				06CF28EB2547DE5700CEC3EC /* ContextManager+Rx.swift in Sources */,
 				7E5F4896243C3C8A00118054 /* SoundAgent.swift in Sources */,
+				1FCAE15725FF0C59001C8061 /* AlertsAgentDirectivePayload.swift in Sources */,
 				737388FE24A46C930018DDD2 /* SystemAgentProtocol.swift in Sources */,
 				1FFBC8C025EDFC2100DFD0D6 /* AlertsAgent+Event.swift in Sources */,
 				7373890724A46CA10018DDD2 /* TTSState.swift in Sources */,

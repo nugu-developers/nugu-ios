@@ -21,13 +21,20 @@ import Foundation
 
 import NuguCore
 
+import RxSwift
+
 public class AlertsAgent: AlertsAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .alerts, version: "1.1")
+    
+    // AlertsAgentProtocol
+    public weak var delegate: AlertsAgentDelegate?
     
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
+    
+    private var disposeBag = DisposeBag()
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
@@ -67,6 +74,24 @@ public class AlertsAgent: AlertsAgentProtocol {
     }
 }
 
+// MARK: - AlertsAgentProtocol
+
+public extension AlertsAgent {
+    // TODO: - 검토필요
+    @discardableResult func requestAlertAssetRequired(
+        playServiceId: String,
+        token: String,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String {
+        let event = Event(
+            typeInfo: .alertAssetRequired(token: token),
+            playServiceId: playServiceId
+        )
+        
+        return sendCompactContextEvent(event.rx).dialogRequestId
+    }
+}
+
 // MARK: - Private(Directive)
 
 private extension AlertsAgent {
@@ -76,6 +101,34 @@ private extension AlertsAgent {
                 completion(.canceled)
                 return
             }
+            
+            guard let payloadDictionary = directive.payloadDictionary else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
+                  let setAlertItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.SetAlert.self, from: payloadData) else {
+                    completion(.failed("Invalid setAlertItem in payload"))
+                    return
+            }
+            
+            let isSuccess = self.delegate?.alertsAgentDidReceiveSetAlert(item: setAlertItem, header: directive.header)
+            let event: Event
+            
+            if isSuccess == true {
+                event = Event(
+                    typeInfo: .setAlertSucceeded(token: setAlertItem.token),
+                    playServiceId: setAlertItem.playServiceId
+                )
+            } else {
+                event = Event(
+                    typeInfo: .setAlertFailed(token: setAlertItem.token),
+                    playServiceId: setAlertItem.playServiceId
+                )
+            }
+            
+            self.sendCompactContextEvent(event.rx)
         }
     }
     
@@ -85,15 +138,57 @@ private extension AlertsAgent {
                 completion(.canceled)
                 return
             }
+            
+            guard let payloadDictionary = directive.payloadDictionary else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
+                  let deleteAlertItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.DeleteAlerts.self, from: payloadData) else {
+                    completion(.failed("Invalid deleteAlertItem in payload"))
+                    return
+            }
+            
+            let isSuccess = self.delegate?.alertsAgentDidReceiveDeleteAlerts(item: deleteAlertItem, header: directive.header)
+            let event: Event
+            
+            if isSuccess == true {
+                event = Event(
+                    typeInfo: .deleteAlertsSucceeded(tokens: deleteAlertItem.tokens),
+                    playServiceId: deleteAlertItem.playServiceId
+                )
+            } else {
+                event = Event(
+                    typeInfo: .deleteAlertsFailed(tokens: deleteAlertItem.tokens),
+                    playServiceId: deleteAlertItem.playServiceId
+                )
+            }
+            
+            self.sendCompactContextEvent(event.rx)
         }
     }
     
+    // TODO: - 검토필요
     func handleDeliveryAlertAsset() -> HandleDirective {
         return { [weak self] directive, completion in
             guard let self = self else {
                 completion(.canceled)
                 return
             }
+            
+            guard let payloadDictionary = directive.payloadDictionary else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
+                  let deliveryAssetItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.DeliveryAlertAsset.self, from: payloadData) else {
+                    completion(.failed("Invalid deliveryAssetItem in payload"))
+                    return
+            }
+            
+            self.delegate?.alertsAgentDidReceiveDeliveryAlertAsset(item: deliveryAssetItem, header: directive.header)
         }
     }
     
@@ -103,6 +198,53 @@ private extension AlertsAgent {
                 completion(.canceled)
                 return
             }
+            
+            guard let payloadDictionary = directive.payloadDictionary else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
+                  let setSnoozeItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.SetSnooze.self, from: payloadData) else {
+                    completion(.failed("Invalid setSnoozeItem in payload"))
+                    return
+            }
+            
+            let isSuccess = self.delegate?.alertsAgentDidReceiveSetSnooze(item: setSnoozeItem, header: directive.header)
+            let event: Event
+            
+            if isSuccess == true {
+                event = Event(
+                    typeInfo: .setSnoozeSucceeded(token: setSnoozeItem.token),
+                    playServiceId: setSnoozeItem.playServiceId
+                )
+            } else {
+                event = Event(
+                    typeInfo: .setSnoozeFailed(token: setSnoozeItem.token),
+                    playServiceId: setSnoozeItem.playServiceId
+                )
+            }
+            
+            self.sendCompactContextEvent(event.rx)
         }
+    }
+}
+
+// MARK: - Private (Event)
+
+private extension AlertsAgent {
+    @discardableResult func sendCompactContextEvent(
+        _ event: Single<Eventable>,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
+        let eventIdentifier = EventIdentifier()
+        upstreamDataSender.sendEvent(
+            event,
+            eventIdentifier: eventIdentifier,
+            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
+            property: self.capabilityAgentProperty,
+            completion: completion
+        ).subscribe().disposed(by: disposeBag)
+        return eventIdentifier
     }
 }

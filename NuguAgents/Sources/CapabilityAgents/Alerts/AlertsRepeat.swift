@@ -1,8 +1,8 @@
 //
-//  AlertsAgentProtocol.swift
+//  AlertsRepeat.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2021/02/26.
+//  Created by yonghoonKwon on 2021/03/05.
 //  Copyright (c) 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,18 +19,10 @@
 
 import Foundation
 
-import NuguCore
-
 /// <#Description#>
-public protocol AlertsAgentProtocol: CapabilityAgentable {
-    
+public struct AlertsRepeat: Codable {
     /// <#Description#>
-    var delegate: AlertsAgentDelegate? { get set }
-    
-    // TODO: - 검토필요
-    @discardableResult func requestAlertAssetRequired(
-        playServiceId: String,
-        token: String,
-        completion: ((StreamDataState) -> Void)?
-    ) -> String
+    public let type: String
+    /// <#Description#>
+    public let daysOfWeek: [String]?
 }

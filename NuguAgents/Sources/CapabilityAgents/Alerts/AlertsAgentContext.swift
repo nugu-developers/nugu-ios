@@ -25,22 +25,6 @@ public struct AlertsAgentContext: Codable {
     /// <#Description#>
     public struct Alert: Codable {
         /// <#Description#>
-        public struct Repeat: Codable {
-            /// <#Description#>
-            public let type: String
-            /// <#Description#>
-            public let daysOfWeek: [String]?
-        }
-        
-        /// <#Description#>
-        public struct Asset: Codable {
-            /// <#Description#>
-            public let type: String
-            /// <#Description#>
-            public let resource: String? // TODO: - Dynamic object
-        }
-        
-        /// <#Description#>
         public let playServiceId: String
         /// <#Description#>
         public let token: String
@@ -53,13 +37,13 @@ public struct AlertsAgentContext: Codable {
         /// <#Description#>
         public let minDurationInSec: Int?
         /// <#Description#>
-        public let `repeat`: Repeat?
+        public let `repeat`: AlertsRepeat?
         /// <#Description#>
         public let alarmResourceType: String?
         /// <#Description#>
         public let assetRequiredInMilliseconds: Int?
         /// <#Description#>
-        public let assets: [Asset]
+        public let assets: [AlertsAsset]
     }
     
     /// <#Description#>

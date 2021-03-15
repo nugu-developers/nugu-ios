@@ -19,6 +19,31 @@
 
 import Foundation
 
+import NuguCore
+
 public protocol AlertsAgentDelegate: class {
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - item: <#payload description#>
+    ///   - header: <#header description#>
+    func alertsAgentDidReceiveSetAlert(item: AlertsAgentDirectivePayload.SetAlert, header: Downstream.Header) -> Bool
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - item: <#item description#>
+    ///   - header: <#header description#>
+    func alertsAgentDidReceiveDeleteAlerts(item: AlertsAgentDirectivePayload.DeleteAlerts, header: Downstream.Header) -> Bool
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - item: <#item description#>
+    ///   - header: <#header description#>
+    func alertsAgentDidReceiveDeliveryAlertAsset(item: AlertsAgentDirectivePayload.DeliveryAlertAsset, header: Downstream.Header)
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - item: <#item description#>
+    ///   - header: <#header description#>
+    func alertsAgentDidReceiveSetSnooze(item: AlertsAgentDirectivePayload.SetSnooze, header: Downstream.Header) -> Bool
 }
