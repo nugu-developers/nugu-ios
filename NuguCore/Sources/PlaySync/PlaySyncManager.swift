@@ -33,7 +33,12 @@ public class PlaySyncManager: PlaySyncManageable {
     
     private let contextManager: ContextManageable
     
-    private var playStack = PlayStack()
+    private var playStack = PlayStack() {
+        didSet {
+            let properties = playStack.filter { $0.property.contextType == .display || playContextTimers[$0.property] == nil }
+            post(NuguCoreNotification.PlaySync.SynchronizedProperties(properties: properties))
+        }
+    }
     private var playContextTimers = [PlaySyncProperty: Disposable]() {
         didSet {
             log.debug(playContextTimers.keys.map { (property) -> String in
@@ -265,6 +270,7 @@ private extension PlaySyncManager {
 
 extension Notification.Name {
     static let playSyncPropertyDidRelease = Notification.Name("com.sktelecom.romaine.notification.name.play_sync_property_did_release")
+    static let playSyncPropertiesDidChange = Notification.Name("com.sktelecom.romaine.notification.name.play_sync_properties_did_change")
 }
 
 public extension NuguCoreNotification {
@@ -279,6 +285,18 @@ public extension NuguCoreNotification {
                       let messageId = from["messageId"] as? String else { return nil }
                 
                 return ReleasedProperty(property: property, messageId: messageId)
+            }
+        }
+        
+        /// Notify the synchronized properties except for the sound layer where the timer is running.
+        public struct SynchronizedProperties: TypedNotification {
+            public static var name: Notification.Name = .playSyncPropertiesDidChange
+            public let properties: [(property: PlaySyncProperty, info: PlaySyncInfo)]
+            
+            public static func make(from: [String: Any]) -> SynchronizedProperties? {
+                guard let properties = from["properties"] as? [(property: PlaySyncProperty, info: PlaySyncInfo)] else { return nil }
+                
+                return SynchronizedProperties(properties: properties)
             }
         }
     }
