@@ -43,14 +43,19 @@ public class DialogStateAggregator: TypedNotifyable {
             multiturnSpeakingToListeningTimer?.cancel()
             
             var chipsItem: ChipsAgentItem?
-            if sessionManager.activeSessions.last?.dialogRequestId == currentChips?.dialogRequestId {
+            switch currentChips?.item.target {
+            case .dialog where sessionManager.activeSessions.last?.dialogRequestId == currentChips?.dialogRequestId:
                 chipsItem = currentChips?.item
-            } else {
+            case .listen where isMultiturn:
+                chipsItem = currentChips?.item
+            case .speaking where dialogState == .speaking:
+                chipsItem = currentChips?.item
+            default:
                 // Delete the chips if it is not for the most recently active session.
-                currentChips = nil
+                chipsItem = nil
             }
             
-            let typedNotification = NuguClientNotification.DialogState.State(state: dialogState, multiTurn: isMultiturn, chips: chipsItem?.chips, sessionActivated: sessionActivated)
+            let typedNotification = NuguClientNotification.DialogState.State(state: dialogState, multiTurn: isMultiturn, item: chipsItem, sessionActivated: sessionActivated)
             notificationCenter.post(name: .dialogStateDidChange, object: self, userInfo: typedNotification.dictionary)
         }
     }
@@ -164,7 +169,7 @@ public extension NuguClientNotification {
             public static let name: Notification.Name = .dialogStateDidChange
             public let state: NuguClientKit.DialogState
             public let multiTurn: Bool
-            public let chips: [ChipsAgentItem.Chip]?
+            public let item: ChipsAgentItem?
             public let sessionActivated: Bool
             
             public static func make(from: [String: Any]) -> State? {
@@ -172,8 +177,8 @@ public extension NuguClientNotification {
                       let multiTurn = from["multiTurn"] as? Bool,
                       let sessionActivated = from["sessionActivated"] as? Bool else { return nil }
                 
-                let chips = from["chips"] as? [ChipsAgentItem.Chip]
-                return State(state: state, multiTurn: multiTurn, chips: chips, sessionActivated: sessionActivated)
+                let item = from["item"] as? ChipsAgentItem
+                return State(state: state, multiTurn: multiTurn, item: item, sessionActivated: sessionActivated)
             }
         }
     }
@@ -184,9 +189,7 @@ private extension DialogStateAggregator {
     func addChipsAgentObserver(_ object: ChipsAgentProtocol) {
         chipsAgentObserver = object.observe(NuguAgentNotification.Chips.Receive.self, queue: nil) { [weak self] (notification) in
             self?.dialogStateDispatchQueue.async { [weak self] in
-                if notification.item.target == .dialog {
-                    self?.currentChips = (dialogRequestId: notification.header.dialogRequestId, item: notification.item)
-                }
+                self?.currentChips = (dialogRequestId: notification.header.dialogRequestId, item: notification.item)
             }
         }
     }

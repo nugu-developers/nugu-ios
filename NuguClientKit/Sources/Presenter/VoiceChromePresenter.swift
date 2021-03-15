@@ -305,7 +305,7 @@ private extension VoiceChromePresenter {
     func addDialogStateObserver(_ object: DialogStateAggregator) {
         dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-            log.debug("\(notification.state) \(notification.multiTurn), \(notification.chips.debugDescription)")
+            log.debug("\(notification.state) \(notification.multiTurn), \(notification.item.debugDescription)")
 
             switch notification.state {
             case .idle:
@@ -318,14 +318,14 @@ private extension VoiceChromePresenter {
                 self.voiceChromeDismissWorkItem?.cancel()
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    guard notification.multiTurn == true else {
+                    guard notification.multiTurn == true || notification.item?.target == .speaking else {
                         self.dismissVoiceChrome()
                         return
                     }
                     // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
                     try? self.showVoiceChrome()
                     self.nuguVoiceChrome.changeState(state: .speaking)
-                    if let chips = notification.chips {
+                    if let chips = notification.item?.chips {
                         let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                         self.setChipsButton(actionList: actionList, normalList: normalList)
@@ -341,7 +341,7 @@ private extension VoiceChromePresenter {
                         self.nuguVoiceChrome.changeState(state: .listeningPassive)
                         self.nuguVoiceChrome.setRecognizedText(text: nil)
                     }
-                    if let chips = notification.chips {
+                    if let chips = notification.item?.chips {
                         let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                         self.setChipsButton(actionList: actionList, normalList: normalList)

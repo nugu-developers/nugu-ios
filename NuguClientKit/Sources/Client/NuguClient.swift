@@ -140,6 +140,11 @@ public class NuguClient {
     // TODO: 입력부탁
     public let utilityAgent: UtilityAgentProtocol
     
+    /**
+     Recommend a nugu operation intent
+     */
+    public let nudgeAgent: NudgeAgentProtocol
+    
     // Additional Agents
     /**
      Play your own audio contents
@@ -278,7 +283,8 @@ public class NuguClient {
         messageAgent: MessageAgentProtocol?,
         soundAgent: SoundAgentProtocol?,
         displayAgent: DisplayAgentProtocol?,
-        locationAgent: LocationAgentProtocol?
+        locationAgent: LocationAgentProtocol?,
+        nudgeAgent: NudgeAgentProtocol
     ) {
         // Core
         self.contextManager = contextManager
@@ -315,6 +321,7 @@ public class NuguClient {
         self.sessionAgent = sessionAgent
         self.chipsAgent = chipsAgent
         self.utilityAgent = utilityAgent
+        self.nudgeAgent = nudgeAgent
         
         // Supports
         self.audioSessionManager = audioSessionManager

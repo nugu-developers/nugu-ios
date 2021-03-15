@@ -88,6 +88,12 @@ public extension NuguClient {
             contextManager: contextManager
         )
         
+        public lazy var nudgeAgent: NudgeAgentProtocol = NudgeAgent(
+            directiveSequencer: directiveSequencer,
+            contextManager: contextManager,
+            playSyncManager: playSyncManager
+        )
+        
         // Additional Agents
         /**
          Play some special sound on the special occasion
@@ -275,7 +281,8 @@ public extension NuguClient {
                 messageAgent: messageAgent,
                 soundAgent: soundAgent,
                 displayAgent: displayAgent,
-                locationAgent: locationAgent
+                locationAgent: locationAgent,
+                nudgeAgent: nudgeAgent
             )
         }
     }

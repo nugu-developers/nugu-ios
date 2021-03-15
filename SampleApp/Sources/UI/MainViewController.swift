@@ -367,7 +367,7 @@ private extension MainViewController {
     
     func addDialogStateObserver(_ object: DialogStateAggregator) {
         dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
-            log.debug("dialog satate: \(notification.state), multiTurn: \(notification.multiTurn), chips: \(notification.chips.debugDescription)")
+            log.debug("dialog satate: \(notification.state), multiTurn: \(notification.multiTurn), chips: \(notification.item.debugDescription)")
 
             switch notification.state {
             case .thinking:

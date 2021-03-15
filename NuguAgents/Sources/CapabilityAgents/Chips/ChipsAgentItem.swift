@@ -32,6 +32,8 @@ public struct ChipsAgentItem {
     /// <#Description#>
     public enum Target: String, Codable {
         case dialog = "DM"
+        case listen = "LISTEN"
+        case speaking = "SPEAKING"
     }
     
     /// <#Description#>
