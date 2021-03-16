@@ -1,5 +1,5 @@
 //
-//  PhoneCallContext.swift
+//  PhoneCallAgentContext.swift
 //  NuguAgents
 //
 //  Created by yonghoonKwon on 2020/10/19.
@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct PhoneCallContext {
+public struct PhoneCallAgentContext {
     
     /// <#Description#>
     public struct Template {
@@ -36,7 +36,7 @@ public struct PhoneCallContext {
         
         public let searchScene: String?
         
-        /// The initializer for `PhoneCallContext.Template`.
+        /// The initializer for `PhoneCallAgentContext.Template`.
         /// - Parameters:
         ///   - intent: <#intent description#>
         ///   - callType: <#callType description#>
@@ -69,7 +69,7 @@ public struct PhoneCallContext {
         /// <#Description#>
         public let isRecentMissed: Bool?
         
-        /// The initializer for `PhoneCallContext.Recipient`.
+        /// The initializer for `PhoneCallAgentContext.Recipient`.
         /// - Parameters:
         ///   - name: <#name description#>
         ///   - token: <#token description#>
@@ -91,15 +91,15 @@ public struct PhoneCallContext {
     /// <#Description#>
     public let state: PhoneCallState
     /// <#Description#>
-    public let template: PhoneCallContext.Template?
+    public let template: PhoneCallAgentContext.Template?
     /// <#Description#>
-    public let recipient: PhoneCallContext.Recipient?
+    public let recipient: PhoneCallAgentContext.Recipient?
     
-    /// The initializer for `PhoneCallContext`.
+    /// The initializer for `PhoneCallAgentContext`.
     public init(
         state: PhoneCallState,
-        template: PhoneCallContext.Template?,
-        recipient: PhoneCallContext.Recipient?
+        template: PhoneCallAgentContext.Template?,
+        recipient: PhoneCallAgentContext.Recipient?
     ) {
         self.state = state
         self.template = template
@@ -107,17 +107,17 @@ public struct PhoneCallContext {
     }
 }
 
-// MARK: - PhoneCallContext + Codable
+// MARK: - PhoneCallAgentContext + Codable
 
-extension PhoneCallContext: Codable {}
+extension PhoneCallAgentContext: Codable {}
 
-// MARK: - PhoneCallContext.Template + Codable
+// MARK: - PhoneCallAgentContext.Template + Codable
 
-extension PhoneCallContext.Template: Codable {}
+extension PhoneCallAgentContext.Template: Codable {}
 
-// MARK: - PhoneCallContext.Recipient + Codable
+// MARK: - PhoneCallAgentContext.Recipient + Codable
 
-extension PhoneCallContext.Recipient: Codable {
+extension PhoneCallAgentContext.Recipient: Codable {
     enum CodingKeys: String, CodingKey {
         case name
         case token

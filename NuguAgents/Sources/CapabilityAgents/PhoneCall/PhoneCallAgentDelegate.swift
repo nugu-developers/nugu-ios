@@ -29,7 +29,7 @@ public protocol PhoneCallAgentDelegate: class {
     ///
     /// This function should return as soon as possible to reduce request delay.
     /// - Returns: The context for `PhoneCallAgent`
-    func phoneCallAgentRequestContext() -> PhoneCallContext
+    func phoneCallAgentRequestContext() -> PhoneCallAgentContext
     
     /// Called method when a directive 'SendCandidates' is received.
     /// - Parameters:
