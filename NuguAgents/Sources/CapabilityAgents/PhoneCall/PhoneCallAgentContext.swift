@@ -33,7 +33,7 @@ public struct PhoneCallAgentContext {
         public let recipientIntended: PhoneCallRecipientIntended?
         /// <#Description#>
         public let candidates: [PhoneCallPerson]?
-        
+        /// <#Description#>
         public let searchScene: String?
         
         /// The initializer for `PhoneCallAgentContext.Template`.

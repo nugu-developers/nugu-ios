@@ -31,13 +31,13 @@ public protocol MessageAgentDelegate: class {
     
     /// Called method when a directive 'SendCandidates' is received.
     /// - Parameters:
-    ///   - item: The item of `MessageCandidatesItem`
+    ///   - payload: The payload of `MessageAgentDirectivePayload.SendCandidates`
     ///   - header: The header of the originally handled directive.
     func messageAgentDidReceiveSendCandidates(payload: MessageAgentDirectivePayload.SendCandidates, header: Downstream.Header)
     
     /// Called method when a directive 'SendMessasge' is received.
     /// - Parameters:
-    ///   - recipient: An contact about the recipient.
+    ///   - payload: The payload of `MessageAgentDirectivePayload.SendMessage`
     ///   - header: The header of the originally handled directive.
     /// - Returns: If have an error, the error-code is returned, otherwise it returns `nil`.
     func messageAgentDidReceiveSendMessage(payload: MessageAgentDirectivePayload.SendMessage, header: Downstream.Header) -> String?

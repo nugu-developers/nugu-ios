@@ -84,13 +84,13 @@ public final class MessageAgent: MessageAgentProtocol {
 
 public extension MessageAgent {
     @discardableResult func requestSendCandidates(
-        candidatesItem: MessageAgentDirectivePayload.SendCandidates,
+        payload: MessageAgentDirectivePayload.SendCandidates,
         header: Downstream.Header?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         let event = Event(
             typeInfo: .candidatesListed,
-            playServiceId: candidatesItem.playServiceId,
+            playServiceId: payload.playServiceId,
             referrerDialogRequestId: header?.dialogRequestId
         )
         
@@ -99,7 +99,7 @@ public extension MessageAgent {
             guard let self = self else { return }
             switch state {
             case .finished, .error:
-                if let interactionControl = candidatesItem.interactionControl {
+                if let interactionControl = payload.interactionControl {
                     self.interactionControlManager.finish(
                         mode: interactionControl.mode,
                         category: self.capabilityAgentProperty.category
