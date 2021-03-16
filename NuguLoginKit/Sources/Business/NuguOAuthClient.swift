@@ -296,6 +296,17 @@ private extension NuguOAuthClient {
                 return
             }
             
+            switch notification.userInfo?["error"] {
+            case let loginKitError as NuguLoginKitError:
+                complete(result: .failure(loginKitError))
+                return
+            case let unknownError as Error:
+                complete(result: .failure(NuguLoginKitError.unknown(description: unknownError.localizedDescription)))
+                return
+            default:
+                break
+            }
+            
             guard let url = notification.userInfo?["url"] as? URL else {
                 complete(result: .failure(NuguLoginKitError.invalidOpenURL))
                 return
