@@ -128,7 +128,6 @@ public extension PhoneCallAgent {
 private extension PhoneCallAgent {
     func handleSendCandidates() -> HandleDirective {
         return { [weak self] directive, completion in
-            
             guard let self = self else {
                 completion(.canceled)
                 return
