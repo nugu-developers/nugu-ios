@@ -84,7 +84,7 @@ public final class MessageAgent: MessageAgentProtocol {
 
 public extension MessageAgent {
     @discardableResult func requestSendCandidates(
-        candidatesItem: MessageCandidatesItem,
+        candidatesItem: MessageAgentDirectivePayload.SendCandidates,
         header: Downstream.Header?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
@@ -128,7 +128,7 @@ private extension MessageAgent {
             }
             
             guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                  let candidatesItem = try? JSONDecoder().decode(MessageCandidatesItem.self, from: payloadData) else {
+                  let candidatesItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendCandidates.self, from: payloadData) else {
                 completion(.failed("Invalid candidateItem in payload"))
                 return
             }
@@ -143,7 +143,7 @@ private extension MessageAgent {
             }
             
             delegate.messageAgentDidReceiveSendCandidates(
-                item: candidatesItem,
+                payload: candidatesItem,
                 header: directive.header
             )
         }
@@ -161,30 +161,24 @@ private extension MessageAgent {
                 return
             }
             
-            guard let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    completion(.failed("Invalid playServiceId in payload"))
-                    return
-            }
-            
-            guard let recipientDictionary = payloadDictionary["recipient"] as? [String: AnyHashable],
-                let recipientData = try? JSONSerialization.data(withJSONObject: recipientDictionary, options: []),
-                let recipient = try? JSONDecoder().decode(MessageAgentContact.self, from: recipientData) else {
-                    completion(.failed("Invalid recipient in payload"))
-                    return
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
+                  let sendMessageItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendMessage.self, from: payloadData) else {
+                completion(.failed("Invalid candidateItem in payload"))
+                return
             }
             
             defer { completion(.finished) }
 
-            if let errorCode = delegate.messageAgentDidReceiveSendMessage(recipient: recipient, header: directive.header) {
+            if let errorCode = delegate.messageAgentDidReceiveSendMessage(payload: sendMessageItem, header: directive.header) {
                 self.sendCompactContextEvent(Event(
-                    typeInfo: .sendMessageFailed(recipient: recipient, errorCode: errorCode),
-                    playServiceId: playServiceId,
+                    typeInfo: .sendMessageFailed(recipient: sendMessageItem.recipient, errorCode: errorCode),
+                    playServiceId: sendMessageItem.playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ).rx)
             } else {
                 self.sendCompactContextEvent(Event(
-                    typeInfo: .sendMessageSucceeded(recipient: recipient),
-                    playServiceId: playServiceId,
+                    typeInfo: .sendMessageSucceeded(recipient: sendMessageItem.recipient),
+                    playServiceId: sendMessageItem.playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ).rx)
             }

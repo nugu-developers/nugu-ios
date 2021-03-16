@@ -34,7 +34,7 @@ public protocol MessageAgentProtocol: CapabilityAgentable {
     ///   - completion: The completion handler to call when the request is complete.
     /// - Returns: The `dialogRequestId` for request.
     @discardableResult func requestSendCandidates(
-        candidatesItem: MessageCandidatesItem,
+        candidatesItem: MessageAgentDirectivePayload.SendCandidates,
         header: Downstream.Header?,
         completion: ((StreamDataState) -> Void)?
     ) -> String

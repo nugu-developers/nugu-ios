@@ -87,7 +87,6 @@
 		1F9336E225B68D4D00CEBF66 /* MessageAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9336E125B68D4D00CEBF66 /* MessageAgentDelegate.swift */; };
 		1F93375D25BEB8CE00CEBF66 /* MessageAgentContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93375C25BEB8CE00CEBF66 /* MessageAgentContext.swift */; };
 		1F93377325BEB95800CEBF66 /* MessageAgentContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93377225BEB95800CEBF66 /* MessageAgentContact.swift */; };
-		1F93377F25BF12D600CEBF66 /* MessageCandidatesItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93377E25BF12D600CEBF66 /* MessageCandidatesItem.swift */; };
 		1F93378B25BF135700CEBF66 /* MessageRecipientIntended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93378A25BF135700CEBF66 /* MessageRecipientIntended.swift */; };
 		1F93379725BF182400CEBF66 /* MessageToSendItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F93379625BF182400CEBF66 /* MessageToSendItem.swift */; };
 		1F9337AD25BF265200CEBF66 /* MessageAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9337AC25BF265200CEBF66 /* MessageAgent+Event.swift */; };
@@ -107,6 +106,7 @@
 		1F9EF1F8248A4BD1000786E5 /* NuguUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */; };
 		1FBA3B702459669B001E5828 /* PhoneCallAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA3B6F2459669B001E5828 /* PhoneCallAgent.swift */; };
 		1FBA3B7624596E1A001E5828 /* PhoneCallAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */; };
+		1FCAE2A026005AC0001C8061 /* MessageAgentDirectivePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCAE29F26005AC0001C8061 /* MessageAgentDirectivePayload.swift */; };
 		1FD1CFD423A3506C0000FB8C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */; };
 		1FD1CFE823AE30300000FB8C /* NuguOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFE723AE30300000FB8C /* NuguOAuthClient.swift */; };
 		1FD1CFEB23AE3C060000FB8C /* ClientCredentialsGrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1CFEA23AE3C060000FB8C /* ClientCredentialsGrant.swift */; };
@@ -792,7 +792,6 @@
 		1F9336E125B68D4D00CEBF66 /* MessageAgentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgentDelegate.swift; sourceTree = "<group>"; };
 		1F93375C25BEB8CE00CEBF66 /* MessageAgentContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgentContext.swift; sourceTree = "<group>"; };
 		1F93377225BEB95800CEBF66 /* MessageAgentContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgentContact.swift; sourceTree = "<group>"; };
-		1F93377E25BF12D600CEBF66 /* MessageCandidatesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCandidatesItem.swift; sourceTree = "<group>"; };
 		1F93378A25BF135700CEBF66 /* MessageRecipientIntended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRecipientIntended.swift; sourceTree = "<group>"; };
 		1F93379625BF182400CEBF66 /* MessageToSendItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageToSendItem.swift; sourceTree = "<group>"; };
 		1F9337AC25BF265200CEBF66 /* MessageAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageAgent+Event.swift"; sourceTree = "<group>"; };
@@ -812,6 +811,7 @@
 		1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguUserInfo.swift; sourceTree = "<group>"; };
 		1FBA3B6F2459669B001E5828 /* PhoneCallAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallAgent.swift; sourceTree = "<group>"; };
 		1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneCallAgent+Event.swift"; sourceTree = "<group>"; };
+		1FCAE29F26005AC0001C8061 /* MessageAgentDirectivePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAgentDirectivePayload.swift; sourceTree = "<group>"; };
 		1FD1CFD223A32FF50000FB8C /* PULL_REQUEST_TEMPLATE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PULL_REQUEST_TEMPLATE.md; sourceTree = "<group>"; };
 		1FD1CFD323A3506C0000FB8C /* KeychainHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1FD1CFDF23A788770000FB8C /* CODEOWNERS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
@@ -1536,8 +1536,8 @@
 				1F9336C925B68CC000CEBF66 /* MessageAgentProtocol.swift */,
 				1F9336E125B68D4D00CEBF66 /* MessageAgentDelegate.swift */,
 				1F93375C25BEB8CE00CEBF66 /* MessageAgentContext.swift */,
+				1FCAE29F26005AC0001C8061 /* MessageAgentDirectivePayload.swift */,
 				1F93377225BEB95800CEBF66 /* MessageAgentContact.swift */,
-				1F93377E25BF12D600CEBF66 /* MessageCandidatesItem.swift */,
 				1F93379625BF182400CEBF66 /* MessageToSendItem.swift */,
 				1F93378A25BF135700CEBF66 /* MessageRecipientIntended.swift */,
 			);
@@ -1621,6 +1621,7 @@
 				1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */,
 				1FD5D17224A99993007BA384 /* PhoneCallAgentProtocol.swift */,
 				1FD5D17124A99993007BA384 /* PhoneCallAgentDelegate.swift */,
+				68F2F800253D874900D91AA1 /* PhoneCallAgentContext.swift */,
 				1FD5D17724A99993007BA384 /* PhoneCallErrorCode.swift */,
 				1FD5D17824A99993007BA384 /* PhoneCallIntent.swift */,
 				1FD5D17324A99993007BA384 /* PhoneCallPerson.swift */,
@@ -1628,7 +1629,6 @@
 				1FD5D17424A99993007BA384 /* PhoneCallState.swift */,
 				1FD5D17524A99993007BA384 /* PhoneCallType.swift */,
 				1FD5D18324AC97CE007BA384 /* PhoneCallCandidatesItem.swift */,
-				68F2F800253D874900D91AA1 /* PhoneCallAgentContext.swift */,
 			);
 			path = PhoneCall;
 			sourceTree = "<group>";
@@ -3684,7 +3684,6 @@
 				1FFFF4FE237672F100C9A177 /* AppDelegate.swift in Sources */,
 				1FFFF4E0237672F100C9A177 /* IntroViewController.swift in Sources */,
 				1FFFF4F9237672F100C9A177 /* SampleAppError.swift in Sources */,
-				1FFFF4E3237672F100C9A177 /* NuguWebView.swift in Sources */,
 				1FFFF4FC237672F100C9A177 /* NuguCentralManager.swift in Sources */,
 				1FFFF501237672F100C9A177 /* UserDefaults+Standard.swift in Sources */,
 				1FFFF4E2237672F100C9A177 /* GuideWebViewController.swift in Sources */,
@@ -3783,11 +3782,11 @@
 				7373891924A46CC20018DDD2 /* LocationInfo.swift in Sources */,
 				737388F724A46C800018DDD2 /* ASRState.swift in Sources */,
 				73152FC423E0414F00F843C3 /* SystemAgentExceptionItem.swift in Sources */,
+				1FCAE2A026005AC0001C8061 /* MessageAgentDirectivePayload.swift in Sources */,
 				737388C424A46C110018DDD2 /* CapabilityAgentProperty.swift in Sources */,
 				1F9336CA25B68CC000CEBF66 /* MessageAgentProtocol.swift in Sources */,
 				1F9336E225B68D4D00CEBF66 /* MessageAgentDelegate.swift in Sources */,
 				737388EC24A46C680018DDD2 /* AudioPlayerDisplayDelegate.swift in Sources */,
-				1F93377F25BF12D600CEBF66 /* MessageCandidatesItem.swift in Sources */,
 				737388D124A46C2B0018DDD2 /* SessionManageable.swift in Sources */,
 				1FD5D18F24C82224007BA384 /* MediaPlayerAgentSong.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,

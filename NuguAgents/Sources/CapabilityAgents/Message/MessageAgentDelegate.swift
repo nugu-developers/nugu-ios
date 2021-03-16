@@ -33,12 +33,12 @@ public protocol MessageAgentDelegate: class {
     /// - Parameters:
     ///   - item: The item of `MessageCandidatesItem`
     ///   - header: The header of the originally handled directive.
-    func messageAgentDidReceiveSendCandidates(item: MessageCandidatesItem, header: Downstream.Header)
+    func messageAgentDidReceiveSendCandidates(payload: MessageAgentDirectivePayload.SendCandidates, header: Downstream.Header)
     
     /// Called method when a directive 'SendMessasge' is received.
     /// - Parameters:
     ///   - recipient: An contact about the recipient.
     ///   - header: The header of the originally handled directive.
     /// - Returns: If have an error, the error-code is returned, otherwise it returns `nil`.
-    func messageAgentDidReceiveSendMessage(recipient: MessageAgentContact, header: Downstream.Header) -> String?
+    func messageAgentDidReceiveSendMessage(payload: MessageAgentDirectivePayload.SendMessage, header: Downstream.Header) -> String?
 }

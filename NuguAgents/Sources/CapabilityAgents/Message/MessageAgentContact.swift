@@ -24,17 +24,41 @@ import Foundation
 public struct MessageAgentContact: Codable {
     
     /// <#Description#>
+    public enum ContactType: String, Codable {
+        case contact = "CONTACT"
+        case exchange = "EXCHANGE"
+        case t114 = "T114"
+        case none = "NONE"
+        case emergency = "EMERGENCY"
+    }
+    
+    /// <#Description#>
+    public enum Label: String, Codable {
+        case mobile = "MOBILE"
+        case company = "COMPANY"
+        case home = "HOME"
+        case userDefined = "USER_DEFINED"
+    }
+    
+    /// <#Description#>
     public struct Message: Codable {
+        
+        /// <#Description#>
+        public enum MessageType: String, Codable {
+            case sms = "SMS"
+            case mms = "MMS"
+        }
+        
         /// <#Description#>
         public let text: String
         /// <#Description#>
-        public let type: String
+        public let type: MessageType
         
         /// The initializer for `MessageAgentContact.Message`.
         /// - Parameters:
         ///   - text: <#text description#>
         ///   - type: <#type description#>
-        public init(text: String, type: String) {
+        public init(text: String, type: MessageType) {
             self.text = text
             self.type = type
         }
@@ -43,11 +67,11 @@ public struct MessageAgentContact: Codable {
     /// <#Description#>
     public let name: String?
     /// <#Description#>
-    public let type: String?
+    public let type: ContactType?
     /// <#Description#>
     public let number: String?
     /// <#Description#>
-    public let label: String?
+    public let label: Label?
     /// <#Description#>
     public let profileImgUrl: String?
     /// <#Description#>
@@ -75,15 +99,16 @@ public struct MessageAgentContact: Codable {
     ///   - score: <#score description#>
     public init(
         name: String?,
-        type: String?,
+        type: ContactType?,
         number: String?,
-        label: String?,
+        label: Label?,
         profileImgUrl: String?,
         message: Message?,
         time: String?,
         numInMessageHistory: String?,
         token: String?,
-        score: String?) {
+        score: String?
+    ) {
         self.name = name
         self.type = type
         self.number = number
