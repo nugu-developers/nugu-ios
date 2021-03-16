@@ -122,14 +122,8 @@ private extension MessageAgent {
                 return
             }
             
-            guard let payloadDictionary = directive.payloadDictionary else {
+            guard let candidatesItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendCandidates.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
-                return
-            }
-            
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                  let candidatesItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendCandidates.self, from: payloadData) else {
-                completion(.failed("Invalid candidateItem in payload"))
                 return
             }
             
@@ -156,14 +150,8 @@ private extension MessageAgent {
                 return
             }
             
-            guard let payloadDictionary = directive.payloadDictionary else {
+            guard let sendMessageItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendMessage.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
-                return
-            }
-            
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                  let sendMessageItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendMessage.self, from: payloadData) else {
-                completion(.failed("Invalid candidateItem in payload"))
                 return
             }
             

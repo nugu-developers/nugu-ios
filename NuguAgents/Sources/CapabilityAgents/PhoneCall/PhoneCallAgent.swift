@@ -140,15 +140,9 @@ private extension PhoneCallAgent {
                     return
                 }
                 
-                guard let payloadDictionary = directive.payloadDictionary else {
+                guard let candidatesItem = try? JSONDecoder().decode(PhoneCallAgentDirectivePayload.SendCandidates.self, from: directive.payload) else {
                     completion(.failed("Invalid payload"))
                     return
-                }
-                
-                guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                      let candidatesItem = try? JSONDecoder().decode(PhoneCallAgentDirectivePayload.SendCandidates.self, from: payloadData) else {
-                        completion(.failed("Invalid candidateItem in payload"))
-                        return
                 }
                 
                 defer { completion(.finished) }
@@ -195,15 +189,9 @@ private extension PhoneCallAgent {
                     return
                 }
                 
-                guard let payloadDictionary = directive.payloadDictionary else {
+                guard let makeCallItem = try? JSONDecoder().decode(PhoneCallAgentDirectivePayload.MakeCall.self, from: directive.payload) else {
                     completion(.failed("Invalid payload"))
                     return
-                }
-                
-                guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                      let makeCallItem = try? JSONDecoder().decode(PhoneCallAgentDirectivePayload.MakeCall.self, from: payloadData) else {
-                        completion(.failed("Invalid makeCallItem in payload"))
-                        return
                 }
                 
                 defer { completion(.finished) }

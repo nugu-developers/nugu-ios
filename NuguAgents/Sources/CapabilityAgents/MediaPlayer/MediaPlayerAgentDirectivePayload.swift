@@ -54,6 +54,16 @@ public struct MediaPlayerAgentDirectivePayload {
         public let data: [String: AnyHashable]?
     }
     
+    // MARK: Stop
+    
+    /// <#Description#>
+    public struct Stop {
+        /// <#Description#>
+        public let playServiceId: String
+        /// <#Description#>
+        public let token: String
+    }
+    
     // MARK: Search
     
     /// <#Description#>
@@ -114,6 +124,36 @@ public struct MediaPlayerAgentDirectivePayload {
         public let sec: String
     }
     
+    // MARK: Pause
+    
+    /// <#Description#>
+    public struct Pause {
+        /// <#Description#>
+        public let playServiceId: String
+        /// <#Description#>
+        public let token: String
+    }
+    
+    // MARK: Resume
+    
+    /// <#Description#>
+    public struct Resume {
+        /// <#Description#>
+        public let playServiceId: String
+        /// <#Description#>
+        public let token: String
+    }
+    
+    // MARK: Rewind
+    
+    /// <#Description#>
+    public struct Rewind {
+        /// <#Description#>
+        public let playServiceId: String
+        /// <#Description#>
+        public let token: String
+    }
+    
     // MARK: Toggle
     
     /// <#Description#>
@@ -128,6 +168,38 @@ public struct MediaPlayerAgentDirectivePayload {
         public let like: String?
         /// <#Description#>
         public let shuffle: String?
+    }
+    
+    // MARK: GetInfo
+    
+    /// <#Description#>
+    public struct GetInfo {
+        /// <#Description#>
+        public let playServiceId: String
+        /// <#Description#>
+        public let token: String
+    }
+    
+    // MARK: HandlePlaylist
+    
+    /// <#Description#>
+    public struct HandlePlaylist {
+        /// <#Description#>
+        public let playServiceId: String
+        /// <#Description#>
+        public let action: String
+        /// <#Description#>
+        public let target: String?
+    }
+    
+    // MARK: HandleLyrics
+    
+    /// <#Description#>
+    public struct HandleLyrics {
+        /// <#Description#>
+        public let playServiceId: String
+        /// <#Description#>
+        public let action: String
     }
 }
 
@@ -168,6 +240,10 @@ extension MediaPlayerAgentDirectivePayload.Play: Codable {
         try container.encodeIfPresent(data, forKey: .data)
     }
 }
+
+// MARK: - MediaPlayerAgentDirectivePayload.Stop + Codable
+
+extension MediaPlayerAgentDirectivePayload.Stop: Codable {}
 
 // MARK: - MediaPlayerAgentDirectivePayload.Play.Toggle + Codable
 
@@ -245,6 +321,30 @@ extension MediaPlayerAgentDirectivePayload.Next: Codable {
 
 extension MediaPlayerAgentDirectivePayload.Move: Codable {}
 
+// MARK: - MediaPlayerAgentDirectivePayload.Pause + Codable
+
+extension MediaPlayerAgentDirectivePayload.Pause: Codable {}
+
+// MARK: - MediaPlayerAgentDirectivePayload.Resume + Codable
+
+extension MediaPlayerAgentDirectivePayload.Resume: Codable {}
+
+// MARK: - MediaPlayerAgentDirectivePayload.Rewind + Codable
+
+extension MediaPlayerAgentDirectivePayload.Rewind: Codable {}
+
 // MARK: - MediaPlayerAgentDirectivePayload.Toggle + Codable
 
 extension MediaPlayerAgentDirectivePayload.Toggle: Codable {}
+
+// MARK: - MediaPlayerAgentDirectivePayload.GetInfo + Codable
+
+extension MediaPlayerAgentDirectivePayload.GetInfo: Codable {}
+
+// MARK: - MediaPlayerAgentDirectivePayload.HandlePlaylist + Codable
+
+extension MediaPlayerAgentDirectivePayload.HandlePlaylist: Codable {}
+
+// MARK: - MediaPlayerAgentDirectivePayload.HandleLyrics + Codable
+
+extension MediaPlayerAgentDirectivePayload.HandleLyrics: Codable {}

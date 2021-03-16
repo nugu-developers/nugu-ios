@@ -2452,8 +2452,8 @@
 				680EF96224B30DAE003DE266 /* MediaPlayerAgentProtocol.swift */,
 				680EF96424B30DBB003DE266 /* MediaPlayerAgentDelegate.swift */,
 				1FD5D19224D2A0F0007BA384 /* MediaPlayerAgentContext.swift */,
-				1FD5D18E24C82224007BA384 /* MediaPlayerAgentSong.swift */,
 				1FD5D19524D2C588007BA384 /* MediaPlayerAgentDirectivePayload.swift */,
+				1FD5D18E24C82224007BA384 /* MediaPlayerAgentSong.swift */,
 				1FD5D19D24D35281007BA384 /* MediaPlayerAgentPlaylist.swift */,
 				1FD5D19B24D34F3A007BA384 /* MediaPlayerAgentResult.swift */,
 			);

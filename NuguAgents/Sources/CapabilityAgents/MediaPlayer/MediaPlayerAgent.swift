@@ -91,50 +91,51 @@ public final class MediaPlayerAgent: MediaPlayerAgentProtocol {
 private extension MediaPlayerAgent {
     func handlePlay() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let delegate = self?.delegate else {
-                completion(.canceled)
-                return
-            }
             guard let playPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Play.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
             
-            delegate.mediaPlayerAgentReceivePlay(
+            defer { completion(.finished) }
+            
+            self?.delegate?.mediaPlayerAgentReceivePlay(
                 payload: playPayload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    defer { completion(.finished) }
-                    
-                    self?.processPlayDirectiveResult(payload: playPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processPlayDirectiveResult(
+                        payload: playPayload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleStop() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payloadDictionary = directive.payloadDictionary,
-                let playServiceId = payloadDictionary["playServiceId"] as? String,
-                let token = payloadDictionary["token"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Stop.self, from: directive.payload) else {
+                completion(.failed("Invalid payload"))
+                return
             }
             
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceiveStop(
-                playServiceId: playServiceId,
-                token: token,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processStopDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processStopDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleSearch() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let searchPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Search.self, from: directive.payload) else {
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Search.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
@@ -142,17 +143,21 @@ private extension MediaPlayerAgent {
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceiveSearch(
-                payload: searchPayload,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processSearchDirectiveResult(payload: searchPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processSearchDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handlePrevious() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let previousPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Previous.self, from: directive.payload) else {
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Previous.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
@@ -160,17 +165,21 @@ private extension MediaPlayerAgent {
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceivePrevious(
-                payload: previousPayload,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processPreviousDirectiveResult(payload: previousPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processPreviousDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleNext() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let nextPayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Next.self, from: directive.payload) else {
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Next.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
@@ -178,17 +187,21 @@ private extension MediaPlayerAgent {
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceiveNext(
-                payload: nextPayload,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processNextDirectiveResult(payload: nextPayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processNextDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleMove() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let movePayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Move.self, from: directive.payload) else {
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Move.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
@@ -196,80 +209,87 @@ private extension MediaPlayerAgent {
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceiveMove(
-                payload: movePayload,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processMoveDirectiveResult(payload: movePayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processMoveDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handlePause() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payloadDictionary = directive.payloadDictionary,
-                let playServiceId = payloadDictionary["playServiceId"] as? String,
-                let token = payloadDictionary["token"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Pause.self, from: directive.payload) else {
+                completion(.failed("Invalid payload"))
+                return
             }
             
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceivePause(
-                playServiceId: playServiceId,
-                token: token,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processPauseDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processPauseDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleResume() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payloadDictionary = directive.payloadDictionary,
-                let playServiceId = payloadDictionary["playServiceId"] as? String,
-                let token = payloadDictionary["token"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Resume.self, from: directive.payload) else {
+                completion(.failed("Invalid payload"))
+                return
             }
             
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceiveResume(
-                playServiceId: playServiceId,
-                token: token,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                self?.processResumeDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processResumeDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleRewind() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payloadDictionary = directive.payloadDictionary,
-                let playServiceId = payloadDictionary["playServiceId"] as? String,
-                let token = payloadDictionary["token"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Rewind.self, from: directive.payload) else {
+                completion(.failed("Invalid payload"))
+                return
             }
             
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceiveRewind(
-                playServiceId: playServiceId,
-                token: token,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processRewindDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processRewindDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleToggle() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let togglePayload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Toggle.self, from: directive.payload) else {
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.Toggle.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
@@ -277,76 +297,80 @@ private extension MediaPlayerAgent {
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceiveToggle(
-                payload: togglePayload,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processToggleDirectiveResult(payload: togglePayload, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processToggleDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleGetInfo() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payloadDictionary = directive.payloadDictionary,
-                let playServiceId = payloadDictionary["playServiceId"] as? String,
-                let token = payloadDictionary["token"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.GetInfo.self, from: directive.payload) else {
+                completion(.failed("Invalid payload"))
+                return
             }
             
             defer { completion(.finished) }
             
             self?.delegate?.mediaPlayerAgentReceiveGetInfo(
-                playServiceId: playServiceId,
-                token: token,
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processGetInfoDirectiveResult(playServiceId: playServiceId, token: token, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processGetInfoDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handlePlaylist() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payloadDictionary = directive.payloadDictionary,
-                let playServiceId = payloadDictionary["playServiceId"] as? String,
-                let action = payloadDictionary["action"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.HandlePlaylist.self, from: directive.payload) else {
+                completion(.failed("Invalid payload"))
+                return
             }
             
             defer { completion(.finished) }
             
-            let target = payloadDictionary["target"] as? String
-            
-            self?.delegate?.mediaPlayerAgentReceivePlaylist(
-                playServiceId: playServiceId,
-                action: action,
-                target: target,
+            self?.delegate?.mediaPlayerAgentReceiveHandlePlaylist(
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processHandlePlaylistDirectiveResult(playServiceId: playServiceId, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processHandlePlaylistDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
     
     func handleLyrics() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payloadDictionary = directive.payloadDictionary,
-                let playServiceId = payloadDictionary["playServiceId"] as? String,
-                let action = payloadDictionary["action"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+            guard let payload = try? JSONDecoder().decode(MediaPlayerAgentDirectivePayload.HandleLyrics.self, from: directive.payload) else {
+                completion(.failed("Invalid payload"))
+                return
             }
             
             defer { completion(.finished) }
             
-            self?.delegate?.mediaPlayerAgentReceiveLyrics(
-                playServiceId: playServiceId,
-                action: action,
+            self?.delegate?.mediaPlayerAgentReceiveHandleLyrics(
+                payload: payload,
                 header: directive.header,
                 completion: { [weak self] (result) in
-                    self?.processHandleLyricsDirectiveResult(playServiceId: playServiceId, result: result, referrerDialogRequestId: directive.header.dialogRequestId)
+                    self?.processHandleLyricsDirectiveResult(
+                        payload: payload,
+                        result: result,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    )
             })
         }
     }
@@ -398,8 +422,7 @@ private extension MediaPlayerAgent {
     }
     
     func processStopDirectiveResult(
-        playServiceId: String,
-        token: String,
+        payload: MediaPlayerAgentDirectivePayload.Stop,
         result: MediaPlayerAgentProcessResult.Stop,
         referrerDialogRequestId: String
     ) {
@@ -413,8 +436,8 @@ private extension MediaPlayerAgent {
         
         sendCompactContextEvent(Event(
             typeInfo: typeInfo,
-            playServiceId: playServiceId,
-            token: token,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
             referrerDialogRequestId: referrerDialogRequestId
         ).rx)
     }
@@ -508,8 +531,7 @@ private extension MediaPlayerAgent {
     }
     
     func processPauseDirectiveResult(
-        playServiceId: String,
-        token: String,
+        payload: MediaPlayerAgentDirectivePayload.Pause,
         result: MediaPlayerAgentProcessResult.Pause,
         referrerDialogRequestId: String
     ) {
@@ -523,15 +545,14 @@ private extension MediaPlayerAgent {
         
         sendCompactContextEvent(Event(
             typeInfo: typeInfo,
-            playServiceId: playServiceId,
-            token: token,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
             referrerDialogRequestId: referrerDialogRequestId
         ).rx)
     }
     
     func processResumeDirectiveResult(
-        playServiceId: String,
-        token: String,
+        payload: MediaPlayerAgentDirectivePayload.Resume,
         result: MediaPlayerAgentProcessResult.Resume,
         referrerDialogRequestId: String
     ) {
@@ -545,15 +566,14 @@ private extension MediaPlayerAgent {
         
         sendCompactContextEvent(Event(
             typeInfo: typeInfo,
-            playServiceId: playServiceId,
-            token: token,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
             referrerDialogRequestId: referrerDialogRequestId
         ).rx)
     }
     
     func processRewindDirectiveResult(
-        playServiceId: String,
-        token: String,
+        payload: MediaPlayerAgentDirectivePayload.Rewind,
         result: MediaPlayerAgentProcessResult.Rewind,
         referrerDialogRequestId: String
     ) {
@@ -567,8 +587,8 @@ private extension MediaPlayerAgent {
         
         sendCompactContextEvent(Event(
             typeInfo: typeInfo,
-            playServiceId: playServiceId,
-            token: token,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
             referrerDialogRequestId: referrerDialogRequestId
         ).rx)
     }
@@ -595,8 +615,7 @@ private extension MediaPlayerAgent {
     }
     
     func processGetInfoDirectiveResult(
-        playServiceId: String,
-        token: String,
+        payload: MediaPlayerAgentDirectivePayload.GetInfo,
         result: MediaPlayerAgentProcessResult.GetInfo,
         referrerDialogRequestId: String
     ) {
@@ -610,14 +629,14 @@ private extension MediaPlayerAgent {
         
         sendCompactContextEvent(Event(
             typeInfo: typeInfo,
-            playServiceId: playServiceId,
-            token: token,
+            playServiceId: payload.playServiceId,
+            token: payload.token,
             referrerDialogRequestId: referrerDialogRequestId
         ).rx)
     }
     
     func processHandlePlaylistDirectiveResult(
-        playServiceId: String,
+        payload: MediaPlayerAgentDirectivePayload.HandlePlaylist,
         result: MediaPlayerAgentProcessResult.HandlePlaylist,
         referrerDialogRequestId: String
     ) {
@@ -632,7 +651,7 @@ private extension MediaPlayerAgent {
         sendCompactContextEvent(
             Event(
                 typeInfo: typeInfo,
-                playServiceId: playServiceId,
+                playServiceId: payload.playServiceId,
                 token: nil,
                 referrerDialogRequestId: referrerDialogRequestId
             ).rx
@@ -640,7 +659,7 @@ private extension MediaPlayerAgent {
     }
     
     func processHandleLyricsDirectiveResult(
-        playServiceId: String,
+        payload: MediaPlayerAgentDirectivePayload.HandleLyrics,
         result: MediaPlayerAgentProcessResult.HandleLyrics,
         referrerDialogRequestId: String
     ) {
@@ -655,7 +674,7 @@ private extension MediaPlayerAgent {
         sendCompactContextEvent(
             Event(
                 typeInfo: typeInfo,
-                playServiceId: playServiceId,
+                playServiceId: payload.playServiceId,
                 token: nil,
                 referrerDialogRequestId: referrerDialogRequestId
             ).rx
