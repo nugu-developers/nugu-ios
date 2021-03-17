@@ -103,11 +103,14 @@ final class AudioPlayer2View: AudioDisplayView {
             
             if isSeekable {
                 startProgressTimer()
+                progressView.isHidden = false
+                audioPlayerBarView.progressView.isHidden = false
             } else {
                 stopProgressTimer()
                 elapsedTimeLabel.text = nil
                 durationTimeLabel.text = nil
                 progressView.isHidden = true
+                audioPlayerBarView.progressView.isHidden = true
             }
             
             playPauseButton.isSelected = delegate?.requestAudioPlayerIsPlaying() == true
