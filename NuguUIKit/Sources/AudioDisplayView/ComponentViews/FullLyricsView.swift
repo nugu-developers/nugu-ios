@@ -27,6 +27,8 @@ final class FullLyricsView: UIView {
     
     var onViewDidTap: (() -> Void)?
     
+    private var isScrolling = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadFromXib()
@@ -45,6 +47,7 @@ final class FullLyricsView: UIView {
         addSubview(view)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewDidTap(gestureRecognizer:)))
         addGestureRecognizer(tapRecognizer)
+        scrollView.delegate = self
     }
     
     func updateLyricsFocus(lyricsIndex: Int?) {
@@ -57,7 +60,7 @@ final class FullLyricsView: UIView {
         currentLyricsLabel.textColor = UIColor(red: 0, green: 157.0/255.0, blue: 1, alpha: 1.0)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             guard let self = self,
-                  self.scrollView.panGestureRecognizer.velocity(in: self.scrollView).y == 0 else { return }
+                  self.isScrolling == false else { return }
             if currentLyricsLabel.frame.origin.y - self.scrollView.frame.size.height/2 < 0 {
                 self.scrollView.setContentOffset(.zero, animated: true)
             } else {
@@ -69,5 +72,21 @@ final class FullLyricsView: UIView {
     
     @objc func viewDidTap(gestureRecognizer: UITapGestureRecognizer) {
         onViewDidTap?()
+    }
+}
+
+extension FullLyricsView: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        isScrolling = true
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        isScrolling = false
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if decelerate == false {
+            isScrolling = false
+        }
     }
 }
