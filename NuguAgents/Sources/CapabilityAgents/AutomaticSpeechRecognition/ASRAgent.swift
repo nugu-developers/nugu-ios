@@ -241,7 +241,7 @@ public final class ASRAgent: ASRAgentProtocol {
     public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
         guard let self = self else { return }
         
-        let payload: [String: AnyHashable] = [
+        let payload: [String: AnyHashable?] = [
             "version": self.capabilityAgentProperty.version,
             "engine": "skt",
             "state": self.asrState.value,

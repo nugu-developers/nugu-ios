@@ -30,7 +30,6 @@ final class ControlCenterManager {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         }
     }
-    private let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
     private let remoteCommandCenter = MPRemoteCommandCenter.shared()
     
     private let nowPlayInfoCenterQueue = DispatchQueue(label: "com.sktelecom.romaine.now_playing_info_update_queue")
