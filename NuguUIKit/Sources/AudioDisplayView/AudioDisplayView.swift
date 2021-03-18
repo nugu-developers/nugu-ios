@@ -78,12 +78,12 @@ public class AudioDisplayView: UIView {
     }
     
     public var displayPayload: [String: AnyHashable]?
+    public var isSeekable: Bool = false
     
     // Internal Properties
     var lyricsData: AudioPlayerLyricsTemplate?
     var fullLyricsView: FullLyricsView?
-    
-    var isSeekable: Bool = false
+
     var repeatMode: AudioPlayerDisplayRepeat? {
         didSet {
             guard let repeatMode = repeatMode else { return }
@@ -131,11 +131,14 @@ public class AudioDisplayView: UIView {
         DispatchQueue.main.async { [weak self] in
             guard let elapsedTimeAsInt = self?.delegate?.requestOffset(),
                   let durationAsInt = self?.delegate?.requestDuration() else {
-                    self?.elapsedTimeLabel.text = nil
-                    self?.durationTimeLabel.text = nil
-                    self?.progressView.isHidden = true
-                    return
+                self?.elapsedTimeLabel.text = nil
+                self?.durationTimeLabel.text = nil
+                self?.progressView.isHidden = true
+                self?.audioPlayerBarView.progressView.isHidden = true
+                return
             }
+            self?.progressView.isHidden = false
+            self?.audioPlayerBarView.progressView.isHidden = false
             let elapsedTime = Float(elapsedTimeAsInt)
             let duration = Float(durationAsInt)
             self?.elapsedTimeLabel.text = Int(elapsedTime).secondTimeString

@@ -141,6 +141,7 @@ private extension AudioDisplayViewPresenter {
             completion(nil)
             return
         }
+        audioDisplayView.isSeekable = audioPlayerDisplayTemplate.isSeekable
         audioDisplayView.displayPayload = audioPlayerDisplayTemplate.payload
         completion(audioDisplayView)
     }
