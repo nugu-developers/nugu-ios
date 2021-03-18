@@ -97,36 +97,21 @@ public extension AlertsAgent {
 private extension AlertsAgent {
     func handleSetAlert() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self else {
+            guard let self = self, let delegate = self.delegate else {
                 completion(.canceled)
                 return
             }
             
-            guard let payloadDictionary = directive.payloadDictionary else {
-                completion(.failed("Invalid payload"))
+            guard let setAlertItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.SetAlert.self, from: directive.payload) else {
+                completion(.failed("Invalid deliveryAssetItem in payload"))
                 return
             }
             
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                  let setAlertItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.SetAlert.self, from: payloadData) else {
-                    completion(.failed("Invalid setAlertItem in payload"))
-                    return
-            }
-            
-            let isSuccess = self.delegate?.alertsAgentDidReceiveSetAlert(item: setAlertItem, header: directive.header)
-            let event: Event
-            
-            if isSuccess == true {
-                event = Event(
-                    typeInfo: .setAlertSucceeded(token: setAlertItem.token),
-                    playServiceId: setAlertItem.playServiceId
-                )
-            } else {
-                event = Event(
-                    typeInfo: .setAlertFailed(token: setAlertItem.token),
-                    playServiceId: setAlertItem.playServiceId
-                )
-            }
+            let isSuccess = delegate.alertsAgentDidReceiveSetAlert(item: setAlertItem, header: directive.header)
+            let event = Event(
+                typeInfo: isSuccess ? .setAlertSucceeded(token: setAlertItem.token) : .setAlertFailed(token: setAlertItem.token),
+                playServiceId: setAlertItem.playServiceId
+            )
             
             self.sendCompactContextEvent(event.rx)
         }
@@ -134,36 +119,21 @@ private extension AlertsAgent {
     
     func handleDeleteAlerts() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self else {
+            guard let self = self, let delegate = self.delegate else {
                 completion(.canceled)
                 return
             }
             
-            guard let payloadDictionary = directive.payloadDictionary else {
-                completion(.failed("Invalid payload"))
+            guard let deleteAlertItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.DeleteAlerts.self, from: directive.payload) else {
+                completion(.failed("Invalid deliveryAssetItem in payload"))
                 return
             }
             
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                  let deleteAlertItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.DeleteAlerts.self, from: payloadData) else {
-                    completion(.failed("Invalid deleteAlertItem in payload"))
-                    return
-            }
-            
-            let isSuccess = self.delegate?.alertsAgentDidReceiveDeleteAlerts(item: deleteAlertItem, header: directive.header)
-            let event: Event
-            
-            if isSuccess == true {
-                event = Event(
-                    typeInfo: .deleteAlertsSucceeded(tokens: deleteAlertItem.tokens),
-                    playServiceId: deleteAlertItem.playServiceId
-                )
-            } else {
-                event = Event(
-                    typeInfo: .deleteAlertsFailed(tokens: deleteAlertItem.tokens),
-                    playServiceId: deleteAlertItem.playServiceId
-                )
-            }
+            let isSuccess = delegate.alertsAgentDidReceiveDeleteAlerts(item: deleteAlertItem, header: directive.header)
+            let event = Event(
+                typeInfo: isSuccess ? .deleteAlertsSucceeded(tokens: deleteAlertItem.tokens) : .deleteAlertsFailed(tokens: deleteAlertItem.tokens),
+                playServiceId: deleteAlertItem.playServiceId
+            )
             
             self.sendCompactContextEvent(event.rx)
         }
@@ -172,58 +142,37 @@ private extension AlertsAgent {
     // TODO: - 검토필요
     func handleDeliveryAlertAsset() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self else {
+            guard let self = self, let delegate = self.delegate else {
                 completion(.canceled)
                 return
             }
             
-            guard let payloadDictionary = directive.payloadDictionary else {
-                completion(.failed("Invalid payload"))
+            guard let deliveryAssetItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.DeliveryAlertAsset.self, from: directive.payload) else {
+                completion(.failed("Invalid deliveryAssetItem in payload"))
                 return
             }
             
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                  let deliveryAssetItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.DeliveryAlertAsset.self, from: payloadData) else {
-                    completion(.failed("Invalid deliveryAssetItem in payload"))
-                    return
-            }
-            
-            self.delegate?.alertsAgentDidReceiveDeliveryAlertAsset(item: deliveryAssetItem, header: directive.header)
+            delegate.alertsAgentDidReceiveDeliveryAlertAsset(item: deliveryAssetItem, header: directive.header)
         }
     }
     
     func handleSetSnooze() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self else {
+            guard let self = self, let delegate = self.delegate else {
                 completion(.canceled)
                 return
             }
             
-            guard let payloadDictionary = directive.payloadDictionary else {
-                completion(.failed("Invalid payload"))
+            guard let setSnoozeItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.SetSnooze.self, from: directive.payload) else {
+                completion(.failed("Invalid deliveryAssetItem in payload"))
                 return
             }
             
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                  let setSnoozeItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.SetSnooze.self, from: payloadData) else {
-                    completion(.failed("Invalid setSnoozeItem in payload"))
-                    return
-            }
-            
-            let isSuccess = self.delegate?.alertsAgentDidReceiveSetSnooze(item: setSnoozeItem, header: directive.header)
-            let event: Event
-            
-            if isSuccess == true {
-                event = Event(
-                    typeInfo: .setSnoozeSucceeded(token: setSnoozeItem.token),
-                    playServiceId: setSnoozeItem.playServiceId
-                )
-            } else {
-                event = Event(
-                    typeInfo: .setSnoozeFailed(token: setSnoozeItem.token),
-                    playServiceId: setSnoozeItem.playServiceId
-                )
-            }
+            let isSuccess = delegate.alertsAgentDidReceiveSetSnooze(item: setSnoozeItem, header: directive.header)
+            let event = Event(
+                typeInfo: isSuccess ? .setSnoozeSucceeded(token: setSnoozeItem.token) : .setSnoozeFailed(token: setSnoozeItem.token),
+                playServiceId: setSnoozeItem.playServiceId
+            )
             
             self.sendCompactContextEvent(event.rx)
         }
