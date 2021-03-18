@@ -200,6 +200,7 @@ public class AudioDisplayView: UIView {
     func showLyrics() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            self.fullLyricsView?.removeFromSuperview() 
             self.contentStackView.isHidden = true
             let fullLyricsView = FullLyricsView(
                 frame: CGRect(
