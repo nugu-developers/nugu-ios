@@ -156,20 +156,22 @@ private extension MessageAgent {
             }
             
             defer { completion(.finished) }
+            
+            let typeInfo: Event.TypeInfo
 
             if let errorCode = delegate.messageAgentDidReceiveSendMessage(payload: sendMessageItem, header: directive.header) {
-                self.sendCompactContextEvent(Event(
-                    typeInfo: .sendMessageFailed(recipient: sendMessageItem.recipient, errorCode: errorCode),
-                    playServiceId: sendMessageItem.playServiceId,
-                    referrerDialogRequestId: directive.header.dialogRequestId
-                ).rx)
+                typeInfo = .sendMessageFailed(recipient: sendMessageItem.recipient, errorCode: errorCode)
             } else {
-                self.sendCompactContextEvent(Event(
-                    typeInfo: .sendMessageSucceeded(recipient: sendMessageItem.recipient),
+                typeInfo = .sendMessageSucceeded(recipient: sendMessageItem.recipient)
+            }
+            
+            self.sendCompactContextEvent(
+                Event(
+                    typeInfo: typeInfo,
                     playServiceId: sendMessageItem.playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
-                ).rx)
-            }
+                ).rx
+            )
         }
     }
 }

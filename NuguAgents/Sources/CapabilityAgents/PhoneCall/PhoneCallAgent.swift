@@ -128,7 +128,6 @@ public extension PhoneCallAgent {
 private extension PhoneCallAgent {
     func handleSendCandidates() -> HandleDirective {
         return { [weak self] directive, completion in
-            
             guard let self = self else {
                 completion(.canceled)
                 return
@@ -178,7 +177,7 @@ private extension PhoneCallAgent {
             }
             
             self.phoneCallDispatchQueue.async { [weak self] in
-                guard let self = self else {
+                guard let self = self, let delegate = self.delegate else {
                     completion(.canceled)
                     return
                 }
@@ -195,23 +194,22 @@ private extension PhoneCallAgent {
                 }
                 
                 defer { completion(.finished) }
-
-                if let errorCode = self.delegate?.phoneCallAgentDidReceiveMakeCall(
+                
+                let typeInfo: Event.TypeInfo
+                if let errorCode = delegate.phoneCallAgentDidReceiveMakeCall(
                     payload: makeCallItem,
                     header: directive.header
                 ) {
-                    self.sendCompactContextEvent(Event(
-                        typeInfo: .makeCallFailed(errorCode: errorCode, callType: makeCallItem.callType),
-                        playServiceId: makeCallItem.playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId
-                    ).rx)
+                    typeInfo = .makeCallFailed(errorCode: errorCode, callType: makeCallItem.callType)
                 } else {
-                    self.sendCompactContextEvent(Event(
-                        typeInfo: .makeCallSucceeded(recipient: makeCallItem.recipient),
-                        playServiceId: makeCallItem.playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId
-                    ).rx)
+                    typeInfo = .makeCallSucceeded(recipient: makeCallItem.recipient)
                 }
+                
+                self.sendCompactContextEvent(Event(
+                    typeInfo: typeInfo,
+                    playServiceId: makeCallItem.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
             }
         }
     }
