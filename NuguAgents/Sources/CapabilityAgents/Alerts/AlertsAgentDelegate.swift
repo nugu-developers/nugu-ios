@@ -23,6 +23,13 @@ import NuguCore
 
 public protocol AlertsAgentDelegate: class {
     
+    
+    /// Provide a context of `AlertsAgent`.
+    ///
+    /// This function should return as soon as possible to reduce request delay.
+    /// - Returns: The context for `AlertsAgent`
+    func alertsAgentRequestContext() -> AlertsAgentContext
+    
     /// <#Description#>
     /// - Parameters:
     ///   - item: <#payload description#>

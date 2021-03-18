@@ -62,6 +62,12 @@ public class AlertsAgent: AlertsAgentProtocol {
         
         var payload = [String: AnyHashable?]()
         
+        if let context = self.delegate?.alertsAgentRequestContext(),
+            let contextData = try? JSONEncoder().encode(context),
+            let contextDictionary = try? JSONSerialization.jsonObject(with: contextData, options: []) as? [String: AnyHashable] {
+            payload = contextDictionary
+        }
+        
         payload["version"] = self.capabilityAgentProperty.version
         
         completion(
