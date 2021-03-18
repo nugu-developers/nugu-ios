@@ -209,7 +209,17 @@ extension NuguCentralManager {
     }
     
     func getUserInfo(completion: @escaping (Result<NuguUserInfo, NuguLoginKitError>) -> Void) {
-        oauthClient.getUserInfo(completion: completion)
+        oauthClient.getUserInfo { [weak self] (result) in
+            switch result {
+            case .failure(let nuguLoginKitError):
+                let sampleAppError = SampleAppError.parseFromNuguLoginKitError(error: nuguLoginKitError)
+                if case SampleAppError.loginUnauthorized = sampleAppError {
+                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                }
+                completion(result)
+            default: completion(result)
+            }
+        }
     }
     
     func showTidInfo(parentViewController: UIViewController, completion: @escaping () -> Void) {
