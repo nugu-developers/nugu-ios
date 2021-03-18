@@ -89,4 +89,8 @@ extension FullLyricsView: UIScrollViewDelegate {
             isScrolling = false
         }
     }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        isScrolling = false
+    }
 }
