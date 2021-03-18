@@ -67,8 +67,15 @@ final class SettingViewController: UIViewController {
             switch result {
             case .success(let nuguUserInfo):
                 self?.tid = nuguUserInfo.username
-            case .failure:
-                self?.tid = nil
+            case .failure(let nuguLoginKitError):
+                let sampleAppError = SampleAppError.parseFromNuguLoginKitError(error: nuguLoginKitError)
+                if case SampleAppError.loginUnauthorized = sampleAppError {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.dismiss(animated: true)
+                    }
+                } else {
+                    self?.tid = nil
+                }
             }
         }
     }
