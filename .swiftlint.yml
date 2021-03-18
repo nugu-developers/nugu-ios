@@ -15,6 +15,7 @@ included:
 
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - NuguTests
+  - NuguUIKit/Sources/MarqueeLabel
 
 disabled_rules: # rule identifiers to exclude from running
   - trailing_whitespace
