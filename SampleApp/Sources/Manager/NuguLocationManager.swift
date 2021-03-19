@@ -47,15 +47,30 @@ final class NuguLocationManager: NSObject {
 extension NuguLocationManager {
     func startUpdatingLocation() {
         switch CLLocationManager.authorizationStatus() {
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse, .authorizedAlways:
             locationManager.stopUpdatingLocation()
             locationManager.startUpdatingLocation()
-        case .restricted, .denied:
+        case .notDetermined, .restricted, .denied:
             // Do not something
             break
         @unknown default: break
+        }
+    }
+    
+    func authorizationStatus() -> PermissionAgentContext.Permission.State {
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined: return .undetermined
+        case .authorizedWhenInUse, .authorizedAlways: return .granted
+        default: return .denied
+        }
+    }
+    
+    func requestPermission() {
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        default:
+            break
         }
     }
 }
