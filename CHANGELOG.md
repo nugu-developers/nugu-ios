@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.29.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.29.1)
+Released on 2021-03-19
+### SDK
+#### Update
+- Save the offset of the `MediaPlayer` only if it is not nil. (#777)
+
 ## [0.29.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.29.0)
 Released on 2021-03-10
 ### Sample Application
