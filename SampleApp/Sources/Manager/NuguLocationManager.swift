@@ -59,7 +59,6 @@ extension NuguLocationManager {
     
     func authorizationStatus() -> PermissionAgentContext.Permission.State {
         switch CLLocationManager.authorizationStatus() {
-        case .notDetermined: return .undetermined
         case .authorizedWhenInUse, .authorizedAlways: return .granted
         default: return .denied
         }

@@ -40,10 +40,8 @@ public struct PermissionAgentContext: Codable {
         }
         
         public enum State: String, Codable {
-            case undetermined = "UNDETERMINED"
             case granted = "GRANTED"
             case denied = "DENIED"
-            case notSupported = "NOT_SUPPORTED"
         }
     }
 }
