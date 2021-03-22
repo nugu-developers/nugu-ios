@@ -162,6 +162,8 @@ final class AudioPlayer1View: AudioDisplayView {
         nextButton.setImage(UIImage(named: "btn_skip_next", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
         shuffleButton.setImage(UIImage(named: "btn_random_off", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
         shuffleButton.setImage(UIImage(named: "btn_random_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
+        
+        setBarMode()
     }
     
     // MARK: - Override (ProgressTimer)
