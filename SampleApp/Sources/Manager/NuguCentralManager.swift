@@ -214,7 +214,7 @@ extension NuguCentralManager {
             case .failure(let nuguLoginKitError):
                 let sampleAppError = SampleAppError.parseFromNuguLoginKitError(error: nuguLoginKitError)
                 if case SampleAppError.loginUnauthorized = sampleAppError {
-                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                    self?.clearSampleAppAfterErrorHandling()
                 }
                 completion(result)
             default: completion(result)
@@ -250,27 +250,16 @@ private extension NuguCentralManager {
         }
     }
     
-    func clearSampleAppAfterErrorHandling(sampleAppError: SampleAppError) {
+    func clearSampleAppAfterErrorHandling() {
         DispatchQueue.main.async { [weak self] in
             self?.client.audioPlayerAgent.stop()
-            NuguToast.shared.showToast(message: sampleAppError.errorDescription)
             self?.popToRootViewController()
-            switch sampleAppError {
-            case .loginUnauthorized:
-                self?.localTTSAgent.playLocalTTS(type: .pocStateServiceTerminated, completion: { [weak self] in
-                    self?.authorizationInfo = nil
-                    self?.disable()
-                    UserDefaults.Standard.clear()
-                    UserDefaults.Nugu.clear()
-                })
-            default:
-                self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
-                    self?.authorizationInfo = nil
-                    self?.disable()
-                    UserDefaults.Standard.clear()
-                    UserDefaults.Nugu.clear()
-                })
-            }
+            self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
+                self?.authorizationInfo = nil
+                self?.disable()
+                UserDefaults.Standard.clear()
+                UserDefaults.Nugu.clear()
+            })
         }
     }
 }
@@ -287,8 +276,8 @@ private extension NuguCentralManager {
                 switch result {
                 case .success:
                     self?.enable()
-                case .failure(let sampleAppError):
-                    self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                case .failure:
+                    self?.clearSampleAppAfterErrorHandling()
                 }
             }
         case NetworkError.timeout:
@@ -411,8 +400,8 @@ private extension NuguCentralManager {
                     switch result {
                     case .success:
                         self?.enable()
-                    case .failure(let sampleAppError):
-                        self?.clearSampleAppAfterErrorHandling(sampleAppError: sampleAppError)
+                    case .failure:
+                        self?.clearSampleAppAfterErrorHandling()
                     }
                 }
             case .internalServiceException:
@@ -423,7 +412,10 @@ private extension NuguCentralManager {
         }
 
         systemAgentRevokeObserver = object.observe(NuguAgentNotification.System.RevokeDevice.self, queue: nil) { [weak self] (notification) in
-            self?.clearSampleAppAfterErrorHandling(sampleAppError: .deviceRevoked(reason: notification.reason))
+            DispatchQueue.main.async {
+                NuguToast.shared.showToast(message: notification.reason.rawValue)
+            }
+            self?.clearSampleAppAfterErrorHandling()
         }
     }
 }
