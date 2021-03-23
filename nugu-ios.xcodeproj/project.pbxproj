@@ -494,6 +494,8 @@
 		A19EC9FE2578CEA5003E53A9 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
 		A19ECA022578CEA5003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		A19ECA1A2578CED3003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
+		F78CB7CC25FF2EA000DC3103 /* NudgeAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */; };
+		F78CB7E225FF2EA800DC3103 /* NudgeAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */; };
 		F7AA6E2725E39C5300C852D5 /* skt_trigger_search_tinkerbell.raw in Resources */ = {isa = PBXBuildFile; fileRef = F7AA6E2325E39C5200C852D5 /* skt_trigger_search_tinkerbell.raw */; };
 		F7AA6E2825E39C5300C852D5 /* skt_trigger_am_tinkerbell.raw in Resources */ = {isa = PBXBuildFile; fileRef = F7AA6E2425E39C5200C852D5 /* skt_trigger_am_tinkerbell.raw */; };
 		F7AA6E2925E39C5300C852D5 /* skt_trigger_am_aria.raw in Resources */ = {isa = PBXBuildFile; fileRef = F7AA6E2525E39C5300C852D5 /* skt_trigger_am_aria.raw */; };
@@ -1217,6 +1219,8 @@
 		A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
 		A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeAreaUtil.swift; sourceTree = "<group>"; };
+		F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgent.swift; sourceTree = "<group>"; };
+		F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgentProtocol.swift; sourceTree = "<group>"; };
 		F7AA6E2325E39C5200C852D5 /* skt_trigger_search_tinkerbell.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_search_tinkerbell.raw; sourceTree = "<group>"; };
 		F7AA6E2425E39C5200C852D5 /* skt_trigger_am_tinkerbell.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_am_tinkerbell.raw; sourceTree = "<group>"; };
 		F7AA6E2525E39C5300C852D5 /* skt_trigger_am_aria.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_am_aria.raw; sourceTree = "<group>"; };
@@ -1561,6 +1565,7 @@
 				737388C024A46C100018DDD2 /* CapabilityAgentCategory.swift */,
 				737388C124A46C110018DDD2 /* CapabilityAgentProperty.swift */,
 				064FD86925A2CE7800DE6454 /* Utility */,
+				F78CB7CA25FF2E9400DC3103 /* Nudge */,
 				1FBA3B6C2459667D001E5828 /* PhoneCall */,
 				7EE2DCA1247CCC0B0005DE17 /* Chips */,
 				7EA53EF7247F3AFF008731CD /* Session */,
@@ -2871,6 +2876,15 @@
 			path = MediaPlayer;
 			sourceTree = "<group>";
 		};
+		F78CB7CA25FF2E9400DC3103 /* Nudge */ = {
+			isa = PBXGroup;
+			children = (
+				F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */,
+				F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */,
+			);
+			path = Nudge;
+			sourceTree = "<group>";
+		};
 		F79BBC5F25E382C800575C7F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -3800,6 +3814,7 @@
 				06301FBC256B853D00FD97E8 /* TextAgentRedirectPayload.swift in Sources */,
 				73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */,
 				73152FB623E0413F00F843C3 /* AudioPlayerPlayPayload.swift in Sources */,
+				F78CB7E225FF2EA800DC3103 /* NudgeAgentProtocol.swift in Sources */,
 				7E284D9924DD2B4A00BF9640 /* InteractionControlManageable.swift in Sources */,
 				737388E024A46C4A0018DDD2 /* ExtensionAgentProtocol.swift in Sources */,
 				1FD5D17A24A99993007BA384 /* PhoneCallAgentDelegate.swift in Sources */,
@@ -3827,6 +3842,7 @@
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
 				736508662462F7FA00EF4549 /* OpusPlayer.swift in Sources */,
 				7EA53EFB247F3B5A008731CD /* SessionAgent.swift in Sources */,
+				F78CB7CC25FF2EA000DC3103 /* NudgeAgent.swift in Sources */,
 				680EF96124B30DA4003DE266 /* MediaPlayerAgent.swift in Sources */,
 				06FE5685253EDB64002FAC9B /* AudioPlayer.swift in Sources */,
 				73152FB323E0413F00F843C3 /* AudioPlayerAgent.swift in Sources */,

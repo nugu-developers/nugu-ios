@@ -26,7 +26,7 @@ import RxSwift
 
 public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.6")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.7")
     
     public weak var delegate: DisplayAgentDelegate?
     public var defaultDisplayTempalteDuration: DisplayTemplateDuration = .short
