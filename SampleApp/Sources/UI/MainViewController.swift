@@ -202,7 +202,9 @@ private extension MainViewController {
         ConfigurationStore.shared.usageGuideUrl(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId) { [weak self] (result) in
             switch result {
             case .success(let urlString):
-                self?.performSegue(withIdentifier: "mainToGuideWeb", sender: urlString)
+                DispatchQueue.main.async { [weak self] in
+                    self?.performSegue(withIdentifier: "mainToGuideWeb", sender: urlString)
+                }
             case .failure(let error):
                 log.error(error)
             }
