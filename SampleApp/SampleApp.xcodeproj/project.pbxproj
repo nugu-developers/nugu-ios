@@ -24,7 +24,6 @@
 		7E6A0B392410888000C7A19E /* device_GW_error_003.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B2F2410888000C7A19E /* device_GW_error_003.wav */; };
 		7E6A0B3A2410888000C7A19E /* device_GW_error_002.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B302410888000C7A19E /* device_GW_error_002.wav */; };
 		7E6A0B3B2410888000C7A19E /* device_GW_error_001.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B312410888000C7A19E /* device_GW_error_001.wav */; };
-		7E6A0B3C2410888000C7A19E /* poc_end_error.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B322410888000C7A19E /* poc_end_error.wav */; };
 		7E6A0B3D2410888000C7A19E /* device_GW_error_005.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B332410888000C7A19E /* device_GW_error_005.wav */; };
 		7E6A0B3E2410888000C7A19E /* device_GW_error_004.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B342410888000C7A19E /* device_GW_error_004.wav */; };
 		7E6A0B3F2410888000C7A19E /* device_GW_error_006.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A0B352410888000C7A19E /* device_GW_error_006.wav */; };
@@ -59,7 +58,6 @@
 		7E6A0B2F2410888000C7A19E /* device_GW_error_003.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_003.wav; sourceTree = "<group>"; };
 		7E6A0B302410888000C7A19E /* device_GW_error_002.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_002.wav; sourceTree = "<group>"; };
 		7E6A0B312410888000C7A19E /* device_GW_error_001.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_001.wav; sourceTree = "<group>"; };
-		7E6A0B322410888000C7A19E /* poc_end_error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = poc_end_error.wav; sourceTree = "<group>"; };
 		7E6A0B332410888000C7A19E /* device_GW_error_005.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_005.wav; sourceTree = "<group>"; };
 		7E6A0B342410888000C7A19E /* device_GW_error_004.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_004.wav; sourceTree = "<group>"; };
 		7E6A0B352410888000C7A19E /* device_GW_error_006.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_006.wav; sourceTree = "<group>"; };
@@ -241,7 +239,6 @@
 				7E6A0B2F2410888000C7A19E /* device_GW_error_003.wav */,
 				7E6A0B302410888000C7A19E /* device_GW_error_002.wav */,
 				7E6A0B312410888000C7A19E /* device_GW_error_001.wav */,
-				7E6A0B322410888000C7A19E /* poc_end_error.wav */,
 				7E6A0B332410888000C7A19E /* device_GW_error_005.wav */,
 				7E6A0B342410888000C7A19E /* device_GW_error_004.wav */,
 				7E6A0B352410888000C7A19E /* device_GW_error_006.wav */,
@@ -311,7 +308,6 @@
 			files = (
 				7E6A0B16241084C000C7A19E /* Main.storyboard in Resources */,
 				7E6A0B14241084C000C7A19E /* Assets.xcassets in Resources */,
-				7E6A0B3C2410888000C7A19E /* poc_end_error.wav in Resources */,
 				7ECD3DF024F64605007F29CE /* listening_start.wav in Resources */,
 				7ECD3DEF24F64605007F29CE /* listening_end.wav in Resources */,
 				7E6A0B3F2410888000C7A19E /* device_GW_error_006.wav in Resources */,
