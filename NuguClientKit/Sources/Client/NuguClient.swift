@@ -103,6 +103,12 @@ public class NuguClient {
     )
     
     /// <#Description#>
+    public lazy var permissionAgent: PermissionAgentProtocol = PermissionAgent(
+        contextManager: contextManager,
+        directiveSequencer: directiveSequencer
+    )
+    
+    /// <#Description#>
     public private(set) lazy var keywordDetector: KeywordDetector = {
         let keywordDetector =  KeywordDetector()
         contextManager.add(delegate: keywordDetector)
