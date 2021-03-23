@@ -223,14 +223,15 @@ private extension DisplayWebViewPresenter {
     }
     
     func dismissDisplayView() {
-        guard let nuguDisplayWebView = self.nuguDisplayWebView else { return }
+        guard nuguDisplayWebView != nil else { return }
         UIView.animate(
             withDuration: 0.3,
-            animations: {
-                nuguDisplayWebView.alpha = 0
+            animations: { [weak self] in
+                self?.nuguDisplayWebView?.alpha = 0
             },
-            completion: { _ in
-                nuguDisplayWebView.removeFromSuperview()
+            completion: { [weak self] _ in
+                self?.nuguDisplayWebView?.removeFromSuperview()
+                self?.nuguDisplayWebView = nil
             }
         )
     }
