@@ -481,7 +481,6 @@
 		A17B06602394D22800D739E9 /* device_GW_error_005.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06592394D22700D739E9 /* device_GW_error_005.wav */; };
 		A17B06612394D22800D739E9 /* device_GW_error_003.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065A2394D22700D739E9 /* device_GW_error_003.wav */; };
 		A17B06622394D22800D739E9 /* device_GW_error_004.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065B2394D22700D739E9 /* device_GW_error_004.wav */; };
-		A17B06632394D22800D739E9 /* poc_end_error.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065C2394D22800D739E9 /* poc_end_error.wav */; };
 		A17B06642394D22800D739E9 /* device_GW_error_006.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065D2394D22800D739E9 /* device_GW_error_006.wav */; };
 		A17B06D4239E28EB00D739E9 /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */; };
 		A19EC86025761228003E53A9 /* SafeAreaUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */; };
@@ -1204,7 +1203,6 @@
 		A17B06592394D22700D739E9 /* device_GW_error_005.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_005.wav; sourceTree = "<group>"; };
 		A17B065A2394D22700D739E9 /* device_GW_error_003.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_003.wav; sourceTree = "<group>"; };
 		A17B065B2394D22700D739E9 /* device_GW_error_004.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_004.wav; sourceTree = "<group>"; };
-		A17B065C2394D22800D739E9 /* poc_end_error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = poc_end_error.wav; sourceTree = "<group>"; };
 		A17B065D2394D22800D739E9 /* device_GW_error_006.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_006.wav; sourceTree = "<group>"; };
 		A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
@@ -2838,7 +2836,6 @@
 				A17B065B2394D22700D739E9 /* device_GW_error_004.wav */,
 				A17B06592394D22700D739E9 /* device_GW_error_005.wav */,
 				A17B065D2394D22800D739E9 /* device_GW_error_006.wav */,
-				A17B065C2394D22800D739E9 /* poc_end_error.wav */,
 			);
 			path = LocalTts;
 			sourceTree = "<group>";
@@ -3358,7 +3355,6 @@
 				75047D9A24F4DE8F007BBF22 /* responsefail.wav in Resources */,
 				A17B06602394D22800D739E9 /* device_GW_error_005.wav in Resources */,
 				1FFFF504237672F100C9A177 /* Main.storyboard in Resources */,
-				A17B06632394D22800D739E9 /* poc_end_error.wav in Resources */,
 				A17B065E2394D22800D739E9 /* device_GW_error_002.wav in Resources */,
 				A17B06622394D22800D739E9 /* device_GW_error_004.wav in Resources */,
 			);
