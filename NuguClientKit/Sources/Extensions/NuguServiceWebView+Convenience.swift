@@ -47,7 +47,7 @@ public extension NuguServiceWebView {
         setNuguServiceCookie(nuguServiceCookie: cookie)
     }
     
-    func setCustomCookie(deviceUniqueId: String, customCookie: [String: Any]) {
+    func setCustomCookie(theme: String = "LIGHT", deviceUniqueId: String, customCookie: [String: Any]) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             log.error("ConfigurationStore is not configured")
             return
@@ -60,7 +60,7 @@ public extension NuguServiceWebView {
             authToken: token,
             appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
             pocId: configuration.pocId,
-            theme: "LIGHT",
+            theme: theme,
             oauthRedirectUri: configuration.serviceWebRedirectUri,
             deviceUniqueId: deviceUniqueId
         )
