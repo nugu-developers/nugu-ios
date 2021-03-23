@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.30.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.30.0)
+Released on 2021-03-23
+### Sample Application
+#### Update
+- Implement `PermissionAgent`. (#790)
+> Not essential changes to reflect.
+> Use `PermissionAgent` to request permissions exactly when `NUGU Play` needs it.
+
+### SDK
+#### Added
+- Implement `PermissionAgent`. (#790)
+
+#### Fixed
+- Check `InteractionControl` when handling `PhoneCall.SendCandidates` directive. (#795)
+- Remove guideTextLabel's text during session has been activated #798
+
 ## [0.29.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.29.1)
 Released on 2021-03-19
 ### SDK

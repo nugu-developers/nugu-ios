@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguServiceKit'
-  s.version = '0.29.1'
+  s.version = '0.30.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Customized Webview for Nugu Service'
   s.description = <<-DESC
