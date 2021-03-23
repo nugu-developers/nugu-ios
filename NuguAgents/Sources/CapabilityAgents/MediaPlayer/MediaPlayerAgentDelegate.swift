@@ -40,11 +40,10 @@ public protocol MediaPlayerAgentDelegate: class {
     
     /// Called method when a directive 'Stop' is received.
     /// - Parameters:
-    ///   - playServiceId: The unique identifier to specify play service.
-    ///   - token: <#token description#>
+    ///   - payload: <#payload description#>
     ///   - header: The header of the originally handled directive.
     ///   - completion: A block to call when you are finished performing the action.
-    func mediaPlayerAgentReceiveStop(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Stop) -> Void))
+    func mediaPlayerAgentReceiveStop(payload: MediaPlayerAgentDirectivePayload.Stop, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Stop) -> Void))
     
     /// Called method when a directive 'Search' is received.
     /// - Parameters:
@@ -76,27 +75,24 @@ public protocol MediaPlayerAgentDelegate: class {
     
     /// Called method when a directive 'Pause' is received.
     /// - Parameters:
-    ///   - playServiceId: The unique identifier to specify play service.
-    ///   - token: <#token description#>
+    ///   - payload: <#payload description#>
     ///   - header: The header of the originally handled directive.
     ///   - completion: A block to call when you are finished performing the action.
-    func mediaPlayerAgentReceivePause(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Pause) -> Void))
+    func mediaPlayerAgentReceivePause(payload: MediaPlayerAgentDirectivePayload.Pause, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Pause) -> Void))
     
     /// Called method when a directive 'Resume' is received.
     /// - Parameters:
-    ///   - playServiceId: The unique identifier to specify play service.
-    ///   - token: <#token description#>
+    ///   - payload: <#payload description#>
     ///   - header: The header of the originally handled directive.
     ///   - completion: A block to call when you are finished performing the action.
-    func mediaPlayerAgentReceiveResume(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Resume) -> Void))
+    func mediaPlayerAgentReceiveResume(payload: MediaPlayerAgentDirectivePayload.Resume, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Resume) -> Void))
     
     /// Called method when a directive 'Rewind' is received.
     /// - Parameters:
-    ///   - playServiceId: The unique identifier to specify play service.
-    ///   - token: <#token description#>
+    ///   - payload: <#payload description#>
     ///   - header: The header of the originally handled directive.
     ///   - completion: A block to call when you are finished performing the action.
-    func mediaPlayerAgentReceiveRewind(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Rewind) -> Void))
+    func mediaPlayerAgentReceiveRewind(payload: MediaPlayerAgentDirectivePayload.Rewind, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.Rewind) -> Void))
     
     /// Called method when a directive 'Toggle' is received.
     /// - Parameters:
@@ -107,26 +103,22 @@ public protocol MediaPlayerAgentDelegate: class {
     
     /// Called method when a directive 'GetInfo' is received.
     /// - Parameters:
-    ///   - playServiceId: The unique identifier to specify play service.
-    ///   - token: <#token description#>
+    ///   - payload: <#payload description#>
     ///   - header: The header of the originally handled directive.
     ///   - completion: A block to call when you are finished performing the action.
-    func mediaPlayerAgentReceiveGetInfo(playServiceId: String, token: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.GetInfo) -> Void))
+    func mediaPlayerAgentReceiveGetInfo(payload: MediaPlayerAgentDirectivePayload.GetInfo, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.GetInfo) -> Void))
     
     /// Called method when a directive 'HandlePlaylist' is received.
     /// - Parameters:
-    ///   - playServiceId: The unique identifier to specify play service.
-    ///   - action: <#action description#>
-    ///   - target: <#target description#>
+    ///   - payload: <#payload description#>
     ///   - header: The header of the originally handled directive.
     ///   - completion: A block to call when you are finished performing the action.
-    func mediaPlayerAgentReceivePlaylist(playServiceId: String, action: String, target: String?, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.HandlePlaylist) -> Void))
+    func mediaPlayerAgentReceiveHandlePlaylist(payload: MediaPlayerAgentDirectivePayload.HandlePlaylist, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.HandlePlaylist) -> Void))
     
     /// Called method when a directive 'HandleLyrics' is received.
     /// - Parameters:
-    ///   - playServiceId: The unique identifier to specify play service.
-    ///   - action: <#action description#>
+    ///   - payload: <#payload description#>
     ///   - header: The header of the originally handled directive.
     ///   - completion: A block to call when you are finished performing the action.
-    func mediaPlayerAgentReceiveLyrics(playServiceId: String, action: String, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.HandleLyrics) -> Void))
+    func mediaPlayerAgentReceiveHandleLyrics(payload: MediaPlayerAgentDirectivePayload.HandleLyrics, header: Downstream.Header, completion: @escaping ((MediaPlayerAgentProcessResult.HandleLyrics) -> Void))
 }

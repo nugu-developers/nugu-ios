@@ -29,19 +29,18 @@ public protocol PhoneCallAgentDelegate: class {
     ///
     /// This function should return as soon as possible to reduce request delay.
     /// - Returns: The context for `PhoneCallAgent`
-    func phoneCallAgentRequestContext() -> PhoneCallContext
+    func phoneCallAgentRequestContext() -> PhoneCallAgentContext
     
     /// Called method when a directive 'SendCandidates' is received.
     /// - Parameters:
-    ///   - item: The item of `PhoneCallCandidatesItem`
+    ///   - payload: The payload of `PhoneCallAgentDirectivePayload.SendCandidates`
     ///   - header: The header of the originally handled directive.
-    func phoneCallAgentDidReceiveSendCandidates(item: PhoneCallCandidatesItem, header: Downstream.Header)
+    func phoneCallAgentDidReceiveSendCandidates(payload: PhoneCallAgentDirectivePayload.SendCandidates, header: Downstream.Header)
     
     /// Called method when a directive 'MakeCall' is received.
     /// - Parameters:
-    ///   - callType: Types of phone calls
-    ///   - recipient: An contact about the recipient(callee)
+    ///   - payload: The payload of `PhoneCallAgentDirectivePayload.MakeCall`
     ///   - header: The header of the originally handled directive.
     /// - Returns: If have an error, the error-code is returned, otherwise it returns `nil`.
-    func phoneCallAgentDidReceiveMakeCall(callType: PhoneCallType, recipient: PhoneCallPerson, header: Downstream.Header) -> PhoneCallErrorCode?
+    func phoneCallAgentDidReceiveMakeCall(payload: PhoneCallAgentDirectivePayload.MakeCall, header: Downstream.Header) -> PhoneCallErrorCode?
 }

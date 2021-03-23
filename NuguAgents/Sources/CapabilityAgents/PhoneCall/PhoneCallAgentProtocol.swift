@@ -29,12 +29,12 @@ public protocol PhoneCallAgentProtocol: CapabilityAgentable {
     
     /// Send 'CandidatesListed' event with `candidatesItem` received 'SendCandidates' directive.
     /// - Parameters:
-    ///   - candidatesItem: A payload received 'SendCandidates' directive.
+    ///   - payload: A payload received 'SendCandidates' directive.
     ///   - header: The header of the originally handled directive.
     ///   - completion: The completion handler to call when the request is complete.
     /// - Returns: The `dialogRequestId` for request.
     @discardableResult func requestSendCandidates(
-        candidatesItem: PhoneCallCandidatesItem,
+        payload: PhoneCallAgentDirectivePayload.SendCandidates,
         header: Downstream.Header?,
         completion: ((StreamDataState) -> Void)?
     ) -> String

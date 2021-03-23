@@ -95,13 +95,13 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
 
 public extension PhoneCallAgent {
     @discardableResult func requestSendCandidates(
-        candidatesItem: PhoneCallCandidatesItem,
+        payload: PhoneCallAgentDirectivePayload.SendCandidates,
         header: Downstream.Header?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         let event = Event(
             typeInfo: .candidatesListed,
-            playServiceId: candidatesItem.playServiceId,
+            playServiceId: payload.playServiceId,
             referrerDialogRequestId: header?.dialogRequestId
         )
         
@@ -110,7 +110,7 @@ public extension PhoneCallAgent {
             guard let self = self else { return }
             switch state {
             case .finished, .error:
-                if let interactionControl = candidatesItem.interactionControl {
+                if let interactionControl = payload.interactionControl {
                     self.interactionControlManager.finish(
                         mode: interactionControl.mode,
                         category: self.capabilityAgentProperty.category
@@ -128,7 +128,6 @@ public extension PhoneCallAgent {
 private extension PhoneCallAgent {
     func handleSendCandidates() -> HandleDirective {
         return { [weak self] directive, completion in
-            
             guard let self = self else {
                 completion(.canceled)
                 return
@@ -140,14 +139,9 @@ private extension PhoneCallAgent {
                     return
                 }
                 
-                guard let payloadDictionary = directive.payloadDictionary else {
+                guard let candidatesItem = try? JSONDecoder().decode(PhoneCallAgentDirectivePayload.SendCandidates.self, from: directive.payload) else {
                     completion(.failed("Invalid payload"))
                     return
-                }
-                guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                    let candidatesItem = try? JSONDecoder().decode(PhoneCallCandidatesItem.self, from: payloadData) else {
-                        completion(.failed("Invalid candidateItem in payload"))
-                        return
                 }
                 
                 defer { completion(.finished) }
@@ -160,7 +154,7 @@ private extension PhoneCallAgent {
                 }
                 
                 delegate.phoneCallAgentDidReceiveSendCandidates(
-                    item: candidatesItem,
+                    payload: candidatesItem,
                     header: directive.header
                 )
             }
@@ -183,7 +177,7 @@ private extension PhoneCallAgent {
             }
             
             self.phoneCallDispatchQueue.async { [weak self] in
-                guard let self = self else {
+                guard let self = self, let delegate = self.delegate else {
                     completion(.canceled)
                     return
                 }
@@ -194,44 +188,28 @@ private extension PhoneCallAgent {
                     return
                 }
                 
-                guard let payloadDictionary = directive.payloadDictionary else {
+                guard let makeCallItem = try? JSONDecoder().decode(PhoneCallAgentDirectivePayload.MakeCall.self, from: directive.payload) else {
                     completion(.failed("Invalid payload"))
                     return
                 }
                 
-                guard let playServiceId = payloadDictionary["playServiceId"] as? String,
-                    let callType = payloadDictionary["callType"] as? String,
-                    let phoneCallType = PhoneCallType(rawValue: callType) else {
-                        completion(.failed("Invalid callType or playServiceId in payload"))
-                        return
-                }
-                
-                guard let recipientDictionary = payloadDictionary["recipient"] as? [String: AnyHashable],
-                    let recipientData = try? JSONSerialization.data(withJSONObject: recipientDictionary, options: []),
-                    let recipientPerson = try? JSONDecoder().decode(PhoneCallPerson.self, from: recipientData) else {
-                        completion(.failed("Invalid recipient in payload"))
-                        return
-                }
-                
                 defer { completion(.finished) }
-
-                if let errorCode = self.delegate?.phoneCallAgentDidReceiveMakeCall(
-                    callType: phoneCallType,
-                    recipient: recipientPerson,
+                
+                let typeInfo: Event.TypeInfo
+                if let errorCode = delegate.phoneCallAgentDidReceiveMakeCall(
+                    payload: makeCallItem,
                     header: directive.header
                 ) {
-                    self.sendCompactContextEvent(Event(
-                        typeInfo: .makeCallFailed(errorCode: errorCode, callType: phoneCallType),
-                        playServiceId: playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId
-                    ).rx)
+                    typeInfo = .makeCallFailed(errorCode: errorCode, callType: makeCallItem.callType)
                 } else {
-                    self.sendCompactContextEvent(Event(
-                        typeInfo: .makeCallSucceeded(recipient: recipientPerson),
-                        playServiceId: playServiceId,
-                        referrerDialogRequestId: directive.header.dialogRequestId
-                    ).rx)
+                    typeInfo = .makeCallSucceeded(recipient: makeCallItem.recipient)
                 }
+                
+                self.sendCompactContextEvent(Event(
+                    typeInfo: typeInfo,
+                    playServiceId: makeCallItem.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
             }
         }
     }
