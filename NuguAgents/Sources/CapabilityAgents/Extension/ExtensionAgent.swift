@@ -92,13 +92,18 @@ public extension ExtensionAgent {
 private extension ExtensionAgent {
     func handleAction() -> HandleDirective {
         return { [weak self] directive, completion in
+            guard let self = self, let delegate = self.delegate else {
+                completion(.canceled)
+                return
+            }
+            
             guard let item = try? JSONDecoder().decode(ExtensionAgentItem.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
             defer { completion(.finished) }
 
-            self?.delegate?.extensionAgentDidReceiveAction(
+            delegate.extensionAgentDidReceiveAction(
                 data: item.data,
                 playServiceId: item.playServiceId,
                 header: directive.header,

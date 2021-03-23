@@ -84,13 +84,13 @@ public final class MessageAgent: MessageAgentProtocol {
 
 public extension MessageAgent {
     @discardableResult func requestSendCandidates(
-        candidatesItem: MessageCandidatesItem,
+        payload: MessageAgentDirectivePayload.SendCandidates,
         header: Downstream.Header?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         let event = Event(
             typeInfo: .candidatesListed,
-            playServiceId: candidatesItem.playServiceId,
+            playServiceId: payload.playServiceId,
             referrerDialogRequestId: header?.dialogRequestId
         )
         
@@ -99,7 +99,7 @@ public extension MessageAgent {
             guard let self = self else { return }
             switch state {
             case .finished, .error:
-                if let interactionControl = candidatesItem.interactionControl {
+                if let interactionControl = payload.interactionControl {
                     self.interactionControlManager.finish(
                         mode: interactionControl.mode,
                         category: self.capabilityAgentProperty.category
@@ -122,14 +122,8 @@ private extension MessageAgent {
                 return
             }
             
-            guard let payloadDictionary = directive.payloadDictionary else {
+            guard let candidatesItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendCandidates.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
-                return
-            }
-            
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDictionary, options: []),
-                  let candidatesItem = try? JSONDecoder().decode(MessageCandidatesItem.self, from: payloadData) else {
-                completion(.failed("Invalid candidateItem in payload"))
                 return
             }
             
@@ -143,7 +137,7 @@ private extension MessageAgent {
             }
             
             delegate.messageAgentDidReceiveSendCandidates(
-                item: candidatesItem,
+                payload: candidatesItem,
                 header: directive.header
             )
         }
@@ -156,38 +150,28 @@ private extension MessageAgent {
                 return
             }
             
-            guard let payloadDictionary = directive.payloadDictionary else {
+            guard let sendMessageItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendMessage.self, from: directive.payload) else {
                 completion(.failed("Invalid payload"))
                 return
             }
             
-            guard let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    completion(.failed("Invalid playServiceId in payload"))
-                    return
-            }
-            
-            guard let recipientDictionary = payloadDictionary["recipient"] as? [String: AnyHashable],
-                let recipientData = try? JSONSerialization.data(withJSONObject: recipientDictionary, options: []),
-                let recipient = try? JSONDecoder().decode(MessageAgentContact.self, from: recipientData) else {
-                    completion(.failed("Invalid recipient in payload"))
-                    return
-            }
-            
             defer { completion(.finished) }
+            
+            let typeInfo: Event.TypeInfo
 
-            if let errorCode = delegate.messageAgentDidReceiveSendMessage(recipient: recipient, header: directive.header) {
-                self.sendCompactContextEvent(Event(
-                    typeInfo: .sendMessageFailed(recipient: recipient, errorCode: errorCode),
-                    playServiceId: playServiceId,
-                    referrerDialogRequestId: directive.header.dialogRequestId
-                ).rx)
+            if let errorCode = delegate.messageAgentDidReceiveSendMessage(payload: sendMessageItem, header: directive.header) {
+                typeInfo = .sendMessageFailed(recipient: sendMessageItem.recipient, errorCode: errorCode)
             } else {
-                self.sendCompactContextEvent(Event(
-                    typeInfo: .sendMessageSucceeded(recipient: recipient),
-                    playServiceId: playServiceId,
-                    referrerDialogRequestId: directive.header.dialogRequestId
-                ).rx)
+                typeInfo = .sendMessageSucceeded(recipient: sendMessageItem.recipient)
             }
+            
+            self.sendCompactContextEvent(
+                Event(
+                    typeInfo: typeInfo,
+                    playServiceId: sendMessageItem.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx
+            )
         }
     }
 }
