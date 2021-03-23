@@ -292,6 +292,12 @@ public extension AudioDisplayView {
         fullAudioPlayerContainerView.isHidden = true
         frame = CGRect(origin: CGPoint(x: 0, y: frame.size.height - 58.0 - SafeAreaUtil.bottomSafeAreaHeight), size: audioPlayerBarViewContainerView.frame.size)
     }
+    
+    func setFullMode() {
+        frame = CGRect(origin: CGPoint(x: 0, y: 0), size: UIScreen.main.bounds.size)
+        fullAudioPlayerContainerView.isHidden = false
+        audioPlayerBarViewContainerView.isHidden = true
+    }
 }
 
 // MARK: - IBActions
@@ -344,9 +350,7 @@ extension AudioDisplayView: AudioPlayerBarViewDelegate {
     func onViewTap() {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            self.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: UIScreen.main.bounds.size)
-            self.fullAudioPlayerContainerView.isHidden = false
-            self.audioPlayerBarViewContainerView.isHidden = true
+            self.setFullMode()
         }
     }
     
