@@ -57,7 +57,6 @@ final class LocalTTSAgent: NSObject {
         case deviceGatewayTTSConnectionError
         case deviceGatewayPlayRouterConnectionError
         case playRouterFallbackServerConnectionError
-        case pocStateServiceTerminated
         
         fileprivate var fileName: String {
             switch self {
@@ -75,8 +74,6 @@ final class LocalTTSAgent: NSObject {
                  .deviceGatewayPlayRouterConnectionError,
                  .playRouterFallbackServerConnectionError:
                 return "device_GW_error_006"
-            case .pocStateServiceTerminated:
-                return "poc_end_error"
             }
         }
         
