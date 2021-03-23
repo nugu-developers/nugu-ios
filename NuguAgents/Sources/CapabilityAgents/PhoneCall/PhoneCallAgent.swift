@@ -145,8 +145,13 @@ private extension PhoneCallAgent {
                 
                 defer { completion(.finished) }
                 
-                // TODO: Check interaction mode in payload.
-                self.interactionControlManager.start(mode: .multiTurn, category: self.capabilityAgentProperty.category)
+                if let interactionControl = candidatesItem.interactionControl {
+                    self.interactionControlManager.start(
+                        mode: interactionControl.mode,
+                        category: self.capabilityAgentProperty.category
+                    )
+                }
+                
                 delegate.phoneCallAgentDidReceiveSendCandidates(
                     item: candidatesItem,
                     header: directive.header

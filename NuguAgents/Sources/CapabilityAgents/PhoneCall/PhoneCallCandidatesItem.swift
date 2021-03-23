@@ -76,6 +76,8 @@ public struct PhoneCallCandidatesItem: Codable {
     public let candidates: [PhoneCallPerson]?
     /// <#Description#>
     public let searchScene: String?
+    /// <#Description#>
+    public let interactionControl: InteractionControl?
     
     /// <#Description#>
     /// - Parameters:
@@ -99,5 +101,6 @@ public struct PhoneCallCandidatesItem: Codable {
         self.recipientIntended = recipientIntended
         self.candidates = candidates
         self.searchScene = searchScene
+        self.interactionControl = nil
     }
 }
