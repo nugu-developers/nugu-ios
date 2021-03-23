@@ -114,6 +114,7 @@ extension NuguServiceWebView: WKScriptMessageHandler {
 public extension NuguServiceWebView {
     /// <#Description#>
     /// - Parameter nuguServiceCookie: <#nuguServiceCookie description#>
+    @available(*, deprecated, message: "Use `setCustomCookie` instead")
     func setNuguServiceCookie(nuguServiceCookie: NuguServiceCookie) {
         guard let encodedCookie = try? JSONEncoder().encode(nuguServiceCookie),
             let cookieAsDictionary = (try? JSONSerialization.jsonObject(with: encodedCookie, options: [])) as? [String: Any] else { return }
@@ -121,6 +122,28 @@ public extension NuguServiceWebView {
         log.debug(cookieAsDictionary)
         
         let script = cookieAsDictionary
+            .map { (element) -> HTTPCookie? in
+                let cookieProperties = [
+                    HTTPCookiePropertyKey.name: element.key,
+                    HTTPCookiePropertyKey.value: element.value,
+                    HTTPCookiePropertyKey.domain: NuguServiceWebView.domain,
+                    HTTPCookiePropertyKey.path: "/"
+                ]
+                return HTTPCookie(properties: cookieProperties)
+        }
+        .compactMap({ $0 })
+        .stringValue
+        
+        let cookieScript = WKUserScript(source: script,
+                                        injectionTime: .atDocumentStart,
+                                        forMainFrameOnly: false)
+        configuration.userContentController.addUserScript(cookieScript)
+    }
+    
+    /// <#Description#>
+    /// - Parameter customCookieDictionary: custom dictionary for user specific cookie setting
+    func setCustomCookie(customCookieDictionary: [String: Any]) {        
+        let script = customCookieDictionary
             .map { (element) -> HTTPCookie? in
                 let cookieProperties = [
                     HTTPCookiePropertyKey.name: element.key,

@@ -22,8 +22,10 @@ import Foundation
 
 import NuguCore
 import NuguServiceKit
+import NuguUIKit
 
 public extension NuguServiceWebView {
+    @available(*, deprecated, message: "Use `setCustomCookie` instead")
     func setNuguServiceCookie(theme: String = "LIGHT", deviceUniqueId: String) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             log.error("ConfigurationStore is not configured")
@@ -43,5 +45,31 @@ public extension NuguServiceWebView {
             deviceUniqueId: deviceUniqueId
         )
         setNuguServiceCookie(nuguServiceCookie: cookie)
+    }
+    
+    func setCustomCookie(deviceUniqueId: String, customCookie: [String: Any]) {
+        guard let configuration = ConfigurationStore.shared.configuration else {
+            log.error("ConfigurationStore is not configured")
+            return
+        }
+        guard let token = AuthorizationStore.shared.authorizationToken else {
+            log.error("Access token is nil")
+            return
+        }
+        let cookie = NuguServiceCookie(
+            authToken: token,
+            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
+            pocId: configuration.pocId,
+            theme: "LIGHT",
+            oauthRedirectUri: configuration.serviceWebRedirectUri,
+            deviceUniqueId: deviceUniqueId
+        )
+        guard let encodedCookie = try? JSONEncoder().encode(cookie),
+            let cookieAsDictionary = (try? JSONSerialization.jsonObject(with: encodedCookie, options: [])) as? [String: Any] else { return }
+        let mergedCookie = cookieAsDictionary.merged(with: customCookie)
+        
+        log.debug(mergedCookie)
+        
+        setCustomCookie(customCookieDictionary: mergedCookie)
     }
 }

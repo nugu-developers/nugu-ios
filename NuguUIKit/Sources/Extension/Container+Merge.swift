@@ -20,7 +20,7 @@
 
 import Foundation
 
-extension Dictionary {
+public extension Dictionary {
     mutating func merge(_ forDictionary: Dictionary) {
         forDictionary.forEach { (targetKey, targetValue) in
             var value = targetValue
