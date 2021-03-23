@@ -454,6 +454,11 @@
 		7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */; };
 		7EC282F325206A8C00E3F18A /* BackgroundFocusHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC282F225206A8C00E3F18A /* BackgroundFocusHolder.swift */; };
 		7ECD3DF324F673D4007F29CE /* DirectiveSequencerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECD3DF224F673D4007F29CE /* DirectiveSequencerDelegate.swift */; };
+		7ED37D4926043E0D009A0A24 /* PermissionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED37D4826043E0D009A0A24 /* PermissionAgent.swift */; };
+		7ED37D5526043E16009A0A24 /* PermissionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED37D5426043E16009A0A24 /* PermissionAgentProtocol.swift */; };
+		7ED37D6126043E3F009A0A24 /* PermissionAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED37D6026043E3F009A0A24 /* PermissionAgentDelegate.swift */; };
+		7ED37D6D26043E80009A0A24 /* PermissionAgentContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED37D6C26043E80009A0A24 /* PermissionAgentContext.swift */; };
+		7ED37D7926044103009A0A24 /* PermissionAgentDirectivePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED37D7826044103009A0A24 /* PermissionAgentDirectivePayload.swift */; };
 		7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */; };
 		7EDCF97C24BC11CB0036805C /* DisplayTemplateDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDCF97B24BC11CB0036805C /* DisplayTemplateDuration.swift */; };
 		7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */; };
@@ -1164,6 +1169,11 @@
 		7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundAgentSpec.swift; sourceTree = "<group>"; };
 		7EC282F225206A8C00E3F18A /* BackgroundFocusHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundFocusHolder.swift; sourceTree = "<group>"; };
 		7ECD3DF224F673D4007F29CE /* DirectiveSequencerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveSequencerDelegate.swift; sourceTree = "<group>"; };
+		7ED37D4826043E0D009A0A24 /* PermissionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgent.swift; sourceTree = "<group>"; };
+		7ED37D5426043E16009A0A24 /* PermissionAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentProtocol.swift; sourceTree = "<group>"; };
+		7ED37D6026043E3F009A0A24 /* PermissionAgentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentDelegate.swift; sourceTree = "<group>"; };
+		7ED37D6C26043E80009A0A24 /* PermissionAgentContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentContext.swift; sourceTree = "<group>"; };
+		7ED37D7826044103009A0A24 /* PermissionAgentDirectivePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAgentDirectivePayload.swift; sourceTree = "<group>"; };
 		7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDataRouter.swift; sourceTree = "<group>"; };
 		7EDCF97B24BC11CB0036805C /* DisplayTemplateDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTemplateDuration.swift; sourceTree = "<group>"; };
 		7EDE17822456638400F6CEC2 /* CryptoUtilSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtilSpec.swift; sourceTree = "<group>"; };
@@ -1518,6 +1528,7 @@
 				1FFFF3402375707000C9A177 /* Location */,
 				680EF95F24B30D8D003DE266 /* MediaPlayer */,
 				7E284D9024DD255C00BF9640 /* Interaction */,
+				7ED37D4726043DF3009A0A24 /* Permission */,
 			);
 			path = CapabilityAgents;
 			sourceTree = "<group>";
@@ -2755,6 +2766,18 @@
 			path = Dialog;
 			sourceTree = "<group>";
 		};
+		7ED37D4726043DF3009A0A24 /* Permission */ = {
+			isa = PBXGroup;
+			children = (
+				7ED37D4826043E0D009A0A24 /* PermissionAgent.swift */,
+				7ED37D5426043E16009A0A24 /* PermissionAgentProtocol.swift */,
+				7ED37D6026043E3F009A0A24 /* PermissionAgentDelegate.swift */,
+				7ED37D6C26043E80009A0A24 /* PermissionAgentContext.swift */,
+				7ED37D7826044103009A0A24 /* PermissionAgentDirectivePayload.swift */,
+			);
+			path = Permission;
+			sourceTree = "<group>";
+		};
 		7EE2DCA1247CCC0B0005DE17 /* Chips */ = {
 			isa = PBXGroup;
 			children = (
@@ -3682,6 +3705,8 @@
 				73152FB123E0413F00F843C3 /* AudioPlayerDisplayManager.swift in Sources */,
 				73152FBA23E0414700F843C3 /* ASRAgent.swift in Sources */,
 				7373891D24A46CFA0018DDD2 /* DialogAttributeStoreable.swift in Sources */,
+				7ED37D6126043E3F009A0A24 /* PermissionAgentDelegate.swift in Sources */,
+				7ED37D5526043E16009A0A24 /* PermissionAgentProtocol.swift in Sources */,
 				1FD5D17C24A99993007BA384 /* PhoneCallPerson.swift in Sources */,
 				736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */,
 				73152FC823E0415400F843C3 /* TTSSpeakPayload.swift in Sources */,
@@ -3765,6 +3790,7 @@
 				7EB81CD724C04F3B000910A9 /* Eventable.swift in Sources */,
 				737388ED24A46C680018DDD2 /* AudioPlayerDisplayControlPayload.swift in Sources */,
 				1FD5D1A224FF7035007BA384 /* TextAgentRequestType.swift in Sources */,
+				7ED37D6D26043E80009A0A24 /* PermissionAgentContext.swift in Sources */,
 				7373891524A46CB90018DDD2 /* TextAgentProtocol.swift in Sources */,
 				737388CA24A46C1D0018DDD2 /* ChipsAgentDelegate.swift in Sources */,
 				737388FF24A46C930018DDD2 /* SystemAgentExceptionCode.swift in Sources */,
@@ -3793,6 +3819,7 @@
 				7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */,
 				73152FC323E0414F00F843C3 /* SystemAgent+Event.swift in Sources */,
 				7E8050AA2518A69300994786 /* ASRInitiator.swift in Sources */,
+				7ED37D7926044103009A0A24 /* PermissionAgentDirectivePayload.swift in Sources */,
 				06CF28EB2547DE5700CEC3EC /* ContextManager+Rx.swift in Sources */,
 				7E5F4896243C3C8A00118054 /* SoundAgent.swift in Sources */,
 				737388FE24A46C930018DDD2 /* SystemAgentProtocol.swift in Sources */,
@@ -3808,6 +3835,7 @@
 				737388F924A46C800018DDD2 /* ASRAgentProtocol.swift in Sources */,
 				7E2A516B2474E62F0099875D /* SystemAgentRevokeItem.swift in Sources */,
 				7E5F4898243C40EB00118054 /* SoundMedia.swift in Sources */,
+				7ED37D4926043E0D009A0A24 /* PermissionAgent.swift in Sources */,
 				7315306F23E1248300F843C3 /* ASRError.swift in Sources */,
 				1FD5D18224A99993007BA384 /* PhoneCallRecipientIntended.swift in Sources */,
 				73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */,

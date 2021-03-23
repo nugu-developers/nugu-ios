@@ -41,6 +41,7 @@ final class NuguCentralManager {
     lazy private(set) var client: NuguClient = {
         let client = NuguClient(delegate: self)
         
+        client.permissionAgent.delegate = self
         client.locationAgent.delegate = self
         client.systemAgent.add(systemAgentDelegate: self)
         client.soundAgent.dataSource = self
@@ -442,6 +443,20 @@ extension NuguCentralManager: NuguClientDelegate {
         // Use some analytics SDK(or API) here.
         // Error: EventSenderError
         log.debug("\(error?.localizedDescription ?? ""): \(attachment.seq)")
+    }
+}
+
+// MARK: - PermissionAgentDelegate
+
+extension NuguCentralManager: PermissionAgentDelegate {
+    func permissionAgentRequestContext() -> PermissionAgentContext {
+        return PermissionAgentContext(permissions: [.location: NuguLocationManager.shared.authorizationStatus()])
+    }
+    
+    func permissionAgentDidReceiveRequestPermission(payload: PermissionAgentDirectivePayload.RequestPermission, header: Downstream.Header) {
+        if payload.permissions.contains(.location) {
+            NuguLocationManager.shared.requestPermission()
+        }
     }
 }
 
