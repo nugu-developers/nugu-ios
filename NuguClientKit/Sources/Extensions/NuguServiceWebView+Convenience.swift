@@ -19,13 +19,14 @@
 //
 
 import Foundation
+import UIKit
 
 import NuguCore
 import NuguServiceKit
 import NuguUtils
 
 public extension NuguServiceWebView {
-    @available(*, deprecated, message: "Use `setCustomCookie` instead")
+    @available(*, deprecated, message: "Use `addCookie` instead")
     func setNuguServiceCookie(theme: String = "LIGHT", deviceUniqueId: String) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             log.error("ConfigurationStore is not configured")
@@ -47,7 +48,7 @@ public extension NuguServiceWebView {
         setNuguServiceCookie(nuguServiceCookie: cookie)
     }
     
-    func setCustomCookie(theme: String = "LIGHT", deviceUniqueId: String, customCookie: [String: Any]) {
+    func addCookie(_ cookie: [String: Any]) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             log.error("ConfigurationStore is not configured")
             return
@@ -56,20 +57,20 @@ public extension NuguServiceWebView {
             log.error("Access token is nil")
             return
         }
-        let cookie = NuguServiceCookie(
-            authToken: token,
-            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-            pocId: configuration.pocId,
-            theme: theme,
-            oauthRedirectUri: configuration.serviceWebRedirectUri,
-            deviceUniqueId: deviceUniqueId
-        )
-        guard let encodedCookie = try? JSONEncoder().encode(cookie),
-            let cookieAsDictionary = (try? JSONSerialization.jsonObject(with: encodedCookie, options: [])) as? [String: Any] else { return }
-        let mergedCookie = cookieAsDictionary.merged(with: customCookie)
+        let defaultCookieDictionary: [String: Any] = [
+            "Authorization": token,
+            "Os-Type-Code": "MBL_IOS",
+            "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
+            "Sdk-Version": Bundle(identifier: "com.sktelecom.romaine.NuguServiceKit")?.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
+            "Poc-Id": configuration.pocId,
+            "Phone-Model-Name": UIDevice.current.model,
+            "Theme": "LIGHT",
+            "Oauth-Redirect-Uri": configuration.serviceWebRedirectUri
+        ]
+        let mergedCookie = defaultCookieDictionary.merged(with: cookie)
         
         log.debug(mergedCookie)
         
-        setCustomCookie(customCookieDictionary: mergedCookie)
+        setCookie(mergedCookie)
     }
 }
