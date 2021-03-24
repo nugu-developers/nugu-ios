@@ -47,7 +47,7 @@ public extension Dictionary {
     }
 }
 
-extension Array {
+public extension Array {
     mutating func merge(_ forArray: Array) {
         forArray.enumerated().forEach { index, targetElement in
             var element = targetElement

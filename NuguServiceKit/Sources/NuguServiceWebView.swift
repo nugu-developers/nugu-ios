@@ -141,9 +141,9 @@ public extension NuguServiceWebView {
     }
     
     /// <#Description#>
-    /// - Parameter customCookieDictionary: custom dictionary for user specific cookie setting
-    func setCustomCookie(customCookieDictionary: [String: Any]) {        
-        let script = customCookieDictionary
+    /// - Parameter cookie: custom dictionary for user specific cookie setting
+    func setCookie(_ cookie: [String: Any]) {        
+        let script = cookie
             .map { (element) -> HTTPCookie? in
                 let cookieProperties = [
                     HTTPCookiePropertyKey.name: element.key,
