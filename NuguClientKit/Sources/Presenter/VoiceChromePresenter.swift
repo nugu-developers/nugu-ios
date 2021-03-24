@@ -45,6 +45,7 @@ public class VoiceChromePresenter: NSObject {
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
         tapGestureRecognizer.delegate = self
+        tapGestureRecognizer.cancelsTouchesInView = false
         
         return tapGestureRecognizer
     }()
@@ -199,7 +200,7 @@ private extension VoiceChromePresenter {
     func showVoiceChrome() throws {
         log.debug("")
         guard let view = targetView else { throw VoiceChromePresenterError.superViewNotExsit }
-        guard isHidden == true else { throw VoiceChromePresenterError.alreadyShown      }
+        guard isHidden == true else { throw VoiceChromePresenterError.alreadyShown }
         
         delegate?.voiceChromeWillShow()
         
@@ -367,6 +368,10 @@ extension VoiceChromePresenter: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         let touchLocation = touch.location(in: gestureRecognizer.view)
         return !nuguVoiceChrome.frame.contains(touchLocation)
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
