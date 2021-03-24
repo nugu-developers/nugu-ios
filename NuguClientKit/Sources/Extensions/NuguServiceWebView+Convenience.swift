@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 import NuguServiceKit
-import NuguUIKit
+import NuguUtils
 
 public extension NuguServiceWebView {
     @available(*, deprecated, message: "Use `setCustomCookie` instead")
