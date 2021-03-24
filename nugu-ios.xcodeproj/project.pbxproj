@@ -426,6 +426,7 @@
 		75D069C4247F76CC000B5D1F /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */; };
 		75E6238A25E883F000EAAE3C /* ASRBeepPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */; };
 		75E623D625E89EC800EAAE3C /* ASRBeepPlayerResourcesURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E623D525E89EC800EAAE3C /* ASRBeepPlayerResourcesURL.swift */; };
+		75E624D62603257200EAAE3C /* MarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E624D52603257200EAAE3C /* MarqueeLabel.swift */; };
 		75E62622260B2AD100EAAE3C /* Container+Merge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758E8E3425710D2D00F12268 /* Container+Merge.swift */; };
 		7E0713DB24FCD01C009314DA /* NuguUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0713DA24FCD01C009314DA /* NuguUserDefault.swift */; };
 		7E0713DE24FCD02C009314DA /* UserDefaults+Nugu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */; };
@@ -479,7 +480,6 @@
 		A17B06602394D22800D739E9 /* device_GW_error_005.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06592394D22700D739E9 /* device_GW_error_005.wav */; };
 		A17B06612394D22800D739E9 /* device_GW_error_003.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065A2394D22700D739E9 /* device_GW_error_003.wav */; };
 		A17B06622394D22800D739E9 /* device_GW_error_004.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065B2394D22700D739E9 /* device_GW_error_004.wav */; };
-		A17B06632394D22800D739E9 /* poc_end_error.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065C2394D22800D739E9 /* poc_end_error.wav */; };
 		A17B06642394D22800D739E9 /* device_GW_error_006.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B065D2394D22800D739E9 /* device_GW_error_006.wav */; };
 		A17B06D4239E28EB00D739E9 /* LocalTTSAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */; };
 		A19EC86025761228003E53A9 /* SafeAreaUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */; };
@@ -1142,6 +1142,7 @@
 		75D069C3247F76CC000B5D1F /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		75D069E32488EBBB000B5D1F /* KeyedDecodingContainer+AnyHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedDecodingContainer+AnyHashable.swift"; sourceTree = "<group>"; };
 		75E623D525E89EC800EAAE3C /* ASRBeepPlayerResourcesURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayerResourcesURL.swift; sourceTree = "<group>"; };
+		75E624D52603257200EAAE3C /* MarqueeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarqueeLabel.swift; sourceTree = "<group>"; };
 		75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakScriptMessageHandler.swift; sourceTree = "<group>"; };
 		7E0713DA24FCD01C009314DA /* NuguUserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguUserDefault.swift; sourceTree = "<group>"; };
 		7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Nugu.swift"; sourceTree = "<group>"; };
@@ -1200,7 +1201,6 @@
 		A17B06592394D22700D739E9 /* device_GW_error_005.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_005.wav; sourceTree = "<group>"; };
 		A17B065A2394D22700D739E9 /* device_GW_error_003.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_003.wav; sourceTree = "<group>"; };
 		A17B065B2394D22700D739E9 /* device_GW_error_004.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_004.wav; sourceTree = "<group>"; };
-		A17B065C2394D22800D739E9 /* poc_end_error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = poc_end_error.wav; sourceTree = "<group>"; };
 		A17B065D2394D22800D739E9 /* device_GW_error_006.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_006.wav; sourceTree = "<group>"; };
 		A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
@@ -2207,6 +2207,7 @@
 			isa = PBXGroup;
 			children = (
 				75A46F2725725A55004BB472 /* NuguUIKit.swift */,
+				75E624D42603250800EAAE3C /* MarqueeLabel */,
 				1FFFF4C0237672F100C9A177 /* Util */,
 				06CFF673254276D500A11CB4 /* Extension */,
 				75A46ED22572586F004BB472 /* AudioDisplayView */,
@@ -2713,6 +2714,14 @@
 			path = AudioDisplayView;
 			sourceTree = "<group>";
 		};
+		75E624D42603250800EAAE3C /* MarqueeLabel */ = {
+			isa = PBXGroup;
+			children = (
+				75E624D52603257200EAAE3C /* MarqueeLabel.swift */,
+			);
+			path = MarqueeLabel;
+			sourceTree = "<group>";
+		};
 		7E0713DC24FCD02C009314DA /* Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -2824,7 +2833,6 @@
 				A17B065B2394D22700D739E9 /* device_GW_error_004.wav */,
 				A17B06592394D22700D739E9 /* device_GW_error_005.wav */,
 				A17B065D2394D22800D739E9 /* device_GW_error_006.wav */,
-				A17B065C2394D22800D739E9 /* poc_end_error.wav */,
 			);
 			path = LocalTts;
 			sourceTree = "<group>";
@@ -3344,7 +3352,6 @@
 				75047D9A24F4DE8F007BBF22 /* responsefail.wav in Resources */,
 				A17B06602394D22800D739E9 /* device_GW_error_005.wav in Resources */,
 				1FFFF504237672F100C9A177 /* Main.storyboard in Resources */,
-				A17B06632394D22800D739E9 /* poc_end_error.wav in Resources */,
 				A17B065E2394D22800D739E9 /* device_GW_error_002.wav in Resources */,
 				A17B06622394D22800D739E9 /* device_GW_error_004.wav in Resources */,
 			);
@@ -3638,6 +3645,7 @@
 				75A46EEA25725986004BB472 /* KeyedDecodingContainer+AnyHashable.swift in Sources */,
 				75A46F0C257259AD004BB472 /* DisplayIdleBar.swift in Sources */,
 				7522203C244F627E00192D88 /* NuguChipsView.swift in Sources */,
+				75E624D62603257200EAAE3C /* MarqueeLabel.swift in Sources */,
 				75A46F06257259AD004BB472 /* AudioPlayerUpdateMetadataPayload.swift in Sources */,
 				75A46EE725725986004BB472 /* UIColor+Convenience.swift in Sources */,
 			);

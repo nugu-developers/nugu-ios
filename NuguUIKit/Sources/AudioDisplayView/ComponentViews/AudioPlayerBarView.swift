@@ -55,6 +55,8 @@ final class AudioPlayerBarView: UIView {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewDidTap(gestureRecognizer:)))
         addGestureRecognizer(tapRecognizer)
 
+        imageVIew.layer.cornerRadius = 2.0
+        
         prevButton.setImage(UIImage(named: "btn_skip_previous", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
         playPauseButton.setImage(UIImage(named: "btn_play", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
         playPauseButton.setImage(UIImage(named: "btn_pause", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
