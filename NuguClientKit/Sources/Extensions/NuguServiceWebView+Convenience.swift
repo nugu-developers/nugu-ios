@@ -26,29 +26,9 @@ import NuguServiceKit
 import NuguUtils
 
 public extension NuguServiceWebView {
-    @available(*, deprecated, message: "Use `addCookie` instead")
-    func setNuguServiceCookie(theme: String = "LIGHT", deviceUniqueId: String) {
-        guard let configuration = ConfigurationStore.shared.configuration else {
-            log.error("ConfigurationStore is not configured")
-            return
-        }
-        guard let token = AuthorizationStore.shared.authorizationToken else {
-            log.error("Access token is nil")
-            return
-        }
-        
-        let cookie = NuguServiceCookie(
-            authToken: token,
-            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-            pocId: configuration.pocId,
-            theme: theme,
-            oauthRedirectUri: configuration.serviceWebRedirectUri,
-            deviceUniqueId: deviceUniqueId
-        )
-        setNuguServiceCookie(nuguServiceCookie: cookie)
-    }
-    
-    func addCookie(_ cookie: [String: Any]) {
+    /// Add cookie to `NuguServiceWebView` which already has default cookie
+    /// - Parameter cookie: custom dictionary for user specific cookie setting, value will be overwrited when the key is same with default cookie
+    func addCookie(_ cookie: [String: Any]?) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             log.error("ConfigurationStore is not configured")
             return
@@ -67,10 +47,12 @@ public extension NuguServiceWebView {
             "Theme": "LIGHT",
             "Oauth-Redirect-Uri": configuration.serviceWebRedirectUri
         ]
+        guard let cookie = cookie else {
+            setCookie(defaultCookieDictionary)
+            return
+        }
         let mergedCookie = defaultCookieDictionary.merged(with: cookie)
-        
         log.debug(mergedCookie)
-        
         setCookie(mergedCookie)
     }
 }
