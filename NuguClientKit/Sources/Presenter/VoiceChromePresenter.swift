@@ -91,6 +91,9 @@ public extension VoiceChromePresenter {
         voiceChromeDismissWorkItem?.cancel()
         nuguVoiceChrome.removeFromSuperview()
         nuguVoiceChrome.changeState(state: .listeningPassive)
+        if nuguClient?.dialogStateAggregator.sessionActivated == true {
+            nuguVoiceChrome.setRecognizedText(text: nil)
+        }
         
         try showVoiceChrome()
     }
@@ -202,7 +205,9 @@ extension VoiceChromePresenter: DialogStateDelegate {
                 // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
                 try? self.showVoiceChrome()
                 if isMultiturn || sessionActivated {
-                    self.nuguVoiceChrome.changeState(state: .listeningPassive)
+                    if self.nuguVoiceChrome.currentState != .listeningPassive {
+                        self.nuguVoiceChrome.changeState(state: .listeningPassive)
+                    }
                     self.nuguVoiceChrome.setRecognizedText(text: nil)
                 }
                 if let chips = chips {
