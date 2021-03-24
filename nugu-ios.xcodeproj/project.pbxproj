@@ -375,7 +375,6 @@
 		7525AC88249AFE8E006800A3 /* NuguServiceKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7525AC86249AFE8E006800A3 /* NuguServiceKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7525AC8B249AFE8E006800A3 /* NuguServiceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7525AC84249AFE8E006800A3 /* NuguServiceKit.framework */; };
 		7525AC8C249AFE8E006800A3 /* NuguServiceKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7525AC84249AFE8E006800A3 /* NuguServiceKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		7525AC95249B01BD006800A3 /* NuguServiceCookie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525AC92249B01BC006800A3 /* NuguServiceCookie.swift */; };
 		7525AC96249B01BD006800A3 /* HttpCookie+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525AC93249B01BC006800A3 /* HttpCookie+Convenience.swift */; };
 		7525AC97249B01BD006800A3 /* WebOpenExternalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */; };
 		7525AC99249B01C8006800A3 /* NuguServiceWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */; };
@@ -1112,7 +1111,6 @@
 		7525AC86249AFE8E006800A3 /* NuguServiceKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguServiceKit.h; sourceTree = "<group>"; };
 		7525AC87249AFE8E006800A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7525AC90249AFFFB006800A3 /* NuguServiceKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguServiceKit.podspec; sourceTree = "<group>"; };
-		7525AC92249B01BC006800A3 /* NuguServiceCookie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServiceCookie.swift; sourceTree = "<group>"; };
 		7525AC93249B01BC006800A3 /* HttpCookie+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HttpCookie+Convenience.swift"; sourceTree = "<group>"; };
 		7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebOpenExternalApp.swift; sourceTree = "<group>"; };
 		7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServiceWebView.swift; sourceTree = "<group>"; };
@@ -2685,7 +2683,6 @@
 			children = (
 				7525ACB2249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift */,
 				7525AC98249B01C8006800A3 /* NuguServiceWebView.swift */,
-				7525AC92249B01BC006800A3 /* NuguServiceCookie.swift */,
 				7525AC94249B01BC006800A3 /* WebOpenExternalApp.swift */,
 				7525AC93249B01BC006800A3 /* HttpCookie+Convenience.swift */,
 				7525ACB5249C4255006800A3 /* NuguServiceKit.swift */,
@@ -3955,7 +3952,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7525AC99249B01C8006800A3 /* NuguServiceWebView.swift in Sources */,
-				7525AC95249B01BD006800A3 /* NuguServiceCookie.swift in Sources */,
 				7525AC97249B01BD006800A3 /* WebOpenExternalApp.swift in Sources */,
 				7525ACB3249C3F36006800A3 /* NuguServiceWebJavascriptDelegate.swift in Sources */,
 				7525AC96249B01BD006800A3 /* HttpCookie+Convenience.swift in Sources */,
