@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.30.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.30.1)
+Released on 2021-03-25
+### Sample Application
+#### Fixed
+- Close voice chrome when any object (including button or web page) has been touched (#800)
+
+### SDK
+#### Fixed
+- Close voice chrome when any object (including button or web page) has been touched (#800)
+- Remove guideTextLabel's text during session has been activated (#798)
+
 ## [0.30.0](https://github.com/nugu-developers/nugu-ios/releases/tag/0.30.0)
 Released on 2021-03-23
 ### Sample Application
