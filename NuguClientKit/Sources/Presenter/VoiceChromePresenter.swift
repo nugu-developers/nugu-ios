@@ -45,6 +45,7 @@ public class VoiceChromePresenter: NSObject {
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
         tapGestureRecognizer.delegate = self
+        tapGestureRecognizer.cancelsTouchesInView = false
         
         return tapGestureRecognizer
     }()
@@ -172,6 +173,9 @@ public extension VoiceChromePresenter {
         voiceChromeDismissWorkItem?.cancel()
         nuguVoiceChrome.removeFromSuperview()
         nuguVoiceChrome.changeState(state: .listeningPassive)
+        if nuguClient?.dialogStateAggregator.sessionActivated == true {
+            nuguVoiceChrome.setRecognizedText(text: nil)
+        }
         
         try showVoiceChrome()
     }
@@ -199,7 +203,7 @@ private extension VoiceChromePresenter {
     func showVoiceChrome() throws {
         log.debug("")
         guard let view = targetView else { throw VoiceChromePresenterError.superViewNotExsit }
-        guard isHidden == true else { throw VoiceChromePresenterError.alreadyShown      }
+        guard isHidden == true else { throw VoiceChromePresenterError.alreadyShown }
         
         delegate?.voiceChromeWillShow()
         
@@ -338,7 +342,9 @@ private extension VoiceChromePresenter {
                     // If voice chrome is not showing or dismissing in listening state, voice chrome should be presented
                     try? self.showVoiceChrome()
                     if notification.multiTurn || notification.sessionActivated {
-                        self.nuguVoiceChrome.changeState(state: .listeningPassive)
+                        if self.nuguVoiceChrome.currentState != .listeningPassive {
+                            self.nuguVoiceChrome.changeState(state: .listeningPassive)
+                        }
                         self.nuguVoiceChrome.setRecognizedText(text: nil)
                     }
                     if let chips = notification.chips {
@@ -367,6 +373,10 @@ extension VoiceChromePresenter: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         let touchLocation = touch.location(in: gestureRecognizer.view)
         return !nuguVoiceChrome.frame.contains(touchLocation)
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
