@@ -29,6 +29,7 @@ import NuguUtils
 public class VoiceChromePresenter {
     private let nuguVoiceChrome: NuguVoiceChrome
     
+    private weak var nuguClient: NuguClient?
     private weak var viewController: UIViewController?
     private weak var superView: UIView?
     private var targetView: UIView? {
@@ -72,6 +73,7 @@ public class VoiceChromePresenter {
     ///   - nuguClient: <#nuguClient description#>
     private init(nuguVoiceChrome: NuguVoiceChrome, nuguClient: NuguClient) {
         self.nuguVoiceChrome = nuguVoiceChrome
+        self.nuguClient = nuguClient
         
         nuguClient.dialogStateAggregator.add(delegate: self)
         nuguClient.asrAgent.add(delegate: self)
@@ -121,7 +123,7 @@ private extension VoiceChromePresenter {
     func showVoiceChrome() throws {
         log.debug("")
         guard let view = targetView else { throw VoiceChromePresenterError.superViewNotExsit }
-        guard isHidden == true else { throw VoiceChromePresenterError.alreadyShown      }
+        guard isHidden == true else { throw VoiceChromePresenterError.alreadyShown }
         
         delegate?.voiceChromeWillShow()
         
