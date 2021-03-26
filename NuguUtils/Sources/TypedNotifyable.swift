@@ -36,7 +36,7 @@ fileprivate let jsonDecoder = JSONDecoder()
 public extension TypedNotifyable {
     func observe<Notification: TypedNotification>(_ forType: Notification.Type, queue: OperationQueue?, using block: @escaping (Notification) -> Void) -> Any {
         NotificationCenter.default.addObserver(forName: Notification.name, object: self, queue: queue) { (notification) in
-            guard let userInfo = notification.userInfo as? [String: Any],
+            guard let userInfo = notification.userInfo as NSDictionary? as? [String: Any],
                   let typedNotification = Notification.make(from: userInfo) else { return }
             
             block(typedNotification)
