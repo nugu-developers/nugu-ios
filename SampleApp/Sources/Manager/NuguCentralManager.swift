@@ -96,12 +96,6 @@ final class NuguCentralManager {
 extension NuguCentralManager {
     func enable() {
         log.debug("")
-        if authorizationInfo?.availableServerInitiatedDirective == true {
-            client.startReceiveServerInitiatedDirective()
-        } else {
-            client.stopReceiveServerInitiatedDirective()
-        }
-
         startListeningWithTrigger()
         client.audioSessionManager?.enable()
     }
@@ -109,7 +103,6 @@ extension NuguCentralManager {
     func disable() {
         log.debug("")
         stopListening()
-        client.stopReceiveServerInitiatedDirective()
         client.ttsAgent.stopTTS()
         client.audioPlayerAgent.stop()
         client.audioSessionManager?.disable()

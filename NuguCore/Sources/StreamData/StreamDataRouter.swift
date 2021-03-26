@@ -359,7 +359,8 @@ public extension NuguCoreNotification {
             public static func make(from: [String: Any]) -> SentEvent? {
                 guard let event = from["event"] as? Upstream.Event else { return nil }
                 
-                let error = from["error"] as? Error
+                // FIXME: Find another way.
+                let error = (from as [String: Any?])["error"] as? Error
                 return SentEvent(event: event, error: error)
             }
         }
@@ -372,7 +373,8 @@ public extension NuguCoreNotification {
             public static func make(from: [String: Any]) -> SentAttachment? {
                 guard let attachment = from["attachment"] as? Upstream.Attachment else { return nil }
                 
-                let error = from["error"] as? Error
+                // FIXME: Find another way.
+                let error = (from as [String: Any?])["error"] as? Error
                 return SentAttachment(attachment: attachment, error: error)
             }
         }
