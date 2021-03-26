@@ -25,6 +25,6 @@ import NuguLoginKit
 public extension AuthorizationInfo {
     /// Indicates that the client can receive server initiated directives.
     var availableServerInitiatedDirective: Bool {
-        scopes.contains("device:S.I.D")
+        scopes.contains("device:S.I.D.")
     }
 }
