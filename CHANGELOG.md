@@ -3,6 +3,68 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [1.0.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.0.0)
+Released on 2021-03-30
+### Sample Application
+#### Fixed
+- Remove `refreshToken` validation when login anonymously. (#735)
+- Log out when auth error has occurred in `getUserInfo` api (#787)
+- Remove `pod_end_error.wav` from sample application (#793)
+- Resolve performSegue crash issue (#794)
+
+#### Update
+- Use NotificationCenter rather than Delegate set. (#702) (#712)
+- Migrate audio session manager to `NuguClientKit` (#707)
+- Rename extended function of `NuguOAuthClient` (#720)
+- Apply Builder pattern on `NuguClient` (#743)
+- Use `NuguServiceWebView` in `GuideWebViewController` for `close(reason: wake_up)` javascript support (#756) (#772)
+- Add `deviceUniqueId` variable to `NuguServiceCookie` (#778)
+
+#### Removed
+- Remove `watermarkLabel` and `textInputTextField` to minimize sample application. (#749)
+- Move `UITapGestureRecognizer` from `Application` to `VoiceChromePresenter` for convenience. (#738)
+- Put the resources for signal processing into the frameworks (#752)
+- Migrate `ASRBeepPlayer` into `VoiceChromePresenter` of `NuguClientKit` (#760)
+- Migrate `NuguDisplayPlayerController` into `NuguClientKit` as `ControlCenterManager` (#759)
+- Remove calling `startReceiveServerInitiatedDirective` and `stopReceiveServerInitiatedDirective` function from `SampleApp`. (#802)
+
+### SDK
+#### Fixed
+- Fix to handle error for login (#780)
+- Resolve lyrics view related issues (#785)
+- Hide progressview in bar type audio player when isSeekable is false (#786)
+- Change max text line of `AudioPlayer2View` (#788)
+- Set `isScrolling` value as false when automatic scrolling ends (#789)
+- Add `MarqueeLabel` to `NuguUIKit` (#791)
+- Make `AudioDisplayView`'s `setFullMode()` as public method, and set bar mode as it's initial mode (#792)
+- Resolve `NuguDisplayWebView` memory leak issue (#796)
+- Fixes a typo in `AuthorizationInfo.availableServerInitiatedDirective` property. (#802)
+- Fixes a bug when casting 'Any' to 'Error'. (#803) (#804))
+
+#### Added
+- Add `UtilityAgent` 1.0 (upgrade capability-agent) (#695)
+- Add `MessageAgent` 1.4 (upgrade capability-agent) (#713) (#766)
+
+#### Update
+- Use NotificationCenter rather than Delegate set. (#702) (#712) (#710) (#730) (#750)
+- Include full context for sending `ASR.ListenTimeout`. (#705)
+- Add `NuguToast.Duration` (#708)
+- Migrate audio session manager to `NuguClientKit` (#707)
+- Simplify BoundStreams (#719) (#751)
+- Handle `InteractionControl` field from `Text.TextRedirect`. (#716)
+- Rename extended function of `NuguOAuthClient` (#720)
+- Move `UITapGestureRecognizer` from `Application` to `VoiceChromePresenter` for convenience. (#738) (#768)
+- Apply Builder pattern on `NuguClient` (#743) (#755)
+- Add `WebTheme` options in 'NuguLoginKit' (#741)
+- Put the resources for signal processing into the frameworks (#752)
+- Migrate `ASRBeepPlayer` into `VoiceChromePresenter` of `NuguClientKit` (#760)
+- Migrate `NuguDisplayPlayerController` into `NuguClientKit` as `ControlCenterManager` (#759)
+- Add `deviceUniqueId` variable to `NuguServiceCookie` (#778)
+- Prepare version 1.0.0 of `NuguAgent` (#784)
+
+#### Removed
+- Remove APIs used `deprecated` attribute (#801)
+
 ## [0.30.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.30.1)
 Released on 2021-03-25
 ### Sample Application
