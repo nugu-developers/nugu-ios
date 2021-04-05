@@ -169,6 +169,12 @@ private extension AudioDisplayViewPresenter {
         } else {
             targetView.addSubview(audioDisplayView)
         }
+        
+        audioDisplayView.translatesAutoresizingMaskIntoConstraints = false
+        audioDisplayView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
+        audioDisplayView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
+        audioDisplayView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
+        
         completion(audioDisplayView)
         
         UIView.animate(withDuration: 0.3, animations: {

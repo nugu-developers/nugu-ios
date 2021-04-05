@@ -102,6 +102,9 @@ public class AudioDisplayView: UIView {
     private var audioProgressTimer: DispatchSourceTimer?
     private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioDisplayView.audioProgress")
     
+    private var barHeightConstraint: NSLayoutConstraint?
+    private var topConstraint: NSLayoutConstraint?
+    
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         delegate?.onUserInteraction()
         return super.hitTest(point, with: event)
@@ -290,13 +293,21 @@ public extension AudioDisplayView {
     func setBarMode() {
         audioPlayerBarViewContainerView.isHidden = false
         fullAudioPlayerContainerView.isHidden = true
-        frame = CGRect(origin: CGPoint(x: 0, y: frame.size.height - 58.0 - SafeAreaUtil.bottomSafeAreaHeight), size: audioPlayerBarViewContainerView.frame.size)
+        if barHeightConstraint == nil {
+            barHeightConstraint = heightAnchor.constraint(equalToConstant: 58.0 + SafeAreaUtil.bottomSafeAreaHeight)
+        }
+        barHeightConstraint?.isActive = true
+        topConstraint?.isActive = false
     }
     
     func setFullMode() {
-        frame = CGRect(origin: CGPoint(x: 0, y: 0), size: UIScreen.main.bounds.size)
         fullAudioPlayerContainerView.isHidden = false
         audioPlayerBarViewContainerView.isHidden = true
+        if topConstraint == nil, let superview = superview {
+            topConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
+        }
+        topConstraint?.isActive = true
+        barHeightConstraint?.isActive = false
     }
 }
 
