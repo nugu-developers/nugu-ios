@@ -465,7 +465,7 @@ private extension MediaPlayer {
             switch notification {
             case .buffering:
                 self.delegate?.mediaPlayerStateDidChange(.bufferUnderrun, mediaPlayer: self)
-            case .bufferFinished:
+            case .likelyToKeepUp:
                 self.delegate?.mediaPlayerStateDidChange(.bufferRefilled, mediaPlayer: self)
             }
         }

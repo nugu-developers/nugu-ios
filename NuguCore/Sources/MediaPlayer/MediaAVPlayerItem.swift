@@ -111,15 +111,7 @@ final class MediaAVPlayerItem: AVPlayerItem, TypedNotifyable {
             }
             
             log.debug("LikelyToKeepUp")
-            post(NuguCoreNotification.MediaPlayerItem.BufferStatus.bufferFinished)
-        case #keyPath(isPlaybackBufferFull):
-            guard let isBufferFull = change?[.newKey] as? Bool,
-                  isBufferFull == true else {
-                break
-            }
-            
-            log.debug("BufferFull")
-            post(NuguCoreNotification.MediaPlayerItem.BufferStatus.bufferFinished)
+            post(NuguCoreNotification.MediaPlayerItem.BufferStatus.likelyToKeepUp)
         default:
             break
         }
@@ -152,13 +144,6 @@ private extension MediaAVPlayerItem {
             options: [.initial, .new],
             context: &MediaAVPlayerItem.observerContext
         )
-        
-        addObserver(
-            self,
-            forKeyPath: #keyPath(isPlaybackBufferFull),
-            options: [.initial, .new],
-            context: &MediaAVPlayerItem.observerContext
-        )
     }
     
     func removePlayerItemObservers() {
@@ -179,12 +164,6 @@ private extension MediaAVPlayerItem {
             forKeyPath: #keyPath(isPlaybackLikelyToKeepUp),
             context: &MediaAVPlayerItem.observerContext
         )
-        
-        removeObserver(
-            self,
-            forKeyPath: #keyPath(isPlaybackBufferFull),
-            context: &MediaAVPlayerItem.observerContext
-        )
     }
 }
 
@@ -198,7 +177,7 @@ extension Notification.Name {
 public extension NuguCoreNotification {
     enum MediaPlayerItem {
         public enum PlaybackStatus: EnumTypedNotification {
-            public static var name: Notification.Name = .mediaAVPlayerItemPlaybackStatus
+            public static let name: Notification.Name = .mediaAVPlayerItemPlaybackStatus
             
             case readyToPlay
             case failed(error: Error?)
@@ -206,10 +185,10 @@ public extension NuguCoreNotification {
         }
         
         public enum BufferStatus: EnumTypedNotification {
-            public static var name: Notification.Name = .mediaAVPlayerItemBufferStatus
+            public static let name: Notification.Name = .mediaAVPlayerItemBufferStatus
             
             case buffering
-            case bufferFinished
+            case likelyToKeepUp
         }
     }
 }
