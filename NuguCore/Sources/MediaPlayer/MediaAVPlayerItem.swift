@@ -21,20 +21,26 @@
 import Foundation
 import AVFoundation
 
+import NuguUtils
+
 // MARK: - MediaAVPlayerItem
 
-final class MediaAVPlayerItem: AVPlayerItem {
+final class MediaAVPlayerItem: AVPlayerItem, TypedNotifyable {
     var cacheKey: String?
     
-    init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
-        super.init(
+    // Observers
+    private static var observerContext: Int = 0
+    private let notificationCenter = NotificationCenter.default
+    
+    convenience init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
+        self.init(
             asset: AVAsset(url: url),
             automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
         )
     }
     
-    init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil, cacheKey: String) {
-        super.init(
+    convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil, cacheKey: String) {
+        self.init(
             asset: asset,
             automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
         )
@@ -47,5 +53,163 @@ final class MediaAVPlayerItem: AVPlayerItem {
             asset: asset,
             automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
         )
+        
+        addPlayerItemObservers()
+    }
+    
+    deinit {
+        removePlayerItemObservers()
+    }
+    
+    // CAUTION!!!!!!
+    // AVPlayer has a bug when using the new block based KVO API (especially iOS 13)
+    // So we make notifier to use easily.
+    // swiftlint:disable block_based_kvo
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
+        guard context == &MediaAVPlayerItem.observerContext else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        
+        switch keyPath {
+        case #keyPath(AVPlayerItem.status):
+            guard let statusRawValue = change?[.newKey] as? Int,
+                  let status = AVPlayerItem.Status(rawValue: statusRawValue) else {
+                log.info("playback status changed: (Type) Unknown")
+                post(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.unknown)
+                break
+            }
+            
+            log.debug("playback status changed: \(status)")
+            
+            switch status {
+            case .readyToPlay:
+                post(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.readyToPlay)
+            case .failed:
+                log.debug("playback failed reason: \(String(describing: error))")
+                post(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.failed(error: error))
+            default: //Contains unknown
+                post(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.unknown)
+            }
+        case #keyPath(isPlaybackBufferEmpty):
+            guard let isBufferEmpty = change?[.newKey] as? Bool,
+                  isBufferEmpty == true else {
+                break
+            }
+            
+            log.debug("BufferEmpty")
+            post(NuguCoreNotification.MediaPlayerItem.BufferStatus.buffering)
+        case #keyPath(isPlaybackLikelyToKeepUp):
+            guard let isLikelyToKeepUp = change?[.newKey] as? Bool,
+                  isLikelyToKeepUp == true else {
+                break
+            }
+            
+            log.debug("LikelyToKeepUp")
+            post(NuguCoreNotification.MediaPlayerItem.BufferStatus.bufferFinished)
+        case #keyPath(isPlaybackBufferFull):
+            guard let isBufferFull = change?[.newKey] as? Bool,
+                  isBufferFull == true else {
+                break
+            }
+            
+            log.debug("BufferFull")
+            post(NuguCoreNotification.MediaPlayerItem.BufferStatus.bufferFinished)
+        default:
+            break
+        }
+    }
+    // swiftlint:enable block_based_kvo
+}
+
+
+// MARK: - KVO
+
+private extension MediaAVPlayerItem {
+    func addPlayerItemObservers() {
+        addObserver(
+            self,
+            forKeyPath: #keyPath(AVPlayerItem.status),
+            options: [.initial, .new],
+            context: &MediaAVPlayerItem.observerContext
+        )
+        
+        addObserver(
+            self,
+            forKeyPath: #keyPath(isPlaybackBufferEmpty),
+            options: [.initial, .new],
+            context: &MediaAVPlayerItem.observerContext
+        )
+        
+        addObserver(
+            self,
+            forKeyPath: #keyPath(isPlaybackLikelyToKeepUp),
+            options: [.initial, .new],
+            context: &MediaAVPlayerItem.observerContext
+        )
+        
+        addObserver(
+            self,
+            forKeyPath: #keyPath(isPlaybackBufferFull),
+            options: [.initial, .new],
+            context: &MediaAVPlayerItem.observerContext
+        )
+    }
+    
+    func removePlayerItemObservers() {
+        removeObserver(
+            self,
+            forKeyPath: #keyPath(status),
+            context: &MediaAVPlayerItem.observerContext
+        )
+        
+        removeObserver(
+            self,
+            forKeyPath: #keyPath(isPlaybackBufferEmpty),
+            context: &MediaAVPlayerItem.observerContext
+        )
+        
+        removeObserver(
+            self,
+            forKeyPath: #keyPath(isPlaybackLikelyToKeepUp),
+            context: &MediaAVPlayerItem.observerContext
+        )
+        
+        removeObserver(
+            self,
+            forKeyPath: #keyPath(isPlaybackBufferFull),
+            context: &MediaAVPlayerItem.observerContext
+        )
+    }
+}
+
+// MARK: - Notification Observer
+
+extension Notification.Name {
+    static let mediaAVPlayerItemPlaybackStatus = Notification.Name("com.sktelecom.romaine.notification.name.media_avplayer_item_status")
+    static let mediaAVPlayerItemBufferStatus = Notification.Name("com.sktelecom.romaine.notification.name.media_avplayer_buffer_status")
+}
+
+public extension NuguCoreNotification {
+    enum MediaPlayerItem {
+        public enum PlaybackStatus: EnumTypedNotification {
+            public static var name: Notification.Name = .mediaAVPlayerItemPlaybackStatus
+            
+            case readyToPlay
+            case failed(error: Error?)
+            case unknown
+        }
+        
+        public enum BufferStatus: EnumTypedNotification {
+            public static var name: Notification.Name = .mediaAVPlayerItemBufferStatus
+            
+            case buffering
+            case bufferFinished
+        }
     }
 }

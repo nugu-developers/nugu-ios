@@ -494,6 +494,7 @@
 		A19EC9FE2578CEA5003E53A9 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
 		A19ECA022578CEA5003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		A19ECA1A2578CED3003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
+		F778C001261B096A00B69B32 /* EnumTypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = F778C000261B096A00B69B32 /* EnumTypedNotification.swift */; };
 		F78CB7CC25FF2EA000DC3103 /* NudgeAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */; };
 		F78CB7E225FF2EA800DC3103 /* NudgeAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */; };
 		F7AA6E2725E39C5300C852D5 /* skt_trigger_search_tinkerbell.raw in Resources */ = {isa = PBXBuildFile; fileRef = F7AA6E2325E39C5200C852D5 /* skt_trigger_search_tinkerbell.raw */; };
@@ -1219,6 +1220,7 @@
 		A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
 		A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeAreaUtil.swift; sourceTree = "<group>"; };
+		F778C000261B096A00B69B32 /* EnumTypedNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumTypedNotification.swift; sourceTree = "<group>"; };
 		F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgent.swift; sourceTree = "<group>"; };
 		F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgentProtocol.swift; sourceTree = "<group>"; };
 		F7AA6E2325E39C5200C852D5 /* skt_trigger_search_tinkerbell.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_search_tinkerbell.raw; sourceTree = "<group>"; };
@@ -2509,6 +2511,7 @@
 				732967B8256377190077C3C4 /* EndedUp.swift */,
 				75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */,
 				7378FD9825B810D300AB9764 /* TypedNotifyable.swift */,
+				F778C000261B096A00B69B32 /* EnumTypedNotification.swift */,
 				7345DFF225C68B3A006DBCC6 /* DataBoundInputStream.swift */,
 			);
 			path = Sources;
@@ -3779,6 +3782,7 @@
 				73752B5425B8867B005C27DA /* JSONCodingKey.swift in Sources */,
 				7314DFA8255E3F33004882BB /* NuguTimeInterval.swift in Sources */,
 				73752B4925B88641005C27DA /* KeyedDecodingContainerExtension.swift in Sources */,
+				F778C001261B096A00B69B32 /* EnumTypedNotification.swift in Sources */,
 				A19EC87625761343003E53A9 /* WeakScriptMessageHandler.swift in Sources */,
 				7378FD9925B810D300AB9764 /* TypedNotifyable.swift in Sources */,
 				7314DF87255E3F27004882BB /* CryptoUtil.swift in Sources */,
