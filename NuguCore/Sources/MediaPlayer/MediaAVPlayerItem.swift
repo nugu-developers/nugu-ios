@@ -29,11 +29,6 @@ final class MediaAVPlayerItem: AVPlayerItem {
     var failedToPlayEndTimeObserver: Any?
     var newErrorLogEntryObserver: Any?
     
-    var playerStatusObserver: NSKeyValueObservation?
-    var playbackBufferEmptyObserver: NSKeyValueObservation?
-    var playbackLikelyToKeepUpObserver: NSKeyValueObservation?
-    var playbackBufferFullObserver: NSKeyValueObservation?
-    
     // MARK: AVPlayerItem's Buffer State
     
     enum BufferState {
