@@ -298,6 +298,8 @@ private extension VoiceChromePresenter {
                     self.asrBeepPlayer?.beep(type: .fail)
                 case ASRError.recognizeFailed:
                     break
+                case ASRError.listeningTimeout(let listenTimeoutFailBeep) where listenTimeoutFailBeep == false:
+                    break
                 default:
                     self.asrBeepPlayer?.beep(type: .fail)
                 }
