@@ -49,10 +49,8 @@ public class MediaPlayer: NSObject, MediaPlayable {
     private var playbackStalledObserver: Any?
     private var failedToPlayEndTimeObserver: Any?
     private var newErrorLogEntryObserver: Any?
-    private var playerStatusObserver: NSKeyValueObservation?
-    private var playbackBufferEmptyObserver: NSKeyValueObservation?
-    private var playbackLikelyToKeepUpObserver: NSKeyValueObservation?
-    private var playbackBufferFullObserver: NSKeyValueObservation?
+    private var playerStatusObserver: Any?
+    private var bufferStatusObserver: Any?
     
     deinit {
         removePlayerItemObserver()
@@ -186,6 +184,7 @@ extension MediaPlayer: MediaUrlDataSource {
     }
     
     public func setSource(url: URL, offset: TimeIntervallic, cacheKey: String?) {
+        let playerItem: MediaAVPlayerItem
         if let cacheKey = cacheKey {
             let cacheResult = MediaCacheManager.checkCacheAvailablity(itemURL: url, cacheKey: cacheKey)
             if cacheResult.isAvailable {
@@ -198,10 +197,9 @@ extension MediaPlayer: MediaUrlDataSource {
             playerItem = MediaAVPlayerItem(url: url)
         }
         
-        if let item = playerItem {
-            item.cacheKey = cacheKey
-            addPlayerItemObserver(object: item)
-        }
+        playerItem.cacheKey = cacheKey
+        addPlayerItemObserver(object: playerItem)
+        self.playerItem = playerItem
 
         player = AVQueuePlayer(playerItem: playerItem)
         
@@ -440,15 +438,13 @@ extension MediaPlayer: URLSessionDataDelegate {
 }
 
 // MARK: - Observer
+
 private extension MediaPlayer {
     func addPlayerItemObserver(object: MediaAVPlayerItem) {
-        // KVO
-        playerStatusObserver = object.observe(\.status, options: .new) { [weak self] (_, change) in
-            guard let self = self else { return }
-            guard change.oldValue != change.newValue else { return } // This closure will be called on iOS 12. Though old and new value are nil.
-
-            log.debug("playback status changed: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
-            switch change.newValue {
+        playerStatusObserver = object.observe(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.self, queue: nil) { (notification) in
+            log.debug("playback status changed to: \(notification)")
+            
+            switch notification {
             case .readyToPlay:
                 if let cacheKey = object.cacheKey {
                     MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
@@ -463,46 +459,27 @@ private extension MediaPlayer {
             }
         }
         
-        playbackBufferEmptyObserver = object.observe(\.isPlaybackBufferEmpty, options: .new, changeHandler: { [weak self] (_, change) in
-            guard let self = self else { return }
-            guard change.oldValue != change.newValue else { return }
-
-            log.debug("isBufferEmpty: \(change.oldValue.debugDescription) --> \(change.newValue.debugDescription)")
-            if change.newValue == true {
+        bufferStatusObserver = object.observe(NuguCoreNotification.MediaPlayerItem.BufferStatus.self, queue: nil) { (notification) in
+            log.debug("buffer status changed to: \(notification)")
+            
+            switch notification {
+            case .buffering:
                 self.delegate?.mediaPlayerStateDidChange(.bufferUnderrun, mediaPlayer: self)
-            }
-        })
-        
-        playbackLikelyToKeepUpObserver = object.observe(\.isPlaybackLikelyToKeepUp, options: .new, changeHandler: { [weak self] (_, change) in
-            guard let self = self else { return }
-            guard change.oldValue != change.newValue else { return }
-            
-            log.debug("isLikelyToKeepUp: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
-            if change.newValue == true {
+            case .likelyToKeepUp:
                 self.delegate?.mediaPlayerStateDidChange(.bufferRefilled, mediaPlayer: self)
             }
-        })
-        
-        playbackBufferFullObserver = object.observe(\.isPlaybackBufferFull, options: .new, changeHandler: { [weak self] (_, change) in
-            guard let self = self else { return }
-            guard change.oldValue != change.newValue else { return }
-            
-            log.debug("isBufferFull: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
-            if change.newValue == true {
-                self.delegate?.mediaPlayerStateDidChange(.bufferRefilled, mediaPlayer: self)
-            }
-        })
+        }
         
         // Notification Observer
-        playToEndTimeObserver = notificationCenter.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: object, queue: nil, using: { [weak self] _ in
+        playToEndTimeObserver = notificationCenter.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: object, queue: nil) { [weak self] _ in
             log.debug("Did play to end time")
             guard let self = self else { return }
             
             self.delegate?.mediaPlayerStateDidChange(.finish, mediaPlayer: self)
-        })
+        }
         
         // Maybe called by network issue
-        failedToPlayEndTimeObserver = notificationCenter.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: object, queue: nil, using: { [weak self] notification in
+        failedToPlayEndTimeObserver = notificationCenter.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: object, queue: nil) { [weak self] notification in
             log.debug("Failed to play end time")
             guard let self = self else { return }
             
@@ -516,39 +493,42 @@ private extension MediaPlayer {
             }
             
             self.delegate?.mediaPlayerStateDidChange(.error(error: playerItemError), mediaPlayer: self)
-        })
+        }
         
-        newErrorLogEntryObserver = notificationCenter.addObserver(forName: .AVPlayerItemNewErrorLogEntry, object: object, queue: nil, using: { _ in
+        newErrorLogEntryObserver = notificationCenter.addObserver(forName: .AVPlayerItemNewErrorLogEntry, object: object, queue: nil) { _ in
             // CHECK-ME: errorLog 잘 출력되는지 확인 필요
             log.info("playerItem has new error log: \(String(describing: object.errorLog()))")
-        })
+        }
     }
     
     func removePlayerItemObserver() {
-        // KVO
-        playerStatusObserver = nil
-        playbackBufferEmptyObserver = nil
-        playbackLikelyToKeepUpObserver = nil
-        playbackBufferFullObserver = nil
+        if let playerStatusObserver = playerStatusObserver {
+            notificationCenter.removeObserver(playerStatusObserver)
+            self.playerStatusObserver = nil
+        }
         
-        // Notification
+        if let bufferStatusObserver = bufferStatusObserver {
+            notificationCenter.removeObserver(bufferStatusObserver)
+            self.bufferStatusObserver = nil
+        }
+        
         if let playToEndTimeObserver = playToEndTimeObserver {
-            NotificationCenter.default.removeObserver(playToEndTimeObserver)
+            notificationCenter.removeObserver(playToEndTimeObserver)
             self.playToEndTimeObserver = nil
         }
         
         if let playbackStalledObserver = playbackStalledObserver {
-            NotificationCenter.default.removeObserver(playbackStalledObserver)
+            notificationCenter.removeObserver(playbackStalledObserver)
             self.playbackStalledObserver = nil
         }
         
         if let failedToPlayEndTimeObserver = failedToPlayEndTimeObserver {
-            NotificationCenter.default.removeObserver(failedToPlayEndTimeObserver)
+            notificationCenter.removeObserver(failedToPlayEndTimeObserver)
             self.failedToPlayEndTimeObserver = nil
         }
         
         if let newErrorLogEntryObserver = newErrorLogEntryObserver {
-            NotificationCenter.default.removeObserver(newErrorLogEntryObserver)
+            notificationCenter.removeObserver(newErrorLogEntryObserver)
             self.newErrorLogEntryObserver = nil
         }
     }
