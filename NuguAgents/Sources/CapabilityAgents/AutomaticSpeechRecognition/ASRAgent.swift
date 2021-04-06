@@ -30,7 +30,7 @@ import RxSwift
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.5")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.6")
     private let playSyncProperty = PlaySyncProperty(layerType: .asr, contextType: .sound)
     
     // Private
@@ -372,7 +372,7 @@ extension ASRAgent: EndPointDetectorDelegate {
             case .unknown:
                 self.asrResult = .error(ASRError.listenFailed)
             case .timeout:
-                self.asrResult = .error(ASRError.listeningTimeout)
+                self.asrResult = .error(ASRError.listeningTimeout(listenTimeoutFailBeep: self.expectSpeech?.payload.listenTimeoutFailBeep ?? true))
             }
         }
     }
