@@ -21,13 +21,24 @@
 import UIKit
 
 final class SettingTableViewCell: UITableViewCell {
+    var isEnabled: Bool {
+        get {
+            isUserInteractionEnabled
+        }
+        set {
+            isUserInteractionEnabled = newValue
+            menuSwitch.isEnabled = newValue
+            textLabel?.isEnabled = newValue
+            detailTextLabel?.isEnabled = newValue
+        }
+    }
     var onSwitchValueChanged: ((_ isOn: Bool) -> Void)?
 
     // MARK: Properties
     
     @IBOutlet private weak var menuSwitch: UISwitch!
     
-    func configure(text: String, isSwitchOn: Bool? = nil, isSwitchEnabled: Bool = false, detailText: String? = nil) {
+    func configure(text: String, isSwitchOn: Bool? = nil, detailText: String? = nil) {
         textLabel?.text = text
         textLabel?.textColor = .black
         
@@ -40,7 +51,6 @@ final class SettingTableViewCell: UITableViewCell {
         } else {
             menuSwitch.isHidden = true
         }
-        menuSwitch.isEnabled = isSwitchEnabled
     }
 }
 
