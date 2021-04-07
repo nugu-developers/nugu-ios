@@ -125,8 +125,12 @@ final class AudioPlayer1View: AudioDisplayView {
         // swiftlint:disable force_cast
         let view = Bundle(for: AudioPlayer1View.self).loadNibNamed("AudioPlayer1View", owner: self)?.first as! UIView
         // swiftlint:enable force_cast
-        view.frame = bounds
         addSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        view.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         albumImageView.layer.cornerRadius = 8.0
         

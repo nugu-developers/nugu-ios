@@ -291,24 +291,39 @@ public extension AudioDisplayView {
     }
         
     func setBarMode() {
-        audioPlayerBarViewContainerView.isHidden = false
-        fullAudioPlayerContainerView.isHidden = true
         if barHeightConstraint == nil {
-            barHeightConstraint = heightAnchor.constraint(equalToConstant: 58.0 + SafeAreaUtil.bottomSafeAreaHeight)
+            barHeightConstraint = heightAnchor.constraint(equalToConstant: 100.0)
         }
+        
         barHeightConstraint?.isActive = true
         topConstraint?.isActive = false
+        
+        UIView.animate(withDuration: 0.3) {
+            self.audioPlayerBarViewContainerView.isHidden = false
+            self.audioPlayerBarViewContainerView.alpha = 1.0
+            self.fullAudioPlayerContainerView.transform = CGAffineTransform(translationX: 0.0, y: self.fullAudioPlayerContainerView.bounds.height)
+            self.fullAudioPlayerContainerView.alpha = 0.0
+        } completion: { (animated) in
+            self.fullAudioPlayerContainerView.isHidden = true
+        }
     }
     
     func setFullMode() {
-        fullAudioPlayerContainerView.isHidden = false
-        audioPlayerBarViewContainerView.isHidden = true
-        
         if topConstraint == nil, let superview = superview {
             topConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
         }
+        
         topConstraint?.isActive = true
         barHeightConstraint?.isActive = false
+        
+        UIView.animate(withDuration: 0.3) {
+            self.fullAudioPlayerContainerView.isHidden = false
+            self.audioPlayerBarViewContainerView.alpha = 0.0
+            self.fullAudioPlayerContainerView.transform = CGAffineTransform(translationX: 0.0, y: 0)
+            self.fullAudioPlayerContainerView.alpha = 1.0
+        } completion: { (animated) in
+            self.audioPlayerBarViewContainerView.isHidden = true
+        }
     }
 }
 
@@ -320,10 +335,7 @@ extension AudioDisplayView {
     }
     
     @IBAction func barTypeButtonDidClick(_ button: UIButton) {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.setBarMode()
-        }
+        self.setBarMode()
     }
     
     @IBAction func previousButtonDidClick(_ button: UIButton) {
@@ -360,10 +372,7 @@ extension AudioDisplayView {
 
 extension AudioDisplayView: AudioPlayerBarViewDelegate {
     func onViewTap() {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.setFullMode()
-        }
+        self.setFullMode()
     }
     
     func onCloseButtonClick() {
