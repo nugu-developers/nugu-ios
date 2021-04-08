@@ -50,6 +50,10 @@ public class VoiceChromePresenter: NSObject {
         return tapGestureRecognizer
     }()
     
+    private var voiceChromeHeight: CGFloat {
+        NuguVoiceChrome.recommendedHeight + SafeAreaUtil.bottomSafeAreaHeight
+    }
+    
     public weak var delegate: VoiceChromePresenterDelegate?
     public var isHidden = true {
         didSet {
@@ -190,7 +194,7 @@ public extension VoiceChromePresenter {
 
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
-            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: 0)
+            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: self.voiceChromeHeight)
         }, completion: { [weak self] _ in
             self?.nuguVoiceChrome.removeFromSuperview()
         })
@@ -212,13 +216,18 @@ private extension VoiceChromePresenter {
         let showAnimation = {
             UIView.animate(withDuration: 0.3) { [weak self] in
                 guard let self = self else { return }
-                self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
+                self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: 0)
             }
         }
         
         if view.subviews.contains(nuguVoiceChrome) == false {
-            nuguVoiceChrome.frame = CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SafeAreaUtil.bottomSafeAreaHeight)
             view.addSubview(nuguVoiceChrome)
+            nuguVoiceChrome.translatesAutoresizingMaskIntoConstraints = false
+            nuguVoiceChrome.heightAnchor.constraint(equalToConstant: voiceChromeHeight).isActive = true
+            nuguVoiceChrome.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            nuguVoiceChrome.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            nuguVoiceChrome.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: voiceChromeHeight)
         }
         showAnimation()
     }

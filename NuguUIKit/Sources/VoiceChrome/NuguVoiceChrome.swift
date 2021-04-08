@@ -112,9 +112,12 @@ final public class NuguVoiceChrome: UIView {
         // swiftlint:disable force_cast
         let view = Bundle(for: NuguVoiceChrome.self).loadNibNamed("NuguVoiceChrome", owner: self)?.first as! UIView
         // swiftlint:enable force_cast
-        view.frame = bounds
         addSubview(view)
-        setupBackgroundView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        view.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.15
@@ -136,13 +139,10 @@ final public class NuguVoiceChrome: UIView {
         changeState(state: .listeningPassive)
     }
     
-    public override var frame: CGRect {
-        didSet {
-            guard let view = subviews.first else { return }
-            
-            view.frame = bounds
-            setupBackgroundView()
-        }
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        setupBackgroundView()
     }
     
     private func setupBackgroundView() {
