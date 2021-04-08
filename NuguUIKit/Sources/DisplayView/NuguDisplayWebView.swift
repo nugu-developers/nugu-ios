@@ -75,8 +75,12 @@ final public class NuguDisplayWebView: UIView {
     func loadFromXib() {
         // swiftlint:disable force_cast
         let view = Bundle(for: NuguDisplayWebView.self).loadNibNamed("NuguDisplayWebView", owner: self)?.first as! UIView
-        view.frame = bounds
         addSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        view.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -110,13 +114,17 @@ private extension NuguDisplayWebView {
     }
     
     func makeWebView(_ configuration: WKWebViewConfiguration) {
-        let webViewFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - SafeAreaUtil.bottomSafeAreaHeight)
-        let webView = WKWebView(frame: webViewFrame, configuration: configuration)
+        let webView = WKWebView(frame: CGRect(), configuration: configuration)
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
         tapGestureRecognizer.delegate = self
         webView.addGestureRecognizer(tapGestureRecognizer)
         webView.allowsLinkPreview = false
         subviews.first?.insertSubview(webView, at: 0)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         displayWebView = webView
     }
     

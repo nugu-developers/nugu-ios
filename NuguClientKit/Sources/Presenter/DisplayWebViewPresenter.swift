@@ -152,7 +152,7 @@ private extension DisplayWebViewPresenter {
             replaceDisplayView(displayTemplate: displayTemplate, completion: completion)
             return
         }
-        nuguDisplayWebView = NuguDisplayWebView(frame: targetView?.frame ?? .zero)
+        nuguDisplayWebView = NuguDisplayWebView(frame: CGRect())
         nuguDisplayWebView?.displayWebView?.navigationDelegate = self
         nuguDisplayWebView?.load(
             displayPayload: displayTemplate.payload,
@@ -181,15 +181,20 @@ private extension DisplayWebViewPresenter {
         }
         
         nuguDisplayWebView?.alpha = 0
-        guard let nuguDisplayWebView = self.nuguDisplayWebView else {
+        guard let nuguDisplayWebView = self.nuguDisplayWebView, let targetView = self.targetView else {
             completion(nil)
             return
         }
-        if let voiceChrome = targetView?.subviews.filter({ $0.isKind(of: NuguVoiceChrome.self) }).first {
-            targetView?.insertSubview(nuguDisplayWebView, belowSubview: voiceChrome)
+        if let voiceChrome = targetView.subviews.filter({ $0.isKind(of: NuguVoiceChrome.self) }).first {
+            targetView.insertSubview(nuguDisplayWebView, belowSubview: voiceChrome)
         } else {
-            targetView?.addSubview(nuguDisplayWebView)
+            targetView.addSubview(nuguDisplayWebView)
         }
+        nuguDisplayWebView.translatesAutoresizingMaskIntoConstraints = false
+        nuguDisplayWebView.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
+        nuguDisplayWebView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
+        nuguDisplayWebView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
+        nuguDisplayWebView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
         
         let closeButton = UIButton(type: .custom)
         closeButton.setImage(UIImage(named: "btn_close"), for: .normal)
