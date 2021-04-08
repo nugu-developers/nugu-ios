@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.30.2](https://github.com/nugu-developers/nugu-ios/releases/tag/0.30.2)
+Released on 2021-04-08
+### SDK
+#### Fixed
+- Restore AVPlayerItem observer (#806)
+
 ## [0.30.1](https://github.com/nugu-developers/nugu-ios/releases/tag/0.30.1)
 Released on 2021-03-25
 ### Sample Application
