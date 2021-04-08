@@ -29,11 +29,6 @@ final class MediaAVPlayerItem: AVPlayerItem {
     var failedToPlayEndTimeObserver: Any?
     var newErrorLogEntryObserver: Any?
     
-    var playerStatusObserver: NSKeyValueObservation?
-    var playbackBufferEmptyObserver: NSKeyValueObservation?
-    var playbackLikelyToKeepUpObserver: NSKeyValueObservation?
-    var playbackBufferFullObserver: NSKeyValueObservation?
-    
     // MARK: AVPlayerItem's Buffer State
     
     enum BufferState {
@@ -81,75 +76,119 @@ final class MediaAVPlayerItem: AVPlayerItem {
         removePlayerItemObservers()
         removeNotificationObservers()
     }
+    
+    // AVPlayer has a bug when using the new block based KVO API
+    // swiftlint:disable block_based_kvo
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
+        guard context == &MediaAVPlayerItem.observerContext else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        
+        switch keyPath {
+        case #keyPath(AVPlayerItem.status):
+            guard
+                let statusRawValue = change?[.newKey] as? Int,
+                let status = AVPlayerItem.Status(rawValue: statusRawValue) else {
+                    log.info("playback status changed: (Type) Unknown")
+                    delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .unknown)
+                    break
+            }
+            
+            log.debug("playback status changed: \(status)")
+            
+            switch status {
+            case .readyToPlay:
+                delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .readyToPlay)
+            case .failed:
+                log.debug("playback failed reason: \(String(describing: error))")
+                delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .failed(error: error))
+            default: //Contains unknown
+                delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .unknown)
+            }
+        case #keyPath(isPlaybackBufferEmpty):
+            guard
+                let isBufferEmpty = change?[.newKey] as? Bool,
+                isBufferEmpty == true else {
+                    break
+            }
+            
+            log.debug("BufferEmpty")
+            
+            delegate?.mediaAVPlayerItem(self, didChangeBufferState: .buffering)
+        case #keyPath(isPlaybackLikelyToKeepUp):
+            guard
+                let isLikelyToKeepUp = change?[.newKey] as? Bool,
+                isLikelyToKeepUp == true else {
+                    break
+            }
+            
+            log.debug("LikelyToKeepUp")
+            
+            delegate?.mediaAVPlayerItem(self, didChangeBufferState: .bufferFinished)
+        case #keyPath(isPlaybackBufferFull):
+            guard
+                let isBufferFull = change?[.newKey] as? Bool,
+                isBufferFull == true else {
+                    break
+            }
+            
+            log.debug("BufferFull")
+            
+            delegate?.mediaAVPlayerItem(self, didChangeBufferState: .bufferFinished)
+        default:
+            break
+        }
+    }
+    // swiftlint:enable block_based_kvo
 }
 
 // MARK: - KVO Observers
 
 private extension MediaAVPlayerItem {
     func addPlayerItemObservers() {
-        playerStatusObserver = observe(\.status, options: .new) { [weak self] (_, change) in
-            guard let self = self else { return }
-            guard change.oldValue != change.newValue else { return } // This closure will be called on iOS 12. Though old and new value are nil.
-
-            log.debug("playback status changed: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
-            switch change.newValue {
-            case .readyToPlay:
-                self.delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .readyToPlay)
-            case .failed:
-                log.debug("playback failed reason: \(self.error.debugDescription)")
-                self.delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .failed(error: self.error))
-            default: //Contains unknown
-                self.delegate?.mediaAVPlayerItem(self, didChangePlaybackStatus: .unknown)
-            }
-        }
+        addObserver(self,
+                    forKeyPath: #keyPath(AVPlayerItem.status),
+                    options: [.initial, .new],
+                    context: &MediaAVPlayerItem.observerContext)
         
-        playbackBufferEmptyObserver = observe(\.isPlaybackBufferEmpty, options: .new, changeHandler: { [weak self] (_, change) in
-            guard let self = self else { return }
-            guard change.oldValue != change.newValue else { return }
-
-            log.debug("isBufferEmpty: \(change.oldValue.debugDescription) --> \(change.newValue.debugDescription)")
-            if change.newValue == true {
-                self.delegate?.mediaAVPlayerItem(self, didChangeBufferState: .buffering)
-            }
-        })
+        addObserver(self,
+                    forKeyPath: #keyPath(isPlaybackBufferEmpty),
+                    options: [.initial, .new],
+                    context: &MediaAVPlayerItem.observerContext)
         
-        playbackLikelyToKeepUpObserver = observe(\.isPlaybackLikelyToKeepUp, options: .new, changeHandler: { [weak self] (_, change) in
-            guard let self = self else { return }
-            guard change.oldValue != change.newValue else { return }
-            
-            log.debug("isLikelyToKeepUp: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
-            if change.newValue == true {
-                self.delegate?.mediaAVPlayerItem(self, didChangeBufferState: .bufferFinished)
-            }
-        })
+        addObserver(self,
+                    forKeyPath: #keyPath(isPlaybackLikelyToKeepUp),
+                    options: [.initial, .new],
+                    context: &MediaAVPlayerItem.observerContext)
         
-        playbackBufferFullObserver = observe(\.isPlaybackBufferFull, options: .new, changeHandler: { [weak self] (_, change) in
-            guard let self = self else { return }
-            guard change.oldValue != change.newValue else { return }
-            
-            log.debug("isBufferFull: \(change.oldValue.debugDescription) -> \(change.newValue.debugDescription)")
-            if change.newValue == true {
-                self.delegate?.mediaAVPlayerItem(self, didChangeBufferState: .bufferFinished)
-            }
-        })
+        addObserver(self,
+                    forKeyPath: #keyPath(isPlaybackBufferFull),
+                    options: [.initial, .new],
+                    context: &MediaAVPlayerItem.observerContext)
     }
     
     func removePlayerItemObservers() {
-        if playerStatusObserver != nil {
-            playerStatusObserver = nil
-        }
+        removeObserver(self,
+                       forKeyPath: #keyPath(status),
+                       context: &MediaAVPlayerItem.observerContext)
         
-        if  playbackBufferEmptyObserver != nil {
-            playbackBufferEmptyObserver = nil
-        }
+        removeObserver(self,
+                       forKeyPath: #keyPath(isPlaybackBufferEmpty),
+                       context: &MediaAVPlayerItem.observerContext)
         
-        if playbackLikelyToKeepUpObserver != nil {
-            playbackLikelyToKeepUpObserver = nil
-        }
+        removeObserver(self,
+                       forKeyPath: #keyPath(isPlaybackLikelyToKeepUp),
+                       context: &MediaAVPlayerItem.observerContext)
         
-        if playbackBufferFullObserver != nil {
-            playbackBufferFullObserver = nil
-        }
+        removeObserver(self,
+                       forKeyPath: #keyPath(isPlaybackBufferFull),
+                       context: &MediaAVPlayerItem.observerContext)
     }
 }
 
