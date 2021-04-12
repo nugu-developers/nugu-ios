@@ -41,6 +41,13 @@ public class DisplayWebViewPresenter: NSObject {
     private var clientInfo: [String: String]?
     private var addWebViewCompletion: (() -> Void)?
     
+    private var topSafeAreaAnchor: NSLayoutYAxisAnchor? {
+       if #available(iOS 11.0, *) {
+        return self.targetView?.safeAreaLayoutGuide.topAnchor
+       }
+        return self.targetView?.topAnchor
+     }
+    
     /// Initialize with superView
     /// - Parameters:
     ///   - superView: Target view for NuguDisplayWebView should be added to.
@@ -152,7 +159,7 @@ private extension DisplayWebViewPresenter {
             replaceDisplayView(displayTemplate: displayTemplate, completion: completion)
             return
         }
-        nuguDisplayWebView = NuguDisplayWebView(frame: targetView?.frame ?? .zero)
+        nuguDisplayWebView = NuguDisplayWebView(frame: .zero)
         nuguDisplayWebView?.displayWebView?.navigationDelegate = self
         nuguDisplayWebView?.load(
             displayPayload: displayTemplate.payload,
@@ -181,19 +188,25 @@ private extension DisplayWebViewPresenter {
         }
         
         nuguDisplayWebView?.alpha = 0
-        guard let nuguDisplayWebView = self.nuguDisplayWebView else {
+        guard let nuguDisplayWebView = self.nuguDisplayWebView, let targetView = self.targetView else {
             completion(nil)
             return
         }
-        if let voiceChrome = targetView?.subviews.filter({ $0.isKind(of: NuguVoiceChrome.self) }).first {
-            targetView?.insertSubview(nuguDisplayWebView, belowSubview: voiceChrome)
+        if let voiceChrome = targetView.subviews.filter({ $0.isKind(of: NuguVoiceChrome.self) }).first {
+            targetView.insertSubview(nuguDisplayWebView, belowSubview: voiceChrome)
         } else {
-            targetView?.addSubview(nuguDisplayWebView)
+            targetView.addSubview(nuguDisplayWebView)
         }
+        
+        nuguDisplayWebView.translatesAutoresizingMaskIntoConstraints = false
+        nuguDisplayWebView.topAnchor.constraint(equalTo: topSafeAreaAnchor ?? targetView.topAnchor).isActive = true
+        nuguDisplayWebView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
+        nuguDisplayWebView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
+        nuguDisplayWebView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
         
         let closeButton = UIButton(type: .custom)
         closeButton.setImage(UIImage(named: "btn_close"), for: .normal)
-        closeButton.frame = CGRect(x: nuguDisplayWebView.frame.size.width - 48, y: SafeAreaUtil.topSafeAreaHeight + 16, width: 28.0, height: 28.0)
+        closeButton.frame = CGRect(x: targetView.frame.size.width - 48, y: 16, width: 28.0, height: 28.0)
         closeButton.addTarget(self, action: #selector(self.onDisplayViewCloseButtonDidClick), for: .touchUpInside)
         nuguDisplayWebView.addSubview(closeButton)
         

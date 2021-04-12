@@ -75,25 +75,17 @@ final public class NuguDisplayWebView: UIView {
     func loadFromXib() {
         // swiftlint:disable force_cast
         let view = Bundle(for: NuguDisplayWebView.self).loadNibNamed("NuguDisplayWebView", owner: self)?.first as! UIView
-        view.frame = bounds
         addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         view.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        view.topAnchor.constraint(equalTo: self.topSafeAreaAnchor).isActive = true
+        view.topAnchor.constraint(equalTo: topAnchor).isActive = true
         view.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         onUserInteraction?()
         return super.hitTest(point, with: event)
-    }
-    
-    private var topSafeAreaAnchor: NSLayoutYAxisAnchor {
-      if #available(iOS 11.0, *) {
-        return self.safeAreaLayoutGuide.topAnchor
-      }
-      return self.topAnchor
     }
 }
 
@@ -131,7 +123,7 @@ private extension NuguDisplayWebView {
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         webView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        webView.topAnchor.constraint(equalTo: self.topSafeAreaAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         webView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -SafeAreaUtil.bottomSafeAreaHeight).isActive = true
         displayWebView = webView
     }
