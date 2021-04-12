@@ -232,13 +232,11 @@ private extension VoiceChromePresenter {
         showAnimation()
     }
     
-    func setChipsButton(actionList: [(text: String, token: String?)], normalList: [(text: String, token: String?)]) {
-        var chipsData = [NuguChipsButton.NuguChipsButtonType]()
+    func setChipsButton(nudgeList: [(text: String, token: String?)] = [], actionList: [(text: String, token: String?)], normalList: [(text: String, token: String?)]) {
+        let nudgeButtonList = nudgeList.map { NuguChipsButton.NuguChipsButtonType.nudge(text: $0.text, token: $0.token) }
         let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0.text, token: $0.token) }
-        chipsData.append(contentsOf: actionButtonList)
         let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0.text, token: $0.token) }
-        chipsData.append(contentsOf: normalButtonList)
-        nuguVoiceChrome.setChipsData(chipsData) { [weak self] chips in
+        nuguVoiceChrome.setChipsData(nudgeButtonList + actionButtonList + normalButtonList) { [weak self] chips in
             self?.delegate?.voiceChromeChipsDidClick(chips: chips)
         }
     }
@@ -359,9 +357,10 @@ private extension VoiceChromePresenter {
                         self.nuguVoiceChrome.setRecognizedText(text: nil)
                     }
                     if let chips = notification.item?.chips {
+                        let nudgeList = chips.filter { $0.type == .nudge }.map { ($0.text, $0.token) }
                         let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                        self.setChipsButton(actionList: actionList, normalList: normalList)
+                        self.setChipsButton(nudgeList: nudgeList, actionList: actionList, normalList: normalList)
                     }
                     self.asrBeepPlayer?.beep(type: .start)
                 }

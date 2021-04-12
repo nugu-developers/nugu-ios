@@ -47,6 +47,7 @@ public struct ChipsAgentItem {
         
         /// <#Description#>
         public enum ItemType: String, Codable {
+            case nudge = "NUDGE"
             case action = "ACTION"
             case general = "GENERAL"
         }

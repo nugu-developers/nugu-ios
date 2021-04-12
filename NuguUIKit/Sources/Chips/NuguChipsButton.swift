@@ -49,12 +49,15 @@ final public class NuguChipsButton: UIButton {
     
     /// <#Description#>
     public enum NuguChipsButtonType {
+        case nudge(text: String, token: String? = nil)
         case action(text: String, token: String? = nil)
         case normal(text: String, token: String? = nil)
         
         /// <#Description#>
         public var text: String {
             switch self {
+            case .nudge(let text, _):
+                return text
             case .action(let text, _):
                 return text
             case .normal(let text, _):
@@ -65,6 +68,8 @@ final public class NuguChipsButton: UIButton {
         /// <#Description#>
         public var token: String? {
             switch self {
+            case .nudge(let token, _):
+                return token
             case .action(_, let token):
                 return token
             case .normal(_, let token):
@@ -77,6 +82,10 @@ final public class NuguChipsButton: UIButton {
         /// - Returns: <#description#>
         func textColor(theme: NuguChipsButtonTheme) -> UIColor {
             switch (self, theme) {
+            case (.nudge, .light):
+                return UIColor(red: 64.0/255.0, green: 72.0/255.0, blue: 88.0/255.0, alpha: 1.0)
+            case (.nudge, .dark):
+                return .white
             case (.action, .light):
                 return UIColor(red: 0.0/255.0, green: 157.0/255.0, blue: 255.0/255.0, alpha: 1.0)
             case (.action, .dark):
@@ -93,6 +102,8 @@ final public class NuguChipsButton: UIButton {
     
     private var theme: NuguChipsButtonTheme = .light
     private var type: NuguChipsButtonType = .normal(text: "")
+    private let gradient = CAGradientLayer()
+    private let gradientShape = CAShapeLayer()
     
     // MARK: Override
     
@@ -113,13 +124,36 @@ final public class NuguChipsButton: UIButton {
         titleLabel?.lineBreakMode = .byTruncatingTail
         contentEdgeInsets = UIEdgeInsets(top: 0, left: ChipsButtonConst.chipsInset, bottom: 0, right: ChipsButtonConst.chipsInset)
         layer.cornerRadius = ChipsButtonConst.chipsHeight / 2
-        layer.borderWidth = 0.5
-        layer.borderColor = UIColor(red: 0.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 0.04).cgColor
-        clipsToBounds = true
+        switch type {
+        case .nudge:
+            gradient.colors = [UIColor(rgbHexValue: 0x009dff).cgColor, UIColor(rgbHexValue: 0x00e688).cgColor]
+            gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+            gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+            
+            gradientShape.lineWidth = 1
+            gradientShape.strokeColor = UIColor.black.cgColor
+            gradientShape.fillColor = UIColor.clear.cgColor
+            gradient.mask = gradientShape
+            layer.insertSublayer(gradient, at: 0)
+        default:
+            layer.borderWidth = 0.5
+            layer.borderColor = UIColor(red: 0.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 0.04).cgColor
+        }
         backgroundColor = theme.backgroundColor
         setTitleColor(type.textColor(theme: theme), for: .normal)
         setTitle(type.text, for: .normal)
         titleLabel?.font = ChipsButtonConst.chipsFont
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        gradient.frame = bounds
+        let insetBounds = bounds.inset(by: UIEdgeInsets(top: 0.5, left: 0.5, bottom: 0.5, right: 0.5))
+        gradientShape.path = UIBezierPath(
+            roundedRect: insetBounds,
+            cornerRadius: insetBounds.height / 2
+        ).cgPath
     }
     
     override public var isHighlighted: Bool {

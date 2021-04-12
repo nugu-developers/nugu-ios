@@ -37,7 +37,7 @@ PODS:
   - NuguUtils (1.0.0):
     - RxSwift (~> 5)
   - RxSwift (5.1.2)
-  - SilverTray (1.2.6)
+  - SilverTray (1.2.7)
 
 DEPENDENCIES:
   - JadeMarble (from `../`)
@@ -90,7 +90,7 @@ SPEC CHECKSUMS:
   NuguUIKit: 971aa635a0119f7080f1b210a67069ff567af766
   NuguUtils: 2e7cffabc03c387c13a66222550b3edbff580a17
   RxSwift: 1e2e1f9570186967f617e49128ed26ccf1bafc8e
-  SilverTray: d006036dd35c1b898497c28dbf06eddce6f1745d
+  SilverTray: 441aa919a09689a9258888bdf3a8ffd79e478418
 
 PODFILE CHECKSUM: 8298bfb0e4bcda25cb6083e09d051b8025ea2dee
 
