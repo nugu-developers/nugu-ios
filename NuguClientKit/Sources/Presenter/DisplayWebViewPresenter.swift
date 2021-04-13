@@ -47,6 +47,13 @@ public class DisplayWebViewPresenter: NSObject {
         return self.targetView?.topAnchor
     }
     
+    private var topSafeAreaAnchor: NSLayoutYAxisAnchor? {
+       if #available(iOS 11.0, *) {
+        return self.targetView?.safeAreaLayoutGuide.topAnchor
+       }
+        return self.targetView?.topAnchor
+     }
+    
     /// Initialize with superView
     /// - Parameters:
     ///   - superView: Target view for NuguDisplayWebView should be added to.
@@ -202,6 +209,12 @@ private extension DisplayWebViewPresenter {
         }
         nuguDisplayWebView.translatesAutoresizingMaskIntoConstraints = false
         nuguDisplayWebView.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
+        nuguDisplayWebView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
+        nuguDisplayWebView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
+        nuguDisplayWebView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
+        
+        nuguDisplayWebView.translatesAutoresizingMaskIntoConstraints = false
+        nuguDisplayWebView.topAnchor.constraint(equalTo: topSafeAreaAnchor ?? targetView.topAnchor).isActive = true
         nuguDisplayWebView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
         nuguDisplayWebView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
         nuguDisplayWebView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
