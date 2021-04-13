@@ -40,6 +40,12 @@ public class DisplayWebViewPresenter: NSObject {
     private weak var nuguClient: NuguClient?
     private var clientInfo: [String: String]?
     private var addWebViewCompletion: (() -> Void)?
+    private var topSafeAreaAnchor: NSLayoutYAxisAnchor? {
+        if #available(iOS 11.0, *) {
+            return self.targetView?.safeAreaLayoutGuide.topAnchor
+        }
+        return self.targetView?.topAnchor
+    }
     
     /// Initialize with superView
     /// - Parameters:
@@ -198,9 +204,14 @@ private extension DisplayWebViewPresenter {
         
         let closeButton = UIButton(type: .custom)
         closeButton.setImage(UIImage(named: "btn_close"), for: .normal)
-        closeButton.frame = CGRect(x: nuguDisplayWebView.frame.size.width - 48, y: SafeAreaUtil.topSafeAreaHeight + 16, width: 28.0, height: 28.0)
         closeButton.addTarget(self, action: #selector(self.onDisplayViewCloseButtonDidClick), for: .touchUpInside)
         nuguDisplayWebView.addSubview(closeButton)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.topAnchor.constraint(equalTo: topSafeAreaAnchor ?? targetView.topAnchor, constant: 20).isActive = true
+        closeButton.trailingAnchor.constraint(equalTo: targetView.trailingAnchor, constant: -20).isActive = true
+        closeButton.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        closeButton.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        targetView.layoutIfNeeded()
         
         if checkSupportVisibleTokenListOrSupportFocusedItemToken(displayTemplate: displayTemplate) == true {
             addWebViewCompletion = { [weak self] in
