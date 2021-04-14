@@ -75,6 +75,7 @@ final public class NuguDisplayWebView: UIView {
     func loadFromXib() {
         // swiftlint:disable force_cast
         let view = Bundle(for: NuguDisplayWebView.self).loadNibNamed("NuguDisplayWebView", owner: self)?.first as! UIView
+        // swiftlint:enable force_cast
         addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -124,7 +125,7 @@ private extension NuguDisplayWebView {
         webView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         webView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        webView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -SafeAreaUtil.bottomSafeAreaHeight).isActive = true
         displayWebView = webView
     }
     

@@ -57,7 +57,6 @@ final class AudioPlayer1View: AudioDisplayView {
             lyricsView.addGestureRecognizer(tapGestureRecognizeView)
             lyricsIndex = 0
             updateLyrics()
-            replaceFullLyrics()
             
             if let favorite = template.content.settings?.favorite {
                 favoriteButtonContainerView.isHidden = false
@@ -167,7 +166,7 @@ final class AudioPlayer1View: AudioDisplayView {
         shuffleButton.setImage(UIImage(named: "btn_random_off", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
         shuffleButton.setImage(UIImage(named: "btn_random_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
         
-        setBarMode()
+        setBarMode(0)
     }
     
     // MARK: - Override (ProgressTimer)
@@ -193,8 +192,8 @@ final class AudioPlayer1View: AudioDisplayView {
     
     // MARK: - Override (Lyrics)
     
-    override func replaceFullLyrics() {
-        super.replaceFullLyrics()
+    override func updateFullLyrics() {
+        super.updateFullLyrics()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             if self.lyricsIndex != -1 {
