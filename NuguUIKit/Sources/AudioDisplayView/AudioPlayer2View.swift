@@ -37,8 +37,12 @@ final class AudioPlayer2View: AudioDisplayView {
         // swiftlint:disable force_cast
         let view = Bundle(for: AudioPlayer2View.self).loadNibNamed("AudioPlayer2View", owner: self)?.first as! UIView
         // swiftlint:enable force_cast
-        view.frame = bounds
         addSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        view.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         albumImageView.layer.cornerRadius = 8.0
         
@@ -68,7 +72,7 @@ final class AudioPlayer2View: AudioDisplayView {
         shuffleButton.setImage(UIImage(named: "btn_random_off", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
         shuffleButton.setImage(UIImage(named: "btn_random_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
         
-        setBarMode()
+        setBarMode(0)
     }
 
     override var displayPayload: [String: AnyHashable]? {
@@ -92,7 +96,6 @@ final class AudioPlayer2View: AudioDisplayView {
             let tapGestureRecognizeView = UITapGestureRecognizer(target: self, action: #selector(lyricsViewDidTap(_:)))
             lyricsView.addGestureRecognizer(tapGestureRecognizeView)
             updateLyrics()
-            updateFullLyrics()
             
             favoriteButtonContainerView.isHidden = true
             repeatButton.isHidden = true
