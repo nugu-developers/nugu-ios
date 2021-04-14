@@ -36,6 +36,7 @@ final class AudioPlayer2View: AudioDisplayView {
     private func loadFromXib() {
         // swiftlint:disable force_cast
         let view = Bundle(for: AudioPlayer2View.self).loadNibNamed("AudioPlayer2View", owner: self)?.first as! UIView
+        // swiftlint:enable force_cast
         addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true

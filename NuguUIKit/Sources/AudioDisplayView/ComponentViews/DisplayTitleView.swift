@@ -40,6 +40,7 @@ final class DisplayTitleView: UIView {
     func loadFromXib() {
         // swiftlint:disable force_cast
         let view = Bundle(for: DisplayTitleView.self).loadNibNamed("DisplayTitleView", owner: self)?.first as! UIView
+        // swiftlint:enable force_cast
         insertSubview(view, at: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
