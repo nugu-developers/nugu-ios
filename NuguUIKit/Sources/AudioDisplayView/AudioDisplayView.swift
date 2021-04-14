@@ -271,9 +271,9 @@ public extension AudioDisplayView {
         }
     }
         
-    func setBarMode() {
+    func setBarMode(_ duration: TimeInterval = 0.3) {
         topConstraint?.isActive = false
-        UIView.animate(withDuration: 0.3) { [weak self] in
+        UIView.animate(withDuration: duration) { [weak self] in
             guard let self = self else { return }
             self.audioPlayerBarViewContainerView.isHidden = false
             self.audioPlayerBarViewContainerView.alpha = 1.0
@@ -286,14 +286,14 @@ public extension AudioDisplayView {
         }
     }
     
-    func setFullMode() {
+    func setFullMode(_ duration: TimeInterval = 0.3) {
         if let superview = superview {
             topConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
         }
         topConstraint?.isActive = true
         fullAudioPlayerContainerView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height).isActive = true
         
-        UIView.animate(withDuration: 0.3) { [weak self] in
+        UIView.animate(withDuration: duration) { [weak self] in
             guard let self = self else { return }
             self.fullAudioPlayerContainerView.isHidden = false
             self.audioPlayerBarViewContainerView.alpha = 0.0
