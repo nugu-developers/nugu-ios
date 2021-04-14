@@ -272,13 +272,7 @@ public extension AudioDisplayView {
     }
         
     func setBarMode() {
-        if barHeightConstraint == nil {
-            barHeightConstraint = heightAnchor.constraint(equalToConstant: 100.0)
-        }
-        
-        barHeightConstraint?.isActive = true
         topConstraint?.isActive = false
-            
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
             self.audioPlayerBarViewContainerView.isHidden = false
@@ -286,17 +280,18 @@ public extension AudioDisplayView {
             self.fullAudioPlayerContainerView.transform = CGAffineTransform(translationX: 0.0, y: self.fullAudioPlayerContainerView.bounds.height)
             self.fullAudioPlayerContainerView.alpha = 0.0
         } completion: { [weak self] _ in
-            self?.fullAudioPlayerContainerView.isHidden = true
+            guard let self = self else { return }
+            self.fullAudioPlayerContainerView.isHidden = true
+            self.fullAudioPlayerContainerView.heightAnchor.constraint(equalToConstant: self.audioPlayerBarViewContainerView.frame.size.height).isActive = true
         }
     }
     
     func setFullMode() {
-        if topConstraint == nil, let superview = superview {
+        if let superview = superview {
             topConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
         }
-        
         topConstraint?.isActive = true
-        barHeightConstraint?.isActive = false
+        fullAudioPlayerContainerView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height).isActive = true
         
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
