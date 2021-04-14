@@ -143,6 +143,7 @@ private extension AudioDisplayViewPresenter {
         }
         audioDisplayView.isSeekable = audioPlayerDisplayTemplate.isSeekable
         audioDisplayView.displayPayload = audioPlayerDisplayTemplate.payload
+        audioDisplayView.updateFullLyrics()
         completion(audioDisplayView)
     }
     

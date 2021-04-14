@@ -176,7 +176,7 @@ public class AudioDisplayView: UIView {
         showLyrics()
     }
     
-    func updateFullLyrics() {
+    public func updateFullLyrics() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             guard self.lyricsData?.lyricsInfoList != nil,
