@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -23,6 +24,7 @@
                 <outlet property="favoriteButton" destination="VOG-tE-myi" id="5fz-ud-x3C"/>
                 <outlet property="favoriteButtonContainerView" destination="H3S-Fg-aNW" id="u0T-Oi-C8h"/>
                 <outlet property="fullAudioPlayerContainerView" destination="EP1-Pl-EFV" id="Mu1-VW-da4"/>
+                <outlet property="fullLyricsView" destination="Onk-rw-F89" id="k1H-Lb-6QY"/>
                 <outlet property="idleBar" destination="pG4-6i-DuM" id="QVP-Nb-ZUl"/>
                 <outlet property="lyricsView" destination="gHw-Yo-7OU" id="Dv3-N6-tdE"/>
                 <outlet property="nextButton" destination="YE8-JB-xca" id="eNb-Wt-RVp"/>
@@ -42,6 +44,10 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Onk-rw-F89" customClass="FullLyricsView" customModule="NuguUIKit" customModuleProvider="target">
+                    <rect key="frame" x="20" y="120" width="374" height="586"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="68" translatesAutoresizingMaskIntoConstraints="NO" id="jXW-9x-vgp">
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
@@ -321,8 +327,12 @@
                 <constraint firstItem="jXW-9x-vgp" firstAttribute="top" secondItem="ZaX-GT-Q7R" secondAttribute="top" id="NA2-ku-PNV"/>
                 <constraint firstItem="ZaX-GT-Q7R" firstAttribute="bottom" secondItem="8G0-8O-pRZ" secondAttribute="bottom" id="P3R-q5-kkE"/>
                 <constraint firstAttribute="bottom" secondItem="TTt-Mo-EwR" secondAttribute="bottom" id="Pww-Iw-dKl"/>
+                <constraint firstItem="ZaX-GT-Q7R" firstAttribute="trailing" secondItem="Onk-rw-F89" secondAttribute="trailing" constant="20" id="Z00-C0-fZJ"/>
                 <constraint firstItem="jXW-9x-vgp" firstAttribute="trailing" secondItem="ZaX-GT-Q7R" secondAttribute="trailing" id="giI-dd-afX"/>
+                <constraint firstItem="Onk-rw-F89" firstAttribute="bottom" secondItem="veS-tW-n4N" secondAttribute="bottom" id="iRX-ge-gcd"/>
+                <constraint firstItem="Onk-rw-F89" firstAttribute="leading" secondItem="ZaX-GT-Q7R" secondAttribute="leading" constant="20" id="pyf-Zu-3Qn"/>
                 <constraint firstItem="TTt-Mo-EwR" firstAttribute="trailing" secondItem="jXW-9x-vgp" secondAttribute="trailing" id="yap-vu-ERv"/>
+                <constraint firstItem="Onk-rw-F89" firstAttribute="top" secondItem="pH6-Ca-81Z" secondAttribute="bottom" id="yub-YM-KQc"/>
             </constraints>
             <point key="canvasLocation" x="128.98550724637681" y="135.9375"/>
         </view>
@@ -338,5 +348,8 @@
         <image name="btn_repeat_off" width="32" height="32"/>
         <image name="btn_skip_next" width="48" height="48"/>
         <image name="btn_skip_previous" width="48" height="48"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
