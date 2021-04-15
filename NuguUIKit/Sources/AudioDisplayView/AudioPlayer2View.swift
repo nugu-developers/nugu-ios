@@ -96,6 +96,7 @@ final class AudioPlayer2View: AudioDisplayView {
             let tapGestureRecognizeView = UITapGestureRecognizer(target: self, action: #selector(lyricsViewDidTap(_:)))
             lyricsView.addGestureRecognizer(tapGestureRecognizeView)
             updateLyrics()
+            updateFullLyrics()
             
             favoriteButtonContainerView.isHidden = true
             repeatButton.isHidden = true
