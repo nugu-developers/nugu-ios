@@ -55,6 +55,7 @@ final class FullLyricsView: UIView {
     }
     
     func updateLyricsFocus(lyricsIndex: Int?) {
+        guard isHidden == false else { return }
         stackView.arrangedSubviews.forEach { (label) in
             guard let label = label as? UILabel else { return }
             label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
