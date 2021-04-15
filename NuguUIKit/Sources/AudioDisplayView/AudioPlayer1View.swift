@@ -57,6 +57,7 @@ final class AudioPlayer1View: AudioDisplayView {
             lyricsView.addGestureRecognizer(tapGestureRecognizeView)
             lyricsIndex = 0
             updateLyrics()
+            updateFullLyrics()
             
             if let favorite = template.content.settings?.favorite {
                 favoriteButtonContainerView.isHidden = false
