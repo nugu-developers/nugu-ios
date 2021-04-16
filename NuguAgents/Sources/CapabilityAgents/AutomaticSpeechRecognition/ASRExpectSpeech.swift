@@ -63,7 +63,7 @@ extension ASRExpectSpeech.Payload: Decodable {
         domainTypes = try? container.decode([AnyHashable].self, forKey: .domainTypes)
         asrContext = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .asrContext)
         epd = try? container.decode(EPD.self, forKey: .epd)
-        listenTimeoutFailBeep = try? container.decode(Bool.self, forKey: .epd)
+        listenTimeoutFailBeep = try? container.decode(Bool.self, forKey: .listenTimeoutFailBeep)
     }
 }
 
