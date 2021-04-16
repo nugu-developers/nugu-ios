@@ -1,40 +1,40 @@
 PODS:
-  - JadeMarble (1.1.0-alpha.3):
+  - JadeMarble (1.1.0-alpha.4):
     - NattyLog (~> 1)
-  - KeenSense (1.1.0-alpha.3):
+  - KeenSense (1.1.0-alpha.4):
     - NattyLog (~> 1)
   - lottie-ios (3.2.1)
   - NattyLog (1.2.2)
-  - NuguAgents (1.1.0-alpha.3):
-    - JadeMarble (= 1.1.0-alpha.3)
+  - NuguAgents (1.1.0-alpha.4):
+    - JadeMarble (= 1.1.0-alpha.4)
     - NattyLog (~> 1)
-    - NuguCore (= 1.1.0-alpha.3)
-    - NuguUtils (= 1.1.0-alpha.3)
+    - NuguCore (= 1.1.0-alpha.4)
+    - NuguUtils (= 1.1.0-alpha.4)
     - SilverTray (~> 1)
-  - NuguClientKit (1.1.0-alpha.3):
-    - KeenSense (= 1.1.0-alpha.3)
+  - NuguClientKit (1.1.0-alpha.4):
+    - KeenSense (= 1.1.0-alpha.4)
     - NattyLog (~> 1)
-    - NuguAgents (= 1.1.0-alpha.3)
-    - NuguCore (= 1.1.0-alpha.3)
-    - NuguLoginKit (= 1.1.0-alpha.3)
-    - NuguServiceKit (= 1.1.0-alpha.3)
-    - NuguUIKit (= 1.1.0-alpha.3)
-    - NuguUtils (= 1.1.0-alpha.3)
-  - NuguCore (1.1.0-alpha.3):
+    - NuguAgents (= 1.1.0-alpha.4)
+    - NuguCore (= 1.1.0-alpha.4)
+    - NuguLoginKit (= 1.1.0-alpha.4)
+    - NuguServiceKit (= 1.1.0-alpha.4)
+    - NuguUIKit (= 1.1.0-alpha.4)
+    - NuguUtils (= 1.1.0-alpha.4)
+  - NuguCore (1.1.0-alpha.4):
     - NattyLog (~> 1.0)
-    - NuguUtils (= 1.1.0-alpha.3)
+    - NuguUtils (= 1.1.0-alpha.4)
     - RxSwift (~> 5)
-  - NuguLoginKit (1.1.0-alpha.3):
-    - NuguUtils (= 1.1.0-alpha.3)
-  - NuguServiceKit (1.1.0-alpha.3):
+  - NuguLoginKit (1.1.0-alpha.4):
+    - NuguUtils (= 1.1.0-alpha.4)
+  - NuguServiceKit (1.1.0-alpha.4):
     - NattyLog (~> 1)
-    - NuguUtils (= 1.1.0-alpha.3)
-  - NuguUIKit (1.1.0-alpha.3):
+    - NuguUtils (= 1.1.0-alpha.4)
+  - NuguUIKit (1.1.0-alpha.4):
     - lottie-ios (~> 3)
     - NattyLog (~> 1)
-    - NuguAgents (= 1.1.0-alpha.3)
-    - NuguUtils (= 1.1.0-alpha.3)
-  - NuguUtils (1.1.0-alpha.3):
+    - NuguAgents (= 1.1.0-alpha.4)
+    - NuguUtils (= 1.1.0-alpha.4)
+  - NuguUtils (1.1.0-alpha.4):
     - RxSwift (~> 5)
   - RxSwift (5.1.2)
   - SilverTray (1.2.7)
@@ -78,20 +78,20 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  JadeMarble: 93474b6095c88fac9bc0b430e5fa8f0adf1e4955
-  KeenSense: 73c7b139eae38da52a1dbea7233cb41aa38c0b49
+  JadeMarble: 420067965887569ef88df987d0bb790b24c99a43
+  KeenSense: ef98b6c0e3c86d69f0e3a163099a4701ab245d9d
   lottie-ios: 106e92eaf11fbed0a76590b4cdb9b5ec26123ff7
   NattyLog: 1a54981676b1dee3018b5e6cefed03b029212baa
-  NuguAgents: e2ae50f158755cab287a2b3ee788d7dd3507ab2b
-  NuguClientKit: 1b7e4a5018be31fa630c78b8afcdb6a5c7fd9ba8
-  NuguCore: c3c3ab2202378eddd6c3824903e902371c486f9e
-  NuguLoginKit: 3573a5a0170543762170dad1545966dfeb8af1b1
-  NuguServiceKit: ff1717e131ce21a6e1fdc7efb679f0637b0b479c
-  NuguUIKit: 728b67042bf2784f5afd2217c762aae04c3840aa
-  NuguUtils: f997e8c6ceeeb7f3913fcac8a1272a70878312c4
+  NuguAgents: 968858e4621e2275282b85c925f1fae745e76eef
+  NuguClientKit: e3f12eaf4a033def75f1ece1df4535ea84757105
+  NuguCore: ccaf0172690f4659db0349707e3f73487ad5ef4c
+  NuguLoginKit: 3a823100e6e157fa74e822d092f27122fb5e82a1
+  NuguServiceKit: 4a56f6924f7983a1c617491ce8a07ef0a95d984c
+  NuguUIKit: 20ca00fc749313c26551e967e28df3a260fa5253
+  NuguUtils: 4138e89a0fd4ff6b0ea1cc7f936c03cbfd21632f
   RxSwift: 1e2e1f9570186967f617e49128ed26ccf1bafc8e
   SilverTray: 441aa919a09689a9258888bdf3a8ffd79e478418
 
 PODFILE CHECKSUM: 8298bfb0e4bcda25cb6083e09d051b8025ea2dee
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.9.3
