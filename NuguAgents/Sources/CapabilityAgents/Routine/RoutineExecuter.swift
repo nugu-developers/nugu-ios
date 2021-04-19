@@ -162,7 +162,7 @@ private extension RoutineExecuter {
     func addDirectiveSequencerObserver(_ directiveSequencer: DirectiveSequenceable) {
         let token = directiveSequencer.observe(NuguCoreNotification.DirectiveSquencer.Complete.self, queue: routineDispatchQueue) { [weak self] (notification) in
             // Routine Action 에 의한 directive 실행 결과에 따른 처리
-            guard let self = self, self.routine != nil,
+            guard let self = self, self.state == .playing,
                   self.handlingDirectives.remove(notification.directive.header.messageId) != nil else { return }
             
             log.debug(notification.result)
@@ -187,7 +187,7 @@ private extension RoutineExecuter {
 
     func addAsrAgentObserver(_ asrAgent: ASRAgentProtocol) {
         let token = asrAgent.observe(NuguAgentNotification.ASR.StartRecognition.self, queue: routineDispatchQueue) { [weak self] (notification) in
-            guard let self = self, self.routine != nil else { return }
+            guard let self = self, self.state == .playing else { return }
             
             // ASR.Recognize event 발생시 interrupt 처리
             if self.doInterrupt() == true {
@@ -200,7 +200,7 @@ private extension RoutineExecuter {
 
     func addStreamDataObserver(_ streamDataRouter: StreamDataRoutable) {
         let directivesToken = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ReceivedDirectives.self, queue: routineDispatchQueue) { [weak self] (notification) in
-            guard let self = self, self.routine != nil else { return }
+            guard let self = self, self.state == .playing else { return }
             
             // Directive 에 Routine 중단 대상이 포함되어 있으며, 다음 Action 이 있으면 Routine 종료
             if (notification.directives.contains { self.stopTargets.contains($0.header.type) }), self.hasNextAction {
@@ -224,7 +224,7 @@ private extension RoutineExecuter {
         notificationTokens.append(directivesToken)
 
         let eventTokens = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ToBeSentEvent.self, queue: routineDispatchQueue) { [weak self] (notification) in
-            guard let self = self, self.routine != nil else { return }
+            guard let self = self, self.state == .playing else { return }
             
             // Event 가 Routine interrupt 대상에 포함되어 있으며, Action 에 의한 event 가 아닌 경우 interrupt 처리.
             if self.interruptTargets.contains(notification.event.header.type), self.handlingEvent != notification.event.header.dialogRequestId {
@@ -242,8 +242,7 @@ private extension RoutineExecuter {
 
 private extension RoutineExecuter {
     func doAction() {
-        guard let routine = routine, state == .playing else { return }
-        guard let action = currentAction else { return }
+        guard state == .playing, let routine = routine, let action = currentAction else { return }
         
         let completion: ((StreamDataState) -> Void) = { [weak self] result in
             log.debug(result)
@@ -276,7 +275,7 @@ private extension RoutineExecuter {
     }
 
     func doNextAction() {
-        guard hasNextAction else {
+        guard state == .playing, hasNextAction else {
             doFinish()
             return
         }
@@ -301,7 +300,7 @@ private extension RoutineExecuter {
 
     @discardableResult
     func doInterrupt() -> Bool {
-        guard routine != nil, state == .playing else { return false }
+        guard state == .playing else { return false }
         
         log.debug("")
         state = .interrupted
@@ -310,14 +309,14 @@ private extension RoutineExecuter {
     }
     
     func doStop() {
-        guard routine != nil, [.playing, .interrupted].contains(state) else { return }
+        guard [.playing, .interrupted].contains(state) else { return }
         
         log.debug("")
         state = .stopped
     }
 
     func doFinish() {
-        guard routine != nil, state == .playing else { return }
+        guard state == .playing else { return }
         
         log.debug("")
         state = .finished
@@ -328,13 +327,13 @@ private extension RoutineExecuter {
 
 private extension RoutineExecuter {
     var currentAction: RoutineItem.Payload.Action? {
-        guard let item = routine, currentActionIndex < item.payload.actions.count else { return nil }
+        guard let routine = routine, currentActionIndex < routine.payload.actions.count else { return nil }
 
-        return item.payload.actions[currentActionIndex]
+        return routine.payload.actions[currentActionIndex]
     }
     
     var hasNextAction: Bool {
-        guard let routine = routine else { return false }
+        guard let routine = routine, routine.payload.actions.count - 1 > 0 else { return false }
         
         return (0..<routine.payload.actions.count - 1).contains(currentActionIndex)
     }
