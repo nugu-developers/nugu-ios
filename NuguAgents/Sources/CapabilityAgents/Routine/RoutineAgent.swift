@@ -101,12 +101,33 @@ public final class RoutineAgent: RoutineAgentProtocol {
 
 // MARK: - RoutineExecuterDelegate
 extension RoutineAgent: RoutineExecuterDelegate {
-    func routineExecuterDidStart(routine: RoutineItem) {
-        sendCompactContextEvent(Event(
-            typeInfo: .started,
-            playServiceId: routine.payload.playServiceId,
-            referrerDialogRequestId: routine.dialogRequestId
-        ).rx)
+    func routineExecuterDidChange(state: RoutineState) {
+        guard let routine = routineExecuter.routine else { return }
+        
+        switch state {
+        case .idle:
+            break
+        case .playing:
+            sendCompactContextEvent(Event(
+                typeInfo: .started,
+                playServiceId: routine.payload.playServiceId,
+                referrerDialogRequestId: routine.dialogRequestId
+            ).rx)
+        case .interrupted:
+            break
+        case .finished:
+            sendCompactContextEvent(Event(
+                typeInfo: .finished,
+                playServiceId: routine.payload.playServiceId,
+                referrerDialogRequestId: routine.dialogRequestId
+            ).rx)
+        case .stopped:
+            sendCompactContextEvent(Event(
+                typeInfo: .stopped,
+                playServiceId: routine.payload.playServiceId,
+                referrerDialogRequestId: routine.dialogRequestId
+            ).rx)
+        }
     }
 
     func routineExecuterShouldRequestAction(
@@ -119,25 +140,6 @@ extension RoutineAgent: RoutineExecuterDelegate {
             playServiceId: action.playServiceId,
             referrerDialogRequestId: referrerDialogRequestId
         ).rx, completion: completion)
-    }
-
-    func routineExecuterDidInterrupt(routine: RoutineItem) {
-    }
-
-    func routineExecuterDidStop(routine: RoutineItem) {
-        sendCompactContextEvent(Event(
-            typeInfo: .stopped,
-            playServiceId: routine.payload.playServiceId,
-            referrerDialogRequestId: routine.dialogRequestId
-        ).rx)
-    }
-
-    func routineExecuterDidFinish(routine: RoutineItem) {
-        sendCompactContextEvent(Event(
-            typeInfo: .finished,
-            playServiceId: routine.payload.playServiceId,
-            referrerDialogRequestId: routine.dialogRequestId
-        ).rx)
     }
 }
 

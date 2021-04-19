@@ -24,30 +24,25 @@ import NuguCore
 import NuguUtils
 
 protocol RoutineExecuterDelegate: class {
-    func routineExecuterDidStart(routine: RoutineItem)
+    func routineExecuterDidChange(state: RoutineState)
 
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
         referrerDialogRequestId: String,
         completion: @escaping (StreamDataState) -> Void
     ) -> EventIdentifier
-
-    func routineExecuterDidInterrupt(routine: RoutineItem)
-
-    func routineExecuterDidStop(routine: RoutineItem)
-
-    func routineExecuterDidFinish(routine: RoutineItem)
 }
 
 class RoutineExecuter {
     weak var delegate: RoutineExecuterDelegate?
-    var routine: RoutineItem?
+    
+    private(set) var routine: RoutineItem?
     var routineActionIndex: Int? {
         guard currentActionIndex >= 0 else { return nil }
         
         return currentActionIndex
     }
-    var state: RoutineState = .idle {
+    private(set) var state: RoutineState = .idle {
         didSet {
             log.debug(state)
             
@@ -58,27 +53,30 @@ class RoutineExecuter {
             case .playing:
                 break
             case .interrupted:
+                // Interrupt 이후 60초 이내에 Routine.Continue directive 를 받지 못하면 Routine 종료.
                 if hasNextAction {
                     actionWorkItem?.cancel()
                     if let dialogRequestId = handlingEvent {
                         directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
                     }
-                    // Interrupt 이후 60초 이내에 Routine.Continue directive 를 받지 못하면 Routine 종료.
                     let item = DispatchWorkItem { [weak self] in
                         guard let self = self, self.state == .interrupted else { return }
                         
                         self.doStop()
                     }
-                    self.interruptTimer = item
+                    interruptTimer = item
                     routineDispatchQueue.asyncAfter(deadline: .now() + 60, execute: item)
                 } else {
                     state = .stopped
                 }
-            case .finished:
-                clear()
-            case .stopped:
-                clear()
+            case .finished, .stopped:
+                if let dialogRequestId = handlingEvent {
+                    directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
+                }
+                actionWorkItem?.cancel()
             }
+            
+            delegate?.routineExecuterDidChange(state: state)
         }
     }
 
@@ -125,12 +123,13 @@ class RoutineExecuter {
             guard let self = self else { return }
             
             log.debug(routine.payload.actions)
-            self.clear()
 
-            self.routine = routine
+            self.handlingDirectives.removeAll()
+            self.handlingEvent = nil
+            self.interruptEvent = nil
             self.currentActionIndex = 0
+            self.routine = routine
             self.state = .playing
-            self.delegate?.routineExecuterDidStart(routine: routine)
 
             self.doAction()
         }
@@ -162,13 +161,9 @@ class RoutineExecuter {
 private extension RoutineExecuter {
     func addDirectiveSequencerObserver(_ directiveSequencer: DirectiveSequenceable) {
         let token = directiveSequencer.observe(NuguCoreNotification.DirectiveSquencer.Complete.self, queue: routineDispatchQueue) { [weak self] (notification) in
+            // Routine Action 에 의한 directive 실행 결과에 따른 처리
             guard let self = self, self.routine != nil,
                   self.handlingDirectives.remove(notification.directive.header.messageId) != nil else { return }
-            
-//            if self.handlingDirectives.isEmpty {
-//                log.debug("")
-//                self.handlingEvent = nil
-//            }
             
             log.debug(notification.result)
             switch notification.result {
@@ -181,6 +176,7 @@ private extension RoutineExecuter {
                     self.doInterrupt()
                 }
             case .failed, .finished:
+                // 마지막 directive 가 실행완료 되면 다음 Action 실행
                 if self.handlingDirectives.isEmpty {
                     self.doNextAction()
                 }
@@ -193,6 +189,7 @@ private extension RoutineExecuter {
         let token = asrAgent.observe(NuguAgentNotification.ASR.StartRecognition.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.routine != nil else { return }
             
+            // ASR.Recognize event 발생시 interrupt 처리
             if self.doInterrupt() == true {
                 log.debug("")
                 self.interruptEvent = notification.dialogRequestId
@@ -206,9 +203,7 @@ private extension RoutineExecuter {
             guard let self = self, self.routine != nil else { return }
             
             // Directive 에 Routine 중단 대상이 포함되어 있으며, 다음 Action 이 있으면 Routine 종료
-            if notification.directives.contains(where: { (directive) -> Bool in
-                self.stopTargets.contains(directive.header.type)
-            }), self.hasNextAction {
+            if (notification.directives.contains { self.stopTargets.contains($0.header.type) }), self.hasNextAction {
                 log.debug("")
                 self.doStop()
             }
@@ -231,7 +226,7 @@ private extension RoutineExecuter {
         let eventTokens = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ToBeSentEvent.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.routine != nil else { return }
             
-            // Action 에 의한 event
+            // Event 가 Routine interrupt 대상에 포함되어 있으며, Action 에 의한 event 가 아닌 경우 interrupt 처리.
             if self.interruptTargets.contains(notification.event.header.type), self.handlingEvent != notification.event.header.dialogRequestId {
                 if self.doInterrupt() == true {
                     log.debug("")
@@ -258,6 +253,7 @@ private extension RoutineExecuter {
         }
         
         log.debug(action.actionType)
+        // Actin 규격에 문제가 있는 경우 다음 Action 으로 넘어감
         switch action.actionType {
         case .text:
             guard let text = action.text else {
@@ -305,48 +301,28 @@ private extension RoutineExecuter {
 
     @discardableResult
     func doInterrupt() -> Bool {
-        guard let routine = routine else { return false }
-        guard state == .playing else { return false }
+        guard routine != nil, state == .playing else { return false }
         
         log.debug("")
         state = .interrupted
-        delegate?.routineExecuterDidInterrupt(routine: routine)
 
         return true
     }
     
     func doStop() {
-        guard let routine = routine else { return }
-        guard [.playing, .interrupted].contains(state) else { return }
+        guard routine != nil, [.playing, .interrupted].contains(state) else { return }
         
         log.debug("")
         state = .stopped
-        delegate?.routineExecuterDidStop(routine: routine)
     }
 
     func doFinish() {
-        guard let routine = routine else { return }
-        guard state == .playing else { return }
+        guard routine != nil, state == .playing else { return }
         
         log.debug("")
         state = .finished
-        delegate?.routineExecuterDidFinish(routine: routine)
-    }
-
-    func clear() {
-        log.debug("")
-        if let dialogRequestId = handlingEvent {
-            directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
-        }
-
-        handlingDirectives.removeAll()
-        handlingEvent = nil
-        interruptEvent = nil
-        actionWorkItem?.cancel()
-        currentActionIndex = -1
     }
 }
-
 
 // MARK: - Convienence
 
@@ -363,5 +339,3 @@ private extension RoutineExecuter {
         return (0..<routine.payload.actions.count - 1).contains(currentActionIndex)
     }
 }
-
-
