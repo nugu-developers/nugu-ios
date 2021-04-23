@@ -52,7 +52,7 @@ public class DialogStateAggregator: TypedNotifyable {
                 chipsItem = currentChips?.item
             default:
                 // Delete the chips if it is not for the most recently active session.
-                chipsItem = nil
+                currentChips = nil
             }
             
             let typedNotification = NuguClientNotification.DialogState.State(state: dialogState, multiTurn: isMultiturn, item: chipsItem, sessionActivated: sessionActivated)
