@@ -441,6 +441,13 @@
 		7E0713DE24FCD02C009314DA /* UserDefaults+Nugu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */; };
 		7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E0B072437077F00198FCB /* EndPointDetectable.swift */; };
 		7E1A28C724E4E1F2003A8817 /* DirectiveCancelPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1A28C624E4E1F2003A8817 /* DirectiveCancelPolicy.swift */; };
+		7E1DDE0D25F894A90038D040 /* Routine+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1DDE0C25F894A90038D040 /* Routine+Event.swift */; };
+		7E1DDE2325F894BB0038D040 /* RoutineAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1DDE2225F894BB0038D040 /* RoutineAgent.swift */; };
+		7E1DDE2F25F894D30038D040 /* RoutineAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1DDE2E25F894D30038D040 /* RoutineAgentProtocol.swift */; };
+		7E1DDE3B25F894E40038D040 /* RoutineError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1DDE3A25F894E40038D040 /* RoutineError.swift */; };
+		7E1DDE4725F8950A0038D040 /* RoutineExecuter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1DDE4625F8950A0038D040 /* RoutineExecuter.swift */; };
+		7E1DDE5D25F895250038D040 /* RoutineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1DDE5C25F895250038D040 /* RoutineItem.swift */; };
+		7E1DDE6925F8953E0038D040 /* RoutineState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1DDE6825F8953E0038D040 /* RoutineState.swift */; };
 		7E26C58123A08DC100716E44 /* URLRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */; };
 		7E27375324B553EC00602B57 /* DirectiveHandleResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */; };
 		7E284D9924DD2B4A00BF9640 /* InteractionControlManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E284D9124DD260200BF9640 /* InteractionControlManageable.swift */; };
@@ -1171,6 +1178,13 @@
 		7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Nugu.swift"; sourceTree = "<group>"; };
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
 		7E1A28C624E4E1F2003A8817 /* DirectiveCancelPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveCancelPolicy.swift; sourceTree = "<group>"; };
+		7E1DDE0C25F894A90038D040 /* Routine+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Routine+Event.swift"; sourceTree = "<group>"; };
+		7E1DDE2225F894BB0038D040 /* RoutineAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgent.swift; sourceTree = "<group>"; };
+		7E1DDE2E25F894D30038D040 /* RoutineAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgentProtocol.swift; sourceTree = "<group>"; };
+		7E1DDE3A25F894E40038D040 /* RoutineError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineError.swift; sourceTree = "<group>"; };
+		7E1DDE4625F8950A0038D040 /* RoutineExecuter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineExecuter.swift; sourceTree = "<group>"; };
+		7E1DDE5C25F895250038D040 /* RoutineItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineItem.swift; sourceTree = "<group>"; };
+		7E1DDE6825F8953E0038D040 /* RoutineState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineState.swift; sourceTree = "<group>"; };
 		7E26C58023A08DC100716E44 /* URLRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Rx.swift"; sourceTree = "<group>"; };
 		7E27375224B553EC00602B57 /* DirectiveHandleResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectiveHandleResult.swift; sourceTree = "<group>"; };
 		7E284D9124DD260200BF9640 /* InteractionControlManageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionControlManageable.swift; sourceTree = "<group>"; };
@@ -1594,6 +1608,7 @@
 				1F9336C825B68CA500CEBF66 /* Message */,
 				7E284D9024DD255C00BF9640 /* Interaction */,
 				7ED37D4726043DF3009A0A24 /* Permission */,
+				7E1DDE0B25F894960038D040 /* Routine */,
 			);
 			path = CapabilityAgents;
 			sourceTree = "<group>";
@@ -2776,6 +2791,20 @@
 			path = Store;
 			sourceTree = "<group>";
 		};
+		7E1DDE0B25F894960038D040 /* Routine */ = {
+			isa = PBXGroup;
+			children = (
+				7E1DDE0C25F894A90038D040 /* Routine+Event.swift */,
+				7E1DDE2225F894BB0038D040 /* RoutineAgent.swift */,
+				7E1DDE2E25F894D30038D040 /* RoutineAgentProtocol.swift */,
+				7E1DDE3A25F894E40038D040 /* RoutineError.swift */,
+				7E1DDE4625F8950A0038D040 /* RoutineExecuter.swift */,
+				7E1DDE5C25F895250038D040 /* RoutineItem.swift */,
+				7E1DDE6825F8953E0038D040 /* RoutineState.swift */,
+			);
+			path = Routine;
+			sourceTree = "<group>";
+		};
 		7E284D9024DD255C00BF9640 /* Interaction */ = {
 			isa = PBXGroup;
 			children = (
@@ -3830,6 +3859,7 @@
 				1F9337AD25BF265200CEBF66 /* MessageAgent+Event.swift in Sources */,
 				06FE563F253E9EC0002FAC9B /* TTSPlayer.swift in Sources */,
 				06301FBC256B853D00FD97E8 /* TextAgentRedirectPayload.swift in Sources */,
+				7E1DDE2325F894BB0038D040 /* RoutineAgent.swift in Sources */,
 				73152FCE23E0416100F843C3 /* TextAgent.swift in Sources */,
 				73152FB623E0413F00F843C3 /* AudioPlayerPlayPayload.swift in Sources */,
 				7E284D9924DD2B4A00BF9640 /* InteractionControlManageable.swift in Sources */,
@@ -3856,6 +3886,7 @@
 				737388EC24A46C680018DDD2 /* AudioPlayerDisplayDelegate.swift in Sources */,
 				1FCAE16F25FF1178001C8061 /* AlertsRepeat.swift in Sources */,
 				737388D124A46C2B0018DDD2 /* SessionManageable.swift in Sources */,
+				7E1DDE3B25F894E40038D040 /* RoutineError.swift in Sources */,
 				1FD5D18F24C82224007BA384 /* MediaPlayerAgentSong.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
@@ -3885,10 +3916,13 @@
 				737388E124A46C4A0018DDD2 /* ExtensionAgentDelegate.swift in Sources */,
 				73152FCB23E0415B00F843C3 /* DisplayAgent+Event.swift in Sources */,
 				7E284DA124DD482800BF9640 /* InteractionControlConst.swift in Sources */,
+				7E1DDE0D25F894A90038D040 /* Routine+Event.swift in Sources */,
 				73152FA923E0412D00F843C3 /* ExtensionAgent+Event.swift in Sources */,
 				7E35D79824623A22003289A2 /* TTSError.swift in Sources */,
 				73152FE623E0491C00F843C3 /* NSObject+Rx.swift in Sources */,
 				064FD88D25A2DC8B00DE6454 /* UtilityBlockItem.swift in Sources */,
+				7E1DDE5D25F895250038D040 /* RoutineItem.swift in Sources */,
+				7E1DDE4725F8950A0038D040 /* RoutineExecuter.swift in Sources */,
 				737388D224A46C2B0018DDD2 /* SessionAgentProtocol.swift in Sources */,
 				06EBF6BF254A5BAC00B01DC6 /* NuguAgentError.swift in Sources */,
 				7378FD8325B575A500AB9764 /* NuguAgentNotification.swift in Sources */,
@@ -3950,6 +3984,7 @@
 				73152FB923E0414700F843C3 /* EndPointDetectorState.swift in Sources */,
 				7373891124A46CAE0018DDD2 /* DisplayAgentDelegate.swift in Sources */,
 				7E284D9B24DD2B4A00BF9640 /* InteractionControl.swift in Sources */,
+				7E1DDE6925F8953E0038D040 /* RoutineState.swift in Sources */,
 				7373890824A46CA10018DDD2 /* TTSResult.swift in Sources */,
 				06FE5690253FCC1E002FAC9B /* AudioPlayerAgentError.swift in Sources */,
 				737388F924A46C800018DDD2 /* ASRAgentProtocol.swift in Sources */,
@@ -3958,6 +3993,7 @@
 				7ED37D4926043E0D009A0A24 /* PermissionAgent.swift in Sources */,
 				7315306F23E1248300F843C3 /* ASRError.swift in Sources */,
 				1FD5D18224A99993007BA384 /* PhoneCallRecipientIntended.swift in Sources */,
+				7E1DDE2F25F894D30038D040 /* RoutineAgentProtocol.swift in Sources */,
 				73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */,
 				7E35D79024622B4E003289A2 /* EventIdentifier.swift in Sources */,
 				1FBA3B702459669B001E5828 /* PhoneCallAgent.swift in Sources */,

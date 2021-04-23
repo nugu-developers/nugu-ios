@@ -88,6 +88,15 @@ public extension NuguClient {
             contextManager: contextManager
         )
         
+        public lazy var routineAgent: RoutineAgentProtocol = RoutineAgent(
+            upstreamDataSender: streamDataRouter,
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer,
+            streamDataRouter: streamDataRouter,
+            textAgent: textAgent,
+            asrAgent: asrAgent
+        )
+        
         // Additional Agents
         /**
          Play some special sound on the special occasion
@@ -279,6 +288,7 @@ public extension NuguClient {
                 sessionAgent: sessionAgent,
                 chipsAgent: chipsAgent,
                 utilityAgent: utilityAgent,
+                routineAgent: routineAgent,
                 audioSessionManager: audioSessionManager,
                 keywordDetector: keywordDetector,
                 speechRecognizerAggregator: speechRecognizerAggregator,

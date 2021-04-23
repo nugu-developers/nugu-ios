@@ -713,12 +713,24 @@ private extension ASRAgent {
 // MARK: - Observers
 
 extension Notification.Name {
+    static let asrAgentStartRecognition = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_start_recognition")
     static let asrAgentStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_state_did_chage")
     static let asrAgentResultDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.asr_agent_result_did_receive")
 }
 
 public extension NuguAgentNotification {
     enum ASR {
+        public struct StartRecognition: TypedNotification {
+            public static let name: Notification.Name = .asrAgentStartRecognition
+            public let dialogRequestId: String
+
+            public static func make(from: [String : Any]) -> StartRecognition? {
+                guard let dialogRequestId = from["dialogRequestId"] as? String else { return nil }
+
+                return StartRecognition(dialogRequestId: dialogRequestId)
+            }
+        }
+        
         public struct State: TypedNotification {
             public static let name: Notification.Name = .asrAgentStateDidChange
             public let state: ASRState
