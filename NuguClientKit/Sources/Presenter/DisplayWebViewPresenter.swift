@@ -83,7 +83,11 @@ public class DisplayWebViewPresenter: NSObject {
 
 extension DisplayWebViewPresenter: DisplayAgentDelegate {
     public func displayAgentRequestContext(templateId: String, completion: @escaping (DisplayContext?) -> Void) {
-        nuguDisplayWebView?.requestContext(completion: { (displayContext) in
+        guard let nuguDisplayWebView = nuguDisplayWebView  else {
+            completion(nil)
+            return
+        }
+        nuguDisplayWebView.requestContext(completion: { (displayContext) in
             completion(displayContext)
         })
     }
