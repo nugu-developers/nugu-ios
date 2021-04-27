@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [1.1.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.1.0)
+Released on 2021-04-27
+### SDK
+#### Fixed
+- Fix `AVMediaPlayerItem` Observation defeat
+
+#### Added
+- Add landscape mode of `AudioPlayerView` and `DisplayWebView`
+- Add `NudgeAgent`
+
 ## [1.0.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.0.0)
 Released on 2021-03-30
 ### Sample Application
