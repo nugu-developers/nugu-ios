@@ -293,7 +293,12 @@ extension NuguCentralManager {
     }
     
     func startListeningWithTrigger() {
-        client.speechRecognizerAggregator.startListeningWithTrigger()
+        client.speechRecognizerAggregator.startListeningWithTrigger { (result) in
+            if case let .failure(error) = result {
+                log.error("startListeningWithTrigger error: \(error)")
+                return
+            }
+        }
     }
     
     func stopListening() {
