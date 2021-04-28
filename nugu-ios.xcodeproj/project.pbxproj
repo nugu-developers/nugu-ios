@@ -517,6 +517,7 @@
 		F7AA6E2925E39C5300C852D5 /* skt_trigger_am_aria.raw in Resources */ = {isa = PBXBuildFile; fileRef = F7AA6E2525E39C5300C852D5 /* skt_trigger_am_aria.raw */; };
 		F7AA6E2A25E39C5300C852D5 /* skt_trigger_search_aria.raw in Resources */ = {isa = PBXBuildFile; fileRef = F7AA6E2625E39C5300C852D5 /* skt_trigger_search_aria.raw */; };
 		F7AA6E4025E39C8E00C852D5 /* skt_epd_model.raw in Resources */ = {isa = PBXBuildFile; fileRef = F7AA6E3F25E39C8E00C852D5 /* skt_epd_model.raw */; };
+		F7E224ED263957DE00E13F19 /* SpeechRecognizerAggregatorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E224EC263957DE00E13F19 /* SpeechRecognizerAggregatorError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1258,6 +1259,7 @@
 		F7AA6E2525E39C5300C852D5 /* skt_trigger_am_aria.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_am_aria.raw; sourceTree = "<group>"; };
 		F7AA6E2625E39C5300C852D5 /* skt_trigger_search_aria.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_trigger_search_aria.raw; sourceTree = "<group>"; };
 		F7AA6E3F25E39C8E00C852D5 /* skt_epd_model.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = skt_epd_model.raw; sourceTree = "<group>"; };
+		F7E224EC263957DE00E13F19 /* SpeechRecognizerAggregatorError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerAggregatorError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1736,6 +1738,7 @@
 				7E341F8425AFFA1400734A45 /* SpeechRecognizerAggregatable.swift */,
 				7E341F3C25AFEEFD00734A45 /* SpeechRecognizerAggregator.swift */,
 				732B538125CD119A00126FE4 /* SpeechRecognizerAggregatorDelegate.swift */,
+				F7E224EC263957DE00E13F19 /* SpeechRecognizerAggregatorError.swift */,
 				1FFFF3182375707000C9A177 /* MicInputProvider */,
 				1F2E803623966B2900569C59 /* KeywordDetector */,
 			);
@@ -3674,6 +3677,7 @@
 				75021EAC25945E670014537C /* AudioDisplayViewPresenter.swift in Sources */,
 				1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */,
 				7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */,
+				F7E224ED263957DE00E13F19 /* SpeechRecognizerAggregatorError.swift in Sources */,
 				73F0B72F25CAC4930025FC6A /* AudioSessionManagerDelegate.swift in Sources */,
 				063A84722565027D0032F13B /* VoiceChromePresenter.swift in Sources */,
 				1FD1CFF723BDC0660000FB8C /* DialogStateAggregator.swift in Sources */,
