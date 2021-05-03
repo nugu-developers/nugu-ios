@@ -47,4 +47,6 @@ public protocol DirectiveSequenceable: TypedNotifyable {
      Dispatch attachment to pre-registered handler
      */
     func processAttachment(_ attachment: Downstream.Attachment)
+    
+    func cancelDirective(dialogRequestId: String)
 }

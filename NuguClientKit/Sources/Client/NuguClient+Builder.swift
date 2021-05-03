@@ -88,6 +88,15 @@ public extension NuguClient {
             contextManager: contextManager
         )
         
+        public lazy var routineAgent: RoutineAgentProtocol = RoutineAgent(
+            upstreamDataSender: streamDataRouter,
+            contextManager: contextManager,
+            directiveSequencer: directiveSequencer,
+            streamDataRouter: streamDataRouter,
+            textAgent: textAgent,
+            asrAgent: asrAgent
+        )
+        
         public lazy var nudgeAgent: NudgeAgentProtocol = NudgeAgent(
             directiveSequencer: directiveSequencer,
             contextManager: contextManager,
@@ -131,6 +140,11 @@ public extension NuguClient {
          Handles directives for system permission.
          */
         public var permissionAgent: PermissionAgentProtocol?
+        
+        /**
+         Set alerts
+         */
+        public var alertsAgent: AlertsAgentProtocol?
         
         /**
          Show Graphical User Interface
@@ -238,6 +252,15 @@ public extension NuguClient {
                 permissionAgent?.delegate = delegate as? PermissionAgentDelegate
             }
             
+            if delegate is AlertsAgentDelegate {
+                alertsAgent = AlertsAgent(
+                    directiveSequencer: directiveSequencer,
+                    contextManager: contextManager,
+                    upstreamDataSender: streamDataRouter
+                )
+                alertsAgent?.delegate = delegate as? AlertsAgentDelegate
+            }
+            
             return self
         }
         
@@ -285,6 +308,7 @@ public extension NuguClient {
                 sessionAgent: sessionAgent,
                 chipsAgent: chipsAgent,
                 utilityAgent: utilityAgent,
+                routineAgent: routineAgent,
                 audioSessionManager: audioSessionManager,
                 keywordDetector: keywordDetector,
                 speechRecognizerAggregator: speechRecognizerAggregator,
@@ -296,6 +320,7 @@ public extension NuguClient {
                 displayAgent: displayAgent,
                 locationAgent: locationAgent,
                 permissionAgent: permissionAgent,
+                alertsAgent: alertsAgent,
                 nudgeAgent: nudgeAgent
             )
         }

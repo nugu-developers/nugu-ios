@@ -75,6 +75,13 @@ public extension DirectiveSequencer {
             handler.attachmentHandler?(attachment)
         }
     }
+    
+    func cancelDirective(dialogRequestId: String) {
+        directiveSequencerDispatchQueue.async { [weak self] in
+            log.debug(dialogRequestId)
+            self?.directiveCancelPolicies.append((dialogRequestId: dialogRequestId, policy: .cancelAll))
+        }
+    }
 }
 
 // MARK: - Private
