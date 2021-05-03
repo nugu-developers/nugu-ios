@@ -142,6 +142,11 @@ public extension NuguClient {
         public var permissionAgent: PermissionAgentProtocol?
         
         /**
+         Set alerts
+         */
+        public var alertsAgent: AlertsAgentProtocol?
+        
+        /**
          Show Graphical User Interface
          */
         public var displayAgent: DisplayAgentProtocol?
@@ -247,6 +252,15 @@ public extension NuguClient {
                 permissionAgent?.delegate = delegate as? PermissionAgentDelegate
             }
             
+            if delegate is AlertsAgentDelegate {
+                alertsAgent = AlertsAgent(
+                    directiveSequencer: directiveSequencer,
+                    contextManager: contextManager,
+                    upstreamDataSender: streamDataRouter
+                )
+                alertsAgent?.delegate = delegate as? AlertsAgentDelegate
+            }
+            
             return self
         }
         
@@ -306,6 +320,7 @@ public extension NuguClient {
                 displayAgent: displayAgent,
                 locationAgent: locationAgent,
                 permissionAgent: permissionAgent,
+                alertsAgent: alertsAgent,
                 nudgeAgent: nudgeAgent
             )
         }

@@ -222,6 +222,15 @@ public class NuguClient {
      */
     public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
     
+    /**
+     Set alerts
+     */
+    public lazy var alertsAgent: AlertsAgentProtocol = AlertsAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
     // Supports
     /**
      Indicates the dialog state.
@@ -294,6 +303,7 @@ public class NuguClient {
         displayAgent: DisplayAgentProtocol?,
         locationAgent: LocationAgentProtocol?,
         permissionAgent: PermissionAgentProtocol?,
+        alertsAgent: AlertsAgentProtocol?,
         nudgeAgent: NudgeAgentProtocol
     ) {
         // Core
@@ -371,6 +381,10 @@ public class NuguClient {
         
         if let permissionAgent = permissionAgent {
             self.permissionAgent = permissionAgent
+        }
+        
+        if let alertsAgent = alertsAgent {
+            self.alertsAgent = alertsAgent
         }
         
         // Wiring
