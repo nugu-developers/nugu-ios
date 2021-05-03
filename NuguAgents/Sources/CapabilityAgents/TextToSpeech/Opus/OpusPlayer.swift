@@ -91,7 +91,7 @@ class OpusPlayer: MediaPlayable {
 
 extension OpusPlayer: DataStreamPlayerDelegate {
     func dataStreamPlayerStateDidChange(_ state: DataStreamPlayerState) {
-        var state: MediaPlayerState {
+        var playerState: MediaPlayerState {
             switch state {
             case .start:
                 return .start
@@ -110,7 +110,7 @@ extension OpusPlayer: DataStreamPlayerDelegate {
             }
         }
         
-        delegate?.mediaPlayerStateDidChange(state, mediaPlayer: self)
+        delegate?.mediaPlayerStateDidChange(playerState, mediaPlayer: self)
     }
 }
 
