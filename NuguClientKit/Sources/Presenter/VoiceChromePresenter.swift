@@ -50,6 +50,10 @@ public class VoiceChromePresenter: NSObject {
         return tapGestureRecognizer
     }()
     
+    private var voiceChromeHeight: CGFloat {
+        NuguVoiceChrome.recommendedHeight + SafeAreaUtil.bottomSafeAreaHeight
+    }
+    
     public weak var delegate: VoiceChromePresenterDelegate?
     public var isHidden = true {
         didSet {
@@ -190,7 +194,7 @@ public extension VoiceChromePresenter {
 
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
-            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: 0)
+            self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: self.voiceChromeHeight)
         }, completion: { [weak self] _ in
             self?.nuguVoiceChrome.removeFromSuperview()
         })
@@ -212,24 +216,27 @@ private extension VoiceChromePresenter {
         let showAnimation = {
             UIView.animate(withDuration: 0.3) { [weak self] in
                 guard let self = self else { return }
-                self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: -self.nuguVoiceChrome.bounds.height)
+                self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: 0)
             }
         }
         
         if view.subviews.contains(nuguVoiceChrome) == false {
-            nuguVoiceChrome.frame = CGRect(x: 0, y: view.frame.size.height, width: view.frame.size.width, height: NuguVoiceChrome.recommendedHeight + SafeAreaUtil.bottomSafeAreaHeight)
             view.addSubview(nuguVoiceChrome)
+            nuguVoiceChrome.translatesAutoresizingMaskIntoConstraints = false
+            nuguVoiceChrome.heightAnchor.constraint(equalToConstant: voiceChromeHeight).isActive = true
+            nuguVoiceChrome.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            nuguVoiceChrome.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            nuguVoiceChrome.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: voiceChromeHeight)
         }
         showAnimation()
     }
     
-    func setChipsButton(actionList: [(text: String, token: String?)], normalList: [(text: String, token: String?)]) {
-        var chipsData = [NuguChipsButton.NuguChipsButtonType]()
+    func setChipsButton(nudgeList: [(text: String, token: String?)] = [], actionList: [(text: String, token: String?)], normalList: [(text: String, token: String?)]) {
+        let nudgeButtonList = nudgeList.map { NuguChipsButton.NuguChipsButtonType.nudge(text: $0.text, token: $0.token) }
         let actionButtonList = actionList.map { NuguChipsButton.NuguChipsButtonType.action(text: $0.text, token: $0.token) }
-        chipsData.append(contentsOf: actionButtonList)
         let normalButtonList = normalList.map { NuguChipsButton.NuguChipsButtonType.normal(text: $0.text, token: $0.token) }
-        chipsData.append(contentsOf: normalButtonList)
-        nuguVoiceChrome.setChipsData(chipsData) { [weak self] chips in
+        nuguVoiceChrome.setChipsData(nudgeButtonList + actionButtonList + normalButtonList) { [weak self] chips in
             self?.delegate?.voiceChromeChipsDidClick(chips: chips)
         }
     }
@@ -298,6 +305,8 @@ private extension VoiceChromePresenter {
                     self.asrBeepPlayer?.beep(type: .fail)
                 case ASRError.recognizeFailed:
                     break
+                case ASRError.listeningTimeout(let listenTimeoutFailBeep) where listenTimeoutFailBeep == false:
+                    break
                 default:
                     self.asrBeepPlayer?.beep(type: .fail)
                 }
@@ -309,7 +318,7 @@ private extension VoiceChromePresenter {
     func addDialogStateObserver(_ object: DialogStateAggregator) {
         dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-            log.debug("\(notification.state) \(notification.multiTurn), \(notification.chips.debugDescription)")
+            log.debug("\(notification.state) \(notification.multiTurn), \(notification.item.debugDescription)")
 
             switch notification.state {
             case .idle:
@@ -322,14 +331,14 @@ private extension VoiceChromePresenter {
                 self.voiceChromeDismissWorkItem?.cancel()
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    guard notification.multiTurn == true else {
+                    guard notification.multiTurn == true || notification.item?.target == .speaking else {
                         self.dismissVoiceChrome()
                         return
                     }
                     // If voice chrome is not showing or dismissing in speaking state, voice chrome should be presented
                     try? self.showVoiceChrome()
                     self.nuguVoiceChrome.changeState(state: .speaking)
-                    if let chips = notification.chips {
+                    if let chips = notification.item?.chips {
                         let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
                         self.setChipsButton(actionList: actionList, normalList: normalList)
@@ -347,10 +356,11 @@ private extension VoiceChromePresenter {
                         }
                         self.nuguVoiceChrome.setRecognizedText(text: nil)
                     }
-                    if let chips = notification.chips {
+                    if let chips = notification.item?.chips {
+                        let nudgeList = chips.filter { $0.type == .nudge }.map { ($0.text, $0.token) }
                         let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                        self.setChipsButton(actionList: actionList, normalList: normalList)
+                        self.setChipsButton(nudgeList: nudgeList, actionList: actionList, normalList: normalList)
                     }
                     self.asrBeepPlayer?.beep(type: .start)
                 }

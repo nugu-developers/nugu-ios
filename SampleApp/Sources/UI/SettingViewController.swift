@@ -104,33 +104,39 @@ extension SettingViewController: UITableViewDataSource {
         } else if indexPath.section == 2 {
             switch indexPath.row {
             case 0:
-                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useNuguService, isSwitchEnabled: true)
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useNuguService)
                 cell.onSwitchValueChanged = { [weak self] isOn in
                     UserDefaults.Standard.useNuguService = isOn
                     self?.tableView.reloadData()
                 }
             case 1:
-                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useWakeUpDetector, isSwitchEnabled: switchEnableability)
-                cell.onSwitchValueChanged = { isOn in
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useWakeUpDetector)
+                cell.onSwitchValueChanged = { [weak self] isOn in
                     UserDefaults.Standard.useWakeUpDetector = isOn
+                    self?.tableView.reloadData()
                 }
+                cell.isEnabled = switchEnableability
             case 2:
                 cell.configure(text: menuTitle, detailText: Keyword(rawValue: UserDefaults.Standard.wakeUpWord)?.description)
+                cell.isEnabled = switchEnableability && UserDefaults.Standard.useWakeUpDetector
             case 3:
-                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrStartSound, isSwitchEnabled: switchEnableability)
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrStartSound)
                 cell.onSwitchValueChanged = { isOn in
                     UserDefaults.Standard.useAsrStartSound = isOn
                 }
+                cell.isEnabled = switchEnableability
             case 4:
-                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrSuccessSound, isSwitchEnabled: switchEnableability)
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrSuccessSound)
                 cell.onSwitchValueChanged = { isOn in
                     UserDefaults.Standard.useAsrSuccessSound = isOn
                 }
+                cell.isEnabled = switchEnableability
             case 5:
-                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrFailSound, isSwitchEnabled: switchEnableability)
+                cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrFailSound)
                 cell.onSwitchValueChanged = { isOn in
                     UserDefaults.Standard.useAsrFailSound = isOn
                 }
+                cell.isEnabled = switchEnableability
             default:
                 break
             }

@@ -57,7 +57,7 @@ final class AudioPlayer1View: AudioDisplayView {
             lyricsView.addGestureRecognizer(tapGestureRecognizeView)
             lyricsIndex = 0
             updateLyrics()
-            replaceFullLyrics()
+            updateFullLyrics()
             
             if let favorite = template.content.settings?.favorite {
                 favoriteButtonContainerView.isHidden = false
@@ -125,8 +125,12 @@ final class AudioPlayer1View: AudioDisplayView {
         // swiftlint:disable force_cast
         let view = Bundle(for: AudioPlayer1View.self).loadNibNamed("AudioPlayer1View", owner: self)?.first as! UIView
         // swiftlint:enable force_cast
-        view.frame = bounds
         addSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        view.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         albumImageView.layer.cornerRadius = 8.0
         
@@ -163,7 +167,7 @@ final class AudioPlayer1View: AudioDisplayView {
         shuffleButton.setImage(UIImage(named: "btn_random_off", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
         shuffleButton.setImage(UIImage(named: "btn_random_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
         
-        setBarMode()
+        setBarMode(0)
     }
     
     // MARK: - Override (ProgressTimer)
@@ -189,8 +193,8 @@ final class AudioPlayer1View: AudioDisplayView {
     
     // MARK: - Override (Lyrics)
     
-    override func replaceFullLyrics() {
-        super.replaceFullLyrics()
+    override func updateFullLyrics() {
+        super.updateFullLyrics()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             if self.lyricsIndex != -1 {

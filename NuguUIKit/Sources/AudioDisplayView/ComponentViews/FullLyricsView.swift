@@ -43,14 +43,19 @@ final class FullLyricsView: UIView {
         // swiftlint:disable force_cast
         let view = Bundle(for: FullLyricsView.self).loadNibNamed("FullLyricsView", owner: self)?.first as! UIView
         // swiftlint:enable force_cast
-        view.frame = bounds
         addSubview(view)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewDidTap(gestureRecognizer:)))
         addGestureRecognizer(tapRecognizer)
         scrollView.delegate = self
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
     func updateLyricsFocus(lyricsIndex: Int?) {
+        guard isHidden == false else { return }
         stackView.arrangedSubviews.forEach { (label) in
             guard let label = label as? UILabel else { return }
             label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)

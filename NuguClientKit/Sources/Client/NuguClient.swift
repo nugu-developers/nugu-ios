@@ -142,6 +142,10 @@ public class NuguClient {
     
     // TODO: 입력부탁
     public let routineAgent: RoutineAgentProtocol
+    /**
+     Recommend a nugu operation intent
+     */
+    public let nudgeAgent: NudgeAgentProtocol
     
     // Additional Agents
     /**
@@ -289,7 +293,8 @@ public class NuguClient {
         soundAgent: SoundAgentProtocol?,
         displayAgent: DisplayAgentProtocol?,
         locationAgent: LocationAgentProtocol?,
-        permissionAgent: PermissionAgentProtocol?
+        permissionAgent: PermissionAgentProtocol?,
+        nudgeAgent: NudgeAgentProtocol
     ) {
         // Core
         self.contextManager = contextManager
@@ -327,6 +332,7 @@ public class NuguClient {
         self.chipsAgent = chipsAgent
         self.utilityAgent = utilityAgent
         self.routineAgent = routineAgent
+        self.nudgeAgent = nudgeAgent
         
         // Supports
         self.audioSessionManager = audioSessionManager

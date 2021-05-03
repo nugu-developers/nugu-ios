@@ -62,6 +62,8 @@ public class AudioDisplayView: UIView {
     @IBOutlet weak var audioPlayerBarViewContainerView: UIView!
     @IBOutlet weak var audioPlayerBarView: AudioPlayerBarView!
     
+    @IBOutlet weak var fullLyricsView: FullLyricsView!
+    
     // Public Proprties
     public weak var delegate: AudioDisplayViewDelegate?
     public var isBarMode: Bool {
@@ -82,7 +84,6 @@ public class AudioDisplayView: UIView {
     
     // Internal Properties
     var lyricsData: AudioPlayerLyricsTemplate?
-    var fullLyricsView: FullLyricsView?
 
     var repeatMode: AudioPlayerDisplayRepeat? {
         didSet {
@@ -102,6 +103,9 @@ public class AudioDisplayView: UIView {
     private var audioProgressTimer: DispatchSourceTimer?
     private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioDisplayView.audioProgress")
     
+    private var barHeightConstraint: NSLayoutConstraint?
+    private var topConstraint: NSLayoutConstraint?
+    
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         delegate?.onUserInteraction()
         return super.hitTest(point, with: event)
@@ -120,7 +124,8 @@ public class AudioDisplayView: UIView {
         guard isBarMode == false else {
             return false
         }
-        fullLyricsView?.removeFromSuperview()
+        fullLyricsView.isHidden = true
+        fullAudioPlayerContainerView.sendSubviewToBack(fullLyricsView)
         contentStackView.isHidden = false
         return true
     }
@@ -171,23 +176,18 @@ public class AudioDisplayView: UIView {
         showLyrics()
     }
     
-    func replaceFullLyrics() {
+    func updateFullLyrics() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            guard let fullLyricsView = self.fullLyricsView,
-                  self.fullAudioPlayerContainerView.subviews.contains(fullLyricsView) == true else {
-                return
-            }
-            
             guard self.lyricsData?.lyricsInfoList != nil,
                   self.lyricsData?.lyricsType != "NONE" else {
-                fullLyricsView.removeFromSuperview()
+                self.fullLyricsView.isHidden = true
+                self.fullAudioPlayerContainerView.sendSubviewToBack(self.fullLyricsView)
                 self.contentStackView.isHidden = false
                 return
             }
-            
-            fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
-            fullLyricsView.headerLabel.text = self.lyricsData?.title
+            self.fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
+            self.fullLyricsView.headerLabel.text = self.lyricsData?.title
             self.lyricsData?.lyricsInfoList.forEach { lyricsInfo in
                 let label = UILabel()
                 label.numberOfLines = 0
@@ -195,41 +195,25 @@ public class AudioDisplayView: UIView {
                 label.text = lyricsInfo.text
                 label.font = UIFont.systemFont(ofSize: 16)
                 label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
-                fullLyricsView.stackView.addArrangedSubview(label)
+                self.fullLyricsView.stackView.addArrangedSubview(label)
             }
+            self.fullLyricsView.scrollView.setContentOffset(.zero, animated: true)
         }
     }
     
     func showLyrics() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.fullLyricsView?.removeFromSuperview() 
             self.contentStackView.isHidden = true
-            let fullLyricsView = FullLyricsView(
-                frame: CGRect(
-                    origin: self.contentStackView.frame.origin,
-                    size: CGSize(
-                        width: self.contentStackView.frame.size.width,
-                        height: self.progressView.frame.origin.y - self.contentStackView.frame.origin.y - 40
-                    )
-                )
-            )
-            fullLyricsView.headerLabel.text = self.lyricsData?.title
-            self.lyricsData?.lyricsInfoList.forEach { lyricsInfo in
-                let label = UILabel()
-                label.numberOfLines = 0
-                label.textAlignment = .center
-                label.text = lyricsInfo.text
-                label.font = UIFont.systemFont(ofSize: 16)
-                label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
-                fullLyricsView.stackView.addArrangedSubview(label)
+            self.updateFullLyrics()
+            self.fullLyricsView.onViewDidTap = { [weak self] in
+                guard let self = self else { return }
+                self.fullLyricsView.isHidden = true
+                self.fullAudioPlayerContainerView.sendSubviewToBack(self.fullLyricsView)
+                self.contentStackView.isHidden = false
             }
-            fullLyricsView.onViewDidTap = { [weak self] in
-                self?.fullLyricsView?.removeFromSuperview()
-                self?.contentStackView.isHidden = false
-            }
-            self.fullAudioPlayerContainerView.addSubview(fullLyricsView)
-            self.fullLyricsView = fullLyricsView
+            self.fullLyricsView.isHidden = false
+            self.fullAudioPlayerContainerView.bringSubviewToFront(self.fullLyricsView)
         }
     }
     
@@ -287,16 +271,37 @@ public extension AudioDisplayView {
         }
     }
         
-    func setBarMode() {
-        audioPlayerBarViewContainerView.isHidden = false
-        fullAudioPlayerContainerView.isHidden = true
-        frame = CGRect(origin: CGPoint(x: 0, y: frame.size.height - 58.0 - SafeAreaUtil.bottomSafeAreaHeight), size: audioPlayerBarViewContainerView.frame.size)
+    func setBarMode(_ duration: TimeInterval = 0.3) {
+        topConstraint?.isActive = false
+        UIView.animate(withDuration: duration) { [weak self] in
+            guard let self = self else { return }
+            self.audioPlayerBarViewContainerView.isHidden = false
+            self.audioPlayerBarViewContainerView.alpha = 1.0
+            self.fullAudioPlayerContainerView.transform = CGAffineTransform(translationX: 0.0, y: self.fullAudioPlayerContainerView.bounds.height)
+            self.fullAudioPlayerContainerView.alpha = 0.0
+        } completion: { [weak self] _ in
+            guard let self = self else { return }
+            self.fullAudioPlayerContainerView.isHidden = true
+            self.fullAudioPlayerContainerView.heightAnchor.constraint(equalToConstant: self.audioPlayerBarViewContainerView.frame.size.height).isActive = true
+        }
     }
     
-    func setFullMode() {
-        frame = CGRect(origin: CGPoint(x: 0, y: 0), size: UIScreen.main.bounds.size)
-        fullAudioPlayerContainerView.isHidden = false
-        audioPlayerBarViewContainerView.isHidden = true
+    func setFullMode(_ duration: TimeInterval = 0.3) {
+        if let superview = superview {
+            topConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
+        }
+        topConstraint?.isActive = true
+        fullAudioPlayerContainerView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height).isActive = true
+        
+        UIView.animate(withDuration: duration) { [weak self] in
+            guard let self = self else { return }
+            self.fullAudioPlayerContainerView.isHidden = false
+            self.audioPlayerBarViewContainerView.alpha = 0.0
+            self.fullAudioPlayerContainerView.transform = CGAffineTransform(translationX: 0.0, y: 0)
+            self.fullAudioPlayerContainerView.alpha = 1.0
+        } completion: { [weak self] _ in
+            self?.audioPlayerBarViewContainerView.isHidden = true
+        }
     }
 }
 
@@ -308,10 +313,7 @@ extension AudioDisplayView {
     }
     
     @IBAction func barTypeButtonDidClick(_ button: UIButton) {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.setBarMode()
-        }
+        self.setBarMode()
     }
     
     @IBAction func previousButtonDidClick(_ button: UIButton) {
@@ -348,10 +350,7 @@ extension AudioDisplayView {
 
 extension AudioDisplayView: AudioPlayerBarViewDelegate {
     func onViewTap() {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.setFullMode()
-        }
+        self.setFullMode()
     }
     
     func onCloseButtonClick() {

@@ -1,9 +1,9 @@
 //
-//  ASRError.swift
+//  NudgeAgentProtocol.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2019/09/30.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by chidlc on 2021/03/15.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,12 +20,7 @@
 
 import Foundation
 
-/// <#Description#>
-public enum ASRError: Error {
-    /// Recognize event 시작 후 10초(default) 동안 사용자가 발화하지 않음.
-    case listeningTimeout(listenTimeoutFailBeep: Bool)
-    /// 음성 인식 시작 실패
-    case listenFailed
-    /// 음성 인식 실패
-    case recognizeFailed
-}
+/**
+ Recommend a nugu operation intent
+ */
+public protocol NudgeAgentProtocol: CapabilityAgentable {}

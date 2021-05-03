@@ -41,8 +41,13 @@ final class DisplayTitleView: UIView {
         // swiftlint:disable force_cast
         let view = Bundle(for: DisplayTitleView.self).loadNibNamed("DisplayTitleView", owner: self)?.first as! UIView
         // swiftlint:enable force_cast
-        view.frame = CGRect(origin: view.frame.origin, size: CGSize(width: UIScreen.main.bounds.size.width, height: view.frame.size.height))
-        addSubview(view)
+        insertSubview(view, at: 0)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        view.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
         backgroundColor = .clear
         
         closeButton.setImage(UIImage(named: "btn_close", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)

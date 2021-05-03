@@ -310,7 +310,7 @@ final class MarqueeLabel: UILabel, CAAnimationDelegate {
      
      - SeeAlso: leadingBuffer
      */
-    @IBInspectable  var trailingBuffer: CGFloat = 0.0 {
+    @IBInspectable  var trailingBuffer: CGFloat = 40.0 {
         didSet {
             if trailingBuffer != oldValue {
                 updateAndScroll()
