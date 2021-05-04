@@ -26,4 +26,22 @@ extension TypedNotifyable {
     func post<Notification: TypedNotification>(_ notification: Notification) {
         NotificationCenter.default.post(name: Notification.name, object: self, userInfo: notification.dictionary)
     }
+    
+    /**
+     Observe specific type
+     */
+    func observe<Notification: TypedNotification>(
+        _ forType: Notification.Type,
+        queue: DispatchQueue,
+        using block: @escaping (Notification) -> Void
+    ) -> Any {
+        return NotificationCenter.default.addObserver(forName: Notification.name, object: self, queue: nil) { (notification) in
+            guard let userInfo = notification.userInfo as? [String: Any],
+                  let typedNotification = Notification.make(from: userInfo) else { return }
+
+            queue.async {
+                block(typedNotification)
+            }
+        }
+    }
 }
