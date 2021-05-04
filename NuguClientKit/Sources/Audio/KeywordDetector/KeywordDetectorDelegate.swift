@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol KeywordDetectorDelegate: class {
+public protocol KeywordDetectorDelegate: AnyObject {
     /// <#Description#>
     /// - Parameters:
     ///   - keyword: <#keyword description#>

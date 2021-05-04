@@ -22,7 +22,7 @@ import Foundation
 
 import NuguUtils
 
-public protocol MediaPlayerDelegate: class {
+public protocol MediaPlayerDelegate: AnyObject {
     func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable)
     func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable)
 }

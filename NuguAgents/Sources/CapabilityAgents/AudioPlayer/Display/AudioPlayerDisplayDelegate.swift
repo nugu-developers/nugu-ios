@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 /// The DisplayPlayerAgent delegate is used to notify observers when a player template directive is received.
-public protocol AudioPlayerDisplayDelegate: class {
+public protocol AudioPlayerDisplayDelegate: AnyObject {
     /// Tells the delegate that the specified template should be displayed.
     ///
     /// - Parameter template: The player template to display.

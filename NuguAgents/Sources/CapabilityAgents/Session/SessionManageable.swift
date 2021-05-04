@@ -23,7 +23,7 @@ import Foundation
 import NuguUtils
 
 /// <#Description#>
-public protocol SessionManageable: class, TypedNotifyable {
+public protocol SessionManageable: AnyObject, TypedNotifyable {
     /// <#Description#>
     var activeSessions: [Session] { get }
     

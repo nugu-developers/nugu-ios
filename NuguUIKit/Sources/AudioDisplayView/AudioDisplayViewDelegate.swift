@@ -21,7 +21,7 @@
 import NuguAgents
 
 /// <#Description#>
-public protocol AudioDisplayViewDelegate: class {
+public protocol AudioDisplayViewDelegate: AnyObject {
     func onCloseButtonClick()
     func onUserInteraction()
     func onNuguButtonClick()

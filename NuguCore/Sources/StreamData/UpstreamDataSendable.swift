@@ -21,7 +21,7 @@
 import Foundation
 
 /// A protocol for sending `Upstream` data to the server.
-public protocol UpstreamDataSendable: class {
+public protocol UpstreamDataSendable: AnyObject {
     /// Sends an event.
     ///
     /// - Parameters:

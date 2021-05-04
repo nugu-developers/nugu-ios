@@ -23,7 +23,7 @@ import Foundation
 import NuguUIKit
 
 /// A delegate that application can extend to observe `VoiceChromePresenter` changes.
-public protocol VoiceChromePresenterDelegate: class {
+public protocol VoiceChromePresenterDelegate: AnyObject {
     /// Notifies the `NuguVoiceChrome` to be shown.
     func voiceChromeWillShow()
     

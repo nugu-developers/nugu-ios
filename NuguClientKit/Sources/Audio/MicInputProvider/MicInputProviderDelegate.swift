@@ -22,7 +22,7 @@ import Foundation
 import AVFoundation
 
 /// An delegate to processing audio buffers.
-public protocol MicInputProviderDelegate: class {
+public protocol MicInputProviderDelegate: AnyObject {
     /// Tells the delegate that the audio buffer has been received.
     /// - Parameter buffer: The new audio buffer.
     func micInputProviderDidReceive(buffer: AVAudioPCMBuffer)

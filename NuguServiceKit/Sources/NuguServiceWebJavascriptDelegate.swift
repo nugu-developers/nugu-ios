@@ -21,7 +21,7 @@
 // MARK: - NuguServiceWebJavascriptDelegate
 
 /// <#Description#>
-public protocol NuguServiceWebJavascriptDelegate: class {
+public protocol NuguServiceWebJavascriptDelegate: AnyObject {
     /// <#Description#>
     /// - Parameter openExternalAppItem: <#openExternalAppItem description#>
     func openExternalApp(openExternalAppItem: WebOpenExternalApp)
