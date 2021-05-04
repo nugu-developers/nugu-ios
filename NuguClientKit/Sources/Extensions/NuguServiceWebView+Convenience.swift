@@ -27,8 +27,10 @@ import NuguUtils
 
 public extension NuguServiceWebView {
     /// Add cookie to `NuguServiceWebView` which already has default cookie
-    /// - Parameter cookie: custom dictionary for user specific cookie setting, value will be overwrited when the key is same with default cookie
-    func addCookie(_ cookie: [String: Any]?) {
+    /// - Parameter cookie: Custom dictionary for user specific cookie setting.
+    ///                     Value will be overwrited when the key is same with default cookie.
+    ///                     Few keys are provided as `NuguServiceCookieKey` and for more custom keys, extend `NuguServiceCookieKey`
+    func addCookie(_ cookie: [NuguServiceCookieKey.RawValue: Any]?) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             log.error("ConfigurationStore is not configured")
             return
