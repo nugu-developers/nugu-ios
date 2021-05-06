@@ -22,7 +22,7 @@ import Foundation
 
 import RxSwift
 
-protocol MultiPartProcessable: class {
+protocol MultiPartProcessable: AnyObject {
     var parser: MultiPartParser? { get set }
     var data: Data { get set }
     var subject: PublishSubject<Data> { get }

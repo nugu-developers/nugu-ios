@@ -23,7 +23,7 @@ import Foundation
 import NuguUtils
 
 /// <#Description#>
-public protocol MediaPlayable: class {
+public protocol MediaPlayable: AnyObject {
     /// <#Description#>
     var delegate: MediaPlayerDelegate? { get set }
     

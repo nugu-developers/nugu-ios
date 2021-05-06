@@ -20,7 +20,7 @@
 
 import Foundation
 
-public protocol DialogAttributeStoreable: class {
+public protocol DialogAttributeStoreable: AnyObject {
     var attributes: [String: AnyHashable]? { get }
     
     func setAttributes(_ attributes: [String: AnyHashable])

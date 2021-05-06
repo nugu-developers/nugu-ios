@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 /// An delegate that appllication can extend to provide sound data.
-public protocol SoundAgentDataSource: class {
+public protocol SoundAgentDataSource: AnyObject {
     /// It called when need sound `URL` to play beep.
     ///
     /// - Parameter beepName: The beep name to play.

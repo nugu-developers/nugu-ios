@@ -22,7 +22,7 @@ import Foundation
 import NuguAgents
 
 /// A delegate that application can extend to observe `DisplayWebViewPresenter` changes.
-public protocol DisplayWebViewPresenterDelegate: class {
+public protocol DisplayWebViewPresenterDelegate: AnyObject {
     /// Delegate method called when nugu button has been selected.
     func onDisplayWebViewNuguButtonClick()
 }

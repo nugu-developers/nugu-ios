@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 /// The `MediaPlayerAgentDelegate` protocol defines methods that a delegate of a `MediaPlayerAgent` object can implement to receive directives or request context.
-public protocol MediaPlayerAgentDelegate: class {
+public protocol MediaPlayerAgentDelegate: AnyObject {
     
     /// Provide a context of `MediaPlayerAgent`.
     ///

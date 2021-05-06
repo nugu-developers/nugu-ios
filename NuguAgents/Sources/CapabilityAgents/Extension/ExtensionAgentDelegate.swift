@@ -25,7 +25,7 @@ import NuguCore
 /// The `ExtensionAgentDelegate` protocol defines methods that action when `ExtensionAgent` receives a directive.
 ///
 /// The methods of this protocol are all mandatory.
-public protocol ExtensionAgentDelegate: class {
+public protocol ExtensionAgentDelegate: AnyObject {
     /// Provide a context of `ExtensionAgent`.
     /// This function should return as soon as possible to reduce request delay.
     ///
