@@ -40,7 +40,10 @@ final class NuguServiceWebViewController: UIViewController {
         super.viewDidLoad()
         
         nuguServiceWebView.javascriptDelegate = self
-        nuguServiceWebView.setNuguServiceCookie(deviceUniqueId: NuguCentralManager.shared.oauthClient.deviceUniqueId)
+        nuguServiceWebView.addCookie([
+            NuguServiceCookieKey.theme.rawValue: NuguServiceCookieValue.Theme.light.rawValue,
+            NuguServiceCookieKey.deviceUniqueId.rawValue: "put_your_own_device_unique_id_if_needed"
+        ])
         nuguServiceWebView.loadUrlString(initialURLString)
         
         authObserver = NotificationCenter.default.addObserver(forName: .oauthRefresh, object: nil, queue: .main, using: { [weak self] _ in

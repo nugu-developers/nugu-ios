@@ -99,16 +99,11 @@ extension NuguServiceWebView: WKScriptMessageHandler {
 
 // MARK: - Cookie Setting
 
-public extension NuguServiceWebView {
+public extension NuguServiceWebView {    
     /// <#Description#>
-    /// - Parameter nuguServiceCookie: <#nuguServiceCookie description#>
-    func setNuguServiceCookie(nuguServiceCookie: NuguServiceCookie) {
-        guard let encodedCookie = try? JSONEncoder().encode(nuguServiceCookie),
-            let cookieAsDictionary = (try? JSONSerialization.jsonObject(with: encodedCookie, options: [])) as? [String: Any] else { return }
-        
-        log.debug(cookieAsDictionary)
-        
-        let script = cookieAsDictionary
+    /// - Parameter cookie: custom dictionary for user specific cookie setting
+    func setCookie(_ cookie: [String: Any]) {        
+        let script = cookie
             .map { (element) -> HTTPCookie? in
                 let cookieProperties = [
                     HTTPCookiePropertyKey.name: element.key,

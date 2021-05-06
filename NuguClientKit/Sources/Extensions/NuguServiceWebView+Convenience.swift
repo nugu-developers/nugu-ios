@@ -19,12 +19,18 @@
 //
 
 import Foundation
+import UIKit
 
 import NuguCore
 import NuguServiceKit
+import NuguUtils
 
 public extension NuguServiceWebView {
-    func setNuguServiceCookie(theme: String = "LIGHT", deviceUniqueId: String) {
+    /// Add cookie to `NuguServiceWebView` which already has default cookie
+    /// - Parameter cookie: Custom dictionary for user specific cookie setting.
+    ///                     Value will be overwrited when the key is same with default cookie.
+    ///                     Few keys are provided as `NuguServiceCookieKey` and for more custom keys, extend `NuguServiceCookieKey`
+    func addCookie(_ cookie: [NuguServiceCookieKey.RawValue: Any]?) {
         guard let configuration = ConfigurationStore.shared.configuration else {
             log.error("ConfigurationStore is not configured")
             return
@@ -33,15 +39,22 @@ public extension NuguServiceWebView {
             log.error("Access token is nil")
             return
         }
-        
-        let cookie = NuguServiceCookie(
-            authToken: token,
-            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-            pocId: configuration.pocId,
-            theme: theme,
-            oauthRedirectUri: configuration.serviceWebRedirectUri,
-            deviceUniqueId: deviceUniqueId
-        )
-        setNuguServiceCookie(nuguServiceCookie: cookie)
+        let defaultCookieDictionary: [String: Any] = [
+            "Authorization": token,
+            "Os-Type-Code": "MBL_IOS",
+            "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
+            "Sdk-Version": Bundle(identifier: "com.sktelecom.romaine.NuguServiceKit")?.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
+            "Poc-Id": configuration.pocId,
+            "Phone-Model-Name": UIDevice.current.model,
+            "Theme": "LIGHT",
+            "Oauth-Redirect-Uri": configuration.serviceWebRedirectUri
+        ]
+        guard let cookie = cookie else {
+            setCookie(defaultCookieDictionary)
+            return
+        }
+        let mergedCookie = defaultCookieDictionary.merged(with: cookie)
+        log.debug(mergedCookie)
+        setCookie(mergedCookie)
     }
 }
