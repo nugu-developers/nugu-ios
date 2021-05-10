@@ -145,7 +145,6 @@ private extension AlertsAgent {
         }
     }
     
-    // TODO: - 검토필요
     func handleDeliveryAlertAsset() -> HandleDirective {
         return { [weak self] directive, completion in
             guard let self = self, let delegate = self.delegate else {
@@ -158,7 +157,13 @@ private extension AlertsAgent {
                 return
             }
             
-            delegate.alertsAgentDidReceiveDeliveryAlertAsset(item: deliveryAssetItem, header: directive.header)
+            let handled = delegate.alertsAgentDidReceiveDeliveryAlertAsset(item: deliveryAssetItem, header: directive.header)
+            
+            if handled == false {
+                deliveryAssetItem.directives?.forEach { [weak self] directive in
+                    self?.directiveSequencer.processDirective(directive)
+                }
+            }
         }
     }
     

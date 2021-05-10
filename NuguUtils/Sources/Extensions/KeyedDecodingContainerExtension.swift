@@ -31,6 +31,16 @@ public extension KeyedDecodingContainer {
         return try container.decode(type)
     }
     
+    func decode(_ type: [[String: AnyHashable]].Type, forKey key: K) throws -> [[String: AnyHashable]] {
+        var container = try nestedUnkeyedContainer(forKey: key)
+        return try container.decode(type)
+    }
+    
+    func decode(_ type: [[String: Any]].Type, forKey key: K) throws -> [[String: Any]] {
+        var container = try nestedUnkeyedContainer(forKey: key)
+        return try container.decode(type)
+    }
+    
     func decodeIfPresent(_ type: [String: AnyHashable].Type, forKey key: K) throws -> [String: AnyHashable]? {
         guard contains(key) else {
             return nil
@@ -39,6 +49,20 @@ public extension KeyedDecodingContainer {
     }
     
     func decodeIfPresent(_ type: [String: Any].Type, forKey key: K) throws -> [String: Any]? {
+        guard contains(key) else {
+            return nil
+        }
+        return try decode(type, forKey: key)
+    }
+    
+    func decodeIfPresent(_ type: [[String: AnyHashable]].Type, forKey key: K) throws -> [[String: AnyHashable]]? {
+        guard contains(key) else {
+            return nil
+        }
+        return try decode(type, forKey: key)
+    }
+    
+    func decodeIfPresent(_ type: [[String: Any]].Type, forKey key: K) throws -> [[String: Any]]? {
         guard contains(key) else {
             return nil
         }
@@ -173,6 +197,26 @@ extension UnkeyedDecodingContainer {
                 array.append(nestedDictionary)
             } else if let nestedArray = try? decode([Any].self) {
                 array.append(nestedArray)
+            }
+        }
+        return array
+    }
+    
+    mutating func decode(_ type: [[String: Any]].Type) throws -> [[String: Any]] {
+        var array: [[String: Any]] = []
+        while isAtEnd == false {
+            if let value = try? decode([String: Any].self) {
+                array.append(value)
+            }
+        }
+        return array
+    }
+    
+    mutating func decode(_ type: [[String: AnyHashable]].Type) throws -> [[String: AnyHashable]] {
+        var array: [[String: AnyHashable]] = []
+        while isAtEnd == false {
+            if let value = try? decode([String: AnyHashable].self) {
+                array.append(value)
             }
         }
         return array

@@ -25,4 +25,16 @@ public struct AlertsAsset: Codable {
     public let type: String
     /// <#Description#>
     public let resource: String? // TODO: - Dynamic object
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - type: <#type description#>
+    ///   - resource: <#resource description#>
+    public init(
+        type: String,
+        resource: String?
+    ) {
+        self.type = type
+        self.resource = resource
+    }
 }

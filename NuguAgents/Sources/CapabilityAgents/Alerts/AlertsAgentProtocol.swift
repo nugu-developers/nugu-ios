@@ -27,7 +27,6 @@ public protocol AlertsAgentProtocol: CapabilityAgentable {
     /// <#Description#>
     var delegate: AlertsAgentDelegate? { get set }
     
-    // TODO: - 검토필요
     @discardableResult func requestAlertAssetRequired(
         playServiceId: String,
         token: String,

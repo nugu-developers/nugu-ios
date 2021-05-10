@@ -25,4 +25,16 @@ public struct AlertsRepeat: Codable {
     public let type: String
     /// <#Description#>
     public let daysOfWeek: [String]?
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - type: <#type description#>
+    ///   - daysOfWeek: <#daysOfWeek description#>
+    public init(
+        type: String,
+        daysOfWeek: [String]?
+    ) {
+        self.type = type
+        self.daysOfWeek = daysOfWeek
+    }
 }
