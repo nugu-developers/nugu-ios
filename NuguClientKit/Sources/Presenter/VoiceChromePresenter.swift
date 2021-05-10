@@ -323,6 +323,9 @@ private extension VoiceChromePresenter {
             switch notification.state {
             case .idle:
                 self.voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
+                    if notification.chips == nil {
+                        self?.nuguVoiceChrome.setChipsData([])
+                    }
                     self?.dismissVoiceChrome()
                 })
                 guard let voiceChromeDismissWorkItem = self.voiceChromeDismissWorkItem else { break }
