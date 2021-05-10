@@ -277,7 +277,7 @@ private extension Downstream.Attachment {
 
 // MARK: - Downstream.Directive initializer
 
-private extension Downstream.Directive {
+public extension Downstream.Directive {
     init?(directiveDictionary: [String: AnyHashable]) {
         guard let headerDictionary = directiveDictionary["header"] as? [String: AnyHashable],
             let headerData = try? JSONSerialization.data(withJSONObject: headerDictionary, options: []),

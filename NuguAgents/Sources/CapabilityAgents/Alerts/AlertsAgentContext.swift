@@ -44,6 +44,42 @@ public struct AlertsAgentContext: Codable {
         public let assetRequiredInMilliseconds: Int?
         /// <#Description#>
         public let assets: [AlertsAsset]
+        
+        /// <#Description#>
+        /// - Parameters:
+        ///   - playServiceId: <#playServiceId description#>
+        ///   - token: <#token description#>
+        ///   - alertType: <#alertType description#>
+        ///   - scheduledTime: <#scheduledTime description#>
+        ///   - activation: <#activation description#>
+        ///   - minDurationInSec: <#minDurationInSec description#>
+        ///   - repeat: <#repeat description#>
+        ///   - alarmResourceType: <#alarmResourceType description#>
+        ///   - assetRequiredInMilliseconds: <#assetRequiredInMilliseconds description#>
+        ///   - assets: <#assets description#>
+        public init(
+            playServiceId: String,
+            token: String,
+            alertType: String,
+            scheduledTime: String,
+            activation: Bool,
+            minDurationInSec: Int?,
+            `repeat`: AlertsRepeat?,
+            alarmResourceType: String?,
+            assetRequiredInMilliseconds: Int?,
+            assets: [AlertsAsset]
+        ) {
+            self.playServiceId = playServiceId
+            self.token = token
+            self.alertType = alertType
+            self.scheduledTime = scheduledTime
+            self.activation = activation
+            self.minDurationInSec = minDurationInSec
+            self.repeat = `repeat`
+            self.alarmResourceType = alarmResourceType
+            self.assetRequiredInMilliseconds = assetRequiredInMilliseconds
+            self.assets = assets
+        }
     }
     
     /// <#Description#>
@@ -61,4 +97,30 @@ public struct AlertsAgentContext: Codable {
     /// <#Description#>
     public let activeAlarmToken: String?
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - maxAlertCount: <#maxAlertCount description#>
+    ///   - maxAlarmCount: <#maxAlarmCount description#>
+    ///   - supportedTypes: <#supportedType description#>
+    ///   - supportedAlarmResourceTypes: <#supportedAlarmResourceTypes description#>
+    ///   - internalAlarms: <#internalAlarms description#>
+    ///   - allAlerts: <#allAlerts description#>
+    ///   - activeAlarmToken: <#activeAlarmToken description#>
+    public init(
+        maxAlertCount: Int,
+        maxAlarmCount: Int,
+        supportedTypes: [String],
+        supportedAlarmResourceTypes: [String],
+        internalAlarms: [[String: String]],
+        allAlerts: [Alert],
+        activeAlarmToken: String?
+    ) {
+        self.maxAlertCount = maxAlertCount
+        self.maxAlarmCount = maxAlarmCount
+        self.supportedTypes = supportedTypes
+        self.supportedAlarmResourceTypes = supportedAlarmResourceTypes
+        self.internalAlarms = internalAlarms
+        self.allAlerts = allAlerts
+        self.activeAlarmToken = activeAlarmToken
+    }
 }

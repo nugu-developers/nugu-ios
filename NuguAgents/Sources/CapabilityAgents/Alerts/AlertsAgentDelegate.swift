@@ -23,7 +23,6 @@ import NuguCore
 
 public protocol AlertsAgentDelegate: class {
     
-    
     /// Provide a context of `AlertsAgent`.
     ///
     /// This function should return as soon as possible to reduce request delay.
@@ -46,7 +45,8 @@ public protocol AlertsAgentDelegate: class {
     /// - Parameters:
     ///   - item: <#item description#>
     ///   - header: <#header description#>
-    func alertsAgentDidReceiveDeliveryAlertAsset(item: AlertsAgentDirectivePayload.DeliveryAlertAsset, header: Downstream.Header)
+    /// - Returns:If `false`, NUGU SDK handle it.
+    func alertsAgentDidReceiveDeliveryAlertAsset(item: AlertsAgentDirectivePayload.DeliveryAlertAsset, header: Downstream.Header) -> Bool
     
     /// <#Description#>
     /// - Parameters:

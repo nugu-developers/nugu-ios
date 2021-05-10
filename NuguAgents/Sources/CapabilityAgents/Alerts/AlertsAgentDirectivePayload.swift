@@ -19,6 +19,8 @@
 
 import Foundation
 
+import NuguCore
+
 /// <#Description#>
 public struct AlertsAgentDirectivePayload {
     
@@ -44,42 +46,6 @@ public struct AlertsAgentDirectivePayload {
         public let assetRequiredInMilliseconds: Int?
         /// <#Description#>
         public let assets: [AlertsAsset]
-        
-        /// <#Description#>
-        /// - Parameters:
-        ///   - playServiceId: <#playServiceId description#>
-        ///   - token: <#token description#>
-        ///   - alertType: <#alertType description#>
-        ///   - scheduledTime: <#scheduledTime description#>
-        ///   - activation: <#activation description#>
-        ///   - minDurationInSec: <#minDurationInSec description#>
-        ///   - repeat: <#repeat description#>
-        ///   - alarmResourceType: <#alarmResourceType description#>
-        ///   - assetRequiredInMilliseconds: <#assetRequiredInMilliseconds description#>
-        ///   - assets: <#assets description#>
-        public init(
-            playServiceId: String,
-            token: String,
-            alertType: String,
-            scheduledTime: String,
-            activation: Bool,
-            minDurationInSec: Int?,
-            `repeat`: AlertsRepeat?,
-            alarmResourceType: String?,
-            assetRequiredInMilliseconds: Int?,
-            assets: [AlertsAsset]
-        ) {
-            self.playServiceId = playServiceId
-            self.token = token
-            self.alertType = alertType
-            self.scheduledTime = scheduledTime
-            self.activation = activation
-            self.minDurationInSec = minDurationInSec
-            self.repeat = `repeat`
-            self.alarmResourceType = alarmResourceType
-            self.assetRequiredInMilliseconds = assetRequiredInMilliseconds
-            self.assets = assets
-        }
     }
     
     /// <#Description#>
@@ -88,15 +54,6 @@ public struct AlertsAgentDirectivePayload {
         public let playServiceId: String
         /// <#Description#>
         public let tokens: [String]
-        
-        /// <#Description#>
-        /// - Parameters:
-        ///   - playServiceId: <#playServiceId description#>
-        ///   - tokens: <#tokens description#>
-        public init(playServiceId: String, tokens: [String]) {
-            self.playServiceId = playServiceId
-            self.tokens = tokens
-        }
     }
     
     /// <#Description#>
@@ -106,7 +63,9 @@ public struct AlertsAgentDirectivePayload {
         /// <#Description#>
         public let token: String
         /// <#Description#>
-        public let assetDetails: [String: AnyHashable]?
+        private let assetDetails: [[String: AnyHashable]]?
+        /// <#Description#>
+        public let directives: [Downstream.Directive]?
         
         enum CodingKeys: String, CodingKey {
             case playServiceId
@@ -119,7 +78,19 @@ public struct AlertsAgentDirectivePayload {
             
             playServiceId = try container.decode(String.self, forKey: .playServiceId)
             token = try container.decode(String.self, forKey: .token)
-            assetDetails = try container.decodeIfPresent([String: AnyHashable].self, forKey: .assetDetails)
+            assetDetails = try container.decodeIfPresent([[String: AnyHashable]].self, forKey: .assetDetails)
+            
+            if let assets = assetDetails {
+                var directiveStore = [Downstream.Directive]()
+                assets
+                    .compactMap(Downstream.Directive.init)
+                    .forEach { directive in
+                        directiveStore.append(directive)
+                }
+                directives = directiveStore
+            } else {
+                directives = nil
+            }
         }
         
         public func encode(to encoder: Encoder) throws {
