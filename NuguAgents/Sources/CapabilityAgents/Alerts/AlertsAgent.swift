@@ -83,7 +83,6 @@ public class AlertsAgent: AlertsAgentProtocol {
 // MARK: - AlertsAgentProtocol
 
 public extension AlertsAgent {
-    // TODO: - 검토필요
     @discardableResult func requestAlertAssetRequired(
         playServiceId: String,
         token: String,
