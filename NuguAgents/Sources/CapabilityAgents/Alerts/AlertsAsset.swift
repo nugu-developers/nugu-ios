@@ -24,7 +24,7 @@ public struct AlertsAsset: Codable {
     /// <#Description#>
     public let type: String
     /// <#Description#>
-    public let resource: String? // TODO: - Dynamic object
+    public let resourceDictionary: [String: AnyHashable]?
     
     /// <#Description#>
     /// - Parameters:
@@ -32,9 +32,39 @@ public struct AlertsAsset: Codable {
     ///   - resource: <#resource description#>
     public init(
         type: String,
-        resource: String?
+        resourceDictionary: [String: AnyHashable]? = nil
     ) {
         self.type = type
-        self.resource = resource
+        self.resourceDictionary = resourceDictionary
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case type
+        case resource
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "Routine.Start":
+            resourceDictionary = try container.decode([String: AnyHashable].self, forKey: .resource)
+        default:
+            resourceDictionary = nil
+        }
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(type, forKey: .type)
+        
+        switch type {
+        case "Routine.Start":
+            try container.encodeIfPresent(resourceDictionary, forKey: .resource)
+        default:
+            break
+        }
     }
 }
