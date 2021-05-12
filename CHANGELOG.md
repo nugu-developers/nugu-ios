@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [0.30.4](https://github.com/nugu-developers/nugu-ios/releases/tag/0.30.4)
+Released on 2021-05-12
+### SDK
+#### Fixed
+- Change name to separate between computed and argument values (#828)
+
 ## [0.30.3](https://github.com/nugu-developers/nugu-ios/releases/tag/0.30.3)
 Released on 2021-04-13
 ### SDK

@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -27,7 +27,7 @@
 			<string>com.sktelecom.romaine.SampleApp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>TODO: Put your own scheme of redirect uri issued from https://developers.nugu.co.kr/#/sdk/pocList(ex> nugu.user.app.sample.sdk.ios)</string>
+				<string>TODO: Put your own scheme of redirect uri issued from https://developers.nugu.co.kr/#/sdk/pocList(ex&gt; nugu.user.app.sample.sdk.ios)</string>
 			</array>
 		</dict>
 	</array>
