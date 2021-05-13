@@ -59,7 +59,7 @@ public struct AlertsAgentDirectivePayload {
         ///   - alarmResourceType: <#alarmResourceType description#>
         ///   - assetRequiredInMilliseconds: <#assetRequiredInMilliseconds description#>
         ///   - assets: <#assets description#>
-        init(
+        public init(
             playServiceId: String,
             token: String,
             alertType: String,
@@ -95,7 +95,7 @@ public struct AlertsAgentDirectivePayload {
         /// - Parameters:
         ///   - playServiceId: <#playServiceId description#>
         ///   - tokens: <#tokens description#>
-        init(
+        public init(
             playServiceId: String,
             tokens: [String]
         ) {
