@@ -38,7 +38,7 @@ public class DialogStateAggregator: TypedNotifyable {
 
     private var dialogState: DialogState = .idle {
         didSet {
-            log.info("from \(oldValue) to \(dialogState) isMultiturn \(isMultiturn)")
+            log.info("dialogState is changed from \(oldValue) to \(dialogState) isMultiturn \(isMultiturn)")
 
             multiturnSpeakingToListeningTimer?.cancel()
             
@@ -46,7 +46,7 @@ public class DialogStateAggregator: TypedNotifyable {
             switch currentChips?.item.target {
             case .dialog where sessionManager.activeSessions.last?.dialogRequestId == currentChips?.dialogRequestId:
                 chipsItem = currentChips?.item
-            case .listen where isMultiturn:
+            case .listen where isMultiturn && dialogState == .listening:
                 chipsItem = currentChips?.item
             case .speaking where dialogState == .speaking:
                 chipsItem = currentChips?.item
