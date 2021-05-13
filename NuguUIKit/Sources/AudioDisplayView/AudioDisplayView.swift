@@ -116,6 +116,9 @@ public class AudioDisplayView: UIView {
         guard isBarMode == false else {
             return false
         }
+        if lyricsData == nil || lyricsData?.lyricsType == "NONE" {
+            return false
+        }
         showLyrics()
         return true
     }
