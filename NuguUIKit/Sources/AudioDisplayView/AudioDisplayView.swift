@@ -233,8 +233,6 @@ public extension AudioDisplayView {
         switch audioPlayerDisplayTemplate.type {
         case "AudioPlayer.Template1":
             return AudioPlayer1View.self
-        case "AudioPlayer.Template2":
-            return AudioPlayer2View.self
         default:
             return nil
         }
@@ -246,8 +244,6 @@ public extension AudioDisplayView {
         switch audioPlayerDisplayTemplate.type {
         case "AudioPlayer.Template1":
             displayAudioPlayerView = AudioPlayer1View(frame: frame)
-        case "AudioPlayer.Template2":
-            displayAudioPlayerView = AudioPlayer2View(frame: frame)
         default:
             displayAudioPlayerView = nil
         }
