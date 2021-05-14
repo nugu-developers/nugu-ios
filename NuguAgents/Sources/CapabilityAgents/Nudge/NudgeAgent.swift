@@ -87,6 +87,7 @@ extension NudgeAgent {
             }
             
             self?.nudgeInfo = nudgeInfo
+            self?.dialogRequestId = directive.header.dialogRequestId
         }
     }
     
