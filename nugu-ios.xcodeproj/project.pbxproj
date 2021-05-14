@@ -407,7 +407,6 @@
 		75A46F04257259AD004BB472 /* AudioPlayerBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75962B0A24763E120003B189 /* AudioPlayerBarView.xib */; };
 		75A46F05257259AD004BB472 /* AudioDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500490F24766B1500B73DD8 /* AudioDisplayView.swift */; };
 		75A46F06257259AD004BB472 /* AudioPlayerUpdateMetadataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15050922416272400671568 /* AudioPlayerUpdateMetadataPayload.swift */; };
-		75A46F07257259AD004BB472 /* AudioPlayer2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75032BC0246B90650077B824 /* AudioPlayer2Template.swift */; };
 		75A46F08257259AD004BB472 /* DisplayIdleBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75032BB3246A32CD0077B824 /* DisplayIdleBar.xib */; };
 		75A46F09257259AD004BB472 /* AudioPlayerBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75962B0824763E010003B189 /* AudioPlayerBarView.swift */; };
 		75A46F0B257259AD004BB472 /* DisplayTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CE55A246E849900E68733 /* DisplayTitleView.swift */; };
@@ -1120,7 +1119,6 @@
 		75021EB725945E7B0014537C /* AudioDisplayViewPresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayViewPresenterDelegate.swift; sourceTree = "<group>"; };
 		75032BB1246A32B60077B824 /* DisplayIdleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayIdleBar.swift; sourceTree = "<group>"; };
 		75032BB3246A32CD0077B824 /* DisplayIdleBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayIdleBar.xib; sourceTree = "<group>"; };
-		75032BC0246B90650077B824 /* AudioPlayer2Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer2Template.swift; sourceTree = "<group>"; };
 		75032BC1246B90650077B824 /* AudioPlayer1Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer1Template.swift; sourceTree = "<group>"; };
 		75047D9724F4DE8E007BBF22 /* responsefail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = responsefail.wav; sourceTree = "<group>"; };
 		75047D9824F4DE8F007BBF22 /* listening_end.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = listening_end.wav; sourceTree = "<group>"; };
@@ -2361,7 +2359,6 @@
 			isa = PBXGroup;
 			children = (
 				75032BC1246B90650077B824 /* AudioPlayer1Template.swift */,
-				75032BC0246B90650077B824 /* AudioPlayer2Template.swift */,
 				A15050CE241B2B7000671568 /* AudioPlayerLyricsTemplate.swift */,
 				A15050D0241B2BCF00671568 /* AudioPlayerSettingsTemplate.swift */,
 				A15050922416272400671568 /* AudioPlayerUpdateMetadataPayload.swift */,
@@ -3725,7 +3722,6 @@
 				75A46F0F257259AD004BB472 /* DisplayCommonTemplate.swift in Sources */,
 				75A46F1C257259DC004BB472 /* ImageDataLoader.swift in Sources */,
 				75A46F01257259AD004BB472 /* AudioPlayer1Template.swift in Sources */,
-				75A46F07257259AD004BB472 /* AudioPlayer2Template.swift in Sources */,
 				75A46EE825725986004BB472 /* Int+Convenience.swift in Sources */,
 				1FFFF476237580F500C9A177 /* NuguButton.swift in Sources */,
 				75A46F882572A09E004BB472 /* AudioPlayerBarViewDelegate.swift in Sources */,
