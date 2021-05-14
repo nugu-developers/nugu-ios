@@ -410,13 +410,11 @@
 		75A46F07257259AD004BB472 /* AudioPlayer2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75032BC0246B90650077B824 /* AudioPlayer2Template.swift */; };
 		75A46F08257259AD004BB472 /* DisplayIdleBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75032BB3246A32CD0077B824 /* DisplayIdleBar.xib */; };
 		75A46F09257259AD004BB472 /* AudioPlayerBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75962B0824763E010003B189 /* AudioPlayerBarView.swift */; };
-		75A46F0A257259AD004BB472 /* AudioPlayer2View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75962AF82475EDD10003B189 /* AudioPlayer2View.xib */; };
 		75A46F0B257259AD004BB472 /* DisplayTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CE55A246E849900E68733 /* DisplayTitleView.swift */; };
 		75A46F0C257259AD004BB472 /* DisplayIdleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75032BB1246A32B60077B824 /* DisplayIdleBar.swift */; };
 		75A46F0D257259AD004BB472 /* AudioPlayer1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75962AF22475ED930003B189 /* AudioPlayer1View.swift */; };
 		75A46F0E257259AD004BB472 /* AudioPlayerLyricsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15050CE241B2B7000671568 /* AudioPlayerLyricsTemplate.swift */; };
 		75A46F0F257259AD004BB472 /* DisplayCommonTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4B7237672F100C9A177 /* DisplayCommonTemplate.swift */; };
-		75A46F10257259AD004BB472 /* AudioPlayer2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75962AF62475EDC30003B189 /* AudioPlayer2View.swift */; };
 		75A46F11257259AD004BB472 /* FullLyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75962AFA24762ECB0003B189 /* FullLyricsView.swift */; };
 		75A46F1C257259DC004BB472 /* ImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF4C4237672F100C9A177 /* ImageDataLoader.swift */; };
 		75A46F2825725A55004BB472 /* NuguUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A46F2725725A55004BB472 /* NuguUIKit.swift */; };
@@ -1154,8 +1152,6 @@
 		758E8E3425710D2D00F12268 /* Container+Merge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+Merge.swift"; sourceTree = "<group>"; };
 		75962AF22475ED930003B189 /* AudioPlayer1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer1View.swift; sourceTree = "<group>"; };
 		75962AF42475EDB20003B189 /* AudioPlayer1View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioPlayer1View.xib; sourceTree = "<group>"; };
-		75962AF62475EDC30003B189 /* AudioPlayer2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer2View.swift; sourceTree = "<group>"; };
-		75962AF82475EDD10003B189 /* AudioPlayer2View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioPlayer2View.xib; sourceTree = "<group>"; };
 		75962AFA24762ECB0003B189 /* FullLyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullLyricsView.swift; sourceTree = "<group>"; };
 		75962AFC24762EDF0003B189 /* FullLyricsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullLyricsView.xib; sourceTree = "<group>"; };
 		75962B0824763E010003B189 /* AudioPlayerBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerBarView.swift; sourceTree = "<group>"; };
@@ -2778,8 +2774,6 @@
 				75A46F5B2572962E004BB472 /* AudioDisplayViewDelegate.swift */,
 				75962AF22475ED930003B189 /* AudioPlayer1View.swift */,
 				75962AF42475EDB20003B189 /* AudioPlayer1View.xib */,
-				75962AF62475EDC30003B189 /* AudioPlayer2View.swift */,
-				75962AF82475EDD10003B189 /* AudioPlayer2View.xib */,
 				752CE559246E845E00E68733 /* ComponentViews */,
 				1FFFF4B4237672F100C9A177 /* Models */,
 			);
@@ -3412,7 +3406,6 @@
 				75A46F02257259AD004BB472 /* DisplayTitleView.xib in Resources */,
 				7522203E244F632800192D88 /* NuguChipsView.xib in Resources */,
 				75C61BB524C6DB8700265228 /* 01_intro.json in Resources */,
-				75A46F0A257259AD004BB472 /* AudioPlayer2View.xib in Resources */,
 				1FFFF478237580F500C9A177 /* Assets.xcassets in Resources */,
 				75C61BB924C6DB8700265228 /* 03_transition.json in Resources */,
 				75C61BB424C6DB8700265228 /* 04_active.json in Resources */,
@@ -3732,7 +3725,6 @@
 				75A46F0F257259AD004BB472 /* DisplayCommonTemplate.swift in Sources */,
 				75A46F1C257259DC004BB472 /* ImageDataLoader.swift in Sources */,
 				75A46F01257259AD004BB472 /* AudioPlayer1Template.swift in Sources */,
-				75A46F10257259AD004BB472 /* AudioPlayer2View.swift in Sources */,
 				75A46F07257259AD004BB472 /* AudioPlayer2Template.swift in Sources */,
 				75A46EE825725986004BB472 /* Int+Convenience.swift in Sources */,
 				1FFFF476237580F500C9A177 /* NuguButton.swift in Sources */,

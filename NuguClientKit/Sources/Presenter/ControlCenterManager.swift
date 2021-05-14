@@ -185,12 +185,6 @@ private extension ControlCenterManager {
                 return nil
             }
             return (payload.template.title.text, payload.template.content.title, payload.template.content.imageUrl)
-        case "AudioPlayer.Template2":
-            guard let payload = try? JSONDecoder().decode(AudioPlayer2Template.self, from: payloadAsData) else {
-                remove()
-                return nil
-            }
-            return (payload.template.title.text, payload.template.content.title, payload.template.content.imageUrl)
         default:
             remove()
             return nil
