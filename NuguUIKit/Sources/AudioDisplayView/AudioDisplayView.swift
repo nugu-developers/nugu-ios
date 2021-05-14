@@ -70,7 +70,10 @@ public class AudioDisplayView: UIView {
         return audioPlayerBarViewContainerView.isHidden == false
     }
     public var isLyricsVisible: Bool {
-        return lyricsView.isHidden == false
+        if isBarMode == true {
+            return false
+        }
+        return fullLyricsView.isHidden == false
     }
     public var audioPlayerState: AudioPlayerState? {
         didSet {
@@ -114,6 +117,9 @@ public class AudioDisplayView: UIView {
     // Overridable Public Methods    
     public func shouldShowLyrics() -> Bool {
         guard isBarMode == false else {
+            return false
+        }
+        if lyricsData == nil || lyricsData?.lyricsType == "NONE" {
             return false
         }
         showLyrics()
