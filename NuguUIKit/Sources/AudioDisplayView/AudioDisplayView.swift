@@ -70,7 +70,10 @@ public class AudioDisplayView: UIView {
         return audioPlayerBarViewContainerView.isHidden == false
     }
     public var isLyricsVisible: Bool {
-        return lyricsView.isHidden == false
+        if isBarMode == true {
+            return false
+        }
+        return fullLyricsView.isHidden == false
     }
     public var audioPlayerState: AudioPlayerState? {
         didSet {
