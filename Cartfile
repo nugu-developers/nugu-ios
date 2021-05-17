@@ -1,4 +1,4 @@
-github "ReactiveX/RxSwift" ~> 6.0
+github "ReactiveX/RxSwift" ~> 5.0
 github "nugu-developers/natty-log-ios" ~> 1.0
 github "nugu-developers/silvertray-ios" ~> 1.0
 github "airbnb/lottie-ios" ~> 3.0

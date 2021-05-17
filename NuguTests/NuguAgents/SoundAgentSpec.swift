@@ -51,7 +51,7 @@ class SoundAgentSpec: QuickSpec {
             describe("context") {
                 var contextInfo: ContextInfo?
                 
-                waitUntil(timeout: 0.5) { (done) in
+                waitUntil(timeout: .milliseconds(500)) { (done) in
                     soundAgent.contextInfoProvider { (context) in
                         contextInfo = context
                         done()
@@ -93,7 +93,7 @@ class SoundAgentSpec: QuickSpec {
                     }
                     
                     it("should beep") {
-                        expect(self.state).toEventually(contain(.playing), timeout: 3.0)
+                        expect(self.state).toEventually(contain(.playing), timeout: .seconds(3))
                         // TODO: Travis does not support playing `AVPlayerItem`.
                         // expect(self.state).toEventually(equal([.playing, .finished]), timeout: 3.0)
                     }

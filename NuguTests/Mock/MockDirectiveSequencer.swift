@@ -38,4 +38,8 @@ class MockDirectiveSequencer: DirectiveSequenceable {
     func remove(directiveHandleInfos: DirectiveHandleInfos) {
         //
     }
+    
+    func cancelDirective(dialogRequestId: String) {
+        //
+    }
 }
