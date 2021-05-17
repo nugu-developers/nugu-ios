@@ -48,7 +48,7 @@ class AudioPlayerAgentSpec: QuickSpec {
             describe("context") {
                 var contextInfo: ContextInfo?
                 
-                waitUntil(timeout: 0.5) { (done) in
+                waitUntil(timeout: .milliseconds(500)) { (done) in
                     audioPlayerAgent.contextInfoProvider { (context) in
                         contextInfo = context
                         done()
