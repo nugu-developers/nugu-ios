@@ -197,6 +197,12 @@ final class AudioPlayer1View: AudioDisplayView {
         super.updateFullLyrics()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            if self.lyricsData == nil || self.lyricsData?.lyricsType == "NONE" {
+                self.fullLyricsView.noLyricsLabel.isHidden = false
+                return
+            } else {
+                self.fullLyricsView.noLyricsLabel.isHidden = true
+            }
             if self.lyricsIndex != -1 {
                 self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
             }
@@ -207,6 +213,12 @@ final class AudioPlayer1View: AudioDisplayView {
         super.showLyrics()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            if self.lyricsData == nil || self.lyricsData?.lyricsType == "NONE" {
+                self.fullLyricsView.noLyricsLabel.isHidden = false
+                return
+            } else {
+                self.fullLyricsView.noLyricsLabel.isHidden = true
+            }
             if self.lyricsIndex != -1 {
                 self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
             }

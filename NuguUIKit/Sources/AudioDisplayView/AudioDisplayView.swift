@@ -119,9 +119,6 @@ public class AudioDisplayView: UIView {
         guard isBarMode == false else {
             return false
         }
-        if lyricsData == nil || lyricsData?.lyricsType == "NONE" {
-            return false
-        }
         showLyrics()
         return true
     }
@@ -185,13 +182,6 @@ public class AudioDisplayView: UIView {
     func updateFullLyrics() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            guard self.lyricsData?.lyricsInfoList != nil,
-                  self.lyricsData?.lyricsType != "NONE" else {
-                self.fullLyricsView.isHidden = true
-                self.fullAudioPlayerContainerView.sendSubviewToBack(self.fullLyricsView)
-                self.contentStackView.isHidden = false
-                return
-            }
             self.fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
             self.fullLyricsView.headerLabel.text = self.lyricsData?.title
             self.lyricsData?.lyricsInfoList.forEach { lyricsInfo in
