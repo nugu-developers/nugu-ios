@@ -45,6 +45,8 @@ public struct AlertsAgentDirectivePayload {
         /// <#Description#>
         public let assetRequiredInMilliseconds: Int?
         /// <#Description#>
+        public let name: String?
+        /// <#Description#>
         public let assets: [AlertsAsset]
         
         /// <#Description#>
@@ -58,6 +60,7 @@ public struct AlertsAgentDirectivePayload {
         ///   - repeat: <#repeat description#>
         ///   - alarmResourceType: <#alarmResourceType description#>
         ///   - assetRequiredInMilliseconds: <#assetRequiredInMilliseconds description#>
+        ///   - name: <#name description#>
         ///   - assets: <#assets description#>
         public init(
             playServiceId: String,
@@ -69,6 +72,7 @@ public struct AlertsAgentDirectivePayload {
             repeat: AlertsRepeat?,
             alarmResourceType: String?,
             assetRequiredInMilliseconds: Int?,
+            name: String?,
             assets: [AlertsAsset]
         ) {
             self.playServiceId = playServiceId
@@ -80,6 +84,7 @@ public struct AlertsAgentDirectivePayload {
             self.repeat = `repeat`
             self.alarmResourceType = alarmResourceType
             self.assetRequiredInMilliseconds = assetRequiredInMilliseconds
+            self.name = name
             self.assets = assets
         }
     }

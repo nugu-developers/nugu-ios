@@ -43,6 +43,8 @@ public struct AlertsAgentContext: Codable {
         /// <#Description#>
         public let assetRequiredInMilliseconds: Int?
         /// <#Description#>
+        public let name: String?
+        /// <#Description#>
         public let assets: [AlertsAsset]
         
         /// <#Description#>
@@ -56,6 +58,7 @@ public struct AlertsAgentContext: Codable {
         ///   - repeat: <#repeat description#>
         ///   - alarmResourceType: <#alarmResourceType description#>
         ///   - assetRequiredInMilliseconds: <#assetRequiredInMilliseconds description#>
+        ///   - name: <#name description#>
         ///   - assets: <#assets description#>
         public init(
             playServiceId: String,
@@ -67,6 +70,7 @@ public struct AlertsAgentContext: Codable {
             `repeat`: AlertsRepeat?,
             alarmResourceType: String?,
             assetRequiredInMilliseconds: Int?,
+            name: String?,
             assets: [AlertsAsset]
         ) {
             self.playServiceId = playServiceId
@@ -78,6 +82,7 @@ public struct AlertsAgentContext: Codable {
             self.repeat = `repeat`
             self.alarmResourceType = alarmResourceType
             self.assetRequiredInMilliseconds = assetRequiredInMilliseconds
+            self.name = name
             self.assets = assets
         }
     }
