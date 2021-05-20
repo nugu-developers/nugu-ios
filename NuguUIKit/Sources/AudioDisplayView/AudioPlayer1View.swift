@@ -215,9 +215,8 @@ final class AudioPlayer1View: AudioDisplayView {
             if self.lyricsData == nil || self.lyricsData?.lyricsType == "NONE" {
                 self.fullLyricsView.noLyricsLabel.isHidden = false
                 return
-            } else {
-                self.fullLyricsView.noLyricsLabel.isHidden = true
             }
+            self.fullLyricsView.noLyricsLabel.isHidden = true
             if self.lyricsIndex != -1 {
                 self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
             }
