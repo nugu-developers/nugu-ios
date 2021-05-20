@@ -90,7 +90,8 @@ public extension AlertsAgent {
     ) -> String {
         let event = Event(
             typeInfo: .alertAssetRequired(token: token),
-            playServiceId: playServiceId
+            playServiceId: playServiceId,
+            referrerDialogRequestId: nil
         )
         
         return sendCompactContextEvent(event.rx).dialogRequestId
@@ -115,7 +116,8 @@ private extension AlertsAgent {
             let isSuccess = delegate.alertsAgentDidReceiveSetAlert(item: setAlertItem, header: directive.header)
             let event = Event(
                 typeInfo: isSuccess ? .setAlertSucceeded(token: setAlertItem.token) : .setAlertFailed(token: setAlertItem.token),
-                playServiceId: setAlertItem.playServiceId
+                playServiceId: setAlertItem.playServiceId,
+                referrerDialogRequestId: directive.header.dialogRequestId
             )
             
             self.sendCompactContextEvent(event.rx)
@@ -137,7 +139,8 @@ private extension AlertsAgent {
             let isSuccess = delegate.alertsAgentDidReceiveDeleteAlerts(item: deleteAlertItem, header: directive.header)
             let event = Event(
                 typeInfo: isSuccess ? .deleteAlertsSucceeded(tokens: deleteAlertItem.tokens) : .deleteAlertsFailed(tokens: deleteAlertItem.tokens),
-                playServiceId: deleteAlertItem.playServiceId
+                playServiceId: deleteAlertItem.playServiceId,
+                referrerDialogRequestId: directive.header.dialogRequestId
             )
             
             self.sendCompactContextEvent(event.rx)
@@ -181,7 +184,8 @@ private extension AlertsAgent {
             let isSuccess = delegate.alertsAgentDidReceiveSetSnooze(item: setSnoozeItem, header: directive.header)
             let event = Event(
                 typeInfo: isSuccess ? .setSnoozeSucceeded(token: setSnoozeItem.token) : .setSnoozeFailed(token: setSnoozeItem.token),
-                playServiceId: setSnoozeItem.playServiceId
+                playServiceId: setSnoozeItem.playServiceId,
+                referrerDialogRequestId: directive.header.dialogRequestId
             )
             
             self.sendCompactContextEvent(event.rx)

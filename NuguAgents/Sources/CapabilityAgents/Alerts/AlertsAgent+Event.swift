@@ -23,6 +23,7 @@ extension AlertsAgent {
     struct Event {
         let typeInfo: TypeInfo
         let playServiceId: String
+        let referrerDialogRequestId: String?
         
         enum TypeInfo {
             case setAlertSucceeded(token: String)
