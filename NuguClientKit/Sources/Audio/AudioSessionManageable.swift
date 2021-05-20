@@ -20,7 +20,7 @@
 
 import Foundation
 
-public protocol AudioSessionManageable: class {
+public protocol AudioSessionManageable: AnyObject {
     var delegate: AudioSessionManagerDelegate? { get set }
     
     func isCarplayConnected() -> Bool

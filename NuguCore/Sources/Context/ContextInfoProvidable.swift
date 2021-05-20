@@ -23,7 +23,7 @@ import Foundation
 public typealias ContextInfoProviderType = (_ completion: @escaping (ContextInfo?) -> Void) -> Void
 
 /// ContextInfoProvidable may be capability agent whose context needs to be sent to the server.
-public protocol ContextInfoProvidable: class {
+public protocol ContextInfoProvidable: AnyObject {
      /// A request to provide the context.
      ///
      /// It should perform minimum processing and return quickly

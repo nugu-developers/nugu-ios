@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 import NuguUtils
 
-protocol RoutineExecuterDelegate: class {
+protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterDidChange(state: RoutineState)
 
     func routineExecuterShouldRequestAction(

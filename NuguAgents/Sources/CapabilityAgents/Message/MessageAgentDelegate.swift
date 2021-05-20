@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 /// The `MessageAgentDelegate` protocol defines methods that a delegate of a `MessageAgent` object can implement to receive directives or request context.
-public protocol MessageAgentDelegate: class {
+public protocol MessageAgentDelegate: AnyObject {
     
     /// Provide a context of `MessageAgent`.
     /// This function should return as soon as possible to reduce request delay.
