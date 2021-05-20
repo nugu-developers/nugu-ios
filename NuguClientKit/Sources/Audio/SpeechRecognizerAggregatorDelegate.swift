@@ -20,6 +20,6 @@
 
 import Foundation
 
-public protocol SpeechRecognizerAggregatorDelegate: class {
+public protocol SpeechRecognizerAggregatorDelegate: AnyObject {
     func speechRecognizerWillUseMic(requestingFocus: Bool)
 }

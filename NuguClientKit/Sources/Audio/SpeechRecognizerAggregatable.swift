@@ -23,7 +23,7 @@ import Foundation
 import NuguAgents
 import NuguCore
 
-public protocol SpeechRecognizerAggregatable: class {
+public protocol SpeechRecognizerAggregatable: AnyObject {
     var delegate: SpeechRecognizerAggregatorDelegate? { get set }
     var useKeywordDetector: Bool { get set }
     

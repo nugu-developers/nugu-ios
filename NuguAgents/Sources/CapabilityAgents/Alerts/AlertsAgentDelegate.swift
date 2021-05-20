@@ -21,7 +21,7 @@ import Foundation
 
 import NuguCore
 
-public protocol AlertsAgentDelegate: class {
+public protocol AlertsAgentDelegate: AnyObject {
     
     /// Provide a context of `AlertsAgent`.
     ///

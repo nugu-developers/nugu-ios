@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 /// The `PermissionAgentDelegate` protocol defines methods that a delegate of a `PermissionAgent` object can implement to receive directives or request context.
-public protocol PermissionAgentDelegate: class {
+public protocol PermissionAgentDelegate: AnyObject {
     /// Provide a context of `PermissionAgent`.
     /// This function should return as soon as possible to reduce request delay.
     func permissionAgentRequestContext() -> PermissionAgentContext
