@@ -61,6 +61,7 @@ class ServerSideEventReceiver {
                 error = $0
             }, onDispose: { [weak self] in
                 self?.state = .disconnected(error: error)
+                self?.serverPolicies = []
             })
     }
 
