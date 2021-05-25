@@ -56,7 +56,7 @@ public extension StreamDataRouter {
         serverInitiatedDirectiveCompletion = completion
         
         log.debug("start receive server initiated directives")
-
+        
         serverInitiatedDirectiveDisposable?.dispose()
         serverInitiatedDirectiveDisposable = serverInitiatedDirectiveReceiver.directive
             .subscribe(onNext: { [weak self] in

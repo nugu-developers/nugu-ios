@@ -58,12 +58,14 @@ class NuguApiProvider: NSObject {
     private var isCSLBEnabled = false {
         didSet {
             if oldValue != isCSLBEnabled {
-                log.debug("client side load balancing changed: \(oldValue) -> \(isCSLBEnabled)")
+                log.debug("client side load balancing: \(isCSLBEnabled)")
             }
             
-            if oldValue == false, isCSLBEnabled == true {
-                loadBalancedUrl = nil
-            }
+            // To connect last resource server, Comment out clearing loadBalancedUrl codes below.
+            // But it must be remained as a comment for history.
+//            if oldValue == false, isCSLBEnabled == true {
+//                loadBalancedUrl = nil
+//            }
         }
     }
     
