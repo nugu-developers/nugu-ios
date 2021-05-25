@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [1.2.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.2.0)
+Released on 2021-05-25
+### SDK
+#### Fixed
+- Fix Nudge-recommended chips issue
+- Apply Swift 5.5
+- Fix lylics issue
+
+#### Added
+- Add `AlertAgent`
+
+#### Update
+- Update Cookie settings in` NuguServiceWebView`
+
 ## [1.1.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.1.0)
 Released on 2021-04-27
 ### SDK
