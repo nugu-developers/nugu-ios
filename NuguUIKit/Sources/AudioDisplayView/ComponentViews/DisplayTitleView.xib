@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,26 +22,26 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RCu-8e-0xr" userLabel="TitleView">
-                    <rect key="frame" x="147" y="20" width="81" height="24"/>
+                    <rect key="frame" x="149" y="24" width="77" height="20"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="xPq-qL-Lhy">
-                            <rect key="frame" x="0.0" y="0.0" width="81" height="24"/>
+                            <rect key="frame" x="0.0" y="0.0" width="77" height="20"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zxt-H7-dbK">
-                                    <rect key="frame" x="0.0" y="0.0" width="25" height="24"/>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="nugu_logo_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="Zxt-H7-dbK">
+                                    <rect key="frame" x="0.0" y="0.0" width="21" height="20"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="Zxt-H7-dbK" secondAttribute="height" multiplier="1:1" constant="1" id="pNi-kk-6Xa"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dsb-gk-jQ1">
-                                    <rect key="frame" x="31" y="0.0" width="50" height="24"/>
+                                    <rect key="frame" x="27" y="0.0" width="50" height="20"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                     <color key="textColor" red="0.1333333333" green="0.1333333333" blue="0.1333333333" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="height" constant="24" id="dyb-9Q-Ktz"/>
+                                <constraint firstAttribute="height" constant="20" id="dyb-9Q-Ktz"/>
                             </constraints>
                         </stackView>
                     </subviews>
@@ -53,7 +53,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EiA-AV-psA">
-                    <rect key="frame" x="327" y="18" width="28" height="28"/>
+                    <rect key="frame" x="327" y="20" width="28" height="28"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="28" id="aom-Wy-KZZ"/>
                         <constraint firstAttribute="width" constant="28" id="csr-9v-8dj"/>
@@ -68,7 +68,7 @@
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="EiA-AV-psA" secondAttribute="trailing" constant="20" id="LDP-fH-8be"/>
                 <constraint firstItem="RCu-8e-0xr" firstAttribute="centerX" secondItem="QJf-e0-h4a" secondAttribute="centerX" id="PDJ-ez-5td"/>
-                <constraint firstItem="RCu-8e-0xr" firstAttribute="top" secondItem="QJf-e0-h4a" secondAttribute="top" constant="20" id="VcS-oB-dnF"/>
+                <constraint firstItem="RCu-8e-0xr" firstAttribute="top" secondItem="QJf-e0-h4a" secondAttribute="top" constant="24" id="VcS-oB-dnF"/>
                 <constraint firstItem="EiA-AV-psA" firstAttribute="centerY" secondItem="RCu-8e-0xr" secondAttribute="centerY" id="cfo-0K-vRH"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -77,5 +77,6 @@
     </objects>
     <resources>
         <image name="btn_close" width="24" height="24"/>
+        <image name="nugu_logo_placeholder" width="20" height="20"/>
     </resources>
 </document>
