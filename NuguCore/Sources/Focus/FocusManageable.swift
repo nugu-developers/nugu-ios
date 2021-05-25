@@ -22,7 +22,7 @@ import Foundation
 
 /// A FocusManager takes requests to acquire and release Channels and updates the focuses of other Channels based on
 /// their priorities so that the invariant that there can only be one Foreground Channel is held.
-public protocol FocusManageable: class {
+public protocol FocusManageable: AnyObject {
     /// The object that acts as the delegate of focus-manager
     var delegate: FocusDelegate? { get set }
     

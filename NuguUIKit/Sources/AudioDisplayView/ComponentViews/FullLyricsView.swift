@@ -24,6 +24,7 @@ final class FullLyricsView: UIView {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var noLyricsLabel: UILabel!
     
     var onViewDidTap: (() -> Void)?
     

@@ -20,7 +20,7 @@
 
 import Foundation
 
-public protocol AudioSessionManagerDelegate: class {
+public protocol AudioSessionManagerDelegate: AnyObject {
     func audioSessionInterrupted(type: AudioSessionManager.AudioSessionInterruptionType)
     func audioSessionRouteChanged(reason: AudioSessionManager.AudioSessionRouteChangeReason)
     func audioSessionWillDeactivate()

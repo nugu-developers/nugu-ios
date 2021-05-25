@@ -161,7 +161,7 @@ private extension TextAgent {
             defer { completion(.finished) }
             
             self?.textDispatchQueue.async { [weak self] in
-                guard let self = self, let delegate = self.delegate else { return }
+                guard let self = self else { return }
                 
                 if let interactionControl = payload.interactionControl {
                     self.interactionControlManager.start(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
@@ -178,7 +178,7 @@ private extension TextAgent {
                         break
                     }
                 }
-                guard delegate.textAgentShouldHandleTextRedirect(directive: directive) != false else {
+                guard self.delegate?.textAgentShouldHandleTextRedirect(directive: directive) != false else {
                     self.sendCompactContextEvent(Event(
                         typeInfo: .textRedirectFailed(token: payload.token, playServiceId: payload.playServiceId, errorCode: "NOT_SUPPORTED_STATE"),
                         referrerDialogRequestId: directive.header.dialogRequestId

@@ -23,7 +23,7 @@ import Foundation
 import NuguAgents
 import NuguCore
 
-public protocol SpeechRecognizerAggregatable: class {
+public protocol SpeechRecognizerAggregatable: AnyObject {
     var delegate: SpeechRecognizerAggregatorDelegate? { get set }
     var useKeywordDetector: Bool { get set }
     
@@ -35,7 +35,7 @@ public protocol SpeechRecognizerAggregatable: class {
     func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)?) -> String
     
     /// Start keyword detector with microphone.
-    func startListeningWithTrigger()
+    func startListeningWithTrigger(completion: ((Result<Void, Error>) -> Void)?)
     
     /// Stop microphone, keyword detector and ASR.
     func stopListening()
@@ -47,5 +47,9 @@ public extension SpeechRecognizerAggregatable {
     ///   - initiator: The options for recognition.
     func startListening(initiator: ASRInitiator) {
         startListening(initiator: initiator, completion: nil)
+    }
+    
+    func startListeningWithTrigger() {
+        startListeningWithTrigger(completion: nil)
     }
 }

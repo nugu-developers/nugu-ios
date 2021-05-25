@@ -23,7 +23,7 @@ import NuguAgents
 import NuguUIKit
 
 /// A delegate that application can extend to observe `DisplayWebViewPresenter` changes.
-public protocol AudioDisplayViewPresenterDelegate: class {
+public protocol AudioDisplayViewPresenterDelegate: AnyObject {
     /// Delegate method called when NuguButton in AudioDisplayView has been clicked.
     func onAudioDisplayViewNuguButtonClick()
     /// Delegate method called when chips button in AudioDisplayView has been clicked.

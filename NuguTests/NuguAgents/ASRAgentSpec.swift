@@ -52,7 +52,7 @@ class ASRAgentSpec: QuickSpec {
             describe("context") {
                 var contextInfo: ContextInfo?
                 
-                waitUntil(timeout: 0.5) { (done) in
+                waitUntil(timeout: .milliseconds(500)) { (done) in
                     asrAgent.contextInfoProvider { (context) in
                         contextInfo = context
                         done()

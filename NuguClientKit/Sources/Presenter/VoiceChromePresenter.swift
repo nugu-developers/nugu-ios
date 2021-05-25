@@ -323,6 +323,9 @@ private extension VoiceChromePresenter {
             switch notification.state {
             case .idle:
                 self.voiceChromeDismissWorkItem = DispatchWorkItem(block: { [weak self] in
+                    if notification.item == nil {
+                        self?.nuguVoiceChrome.setChipsData([])
+                    }
                     self?.dismissVoiceChrome()
                 })
                 guard let voiceChromeDismissWorkItem = self.voiceChromeDismissWorkItem else { break }
@@ -339,9 +342,10 @@ private extension VoiceChromePresenter {
                     try? self.showVoiceChrome()
                     self.nuguVoiceChrome.changeState(state: .speaking)
                     if let chips = notification.item?.chips {
+                        let nudgeList = chips.filter { $0.type == .nudge }.map { ($0.text, $0.token) }
                         let actionList = chips.filter { $0.type == .action }.map { ($0.text, $0.token) }
                         let normalList = chips.filter { $0.type == .general }.map { ($0.text, $0.token) }
-                        self.setChipsButton(actionList: actionList, normalList: normalList)
+                        self.setChipsButton(nudgeList: nudgeList, actionList: actionList, normalList: normalList)
                     }
                 }
             case .listening:

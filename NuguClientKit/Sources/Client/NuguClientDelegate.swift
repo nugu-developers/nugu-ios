@@ -23,7 +23,7 @@ import Foundation
 import NuguCore
 
 /// <#Description#>
-public protocol NuguClientDelegate: class {
+public protocol NuguClientDelegate: AnyObject {
     // audio session related
     /// Notify that  nugu client will play some audio
     func nuguClientWillRequireAudioSession() -> Bool

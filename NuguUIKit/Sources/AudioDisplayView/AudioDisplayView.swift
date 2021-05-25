@@ -70,7 +70,10 @@ public class AudioDisplayView: UIView {
         return audioPlayerBarViewContainerView.isHidden == false
     }
     public var isLyricsVisible: Bool {
-        return lyricsView.isHidden == false
+        if isBarMode == true {
+            return false
+        }
+        return fullLyricsView.isHidden == false
     }
     public var audioPlayerState: AudioPlayerState? {
         didSet {
@@ -179,13 +182,6 @@ public class AudioDisplayView: UIView {
     func updateFullLyrics() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            guard self.lyricsData?.lyricsInfoList != nil,
-                  self.lyricsData?.lyricsType != "NONE" else {
-                self.fullLyricsView.isHidden = true
-                self.fullAudioPlayerContainerView.sendSubviewToBack(self.fullLyricsView)
-                self.contentStackView.isHidden = false
-                return
-            }
             self.fullLyricsView.stackView.arrangedSubviews.filter { $0.isKind(of: UILabel.self) }.forEach { $0.removeFromSuperview() }
             self.fullLyricsView.headerLabel.text = self.lyricsData?.title
             self.lyricsData?.lyricsInfoList.forEach { lyricsInfo in
@@ -227,8 +223,6 @@ public extension AudioDisplayView {
         switch audioPlayerDisplayTemplate.type {
         case "AudioPlayer.Template1":
             return AudioPlayer1View.self
-        case "AudioPlayer.Template2":
-            return AudioPlayer2View.self
         default:
             return nil
         }
@@ -240,8 +234,6 @@ public extension AudioDisplayView {
         switch audioPlayerDisplayTemplate.type {
         case "AudioPlayer.Template1":
             displayAudioPlayerView = AudioPlayer1View(frame: frame)
-        case "AudioPlayer.Template2":
-            displayAudioPlayerView = AudioPlayer2View(frame: frame)
         default:
             displayAudioPlayerView = nil
         }

@@ -22,7 +22,7 @@ import Foundation
 
 /// Manage capability agent's context.
 /// Context is a container used to communicate the state of the capability agents to server.
-public protocol ContextManageable: class {
+public protocol ContextManageable: AnyObject {
     /// Add `ContextInfoProvidable` to `ContextManager`
     ///
     /// When the context manager receives a getContexts request it queries the registered `ContextInfoProvidable` for updated context.

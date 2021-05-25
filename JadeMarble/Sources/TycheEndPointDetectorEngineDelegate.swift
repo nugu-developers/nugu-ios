@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public protocol TycheEndPointDetectorEngineDelegate: class {
+public protocol TycheEndPointDetectorEngineDelegate: AnyObject {
     /// <#Description#>
     /// - Parameter state: state description
     func tycheEndPointDetectorEngineDidChange(state: TycheEndPointDetectorEngine.State)

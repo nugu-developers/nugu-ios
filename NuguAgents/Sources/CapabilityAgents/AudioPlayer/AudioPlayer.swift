@@ -25,7 +25,7 @@ import NuguUtils
 
 import RxSwift
 
-protocol AudioPlayerProgressDelegate: class {
+protocol AudioPlayerProgressDelegate: AnyObject {
     func audioPlayerDidReportDelay(_ player: AudioPlayer)
     func audioPlayerDidReportInterval(_ player: AudioPlayer)
 }

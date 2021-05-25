@@ -21,7 +21,7 @@
 import Foundation
 
 /// An delegate that application should extend to provide access token.
-public protocol AuthorizationStoreDelegate: class {
+public protocol AuthorizationStoreDelegate: AnyObject {
     /// Provides an access token from cache(ex> `UserDefault`).
     ///
     /// - returns: The current authorization token.

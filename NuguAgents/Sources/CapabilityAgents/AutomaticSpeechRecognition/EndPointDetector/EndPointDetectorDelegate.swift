@@ -20,7 +20,7 @@
 
 import Foundation
 
-protocol EndPointDetectorDelegate: class {
+protocol EndPointDetectorDelegate: AnyObject {
     func endPointDetectorStateChanged(_ state: EndPointDetectorState)
     func endPointDetectorDidError()
     func endPointDetectorSpeechDataExtracted(speechData: Data)

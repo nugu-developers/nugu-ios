@@ -21,7 +21,7 @@
 import Foundation
 
 /// The methods that you use to receive location information from an associated `LocationAgent` object.
-public protocol LocationAgentDelegate: class {
+public protocol LocationAgentDelegate: AnyObject {
     
     /// It called when need location information for using nugu service.
     ///

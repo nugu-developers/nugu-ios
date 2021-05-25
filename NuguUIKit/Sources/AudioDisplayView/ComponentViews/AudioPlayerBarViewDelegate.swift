@@ -18,7 +18,7 @@
 //  limitations under the License.
 //
 
-protocol AudioPlayerBarViewDelegate: class {
+protocol AudioPlayerBarViewDelegate: AnyObject {
     func onViewTap()
     func onCloseButtonClick()
     func onPreviousButtonClick()

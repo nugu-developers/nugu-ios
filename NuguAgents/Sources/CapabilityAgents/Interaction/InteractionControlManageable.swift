@@ -23,7 +23,7 @@ import Foundation
 import NuguUtils
 
 /// <#Description#>
-public protocol InteractionControlManageable: class, TypedNotifyable {
+public protocol InteractionControlManageable: AnyObject, TypedNotifyable {
     /// <#Description#>
     /// - Parameters:
     ///   - mode: <#mode description#>

@@ -233,16 +233,17 @@ extension StreamDataRouter {
                     return
             }
             
-            directiveArray
-                .compactMap(Downstream.Directive.init)
-                .forEach { directive in
-                    log.debug("Directive: \(directive.header)")
-                    self.notificationQueue.async { [weak self] in
-                        self?.post(NuguCoreNotification.StreamDataRoute.ReceivedDirective(directive: directive))
-                    }
-                    
-                    directiveSequencer.processDirective(directive)
-                    completion?(.received(part: directive))
+            let directives = directiveArray.compactMap(Downstream.Directive.init)
+            post(NuguCoreNotification.StreamDataRoute.ReceivedDirectives(directives: directives))
+            
+            directives.forEach { directive in
+                log.debug("Directive: \(directive.header)")
+                self.notificationQueue.async { [weak self] in
+                    self?.post(NuguCoreNotification.StreamDataRoute.ReceivedDirective(directive: directive))
+                }
+                
+                directiveSequencer.processDirective(directive)
+                completion?(.received(part: directive))
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
             log.debug("Attachment: \(attachment.header.dialogRequestId), \(attachment.header.type)")
@@ -276,7 +277,7 @@ private extension Downstream.Attachment {
 
 // MARK: - Downstream.Directive initializer
 
-private extension Downstream.Directive {
+public extension Downstream.Directive {
     init?(directiveDictionary: [String: AnyHashable]) {
         guard let headerDictionary = directiveDictionary["header"] as? [String: AnyHashable],
             let headerData = try? JSONSerialization.data(withJSONObject: headerDictionary, options: []),
@@ -309,6 +310,7 @@ private extension Downstream.Header {
 // MARK: - Observer
 
 extension Notification.Name {
+    static let streamDataDirectivesDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_directives_did_receive")
     static let streamDataDirectiveDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_directive_did_receive")
     static let streamDataAttachmentDidReceive = Notification.Name("com.sktelecom.romaine.notification.name.stread_data_attachment_did_receive")
     static let streamDataEventWillSend = Notification.Name("com.sktelecom.romaine.notification.name.stream_data_event_will_send")
@@ -318,6 +320,17 @@ extension Notification.Name {
 
 public extension NuguCoreNotification {
     enum StreamDataRoute {
+        public struct ReceivedDirectives: TypedNotification {
+            public static var name: Notification.Name = .streamDataDirectivesDidReceive
+            public let directives: [Downstream.Directive]
+
+            public static func make(from: [String : Any]) -> ReceivedDirectives? {
+                guard let directives = from["directives"] as? [Downstream.Directive] else { return nil }
+
+                return ReceivedDirectives(directives: directives)
+            }
+        }
+
         public struct ReceivedDirective: TypedNotification {
             public static var name: Notification.Name = .streamDataDirectiveDidReceive
             public let directive: Downstream.Directive

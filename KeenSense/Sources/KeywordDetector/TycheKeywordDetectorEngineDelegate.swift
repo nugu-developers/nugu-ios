@@ -20,7 +20,7 @@
 
 import Foundation
 
-public protocol TycheKeywordDetectorEngineDelegate: class {
+public protocol TycheKeywordDetectorEngineDelegate: AnyObject {
     func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int)
     func tycheKeywordDetectorEngineDidError(_ error: Error)
     func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State)

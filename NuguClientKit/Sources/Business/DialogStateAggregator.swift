@@ -38,7 +38,7 @@ public class DialogStateAggregator: TypedNotifyable {
 
     private var dialogState: DialogState = .idle {
         didSet {
-            log.info("from \(oldValue) to \(dialogState) isMultiturn \(isMultiturn)")
+            log.info("dialogState is changed from \(oldValue) to \(dialogState) isMultiturn \(isMultiturn)")
 
             multiturnSpeakingToListeningTimer?.cancel()
             
@@ -47,12 +47,17 @@ public class DialogStateAggregator: TypedNotifyable {
             case .dialog where sessionManager.activeSessions.last?.dialogRequestId == currentChips?.dialogRequestId:
                 chipsItem = currentChips?.item
             case .listen where isMultiturn:
-                chipsItem = currentChips?.item
-            case .speaking where dialogState == .speaking:
-                chipsItem = currentChips?.item
+                if dialogState == .listening {
+                    chipsItem = currentChips?.item
+                }
+            case .speaking:
+                if dialogState == .speaking {
+                    chipsItem = currentChips?.item
+                }
             default:
                 // Delete the chips if it is not for the most recently active session.
                 currentChips = nil
+                log.debug("current chips are cleared")
             }
             
             let typedNotification = NuguClientNotification.DialogState.State(state: dialogState, multiTurn: isMultiturn, item: chipsItem, sessionActivated: sessionActivated)

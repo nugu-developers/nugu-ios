@@ -23,7 +23,7 @@ import AVFoundation
 
 import NuguCore
 
-protocol EndPointDetectable: class {
+protocol EndPointDetectable: AnyObject {
     var delegate: EndPointDetectorDelegate? { get set }
     
     func start()

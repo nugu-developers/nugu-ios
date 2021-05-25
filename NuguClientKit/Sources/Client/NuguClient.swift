@@ -140,6 +140,8 @@ public class NuguClient {
     // TODO: 입력부탁
     public let utilityAgent: UtilityAgentProtocol
     
+    // TODO: 입력부탁
+    public let routineAgent: RoutineAgentProtocol
     /**
      Recommend a nugu operation intent
      */
@@ -220,6 +222,15 @@ public class NuguClient {
      */
     public lazy var locationAgent: LocationAgentProtocol = LocationAgent(contextManager: contextManager)
     
+    /**
+     Set alerts
+     */
+    public lazy var alertsAgent: AlertsAgentProtocol = AlertsAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
     // Supports
     /**
      Indicates the dialog state.
@@ -280,6 +291,7 @@ public class NuguClient {
         sessionAgent: SessionAgentProtocol,
         chipsAgent: ChipsAgentProtocol,
         utilityAgent: UtilityAgentProtocol,
+        routineAgent: RoutineAgentProtocol,
         audioSessionManager: AudioSessionManageable?,
         keywordDetector: KeywordDetector,
         speechRecognizerAggregator: SpeechRecognizerAggregatable,
@@ -291,6 +303,7 @@ public class NuguClient {
         displayAgent: DisplayAgentProtocol?,
         locationAgent: LocationAgentProtocol?,
         permissionAgent: PermissionAgentProtocol?,
+        alertsAgent: AlertsAgentProtocol?,
         nudgeAgent: NudgeAgentProtocol
     ) {
         // Core
@@ -328,6 +341,7 @@ public class NuguClient {
         self.sessionAgent = sessionAgent
         self.chipsAgent = chipsAgent
         self.utilityAgent = utilityAgent
+        self.routineAgent = routineAgent
         self.nudgeAgent = nudgeAgent
         
         // Supports
@@ -367,6 +381,10 @@ public class NuguClient {
         
         if let permissionAgent = permissionAgent {
             self.permissionAgent = permissionAgent
+        }
+        
+        if let alertsAgent = alertsAgent {
+            self.alertsAgent = alertsAgent
         }
         
         // Wiring

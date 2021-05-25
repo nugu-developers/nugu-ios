@@ -21,7 +21,7 @@
 import Foundation
 
 /// An delegate that appllication can extend to register to observe focus changes.
-public protocol FocusDelegate: class {
+public protocol FocusDelegate: AnyObject {
     /// Determines whether the `AVAudioSession` should be activates.
     ///
     /// This mehthod called When the `FocusManager` receives a `requestFocus:channelDelegate:`

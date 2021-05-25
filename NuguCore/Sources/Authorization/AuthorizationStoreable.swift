@@ -22,7 +22,7 @@ import Foundation
 
 /// The `AuthorizationStoreable` is used to provide authorization token.
 /// Provide authorization token
-public protocol AuthorizationStoreable: class {
+public protocol AuthorizationStoreable: AnyObject {
     // MARK: Managing Interactions
     
     /// An delegate that application should extend to provide access token.

@@ -55,7 +55,7 @@ final class AudioPlayer1View: AudioDisplayView {
             lyricsView.gestureRecognizers?.forEach { lyricsView.removeGestureRecognizer($0) }
             let tapGestureRecognizeView = UITapGestureRecognizer(target: self, action: #selector(lyricsViewDidTap(_:)))
             lyricsView.addGestureRecognizer(tapGestureRecognizeView)
-            lyricsIndex = 0
+            lyricsIndex = lyricsData?.lyricsType == "SYNC" ? 0 : -1
             updateLyrics()
             updateFullLyrics()
             
@@ -197,6 +197,11 @@ final class AudioPlayer1View: AudioDisplayView {
         super.updateFullLyrics()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            if self.lyricsData == nil || self.lyricsData?.lyricsType == "NONE" {
+                self.fullLyricsView.noLyricsLabel.isHidden = false
+                return
+            }
+            self.fullLyricsView.noLyricsLabel.isHidden = true
             if self.lyricsIndex != -1 {
                 self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
             }
@@ -207,6 +212,11 @@ final class AudioPlayer1View: AudioDisplayView {
         super.showLyrics()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            if self.lyricsData == nil || self.lyricsData?.lyricsType == "NONE" {
+                self.fullLyricsView.noLyricsLabel.isHidden = false
+                return
+            }
+            self.fullLyricsView.noLyricsLabel.isHidden = true
             if self.lyricsIndex != -1 {
                 self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
             }

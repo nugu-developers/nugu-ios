@@ -21,7 +21,7 @@
 import Foundation
 
 /// FocusChannelDelegate may be capability agent whose needs to be registered with the ContextManager.
-public protocol FocusChannelDelegate: class {
+public protocol FocusChannelDelegate: AnyObject {
     /// <#Description#>
     func focusChannelPriority() -> FocusChannelPriority
     
