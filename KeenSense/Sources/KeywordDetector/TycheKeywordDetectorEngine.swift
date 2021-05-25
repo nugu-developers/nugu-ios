@@ -21,14 +21,15 @@
 import Foundation
 import AVFoundation
 
+import NuguUtils
+
 /**
  Default key word detector of NUGU service.
  
  When the key word detected, you can take PCM data of user's voice.
  so you can do Speaker Recognition, enhance the recognizing rate and so on using this data.
  */
-public class TycheKeywordDetectorEngine {
-    public weak var delegate: TycheKeywordDetectorEngineDelegate?
+public class TycheKeywordDetectorEngine: TypedNotifyable {
     private let kwdQueue = DispatchQueue(label: "com.sktelecom.romaine.keensense.tyche_key_word_detector")
     private var engineHandle: WakeupHandle?
     
@@ -39,8 +40,8 @@ public class TycheKeywordDetectorEngine {
     public var state: TycheKeywordDetectorEngine.State = .inactive {
         didSet {
             if oldValue != state {
-                delegate?.tycheKeywordDetectorEngineDidChange(state: state)
                 log.debug("state changed: \(state)")
+                post(state)
             }
         }
     }
@@ -70,7 +71,7 @@ public class TycheKeywordDetectorEngine {
     }
     
     /**
-     Start Key Word Detection.
+     Start keyword Detection.
      */
     public func start() {
         log.debug("try to start")
@@ -88,12 +89,20 @@ public class TycheKeywordDetectorEngine {
                 self.state = .active
             } catch {
                 self.state = .inactive
-                self.delegate?.tycheKeywordDetectorEngineDidError(error)
                 log.debug("error: \(error)")
+                
+                // initTriggerEngine() throws only KeywordDetectorError
+                // swiftlint:disable force_cast
+                self.post(error as! KeywordDetectorError)
+                // swiftlint:enable force_cast
             }
         }
     }
-    
+
+    /**
+     Put  pcm data to the engine
+     - Parameter buffer: PCM buffer contained voice data
+     */
     public func putAudioBuffer(buffer: AVAudioPCMBuffer) {
         kwdQueue.async { [weak self] in
             guard let self = self else { return }
@@ -116,6 +125,9 @@ public class TycheKeywordDetectorEngine {
         }
     }
     
+    /**
+     Stop keyword Detection.
+     */
     public func stop() {
         log.debug("try to stop")
         
@@ -185,15 +197,67 @@ extension TycheKeywordDetectorEngine {
         }
         #endif
         
-        delegate?.tycheKeywordDetectorEngineDidDetect(
-            data: detectedData,
-            start: start - base,
-            end: end - base,
-            detection: detection - base
+        post(
+            DetectedInfo(
+                data: detectedData,
+                start: start - base,
+                end: end - base,
+                detection: detection - base
+            )
         )
     }
     
     private func convertTimeToDataOffset(_ time: Int32) -> Int {
         return (Int(time) * KeywordDetectorConst.sampleRate * 2) / 1000
+    }
+}
+
+// MARK: - Observer
+
+private extension TycheKeywordDetectorEngine {
+    func post<Notification: TypedNotification>(_ notification: Notification) {
+        NotificationCenter.default.post(name: Notification.name, object: self, userInfo: notification.dictionary)
+    }
+}
+
+public extension Notification.Name {
+    static let keywordDetectorState = Notification.Name(rawValue: "com.sktelecom.romaine.tyche_keyword_detector_engine.state")
+    static let keywordDetectorError = Notification.Name(rawValue: "com.sktelecom.romaine.tyche_keyword_detector_engine.error")
+    static let keywordDetectorDetectedInfo = Notification.Name(rawValue: "com.sktelecom.romaine.tyche_keyword_detector_engine.detected_info")
+}
+
+public extension TycheKeywordDetectorEngine {
+    enum State: EnumTypedNotification {
+        public static var name: Notification.Name = .keywordDetectorState
+        
+        case active
+        case inactive
+    }
+    
+    enum KeywordDetectorError: Error, EnumTypedNotification {
+        public static var name: Notification.Name = .keywordDetectorError
+        
+        case initEngineFailed
+        case initBufferFailed
+        case unsupportedAudioFormat
+        case noDataAvailable
+        case alreadyActivated
+    }
+    
+    struct DetectedInfo: TypedNotification {
+        public let data: Data
+        public let start: Int
+        public let end: Int
+        public let detection: Int
+        
+        public static var name: Notification.Name = .keywordDetectorDetectedInfo
+        public static func make(from: [String: Any]) -> TycheKeywordDetectorEngine.DetectedInfo? {
+            guard let data = from["data"] as? Data,
+                  let start = from["start"] as? Int,
+                  let end = from["end"] as? Int,
+                  let detection = from["detection"] as? Int else { return nil }
+            
+            return DetectedInfo(data: data, start: start, end: end, detection: detection)
+        }
     }
 }

@@ -67,16 +67,6 @@ enum KeywordDetectorConst {
     static let channel = 1
 }
 
-// MARK: - Error
-
-public enum KeywordDetectorError: Error {
-    case initEngineFailed
-    case initBufferFailed
-    case unsupportedAudioFormat
-    case noDataAvailable
-    case alreadyActivated
-}
-
 // MARK: Keyword
 
 public enum Keyword: Int, CustomStringConvertible, CaseIterable {
@@ -110,4 +100,3 @@ public enum Keyword: Int, CustomStringConvertible, CaseIterable {
         }
     }
 }
-
