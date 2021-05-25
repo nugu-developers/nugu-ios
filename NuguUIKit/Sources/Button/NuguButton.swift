@@ -217,25 +217,32 @@ final public class NuguButton: UIButton {
 private extension NuguButton {
     func updateButtonImages() {
         guard isEnabled == true else { return }
-        if isHighlighted {
-            switch nuguButtonType {
-            case .fab(let color):
-                micImageView.image = flipped ? UIImage(named: "fab_\(color.rawValue)_logo_pressed", in: Bundle.imageBundle, compatibleWith: nil) : UIImage(named: "fab_\(color.rawValue)_mic_pressed", in: Bundle.imageBundle, compatibleWith: nil)
-                backgroundImageView.image = UIImage(named: "fab_\(color.rawValue)_background_pressed", in: Bundle.imageBundle, compatibleWith: nil)
-            case .button(let color):
-                micImageView.image = flipped ? UIImage(named: "btn_\(color.rawValue)_logo_pressed", in: Bundle.imageBundle, compatibleWith: nil) : UIImage(named: "btn_\(color.rawValue)_mic_pressed", in: Bundle.imageBundle, compatibleWith: nil)
-                backgroundImageView.image = UIImage(named: "btn_\(color.rawValue)_background_pressed", in: Bundle.imageBundle, compatibleWith: nil)
-            }
-        } else {
-            switch nuguButtonType {
-            case .fab(let color):
-                micImageView.image = flipped ? UIImage(named: "fab_\(color.rawValue)_logo", in: Bundle.imageBundle, compatibleWith: nil) : UIImage(named: "fab_\(color.rawValue)_mic", in: Bundle.imageBundle, compatibleWith: nil)
-                backgroundImageView.image = UIImage(named: "fab_\(color.rawValue)_background", in: Bundle.imageBundle, compatibleWith: nil)
-            case .button(let color):
-                micImageView.image = flipped ? UIImage(named: "btn_\(color.rawValue)_logo", in: Bundle.imageBundle, compatibleWith: nil) : UIImage(named: "btn_\(color.rawValue)_mic", in: Bundle.imageBundle, compatibleWith: nil)
-                backgroundImageView.image = UIImage(named: "btn_\(color.rawValue)_background", in: Bundle.imageBundle, compatibleWith: nil)
-            }
+        
+        let imgNamePrefix: String
+        let imgNameColor: String
+        switch nuguButtonType {
+        case .fab(let color):
+            imgNamePrefix = "fab"
+            imgNameColor = color.rawValue
+        case .button(let color):
+            imgNamePrefix = "button"
+            imgNameColor = color.rawValue
         }
+        
+        let imgNamePostfix = flipped ? "logo" : "mic"
+        let imgNameState = isHighlighted ? "_pressed" : ""
+        
+        micImageView.image = UIImage(
+            named: "\(imgNamePrefix)_\(imgNameColor)_\(imgNamePostfix)" + imgNameState,
+            in: Bundle.imageBundle,
+            compatibleWith: nil
+        )
+        
+        backgroundImageView.image = UIImage(
+            named: "\(imgNamePrefix)_\(imgNameColor)_background" + imgNameState,
+            in: Bundle.imageBundle,
+            compatibleWith: nil
+        )
     }
     
     func addImageViews() {

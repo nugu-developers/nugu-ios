@@ -18,7 +18,7 @@
 //  limitations under the License.
 //
 
-public struct NuguServiceCookieKey : RawRepresentable, Equatable, Hashable {
+public struct NuguServiceCookieKey: RawRepresentable, Equatable, Hashable {
     public private(set) var rawValue: String
 
     public init(_ rawValue: String) {
