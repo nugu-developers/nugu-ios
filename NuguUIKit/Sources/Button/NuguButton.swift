@@ -225,7 +225,7 @@ private extension NuguButton {
             imgNamePrefix = "fab"
             imgNameColor = color.rawValue
         case .button(let color):
-            imgNamePrefix = "button"
+            imgNamePrefix = "btn"
             imgNameColor = color.rawValue
         }
         
