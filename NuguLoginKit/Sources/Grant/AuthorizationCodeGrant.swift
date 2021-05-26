@@ -39,13 +39,6 @@ public struct AuthorizationCodeGrant {
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.redirectUri = redirectUri
-        
-        if #available(iOS 12, *) {
-            self.oauthHandler = ASAuthenticationOAuthHandler()
-        } else if #available(iOS 11, *) {
-            self.oauthHandler = SFAuthenticationOAuthHandler()
-        } else {
-            self.oauthHandler = SFSafariOAuthHandler()
-        }
+        self.oauthHandler = ASAuthenticationOAuthHandler()
     }
 }
