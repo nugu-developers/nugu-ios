@@ -324,7 +324,7 @@ public extension NuguCoreNotification {
             public static var name: Notification.Name = .streamDataDirectivesDidReceive
             public let directives: [Downstream.Directive]
 
-            public static func make(from: [String : Any]) -> ReceivedDirectives? {
+            public static func make(from: [String: Any]) -> ReceivedDirectives? {
                 guard let directives = from["directives"] as? [Downstream.Directive] else { return nil }
 
                 return ReceivedDirectives(directives: directives)

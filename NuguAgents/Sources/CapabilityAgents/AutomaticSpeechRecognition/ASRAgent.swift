@@ -724,7 +724,7 @@ public extension NuguAgentNotification {
             public static let name: Notification.Name = .asrAgentStartRecognition
             public let dialogRequestId: String
 
-            public static func make(from: [String : Any]) -> StartRecognition? {
+            public static func make(from: [String: Any]) -> StartRecognition? {
                 guard let dialogRequestId = from["dialogRequestId"] as? String else { return nil }
 
                 return StartRecognition(dialogRequestId: dialogRequestId)

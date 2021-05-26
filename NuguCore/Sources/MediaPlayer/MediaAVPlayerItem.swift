@@ -93,7 +93,7 @@ final class MediaAVPlayerItem: AVPlayerItem, TypedNotifyable {
             case .failed:
                 log.debug("playback failed reason: \(String(describing: error))")
                 post(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.failed(error: error))
-            default: //Contains unknown
+            default: // Contains unknown
                 post(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.unknown)
             }
         case #keyPath(isPlaybackBufferEmpty):
@@ -118,7 +118,6 @@ final class MediaAVPlayerItem: AVPlayerItem, TypedNotifyable {
     }
     // swiftlint:enable block_based_kvo
 }
-
 
 // MARK: - KVO
 
