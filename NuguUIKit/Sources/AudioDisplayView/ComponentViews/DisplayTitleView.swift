@@ -55,23 +55,19 @@ final class DisplayTitleView: UIView {
     
     func setData(titleData: DisplayCommonTemplate.Common.Title) {
         // Set title
-        if let logoUrl = titleData.logo?.sources.first?.url {
-            logoImageView.loadImage(from: logoUrl)
-            logoImageView.isHidden = false
-        } else {
-            logoImageView.isHidden = true
-        }
+        logoImageView.loadImage(
+            from: titleData.logo?.sources.first?.url,
+            failureImage: UIImage(named: "nugu_logo_default", in: Bundle.imageBundle, compatibleWith: nil)
+        )
         titleLabel.setDisplayText(displayText: titleData.text)
     }
     
     func setData(logoUrl: String?, titleText: String) {
         // Set title
-        if let logoUrl = logoUrl {
-            logoImageView.loadImage(from: logoUrl)
-            logoImageView.isHidden = false
-        } else {
-            logoImageView.isHidden = true
-        }
+        logoImageView.loadImage(
+            from: logoUrl,
+            failureImage: UIImage(named: "nugu_logo_default", in: Bundle.imageBundle, compatibleWith: nil)
+        )
         titleLabel.text = titleText
     }
     
