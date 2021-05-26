@@ -59,13 +59,13 @@ final public class ImageDataLoader {
 
 extension UIImageView {
     @discardableResult
-    func loadImage(from urlString: String?) -> URLSessionDataTask? {
+    func loadImage(from urlString: String?, failureImage: UIImage? = nil) -> URLSessionDataTask? {
         guard
             let imageUrlString = urlString,
             let url = URL(string: imageUrlString)
             else {
                 log.debug("Failed load image, url is nil or invalid \(urlString ?? "")")
-                self.image = nil
+                self.image = failureImage
                 return nil
         }
         
@@ -74,7 +74,7 @@ extension UIImageView {
             case .success(let imageData):
                 self.image = UIImage(data: imageData)
             case .failure(let error):
-                self.image = nil
+                self.image = failureImage
                 log.debug("Failed load image: \(error)")
             }
         }
