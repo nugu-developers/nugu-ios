@@ -28,16 +28,18 @@ import KeenSense
 public typealias Keyword = KeenSense.Keyword
 
 /// <#Description#>
-public class KeywordDetector {
+public class KeywordDetector: ContextInfoProvidable {
     private let engine = TycheKeywordDetectorEngine()
-    /// <#Description#>
+    /// KeywordDetector delegate
     public weak var delegate: KeywordDetectorDelegate?
     private let contextManager: ContextManageable
     
-    /// <#Description#>
+    /// Keyword detector state
     private(set) public var state: KeywordDetectorState = .inactive {
         didSet {
-            delegate?.keywordDetectorStateDidChange(state)
+            if oldValue != state {
+                delegate?.keywordDetectorStateDidChange(state)
+            }
         }
     }
     
@@ -49,32 +51,36 @@ public class KeywordDetector {
         }
     }
     
-    /// <#Description#>
+    // Observers
+    var tycheKeywordDetectorStateObserver: Any?
+    var tycheKeywordDetectorErrorObserver: Any?
+    var tycheKeywordDetectorDetectedInfoObserver: Any?
+    
     public init(contextManager: ContextManageable) {
         self.contextManager = contextManager
-        engine.delegate = self
-        
-        contextManager.addProvider(contextInfo)
+        contextManager.addProvider(contextInfoProvider)
+        addObservers()
     }
     
     deinit {
-        contextManager.removeProvider(contextInfo)
+        contextManager.removeProvider(contextInfoProvider)
+        removeObservers()
     }
     
-    public lazy var contextInfo: ContextInfoProviderType = { [weak self] completion in
+    public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
         guard let self = self else { return }
         
         completion(ContextInfo(contextType: .client, name: "wakeupWord", payload: self.keyword.description))
     }
     
-    /// <#Description#>
+    /// Start keyword detection.
     public func start() {
         log.debug("start")
         engine.start()
     }
     
-    /// <#Description#>
-    /// - Parameter buffer: <#buffer description#>
+    /// Put  pcm data to the engine
+    /// - Parameter buffer: PCM buffer contained voice data
     public func putAudioBuffer(buffer: AVAudioPCMBuffer) {
         guard let pcmBuffer: AVAudioPCMBuffer = buffer.copy() as? AVAudioPCMBuffer else {
             log.warning("copy buffer failed")
@@ -84,32 +90,57 @@ public class KeywordDetector {
         engine.putAudioBuffer(buffer: pcmBuffer)
     }
     
-    /// <#Description#>
+    /// Stop keyword detection.
     public func stop() {
         engine.stop()
     }
 }
 
-// MARK: - TycheKeywordDetectorEngineDelegate
+// MARK: - TycheKeywordDetector Observers
 
-/// :nodoc:
-extension KeywordDetector: TycheKeywordDetectorEngineDelegate {
-    public func tycheKeywordDetectorEngineDidDetect(data: Data, start: Int, end: Int, detection: Int) {
-        delegate?.keywordDetectorDidDetect(keyword: keyword.description, data: data, start: start, end: end, detection: detection)
-        stop()
+extension KeywordDetector {
+    func addObservers() {
+        tycheKeywordDetectorStateObserver = engine.observe(TycheKeywordDetectorEngine.State.self, queue: nil) { [weak self] notification in
+            log.debug("tyche keyword detector engine state changed to \(notification)")
+            
+            switch notification {
+            case .active:
+                self?.state = .active
+            case .inactive:
+                self?.state = .inactive
+            }
+        }
+        
+        tycheKeywordDetectorErrorObserver = engine.observe(TycheKeywordDetectorEngine.KeywordDetectorError.self, queue: nil) { [weak self] notification in
+            log.debug("tyche keyword detector engine error: \(notification)")
+            
+            self?.delegate?.keywordDetectorDidError(notification)
+            self?.stop()
+        }
+        
+        tycheKeywordDetectorDetectedInfoObserver = engine.observe(TycheKeywordDetectorEngine.DetectedInfo.self, queue: nil) { [weak self] notification in
+            guard let self = self else { return }
+            log.debug("tyche keyword detector engine detected: \(notification))")
+            
+            self.delegate?.keywordDetectorDidDetect(keyword: self.keyword.description, data: notification.data, start: notification.start, end: notification.end, detection: notification.detection)
+            self.stop()
+        }
     }
     
-    public func tycheKeywordDetectorEngineDidError(_ error: Error) {
-        delegate?.keywordDetectorDidError(error)
-        stop()
-    }
-    
-    public func tycheKeywordDetectorEngineDidChange(state: TycheKeywordDetectorEngine.State) {
-        switch state {
-        case .active:
-            self.state = .active
-        case .inactive:
-            self.state = .inactive
+    func removeObservers() {
+        if let tycheKeywordDetectorStateObserver = tycheKeywordDetectorStateObserver {
+            NotificationCenter.default.removeObserver(tycheKeywordDetectorStateObserver)
+            self.tycheKeywordDetectorStateObserver = nil
+        }
+        
+        if let tycheKeywordDetectorErrorObserver = tycheKeywordDetectorErrorObserver {
+            NotificationCenter.default.removeObserver(tycheKeywordDetectorErrorObserver)
+            self.tycheKeywordDetectorErrorObserver = nil
+        }
+        
+        if let tycheKeywordDetectorDetectedInfoObserver = tycheKeywordDetectorDetectedInfoObserver {
+            NotificationCenter.default.removeObserver(tycheKeywordDetectorDetectedInfoObserver)
+            self.tycheKeywordDetectorDetectedInfoObserver = nil
         }
     }
 }
