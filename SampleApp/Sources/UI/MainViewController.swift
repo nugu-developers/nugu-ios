@@ -33,12 +33,14 @@ final class MainViewController: UIViewController {
     
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
-        nuguClient: NuguCentralManager.shared.client
+        nuguClient: NuguCentralManager.shared.client,
+        themeManager: NuguCentralManager.shared.themeManager
     )
     private lazy var displayWebViewPresenter = DisplayWebViewPresenter(
         viewController: self,
         nuguClient: NuguCentralManager.shared.client,
-        clientInfo: ["buttonColor": "white"]
+        clientInfo: ["buttonColor": "white"],
+        themeManager: NuguCentralManager.shared.themeManager
     )
     private lazy var audioDisplayViewPresenter = AudioDisplayViewPresenter(
         viewController: self,
@@ -173,6 +175,10 @@ private extension MainViewController {
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
         presentVoiceChrome(initiator: .tap)
     }
+    
+    @IBAction func onThemeSwitchChanged(_ themeSwitch: UISwitch) {
+        NuguCentralManager.shared.themeManager.theme = themeSwitch.isOn ? .dark : .light
+    }
 }
 
 // MARK: - Private (Nugu)
@@ -193,6 +199,8 @@ private extension MainViewController {
         voiceChromePresenter.delegate = self
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
+        
+        NuguCentralManager.shared.themeManager.theme = .dark
     }
     
     /// Show nugu usage guide webpage after successful login process

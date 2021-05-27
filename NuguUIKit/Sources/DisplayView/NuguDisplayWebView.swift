@@ -179,6 +179,27 @@ public extension NuguDisplayWebView {
     func requestContext(completion: @escaping (DisplayContext) -> Void) {
         completion(DisplayContext(focusedItemToken: focusedItemToken, visibleTokenList: visibleTokenList))
     }
+    
+    func onClientInfoChanged(newClientInfo: [String: String]? = nil) {
+        if let newClientInfo = newClientInfo {
+            clientInfo?.merge(newClientInfo)
+        }
+        var defaultClientInfo = [String: String]()
+        defaultClientInfo["nuguSdkVersion"] = Bundle(for: NuguDisplayWebView.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
+        defaultClientInfo["osType"] = "IOS"
+        if let clientInfo = clientInfo {
+            defaultClientInfo.merge(clientInfo)
+        }
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: defaultClientInfo, options: []),
+            let jsonStr = String(data: jsonData, encoding: .utf8) else {
+            return
+        }
+        DispatchQueue.main.async { [weak self] in
+            self?.displayWebView?.evaluateJavaScript("onClientInfoChanged(\(jsonStr))", completionHandler: { (result, error) in
+                log.debug("onClientInfoChanged(\(jsonStr)) \(String(describing: result)) \(String(describing: error))")
+            })
+        }
+    }
 }
 
 // MARK: - Private (request)

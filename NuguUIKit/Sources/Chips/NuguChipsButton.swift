@@ -98,9 +98,14 @@ final public class NuguChipsButton: UIButton {
         }
     }
     
-    // MARK: Private Properties
+    public var theme: NuguChipsButtonTheme = .light {
+        didSet {
+            backgroundColor = theme.backgroundColor
+            setTitleColor(type.textColor(theme: theme), for: .normal)
+        }
+    }
     
-    private var theme: NuguChipsButtonTheme = .light
+    // MARK: Private Properties
     private var type: NuguChipsButtonType = .normal(text: "")
     private let gradient = CAGradientLayer()
     private let gradientShape = CAShapeLayer()

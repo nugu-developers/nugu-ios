@@ -87,6 +87,7 @@ public class VoiceChromePresenter: NSObject {
     private var asrStateObserver: Any?
     private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
+    private var themeObserver: Any?
     
     /// Initialize with superView
     /// - Parameters:
@@ -98,9 +99,10 @@ public class VoiceChromePresenter: NSObject {
         superView: UIView,
         nuguVoiceChrome: NuguVoiceChrome? = nil,
         nuguClient: NuguClient,
-        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL()
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL(),
+        themeManager: NuguThemeManager? = nil
     ) {
-        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL)
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL, themeManager: themeManager)
         
         self.superView = superView
     }
@@ -115,9 +117,10 @@ public class VoiceChromePresenter: NSObject {
         viewController: UIViewController,
         nuguVoiceChrome: NuguVoiceChrome? = nil,
         nuguClient: NuguClient,
-        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL()
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL(),
+        themeManager: NuguThemeManager? = nil
     ) {
-        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL)
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL, themeManager: themeManager)
         
         self.viewController = viewController
     }
@@ -125,7 +128,8 @@ public class VoiceChromePresenter: NSObject {
     private init(
         nuguVoiceChrome: NuguVoiceChrome?,
         nuguClient: NuguClient,
-        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL,
+        themeManager: NuguThemeManager? = nil
     ) {
         self.nuguVoiceChrome = nuguVoiceChrome ?? NuguVoiceChrome(frame: CGRect())
         self.nuguClient = nuguClient
@@ -137,6 +141,9 @@ public class VoiceChromePresenter: NSObject {
         addInteractionControlObserver(nuguClient.interactionControlManager)
         addAsrAgentObserver(nuguClient.asrAgent)
         addDialogStateObserver(nuguClient.dialogStateAggregator)
+        if let themeManager = themeManager {
+            addThemeManagerObserver(themeManager)
+        }
     }
     
     deinit {
@@ -154,6 +161,10 @@ public class VoiceChromePresenter: NSObject {
         
         if let dialogStateObserver = dialogStateObserver {
             notificationCenter.removeObserver(dialogStateObserver)
+        }
+        
+        if let themeObserver = themeObserver {
+            notificationCenter.removeObserver(themeObserver)
         }
     }
 }
@@ -378,6 +389,22 @@ private extension VoiceChromePresenter {
                 }
             }
         }
+    }
+    
+    func addThemeManagerObserver(_ object: NuguThemeManager) {
+        themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
+            guard let self = self else { return }
+            switch notification.theme {
+            case .dark:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.theme = .dark
+                }
+            case .light:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.theme = .light
+                }
+            }
+        })
     }
 }
 
