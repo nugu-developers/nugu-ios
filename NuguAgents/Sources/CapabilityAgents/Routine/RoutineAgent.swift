@@ -33,6 +33,7 @@ public final class RoutineAgent: RoutineAgentProtocol {
     public weak var delegate: RoutineAgentDelegate?
     
     public var state: RoutineState { routineExecuter.state }
+    public var routineItem: RoutineItem? { routineExecuter.routine }
     
     // private
     private let directiveSequencer: DirectiveSequenceable
