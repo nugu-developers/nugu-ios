@@ -173,6 +173,17 @@ private extension MainViewController {
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
         presentVoiceChrome(initiator: .tap)
     }
+    
+    @IBAction func sidOptionSwitchValueChanged(_ optionSwitch: UISwitch) {
+        print("--------")
+        if optionSwitch.isOn == true {
+            NuguCentralManager.shared.client.streamDataRouter.startReceiveServerInitiatedDirective { state in
+                log.debug(state)
+            }
+        } else {
+            NuguCentralManager.shared.client.streamDataRouter.stopReceiveServerInitiatedDirective()
+        }
+    }
 }
 
 // MARK: - Private (Nugu)
