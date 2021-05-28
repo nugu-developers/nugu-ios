@@ -45,7 +45,7 @@ public enum AudioDisplayTheme {
     var titleViewTextColor: UIColor {
         switch self {
         case .light:
-            return UIColor(red: 224.0/255.0, green: 224.0/255.0, blue: 224.0/255.0, alpha: 1.0)
+            return UIColor(red: 34.0/255.0, green: 34.0/255.0, blue: 34.0/255.0, alpha: 1.0)
         case .dark:
             return .white
         }
@@ -90,7 +90,7 @@ public enum AudioDisplayTheme {
     var progressViewTrackTintColor: UIColor {
         switch self {
         case .light:
-            return UIColor(red: 34.0/255.0, green: 34.0/255.0, blue: 34.0/255.0, alpha: 1.0)
+            return UIColor(red: 34.0/255.0, green: 34.0/255.0, blue: 34.0/255.0, alpha: 0.2)
         case .dark:
             return UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.1)
         }
@@ -99,7 +99,7 @@ public enum AudioDisplayTheme {
     var barProgressViewTrackTintColor: UIColor {
         switch self {
         case .light:
-            return UIColor(red: 34.0/255.0, green: 34.0/255.0, blue: 34.0/255.0, alpha: 1.0)
+            return UIColor(red: 34.0/255.0, green: 34.0/255.0, blue: 34.0/255.0, alpha: 0.2)
         case .dark:
             return UIColor(red: 34.0/255.0, green: 34.0/255.0, blue: 34.0/255.0, alpha: 1.0)
         }
