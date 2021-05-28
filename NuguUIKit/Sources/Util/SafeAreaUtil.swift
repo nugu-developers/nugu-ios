@@ -23,19 +23,11 @@ import Foundation
 public struct SafeAreaUtil {
     public static var topSafeAreaHeight: CGFloat {
         guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
-        if #available(iOS 11.0, *) {
-            return rootViewController.view.safeAreaInsets.top
-        } else {
-            return rootViewController.topLayoutGuide.length
-        }
+        return rootViewController.view.safeAreaInsets.top
     }
     
     public static var bottomSafeAreaHeight: CGFloat {
         guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
-        if #available(iOS 11.0, *) {
-            return rootViewController.view.safeAreaInsets.bottom
-        } else {
-            return rootViewController.bottomLayoutGuide.length
-        }
+        return rootViewController.view.safeAreaInsets.bottom
     }
 }

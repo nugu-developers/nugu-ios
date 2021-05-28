@@ -41,10 +41,7 @@ public class DisplayWebViewPresenter: NSObject {
     private var clientInfo: [String: String]?
     private var addWebViewCompletion: (() -> Void)?
     private var topSafeAreaAnchor: NSLayoutYAxisAnchor? {
-        if #available(iOS 11.0, *) {
-            return self.targetView?.safeAreaLayoutGuide.topAnchor
-        }
-        return self.targetView?.topAnchor
+        return self.targetView?.safeAreaLayoutGuide.topAnchor
     }
     
     /// Initialize with superView
