@@ -29,6 +29,9 @@ public final class RoutineAgent: RoutineAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .routine, version: "1.2")
 
+    // RoutineAgentProtocol
+    public weak var delegate: RoutineAgentDelegate?
+    
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
@@ -100,6 +103,7 @@ public final class RoutineAgent: RoutineAgentProtocol {
 }
 
 // MARK: - RoutineExecuterDelegate
+
 extension RoutineAgent: RoutineExecuterDelegate {
     func routineExecuterDidChange(state: RoutineState) {
         guard let routine = routineExecuter.routine else { return }
@@ -128,6 +132,8 @@ extension RoutineAgent: RoutineExecuterDelegate {
                 referrerDialogRequestId: routine.dialogRequestId
             ).rx)
         }
+        
+        delegate?.routineAgentDidChange(state: state, item: routine)
     }
 
     func routineExecuterShouldRequestAction(
@@ -144,6 +150,7 @@ extension RoutineAgent: RoutineExecuterDelegate {
 }
 
 // MARK: - Private(Directive)
+
 private extension RoutineAgent {
     func handleStart() -> HandleDirective {
         return { [weak self] directive, completion in
@@ -206,6 +213,7 @@ private extension RoutineAgent {
 }
 
 // MARK: - Private (Event)
+
 private extension RoutineAgent {
     @discardableResult func sendCompactContextEvent(
         _ event: Single<Eventable>,

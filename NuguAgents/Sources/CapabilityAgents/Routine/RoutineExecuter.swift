@@ -46,6 +46,11 @@ class RoutineExecuter {
         didSet {
             log.debug(state)
             
+            guard oldValue != state else {
+                log.debug("state has not changed. \(oldValue) -> \(state)")
+                return
+            }
+            
             interruptTimer?.cancel()
             switch state {
             case .idle:

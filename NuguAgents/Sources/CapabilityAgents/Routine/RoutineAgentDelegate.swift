@@ -1,8 +1,8 @@
 //
-//  RoutineAgentProtocol.swift
+//  RoutineAgentDelegate.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 2020/07/07.
+//  Created by yonghoonKwon on 2021/05/27.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,6 @@
 
 import Foundation
 
-public protocol RoutineAgentProtocol: CapabilityAgentable {
-    var delegate: RoutineAgentDelegate? { get set }
+public protocol RoutineAgentDelegate: AnyObject {
+    func routineAgentDidChange(state: RoutineState, item: RoutineItem?)
 }

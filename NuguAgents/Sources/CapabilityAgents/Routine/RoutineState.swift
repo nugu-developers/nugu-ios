@@ -20,7 +20,7 @@
 
 import Foundation
 
-enum RoutineState: Equatable {
+public enum RoutineState: Equatable {
     case idle
     case playing
     case interrupted
