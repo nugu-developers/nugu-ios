@@ -21,5 +21,8 @@
 import Foundation
 
 public protocol RoutineAgentProtocol: CapabilityAgentable {
+    var state: RoutineState { get }
+    var routineItem: RoutineItem? { get }
+    
     var delegate: RoutineAgentDelegate? { get set }
 }

@@ -32,6 +32,9 @@ public final class RoutineAgent: RoutineAgentProtocol {
     // RoutineAgentProtocol
     public weak var delegate: RoutineAgentDelegate?
     
+    public var state: RoutineState { routineExecuter.state }
+    public var routineItem: RoutineItem? { routineExecuter.routine }
+    
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
@@ -73,7 +76,6 @@ public final class RoutineAgent: RoutineAgentProtocol {
     deinit {
         contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
-
     }
 
     public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
@@ -88,6 +90,7 @@ public final class RoutineAgent: RoutineAgentProtocol {
                 "playServiceId": action.playServiceId
             ]
         }.map { $0.compactMapValues { $0 } }
+        
         let payload: [String: AnyHashable?] = [
             "version": self.capabilityAgentProperty.version,
             "token": routine?.payload.token,
