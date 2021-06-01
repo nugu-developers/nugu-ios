@@ -29,6 +29,17 @@ final class FullLyricsView: UIView {
     var onViewDidTap: (() -> Void)?
     
     private var isScrolling = false
+    private var currentIndex: Int?
+    
+    var theme: AudioDisplayTheme = .light {
+        didSet {
+            backgroundColor = theme.backgroundColor
+            scrollView.backgroundColor = theme.backgroundColor
+            stackView.backgroundColor = theme.backgroundColor
+            headerLabel.textColor = theme.fullLyricsHeaderLabelTextColor
+            updateLyricsFocus(lyricsIndex: currentIndex)
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,9 +68,10 @@ final class FullLyricsView: UIView {
     
     func updateLyricsFocus(lyricsIndex: Int?) {
         guard isHidden == false else { return }
+        currentIndex = lyricsIndex
         stackView.arrangedSubviews.forEach { (label) in
             guard let label = label as? UILabel else { return }
-            label.textColor = UIColor(red: 68.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
+            label.textColor = theme.fullLyricsLabelTextColor
         }
         guard let lyricsIndex = lyricsIndex,
             let currentLyricsLabel = stackView.arrangedSubviews[lyricsIndex + 1] as? UILabel else { return }
