@@ -100,6 +100,8 @@ extension GuideWebViewController: NuguServiceWebJavascriptDelegate {
             dismiss(animated: true)
         }
     }
+    
+    func requestActiveRoutine() {}
 }
 
 // MARK: - Private (IBAction)
