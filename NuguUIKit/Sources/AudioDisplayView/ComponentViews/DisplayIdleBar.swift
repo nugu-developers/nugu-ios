@@ -23,7 +23,7 @@ import UIKit
 final class DisplayIdleBar: UIView {
     @IBOutlet private weak var lineView: UIView!
     @IBOutlet private weak var nuguButton: NuguButton!
-    @IBOutlet private weak var chipsView: NuguChipsView!
+    @IBOutlet weak var chipsView: NuguChipsView!
     
     var onNuguButtonClick: (() -> Void)?
     
