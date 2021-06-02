@@ -30,6 +30,7 @@ final class MainViewController: UIViewController {
     
     @IBOutlet private weak var nuguButton: NuguButton!
     @IBOutlet private weak var settingButton: UIButton!
+    @IBOutlet private weak var themeSwitch: UISwitch!
     
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
@@ -102,6 +103,20 @@ final class MainViewController: UIViewController {
             UserDefaults.Standard.hasSeenGuideWeb = true
         default:
             return
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            NuguCentralManager.shared.themeManager.theme = .dark
+            themeSwitch.isOn = true
+        case .light:
+            NuguCentralManager.shared.themeManager.theme = .light
+            themeSwitch.isOn = false
+        default:
+            break
         }
     }
     
@@ -200,7 +215,16 @@ private extension MainViewController {
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
         
-        NuguCentralManager.shared.themeManager.theme = .dark
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            NuguCentralManager.shared.themeManager.theme = .dark
+            themeSwitch.isOn = true
+        case .light:
+            NuguCentralManager.shared.themeManager.theme = .light
+            themeSwitch.isOn = false
+        default:
+            break
+        }
     }
     
     /// Show nugu usage guide webpage after successful login process

@@ -23,7 +23,7 @@ import NuguUtils
 public class NuguThemeManager: NSObject, TypedNotifyable {
     private let notificationCenter = NotificationCenter.default
     
-    public var theme: NuguTheme = .light {
+    public var theme: NuguTheme = UserInterfaceUtil.style == .dark ? .dark : .light {
         didSet {
             log.info("NuguTheme changed to \(theme)")
             let typedNotification = NuguClientNotification.NuguThemeState.Theme(theme: theme)

@@ -8,6 +8,8 @@
 
 import UIKit
 
+import NuguUtils
+
 /// <#Description#>
 final public class NuguChipsButton: UIButton {
     
@@ -98,7 +100,7 @@ final public class NuguChipsButton: UIButton {
         }
     }
     
-    public var theme: NuguChipsButtonTheme = .light {
+    public var theme: NuguChipsButtonTheme = UserInterfaceUtil.style == .dark ? .dark : .light {
         didSet {
             backgroundColor = theme.backgroundColor
             setTitleColor(type.textColor(theme: theme), for: .normal)

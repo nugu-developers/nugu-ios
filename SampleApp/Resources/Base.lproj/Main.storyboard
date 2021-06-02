@@ -142,6 +142,7 @@
                     <connections>
                         <outlet property="nuguButton" destination="1pN-zT-foV" id="esl-yf-Cut"/>
                         <outlet property="settingButton" destination="H7A-kt-fwH" id="wvw-g1-c4g"/>
+                        <outlet property="themeSwitch" destination="x9I-h2-tZ9" id="t2N-DD-BHF"/>
                         <segue destination="gGQ-jV-Gla" kind="presentation" identifier="mainToGuideWeb" id="HfI-PN-nmd"/>
                         <segue destination="GR6-bJ-aiM" kind="presentation" identifier="showSettings" modalPresentationStyle="fullScreen" id="XSP-sM-tXK"/>
                     </connections>
