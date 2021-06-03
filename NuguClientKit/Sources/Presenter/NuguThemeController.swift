@@ -1,5 +1,5 @@
 //
-//  NuguThemeManager.swift
+//  NuguThemeController.swift
 //  NuguClientKit
 //
 //  Created by jin kim on 2021/05/27.
@@ -20,7 +20,7 @@
 
 import NuguUtils
 
-public class NuguThemeManager: NSObject, TypedNotifyable {
+public class NuguThemeController: NSObject, TypedNotifyable {
     private let notificationCenter = NotificationCenter.default
     
     public var theme: NuguTheme = UserInterfaceUtil.style == .dark ? .dark : .light {

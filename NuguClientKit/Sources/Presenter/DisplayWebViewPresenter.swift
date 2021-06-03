@@ -57,8 +57,9 @@ public class DisplayWebViewPresenter: NSObject {
     ///   - superView: Target view for NuguDisplayWebView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    public convenience init(superView: UIView, nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeManager: NuguThemeManager? = nil) {
-        self.init(nuguClient: nuguClient, clientInfo: clientInfo, themeManager: themeManager)
+    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    public convenience init(superView: UIView, nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
+        self.init(nuguClient: nuguClient, clientInfo: clientInfo, themeController: themeController)
         self.superView = superView
     }
     
@@ -67,8 +68,9 @@ public class DisplayWebViewPresenter: NSObject {
     ///   - viewController: Target viewController for NuguDisplayWebView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    public convenience init(viewController: UIViewController, nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeManager: NuguThemeManager? = nil) {
-        self.init(nuguClient: nuguClient, clientInfo: clientInfo, themeManager: themeManager)
+    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    public convenience init(viewController: UIViewController, nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
+        self.init(nuguClient: nuguClient, clientInfo: clientInfo, themeController: themeController)
         self.viewController = viewController
     }
     
@@ -76,13 +78,14 @@ public class DisplayWebViewPresenter: NSObject {
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    private init(nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeManager: NuguThemeManager? = nil) {
+    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    private init(nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
         super.init()
         self.nuguClient = nuguClient
         self.clientInfo = clientInfo
         nuguClient.displayAgent.delegate = self
-        if let themeManager = themeManager {
-            addThemeManagerObserver(themeManager)
+        if let themeController = themeController {
+            addThemeManagerObserver(themeController)
         }
     }
     
@@ -282,7 +285,7 @@ extension DisplayWebViewPresenter: WKNavigationDelegate {
 // MARK: - Observer
 
 extension DisplayWebViewPresenter {
-    func addThemeManagerObserver(_ object: NuguThemeManager) {
+    func addThemeManagerObserver(_ object: NuguThemeController) {
         themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
             guard let self = self else { return }
             let newClientInfo = ["theme": notification.theme.rawValue]

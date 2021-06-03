@@ -35,13 +35,13 @@ final class MainViewController: UIViewController {
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
         nuguClient: NuguCentralManager.shared.client,
-        themeManager: NuguCentralManager.shared.themeManager
+        themeController: NuguCentralManager.shared.themeController
     )
     private lazy var displayWebViewPresenter = DisplayWebViewPresenter(
         viewController: self,
         nuguClient: NuguCentralManager.shared.client,
         clientInfo: ["buttonColor": "white"],
-        themeManager: NuguCentralManager.shared.themeManager
+        themeController: NuguCentralManager.shared.themeController
     )
     private lazy var audioDisplayViewPresenter = AudioDisplayViewPresenter(
         viewController: self,
@@ -110,10 +110,10 @@ final class MainViewController: UIViewController {
         super.traitCollectionDidChange(previousTraitCollection)
         switch traitCollection.userInterfaceStyle {
         case .dark:
-            NuguCentralManager.shared.themeManager.theme = .dark
+            NuguCentralManager.shared.themeController.theme = .dark
             themeSwitch.isOn = true
         case .light:
-            NuguCentralManager.shared.themeManager.theme = .light
+            NuguCentralManager.shared.themeController.theme = .light
             themeSwitch.isOn = false
         default:
             break
@@ -192,7 +192,7 @@ private extension MainViewController {
     }
     
     @IBAction func onThemeSwitchChanged(_ themeSwitch: UISwitch) {
-        NuguCentralManager.shared.themeManager.theme = themeSwitch.isOn ? .dark : .light
+        NuguCentralManager.shared.themeController.theme = themeSwitch.isOn ? .dark : .light
     }
 }
 
@@ -217,10 +217,10 @@ private extension MainViewController {
         
         switch traitCollection.userInterfaceStyle {
         case .dark:
-            NuguCentralManager.shared.themeManager.theme = .dark
+            NuguCentralManager.shared.themeController.theme = .dark
             themeSwitch.isOn = true
         case .light:
-            NuguCentralManager.shared.themeManager.theme = .light
+            NuguCentralManager.shared.themeController.theme = .light
             themeSwitch.isOn = false
         default:
             break

@@ -492,7 +492,7 @@
 		A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */; };
 		A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E66A241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift */; };
 		A135E6952428B6C8006F82E5 /* AudioPlayerAgent+RequestPlayEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A135E6942428B6C8006F82E5 /* AudioPlayerAgent+RequestPlayEvent.swift */; };
-		A1700419265F346F006A90E4 /* NuguThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1700418265F346F006A90E4 /* NuguThemeManager.swift */; };
+		A1700419265F346F006A90E4 /* NuguThemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1700418265F346F006A90E4 /* NuguThemeController.swift */; };
 		A170041B265F37FC006A90E4 /* NuguTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A170041A265F37FC006A90E4 /* NuguTheme.swift */; };
 		A1700421266779A0006A90E4 /* UserInterfaceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1700420266779A0006A90E4 /* UserInterfaceUtil.swift */; };
 		A17B065E2394D22800D739E9 /* device_GW_error_002.wav in Resources */ = {isa = PBXBuildFile; fileRef = A17B06572394D22700D739E9 /* device_GW_error_002.wav */; };
@@ -1243,7 +1243,7 @@
 		A15050922416272400671568 /* AudioPlayerUpdateMetadataPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerUpdateMetadataPayload.swift; sourceTree = "<group>"; };
 		A15050CE241B2B7000671568 /* AudioPlayerLyricsTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerLyricsTemplate.swift; sourceTree = "<group>"; };
 		A15050D0241B2BCF00671568 /* AudioPlayerSettingsTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerSettingsTemplate.swift; sourceTree = "<group>"; };
-		A1700418265F346F006A90E4 /* NuguThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguThemeManager.swift; sourceTree = "<group>"; };
+		A1700418265F346F006A90E4 /* NuguThemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguThemeController.swift; sourceTree = "<group>"; };
 		A170041A265F37FC006A90E4 /* NuguTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguTheme.swift; sourceTree = "<group>"; };
 		A1700420266779A0006A90E4 /* UserInterfaceUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInterfaceUtil.swift; sourceTree = "<group>"; };
 		A17B06572394D22700D739E9 /* device_GW_error_002.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = device_GW_error_002.wav; sourceTree = "<group>"; };
@@ -1425,7 +1425,7 @@
 				75021EAB25945E670014537C /* AudioDisplayViewPresenter.swift */,
 				75021EB725945E7B0014537C /* AudioDisplayViewPresenterDelegate.swift */,
 				754F628625D25FA300F6016E /* ControlCenterManager.swift */,
-				A1700418265F346F006A90E4 /* NuguThemeManager.swift */,
+				A1700418265F346F006A90E4 /* NuguThemeController.swift */,
 				A170041A265F37FC006A90E4 /* NuguTheme.swift */,
 			);
 			path = Presenter;
@@ -3685,7 +3685,7 @@
 				75021E64259436930014537C /* DisplayWebViewPresenterDelegate.swift in Sources */,
 				0600C3572570E4CF0071AEF3 /* Configuration.swift in Sources */,
 				7EC282F325206A8C00E3F18A /* BackgroundFocusHolder.swift in Sources */,
-				A1700419265F346F006A90E4 /* NuguThemeManager.swift in Sources */,
+				A1700419265F346F006A90E4 /* NuguThemeController.swift in Sources */,
 				75021EAC25945E670014537C /* AudioDisplayViewPresenter.swift in Sources */,
 				1F2E80402397A2E500569C59 /* KeywordDetectorDelegate.swift in Sources */,
 				7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */,

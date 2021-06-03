@@ -58,7 +58,7 @@ final class NuguCentralManager {
         return client
     }()
     
-    lazy var themeManager = NuguThemeManager()
+    lazy var themeController = NuguThemeController()
     
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
     

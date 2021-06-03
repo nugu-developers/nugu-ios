@@ -100,9 +100,9 @@ public class VoiceChromePresenter: NSObject {
         nuguVoiceChrome: NuguVoiceChrome? = nil,
         nuguClient: NuguClient,
         asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL(),
-        themeManager: NuguThemeManager? = nil
+        themeController: NuguThemeController? = nil
     ) {
-        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL, themeManager: themeManager)
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL, themeController: themeController)
         
         self.superView = superView
     }
@@ -118,9 +118,9 @@ public class VoiceChromePresenter: NSObject {
         nuguVoiceChrome: NuguVoiceChrome? = nil,
         nuguClient: NuguClient,
         asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL(),
-        themeManager: NuguThemeManager? = nil
+        themeController: NuguThemeController? = nil
     ) {
-        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL, themeManager: themeManager)
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL, themeController: themeController)
         
         self.viewController = viewController
     }
@@ -129,7 +129,7 @@ public class VoiceChromePresenter: NSObject {
         nuguVoiceChrome: NuguVoiceChrome?,
         nuguClient: NuguClient,
         asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL,
-        themeManager: NuguThemeManager? = nil
+        themeController: NuguThemeController? = nil
     ) {
         self.nuguVoiceChrome = nuguVoiceChrome ?? NuguVoiceChrome(frame: CGRect())
         self.nuguClient = nuguClient
@@ -141,8 +141,8 @@ public class VoiceChromePresenter: NSObject {
         addInteractionControlObserver(nuguClient.interactionControlManager)
         addAsrAgentObserver(nuguClient.asrAgent)
         addDialogStateObserver(nuguClient.dialogStateAggregator)
-        if let themeManager = themeManager {
-            addThemeManagerObserver(themeManager)
+        if let themeController = themeController {
+            addThemeManagerObserver(themeController)
         }
     }
     
@@ -391,7 +391,7 @@ private extension VoiceChromePresenter {
         }
     }
     
-    func addThemeManagerObserver(_ object: NuguThemeManager) {
+    func addThemeManagerObserver(_ object: NuguThemeController) {
         themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
             guard let self = self else { return }
             switch notification.theme {
