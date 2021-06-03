@@ -334,7 +334,8 @@ private extension VoiceChromePresenter {
                 self.voiceChromeDismissWorkItem?.cancel()
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    guard notification.multiTurn == true || notification.item?.target == .speaking else {
+                    guard notification.sessionActivated == true,
+                          notification.multiTurn == true || notification.item?.target == .speaking else {
                         self.dismissVoiceChrome()
                         return
                     }
