@@ -47,6 +47,9 @@ final public class NuguDisplayWebView: UIView {
     private var deviceTypeCode: String?
     private var clientInfo: [String: String]?
     
+    private let darkBackgroundColor: UIColor = UIColor(red: 26.0/255.0, green: 26.0/255.0, blue: 26.0/255.0, alpha: 1.0)
+    private let lightBackgroundColor: UIColor = UIColor(red: 248.0/255.0, green: 248.0/255.0, blue: 248.0/255.0, alpha: 1.0)
+    
     private var focusedItemToken: String?
     private var visibleTokenList: [String]?
     private var controlCompletion: ((Bool) -> Void)?
@@ -58,6 +61,9 @@ final public class NuguDisplayWebView: UIView {
     public var onChipsSelect: ((_ selectedChips: String) -> Void)?
     public var onTapForStopRecognition: (() -> Void)?
     public var onClose: (() -> Void)?
+    
+    @IBOutlet private weak var containerView: UIView!
+    @IBOutlet private weak var safeAreaCoverView: UIView!
     
     // Override
     public override init(frame: CGRect) {
@@ -116,6 +122,7 @@ private extension NuguDisplayWebView {
     
     func makeWebView(_ configuration: WKWebViewConfiguration) {
         let webView = WKWebView(frame: CGRect(), configuration: configuration)
+        webView.isOpaque = false
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapForStopRecognition))
         tapGestureRecognizer.delegate = self
         webView.addGestureRecognizer(tapGestureRecognizer)
@@ -127,6 +134,36 @@ private extension NuguDisplayWebView {
         webView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         webView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -SafeAreaUtil.bottomSafeAreaHeight).isActive = true
         displayWebView = webView
+    }
+    
+    func updateTheme() {
+        DispatchQueue.main.async { [weak self] in
+            if let themeInfo = self?.clientInfo?["theme"] {
+                switch themeInfo {
+                case "dark":
+                    self?.containerView.backgroundColor = self?.darkBackgroundColor
+                    self?.safeAreaCoverView.backgroundColor = self?.darkBackgroundColor
+                    self?.displayWebView?.scrollView.backgroundColor = self?.darkBackgroundColor
+                case "light":
+                    self?.containerView.backgroundColor = self?.lightBackgroundColor
+                    self?.safeAreaCoverView.backgroundColor = self?.lightBackgroundColor
+                    self?.displayWebView?.scrollView.backgroundColor = self?.lightBackgroundColor
+                default: break
+                }
+            } else {
+                switch UserInterfaceUtil.style {
+                case .dark:
+                    self?.containerView.backgroundColor = self?.darkBackgroundColor
+                    self?.safeAreaCoverView.backgroundColor = self?.darkBackgroundColor
+                    self?.displayWebView?.scrollView.backgroundColor = self?.darkBackgroundColor
+                case .light:
+                    self?.containerView.backgroundColor = self?.lightBackgroundColor
+                    self?.safeAreaCoverView.backgroundColor = self?.lightBackgroundColor
+                    self?.displayWebView?.scrollView.backgroundColor = self?.lightBackgroundColor
+                default: break
+                }
+            }
+        }
     }
     
     @objc func didTapForStopRecognition() {
@@ -149,6 +186,7 @@ public extension NuguDisplayWebView {
         self.displayPayload = displayPayload
         self.displayType = displayType
         self.clientInfo = clientInfo
+        updateTheme()
         guard let displayType = self.displayType,
               let payloadData = self.displayPayload,
               let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadData, options: .mutableContainers) as? [String: Any] else { return }
@@ -195,6 +233,7 @@ public extension NuguDisplayWebView {
             return
         }
         DispatchQueue.main.async { [weak self] in
+            self?.updateTheme()
             self?.displayWebView?.evaluateJavaScript("onClientInfoChanged(\(jsonStr))", completionHandler: { (result, error) in
                 log.debug("onClientInfoChanged(\(jsonStr)) \(String(describing: result)) \(String(describing: error))")
             })
