@@ -30,15 +30,18 @@ final class MainViewController: UIViewController {
     
     @IBOutlet private weak var nuguButton: NuguButton!
     @IBOutlet private weak var settingButton: UIButton!
+    @IBOutlet private weak var themeSwitch: UISwitch!
     
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
-        nuguClient: NuguCentralManager.shared.client
+        nuguClient: NuguCentralManager.shared.client,
+        themeController: NuguCentralManager.shared.themeController
     )
     private lazy var displayWebViewPresenter = DisplayWebViewPresenter(
         viewController: self,
         nuguClient: NuguCentralManager.shared.client,
-        clientInfo: ["buttonColor": "white"]
+        clientInfo: ["buttonColor": "white"],
+        themeController: NuguCentralManager.shared.themeController
     )
     private lazy var audioDisplayViewPresenter = AudioDisplayViewPresenter(
         viewController: self,
@@ -100,6 +103,20 @@ final class MainViewController: UIViewController {
             UserDefaults.Standard.hasSeenGuideWeb = true
         default:
             return
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            NuguCentralManager.shared.themeController.theme = .dark
+            themeSwitch.isOn = true
+        case .light:
+            NuguCentralManager.shared.themeController.theme = .light
+            themeSwitch.isOn = false
+        default:
+            break
         }
     }
     
@@ -173,6 +190,10 @@ private extension MainViewController {
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
         presentVoiceChrome(initiator: .tap)
     }
+    
+    @IBAction func onThemeSwitchChanged(_ themeSwitch: UISwitch) {
+        NuguCentralManager.shared.themeController.theme = themeSwitch.isOn ? .dark : .light
+    }
 }
 
 // MARK: - Private (Nugu)
@@ -193,6 +214,17 @@ private extension MainViewController {
         voiceChromePresenter.delegate = self
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
+        
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            NuguCentralManager.shared.themeController.theme = .dark
+            themeSwitch.isOn = true
+        case .light:
+            NuguCentralManager.shared.themeController.theme = .light
+            themeSwitch.isOn = false
+        default:
+            break
+        }
     }
     
     /// Show nugu usage guide webpage after successful login process

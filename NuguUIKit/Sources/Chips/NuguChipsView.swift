@@ -20,6 +20,8 @@
 
 import UIKit
 
+import NuguUtils
+
 /// <#Description#>
 final public class NuguChipsView: UIView {
     
@@ -46,7 +48,19 @@ final public class NuguChipsView: UIView {
     
     public var willStartScrolling: (() -> Void)?
     
-    public var theme: NuguChipsViewTheme = .light
+    public var theme: NuguChipsViewTheme = UserInterfaceUtil.style == .dark ? .dark : .light {
+        didSet {
+            chipsScrollView.subviews.forEach { subview in
+                guard let nuguChipsButton = subview as? NuguChipsButton else { return }
+                switch theme {
+                case .dark:
+                    nuguChipsButton.theme = .dark
+                case .light:
+                    nuguChipsButton.theme = .light
+                }
+            }
+        }
+    }
     
     public var chipsData: [NuguChipsButton.NuguChipsButtonType] = [] {
         didSet {
