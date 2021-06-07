@@ -34,6 +34,7 @@ public class StreamDataRouter: StreamDataRoutable {
     private var serverInitiatedDirectiveReceiver: ServerSideEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
+    private var serverInitiatedDirectiveStateDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
     public init(directiveSequencer: DirectiveSequenceable) {
@@ -56,6 +57,15 @@ public extension StreamDataRouter {
         serverInitiatedDirectiveCompletion = completion
         
         log.debug("start receive server initiated directives")
+        
+        serverInitiatedDirectiveStateDisposable?.dispose()
+        serverInitiatedDirectiveStateDisposable = serverInitiatedDirectiveReceiver.stateObserver
+            .subscribe(onNext: { [weak self] state in
+                self?.notificationQueue.async { [weak self] in
+                    self?.post(state)
+                }
+            })
+        serverInitiatedDirectiveStateDisposable?.disposed(by: disposeBag)
         
         serverInitiatedDirectiveDisposable?.dispose()
         serverInitiatedDirectiveDisposable = serverInitiatedDirectiveReceiver.directive
@@ -98,6 +108,7 @@ public extension StreamDataRouter {
     func stopReceiveServerInitiatedDirective() {
         log.debug("stop receive server initiated directives")
         serverInitiatedDirectiveDisposable?.dispose()
+        serverInitiatedDirectiveStateDisposable?.dispose()
         serverInitiatedDirectiveCompletion = nil
     }
 }
@@ -324,7 +335,7 @@ public extension NuguCoreNotification {
             public static var name: Notification.Name = .streamDataDirectivesDidReceive
             public let directives: [Downstream.Directive]
 
-            public static func make(from: [String : Any]) -> ReceivedDirectives? {
+            public static func make(from: [String: Any]) -> ReceivedDirectives? {
                 guard let directives = from["directives"] as? [Downstream.Directive] else { return nil }
 
                 return ReceivedDirectives(directives: directives)
@@ -389,5 +400,7 @@ public extension NuguCoreNotification {
                 return SentAttachment(attachment: attachment, error: error)
             }
         }
+        
+        public typealias ServerInitiatedDirectiveReceiverState = ServerSideEventReceiverState
     }
 }

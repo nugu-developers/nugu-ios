@@ -369,6 +369,10 @@ extension NuguCentralManager: NuguClientDelegate {
         // Error: EventSenderError
         log.debug("\(error?.localizedDescription ?? ""): \(attachment.seq)")
     }
+    
+    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {
+        log.debug("nuguClientServerInitiatedDirectiveRecevierStateDidChange: \(state)")
+    }
 }
 
 // MARK: - SoundAgentDataSource
