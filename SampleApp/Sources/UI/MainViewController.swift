@@ -30,15 +30,18 @@ final class MainViewController: UIViewController {
     
     @IBOutlet private weak var nuguButton: NuguButton!
     @IBOutlet private weak var settingButton: UIButton!
+    @IBOutlet private weak var themeSwitch: UISwitch!
     
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
-        nuguClient: NuguCentralManager.shared.client
+        nuguClient: NuguCentralManager.shared.client,
+        themeController: NuguCentralManager.shared.themeController
     )
     private lazy var displayWebViewPresenter = DisplayWebViewPresenter(
         viewController: self,
         nuguClient: NuguCentralManager.shared.client,
-        clientInfo: ["buttonColor": "white"]
+        clientInfo: ["buttonColor": "white"],
+        themeController: NuguCentralManager.shared.themeController
     )
     private lazy var audioDisplayViewPresenter = AudioDisplayViewPresenter(
         viewController: self,
@@ -100,6 +103,24 @@ final class MainViewController: UIViewController {
             UserDefaults.Standard.hasSeenGuideWeb = true
         default:
             return
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 12.0, *) {
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                NuguCentralManager.shared.themeController.theme = .dark
+                themeSwitch.isOn = true
+            case .light:
+                NuguCentralManager.shared.themeController.theme = .light
+                themeSwitch.isOn = false
+            default:
+                break
+            }
+        } else {
+            // Fallback on earlier versions
         }
     }
     
@@ -174,15 +195,8 @@ private extension MainViewController {
         presentVoiceChrome(initiator: .tap)
     }
     
-    @IBAction func sidOptionSwitchValueChanged(_ optionSwitch: UISwitch) {
-        print("--------")
-        if optionSwitch.isOn == true {
-            NuguCentralManager.shared.client.streamDataRouter.startReceiveServerInitiatedDirective { state in
-                log.debug(state)
-            }
-        } else {
-            NuguCentralManager.shared.client.streamDataRouter.stopReceiveServerInitiatedDirective()
-        }
+    @IBAction func onThemeSwitchChanged(_ themeSwitch: UISwitch) {
+        NuguCentralManager.shared.themeController.theme = themeSwitch.isOn ? .dark : .light
     }
 }
 
@@ -204,6 +218,21 @@ private extension MainViewController {
         voiceChromePresenter.delegate = self
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
+        
+        if #available(iOS 12.0, *) {
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                NuguCentralManager.shared.themeController.theme = .dark
+                themeSwitch.isOn = true
+            case .light:
+                NuguCentralManager.shared.themeController.theme = .light
+                themeSwitch.isOn = false
+            default:
+                break
+            }
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     /// Show nugu usage guide webpage after successful login process
