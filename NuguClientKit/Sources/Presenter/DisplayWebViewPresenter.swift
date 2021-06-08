@@ -85,7 +85,7 @@ public class DisplayWebViewPresenter: NSObject {
         self.clientInfo = clientInfo
         nuguClient.displayAgent.delegate = self
         if let themeController = themeController {
-            addThemeManagerObserver(themeController)
+            addThemeControllerObserver(themeController)
         }
     }
     
@@ -291,7 +291,7 @@ extension DisplayWebViewPresenter: WKNavigationDelegate {
 // MARK: - Observer
 
 extension DisplayWebViewPresenter {
-    func addThemeManagerObserver(_ object: NuguThemeController) {
+    func addThemeControllerObserver(_ object: NuguThemeController) {
         themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
             guard let self = self else { return }
             let newClientInfo = ["theme": notification.theme.rawValue]

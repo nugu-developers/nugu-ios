@@ -21,6 +21,7 @@
 import UIKit
 
 import NuguAgents
+import NuguUtils
 
 /// <#Description#>
 public class AudioDisplayView: UIView {    
@@ -85,7 +86,7 @@ public class AudioDisplayView: UIView {
     public var displayPayload: [String: AnyHashable]?
     public var isSeekable: Bool = false
     
-    public var theme: AudioDisplayTheme = .light {
+    public var theme: AudioDisplayTheme = UserInterfaceUtil.style == .dark ? .dark : .light {
         didSet {
             fullAudioPlayerContainerView.backgroundColor = theme.backgroundColor
             audioPlayerBarViewContainerView.backgroundColor = theme.barPlayerBackgroundColor

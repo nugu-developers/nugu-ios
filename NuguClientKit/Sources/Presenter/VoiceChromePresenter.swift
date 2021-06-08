@@ -31,6 +31,7 @@ public class VoiceChromePresenter: NSObject {
     private let nuguVoiceChrome: NuguVoiceChrome
     
     private weak var nuguClient: NuguClient?
+    private weak var themeController: NuguThemeController?
     private weak var viewController: UIViewController?
     private weak var superView: UIView?
     private var targetView: UIView? {
@@ -133,6 +134,7 @@ public class VoiceChromePresenter: NSObject {
     ) {
         self.nuguVoiceChrome = nuguVoiceChrome ?? NuguVoiceChrome(frame: CGRect())
         self.nuguClient = nuguClient
+        self.themeController = themeController
         self.asrBeepPlayer = ASRBeepPlayer(focusManager: nuguClient.focusManager, resourcesUrl: asrBeepPlayerResourcesURL)
         
         super.init()
@@ -142,7 +144,7 @@ public class VoiceChromePresenter: NSObject {
         addAsrAgentObserver(nuguClient.asrAgent)
         addDialogStateObserver(nuguClient.dialogStateAggregator)
         if let themeController = themeController {
-            addThemeManagerObserver(themeController)
+            addThemeControllerObserver(themeController)
         }
     }
     
@@ -223,6 +225,15 @@ private extension VoiceChromePresenter {
         delegate?.voiceChromeWillShow()
         
         isHidden = false
+        
+        if let themeController = themeController {
+            switch themeController.theme {
+            case .dark:
+                nuguVoiceChrome.theme = .dark
+            case .light:
+                nuguVoiceChrome.theme = .light
+            }
+        }
         
         let showAnimation = {
             UIView.animate(withDuration: 0.3) { [weak self] in
@@ -391,7 +402,7 @@ private extension VoiceChromePresenter {
         }
     }
     
-    func addThemeManagerObserver(_ object: NuguThemeController) {
+    func addThemeControllerObserver(_ object: NuguThemeController) {
         themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
             guard let self = self else { return }
             switch notification.theme {
