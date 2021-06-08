@@ -65,6 +65,8 @@ public protocol NuguClientDelegate: AnyObject {
     ///
     /// - returns: The current authorization token.
     func nuguClientRequestAccessToken() -> String?
+    
+    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState)
 }
 
 // MARK: - Optional
@@ -78,4 +80,5 @@ public extension NuguClientDelegate {
     func nuguClientDidReceive(attachment: Downstream.Attachment) {}
     func nuguClientDidSend(event: Upstream.Event, error: Error?) {}
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {}
+    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {}
 }

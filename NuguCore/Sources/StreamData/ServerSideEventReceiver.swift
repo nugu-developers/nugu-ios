@@ -34,7 +34,7 @@ class ServerSideEventReceiver {
     var state: ServerSideEventReceiverState = .disconnected() {
         didSet {
             if oldValue != state {
-                log.debug("\(oldValue) -> \(state)")
+                log.debug("server side event receiver state changed from: \(oldValue) to: \(state)")
                 stateSubject.onNext(state)
                 state == .connected ? startPing() : stopPing()
             }
@@ -46,8 +46,9 @@ class ServerSideEventReceiver {
     }
 
     var directive: Observable<MultiPartParser.Part> {
+        state = .connecting
+
         var error: Error?
-        
         return apiProvider.directive
             .take(1)
             .concatMap { [weak self] part -> Observable<MultiPartParser.Part> in
@@ -82,6 +83,8 @@ private extension ServerSideEventReceiver {
                 guard (error as? NetworkError) != NetworkError.authError else {
                     return Observable.error(error)
                 }
+                
+                self.state = .connecting
 
                 // if server policy does not exist, get it using `policies` api.
                 guard 0 < self.serverPolicies.count else {
