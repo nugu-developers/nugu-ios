@@ -20,6 +20,8 @@
 
 import UIKit
 
+import NuguUtils
+
 final class AudioPlayer1View: AudioDisplayView {
     // Private Properties
     @IBOutlet private weak var nextLyricsLabel: UILabel!
@@ -168,6 +170,8 @@ final class AudioPlayer1View: AudioDisplayView {
         shuffleButton.setImage(UIImage(named: "btn_random_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
         
         setBarMode(0)
+        
+        theme = UserInterfaceUtil.style == .dark ? .dark : .light
     }
     
     // MARK: - Override (ProgressTimer)

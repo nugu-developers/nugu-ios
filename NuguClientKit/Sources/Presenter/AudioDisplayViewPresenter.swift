@@ -24,6 +24,7 @@ import UIKit
 import NuguAgents
 import NuguUIKit
 import NuguCore
+import NuguUtils
 
 /// AudioDisplayViewPresenter is a class which helps user for displaying AudioDisplayView more easily.
 public class AudioDisplayViewPresenter {
@@ -36,11 +37,13 @@ public class AudioDisplayViewPresenter {
         superView ?? viewController?.view
     }
     private weak var nuguClient: NuguClient?
+    private weak var themeController: NuguThemeController?
     
     // Observers
     private let notificationCenter = NotificationCenter.default
     private var audioPlayerStateObserver: Any?
     private var audioPlayerDurationObserver: Any?
+    private var audioPlayerThemeObserver: Any?
     
     private var controlCenterManager: ControlCenterManager?
     
@@ -48,8 +51,8 @@ public class AudioDisplayViewPresenter {
     /// - Parameters:
     ///   - superView: Target view for AudioDisplayView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    public convenience init(superView: UIView, nuguClient: NuguClient) {
-        self.init(nuguClient: nuguClient)
+    public convenience init(superView: UIView, nuguClient: NuguClient, themeController: NuguThemeController? = nil) {
+        self.init(nuguClient: nuguClient, themeController: themeController)
         self.superView = superView
     }
     
@@ -57,16 +60,21 @@ public class AudioDisplayViewPresenter {
     /// - Parameters:
     ///   - viewController: Target viewController for AudioDisplayView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    public convenience init(viewController: UIViewController, nuguClient: NuguClient) {
-        self.init(nuguClient: nuguClient)
+    public convenience init(viewController: UIViewController, nuguClient: NuguClient, themeController: NuguThemeController? = nil) {
+        self.init(nuguClient: nuguClient, themeController: themeController)
         self.viewController = viewController
     }
     
     /// Initialize
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    private init(nuguClient: NuguClient) {
+    private init(nuguClient: NuguClient, themeController: NuguThemeController? = nil) {
         self.nuguClient = nuguClient
+        self.themeController = themeController
+        
+        if let themeController = themeController {
+            addThemeControllerObserver(themeController)
+        }
         
         controlCenterManager = ControlCenterManager(audioPlayerAgent: nuguClient.audioPlayerAgent)
         
@@ -81,6 +89,10 @@ public class AudioDisplayViewPresenter {
         
         if let audioPlayerDurationObserver = audioPlayerDurationObserver {
             notificationCenter.removeObserver(audioPlayerDurationObserver)
+        }
+        
+        if let audioPlayerThemeObserver = audioPlayerThemeObserver {
+            notificationCenter.removeObserver(audioPlayerThemeObserver)
         }
     }
 }
@@ -174,6 +186,14 @@ private extension AudioDisplayViewPresenter {
         audioDisplayView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
         audioDisplayView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
         audioDisplayView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
+        if let themeController = themeController {
+            switch themeController.theme {
+            case .dark:
+                audioDisplayView.theme = .dark
+            case .light:
+                audioDisplayView.theme = .light
+            }
+        }
         completion(audioDisplayView)
         
         UIView.animate(withDuration: 0.3, animations: {
@@ -269,5 +289,21 @@ private extension AudioDisplayViewPresenter {
         audioPlayerDurationObserver = object.observe(NuguAgentNotification.AudioPlayer.Duration.self, queue: .main) { [weak self] (notification) in
             self?.controlCenterManager?.update(notification.duration)
         }
+    }
+    
+    func addThemeControllerObserver(_ object: NuguThemeController) {
+        audioPlayerThemeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
+            guard let self = self else { return }
+            switch notification.theme {
+            case .dark:
+                DispatchQueue.main.async { [weak self] in
+                    self?.audioDisplayView?.theme = .dark
+                }
+            case .light:
+                DispatchQueue.main.async { [weak self] in
+                    self?.audioDisplayView?.theme = .light
+                }
+            }
+        })
     }
 }
