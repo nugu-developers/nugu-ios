@@ -28,7 +28,7 @@ public enum RoutineState: Equatable {
     case stopped
 }
 
-extension RoutineState {
+public extension RoutineState {
     var routineActivity: String {
         switch self {
         case .idle: return "IDLE"
