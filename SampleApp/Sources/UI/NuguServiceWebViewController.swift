@@ -102,7 +102,7 @@ extension NuguServiceWebViewController: NuguServiceWebJavascriptDelegate {
               NuguCentralManager.shared.client.routineAgent.state == .playing else {
             return
         }
-        nuguServiceWebView.onRoutineStatusChanged(token: routineItem.payload.token, status: "PLAYING")
+        nuguServiceWebView.onRoutineStatusChanged(token: routineItem.payload.token, status: RoutineState.playing.routineActivity)
     }
 }
 
@@ -117,19 +117,7 @@ private extension NuguServiceWebViewController {
 extension NuguServiceWebViewController: RoutineAgentDelegate {
     func routineAgentDidChange(state: RoutineState, item: RoutineItem?) {
         guard let token = item?.payload.token else { return }
-        var status: String
-        switch state {
-        case .finished:
-            status = "FINISHED"
-        case .idle:
-            status = "IDLE"
-        case .interrupted:
-            status = "INTERRUPTED"
-        case .playing:
-            status = "PLAYING"
-        case .stopped:
-            status = "STOPPED"
-        }
-        nuguServiceWebView.onRoutineStatusChanged(token: token, status: status)
+        
+        nuguServiceWebView.onRoutineStatusChanged(token: token, status: state.routineActivity)
     }
 }
