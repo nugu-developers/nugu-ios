@@ -20,15 +20,23 @@
 
 import Foundation
 
-enum ServerSideEventReceiverState: Equatable {
+import NuguUtils
+
+public enum ServerSideEventReceiverState: Equatable, EnumTypedNotification {
+    public static var name: Notification.Name = .serverSideEventReceiverStateDidChange
+    
     case connected
+    case connecting
     /// Connection closed.
     /// - Parameter error: If Connection closed because of the error.
     case disconnected(error: Error? = nil)
     
-    static func == (lhs: ServerSideEventReceiverState, rhs: ServerSideEventReceiverState) -> Bool {
+    public static func == (lhs: ServerSideEventReceiverState, rhs: ServerSideEventReceiverState) -> Bool {
         switch (lhs, rhs) {
         case (.connected, .connected):
+            return true
+            
+        case (.connecting, .connecting):
             return true
 
         case (.disconnected(let lhsError), .disconnected(let rhsError)):
@@ -38,4 +46,8 @@ enum ServerSideEventReceiverState: Equatable {
             return false
         }
     }
+}
+
+extension Notification.Name {
+    static let serverSideEventReceiverStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.server_side_event_receiver_state_did_change")
 }

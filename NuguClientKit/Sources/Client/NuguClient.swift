@@ -36,6 +36,7 @@ public class NuguClient {
     private var streamDataEventDidSend: Any?
     private var streamDataAttachmentDidSent: Any?
     private var dialogStateObserver: Any?
+    private var serverInitiatedDirectiveReceiverStateObserver: Any?
     
     // Core
     /**
@@ -517,6 +518,10 @@ extension NuguClient {
         streamDataAttachmentDidSent = object.observe(NuguCoreNotification.StreamDataRoute.SentAttachment.self, queue: nil) { [weak self] (notification) in
             self?.delegate?.nuguClientDidSend(attachment: notification.attachment, error: notification.error)
         }
+        
+        serverInitiatedDirectiveReceiverStateObserver = object.observe(NuguCoreNotification.StreamDataRoute.ServerInitiatedDirectiveReceiverState.self, queue: nil) { [weak self] (notification) in
+            self?.delegate?.nuguClientServerInitiatedDirectiveRecevierStateDidChange(notification)
+        }
     }
     
     private func removeStreamDataRouterObservers() {
@@ -538,6 +543,10 @@ extension NuguClient {
         
         if let streamDataAttachmentDidSent = streamDataAttachmentDidSent {
             notificationCenter.removeObserver(streamDataAttachmentDidSent)
+        }
+        
+        if let serverInitiatedDirectiveReceiverStateObserver = serverInitiatedDirectiveReceiverStateObserver {
+            notificationCenter.removeObserver(serverInitiatedDirectiveReceiverStateObserver)
         }
     }
     
