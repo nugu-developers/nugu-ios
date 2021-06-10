@@ -32,7 +32,7 @@ public protocol NuguClientDelegate: AnyObject {
     func nuguClientDidReleaseAudioSession()
     
     /// Notify that  nugu client need to get mic input
-    func nuguClientWillUseMic()
+    func nuguClientWillUseMic(requestingFocus: Bool)
     
     // nugu server related
     /// Notify that  nugu client received directive

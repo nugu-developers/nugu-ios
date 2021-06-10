@@ -323,8 +323,8 @@ extension NuguCentralManager {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
-    func nuguClientWillUseMic() {
-        log.debug("nuguClientWillUseMic")
+    func nuguClientWillUseMic(requestingFocus: Bool) {
+        log.debug("nuguClientWillUseMic \(requestingFocus)")
     }
     
     func nuguClientRequestAccessToken() -> String? {

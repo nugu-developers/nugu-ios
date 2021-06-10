@@ -646,7 +646,7 @@ extension NuguClient: SpeechRecognizerAggregatorDelegate {
     
     public func speechRecognizerWillUseMic(requestingFocus: Bool) {
         guard let audioSessionManager = audioSessionManager else {
-            delegate?.nuguClientWillUseMic()
+            delegate?.nuguClientWillUseMic(requestingFocus: requestingFocus)
             return
         }
         
