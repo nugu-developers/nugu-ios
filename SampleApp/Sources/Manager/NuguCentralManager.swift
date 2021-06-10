@@ -55,11 +55,6 @@ final class NuguCentralManager {
         // Observers
         addSystemAgentObserver(client.systemAgent)
         
-        // Initialize proper audio session for Nugu service usage
-        // If you want to use your own audio session manager,
-        // Set NuguClient's audio manager to nil and fill up NuguClientDelegate methods instead
-        client.audioSessionManager?.updateAudioSession()
-        
         return client
     }()
     
@@ -331,7 +326,6 @@ extension NuguCentralManager {
 
 extension NuguCentralManager: NuguClientDelegate {
     func nuguClientWillUseMic() {
-        // If you set AudioSessionManager to nil, You should implement this
         log.debug("nuguClientWillUseMic")
     }
     
