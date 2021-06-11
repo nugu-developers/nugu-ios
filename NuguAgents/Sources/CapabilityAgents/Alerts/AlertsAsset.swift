@@ -49,7 +49,7 @@ public struct AlertsAsset: Codable {
         type = try container.decode(String.self, forKey: .type)
         switch type {
         case "Routine.Start":
-            resourceDictionary = try container.decode([String: AnyHashable].self, forKey: .resource)
+            resourceDictionary = try? container.decode([String: AnyHashable].self, forKey: .resource)
         default:
             resourceDictionary = nil
         }

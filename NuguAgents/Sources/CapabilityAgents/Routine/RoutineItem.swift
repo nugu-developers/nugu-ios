@@ -22,34 +22,33 @@ import Foundation
 
 import NuguUtils
 
-struct RoutineItem {
-    let dialogRequestId: String
-    let messageId: String
-    let payload: Payload
+public struct RoutineItem {
+    public let dialogRequestId: String
+    public let messageId: String
+    public let payload: Payload
 
-    struct Payload: Decodable {
-        let playServiceId: String
-        let token: String
-        let actions: [Action]
+    public struct Payload: Decodable {
+        public let playServiceId: String
+        public let token: String
+        public let actions: [Action]
 
-        struct Action {
-            let type: String
-            let text: String?
-            let data: [String: AnyHashable]?
-            let playServiceId: String?
-            let token: String?
-            let postDelayInMilliseconds: Int?
+        public struct Action {
+            public let type: String
+            public let text: String?
+            public let data: [String: AnyHashable]?
+            public let playServiceId: String?
+            public let token: String?
+            public let postDelayInMilliseconds: Int?
 
-            var actionType: Type? {
+            public var actionType: Type? {
                 Type.init(rawValue: type)
             }
 
-            enum `Type`: String, Decodable {
+            public enum `Type`: String, Decodable {
                 case text = "TEXT"
                 case data = "DATA"
             }
         }
-
     }
 }
 
@@ -72,7 +71,7 @@ extension RoutineItem.Payload.Action: Decodable {
         case postDelayInMilliseconds
     }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         type = try container.decode(String.self, forKey: .type)

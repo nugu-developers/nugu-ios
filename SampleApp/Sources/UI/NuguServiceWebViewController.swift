@@ -22,6 +22,7 @@ import UIKit
 import SafariServices
 
 import NuguServiceKit
+import NuguAgents
 
 final class NuguServiceWebViewController: UIViewController {
     var initialURLString: String?
@@ -39,6 +40,7 @@ final class NuguServiceWebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NuguCentralManager.shared.client.routineAgent.delegate = self
         nuguServiceWebView.javascriptDelegate = self
         nuguServiceWebView.addCookie([
             NuguServiceCookieKey.theme.rawValue: NuguServiceCookieValue.Theme.light.rawValue,
@@ -94,6 +96,14 @@ extension NuguServiceWebViewController: NuguServiceWebJavascriptDelegate {
             navigationController?.popViewController(animated: true)
         }
     }
+    
+    func requestActiveRoutine() {
+        guard let routineItem = NuguCentralManager.shared.client.routineAgent.routineItem,
+              NuguCentralManager.shared.client.routineAgent.state == .playing else {
+            return
+        }
+        nuguServiceWebView.onRoutineStatusChanged(token: routineItem.payload.token, status: RoutineState.playing.routineActivity)
+    }
 }
 
 // MARK: - IBAction
@@ -101,5 +111,13 @@ extension NuguServiceWebViewController: NuguServiceWebJavascriptDelegate {
 private extension NuguServiceWebViewController {
     @IBAction func closeButtonDidClick(_ button: UIButton) {
         navigationController?.popViewController(animated: true)
+    }
+}
+
+extension NuguServiceWebViewController: RoutineAgentDelegate {
+    func routineAgentDidChange(state: RoutineState, item: RoutineItem?) {
+        guard let token = item?.payload.token else { return }
+        
+        nuguServiceWebView.onRoutineStatusChanged(token: token, status: state.routineActivity)
     }
 }
