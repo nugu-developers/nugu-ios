@@ -284,6 +284,7 @@ private extension NuguOAuthClient {
                 grant.oauthHandler.clear()
                 completion?(result)
                 NotificationCenter.default.removeObserver(self.observer as Any)
+                self.observer = nil
             }
         }
         
