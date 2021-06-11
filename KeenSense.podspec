@@ -25,5 +25,6 @@ Pod::Spec.new do |s|
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/KeenSense/KeenSense/Libraries/**'}
 
   s.dependency 'NattyLog', '~> 1'
+  s.dependency 'NuguUtils', s.version.to_s
   
 end
