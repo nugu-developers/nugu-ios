@@ -12,7 +12,7 @@ Nugu framework for AI Service
   s.source = { :git => 'https://github.com/nugu-developers/nugu-ios.git', :tag => s.version }
   s.documentation_url = 'https://developers.nugu.co.kr'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '12.0'
   # s.tvos.deployment_target = '13.0'
   # s.watchos.deployment_target = '6.0'
   # s.macos.deployment_target = '10.15.0'

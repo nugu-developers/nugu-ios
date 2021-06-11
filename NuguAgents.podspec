@@ -12,7 +12,7 @@ Default Agent Implementations for Nugu service
   s.source = { :git => 'https://github.com/nugu-developers/nugu-ios.git', :tag => s.version.to_s }
   s.documentation_url = 'https://developers.nugu.co.kr'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '12.0'
 
   # Nugu does not yet support Apple Silicon
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }

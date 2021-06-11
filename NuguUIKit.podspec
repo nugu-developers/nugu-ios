@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.author = { 'SK Telecom Co., Ltd.' => 'nugu_dev_sdk@sk.com' }
   s.source = { :git => 'https://github.com/nugu-developers/nugu-ios.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '12.0'
 
   # Nugu does not yet support Apple Silicon
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
