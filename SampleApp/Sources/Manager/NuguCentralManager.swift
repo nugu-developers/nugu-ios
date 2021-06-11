@@ -330,9 +330,9 @@ extension NuguCentralManager {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
-    func nuguClientWillUseMic() {
+    func nuguClientWillUseMic(requestingFocus: Bool) {
         // If you set AudioSessionManager to nil, You should implement this
-        log.debug("nuguClientWillUseMic")
+        log.debug("nuguClientWillUseMic \(requestingFocus)")
     }
     
     func nuguClientRequestAccessToken() -> String? {

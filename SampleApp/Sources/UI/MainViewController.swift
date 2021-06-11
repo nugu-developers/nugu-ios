@@ -195,6 +195,17 @@ private extension MainViewController {
     @IBAction func onThemeSwitchChanged(_ themeSwitch: UISwitch) {
         NuguCentralManager.shared.themeController.theme = themeSwitch.isOn ? .dark : .light
     }
+    
+    @IBAction func sidOptionSwitchValueChanged(_ optionSwitch: UISwitch) {
+        print("--------")
+        if optionSwitch.isOn == true {
+            NuguCentralManager.shared.client.streamDataRouter.startReceiveServerInitiatedDirective { state in
+                log.debug(state)
+            }
+        } else {
+            NuguCentralManager.shared.client.streamDataRouter.stopReceiveServerInitiatedDirective()
+        }
+    }
 }
 
 // MARK: - Private (Nugu)

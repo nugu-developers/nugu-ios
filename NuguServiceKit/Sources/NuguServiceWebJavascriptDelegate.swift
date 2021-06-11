@@ -31,4 +31,6 @@ public protocol NuguServiceWebJavascriptDelegate: AnyObject {
     /// <#Description#>
     /// - Parameter reason: <#reason description#>
     func closeWindow(reason: String?)
+    /// <#Description#>
+    func requestActiveRoutine()
 }

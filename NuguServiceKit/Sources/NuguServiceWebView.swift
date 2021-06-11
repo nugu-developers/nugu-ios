@@ -33,6 +33,7 @@ final public class NuguServiceWebView: WKWebView {
         case openExternalApp
         case openInAppBrowser
         case closeWindow
+        case requestActiveRoutine
     }
     
     // MARK: Member Variables
@@ -67,6 +68,16 @@ final public class NuguServiceWebView: WKWebView {
     }
 }
 
+public extension NuguServiceWebView {
+    func onRoutineStatusChanged(token: String, status: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.evaluateJavaScript("onRoutineStatusChanged('\(token)', '\(status)')", completionHandler: { (result, error) in
+                log.debug("onRoutineStatusChanged('\(token)', '\(status)') \(String(describing: result)) \(String(describing: error))")
+            })
+        }
+    }
+}
+
 // MARK: - WKScriptMessageHandler
 
 /// :nodoc:
@@ -93,6 +104,8 @@ extension NuguServiceWebView: WKScriptMessageHandler {
             } else {
                 javascriptDelegate?.closeWindow(reason: nil)
             }
+        case .requestActiveRoutine:
+            javascriptDelegate?.requestActiveRoutine()
         }
     }
 }
