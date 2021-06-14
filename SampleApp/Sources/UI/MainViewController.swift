@@ -109,6 +109,7 @@ final class MainViewController: UIViewController {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        guard previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
         switch traitCollection.userInterfaceStyle {
         case .dark:
             NuguCentralManager.shared.themeController.theme = .dark
