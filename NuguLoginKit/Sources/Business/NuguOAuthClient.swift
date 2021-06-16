@@ -242,6 +242,15 @@ public extension NuguOAuthClient {
             )
         }
     }
+    
+    func cancel(grant: AuthorizationCodeGrant) {
+        if let observer = observer {
+            NotificationCenter.default.removeObserver(observer)
+            self.observer = nil
+        }
+        
+        grant.oauthHandler.clear()
+    }
 }
 
 // MARK: - Private
