@@ -30,7 +30,6 @@ final class MainViewController: UIViewController {
     
     @IBOutlet private weak var nuguButton: NuguButton!
     @IBOutlet private weak var settingButton: UIButton!
-    @IBOutlet private weak var themeSwitch: UISwitch!
     
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
@@ -109,16 +108,21 @@ final class MainViewController: UIViewController {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        guard previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
-        switch traitCollection.userInterfaceStyle {
+        guard UserDefaults.Standard.theme == SampleApp.Theme.system.rawValue else { return }
+        NuguCentralManager.shared.themeController.theme = traitCollection.userInterfaceStyle == .dark ? .dark : .light
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        switch NuguCentralManager.shared.themeController.theme {
         case .dark:
-            NuguCentralManager.shared.themeController.theme = .dark
-            themeSwitch.isOn = true
+            return .lightContent
         case .light:
-            NuguCentralManager.shared.themeController.theme = .light
-            themeSwitch.isOn = false
-        default:
-            break
+            if #available(iOS 13.0, *) {
+                return .darkContent
+            } else {
+                return .default
+            }
         }
     }
     
@@ -193,10 +197,6 @@ private extension MainViewController {
         presentVoiceChrome(initiator: .tap)
     }
     
-    @IBAction func onThemeSwitchChanged(_ themeSwitch: UISwitch) {
-        NuguCentralManager.shared.themeController.theme = themeSwitch.isOn ? .dark : .light
-    }
-    
     @IBAction func sidOptionSwitchValueChanged(_ optionSwitch: UISwitch) {
         print("--------")
         if optionSwitch.isOn == true {
@@ -228,16 +228,16 @@ private extension MainViewController {
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
         
-        switch traitCollection.userInterfaceStyle {
-        case .dark:
-            NuguCentralManager.shared.themeController.theme = .dark
-            themeSwitch.isOn = true
+        switch SampleApp.Theme(rawValue: UserDefaults.Standard.theme) {
+        case .system:
+            NuguCentralManager.shared.themeController.theme = traitCollection.userInterfaceStyle == .dark ? .dark : .light
         case .light:
             NuguCentralManager.shared.themeController.theme = .light
-            themeSwitch.isOn = false
-        default:
-            break
+        case .dark:
+            NuguCentralManager.shared.themeController.theme = .dark
+        default: break
         }
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     /// Show nugu usage guide webpage after successful login process

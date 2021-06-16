@@ -29,6 +29,7 @@ final class SettingViewController: UIViewController {
 
     private let settingMenu = [
         ["TID"],
+        ["테마 설정"],
         ["서비스 관리"],
         ["NUGU 사용하기", "이름을 불러 대화 시작하기", "부르는 이름", "호출 효과음", "응답 효과음", "응답 실패 효과음"],
         ["이용약관", "개인정보 처리방침"],
@@ -44,6 +45,26 @@ final class SettingViewController: UIViewController {
     }
     
     // MARK: - Override
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard UserDefaults.Standard.theme == SampleApp.Theme.system.rawValue else { return }
+        NuguCentralManager.shared.themeController.theme = traitCollection.userInterfaceStyle == .dark ? .dark : .light
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        switch NuguCentralManager.shared.themeController.theme {
+        case .dark:
+            return .lightContent
+        case .light:
+            if #available(iOS 13.0, *) {
+                return .darkContent
+            } else {
+                return .default
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,7 +122,7 @@ extension SettingViewController: UITableViewDataSource {
         
         if indexPath.section == 0 {
             cell.configure(text: menuTitle, detailText: tid)
-        } else if indexPath.section == 2 {
+        } else if indexPath.section == 3 {
             switch indexPath.row {
             case 0:
                 cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useNuguService)
@@ -158,6 +179,30 @@ extension SettingViewController: UITableViewDelegate {
                 self?.updateTid()
             }
         case (1, 0):
+            let themeActionSheet = UIAlertController(
+                title: nil,
+                message: nil,
+                preferredStyle: .actionSheet
+            )
+            SampleApp.Theme.allCases.forEach { [weak self] (theme) in
+                let action = UIAlertAction(
+                    title: theme.name,
+                    style: .default) { [weak self] _ in
+                    switch theme {
+                    case .system:
+                        NuguCentralManager.shared.themeController.theme = self?.traitCollection.userInterfaceStyle == .dark ? .dark : .light
+                    case .light:
+                        NuguCentralManager.shared.themeController.theme = .light
+                    case .dark:
+                        NuguCentralManager.shared.themeController.theme = .dark
+                    }
+                    UserDefaults.Standard.theme = theme.rawValue
+                    self?.setNeedsStatusBarAppearanceUpdate()
+                }
+                themeActionSheet.addAction(action)
+            }
+            present(themeActionSheet, animated: true)
+        case (2, 0):
             ConfigurationStore.shared.serviceSettingUrl { [weak self] (result) in
                 switch result {
                 case .success(let urlString):
@@ -166,7 +211,7 @@ extension SettingViewController: UITableViewDelegate {
                     log.error(error)
                 }
             }
-        case (2, 2):
+        case (3, 2):
             let wakeUpWordActionSheet = UIAlertController(
                 title: nil,
                 message: nil,
@@ -183,7 +228,7 @@ extension SettingViewController: UITableViewDelegate {
                 wakeUpWordActionSheet.addAction(action)
             }
             present(wakeUpWordActionSheet, animated: true)
-        case (3, 0):
+        case (4, 0):
             ConfigurationStore.shared.agreementUrl { [weak self] (result) in
                 switch result {
                 case .success(let urlString):
@@ -192,7 +237,7 @@ extension SettingViewController: UITableViewDelegate {
                     log.error(error)
                 }
             }
-        case (3, 1):
+        case (4, 1):
             ConfigurationStore.shared.privacyUrl { (result) in
                 switch result {
                 case .success(let urlString):
@@ -203,7 +248,7 @@ extension SettingViewController: UITableViewDelegate {
                     log.error(error)
                 }
             }
-        case (4, 0):
+        case (5, 0):
             dismiss(animated: true, completion: {
                 NuguCentralManager.shared.revoke()
             })

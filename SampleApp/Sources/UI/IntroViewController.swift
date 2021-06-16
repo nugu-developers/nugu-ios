@@ -25,6 +25,26 @@ import NuguUIKit
 final class IntroViewController: UIViewController {
     // MARK: Override
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard UserDefaults.Standard.theme == SampleApp.Theme.system.rawValue else { return }
+        NuguCentralManager.shared.themeController.theme = traitCollection.userInterfaceStyle == .dark ? .dark : .light
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        switch NuguCentralManager.shared.themeController.theme {
+        case .dark:
+            return .lightContent
+        case .light:
+            if #available(iOS 13.0, *) {
+                return .darkContent
+            } else {
+                return .default
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
