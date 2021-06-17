@@ -139,6 +139,18 @@ public class AudioDisplayView: UIView {
         return super.hitTest(point, with: event)
     }
     
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Theme should be updated when theme value has been changed,
+        // Because of progressView's missing context issue (fails to update it's tint color on not appearing state)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let themeToUpdate = self.theme
+            self.theme = themeToUpdate
+        }
+    }
+    
     // Overridable Public Methods    
     public func shouldShowLyrics() -> Bool {
         guard isBarMode == false else {

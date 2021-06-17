@@ -56,6 +56,24 @@ struct SampleApp {
     static var loginMethod: LoginMethod? {
         return LoginMethod(rawValue: UserDefaults.Standard.loginMethod)
     }
+    
+    enum Theme: Int, CaseIterable {
+        case system
+        case light
+        case dark
+        
+        var name: String {
+            switch self {
+            case .system: return "시스템 설정 모드"
+            case .light: return "라이트 모드"
+            case .dark: return "다크 모드"
+            }
+        }
+    }
+    
+    static var theme: Theme? {
+        return Theme(rawValue: UserDefaults.Standard.theme)
+    }
 }
 
 // MARK: - Notification.Name
