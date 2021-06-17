@@ -27,6 +27,9 @@ extension UserDefaults {
         @UserDefault(userDefaults: .standard, key: "loginMethod", defaultValue: -1)
         static var loginMethod: Int
         
+        @UserDefault(userDefaults: .standard, key: "theme", defaultValue: 0)
+        static var theme: Int
+        
         /// Setting value for using nugu service.
         @UserDefault(userDefaults: .standard, key: "useNuguService", defaultValue: true)
         static var useNuguService: Bool

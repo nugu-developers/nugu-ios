@@ -112,37 +112,37 @@
                                     <action selector="startRecognizeButtonDidClick:" destination="CDe-cd-LHH" eventType="touchUpInside" id="188-nt-X30"/>
                                 </connections>
                             </button>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x9I-h2-tZ9">
-                                <rect key="frame" x="276" y="134" width="51" height="31"/>
-                                <connections>
-                                    <action selector="onThemeSwitchChanged:" destination="CDe-cd-LHH" eventType="valueChanged" id="64A-d0-ZY3"/>
-                                </connections>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="dark theme" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DpQ-p1-Bd2">
-                                <rect key="frame" x="257" y="175" width="87" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="S.I.D" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qU6-on-dhg">
+                                <rect key="frame" x="25" y="400.66666666666669" width="36" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gDe-Kp-y6X">
+                                <rect key="frame" x="121" y="395.66666666666669" width="51" height="30.666666666666686"/>
+                                <connections>
+                                    <action selector="sidOptionSwitchValueChanged:" destination="CDe-cd-LHH" eventType="valueChanged" id="LOq-Dj-EG4"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Fng-5l-cHx"/>
                         <color key="backgroundColor" red="0.72941176470588232" green="0.7803921568627451" blue="0.82745098039215681" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="bottom" secondItem="1pN-zT-foV" secondAttribute="bottom" constant="20" id="2kg-rq-IoR"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" secondItem="H7A-kt-fwH" secondAttribute="trailing" constant="50" id="4Tm-uC-Cli"/>
-                            <constraint firstItem="x9I-h2-tZ9" firstAttribute="centerX" secondItem="H7A-kt-fwH" secondAttribute="centerX" id="8DX-Hc-d1M"/>
-                            <constraint firstItem="DpQ-p1-Bd2" firstAttribute="centerX" secondItem="x9I-h2-tZ9" secondAttribute="centerX" id="Fbh-97-cBs"/>
-                            <constraint firstItem="DpQ-p1-Bd2" firstAttribute="top" secondItem="x9I-h2-tZ9" secondAttribute="bottom" constant="10" id="OZE-jZ-xTO"/>
+                            <constraint firstItem="qU6-on-dhg" firstAttribute="centerY" secondItem="Fng-5l-cHx" secondAttribute="centerY" id="R5I-8W-wQw"/>
+                            <constraint firstItem="gDe-Kp-y6X" firstAttribute="centerY" secondItem="qU6-on-dhg" secondAttribute="centerY" id="TG4-92-BqW"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fng-5l-cHx" secondAttribute="leading" symbolic="YES" id="Tv9-i1-zVn"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="50" id="cjZ-E8-mLe"/>
-                            <constraint firstItem="x9I-h2-tZ9" firstAttribute="top" secondItem="H7A-kt-fwH" secondAttribute="bottom" constant="10" id="iwc-cQ-76q"/>
+                            <constraint firstItem="gDe-Kp-y6X" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="351.66666666666669" id="kYl-4r-GZD"/>
+                            <constraint firstItem="qU6-on-dhg" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="25" id="mbT-EN-Iei"/>
+                            <constraint firstItem="gDe-Kp-y6X" firstAttribute="leading" secondItem="qU6-on-dhg" secondAttribute="trailing" constant="60" id="sZB-a3-bsY"/>
                             <constraint firstItem="1pN-zT-foV" firstAttribute="centerX" secondItem="Fng-5l-cHx" secondAttribute="centerX" id="ziq-Ma-Uj5"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="nuguButton" destination="1pN-zT-foV" id="esl-yf-Cut"/>
                         <outlet property="settingButton" destination="H7A-kt-fwH" id="wvw-g1-c4g"/>
-                        <outlet property="themeSwitch" destination="x9I-h2-tZ9" id="t2N-DD-BHF"/>
                         <segue destination="gGQ-jV-Gla" kind="presentation" identifier="mainToGuideWeb" id="HfI-PN-nmd"/>
                         <segue destination="GR6-bJ-aiM" kind="presentation" identifier="showSettings" modalPresentationStyle="fullScreen" id="XSP-sM-tXK"/>
                     </connections>
