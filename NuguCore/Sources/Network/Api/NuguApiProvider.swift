@@ -44,7 +44,7 @@ class NuguApiProvider: NSObject {
         if isCSLBEnabled {
             return loadBalancedUrl
         } else {
-            return NuguServerInfo.resourceServerAddress
+            return NuguServerInfo.l4SwitchAddress
         }
     }
 
@@ -84,12 +84,17 @@ class NuguApiProvider: NSObject {
     private let internalPolicies: Single<Policy> = Single<URLRequest>.create { (event) -> Disposable in
         let disposable = Disposables.create()
         
+        guard let registryServerAddress = NuguServerInfo.registryServerAddress else {
+            event(.error(NetworkError.noSuitableRegistryServer))
+            return disposable
+        }
+        
         guard let header = NuguApi.policy.header else {
             event(.error(NetworkError.authError))
             return disposable
         }
         
-        var urlComponent = URLComponents(string: NuguApi.policy.uri(baseUrl: NuguServerInfo.registryServerAddress))
+        var urlComponent = URLComponents(string: NuguApi.policy.uri(baseUrl: registryServerAddress))
         urlComponent?.queryItems = [
             URLQueryItem(name: "protocol", value: "H2")
         ]

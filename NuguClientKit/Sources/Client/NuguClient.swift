@@ -413,7 +413,15 @@ public extension NuguClient {
      The server can send some directives at certain times.
      */
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
-        streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
+        ConfigurationStore.shared.registryServerUrl { [weak self] result in
+            switch result {
+            case .failure(let error):
+                completion?(.error(error))
+            case .success(let url):
+                NuguServerInfo.registryServerAddress = url
+                self?.streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
+            }
+        }
     }
     
     /**
@@ -499,6 +507,7 @@ extension NuguClient: FocusDelegate {
 /// :nodoc:
 extension NuguClient {
     private func setupStreamDataRouter(_ object: StreamDataRoutable) {
+        // Observers
         streamDataDirectiveDidReceive = object.observe(NuguCoreNotification.StreamDataRoute.ReceivedDirective.self, queue: nil) { [weak self] (notification) in
             self?.delegate?.nuguClientDidReceive(direcive: notification.directive)
         }
@@ -521,6 +530,15 @@ extension NuguClient {
         
         serverInitiatedDirectiveReceiverStateObserver = object.observe(NuguCoreNotification.StreamDataRoute.ServerInitiatedDirectiveReceiverState.self, queue: nil) { [weak self] (notification) in
             self?.delegate?.nuguClientServerInitiatedDirectiveRecevierStateDidChange(notification)
+        }
+        
+        // Device gateway address
+        ConfigurationStore.shared.l4SwitchUrl { result in
+            guard case let .success(url) = result else {
+                return
+            }
+            
+            NuguServerInfo.l4SwitchAddress = url
         }
     }
     

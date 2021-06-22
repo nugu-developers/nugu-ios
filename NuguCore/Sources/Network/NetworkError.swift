@@ -22,30 +22,42 @@ import Foundation
 
 /// An error that occurs while processing network request.
 public enum NetworkError: Error {
-    /// An error occurred due to a failure to connect to the server.
+    /// An error occurred due to a failure to connect to the registry server.
     ///
     /// This error only occurs when using connection-oriented feature..
+    case noSuitableRegistryServer
+    
+    /// An error occurred due to a failure to connect to the server.
     case noSuitableResourceServer
+    
     /// An error occurred due to a failure to connect to the server.
     ///
     /// This error only occurs when using connection-oriented feature
     case invalidParameter
+    
     /// An error occurred due to a failure to connect to the server.
     ///
     /// This error only occurs when using connection-oriented feature
     case badRequest
+    
     /// Rejected due to authorization error.
     case authError
+    
     /// An error occurred due to a failure to open `InputSteram`.
     case streamInitializeFailed
+    
     /// No has response.
     case nilResponse
+    
     /// The request timed out.
     case timeout
+    
     /// An error occurred while processing received data.
     case invalidMessageReceived
+    
     /// The error occurs on the server.
     case serverError
+    
     /// The error occurs by unknown or complicated issue.
     case unknown
 }
@@ -75,6 +87,8 @@ extension NetworkError: LocalizedError {
             return "Unknown error occur"
         case .noSuitableResourceServer:
             return "No suitable resource server"
+        case .noSuitableRegistryServer:
+            return "No suitable registry server"
         }
     }
 }
