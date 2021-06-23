@@ -56,8 +56,6 @@ public extension StreamDataRouter {
         // Though the resource is changed by handoff command from server.
         serverInitiatedDirectiveCompletion = completion
         
-        log.debug("start receive server initiated directives")
-        
         serverInitiatedDirectiveStateDisposable?.dispose()
         serverInitiatedDirectiveStateDisposable = serverInitiatedDirectiveReceiver.stateObserver
             .subscribe(onNext: { [weak self] state in
@@ -67,16 +65,17 @@ public extension StreamDataRouter {
             })
         serverInitiatedDirectiveStateDisposable?.disposed(by: disposeBag)
         
+        log.debug("start receive server initiated directives")
         serverInitiatedDirectiveDisposable?.dispose()
         serverInitiatedDirectiveDisposable = serverInitiatedDirectiveReceiver.directive
             .subscribe(onNext: { [weak self] in
-                    self?.notifyMessage(with: $0, completion: completion)
-                }, onError: {
-                    log.error("error: \($0)")
-                    completion?(.error($0))
-                }, onDisposed: {
-                    log.debug("server initiated directive is stopeed")
-                })
+                self?.notifyMessage(with: $0, completion: completion)
+            }, onError: {
+                log.error("error: \($0)")
+                completion?(.error($0))
+            }, onDisposed: {
+                log.debug("server initiated directive is stopeed")
+            })
         serverInitiatedDirectiveDisposable?.disposed(by: disposeBag)
     }
     

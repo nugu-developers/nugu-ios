@@ -200,11 +200,11 @@ private extension MainViewController {
     @IBAction func sidOptionSwitchValueChanged(_ optionSwitch: UISwitch) {
         print("--------")
         if optionSwitch.isOn == true {
-            NuguCentralManager.shared.client.streamDataRouter.startReceiveServerInitiatedDirective { state in
+            NuguCentralManager.shared.client.startReceiveServerInitiatedDirective { state in
                 log.debug(state)
             }
         } else {
-            NuguCentralManager.shared.client.streamDataRouter.stopReceiveServerInitiatedDirective()
+            NuguCentralManager.shared.client.stopReceiveServerInitiatedDirective()
         }
     }
 }
