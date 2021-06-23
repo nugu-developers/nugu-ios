@@ -114,6 +114,7 @@ class NuguApiProvider: NSObject {
     .asSingle()
     
     private lazy var internalDirective: Observable<MultiPartParser.Part> = {
+        var task: URLSessionDataTask?
         var error: Error?
         
         return Single<Observable<Data>>.create { [weak self] (single) -> Disposable in
@@ -149,7 +150,8 @@ class NuguApiProvider: NSObject {
                     var downstreamRequest = URLRequest(url: downstreamUrl, cachePolicy: .useProtocolCachePolicy, timeoutInterval: Double.infinity)
                     downstreamRequest.httpMethod = NuguApi.directives.method.rawValue
                     downstreamRequest.allHTTPHeaderFields = header
-                    self.session.dataTask(with: downstreamRequest).resume()
+                    task = self.session.dataTask(with: downstreamRequest)
+                    task?.resume()
                     log.debug("directive request header:\n\(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
                 }
                 
@@ -173,6 +175,7 @@ class NuguApiProvider: NSObject {
         }, onDispose: { [weak self] in
             self?.processorQueue.async {
                 self?.serverSideEventProcessor = nil
+                task?.cancel()
                 
                 if error == nil {
                     self?.isCSLBEnabled = false
