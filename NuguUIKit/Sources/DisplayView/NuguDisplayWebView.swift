@@ -47,7 +47,7 @@ final public class NuguDisplayWebView: UIView {
     private var deviceTypeCode: String?
     private var clientInfo: [String: String]?
     
-    private let darkBackgroundColor: UIColor = UIColor(red: 26.0/255.0, green: 26.0/255.0, blue: 26.0/255.0, alpha: 1.0)
+    private let darkBackgroundColor: UIColor = UIColor(red: 34.0/255.0, green: 34.0/255.0, blue: 34.0/255.0, alpha: 1.0)
     private let lightBackgroundColor: UIColor = UIColor(red: 248.0/255.0, green: 248.0/255.0, blue: 248.0/255.0, alpha: 1.0)
     
     private var focusedItemToken: String?
