@@ -29,6 +29,17 @@ public class NuguOAuthClient {
     private(set) public var deviceUniqueId: String
     private var observer: Any?
     private var serviceName: String?
+    private var oauthHandler: OAuthHandler {
+        if let handler = _oauthHandler {
+            return handler
+        }
+        
+        _oauthHandler = ASAuthenticationOAuthHandler()
+        
+        return _oauthHandler!
+    }
+    
+    private var _oauthHandler: OAuthHandler?
     
     /// The initializer for `NuguOAuthClient`.
     /// Create a `deviceUniqueId` once for each `serviceName` and device, store `deviceUniqueId` in keychain.
@@ -80,6 +91,9 @@ public class NuguOAuthClient {
             NotificationCenter.default.removeObserver(observer)
             self.observer = nil
         }
+        
+        oauthHandler.clear()
+        _oauthHandler = nil
     }
 }
 
@@ -242,6 +256,16 @@ public extension NuguOAuthClient {
             )
         }
     }
+    
+    func cancel() {
+        if let observer = observer {
+            NotificationCenter.default.removeObserver(observer)
+            self.observer = nil
+        }
+        
+        oauthHandler.clear()
+        _oauthHandler = nil
+    }
 }
 
 // MARK: - Private
@@ -254,7 +278,7 @@ private extension NuguOAuthClient {
         theme: WebTheme = .light,
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
-        let state = grant.oauthHandler.makeState()
+        let state = oauthHandler.makeState()
         var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/v1/auth/oauth/authorize")
         
         var queries = [URLQueryItem]() 
@@ -272,7 +296,8 @@ private extension NuguOAuthClient {
         
         guard let url = urlComponents?.url else {
             completion?(.failure(NuguLoginKitError.invalidRequestURL))
-            grant.oauthHandler.clear()
+            oauthHandler.clear()
+            _oauthHandler = nil
             return
         }
         
@@ -281,9 +306,11 @@ private extension NuguOAuthClient {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 
-                grant.oauthHandler.clear()
+                self.oauthHandler.clear()
+                self._oauthHandler = nil
                 completion?(result)
                 NotificationCenter.default.removeObserver(self.observer as Any)
+                self.observer = nil
             }
         }
         
@@ -336,7 +363,7 @@ private extension NuguOAuthClient {
             // Validate state
             guard
                 let state = urlComponent.queryItems?.first(where: { $0.name == "state" })?.value,
-                state == grant.oauthHandler.currentState else {
+                state == self.oauthHandler.currentState else {
                 complete(result: .failure(NuguLoginKitError.invalidState))
                 return
             }
@@ -363,8 +390,9 @@ private extension NuguOAuthClient {
             
         let redirectURLComponents = URLComponents(string: grant.redirectUri)
         
-        DispatchQueue.main.async {
-            grant.oauthHandler.handle(url, callbackURLScheme: redirectURLComponents?.scheme, from: parentViewController)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.oauthHandler.handle(url, callbackURLScheme: redirectURLComponents?.scheme, from: parentViewController)
         }
     }
 }

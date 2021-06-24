@@ -29,8 +29,6 @@ public struct AuthorizationCodeGrant {
     /// The `redirectUri` for OAuth authentication.
     public let redirectUri: String
     
-    let oauthHandler: OAuthHandler
-    
     /// The initializer for `AuthorizationCodeGrant`.
     /// - Parameter clientId: The `clientId` for OAuth authentication.
     /// - Parameter clientSecret: The `clientSecret` for OAuth authentication.
@@ -39,6 +37,5 @@ public struct AuthorizationCodeGrant {
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.redirectUri = redirectUri
-        self.oauthHandler = ASAuthenticationOAuthHandler()
     }
 }
