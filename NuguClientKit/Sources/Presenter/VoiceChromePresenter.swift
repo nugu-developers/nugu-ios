@@ -209,7 +209,9 @@ public extension VoiceChromePresenter {
             guard let self = self else { return }
             self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: self.voiceChromeHeight)
         }, completion: { [weak self] _ in
-            self?.nuguVoiceChrome.removeFromSuperview()
+            guard let self = self,
+                  self.isHidden == true else { return }
+            self.nuguVoiceChrome.removeFromSuperview()
         })
     }
 }
