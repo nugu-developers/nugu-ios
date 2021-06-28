@@ -217,11 +217,6 @@ private extension DisplayWebViewPresenter {
         } else {
             targetView.addSubview(nuguDisplayWebView)
         }
-        nuguDisplayWebView.translatesAutoresizingMaskIntoConstraints = false
-        nuguDisplayWebView.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
-        nuguDisplayWebView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
-        nuguDisplayWebView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
-        nuguDisplayWebView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
         
         nuguDisplayWebView.translatesAutoresizingMaskIntoConstraints = false
         nuguDisplayWebView.topAnchor.constraint(equalTo: topSafeAreaAnchor ?? targetView.topAnchor).isActive = true
