@@ -21,6 +21,7 @@
 import UIKit
 
 import NuguAgents
+import NuguUtils
 
 /// <#Description#>
 public class AudioDisplayView: UIView {    
@@ -85,6 +86,30 @@ public class AudioDisplayView: UIView {
     public var displayPayload: [String: AnyHashable]?
     public var isSeekable: Bool = false
     
+    public var theme: AudioDisplayTheme = UserInterfaceUtil.style == .dark ? .dark : .light {
+        didSet {
+            fullAudioPlayerContainerView.backgroundColor = theme.backgroundColor
+            audioPlayerBarViewContainerView.backgroundColor = theme.barPlayerBackgroundColor
+            audioPlayerBarView.subviews.first?.backgroundColor = theme.barPlayerBackgroundColor
+            audioPlayerBarView.headerLabel.textColor = theme.titleLabelTextColor
+            titleView.titleLabel.textColor = theme.titleViewTextColor
+            titleLabel.textColor = theme.titleLabelTextColor
+            subtitle1Label.textColor = theme.subTitleLabelTextColor
+            progressView.trackTintColor = theme.progressViewTrackTintColor
+            audioPlayerBarView.progressView.trackTintColor = theme.barProgressViewTrackTintColor
+            fullLyricsView.theme = theme
+            idleBar.chipsView.theme = (theme == .light) ? .light : .dark
+            playPauseButton.setImage(theme.playImage, for: .normal)
+            playPauseButton.setImage(theme.pauseImage, for: .selected)
+            nextButton.setImage(theme.nextImage, for: .normal)
+            prevButton.setImage(theme.prevImage, for: .normal)
+            audioPlayerBarView.playPauseButton.setImage(theme.playImage, for: .normal)
+            audioPlayerBarView.playPauseButton.setImage(theme.pauseImage, for: .selected)
+            audioPlayerBarView.nextButton.setImage(theme.nextImage, for: .normal)
+            audioPlayerBarView.prevButton.setImage(theme.prevImage, for: .normal)
+        }
+    }
+    
     // Internal Properties
     var lyricsData: AudioPlayerLyricsTemplate?
 
@@ -112,6 +137,18 @@ public class AudioDisplayView: UIView {
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         delegate?.onUserInteraction()
         return super.hitTest(point, with: event)
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Theme should be updated when theme value has been changed,
+        // Because of progressView's missing context issue (fails to update it's tint color on not appearing state)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let themeToUpdate = self.theme
+            self.theme = themeToUpdate
+        }
     }
     
     // Overridable Public Methods    
@@ -194,6 +231,7 @@ public class AudioDisplayView: UIView {
                 self.fullLyricsView.stackView.addArrangedSubview(label)
             }
             self.fullLyricsView.scrollView.setContentOffset(.zero, animated: true)
+            self.fullLyricsView.theme = self.theme
         }
     }
     

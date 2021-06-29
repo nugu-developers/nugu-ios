@@ -22,6 +22,8 @@ import UIKit
 
 import Lottie
 
+import NuguUtils
+
 /// <#Description#>
 final public class NuguVoiceChrome: UIView {
 
@@ -61,7 +63,7 @@ final public class NuguVoiceChrome: UIView {
     // MARK: - Public Properties (configurable variables)
     
     /// <#Description#>
-    public var theme: NuguVoiceChromeTheme = .light {
+    public var theme: NuguVoiceChromeTheme = UserInterfaceUtil.style == .dark ? .dark : .light {
         didSet {
             backgroundView.backgroundColor = theme.backgroundColor
             coverView.backgroundColor = theme.backgroundColor
@@ -127,7 +129,7 @@ final public class NuguVoiceChrome: UIView {
         animationView.frame = CGRect(x: 12, y: 0, width: 40, height: 40)
         animationContainerView.addSubview(animationView)
         
-        theme = .light
+        theme = UserInterfaceUtil.style == .dark ? .dark : .light
         chipsView.willStartScrolling = { [weak self] in
             UIView.animate(withDuration: 0.3, animations: { [weak self] in
                 self?.guideTextLabel.text = nil

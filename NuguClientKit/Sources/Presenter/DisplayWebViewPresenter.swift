@@ -25,6 +25,7 @@ import WebKit
 import NuguAgents
 import NuguUIKit
 import NuguCore
+import NuguUtils
 
 /// DisplayWebViewPresenter is a class which helps user for displaying DisplayWebView more easily.
 public class DisplayWebViewPresenter: NSObject {
@@ -47,13 +48,18 @@ public class DisplayWebViewPresenter: NSObject {
         return self.targetView?.topAnchor
     }
     
+    // Observers
+    private let notificationCenter = NotificationCenter.default
+    private var themeObserver: Any?
+    
     /// Initialize with superView
     /// - Parameters:
     ///   - superView: Target view for NuguDisplayWebView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    public convenience init(superView: UIView, nuguClient: NuguClient, clientInfo: [String: String]? = nil) {
-        self.init(nuguClient: nuguClient, clientInfo: clientInfo)
+    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    public convenience init(superView: UIView, nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
+        self.init(nuguClient: nuguClient, clientInfo: clientInfo, themeController: themeController)
         self.superView = superView
     }
     
@@ -62,8 +68,9 @@ public class DisplayWebViewPresenter: NSObject {
     ///   - viewController: Target viewController for NuguDisplayWebView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    public convenience init(viewController: UIViewController, nuguClient: NuguClient, clientInfo: [String: String]? = nil) {
-        self.init(nuguClient: nuguClient, clientInfo: clientInfo)
+    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    public convenience init(viewController: UIViewController, nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
+        self.init(nuguClient: nuguClient, clientInfo: clientInfo, themeController: themeController)
         self.viewController = viewController
     }
     
@@ -71,11 +78,21 @@ public class DisplayWebViewPresenter: NSObject {
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    private init(nuguClient: NuguClient, clientInfo: [String: String]? = nil) {
+    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    private init(nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
         super.init()
         self.nuguClient = nuguClient
         self.clientInfo = clientInfo
         nuguClient.displayAgent.delegate = self
+        if let themeController = themeController {
+            addThemeControllerObserver(themeController)
+        }
+    }
+    
+    deinit {
+        if let themeObserver = themeObserver {
+            notificationCenter.removeObserver(themeObserver)
+        }
     }
 }
 
@@ -200,8 +217,9 @@ private extension DisplayWebViewPresenter {
         } else {
             targetView.addSubview(nuguDisplayWebView)
         }
+        
         nuguDisplayWebView.translatesAutoresizingMaskIntoConstraints = false
-        nuguDisplayWebView.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
+        nuguDisplayWebView.topAnchor.constraint(equalTo: topSafeAreaAnchor ?? targetView.topAnchor).isActive = true
         nuguDisplayWebView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
         nuguDisplayWebView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
         nuguDisplayWebView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
@@ -262,5 +280,20 @@ private extension DisplayWebViewPresenter {
 extension DisplayWebViewPresenter: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         addWebViewCompletion?()
+    }
+}
+
+// MARK: - Observer
+
+extension DisplayWebViewPresenter {
+    func addThemeControllerObserver(_ object: NuguThemeController) {
+        themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
+            guard let self = self else { return }
+            let newClientInfo = ["theme": notification.theme.rawValue]
+            self.clientInfo?.merge(newClientInfo)
+            DispatchQueue.main.async { [weak self] in
+                self?.nuguDisplayWebView?.onClientInfoChanged(newClientInfo: newClientInfo)
+            }
+        })
     }
 }

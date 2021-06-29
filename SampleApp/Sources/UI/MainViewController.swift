@@ -33,16 +33,19 @@ final class MainViewController: UIViewController {
     
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
-        nuguClient: NuguCentralManager.shared.client
+        nuguClient: NuguCentralManager.shared.client,
+        themeController: NuguCentralManager.shared.themeController
     )
     private lazy var displayWebViewPresenter = DisplayWebViewPresenter(
         viewController: self,
         nuguClient: NuguCentralManager.shared.client,
-        clientInfo: ["buttonColor": "white"]
+        clientInfo: ["buttonColor": "white"],
+        themeController: NuguCentralManager.shared.themeController
     )
     private lazy var audioDisplayViewPresenter = AudioDisplayViewPresenter(
         viewController: self,
-        nuguClient: NuguCentralManager.shared.client
+        nuguClient: NuguCentralManager.shared.client,
+        themeController: NuguCentralManager.shared.themeController
     )
     
     // MARK: Observers
@@ -100,6 +103,37 @@ final class MainViewController: UIViewController {
             UserDefaults.Standard.hasSeenGuideWeb = true
         default:
             return
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard UserDefaults.Standard.theme == SampleApp.Theme.system.rawValue else { return }
+        if #available(iOS 12.0, *) {
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                NuguCentralManager.shared.themeController.theme = .dark
+            case .light:
+                NuguCentralManager.shared.themeController.theme = .light
+            default:
+                break
+            }
+        } else {
+            NuguCentralManager.shared.themeController.theme = .light
+        }
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        switch NuguCentralManager.shared.themeController.theme {
+        case .dark:
+            return .lightContent
+        case .light:
+            if #available(iOS 13.0, *) {
+                return .darkContent
+            } else {
+                return .default
+            }
         }
     }
     
@@ -204,6 +238,28 @@ private extension MainViewController {
         voiceChromePresenter.delegate = self
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
+        
+        switch SampleApp.Theme(rawValue: UserDefaults.Standard.theme) {
+        case .system:
+            if #available(iOS 12.0, *) {
+                switch traitCollection.userInterfaceStyle {
+                case .dark:
+                    NuguCentralManager.shared.themeController.theme = .dark
+                case .light:
+                    NuguCentralManager.shared.themeController.theme = .light
+                default:
+                    break
+                }
+            } else {
+                NuguCentralManager.shared.themeController.theme = .light
+            }
+        case .light:
+            NuguCentralManager.shared.themeController.theme = .light
+        case .dark:
+            NuguCentralManager.shared.themeController.theme = .dark
+        default: break
+        }
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     /// Show nugu usage guide webpage after successful login process

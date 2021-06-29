@@ -31,6 +31,7 @@ public class VoiceChromePresenter: NSObject {
     private let nuguVoiceChrome: NuguVoiceChrome
     
     private weak var nuguClient: NuguClient?
+    private weak var themeController: NuguThemeController?
     private weak var viewController: UIViewController?
     private weak var superView: UIView?
     private var targetView: UIView? {
@@ -87,6 +88,7 @@ public class VoiceChromePresenter: NSObject {
     private var asrStateObserver: Any?
     private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
+    private var themeObserver: Any?
     
     /// Initialize with superView
     /// - Parameters:
@@ -98,9 +100,10 @@ public class VoiceChromePresenter: NSObject {
         superView: UIView,
         nuguVoiceChrome: NuguVoiceChrome? = nil,
         nuguClient: NuguClient,
-        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL()
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL(),
+        themeController: NuguThemeController? = nil
     ) {
-        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL)
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL, themeController: themeController)
         
         self.superView = superView
     }
@@ -115,9 +118,10 @@ public class VoiceChromePresenter: NSObject {
         viewController: UIViewController,
         nuguVoiceChrome: NuguVoiceChrome? = nil,
         nuguClient: NuguClient,
-        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL()
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL = ASRBeepPlayerResourcesURL(),
+        themeController: NuguThemeController? = nil
     ) {
-        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL)
+        self.init(nuguVoiceChrome: nuguVoiceChrome, nuguClient: nuguClient, asrBeepPlayerResourcesURL: asrBeepPlayerResourcesURL, themeController: themeController)
         
         self.viewController = viewController
     }
@@ -125,10 +129,12 @@ public class VoiceChromePresenter: NSObject {
     private init(
         nuguVoiceChrome: NuguVoiceChrome?,
         nuguClient: NuguClient,
-        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL
+        asrBeepPlayerResourcesURL: ASRBeepPlayerResourcesURL,
+        themeController: NuguThemeController? = nil
     ) {
         self.nuguVoiceChrome = nuguVoiceChrome ?? NuguVoiceChrome(frame: CGRect())
         self.nuguClient = nuguClient
+        self.themeController = themeController
         self.asrBeepPlayer = ASRBeepPlayer(focusManager: nuguClient.focusManager, resourcesUrl: asrBeepPlayerResourcesURL)
         
         super.init()
@@ -137,6 +143,9 @@ public class VoiceChromePresenter: NSObject {
         addInteractionControlObserver(nuguClient.interactionControlManager)
         addAsrAgentObserver(nuguClient.asrAgent)
         addDialogStateObserver(nuguClient.dialogStateAggregator)
+        if let themeController = themeController {
+            addThemeControllerObserver(themeController)
+        }
     }
     
     deinit {
@@ -154,6 +163,10 @@ public class VoiceChromePresenter: NSObject {
         
         if let dialogStateObserver = dialogStateObserver {
             notificationCenter.removeObserver(dialogStateObserver)
+        }
+        
+        if let themeObserver = themeObserver {
+            notificationCenter.removeObserver(themeObserver)
         }
     }
 }
@@ -196,7 +209,9 @@ public extension VoiceChromePresenter {
             guard let self = self else { return }
             self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: self.voiceChromeHeight)
         }, completion: { [weak self] _ in
-            self?.nuguVoiceChrome.removeFromSuperview()
+            guard let self = self,
+                  self.isHidden == true else { return }
+            self.nuguVoiceChrome.removeFromSuperview()
         })
     }
 }
@@ -212,6 +227,15 @@ private extension VoiceChromePresenter {
         delegate?.voiceChromeWillShow()
         
         isHidden = false
+        
+        if let themeController = themeController {
+            switch themeController.theme {
+            case .dark:
+                nuguVoiceChrome.theme = .dark
+            case .light:
+                nuguVoiceChrome.theme = .light
+            }
+        }
         
         let showAnimation = {
             UIView.animate(withDuration: 0.3) { [weak self] in
@@ -378,6 +402,22 @@ private extension VoiceChromePresenter {
                 }
             }
         }
+    }
+    
+    func addThemeControllerObserver(_ object: NuguThemeController) {
+        themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
+            guard let self = self else { return }
+            switch notification.theme {
+            case .dark:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.theme = .dark
+                }
+            case .light:
+                DispatchQueue.main.async { [weak self] in
+                    self?.nuguVoiceChrome.theme = .light
+                }
+            }
+        })
     }
 }
 

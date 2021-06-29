@@ -119,9 +119,9 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gDe-Kp-y6X">
-                                <rect key="frame" x="121" y="395.66666666666669" width="51" height="31"/>
+                                <rect key="frame" x="121" y="395.66666666666669" width="51" height="30.666666666666686"/>
                                 <connections>
-                                    <action selector="sidOptionSwitchValueChanged:" destination="CDe-cd-LHH" eventType="valueChanged" id="Fmz-Zu-B0W"/>
+                                    <action selector="sidOptionSwitchValueChanged:" destination="CDe-cd-LHH" eventType="valueChanged" id="LOq-Dj-EG4"/>
                                 </connections>
                             </switch>
                         </subviews>
@@ -131,9 +131,10 @@
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="bottom" secondItem="1pN-zT-foV" secondAttribute="bottom" constant="20" id="2kg-rq-IoR"/>
                             <constraint firstItem="Fng-5l-cHx" firstAttribute="trailing" secondItem="H7A-kt-fwH" secondAttribute="trailing" constant="50" id="4Tm-uC-Cli"/>
                             <constraint firstItem="qU6-on-dhg" firstAttribute="centerY" secondItem="Fng-5l-cHx" secondAttribute="centerY" id="R5I-8W-wQw"/>
+                            <constraint firstItem="gDe-Kp-y6X" firstAttribute="centerY" secondItem="qU6-on-dhg" secondAttribute="centerY" id="TG4-92-BqW"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fng-5l-cHx" secondAttribute="leading" symbolic="YES" id="Tv9-i1-zVn"/>
-                            <constraint firstItem="gDe-Kp-y6X" firstAttribute="centerY" secondItem="qU6-on-dhg" secondAttribute="centerY" id="c3z-o7-fRu"/>
                             <constraint firstItem="H7A-kt-fwH" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="50" id="cjZ-E8-mLe"/>
+                            <constraint firstItem="gDe-Kp-y6X" firstAttribute="top" secondItem="Fng-5l-cHx" secondAttribute="top" constant="351.66666666666669" id="kYl-4r-GZD"/>
                             <constraint firstItem="qU6-on-dhg" firstAttribute="leading" secondItem="Fng-5l-cHx" secondAttribute="leading" constant="25" id="mbT-EN-Iei"/>
                             <constraint firstItem="gDe-Kp-y6X" firstAttribute="leading" secondItem="qU6-on-dhg" secondAttribute="trailing" constant="60" id="sZB-a3-bsY"/>
                             <constraint firstItem="1pN-zT-foV" firstAttribute="centerX" secondItem="Fng-5l-cHx" secondAttribute="centerX" id="ziq-Ma-Uj5"/>

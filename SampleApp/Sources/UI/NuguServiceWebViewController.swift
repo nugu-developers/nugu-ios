@@ -37,6 +37,37 @@ final class NuguServiceWebViewController: UIViewController {
     
     // MARK: Override
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard UserDefaults.Standard.theme == SampleApp.Theme.system.rawValue else { return }
+        if #available(iOS 12.0, *) {
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                NuguCentralManager.shared.themeController.theme = .dark
+            case .light:
+                NuguCentralManager.shared.themeController.theme = .light
+            default:
+                break
+            }
+        } else {
+            NuguCentralManager.shared.themeController.theme = .light
+        }
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        switch NuguCentralManager.shared.themeController.theme {
+        case .dark:
+            return .lightContent
+        case .light:
+            if #available(iOS 13.0, *) {
+                return .darkContent
+            } else {
+                return .default
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
