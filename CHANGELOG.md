@@ -3,6 +3,34 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [1.3.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.3.0)
+Released on 2021-06-28
+### SDK
+#### Fixed
+- Fix to optional `try` (#863)
+- Do not remove voiceChrome from superview if `isHidden` value of `VoiceChromePresenter` is false (#869)
+- Fix memory issue in NuguOAuthClient (#867) (#872)
+- Cancel `URLSessionDataTask` for server side event when it does not needed anymore. (#871)
+
+#### Added
+- Add `NuguThemeController` to `NuguClientKit` (#853)
+- Support AudioDisplayView dark mode (#854)
+- Add routine related javascript methods to `NuguServiceWebView` (#858)
+- Add `UserInterfaceUtil` to `NuguUtils`
+
+#### Update
+- Add place holder image and default (failure) image to 'DisplayTitleView` (#847)
+- Ugrade target version from 10.0 to 12.0 (#848)
+- Change `TycheKeywordDetector`'s notification mechanism from `Delegate pattern` to `Observer pattern` (#849)
+- Remain last server policy to use next time. (#851) 
+- Notify `ServerInitiatedDirectiveReceiverState` (#860)
+- Update `RoutineState` (#862)
+
+#### Removed
+- Remove codes supporting lower than iOS 12.0 version (#852)  
+- Remove outdated version codes (#855) 
+
+
 ## [1.2.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.2.0)
 Released on 2021-05-25
 ### SDK
