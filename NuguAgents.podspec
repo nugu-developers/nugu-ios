@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguAgents'
-  s.version = '1.3.0'
+  s.version = '1.3.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Agents'
   s.description = <<-DESC
@@ -24,7 +24,7 @@ Default Agent Implementations for Nugu service
   
   s.dependency 'NuguCore', s.version.to_s
   s.dependency 'NuguUtils', s.version.to_s
-  s.dependency 'SilverTray', '~> 1'
+  s.dependency 'SilverTray', '~> 1.3'
   s.dependency 'NattyLog', '~> 1'
   s.ios.dependency 'JadeMarble', s.version.to_s
 
