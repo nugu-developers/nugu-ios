@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-extension ContextManageable {
+public extension ContextManageable {
     func rxContexts(namespace: String) -> Single<[ContextInfo]> {
         Single.create { [weak self] (observer) -> Disposable in
             guard let self = self else {

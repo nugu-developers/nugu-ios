@@ -20,7 +20,7 @@
 
 import Foundation
 
-public enum CapabilityAgentCategory: CaseIterable {
+public enum CapabilityAgentCategory: Hashable {
     case audioPlayer
     case automaticSpeechRecognition
     case textToSpeech
@@ -40,6 +40,7 @@ public enum CapabilityAgentCategory: CaseIterable {
     case alerts
     case routine
     case nudge
+    case etc(name: String)
 }
 
 public extension CapabilityAgentCategory {
@@ -64,6 +65,7 @@ public extension CapabilityAgentCategory {
         case .alerts: return "Alerts"
         case .routine: return "Routine"
         case .nudge: return "Nudge"
+        case .etc(let categoryName): return categoryName
         }
     }
 }
