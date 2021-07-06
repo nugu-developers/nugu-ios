@@ -24,15 +24,16 @@ jobs:
       - name: Deploy to Cocoapods
         run: |
           set -eo pipefail
-          pod trunk push NuguUtils.podspec
-          pod trunk push --synchronous NuguCore.podspec
+          pod trunk push --allow-warnings NuguUtils.podspec
+          pod trunk push --synchronous --allow-warnings NuguCore.podspec
           pod trunk push --synchronous --allow-warnings JadeMarble.podspec
-          pod trunk push --synchronous NuguAgents.podspec
-          pod trunk push --synchronous NuguServiceKit.podspec
-          pod trunk push --synchronous NuguUIKit.podspec
-          pod trunk push --synchronous NuguLoginKit.podspec
+          pod trunk push --synchronous --allow-warnings SilverTray.podspec
+          pod trunk push --synchronous --allow-warnings NuguAgents.podspec
+          pod trunk push --synchronous --allow-warnings NuguServiceKit.podspec
+          pod trunk push --synchronous --allow-warnings NuguUIKit.podspec
+          pod trunk push --synchronous --allow-warnings NuguLoginKit.podspec
           pod trunk push --synchronous --allow-warnings KeenSense.podspec
-          pod trunk push --synchronous NuguClientKit.podspec
+          pod trunk push --synchronous --allow-warnings NuguClientKit.podspec
 
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
