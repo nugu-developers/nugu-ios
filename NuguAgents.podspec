@@ -24,7 +24,7 @@ Default Agent Implementations for Nugu service
   
   s.dependency 'NuguCore', s.version.to_s
   s.dependency 'NuguUtils', s.version.to_s
-  s.dependency 'SilverTray', '~> 1.3'
+  s.dependency 'SilverTray', s.version.to_s
   s.dependency 'NattyLog', '~> 1'
   s.ios.dependency 'JadeMarble', s.version.to_s
 
