@@ -145,6 +145,7 @@ public class VoiceChromePresenter: NSObject {
         addDialogStateObserver(nuguClient.dialogStateAggregator)
         if let themeController = themeController {
             addThemeControllerObserver(themeController)
+            self.nuguVoiceChrome.theme = themeController.theme == .dark ? .dark : .light
         }
     }
     
