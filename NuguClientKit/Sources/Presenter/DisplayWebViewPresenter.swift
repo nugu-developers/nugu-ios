@@ -83,6 +83,8 @@ public class DisplayWebViewPresenter: NSObject {
         nuguClient.displayAgent.delegate = self
         if let themeController = themeController {
             addThemeControllerObserver(themeController)
+            let newClientInfo = ["theme": themeController.theme.rawValue]
+            self.clientInfo?.merge(newClientInfo)
         }
     }
     

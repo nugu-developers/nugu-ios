@@ -227,17 +227,6 @@ private extension MainViewController {
         voiceChromePresenter.delegate = self
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
-        
-        switch SampleApp.Theme(rawValue: UserDefaults.Standard.theme) {
-        case .system:
-            NuguCentralManager.shared.themeController.theme = traitCollection.userInterfaceStyle == .dark ? .dark : .light
-        case .light:
-            NuguCentralManager.shared.themeController.theme = .light
-        case .dark:
-            NuguCentralManager.shared.themeController.theme = .dark
-        default: break
-        }
-        setNeedsStatusBarAppearanceUpdate()
     }
     
     /// Show nugu usage guide webpage after successful login process
