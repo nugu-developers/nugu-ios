@@ -18,7 +18,7 @@ jobs:
 
       - name: Update Carthage
         if: steps.cache-carthage.outputs.cache-hit != 'true'
-        run: ./carthage.sh bootstrap --no-use-binaries --platform iOS --cache-builds
+        run: carthage bootstrap --use-xcframeworks --platform iOS --cache-builds
         
       - name: Run tests
         run: xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest'

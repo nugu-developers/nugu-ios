@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'KeenSense'
-  s.version = '1.3.1'
+  s.version = '1.3.2'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Key Word Detector for NUGU'
   s.homepage = 'https://github.com/nugu-developers/nugu-ios'
@@ -9,16 +9,11 @@ Pod::Spec.new do |s|
   s.documentation_url = 'https://developers.nugu.co.kr'
 
   s.ios.deployment_target = '12.0'
-
-  # Nugu does not yet support Apple Silicon
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-
-  s.swift_version = '5.0'
+  s.swift_version = '5'
 
   s.source_files = 'KeenSense/Sources/**/*.swift', 'KeenSense/Libraries/include/*.h'
   s.public_header_files = 'KeenSense/Libraries/include/*.h'
-  s.vendored_libraries = 'KeenSense/Libraries/libTycheWakeupCommon.a', 'KeenSense/Libraries/libTycheWakeup.a', 'KeenSense/Libraries/libTycheWakeupSpeex.a'
+  s.vendored_frameworks = 'KeenSense/Libraries/TycheWakeupCommon.xcframework', 'KeenSense/Libraries/TycheWakeup.xcframework'
   s.resource = 'KeenSense/Resources/*'
   s.preserve_paths = 'KeenSense/Libraries/**'
   s.libraries = 'c++'
