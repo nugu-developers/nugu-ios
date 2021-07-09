@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguUtils'
-  s.version = '1.3.1'
+  s.version = '1.3.2'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Supported login for Nugu Service'
   s.description = <<-DESC
@@ -13,12 +13,7 @@ Framework for login using OAuth 2.0
   s.documentation_url = 'https://developers.nugu.co.kr'
 
   s.ios.deployment_target = '12.0'
-
-  # Nugu does not yet support Apple Silicon
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  
-  s.swift_version = '5.3'
+  s.swift_version = '5'
 
   s.source_files = 'NuguUtils/Sources/**/*'
 
