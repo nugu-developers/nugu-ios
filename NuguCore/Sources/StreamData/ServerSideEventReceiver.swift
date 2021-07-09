@@ -57,7 +57,7 @@ class ServerSideEventReceiver {
                 self.state = .connected
                 return self.apiProvider.directive.startWith(part)
             }
-            .retryWhen(retryDirective)
+            .retry(when: retryDirective)
             .do(onError: {
                 error = $0
             }, onDispose: { [weak self] in
@@ -95,7 +95,7 @@ private extension ServerSideEventReceiver {
                         .take(1)
                         .flatMap { _ in self.apiProvider.policies }
                         .map { $0 as Policy? }
-                        .catchError { _ in Observable<Policy?>.just(nil) }
+                        .catch { _ in Observable<Policy?>.just(nil) }
                         .map {
                             guard let networkPolicies = $0 else { return index }
 
@@ -130,7 +130,7 @@ private extension ServerSideEventReceiver {
                 
                 return apiProvider.ping
         }
-        .retryWhen { (error: Observable<Error>) in
+        .retry {  (error: Observable<Error>) in
             error
                 .enumerated()
                 .flatMap { (index, error) -> Observable<Int> in

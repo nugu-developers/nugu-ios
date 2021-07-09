@@ -133,7 +133,7 @@ extension AudioPlayerDisplayManager {
                 
                 // Release sync when removed all of template(May be closed by user).
                 Reactive(displayObject).deallocated
-                    .observeOn(self.displayScheduler)
+                    .observe(on: self.displayScheduler)
                     .subscribe({ [weak self] _ in
                         guard let self = self else { return }
                         

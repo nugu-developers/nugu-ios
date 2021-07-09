@@ -85,12 +85,12 @@ class NuguApiProvider: NSObject {
         let disposable = Disposables.create()
         
         guard let registryServerAddress = NuguServerInfo.registryServerAddress else {
-            event(.error(NetworkError.noSuitableRegistryServer))
+            event(.failure(NetworkError.noSuitableRegistryServer))
             return disposable
         }
         
         guard let header = NuguApi.policy.header else {
-            event(.error(NetworkError.authError))
+            event(.failure(NetworkError.authError))
             return disposable
         }
         
@@ -101,7 +101,7 @@ class NuguApiProvider: NSObject {
         
         guard let url = urlComponent?.url else {
             log.error(NetworkError.invalidParameter)
-            event(.error(NetworkError.invalidParameter))
+            event(.failure(NetworkError.invalidParameter))
             return disposable
         }
         
@@ -130,7 +130,7 @@ class NuguApiProvider: NSObject {
             
             self.processorQueue.async {
                 guard let header = NuguApi.directives.header else {
-                    single(.error(NetworkError.authError))
+                    single(.failure(NetworkError.authError))
                     return
                 }
                 
@@ -138,7 +138,7 @@ class NuguApiProvider: NSObject {
                 self.isCSLBEnabled = true
                 
                 guard let resourceServerUrl = self.resourceServerAddress else {
-                    single(.error(NetworkError.noSuitableResourceServer))
+                    single(.failure(NetworkError.noSuitableResourceServer))
                     return
                 }
                 
@@ -148,7 +148,7 @@ class NuguApiProvider: NSObject {
                     // connect downstream.
                     guard let downstreamUrl = URL(string: NuguApi.directives.uri(baseUrl: resourceServerUrl)) else {
                         log.error("invailid url: \(NuguApi.directives.uri(baseUrl: resourceServerUrl))")
-                        single(.error(NetworkError.noSuitableResourceServer))
+                        single(.failure(NetworkError.noSuitableResourceServer))
                         return
                     }
                     
@@ -220,19 +220,19 @@ extension NuguApiProvider {
             
             self.processorQueue.async {
                 guard let header = NuguApi.events.header else {
-                    single(.error(NetworkError.authError))
+                    single(.failure(NetworkError.authError))
                     return
                 }
                 
                 guard let resourceServerUrl = self.resourceServerAddress else {
-                    single(.error(NetworkError.noSuitableResourceServer))
+                    single(.failure(NetworkError.noSuitableResourceServer))
                     return
                 }
                 
                 guard let urlComponent = URLComponents(string: NuguApi.events.uri(baseUrl: resourceServerUrl)),
                     let url = urlComponent.url else {
                         log.error("invailid url: \(NuguApi.events.uri(baseUrl: resourceServerUrl))")
-                        single(.error(NetworkError.badRequest))
+                        single(.failure(NetworkError.badRequest))
                         return
                 }
                 

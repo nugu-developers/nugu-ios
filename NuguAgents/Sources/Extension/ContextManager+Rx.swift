@@ -28,7 +28,7 @@ extension ContextManageable {
     func rxContexts(namespace: String) -> Single<[ContextInfo]> {
         Single.create { [weak self] (observer) -> Disposable in
             guard let self = self else {
-                observer(.error(NuguAgentError.requestCanceled))
+                observer(.failure(NuguAgentError.requestCanceled))
                 return Disposables.create()
             }
             self.getContexts(namespace: namespace) { (contextInfo) in
@@ -41,7 +41,7 @@ extension ContextManageable {
     func rxContexts() -> Single<[ContextInfo]> {
         Single.create { [weak self] (observer) -> Disposable in
             guard let self = self else {
-                observer(.error(NuguAgentError.requestCanceled))
+                observer(.failure(NuguAgentError.requestCanceled))
                 return Disposables.create()
             }
             self.getContexts { (contextInfo) in

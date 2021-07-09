@@ -23,6 +23,6 @@ Nugu framework for AI Service
 
   s.dependency 'NuguUtils', s.version.to_s
   s.dependency 'NattyLog', '~> 1.0'
-  s.dependency 'RxSwift', '~> 5'
+  s.dependency 'RxSwift', '~> 6'
 
 end
