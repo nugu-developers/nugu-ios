@@ -19,8 +19,9 @@ Pod::Spec.new do |s|
 
   s.source_files = 'NuguUIKit/Sources/**/*.{swift}'
 
-  s.dependency 'lottie-ios', '~> 3'
   s.dependency 'NuguAgents', s.version.to_s
   s.dependency 'NuguUtils', s.version.to_s
+  
   s.dependency 'NattyLog', '~> 1'
+  s.dependency 'lottie-ios', '~> 3'
 end

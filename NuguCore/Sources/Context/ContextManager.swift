@@ -79,7 +79,7 @@ extension ContextManager {
         }
         
         Single<ContextInfo?>.zip(requests)
-            .subscribeOn(contextScheduler)
+            .subscribe(on: contextScheduler)
             .map { (contextInfos) -> [ContextInfo] in
                 return contextInfos.compactMap { $0 }
             }
