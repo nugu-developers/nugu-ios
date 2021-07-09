@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguAgents'
-  s.version = '1.3.0'
+  s.version = '1.3.2'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Agents'
   s.description = <<-DESC
@@ -13,18 +13,13 @@ Default Agent Implementations for Nugu service
   s.documentation_url = 'https://developers.nugu.co.kr'
 
   s.ios.deployment_target = '12.0'
-
-  # Nugu does not yet support Apple Silicon
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  
-  s.swift_version = '5.1'
+  s.swift_version = '5'
 
   s.source_files = 'NuguAgents/Sources/**/*'
   
   s.dependency 'NuguCore', s.version.to_s
   s.dependency 'NuguUtils', s.version.to_s
-  s.dependency 'SilverTray', '~> 1'
+  s.dependency 'SilverTray', s.version.to_s
   s.dependency 'NattyLog', '~> 1'
   s.ios.dependency 'JadeMarble', s.version.to_s
 

@@ -1,0 +1,22 @@
+framework module SilverTray {
+    umbrella header "SilverTray.h"
+    export *
+    module * { export * }
+    
+    explicit module UnifiedErrorCatcher {
+        header "UnifiedErrorCatcher.h"
+        link "SilverTray"
+        export *
+    }
+    
+    explicit module LibOpus {
+        header "opus.h"
+        header "opus_defines.h"
+        header "opus_multistream.h"
+        header "opus_projection.h"
+        header "opus_types.h"
+        header "opus_custom.h"
+        link "SilverTray"
+        export *
+    }
+}

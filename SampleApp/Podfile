@@ -12,4 +12,5 @@ target 'SampleApp' do
   pod 'NuguCore', :path => '../'
   pod 'NuguUtils', :path => '../'
   pod 'NuguServiceKit', :path => '../'
+  pod 'SilverTray', :path => '../'
 end

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguUIKit'
-  s.version = '1.3.0'
+  s.version = '1.3.2'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'UI Set of Nugu Service'
   s.description = <<-DESC
@@ -12,12 +12,7 @@ Pod::Spec.new do |s|
   s.source = { :git => 'https://github.com/nugu-developers/nugu-ios.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '12.0'
-
-  # Nugu does not yet support Apple Silicon
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  
-  s.swift_version = '5.1'
+  s.swift_version = '5'
 
   s.resources = 'NuguUIKit/Resources/**/*.{json}', 'NuguUIKit/Sources/**/*.{xib}'
   s.resource_bundles = { 'NuguUIKit-Images' => ['NuguUIKit/Resources/*.xcassets'] }

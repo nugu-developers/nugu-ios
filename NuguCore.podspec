@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguCore'
-  s.version = '1.3.0'
+  s.version = '1.3.2'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu'
   s.description = <<-DESC
@@ -17,11 +17,7 @@ Nugu framework for AI Service
   # s.watchos.deployment_target = '6.0'
   # s.macos.deployment_target = '10.15.0'
 
-  # Nugu does not yet support Apple Silicon
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-
-  s.swift_version = '5.1'
+  s.swift_version = '5'
 
   s.source_files = 'NuguCore/Sources/**/*'
 

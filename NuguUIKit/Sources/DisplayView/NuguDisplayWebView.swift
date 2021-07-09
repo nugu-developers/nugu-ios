@@ -234,8 +234,8 @@ public extension NuguDisplayWebView {
         }
         DispatchQueue.main.async { [weak self] in
             self?.updateTheme()
-            self?.displayWebView?.evaluateJavaScript("onClientInfoChanged(\(jsonStr))", completionHandler: { (result, error) in
-                log.debug("onClientInfoChanged(\(jsonStr)) \(String(describing: result)) \(String(describing: error))")
+            self?.displayWebView?.evaluateJavaScript("nativeEventListener.onClientInfoChanged('\(jsonStr)')", completionHandler: { (result, error) in
+                log.debug("nativeEventListener.onClientInfoChanged(\(jsonStr)) \(String(describing: result)) \(String(describing: error))")
             })
         }
     }
@@ -298,8 +298,8 @@ private extension NuguDisplayWebView {
     func control(type: String, direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             self?.controlCompletion = completion
-            self?.displayWebView?.evaluateJavaScript("control('\(type)', '\(direction.rawValue)')", completionHandler: { (result, error) in
-                log.debug("control('\(type)', '\(direction.rawValue)') \(String(describing: result)) \(String(describing: error))")
+            self?.displayWebView?.evaluateJavaScript("nativeEventListener.control('\(type)', '\(direction.rawValue)')", completionHandler: { (result, error) in
+                log.debug("nativeEventListener.control('\(type)', '\(direction.rawValue)') \(String(describing: result)) \(String(describing: error))")
             })
         }
     }
