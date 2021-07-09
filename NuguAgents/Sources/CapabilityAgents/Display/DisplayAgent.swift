@@ -26,7 +26,7 @@ import RxSwift
 
 public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.7")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.8")
     
     public weak var delegate: DisplayAgentDelegate?
     public var defaultDisplayTempalteDuration: DisplayTemplateDuration = .short
@@ -75,7 +75,8 @@ public final class DisplayAgent: DisplayAgentProtocol {
         "Call1", "Call2", "Call3",
         "Timer",
         "Dummy",
-        "CustomTemplate"
+        "CustomTemplate",
+        "TabExtension"
     ].map({ (name) in
         DirectiveHandleInfo(
             namespace: capabilityAgentProperty.name,
