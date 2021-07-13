@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguLoginKit'
-  s.version = '1.2.6'
+  s.version = '1.2.7'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Supported login for Nugu Service'
   s.description = <<-DESC
