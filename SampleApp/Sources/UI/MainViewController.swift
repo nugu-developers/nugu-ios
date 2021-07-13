@@ -55,7 +55,7 @@ final class MainViewController: UIViewController {
     private var becomeActiveObserver: Any?
     private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
-    
+
     // MARK: Override
     
     override func viewDidLoad() {
@@ -203,7 +203,7 @@ private extension MainViewController {
 
         performSegue(withIdentifier: "showSettings", sender: nil)
     }
-    
+
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
         presentVoiceChrome(initiator: .tap)
     }
