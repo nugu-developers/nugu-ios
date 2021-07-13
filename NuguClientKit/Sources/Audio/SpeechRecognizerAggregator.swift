@@ -24,6 +24,7 @@ import AVFoundation
 
 import NuguAgents
 import NuguCore
+import NuguUtils
 
 public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     public weak var delegate: SpeechRecognizerAggregatorDelegate?
@@ -41,7 +42,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     private var audioSessionInterrupted = false
     private var micInputProviderDelay: DispatchTime = .now()
     
-    private var startMicWorkItem: DispatchWorkItem?
+    @Atomic private var startMicWorkItem: DispatchWorkItem?
 
     // Audio input source
     private let micQueue = DispatchQueue(label: "com.sktelecom.romaine.speech_recognizer")
@@ -126,21 +127,21 @@ public extension SpeechRecognizerAggregator {
     func startListeningWithTrigger(completion: ((Result<Void, Error>) -> Void)?) {
         if useKeywordDetector {
             keywordDetector.start()
-            
-            startMicWorkItem?.cancel()
-            startMicWorkItem = DispatchWorkItem(block: { [weak self] in
-                log.debug("startMicWorkItem start")
-                self?.startMicInputProvider(requestingFocus: false) { (success) in
-                    guard success else {
-                        log.debug("startMicWorkItem failed!")
-                        completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInput))
-                        return
+            _startMicWorkItem.mutate {
+                $0?.cancel()
+                $0 = DispatchWorkItem(block: { [weak self] in
+                    log.debug("startMicWorkItem start")
+                    self?.startMicInputProvider(requestingFocus: false) { (success) in
+                        guard success else {
+                            log.debug("startMicWorkItem failed!")
+                            completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInput))
+                            return
+                        }                        
+                        completion?(.success(()))
                     }
-                    
-                    completion?(.success(()))
-                }
-            })
-            guard let startMicWorkItem = startMicWorkItem else { return }
+                })
+            }
+            guard let startMicWorkItem = self.startMicWorkItem else { return }
             
             if self.micInputProviderDelay > DispatchTime.now() {
                 DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
@@ -164,7 +165,6 @@ public extension SpeechRecognizerAggregator {
 
 extension SpeechRecognizerAggregator {
     func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
-        startMicWorkItem?.cancel()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             guard UIApplication.shared.applicationState == .active else {
