@@ -24,6 +24,7 @@ import AVFoundation
 
 import NuguAgents
 import NuguCore
+import NuguUtils
 
 public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     public weak var delegate: SpeechRecognizerAggregatorDelegate?
@@ -41,9 +42,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     private var audioSessionInterrupted = false
     private var micInputProviderDelay: DispatchTime = .now()
     
-    private var startMicWorkItem: DispatchWorkItem?
-    
-    private let startMicWorkItemQueue = DispatchQueue(label: "com.sktelecom.romaine.speech_recognizer_start_mic")
+    @Atomic private var startMicWorkItem: DispatchWorkItem?
 
     // Audio input source
     private let micQueue = DispatchQueue(label: "com.sktelecom.romaine.speech_recognizer")
@@ -128,29 +127,26 @@ public extension SpeechRecognizerAggregator {
     func startListeningWithTrigger(completion: ((Result<Void, Error>) -> Void)?) {
         if useKeywordDetector {
             keywordDetector.start()
-            
-            startMicWorkItemQueue.sync { [weak self] in
-                guard let self = self else { return }
-                self.startMicWorkItem?.cancel()
-                self.startMicWorkItem = DispatchWorkItem(block: { [weak self] in
+            _startMicWorkItem.mutate {
+                $0?.cancel()
+                $0 = DispatchWorkItem(block: { [weak self] in
                     log.debug("startMicWorkItem start")
                     self?.startMicInputProvider(requestingFocus: false) { (success) in
                         guard success else {
                             log.debug("startMicWorkItem failed!")
                             completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInput))
                             return
-                        }
-                        
+                        }                        
                         completion?(.success(()))
                     }
                 })
-                guard let startMicWorkItem = self.startMicWorkItem else { return }
-                
-                if self.micInputProviderDelay > DispatchTime.now() {
-                    DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
-                } else {
-                    DispatchQueue.global().async(execute: startMicWorkItem)
-                }
+            }
+            guard let startMicWorkItem = self.startMicWorkItem else { return }
+            
+            if self.micInputProviderDelay > DispatchTime.now() {
+                DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
+            } else {
+                DispatchQueue.global().async(execute: startMicWorkItem)
             }
         } else {
             keywordDetector.stop()

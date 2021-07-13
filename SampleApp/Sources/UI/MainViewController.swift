@@ -55,21 +55,6 @@ final class MainViewController: UIViewController {
     private var becomeActiveObserver: Any?
     private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
-    
-    private var startMicWorkItem: DispatchWorkItem?
-    private var queue: DispatchQueue {
-        let queues = [
-            DispatchQueue.global(qos: .default),
-            DispatchQueue.global(qos: .unspecified),
-            DispatchQueue.global(qos: .userInitiated),
-            DispatchQueue.global(qos: .unspecified),
-            DispatchQueue.global(qos: .userInteractive),
-            DispatchQueue.global(qos: .utility)
-        ]
-        let index = Int(arc4random_uniform(UInt32(queues.count)))
-        return queues[index]
-    }
-    private let testQueue = DispatchQueue(label: "com.sktelecom.romaine.test.speech_recognizer")
 
     // MARK: Override
     
@@ -203,31 +188,9 @@ private extension MainViewController {
 
 private extension MainViewController {
     @IBAction func showSettingsButtonDidClick(_ button: UIButton) {
-//        NuguCentralManager.shared.stopListening()
-//
-//        performSegue(withIdentifier: "showSettings", sender: nil)
-        testQueue.async { [weak self] in
-            for index in 1...10000 {
-                self?.queue.async { [weak self] in
-                    self?.startMicWorkItem?.cancel()
-                    self?.startMicWorkItem = DispatchWorkItem(block: { [weak self] in
-                        log.debug(index)
-                        self?.start()
-                    })
-                    guard let startMicWorkItem = self?.startMicWorkItem else { return }
-                    let randomBool = Bool.random()
-                    if randomBool {
-                        DispatchQueue.global().async(execute: startMicWorkItem)
-                    } else {
-                        DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: startMicWorkItem)
-                    }
-                }
-            }
-        }
-    }
-    
-    func start() {
-        startMicWorkItem?.cancel()
+        NuguCentralManager.shared.stopListening()
+
+        performSegue(withIdentifier: "showSettings", sender: nil)
     }
 
     @IBAction func startRecognizeButtonDidClick(_ button: UIButton) {
