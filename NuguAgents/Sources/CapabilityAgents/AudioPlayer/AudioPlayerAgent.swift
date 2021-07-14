@@ -233,6 +233,7 @@ public extension AudioPlayerAgent {
                 return
             }
             player.pauseReason = .nothing
+            player.ignoreSendingResumeEvent = false
             self.currentPlayer = player
             self.focusManager.requestFocus(channelDelegate: self)
         }
@@ -364,9 +365,9 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 eventTypeInfo = .playbackStarted
             case .resume:
                 audioPlayerState = .playing
-                if player.pauseReason != .focus {
+                if player.pauseReason != .focus && player.ignoreSendingResumeEvent == false {
                     eventTypeInfo = .playbackResumed
-                }
+                }                
             case .finish:
                 audioPlayerState = .finished
                 eventTypeInfo = .playbackFinished
