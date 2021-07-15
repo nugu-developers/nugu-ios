@@ -16,10 +16,3 @@ FOUNDATION_EXPORT const unsigned char SilverTrayVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <SilverTray/PublicHeader.h>
 
-#import "STUnifiedErrorCatcher.h"
-#import "opus.h"
-#import "opus_custom.h"
-#import "opus_defines.h"
-#import "opus_multistream.h"
-#import "opus_projection.h"
-#import "opus_types.h"

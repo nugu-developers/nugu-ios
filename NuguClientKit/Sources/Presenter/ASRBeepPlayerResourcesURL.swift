@@ -18,6 +18,8 @@
 //  limitations under the License.
 //
 
+import Foundation
+
 public struct ASRBeepPlayerResourcesURL {
     let startBeepResourceUrl: URL?
     let successBeepResourceUrl: URL?

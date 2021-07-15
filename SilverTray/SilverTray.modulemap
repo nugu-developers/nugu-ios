@@ -3,12 +3,12 @@ framework module SilverTray {
     export *
     module * { export * }
     
-    explicit module UnifiedErrorCatcher {
-        header "UnifiedErrorCatcher.h"
-        link "SilverTray"
-        export *
-    }
-    
+//    explicit module UnifiedErrorCatcher {
+//        header "UnifiedErrorCatcher.h"
+//        link "SilverTray"
+//        export *
+//    }
+//    
     explicit module LibOpus {
         header "opus.h"
         header "opus_defines.h"

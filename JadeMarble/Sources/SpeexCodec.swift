@@ -20,6 +20,8 @@
 
 import Foundation
 
+import TycheSDK
+
 public class SpeexEncoder {
     var codecHandle: SpeexHandle
     

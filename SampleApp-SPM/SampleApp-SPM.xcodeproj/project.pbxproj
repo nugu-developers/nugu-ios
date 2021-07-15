@@ -1,0 +1,473 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		731B919E26A6C71400E77A07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731B919D26A6C71400E77A07 /* AppDelegate.swift */; };
+		731B91A026A6C71400E77A07 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731B919F26A6C71400E77A07 /* SceneDelegate.swift */; };
+		731B91A226A6C71400E77A07 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731B91A126A6C71400E77A07 /* ViewController.swift */; };
+		731B91A526A6C71400E77A07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 731B91A326A6C71400E77A07 /* Main.storyboard */; };
+		731B91A726A6C71500E77A07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 731B91A626A6C71500E77A07 /* Assets.xcassets */; };
+		731B91AA26A6C71500E77A07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 731B91A826A6C71500E77A07 /* LaunchScreen.storyboard */; };
+		731B91B326A6C7A600E77A07 /* NuguAgents in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91B226A6C7A600E77A07 /* NuguAgents */; };
+		731B91B526A6C7A600E77A07 /* NuguLoginKit in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91B426A6C7A600E77A07 /* NuguLoginKit */; };
+		731B91B726A6C7A600E77A07 /* NuguCore in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91B626A6C7A600E77A07 /* NuguCore */; };
+		731B91B926A6C7A600E77A07 /* KeenSense in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91B826A6C7A600E77A07 /* KeenSense */; };
+		731B91BB26A6C7A600E77A07 /* NuguClientKit in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91BA26A6C7A600E77A07 /* NuguClientKit */; };
+		731B91BD26A6C7A600E77A07 /* NuguObjcUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91BC26A6C7A600E77A07 /* NuguObjcUtils */; };
+		731B91BF26A6C7A600E77A07 /* NuguServiceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91BE26A6C7A600E77A07 /* NuguServiceKit */; };
+		731B91C126A6C7A600E77A07 /* JadeMarble in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91C026A6C7A600E77A07 /* JadeMarble */; };
+		731B91C326A6C7A600E77A07 /* NuguUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91C226A6C7A600E77A07 /* NuguUIKit */; };
+		731B91C526A6C7A600E77A07 /* NuguUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91C426A6C7A600E77A07 /* NuguUtils */; };
+		731B91C726A6C7A600E77A07 /* SilverTray in Frameworks */ = {isa = PBXBuildFile; productRef = 731B91C626A6C7A600E77A07 /* SilverTray */; };
+		731B91C826A6C7A600E77A07 /* SilverTray in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 731B91C626A6C7A600E77A07 /* SilverTray */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		731B91CB26A6C7C800E77A07 /* NuguCentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731B91CA26A6C7C800E77A07 /* NuguCentralManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		731B91C926A6C7A700E77A07 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				731B91C826A6C7A600E77A07 /* SilverTray in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		731B919A26A6C71400E77A07 /* SampleApp-SPM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SampleApp-SPM.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		731B919D26A6C71400E77A07 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		731B919F26A6C71400E77A07 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		731B91A126A6C71400E77A07 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		731B91A426A6C71400E77A07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		731B91A626A6C71500E77A07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		731B91A926A6C71500E77A07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		731B91AB26A6C71500E77A07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		731B91CA26A6C7C800E77A07 /* NuguCentralManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguCentralManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		731B919726A6C71400E77A07 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				731B91B526A6C7A600E77A07 /* NuguLoginKit in Frameworks */,
+				731B91C126A6C7A600E77A07 /* JadeMarble in Frameworks */,
+				731B91BB26A6C7A600E77A07 /* NuguClientKit in Frameworks */,
+				731B91BF26A6C7A600E77A07 /* NuguServiceKit in Frameworks */,
+				731B91B726A6C7A600E77A07 /* NuguCore in Frameworks */,
+				731B91BD26A6C7A600E77A07 /* NuguObjcUtils in Frameworks */,
+				731B91C726A6C7A600E77A07 /* SilverTray in Frameworks */,
+				731B91B926A6C7A600E77A07 /* KeenSense in Frameworks */,
+				731B91C526A6C7A600E77A07 /* NuguUtils in Frameworks */,
+				731B91C326A6C7A600E77A07 /* NuguUIKit in Frameworks */,
+				731B91B326A6C7A600E77A07 /* NuguAgents in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		731B919126A6C71400E77A07 = {
+			isa = PBXGroup;
+			children = (
+				731B919C26A6C71400E77A07 /* SampleApp-SPM */,
+				731B919B26A6C71400E77A07 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		731B919B26A6C71400E77A07 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				731B919A26A6C71400E77A07 /* SampleApp-SPM.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		731B919C26A6C71400E77A07 /* SampleApp-SPM */ = {
+			isa = PBXGroup;
+			children = (
+				731B919D26A6C71400E77A07 /* AppDelegate.swift */,
+				731B919F26A6C71400E77A07 /* SceneDelegate.swift */,
+				731B91A126A6C71400E77A07 /* ViewController.swift */,
+				731B91A326A6C71400E77A07 /* Main.storyboard */,
+				731B91A626A6C71500E77A07 /* Assets.xcassets */,
+				731B91A826A6C71500E77A07 /* LaunchScreen.storyboard */,
+				731B91AB26A6C71500E77A07 /* Info.plist */,
+				731B91CA26A6C7C800E77A07 /* NuguCentralManager.swift */,
+			);
+			path = "SampleApp-SPM";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		731B919926A6C71400E77A07 /* SampleApp-SPM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 731B91AE26A6C71500E77A07 /* Build configuration list for PBXNativeTarget "SampleApp-SPM" */;
+			buildPhases = (
+				731B919626A6C71400E77A07 /* Sources */,
+				731B919726A6C71400E77A07 /* Frameworks */,
+				731B919826A6C71400E77A07 /* Resources */,
+				731B91C926A6C7A700E77A07 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SampleApp-SPM";
+			packageProductDependencies = (
+				731B91B226A6C7A600E77A07 /* NuguAgents */,
+				731B91B426A6C7A600E77A07 /* NuguLoginKit */,
+				731B91B626A6C7A600E77A07 /* NuguCore */,
+				731B91B826A6C7A600E77A07 /* KeenSense */,
+				731B91BA26A6C7A600E77A07 /* NuguClientKit */,
+				731B91BC26A6C7A600E77A07 /* NuguObjcUtils */,
+				731B91BE26A6C7A600E77A07 /* NuguServiceKit */,
+				731B91C026A6C7A600E77A07 /* JadeMarble */,
+				731B91C226A6C7A600E77A07 /* NuguUIKit */,
+				731B91C426A6C7A600E77A07 /* NuguUtils */,
+				731B91C626A6C7A600E77A07 /* SilverTray */,
+			);
+			productName = "SampleApp-SPM";
+			productReference = 731B919A26A6C71400E77A07 /* SampleApp-SPM.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		731B919226A6C71400E77A07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					731B919926A6C71400E77A07 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+				};
+			};
+			buildConfigurationList = 731B919526A6C71400E77A07 /* Build configuration list for PBXProject "SampleApp-SPM" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 731B919126A6C71400E77A07;
+			packageReferences = (
+				731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */,
+			);
+			productRefGroup = 731B919B26A6C71400E77A07 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				731B919926A6C71400E77A07 /* SampleApp-SPM */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		731B919826A6C71400E77A07 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				731B91AA26A6C71500E77A07 /* LaunchScreen.storyboard in Resources */,
+				731B91A726A6C71500E77A07 /* Assets.xcassets in Resources */,
+				731B91A526A6C71400E77A07 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		731B919626A6C71400E77A07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				731B91A226A6C71400E77A07 /* ViewController.swift in Sources */,
+				731B919E26A6C71400E77A07 /* AppDelegate.swift in Sources */,
+				731B91CB26A6C7C800E77A07 /* NuguCentralManager.swift in Sources */,
+				731B91A026A6C71400E77A07 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		731B91A326A6C71400E77A07 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				731B91A426A6C71400E77A07 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		731B91A826A6C71500E77A07 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				731B91A926A6C71500E77A07 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		731B91AC26A6C71500E77A07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		731B91AD26A6C71500E77A07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		731B91AF26A6C71500E77A07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QUEYTE2JMS;
+				INFOPLIST_FILE = "SampleApp-SPM/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sktelecom.romaine.SampleApp-SPM";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		731B91B026A6C71500E77A07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QUEYTE2JMS;
+				INFOPLIST_FILE = "SampleApp-SPM/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sktelecom.romaine.SampleApp-SPM";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		731B919526A6C71400E77A07 /* Build configuration list for PBXProject "SampleApp-SPM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				731B91AC26A6C71500E77A07 /* Debug */,
+				731B91AD26A6C71500E77A07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		731B91AE26A6C71500E77A07 /* Build configuration list for PBXNativeTarget "SampleApp-SPM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				731B91AF26A6C71500E77A07 /* Debug */,
+				731B91B026A6C71500E77A07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/childc/nugu-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		731B91B226A6C7A600E77A07 /* NuguAgents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = NuguAgents;
+		};
+		731B91B426A6C7A600E77A07 /* NuguLoginKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = NuguLoginKit;
+		};
+		731B91B626A6C7A600E77A07 /* NuguCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = NuguCore;
+		};
+		731B91B826A6C7A600E77A07 /* KeenSense */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = KeenSense;
+		};
+		731B91BA26A6C7A600E77A07 /* NuguClientKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = NuguClientKit;
+		};
+		731B91BC26A6C7A600E77A07 /* NuguObjcUtils */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = NuguObjcUtils;
+		};
+		731B91BE26A6C7A600E77A07 /* NuguServiceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = NuguServiceKit;
+		};
+		731B91C026A6C7A600E77A07 /* JadeMarble */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = JadeMarble;
+		};
+		731B91C226A6C7A600E77A07 /* NuguUIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = NuguUIKit;
+		};
+		731B91C426A6C7A600E77A07 /* NuguUtils */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = NuguUtils;
+		};
+		731B91C626A6C7A600E77A07 /* SilverTray */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 731B91B126A6C7A600E77A07 /* XCRemoteSwiftPackageReference "nugu-ios" */;
+			productName = SilverTray;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 731B919226A6C71400E77A07 /* Project object */;
+}

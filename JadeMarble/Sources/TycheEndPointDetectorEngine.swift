@@ -21,6 +21,8 @@
 import Foundation
 import AVFoundation
 
+import TycheSDK
+
 public class TycheEndPointDetectorEngine {
     private let epdQueue = DispatchQueue(label: "com.sktelecom.romaine.jademarble.tyche_end_point_detector")
     private var flushedLength: Int = 0

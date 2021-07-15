@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>OAuthServerUrl</key>
+    <string>https://stg-api.sktnugu.com</string>
+    
+    <key>OAuthClientId</key>
+    <string>app.nugu.agent</string>
+    
+    <key>OAuthClientSecret</key>
+    <string>22632e28-77bc-4db3-bd6f-c70e677d9a23</string>
+    
+    <key>OAuthRedirectUri</key>
+    <string>nugu.user.app.nugu.agent://auth</string>
+    
+    <key>PoCId</key>
+    <string>app.nugu.agent</string>
+    
+    <key>DeviceTypeCode</key>
+    <string>APP_NUGU_AGENT</string>
+</dict>
+</plist>

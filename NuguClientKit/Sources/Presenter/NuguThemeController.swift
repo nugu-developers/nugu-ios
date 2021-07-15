@@ -18,6 +18,8 @@
 //  limitations under the License.
 //
 
+import Foundation
+
 import NuguUtils
 
 public class NuguThemeController: NSObject, TypedNotifyable {

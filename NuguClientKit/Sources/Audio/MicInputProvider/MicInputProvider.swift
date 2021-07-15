@@ -21,6 +21,8 @@
 import Foundation
 import AVFoundation
 
+import NuguObjcUtils
+
 /// Record audio input from a microphone.
 public class MicInputProvider {
     public weak var delegate: MicInputProviderDelegate?
@@ -90,9 +92,10 @@ public class MicInputProvider {
         log.debug("try to stop")
         removeAudioEngineConfigurationObserver()
         
-        if let error = NCObjcExceptionCatcher.objcTry({
+        if let error = UnifiedErrorCatcher.try({
             audioEngine.inputNode.removeTap(onBus: audioBus)
             audioEngine.stop()
+            return nil
         }) {
             log.error("stop error: \(error)\n")
         }
@@ -103,11 +106,12 @@ public class MicInputProvider {
         
         var inputNode: AVAudioInputNode!
         var inputFormat: AVAudioFormat!
-        if let error = NCObjcExceptionCatcher.objcTry({
+        if let error = UnifiedErrorCatcher.try({
             // The audio engine creates a singleton on demand when inputNode is first accessed.
             // So it could raise an ObjC exception
             inputNode = audioEngine.inputNode
             inputFormat = inputNode.inputFormat(forBus: audioBus)
+            return nil
         }) {
             log.error("create AVAudioInputNode error: \(error.localizedDescription)")
             throw error
@@ -131,7 +135,7 @@ public class MicInputProvider {
             throw MicInputError.resamplerError(source: inputFormat, dest: recordingFormat)
         }
         
-        if let error = NCObjcExceptionCatcher.objcTry({
+        if let error = UnifiedErrorCatcher.try({
             inputNode.removeTap(onBus: audioBus)
             inputNode.installTap(onBus: audioBus, bufferSize: AVAudioFrameCount(inputFormat.sampleRate/10), format: inputFormat) { [weak self] (buffer, when) in
                 guard let self = self else { return }
@@ -157,6 +161,8 @@ public class MicInputProvider {
                     tapBlock(pcmBuffer, when)
                 }
             }
+            
+            return nil
         }) {
             log.error("installTap error: \(error)\n" +
                 "\t\trequested format: \(String(describing: inputFormat))\n" +
