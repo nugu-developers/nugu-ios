@@ -13,9 +13,11 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '12.0'
   s.swift_version = '5'
+  
+  s.source_files = 'NuguServiceKit/Sources/**/*'
 
   s.dependency 'NuguUtils', s.version.to_s
   s.dependency 'NattyLog', '~> 1'
 
-  s.source_files = 'NuguServiceKit/Sources/**/*'
+
 end
