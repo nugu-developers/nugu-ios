@@ -154,6 +154,7 @@ private extension DisplayWebViewPresenter {
     
     func replaceDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         nuguDisplayWebView?.load(
+            dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
             clientInfo: self.clientInfo
@@ -181,6 +182,7 @@ private extension DisplayWebViewPresenter {
         nuguDisplayWebView = NuguDisplayWebView(frame: CGRect())
         nuguDisplayWebView?.displayWebView?.navigationDelegate = self
         nuguDisplayWebView?.load(
+            dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
             clientInfo: self.clientInfo
@@ -255,7 +257,7 @@ private extension DisplayWebViewPresenter {
     }
     
     func updateDisplayView(displayTemplate: DisplayTemplate) {
-        nuguDisplayWebView?.update(updatePayload: displayTemplate.payload)
+        nuguDisplayWebView?.update(dialogRequestId: displayTemplate.dialogRequestId, updatePayload: displayTemplate.payload)
     }
     
     func dismissDisplayView() {

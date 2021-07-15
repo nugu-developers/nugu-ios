@@ -182,7 +182,7 @@ extension NuguDisplayWebView: UIGestureRecognizerDelegate {
 // MARK: - Public Methods
 
 public extension NuguDisplayWebView {
-    func load(displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
+    func load(dialogRequestId: String, displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
         self.displayPayload = displayPayload
         self.displayType = displayType
         self.clientInfo = clientInfo
@@ -190,13 +190,14 @@ public extension NuguDisplayWebView {
         guard let displayType = self.displayType,
               let payloadData = self.displayPayload,
               let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadData, options: .mutableContainers) as? [String: Any] else { return }
-        request(urlString: NuguDisplayWebView.displayWebServerAddress,
+        request(dialogRequestId: dialogRequestId,
+                urlString: NuguDisplayWebView.displayWebServerAddress,
                 displayType: displayType,
                 payload: payloadDictionary,
                 clientInfo: clientInfo)
     }
     
-    func update(updatePayload: Data) {
+    func update(dialogRequestId: String, updatePayload: Data) {
         guard let displayingPayloadData = displayPayload,
             let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: AnyHashable],
             let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayload, options: []) as? [String: AnyHashable] else {
@@ -205,7 +206,7 @@ public extension NuguDisplayWebView {
         let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
         guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
         displayPayload = mergedPayloadData
-        load(displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
+        load(dialogRequestId: dialogRequestId, displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
     }
     
     func scroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
@@ -252,7 +253,7 @@ private extension NuguDisplayWebView {
         return url.percentEncodedQuery ?? ""
     }
     
-    func request(urlString: String, displayType: String, payload: [String: Any], clientInfo: [String: String]?) {
+    func request(dialogRequestId: String, urlString: String, displayType: String, payload: [String: Any], clientInfo: [String: String]?) {
         var displayRequestBodyParam = [String: String]()
         if let deviceTypeCode = NuguDisplayWebView.deviceTypeCode {
             displayRequestBodyParam["device_type_code"] = deviceTypeCode
@@ -267,6 +268,7 @@ private extension NuguDisplayWebView {
             let jsonStr = String(data: jsonData, encoding: .utf8) {
             displayRequestBodyParam["data"] = jsonStr
         }
+        displayRequestBodyParam["dialog_request_id"] = dialogRequestId
         
         var defaultClientInfo = [String: String]()
         defaultClientInfo["nuguSdkVersion"] = Bundle(for: NuguDisplayWebView.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
