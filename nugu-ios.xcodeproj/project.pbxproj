@@ -258,7 +258,6 @@
 		731B939526A6EC7F00E77A07 /* TycheSpeex.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B932F26A6EB7300E77A07 /* TycheSpeex.xcframework */; };
 		731B939B26A6ECA500E77A07 /* UnifiedErrorCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B939826A6ECA500E77A07 /* UnifiedErrorCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		731B93A326A7168E00E77A07 /* TycheSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93A226A7168E00E77A07 /* TycheSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		731B93A526A7170600E77A07 /* nugu_config-tPhone.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731B93A426A7170600E77A07 /* nugu_config-tPhone.plist */; };
 		731B93B026A72D4F00E77A07 /* opus.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93A926A72D4F00E77A07 /* opus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		731B93B126A72D4F00E77A07 /* opus_multistream.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93AA26A72D4F00E77A07 /* opus_multistream.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		731B93B226A72D4F00E77A07 /* OpusSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93AB26A72D4F00E77A07 /* OpusSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1127,7 +1126,6 @@
 		731B938026A6EC2B00E77A07 /* AudioEngineManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioEngineManager.swift; sourceTree = "<group>"; };
 		731B939826A6ECA500E77A07 /* UnifiedErrorCatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnifiedErrorCatcher.h; sourceTree = "<group>"; };
 		731B93A226A7168E00E77A07 /* TycheSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TycheSDK.h; sourceTree = "<group>"; };
-		731B93A426A7170600E77A07 /* nugu_config-tPhone.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "nugu_config-tPhone.plist"; sourceTree = "<group>"; };
 		731B93A926A72D4F00E77A07 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
 		731B93AA26A72D4F00E77A07 /* opus_multistream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
 		731B93AB26A72D4F00E77A07 /* OpusSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpusSDK.h; sourceTree = "<group>"; };
@@ -2429,7 +2427,6 @@
 		1FFFF48E237671F500C9A177 /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				731B93A426A7170600E77A07 /* nugu_config-tPhone.plist */,
 				1FFFF4A3237672F100C9A177 /* Sources */,
 				1FFFF4D1237672F100C9A177 /* Resources */,
 				1FFFF4D7237672F100C9A177 /* Supporting Files */,
@@ -3851,7 +3848,6 @@
 				A17B06612394D22800D739E9 /* device_GW_error_003.wav in Resources */,
 				A17B065F2394D22800D739E9 /* device_GW_error_001.wav in Resources */,
 				1FFFF502237672F100C9A177 /* Assets.xcassets in Resources */,
-				731B93A526A7170600E77A07 /* nugu_config-tPhone.plist in Resources */,
 				A17B06642394D22800D739E9 /* device_GW_error_006.wav in Resources */,
 				75047D9A24F4DE8F007BBF22 /* responsefail.wav in Resources */,
 				A17B06602394D22800D739E9 /* device_GW_error_005.wav in Resources */,
