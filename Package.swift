@@ -140,5 +140,6 @@ let package = Package(
             path: "NuguClientKit/",
             exclude: ["Info.plist", "README.md"]
         ),
-    ]
+    ],
+    swiftLanguageVersions: [.v5]
 )
