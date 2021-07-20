@@ -133,6 +133,9 @@ class RoutineExecuter {
             self.handlingEvent = nil
             self.interruptEvent = nil
             self.currentActionIndex = 0
+            
+            self.doFinish()
+            
             self.routine = routine
             self.state = .playing
 
