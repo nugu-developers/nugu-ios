@@ -1239,7 +1239,6 @@
 		73C2562F2695D5860008FE7F /* SilverTray.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SilverTray.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73C256312695D5860008FE7F /* SilverTray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SilverTray.h; sourceTree = "<group>"; };
 		73C256322695D5860008FE7F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		73C256462695D5B20008FE7F /* SilverTray.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = SilverTray.modulemap; sourceTree = "<group>"; };
 		73C256A62697408A0008FE7F /* NattyLog.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = NattyLog.xcframework; path = Carthage/Build/NattyLog.xcframework; sourceTree = "<group>"; };
 		73C256AA269740BB0008FE7F /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
 		73C256B1269740D80008FE7F /* Lottie.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Lottie.xcframework; path = Carthage/Build/Lottie.xcframework; sourceTree = "<group>"; };
@@ -2939,7 +2938,6 @@
 			isa = PBXGroup;
 			children = (
 				731B937226A6EC2B00E77A07 /* Sources */,
-				73C256462695D5B20008FE7F /* SilverTray.modulemap */,
 				73C256312695D5860008FE7F /* SilverTray.h */,
 				73C256322695D5860008FE7F /* Info.plist */,
 			);
