@@ -25,8 +25,11 @@ jobs:
         run: |
           set -eo pipefail
           pod trunk push --allow-warnings NuguUtils.podspec
+          pod trunk push --synchronous --allow-warnings NuguObjcUtils.podspec
           pod trunk push --synchronous --allow-warnings NuguCore.podspec
+          pod trunk push --synchronous --allow-warnings TycheSDK.podspec
           pod trunk push --synchronous --allow-warnings JadeMarble.podspec
+          pod trunk push --synchronous --allow-warnings OpusSDK.podspec
           pod trunk push --synchronous --allow-warnings SilverTray.podspec
           pod trunk push --synchronous --allow-warnings NuguAgents.podspec
           pod trunk push --synchronous --allow-warnings NuguServiceKit.podspec
