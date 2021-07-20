@@ -16,7 +16,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "RxSwift", url: "https://github.com/ReactiveX/RxSwift", from: "5.0.0"),
+        .package(name: "RxSwift", url: "https://github.com/ReactiveX/RxSwift", from: "6.0.0"),
         .package(name: "NattyLog", url: "https://github.com/nugu-developers/natty-log-ios", from: "1.2.2"),
         .package(name: "Lottie", url: "https://github.com/airbnb/lottie-ios", from: "3.0.0")
     ],
@@ -54,7 +54,7 @@ let package = Package(
             dependencies: ["TycheCommon", "TycheEpd", "TycheWakeup", "TycheSpeex"],
             path: "TycheSDK/",
             exclude: ["Info.plist"],
-            publicHeadersPath: "."
+            publicHeadersPath: "include/"
         ),
         .target(
             name: "JadeMarble",
@@ -62,7 +62,6 @@ let package = Package(
             path: "JadeMarble/",
             exclude: ["Info.plist"],
             resources: [.process("Resources/skt_epd_model.raw")],
-            publicHeadersPath: "include/",
             linkerSettings: [.linkedLibrary("c++")]
         ),
         .target(
@@ -93,7 +92,7 @@ let package = Package(
             dependencies: ["OpusCodec"],
             path: "OpusSDK/",
             exclude: ["Info.plist"],
-            publicHeadersPath: "."
+            publicHeadersPath: "include/"
         ),
         .target(
             name: "SilverTray",

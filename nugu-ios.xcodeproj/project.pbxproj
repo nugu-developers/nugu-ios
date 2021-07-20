@@ -241,19 +241,6 @@
 		731A0D4326A594A700569E47 /* NuguObjcUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73BF06DA26A0208700112473 /* NuguObjcUtils.framework */; };
 		731B933F26A6EB7400E77A07 /* TycheWakeup.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B932D26A6EB7300E77A07 /* TycheWakeup.xcframework */; };
 		731B934126A6EB7400E77A07 /* TycheCommon.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B932E26A6EB7300E77A07 /* TycheCommon.xcframework */; };
-		731B936226A6EBDE00E77A07 /* opus.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B935B26A6EBDE00E77A07 /* opus.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		731B936326A6EBDE00E77A07 /* opus_multistream.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B935C26A6EBDE00E77A07 /* opus_multistream.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		731B936426A6EBDE00E77A07 /* OpusSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B935D26A6EBDE00E77A07 /* OpusSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		731B936526A6EBDE00E77A07 /* opus_custom.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B935E26A6EBDE00E77A07 /* opus_custom.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		731B936626A6EBDE00E77A07 /* opus_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B935F26A6EBDE00E77A07 /* opus_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		731B936726A6EBDE00E77A07 /* opus_defines.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B936026A6EBDE00E77A07 /* opus_defines.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		731B936826A6EBDE00E77A07 /* opus_projection.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B936126A6EBDE00E77A07 /* opus_projection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		731B938126A6EC2B00E77A07 /* opus.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B936C26A6EC2B00E77A07 /* opus.h */; };
-		731B938226A6EC2B00E77A07 /* opus_multistream.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B936D26A6EC2B00E77A07 /* opus_multistream.h */; };
-		731B938326A6EC2B00E77A07 /* opus_custom.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B936E26A6EC2B00E77A07 /* opus_custom.h */; };
-		731B938426A6EC2B00E77A07 /* opus_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B936F26A6EC2B00E77A07 /* opus_types.h */; };
-		731B938526A6EC2B00E77A07 /* opus_defines.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B937026A6EC2B00E77A07 /* opus_defines.h */; };
-		731B938626A6EC2B00E77A07 /* opus_projection.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B937126A6EC2B00E77A07 /* opus_projection.h */; };
 		731B938726A6EC2B00E77A07 /* DataStreamPlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731B937326A6EC2B00E77A07 /* DataStreamPlayerState.swift */; };
 		731B938826A6EC2B00E77A07 /* DataStreamPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731B937426A6EC2B00E77A07 /* DataStreamPlayer.swift */; };
 		731B938926A6EC2B00E77A07 /* DataStreamPlayerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731B937526A6EC2B00E77A07 /* DataStreamPlayerDelegate.swift */; };
@@ -269,10 +256,17 @@
 		731B939326A6EC7F00E77A07 /* TycheCommon.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B932E26A6EB7300E77A07 /* TycheCommon.xcframework */; };
 		731B939426A6EC7F00E77A07 /* TycheEpd.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B932C26A6EB7300E77A07 /* TycheEpd.xcframework */; };
 		731B939526A6EC7F00E77A07 /* TycheSpeex.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 731B932F26A6EB7300E77A07 /* TycheSpeex.xcframework */; };
-		731B939A26A6ECA500E77A07 /* UnifiedErrorCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 731B939726A6ECA500E77A07 /* UnifiedErrorCatcher.m */; };
 		731B939B26A6ECA500E77A07 /* UnifiedErrorCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B939826A6ECA500E77A07 /* UnifiedErrorCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		731B93A326A7168E00E77A07 /* TycheSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93A226A7168E00E77A07 /* TycheSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		731B93A526A7170600E77A07 /* nugu_config-tPhone.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731B93A426A7170600E77A07 /* nugu_config-tPhone.plist */; };
+		731B93B026A72D4F00E77A07 /* opus.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93A926A72D4F00E77A07 /* opus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		731B93B126A72D4F00E77A07 /* opus_multistream.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93AA26A72D4F00E77A07 /* opus_multistream.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		731B93B226A72D4F00E77A07 /* OpusSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93AB26A72D4F00E77A07 /* OpusSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		731B93B326A72D4F00E77A07 /* opus_custom.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93AC26A72D4F00E77A07 /* opus_custom.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		731B93B426A72D4F00E77A07 /* opus_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93AD26A72D4F00E77A07 /* opus_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		731B93B526A72D4F00E77A07 /* opus_defines.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93AE26A72D4F00E77A07 /* opus_defines.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		731B93B626A72D4F00E77A07 /* opus_projection.h in Headers */ = {isa = PBXBuildFile; fileRef = 731B93AF26A72D4F00E77A07 /* opus_projection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		731B93B826A72D8200E77A07 /* UnifiedErrorCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 731B93B726A72D8200E77A07 /* UnifiedErrorCatcher.m */; };
 		731D3015265D2716003FE737 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		732967B9256377190077C3C4 /* EndedUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732967B8256377190077C3C4 /* EndedUp.swift */; };
 		732967F6256383AB0077C3C4 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
@@ -1120,19 +1114,6 @@
 		731B932E26A6EB7300E77A07 /* TycheCommon.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TycheCommon.xcframework; sourceTree = SOURCE_ROOT; };
 		731B932F26A6EB7300E77A07 /* TycheSpeex.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TycheSpeex.xcframework; sourceTree = SOURCE_ROOT; };
 		731B935826A6EB9A00E77A07 /* OpusCodec.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = OpusCodec.xcframework; sourceTree = SOURCE_ROOT; };
-		731B935B26A6EBDE00E77A07 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
-		731B935C26A6EBDE00E77A07 /* opus_multistream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
-		731B935D26A6EBDE00E77A07 /* OpusSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpusSDK.h; sourceTree = "<group>"; };
-		731B935E26A6EBDE00E77A07 /* opus_custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_custom.h; sourceTree = "<group>"; };
-		731B935F26A6EBDE00E77A07 /* opus_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_types.h; sourceTree = "<group>"; };
-		731B936026A6EBDE00E77A07 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
-		731B936126A6EBDE00E77A07 /* opus_projection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_projection.h; sourceTree = "<group>"; };
-		731B936C26A6EC2B00E77A07 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
-		731B936D26A6EC2B00E77A07 /* opus_multistream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
-		731B936E26A6EC2B00E77A07 /* opus_custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_custom.h; sourceTree = "<group>"; };
-		731B936F26A6EC2B00E77A07 /* opus_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_types.h; sourceTree = "<group>"; };
-		731B937026A6EC2B00E77A07 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
-		731B937126A6EC2B00E77A07 /* opus_projection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_projection.h; sourceTree = "<group>"; };
 		731B937326A6EC2B00E77A07 /* DataStreamPlayerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStreamPlayerState.swift; sourceTree = "<group>"; };
 		731B937426A6EC2B00E77A07 /* DataStreamPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStreamPlayer.swift; sourceTree = "<group>"; };
 		731B937526A6EC2B00E77A07 /* DataStreamPlayerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStreamPlayerDelegate.swift; sourceTree = "<group>"; };
@@ -1144,10 +1125,17 @@
 		731B937D26A6EC2B00E77A07 /* OpusDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpusDecoder.swift; sourceTree = "<group>"; };
 		731B937F26A6EC2B00E77A07 /* AudioEngineObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioEngineObservable.swift; sourceTree = "<group>"; };
 		731B938026A6EC2B00E77A07 /* AudioEngineManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioEngineManager.swift; sourceTree = "<group>"; };
-		731B939726A6ECA500E77A07 /* UnifiedErrorCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnifiedErrorCatcher.m; sourceTree = "<group>"; };
 		731B939826A6ECA500E77A07 /* UnifiedErrorCatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnifiedErrorCatcher.h; sourceTree = "<group>"; };
 		731B93A226A7168E00E77A07 /* TycheSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TycheSDK.h; sourceTree = "<group>"; };
 		731B93A426A7170600E77A07 /* nugu_config-tPhone.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "nugu_config-tPhone.plist"; sourceTree = "<group>"; };
+		731B93A926A72D4F00E77A07 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
+		731B93AA26A72D4F00E77A07 /* opus_multistream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_multistream.h; sourceTree = "<group>"; };
+		731B93AB26A72D4F00E77A07 /* OpusSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpusSDK.h; sourceTree = "<group>"; };
+		731B93AC26A72D4F00E77A07 /* opus_custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_custom.h; sourceTree = "<group>"; };
+		731B93AD26A72D4F00E77A07 /* opus_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_types.h; sourceTree = "<group>"; };
+		731B93AE26A72D4F00E77A07 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
+		731B93AF26A72D4F00E77A07 /* opus_projection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_projection.h; sourceTree = "<group>"; };
+		731B93B726A72D8200E77A07 /* UnifiedErrorCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnifiedErrorCatcher.m; sourceTree = "<group>"; };
 		732967B8256377190077C3C4 /* EndedUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndedUp.swift; sourceTree = "<group>"; };
 		732B538125CD119A00126FE4 /* SpeechRecognizerAggregatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerAggregatorDelegate.swift; sourceTree = "<group>"; };
 		7330CD81237A77D800FCD6E9 /* KeywordDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeywordDetector.swift; sourceTree = "<group>"; };
@@ -2771,7 +2759,7 @@
 		731A0D2426A5935A00569E47 /* OpusSDK */ = {
 			isa = PBXGroup;
 			children = (
-				731B935A26A6EBDE00E77A07 /* iclude */,
+				731B93A826A72D4F00E77A07 /* include */,
 				731A0D2626A5935A00569E47 /* Info.plist */,
 			);
 			path = OpusSDK;
@@ -2787,33 +2775,6 @@
 				731B932D26A6EB7300E77A07 /* TycheWakeup.xcframework */,
 			);
 			path = Frameworks;
-			sourceTree = "<group>";
-		};
-		731B935A26A6EBDE00E77A07 /* iclude */ = {
-			isa = PBXGroup;
-			children = (
-				731B935B26A6EBDE00E77A07 /* opus.h */,
-				731B935C26A6EBDE00E77A07 /* opus_multistream.h */,
-				731B935D26A6EBDE00E77A07 /* OpusSDK.h */,
-				731B935E26A6EBDE00E77A07 /* opus_custom.h */,
-				731B935F26A6EBDE00E77A07 /* opus_types.h */,
-				731B936026A6EBDE00E77A07 /* opus_defines.h */,
-				731B936126A6EBDE00E77A07 /* opus_projection.h */,
-			);
-			path = iclude;
-			sourceTree = "<group>";
-		};
-		731B936B26A6EC2B00E77A07 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				731B936C26A6EC2B00E77A07 /* opus.h */,
-				731B936D26A6EC2B00E77A07 /* opus_multistream.h */,
-				731B936E26A6EC2B00E77A07 /* opus_custom.h */,
-				731B936F26A6EC2B00E77A07 /* opus_types.h */,
-				731B937026A6EC2B00E77A07 /* opus_defines.h */,
-				731B937126A6EC2B00E77A07 /* opus_projection.h */,
-			);
-			path = include;
 			sourceTree = "<group>";
 		};
 		731B937226A6EC2B00E77A07 /* Sources */ = {
@@ -2861,7 +2822,6 @@
 		731B939626A6ECA500E77A07 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				731B939726A6ECA500E77A07 /* UnifiedErrorCatcher.m */,
 				731B939826A6ECA500E77A07 /* UnifiedErrorCatcher.h */,
 			);
 			path = include;
@@ -2870,8 +2830,23 @@
 		731B939926A6ECA500E77A07 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				731B93B726A72D8200E77A07 /* UnifiedErrorCatcher.m */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		731B93A826A72D4F00E77A07 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				731B93A926A72D4F00E77A07 /* opus.h */,
+				731B93AA26A72D4F00E77A07 /* opus_multistream.h */,
+				731B93AB26A72D4F00E77A07 /* OpusSDK.h */,
+				731B93AC26A72D4F00E77A07 /* opus_custom.h */,
+				731B93AD26A72D4F00E77A07 /* opus_types.h */,
+				731B93AE26A72D4F00E77A07 /* opus_defines.h */,
+				731B93AF26A72D4F00E77A07 /* opus_projection.h */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 		7329679725636E240077C3C4 /* Extensions */ = {
@@ -2966,7 +2941,6 @@
 		73C256302695D5860008FE7F /* SilverTray */ = {
 			isa = PBXGroup;
 			children = (
-				731B936B26A6EC2B00E77A07 /* include */,
 				731B937226A6EC2B00E77A07 /* Sources */,
 				73C256462695D5B20008FE7F /* SilverTray.modulemap */,
 				73C256312695D5860008FE7F /* SilverTray.h */,
@@ -3350,13 +3324,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				731B936826A6EBDE00E77A07 /* opus_projection.h in Headers */,
-				731B936626A6EBDE00E77A07 /* opus_types.h in Headers */,
-				731B936526A6EBDE00E77A07 /* opus_custom.h in Headers */,
-				731B936226A6EBDE00E77A07 /* opus.h in Headers */,
-				731B936326A6EBDE00E77A07 /* opus_multistream.h in Headers */,
-				731B936726A6EBDE00E77A07 /* opus_defines.h in Headers */,
-				731B936426A6EBDE00E77A07 /* OpusSDK.h in Headers */,
+				731B93B626A72D4F00E77A07 /* opus_projection.h in Headers */,
+				731B93B426A72D4F00E77A07 /* opus_types.h in Headers */,
+				731B93B326A72D4F00E77A07 /* opus_custom.h in Headers */,
+				731B93B026A72D4F00E77A07 /* opus.h in Headers */,
+				731B93B126A72D4F00E77A07 /* opus_multistream.h in Headers */,
+				731B93B526A72D4F00E77A07 /* opus_defines.h in Headers */,
+				731B93B226A72D4F00E77A07 /* OpusSDK.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3373,13 +3347,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				731B938626A6EC2B00E77A07 /* opus_projection.h in Headers */,
-				731B938426A6EC2B00E77A07 /* opus_types.h in Headers */,
-				731B938326A6EC2B00E77A07 /* opus_custom.h in Headers */,
 				73C256332695D5860008FE7F /* SilverTray.h in Headers */,
-				731B938126A6EC2B00E77A07 /* opus.h in Headers */,
-				731B938526A6EC2B00E77A07 /* opus_defines.h in Headers */,
-				731B938226A6EC2B00E77A07 /* opus_multistream.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4462,7 +4430,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				731B939A26A6ECA500E77A07 /* UnifiedErrorCatcher.m in Sources */,
+				731B93B826A72D8200E77A07 /* UnifiedErrorCatcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5522,12 +5490,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/TycheSDK/TycheCommon.xcframework/**",
-					"$(PROJECT_DIR)/TycheSDK/TycheSpeex.xcframework/**",
-					"$(PROJECT_DIR)/TycheSDK/TycheWakeup.xcframework/**",
-					"$(PROJECT_DIR)/TycheSDK/TycheEpd.xcframework/**",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = TycheSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -5554,12 +5517,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/TycheSDK/TycheCommon.xcframework/**",
-					"$(PROJECT_DIR)/TycheSDK/TycheSpeex.xcframework/**",
-					"$(PROJECT_DIR)/TycheSDK/TycheWakeup.xcframework/**",
-					"$(PROJECT_DIR)/TycheSDK/TycheEpd.xcframework/**",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = TycheSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
