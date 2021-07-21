@@ -335,7 +335,14 @@ extension NuguCentralManager: NuguClientDelegate {
         log.debug("nuguClientWillUseMic \(requestingFocus)")
     }
     
-    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator) {}
+    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator) {
+        DispatchQueue.main.async {
+            guard let keyWindow = UIApplication.shared.windows.filter({$0.isKeyWindow}).first,
+                  let navigationController = keyWindow.rootViewController as? UINavigationController,
+                  let mainViewController = navigationController.viewControllers.last as? MainViewController else { return }
+            mainViewController.presentVoiceChrome(initiator: initiator)
+        }
+    }
     
     func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState) {}
     

@@ -216,9 +216,6 @@ private extension MainViewController {
     /// AudioSession is required for using Nugu
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
-        // keyword detector delegate
-        NuguCentralManager.shared.client.keywordDetector.delegate = self
-        
         // Observers
         addAsrAgentObserver(NuguCentralManager.shared.client.asrAgent)
         addDialogStateObserver(NuguCentralManager.shared.client.dialogStateAggregator)
@@ -340,40 +337,6 @@ extension MainViewController: AudioDisplayViewPresenterDelegate {
     func onAudioDisplayViewChipsSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
         chipsDidSelect(selectedChips: selectedChips)
     }
-}
-
-// MARK: - KeywordDetectorDelegate
-
-extension MainViewController: KeywordDetectorDelegate {
-    func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
-        DispatchQueue.main.async { [weak self] in
-            self?.presentVoiceChrome(initiator: .wakeUpWord(
-                keyword: keyword,
-                data: data,
-                start: start,
-                end: end,
-                detection: detection
-                )
-            )
-        }
-    }
-    
-    func keywordDetectorDidStop() {}
-    
-    func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {
-        switch state {
-        case .active:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguButton.startFlipAnimation()
-            }
-        case .inactive:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguButton.stopFlipAnimation()
-            }
-        }
-    }
-    
-    func keywordDetectorDidError(_ error: Error) {}
 }
 
 // MARK: - VoiceChromePresenterDelegate
