@@ -422,7 +422,7 @@ extension NuguCentralManager: SoundAgentDataSource {
 
 private extension NuguCentralManager {
     func addSystemAgentObserver(_ object: SystemAgentProtocol) {
-        systemAgentExceptionObserver = object.observe(NuguAgentNotification.System.Exception.self, queue: nil) { [weak self] (notification) in
+        systemAgentExceptionObserver = object.observe(NuguAgentNotification.System.Exception.self, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
             
             switch notification.code {
@@ -440,31 +440,25 @@ private extension NuguCentralManager {
                     }
                 }
             case .internalServiceException:
-                DispatchQueue.main.async {
-                    NuguToast.shared.showToast(message: SampleAppError.internalServiceException.errorDescription)
-                }
+                NuguToast.shared.showToast(message: SampleAppError.internalServiceException.errorDescription)
             }
         }
 
-        systemAgentRevokeObserver = object.observe(NuguAgentNotification.System.RevokeDevice.self, queue: nil) { [weak self] (notification) in
-            DispatchQueue.main.async {
-                NuguToast.shared.showToast(message: notification.reason.rawValue)
-            }
+        systemAgentRevokeObserver = object.observe(NuguAgentNotification.System.RevokeDevice.self, queue: .main) { [weak self] (notification) in
+            NuguToast.shared.showToast(message: notification.reason.rawValue)
             self?.clearSampleAppAfterErrorHandling()
         }
     }
     
     func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { (notification) in
+        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { [weak self] (notification) in
             switch notification.result {
             case .error(let error, _):
-                DispatchQueue.main.async { [weak self] in
-                    switch error {
-                    case ASRError.recognizeFailed:
-                        self?.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                    default:
-                        break
-                    }
+                switch error {
+                case ASRError.recognizeFailed:
+                    self?.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                default:
+                    break
                 }
             default: break
             }
