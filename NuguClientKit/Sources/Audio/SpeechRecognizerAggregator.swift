@@ -56,6 +56,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
         self.keywordDetector = keywordDetector
         self.asrAgent = asrAgent
         micInputProvider.delegate = self
+        keywordDetector.delegate = self 
         
         asrStateObserver = asrAgent.observe(NuguAgentNotification.ASR.State.self, queue: .main) { [weak self] (notification) in
             guard let self = self else { return }
@@ -125,32 +126,28 @@ public extension SpeechRecognizerAggregator {
     }
     
     func startListeningWithTrigger(completion: ((Result<Void, Error>) -> Void)?) {
-        if useKeywordDetector {
-            keywordDetector.start()
-            _startMicWorkItem.mutate {
-                $0?.cancel()
-                $0 = DispatchWorkItem(block: { [weak self] in
-                    log.debug("startMicWorkItem start")
-                    self?.startMicInputProvider(requestingFocus: false) { (success) in
-                        guard success else {
-                            log.debug("startMicWorkItem failed!")
-                            completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInput))
-                            return
-                        }                        
-                        completion?(.success(()))
+        guard useKeywordDetector == true else { return }
+        keywordDetector.start()
+        _startMicWorkItem.mutate {
+            $0?.cancel()
+            $0 = DispatchWorkItem(block: { [weak self] in
+                log.debug("startMicWorkItem start")
+                self?.startMicInputProvider(requestingFocus: false) { (success) in
+                    guard success else {
+                        log.debug("startMicWorkItem failed!")
+                        completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInput))
+                        return
                     }
-                })
-            }
-            guard let startMicWorkItem = self.startMicWorkItem else { return }
-            
-            if self.micInputProviderDelay > DispatchTime.now() {
-                DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
-            } else {
-                DispatchQueue.global().async(execute: startMicWorkItem)
-            }
+                    completion?(.success(()))
+                }
+            })
+        }
+        guard let startMicWorkItem = self.startMicWorkItem else { return }
+        
+        if self.micInputProviderDelay > DispatchTime.now() {
+            DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
         } else {
-            keywordDetector.stop()
-            stopMicInputProvider()
+            DispatchQueue.global().async(execute: startMicWorkItem)
         }
     }
     
@@ -218,6 +215,28 @@ extension SpeechRecognizerAggregator: MicInputProviderDelegate {
     public func audioEngineConfigurationChanged() {
         startListeningWithTrigger()
     }
+}
+
+// MARK: - KeywordDetectorDelegate
+
+extension SpeechRecognizerAggregator: KeywordDetectorDelegate {
+    public func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
+        delegate?.speechRecognizerKeywordDidDetect(
+            initiator: .wakeUpWord(
+                keyword: keyword,
+                data: data,
+                start: start,
+                end: end,
+                detection: detection
+            )
+        )
+    }
+    
+    public func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {
+        delegate?.speechRecognizerKeywordStateDidChange(state)
+    }
+    
+    public func keywordDetectorDidError(_ error: Error) {}
 }
 
 // MARK: - private(AudioSessionObserver)

@@ -335,6 +335,10 @@ extension NuguCentralManager: NuguClientDelegate {
         log.debug("nuguClientWillUseMic \(requestingFocus)")
     }
     
+    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator) {}
+    
+    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState) {}
+    
     func nuguClientRequestAccessToken() -> String? {
         return UserDefaults.Standard.accessToken
     }

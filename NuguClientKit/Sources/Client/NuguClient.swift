@@ -676,4 +676,12 @@ extension NuguClient: SpeechRecognizerAggregatorDelegate {
             audioSessionManager.updateAudioSession(requestingFocus: true)
         }
     }
+    
+    public func speechRecognizerKeywordDidDetect(initiator: ASRInitiator) {
+        delegate?.nuguClientDidRecognizeKeyword(initiator: initiator)
+    }
+    
+    public func speechRecognizerKeywordStateDidChange(_ state: KeywordDetectorState) {
+        delegate?.nuguClientDidChangeKeywordDetectorState(state)
+    }
 }
