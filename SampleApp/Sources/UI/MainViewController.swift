@@ -19,7 +19,6 @@
 //
 
 import UIKit
-import MediaPlayer
 
 import NuguAgents
 import NuguClientKit
@@ -133,6 +132,26 @@ final class MainViewController: UIViewController {
     }
 }
 
+// MARK: - Internal (Voice Chrome)
+
+extension MainViewController {
+    func presentVoiceChrome(initiator: ASRInitiator) {
+        do {
+            try voiceChromePresenter.presentVoiceChrome(chipsData: [
+                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
+            ])
+            NuguCentralManager.shared.startListening(initiator: initiator)
+        } catch {
+            switch error {
+            case VoiceChromePresenterError.networkUnreachable:
+                NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+            default:
+                log.error(error)
+            }
+        }
+    }
+}
+
 // MARK: - private (Observer)
 
 private extension MainViewController {
@@ -163,6 +182,9 @@ private extension MainViewController {
             self.refreshNugu()
         })
         
+        /**
+         Observe keyword detector's state change for NuguButton animation
+         */
         keywordDetectorStateObserver = notificationCenter.addObserver(forName: .keywordDetectorStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
             guard let self = self,
                   let state = notification.userInfo?["state"] as? KeywordDetectorState else { return }
@@ -174,6 +196,9 @@ private extension MainViewController {
             }
         })
         
+        /**
+         Observe dialog state change for NuguButton pauseDeactivation (when thinking state)
+         */
         dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
             guard let self = self,
                   let state = notification.userInfo?["state"] as? DialogState else { return }
@@ -223,7 +248,6 @@ private extension MainViewController {
     }
     
     @IBAction func sidOptionSwitchValueChanged(_ optionSwitch: UISwitch) {
-        print("--------")
         if optionSwitch.isOn == true {
             NuguCentralManager.shared.client.startReceiveServerInitiatedDirective { state in
                 log.debug(state)
@@ -295,26 +319,6 @@ private extension MainViewController {
         
         // Enable Nugu SDK
         NuguCentralManager.shared.enable()
-    }
-}
-
-// MARK: - Internal (Voice Chrome)
-
-extension MainViewController {
-    func presentVoiceChrome(initiator: ASRInitiator) {
-        do {
-            try voiceChromePresenter.presentVoiceChrome(chipsData: [
-                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
-            ])
-            NuguCentralManager.shared.startListening(initiator: initiator)
-        } catch {
-            switch error {
-            case VoiceChromePresenterError.networkUnreachable:
-                NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
-            default:
-                log.error(error)
-            }
-        }
     }
 }
 

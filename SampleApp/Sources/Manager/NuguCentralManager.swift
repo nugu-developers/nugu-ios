@@ -29,6 +29,8 @@ import NuguUIKit
 final class NuguCentralManager {
     static let shared = NuguCentralManager()
     
+    lazy var themeController = NuguThemeController()
+    
     private let notificationCenter = NotificationCenter.default
     private var systemAgentExceptionObserver: Any?
     private var systemAgentRevokeObserver: Any?
@@ -66,8 +68,6 @@ final class NuguCentralManager {
         
         return client
     }()
-    
-    lazy var themeController = NuguThemeController()
     
     lazy private(set) var localTTSAgent: LocalTTSAgent = LocalTTSAgent(focusManager: client.focusManager)
     
@@ -250,61 +250,7 @@ extension NuguCentralManager {
     }
 }
 
-// MARK: - Private (Clear Sample App)
-
-private extension NuguCentralManager {
-    func popToRootViewController() {
-        DispatchQueue.main.async {
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
-            
-            rootNavigationViewController.popToRootViewController(animated: true)
-        }
-    }
-    
-    func clearSampleAppAfterErrorHandling() {
-        DispatchQueue.main.async { [weak self] in
-            self?.client.audioPlayerAgent.stop()
-            self?.popToRootViewController()
-            self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
-                self?.authorizationInfo = nil
-                self?.disable()
-                UserDefaults.Standard.clear()
-                UserDefaults.Nugu.clear()
-            })
-        }
-    }
-}
-
-// MARK: - Private (NetworkError handling)
-// TODO: - Should consider and decide for best way for handling network errors
-
-private extension NuguCentralManager {
-    func handleNetworkError(error: Error) {
-        // Handle Nugu's predefined NetworkError        
-        switch error {
-        case NetworkError.authError:
-            refreshToken { [weak self] result in
-                switch result {
-                case .success:
-                    self?.enable()
-                case .failure:
-                    self?.clearSampleAppAfterErrorHandling()
-                }
-            }
-        case NetworkError.timeout:
-            localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
-        case is NetworkError:
-            localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
-        case let urlError as URLError where [.networkConnectionLost, .notConnectedToInternet].contains(urlError.code):
-            // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
-            localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
-        default:
-            // Handle other URLErrors with your own way
-            break
-        }
-    }
-}
+// MARK: - Internal (SpeechRecognizerAggregator)
 
 extension NuguCentralManager {
     func startListening(initiator: ASRInitiator) {
@@ -335,6 +281,125 @@ extension NuguCentralManager {
                 completion?()
             default: break
             }
+        }
+    }
+}
+
+// MARK: - Private (Observers)
+
+private extension NuguCentralManager {
+    func addSystemAgentObserver(_ object: SystemAgentProtocol) {
+        systemAgentExceptionObserver = object.observe(NuguAgentNotification.System.Exception.self, queue: .main) { [weak self] (notification) in
+            guard let self = self else { return }
+            
+            switch notification.code {
+            case .playRouterProcessingException:
+                self.localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
+            case .ttsSpeakingException:
+                self.localTTSAgent.playLocalTTS(type: .deviceGatewayTTSConnectionError)
+            case .unauthorizedRequestException:
+                self.refreshToken { [weak self] result in
+                    switch result {
+                    case .success:
+                        self?.enable()
+                    case .failure:
+                        self?.clearSampleAppAfterErrorHandling()
+                    }
+                }
+            case .internalServiceException:
+                NuguToast.shared.showToast(message: SampleAppError.internalServiceException.errorDescription)
+            }
+        }
+
+        systemAgentRevokeObserver = object.observe(NuguAgentNotification.System.RevokeDevice.self, queue: .main) { [weak self] (notification) in
+            NuguToast.shared.showToast(message: notification.reason.rawValue)
+            self?.clearSampleAppAfterErrorHandling()
+        }
+    }
+    
+    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
+        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { [weak self] (notification) in
+            switch notification.result {
+            case .error(let error, _):
+                switch error {
+                case ASRError.recognizeFailed:
+                    self?.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                default:
+                    break
+                }
+            default: break
+            }
+        }
+    }
+    
+    func addDialogStateObserver(_ object: DialogStateAggregator) {
+        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
+            self?.notificationCenter.post(name: .dialogStateDidChangeNotification, object: nil, userInfo: ["state": notification.state])
+        }
+    }
+}
+
+// MARK: - Private (Clear Sample App)
+
+private extension NuguCentralManager {
+    func popToRootViewController() {
+        DispatchQueue.main.async {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                let rootNavigationViewController = appDelegate.window?.rootViewController as? UINavigationController else { return }
+            
+            rootNavigationViewController.popToRootViewController(animated: true)
+        }
+    }
+    
+    func clearSampleAppAfterErrorHandling() {
+        DispatchQueue.main.async { [weak self] in
+            self?.client.audioPlayerAgent.stop()
+            self?.popToRootViewController()
+            self?.localTTSAgent.playLocalTTS(type: .deviceGatewayAuthError, completion: { [weak self] in
+                self?.authorizationInfo = nil
+                self?.disable()
+                UserDefaults.Standard.clear()
+                UserDefaults.Nugu.clear()
+            })
+        }
+    }
+}
+
+// MARK: - Private (NetworkError handling)
+
+private extension NuguCentralManager {
+    func handleNetworkError(error: Error) {
+        // Handle Nugu's predefined NetworkError        
+        switch error {
+        case NetworkError.authError:
+            refreshToken { [weak self] result in
+                switch result {
+                case .success:
+                    self?.enable()
+                case .failure:
+                    self?.clearSampleAppAfterErrorHandling()
+                }
+            }
+        case NetworkError.timeout:
+            localTTSAgent.playLocalTTS(type: .deviceGatewayTimeout)
+        case is NetworkError:
+            localTTSAgent.playLocalTTS(type: .deviceGatewayAuthServerError)
+        case let urlError as URLError where [.networkConnectionLost, .notConnectedToInternet].contains(urlError.code):
+            // In unreachable network status, play prepared local tts (deviceGatewayNetworkError)
+            localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+        default:
+            // Handle other URLErrors with your own way
+            break
+        }
+    }
+}
+
+// MARK: - SoundAgentDataSource
+
+extension NuguCentralManager: SoundAgentDataSource {
+    func soundAgentRequestUrl(beepName: SoundBeepName, header: Downstream.Header) -> URL? {
+        switch beepName {
+        case .responseFail: return Bundle.main.url(forResource: "responsefail", withExtension: "wav")
         }
     }
 }
@@ -405,69 +470,5 @@ extension NuguCentralManager: NuguClientDelegate {
     
     func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {
         log.debug("nuguClientServerInitiatedDirectiveRecevierStateDidChange: \(state)")
-    }
-}
-
-// MARK: - SoundAgentDataSource
-
-extension NuguCentralManager: SoundAgentDataSource {
-    func soundAgentRequestUrl(beepName: SoundBeepName, header: Downstream.Header) -> URL? {
-        switch beepName {
-        case .responseFail: return Bundle.main.url(forResource: "responsefail", withExtension: "wav")
-        }
-    }
-}
-
-// MARK: - Observers
-
-private extension NuguCentralManager {
-    func addSystemAgentObserver(_ object: SystemAgentProtocol) {
-        systemAgentExceptionObserver = object.observe(NuguAgentNotification.System.Exception.self, queue: .main) { [weak self] (notification) in
-            guard let self = self else { return }
-            
-            switch notification.code {
-            case .playRouterProcessingException:
-                self.localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
-            case .ttsSpeakingException:
-                self.localTTSAgent.playLocalTTS(type: .deviceGatewayTTSConnectionError)
-            case .unauthorizedRequestException:
-                self.refreshToken { [weak self] result in
-                    switch result {
-                    case .success:
-                        self?.enable()
-                    case .failure:
-                        self?.clearSampleAppAfterErrorHandling()
-                    }
-                }
-            case .internalServiceException:
-                NuguToast.shared.showToast(message: SampleAppError.internalServiceException.errorDescription)
-            }
-        }
-
-        systemAgentRevokeObserver = object.observe(NuguAgentNotification.System.RevokeDevice.self, queue: .main) { [weak self] (notification) in
-            NuguToast.shared.showToast(message: notification.reason.rawValue)
-            self?.clearSampleAppAfterErrorHandling()
-        }
-    }
-    
-    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { [weak self] (notification) in
-            switch notification.result {
-            case .error(let error, _):
-                switch error {
-                case ASRError.recognizeFailed:
-                    self?.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                default:
-                    break
-                }
-            default: break
-            }
-        }
-    }
-    
-    func addDialogStateObserver(_ object: DialogStateAggregator) {
-        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
-            self?.notificationCenter.post(name: .dialogStateDidChangeNotification, object: nil, userInfo: ["state": notification.state])
-        }
     }
 }
