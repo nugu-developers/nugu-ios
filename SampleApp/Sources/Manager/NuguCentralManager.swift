@@ -32,6 +32,8 @@ final class NuguCentralManager {
     private let notificationCenter = NotificationCenter.default
     private var systemAgentExceptionObserver: Any?
     private var systemAgentRevokeObserver: Any?
+    private var asrResultObserver: Any?
+    private var dialogStateObserver: Any?
     
     lazy private(set) var client: NuguClient = {
         let nuguBuilder = NuguClient.Builder()
@@ -54,6 +56,8 @@ final class NuguCentralManager {
         
         // Observers
         addSystemAgentObserver(client.systemAgent)
+        addAsrAgentObserver(client.asrAgent)
+        addDialogStateObserver(client.dialogStateAggregator)
         
         // Initialize proper audio session for Nugu service usage
         // If you want to use your own audio session manager,
@@ -94,6 +98,14 @@ final class NuguCentralManager {
         
         if let systemAgentRevokeObserver = systemAgentRevokeObserver {
             notificationCenter.removeObserver(systemAgentRevokeObserver)
+        }
+        
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            notificationCenter.removeObserver(dialogStateObserver)
         }
     }
 }
@@ -344,7 +356,9 @@ extension NuguCentralManager: NuguClientDelegate {
         }
     }
     
-    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState) {}
+    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState) {
+        notificationCenter.post(name: .keywordDetectorStateDidChangeNotification, object: nil, userInfo: ["state": state])
+    }
     
     func nuguClientRequestAccessToken() -> String? {
         return UserDefaults.Standard.accessToken
@@ -404,7 +418,7 @@ extension NuguCentralManager: SoundAgentDataSource {
     }
 }
 
-// MARK: - Observer
+// MARK: - Observers
 
 private extension NuguCentralManager {
     func addSystemAgentObserver(_ object: SystemAgentProtocol) {
@@ -437,6 +451,29 @@ private extension NuguCentralManager {
                 NuguToast.shared.showToast(message: notification.reason.rawValue)
             }
             self?.clearSampleAppAfterErrorHandling()
+        }
+    }
+    
+    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
+        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { (notification) in
+            switch notification.result {
+            case .error(let error, _):
+                DispatchQueue.main.async { [weak self] in
+                    switch error {
+                    case ASRError.recognizeFailed:
+                        self?.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
+                    default:
+                        break
+                    }
+                }
+            default: break
+            }
+        }
+    }
+    
+    func addDialogStateObserver(_ object: DialogStateAggregator) {
+        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
+            self?.notificationCenter.post(name: .dialogStateDidChangeNotification, object: nil, userInfo: ["state": notification.state])
         }
     }
 }

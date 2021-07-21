@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         if ConfigurationStore.shared.isServiceWebRedirectUrl(url: url) {
-            NotificationCenter.default.post(name: .oauthRefresh, object: nil, userInfo: nil)
+            NotificationCenter.default.post(name: .oauthRefreshNotification, object: nil, userInfo: nil)
             return true
         } else if ConfigurationStore.shared.isAuthorizationRedirectUrl(url: url) {
             NuguOAuthClient.handle(url: url)

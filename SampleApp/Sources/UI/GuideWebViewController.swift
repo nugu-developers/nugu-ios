@@ -63,7 +63,7 @@ final class GuideWebViewController: UIViewController {
         nuguServiceWebView.addCookie(nil)
         nuguServiceWebView.loadUrlString(initialURLString)
         
-        authObserver = NotificationCenter.default.addObserver(forName: .oauthRefresh, object: nil, queue: .main, using: { [weak self] _ in
+        authObserver = NotificationCenter.default.addObserver(forName: .oauthRefreshNotification, object: nil, queue: .main, using: { [weak self] _ in
             self?.presentedViewController?.dismiss(animated: true, completion: nil)
             self?.nuguServiceWebView.reload()
         })

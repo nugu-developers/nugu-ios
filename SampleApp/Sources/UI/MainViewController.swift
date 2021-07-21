@@ -53,7 +53,7 @@ final class MainViewController: UIViewController {
     private let notificationCenter = NotificationCenter.default
     private var resignActiveObserver: Any?
     private var becomeActiveObserver: Any?
-    private var asrResultObserver: Any?
+    private var keywordDetectorStateObserver: Any?
     private var dialogStateObserver: Any?
 
     // MARK: Override
@@ -130,13 +130,6 @@ final class MainViewController: UIViewController {
     
     deinit {
         removeObservers()
-        if let asrResultObserver = asrResultObserver {
-            notificationCenter.removeObserver(asrResultObserver)
-        }
-        
-        if let dialogStateObserver = dialogStateObserver {
-            notificationCenter.removeObserver(dialogStateObserver)
-        }
     }
 }
 
@@ -151,7 +144,7 @@ private extension MainViewController {
          Catch resigning active notification to stop recognizing & wake up detector
          It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
          */
-        resignActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main, using: { (_) in
+        resignActiveObserver = notificationCenter.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main, using: { (_) in
             // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
             if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
                 NuguCentralManager.shared.client.ttsAgent.stopTTS()
@@ -163,11 +156,33 @@ private extension MainViewController {
          Catch becoming active notification to refresh mic status & Nugu button
          Recover all status for any issues caused from becoming background
          */
-        becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
+        becomeActiveObserver = notificationCenter.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
             guard let self = self else { return }
             guard self.navigationController?.visibleViewController == self else { return }
 
             self.refreshNugu()
+        })
+        
+        keywordDetectorStateObserver = notificationCenter.addObserver(forName: .keywordDetectorStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self,
+                  let state = notification.userInfo?["state"] as? KeywordDetectorState else { return }
+            switch state {
+            case .active:
+                self.nuguButton.startFlipAnimation()
+            case .inactive:
+                self.nuguButton.stopFlipAnimation()
+            }
+        })
+        
+        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self,
+                  let state = notification.userInfo?["state"] as? DialogState else { return }
+            switch state {
+            case .thinking:
+                self.nuguButton.pauseDeactivateAnimation()
+            default:
+                break
+            }
         })
     }
     
@@ -180,6 +195,16 @@ private extension MainViewController {
         if let becomeActiveObserver = becomeActiveObserver {
             NotificationCenter.default.removeObserver(becomeActiveObserver)
             self.becomeActiveObserver = nil
+        }
+        
+        if let keywordDetectorStateObserver = keywordDetectorStateObserver {
+            NotificationCenter.default.removeObserver(keywordDetectorStateObserver)
+            self.keywordDetectorStateObserver = nil
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            NotificationCenter.default.removeObserver(dialogStateObserver)
+            self.dialogStateObserver = nil
         }
     }
 }
@@ -216,10 +241,6 @@ private extension MainViewController {
     /// AudioSession is required for using Nugu
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
-        // Observers
-        addAsrAgentObserver(NuguCentralManager.shared.client.asrAgent)
-        addDialogStateObserver(NuguCentralManager.shared.client.dialogStateAggregator)
-        
         // UI
         voiceChromePresenter.delegate = self
         displayWebViewPresenter.delegate = self
@@ -352,41 +373,5 @@ extension MainViewController: VoiceChromePresenterDelegate {
     
     func voiceChromeChipsDidClick(chips: NuguChipsButton.NuguChipsButtonType) {
         chipsDidSelect(selectedChips: chips)
-    }
-}
-
-// MARK: - Observers
-
-private extension MainViewController {
-    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { (notification) in
-            switch notification.result {
-            case .error(let error, _):
-                DispatchQueue.main.async {
-                    switch error {
-                    case ASRError.recognizeFailed:
-                        NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                    default:
-                        break
-                    }
-                }
-            default: break
-            }
-        }
-    }
-    
-    func addDialogStateObserver(_ object: DialogStateAggregator) {
-        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
-            log.debug("dialog satate: \(notification.state), multiTurn: \(notification.multiTurn), chips: \(notification.item.debugDescription)")
-
-            switch notification.state {
-            case .thinking:
-                DispatchQueue.main.async { [weak self] in
-                    self?.nuguButton.pauseDeactivateAnimation()
-                }
-            default:
-                break
-            }
-        }
     }
 }
