@@ -22,6 +22,7 @@ import Foundation
 import AVFoundation
 
 import NuguUtils
+import TycheSDK
 
 /**
  Default key word detector of NUGU service.

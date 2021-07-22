@@ -2,10 +2,10 @@ framework module NuguCore {
     umbrella header "NuguCore.h"
     export *
     module * { export * }
-    
-    explicit module ObjcExceptionCatcher {
-        header "ObjcExceptionCatcher.h"
-        link "SilverTray"
-        export *
-    }
+//    
+//    explicit module ObjcExceptionCatcher {
+//        header "ObjcExceptionCatcher.h"
+//        link "SilverTray"
+//        export *
+//    }
 }

@@ -20,15 +20,16 @@ play encoded data using AVAudioEngine
   # s.watchos.deployment_target = '6.0'
   # s.macos.deployment_target = '10.15.0'
 
-  s.source_files = 'SilverTray/Classes/**/*', 'SilverTray/Libraries/**/*.h'
-  s.public_header_files = 'SilverTray/Classes/**/*.h', 'SilverTray/Libraries/**/*.h'
-  s.vendored_frameworks = 'SilverTray/Libraries/Opus/Binary/OpusCodec.xcframework'
-  s.preserve_paths = 'SilverTray/Libraries/**'
+  s.source_files = 'SilverTray/Sources/**/*'
+  s.vendored_frameworks = 'OpusCodec.xcframework'
   s.libraries = 'c++'
 
+  s.dependency 'OpusSDK', s.version.to_s
+  s.dependency 'NuguUtils', s.version.to_s
+  s.dependency 'NuguObjcUtils', s.version.to_s
+
   s.xcconfig = {
-    'OTHER_LDFLAGS' => '-Xlinker -w',
-    'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/SilverTray/SilverTray/Libraries/**'
+    'OTHER_LDFLAGS' => '-Xlinker -w'
   }
   
 end
