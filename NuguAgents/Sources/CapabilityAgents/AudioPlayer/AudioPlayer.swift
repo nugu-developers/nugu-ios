@@ -50,8 +50,8 @@ final class AudioPlayer {
     var cancelAssociation: Bool = false
     var pauseReason: PauseReason = .nothing
     // https://tde.sktelecom.com/wiki/display/ERECTUS/0.+AudioPlayer+Interface+1.5#id-0.AudioPlayerInterface1.5-8)PlaybackResumed
-    // Resume event should not be sent when audio player has been resumed by play directive
-    var ignoreSendingResumeEvent: Bool = true
+    // Resume event should be sent as playback started when audio player has been resumed by play directive
+    var sendingResumeEventAsPlaybackStarted: Bool = true
     private(set) var stopReason: StopReason = .stop
     
     /// Keep the offset before playback stopped.
