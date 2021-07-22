@@ -80,6 +80,7 @@ struct SampleApp {
 
 extension Notification.Name {
     static let oauthRefreshNotification = Notification.Name("com.sktelecom.romaine.SampleApp.oauth_refresh")
+    static let nuguServiceStateDidChangeNotification = Notification.Name("com.sktelecom.romaine.SampleApp.nugu_service_state_did_change")
     static let keywordDetectorStateDidChangeNotification = Notification.Name("com.sktelecom.romaine.SampleApp.keyword_detector_state_did_change")
     static let dialogStateDidChangeNotification = Notification.Name("com.sktelecom.romaine.SampleApp.dialog_state_did_change")
 }

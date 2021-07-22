@@ -113,18 +113,12 @@ final class NuguCentralManager {
 // MARK: - Internal (Enable / Disable)
 
 extension NuguCentralManager {
-    func enable() {
-        log.debug("")
-        startListeningWithTrigger()
-        client.audioSessionManager?.enable()
-    }
-    
-    func disable() {
-        log.debug("")
-        stopListening()
-        client.ttsAgent.stopTTS()
-        client.audioPlayerAgent.stop()
-        client.audioSessionManager?.disable()
+    func refreshNugu() {
+        guard UserDefaults.Standard.useNuguService else {
+            NuguCentralManager.shared.disable()
+            return
+        }
+        NuguCentralManager.shared.enable()
     }
 }
 
@@ -282,6 +276,48 @@ extension NuguCentralManager {
             default: break
             }
         }
+    }
+}
+
+// MARK: - Internal (Chips Selection)
+
+extension NuguCentralManager {
+    func chipsDidSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
+        guard let selectedChips = selectedChips,
+            let window = UIApplication.shared.keyWindow else { return }
+        
+        let indicator = UIActivityIndicatorView(style: .whiteLarge)
+        indicator.color = .black
+        indicator.startAnimating()
+        indicator.center = window.center
+        indicator.startAnimating()
+        window.addSubview(indicator)
+        
+        requestTextInput(text: selectedChips.text, token: selectedChips.token, requestType: .dialog) {
+            DispatchQueue.main.async {
+                indicator.removeFromSuperview()
+            }
+        }
+    }
+}
+
+// MARK: - Private (Enable / Disable)
+
+private extension NuguCentralManager {
+    func enable() {
+        log.debug("")
+        startListeningWithTrigger()
+        client.audioSessionManager?.enable()
+        notificationCenter.post(name: .nuguServiceStateDidChangeNotification, object: nil, userInfo: ["isEnabled": true])
+    }
+    
+    func disable() {
+        log.debug("")
+        stopListening()
+        client.ttsAgent.stopTTS()
+        client.audioPlayerAgent.stop()
+        client.audioSessionManager?.disable()
+        notificationCenter.post(name: .nuguServiceStateDidChangeNotification, object: nil, userInfo: ["isEnabled": false])
     }
 }
 

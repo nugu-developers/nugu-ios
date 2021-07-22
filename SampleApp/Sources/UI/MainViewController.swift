@@ -28,7 +28,6 @@ final class MainViewController: UIViewController {
     // MARK: Properties
     
     @IBOutlet private weak var nuguButton: NuguButton!
-    @IBOutlet private weak var settingButton: UIButton!
     
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
@@ -52,6 +51,7 @@ final class MainViewController: UIViewController {
     private let notificationCenter = NotificationCenter.default
     private var resignActiveObserver: Any?
     private var becomeActiveObserver: Any?
+    private var nuguServiceStateObserver: Any?
     private var keywordDetectorStateObserver: Any?
     private var dialogStateObserver: Any?
 
@@ -67,7 +67,7 @@ final class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        refreshNugu()
+        NuguCentralManager.shared.refreshNugu()
         
         voiceChromePresenter.isStartBeepEnabled = UserDefaults.Standard.useAsrStartSound
         voiceChromePresenter.isSuccessBeepEnabled = UserDefaults.Standard.useAsrSuccessSound
@@ -179,7 +179,22 @@ private extension MainViewController {
             guard let self = self else { return }
             guard self.navigationController?.visibleViewController == self else { return }
 
-            self.refreshNugu()
+            NuguCentralManager.shared.refreshNugu()
+        })
+        
+        /**
+         Observe nugu service state change for NuguButton appearance
+         */
+        nuguServiceStateObserver = notificationCenter.addObserver(forName: .nuguServiceStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self,
+                  let isEnabled = notification.userInfo?["isEnabled"] as? Bool else { return }
+            if isEnabled == true {
+                self.nuguButton.isEnabled = true
+                self.nuguButton.isHidden = false
+            } else {
+                self.nuguButton.isEnabled = false
+                self.nuguButton.isHidden = true
+            }
         })
         
         /**
@@ -222,6 +237,11 @@ private extension MainViewController {
             self.becomeActiveObserver = nil
         }
         
+        if let nuguServiceStateObserver = nuguServiceStateObserver {
+            NotificationCenter.default.removeObserver(nuguServiceStateObserver)
+            self.nuguServiceStateObserver = nil
+        }
+        
         if let keywordDetectorStateObserver = keywordDetectorStateObserver {
             NotificationCenter.default.removeObserver(keywordDetectorStateObserver)
             self.keywordDetectorStateObserver = nil
@@ -261,8 +281,6 @@ private extension MainViewController {
 // MARK: - Private (Nugu)
 
 private extension MainViewController {
-    /// Initialize to start using Nugu
-    /// AudioSession is required for using Nugu
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
         // UI
@@ -270,6 +288,11 @@ private extension MainViewController {
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
         
+        applyTheme()
+    }
+    
+    /// Apply theme
+    func applyTheme() {
         switch SampleApp.Theme(rawValue: UserDefaults.Standard.theme) {
         case .system:
             NuguCentralManager.shared.themeController.theme = traitCollection.userInterfaceStyle == .dark ? .dark : .light
@@ -297,51 +320,6 @@ private extension MainViewController {
             }
         }
     }
-    
-    /// Refresh Nugu status
-    /// Connect or disconnect Nugu service by circumstance
-    /// Hide Nugu button when Nugu service is intended not to use or network issue has occured
-    /// Disable Nugu button when wake up feature is intended not to use
-    func refreshNugu() {
-        guard UserDefaults.Standard.useNuguService else {
-            // Exception handling when already disconnected, scheduled update in future
-            nuguButton.isEnabled = false
-            nuguButton.isHidden = true
-            
-            // Disable Nugu SDK
-            NuguCentralManager.shared.disable()
-            return
-        }
-        
-        // Exception handling when already connected, scheduled update in future
-        nuguButton.isEnabled = true
-        nuguButton.isHidden = false
-        
-        // Enable Nugu SDK
-        NuguCentralManager.shared.enable()
-    }
-}
-
-// MARK: - Private (Chips Selection)
-
-private extension MainViewController {
-    func chipsDidSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
-        guard let selectedChips = selectedChips,
-            let window = UIApplication.shared.keyWindow else { return }
-        
-        let indicator = UIActivityIndicatorView(style: .whiteLarge)
-        indicator.color = .black
-        indicator.startAnimating()
-        indicator.center = window.center
-        indicator.startAnimating()
-        window.addSubview(indicator)
-        
-        NuguCentralManager.shared.requestTextInput(text: selectedChips.text, token: selectedChips.token, requestType: .dialog) {
-            DispatchQueue.main.async {
-                indicator.removeFromSuperview()
-            }
-        }
-    }
 }
 
 // MARK: - DisplayWebViewPresenterDelegate
@@ -360,7 +338,7 @@ extension MainViewController: AudioDisplayViewPresenterDelegate {
     }
     
     func onAudioDisplayViewChipsSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
-        chipsDidSelect(selectedChips: selectedChips)
+        NuguCentralManager.shared.chipsDidSelect(selectedChips: selectedChips)
     }
 }
 
@@ -376,6 +354,6 @@ extension MainViewController: VoiceChromePresenterDelegate {
     }
     
     func voiceChromeChipsDidClick(chips: NuguChipsButton.NuguChipsButtonType) {
-        chipsDidSelect(selectedChips: chips)
+        NuguCentralManager.shared.chipsDidSelect(selectedChips: chips)
     }
 }
