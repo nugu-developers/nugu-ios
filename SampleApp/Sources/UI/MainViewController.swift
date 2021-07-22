@@ -19,7 +19,7 @@
 //
 
 import UIKit
-import MediaPlayer
+import AVFoundation
 
 import NuguAgents
 import NuguClientKit
@@ -29,7 +29,6 @@ final class MainViewController: UIViewController {
     // MARK: Properties
     
     @IBOutlet private weak var nuguButton: NuguButton!
-    @IBOutlet private weak var settingButton: UIButton!
     
     private lazy var voiceChromePresenter = VoiceChromePresenter(
         viewController: self,
@@ -53,7 +52,8 @@ final class MainViewController: UIViewController {
     private let notificationCenter = NotificationCenter.default
     private var resignActiveObserver: Any?
     private var becomeActiveObserver: Any?
-    private var asrResultObserver: Any?
+    private var nuguServiceStateObserver: Any?
+    private var keywordDetectorStateObserver: Any?
     private var dialogStateObserver: Any?
 
     // MARK: Override
@@ -68,7 +68,7 @@ final class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        refreshNugu()
+        NuguCentralManager.shared.refreshNugu()
         
         voiceChromePresenter.isStartBeepEnabled = UserDefaults.Standard.useAsrStartSound
         voiceChromePresenter.isSuccessBeepEnabled = UserDefaults.Standard.useAsrSuccessSound
@@ -130,12 +130,29 @@ final class MainViewController: UIViewController {
     
     deinit {
         removeObservers()
-        if let asrResultObserver = asrResultObserver {
-            notificationCenter.removeObserver(asrResultObserver)
+    }
+}
+
+// MARK: - Internal (Voice Chrome)
+
+extension MainViewController {
+    func presentVoiceChrome(initiator: ASRInitiator) {
+        guard AVAudioSession.sharedInstance().recordPermission == .granted else {
+            NuguToast.shared.showToast(message: "설정에서 마이크 접근 권한을 허용 후 이용하실 수 있습니다.")
+            return
         }
-        
-        if let dialogStateObserver = dialogStateObserver {
-            notificationCenter.removeObserver(dialogStateObserver)
+        do {
+            try voiceChromePresenter.presentVoiceChrome(chipsData: [
+                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
+            ])
+            NuguCentralManager.shared.startListening(initiator: initiator)
+        } catch {
+            switch error {
+            case VoiceChromePresenterError.networkUnreachable:
+                NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
+            default:
+                log.error(error)
+            }
         }
     }
 }
@@ -151,7 +168,7 @@ private extension MainViewController {
          Catch resigning active notification to stop recognizing & wake up detector
          It is possible to keep on listening even on background, but need careful attention for battery issues, audio interruptions and so on
          */
-        resignActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main, using: { (_) in
+        resignActiveObserver = notificationCenter.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main, using: { (_) in
             // if tts is playing for multiturn, tts and associated jobs should be stopped when resign active
             if NuguCentralManager.shared.client.dialogStateAggregator.isMultiturn == true {
                 NuguCentralManager.shared.client.ttsAgent.stopTTS()
@@ -163,11 +180,54 @@ private extension MainViewController {
          Catch becoming active notification to refresh mic status & Nugu button
          Recover all status for any issues caused from becoming background
          */
-        becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
+        becomeActiveObserver = notificationCenter.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
             guard let self = self else { return }
             guard self.navigationController?.visibleViewController == self else { return }
 
-            self.refreshNugu()
+            NuguCentralManager.shared.refreshNugu()
+        })
+        
+        /**
+         Observe nugu service state change for NuguButton appearance
+         */
+        nuguServiceStateObserver = notificationCenter.addObserver(forName: .nuguServiceStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self,
+                  let isEnabled = notification.userInfo?["isEnabled"] as? Bool else { return }
+            if isEnabled == true {
+                self.nuguButton.isEnabled = true
+                self.nuguButton.isHidden = false
+            } else {
+                self.nuguButton.isEnabled = false
+                self.nuguButton.isHidden = true
+            }
+        })
+        
+        /**
+         Observe keyword detector's state change for NuguButton animation
+         */
+        keywordDetectorStateObserver = notificationCenter.addObserver(forName: .keywordDetectorStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self,
+                  let state = notification.userInfo?["state"] as? KeywordDetectorState else { return }
+            switch state {
+            case .active:
+                self.nuguButton.startFlipAnimation()
+            case .inactive:
+                self.nuguButton.stopFlipAnimation()
+            }
+        })
+        
+        /**
+         Observe dialog state change for NuguButton pauseDeactivation (when thinking state)
+         */
+        dialogStateObserver = notificationCenter.addObserver(forName: .dialogStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            guard let self = self,
+                  let state = notification.userInfo?["state"] as? DialogState else { return }
+            switch state {
+            case .thinking:
+                self.nuguButton.pauseDeactivateAnimation()
+            default:
+                break
+            }
         })
     }
     
@@ -180,6 +240,21 @@ private extension MainViewController {
         if let becomeActiveObserver = becomeActiveObserver {
             NotificationCenter.default.removeObserver(becomeActiveObserver)
             self.becomeActiveObserver = nil
+        }
+        
+        if let nuguServiceStateObserver = nuguServiceStateObserver {
+            NotificationCenter.default.removeObserver(nuguServiceStateObserver)
+            self.nuguServiceStateObserver = nil
+        }
+        
+        if let keywordDetectorStateObserver = keywordDetectorStateObserver {
+            NotificationCenter.default.removeObserver(keywordDetectorStateObserver)
+            self.keywordDetectorStateObserver = nil
+        }
+        
+        if let dialogStateObserver = dialogStateObserver {
+            NotificationCenter.default.removeObserver(dialogStateObserver)
+            self.dialogStateObserver = nil
         }
     }
 }
@@ -198,7 +273,6 @@ private extension MainViewController {
     }
     
     @IBAction func sidOptionSwitchValueChanged(_ optionSwitch: UISwitch) {
-        print("--------")
         if optionSwitch.isOn == true {
             NuguCentralManager.shared.client.startReceiveServerInitiatedDirective { state in
                 log.debug(state)
@@ -212,22 +286,18 @@ private extension MainViewController {
 // MARK: - Private (Nugu)
 
 private extension MainViewController {
-    /// Initialize to start using Nugu
-    /// AudioSession is required for using Nugu
     /// Add delegates for all the components that provided by default client or custom provided ones
     func initializeNugu() {
-        // keyword detector delegate
-        NuguCentralManager.shared.client.keywordDetector.delegate = self
-        
-        // Observers
-        addAsrAgentObserver(NuguCentralManager.shared.client.asrAgent)
-        addDialogStateObserver(NuguCentralManager.shared.client.dialogStateAggregator)
-        
         // UI
         voiceChromePresenter.delegate = self
         displayWebViewPresenter.delegate = self
         audioDisplayViewPresenter.delegate = self
         
+        applyTheme()
+    }
+    
+    /// Apply theme
+    func applyTheme() {
         switch SampleApp.Theme(rawValue: UserDefaults.Standard.theme) {
         case .system:
             NuguCentralManager.shared.themeController.theme = traitCollection.userInterfaceStyle == .dark ? .dark : .light
@@ -255,71 +325,6 @@ private extension MainViewController {
             }
         }
     }
-    
-    /// Refresh Nugu status
-    /// Connect or disconnect Nugu service by circumstance
-    /// Hide Nugu button when Nugu service is intended not to use or network issue has occured
-    /// Disable Nugu button when wake up feature is intended not to use
-    func refreshNugu() {
-        guard UserDefaults.Standard.useNuguService else {
-            // Exception handling when already disconnected, scheduled update in future
-            nuguButton.isEnabled = false
-            nuguButton.isHidden = true
-            
-            // Disable Nugu SDK
-            NuguCentralManager.shared.disable()
-            return
-        }
-        
-        // Exception handling when already connected, scheduled update in future
-        nuguButton.isEnabled = true
-        nuguButton.isHidden = false
-        
-        // Enable Nugu SDK
-        NuguCentralManager.shared.enable()
-    }
-}
-
-// MARK: - Internal (Voice Chrome)
-
-extension MainViewController {
-    func presentVoiceChrome(initiator: ASRInitiator) {
-        do {
-            try voiceChromePresenter.presentVoiceChrome(chipsData: [
-                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
-            ])
-            NuguCentralManager.shared.startListening(initiator: initiator)
-        } catch {
-            switch error {
-            case VoiceChromePresenterError.networkUnreachable:
-                NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayNetworkError)
-            default:
-                log.error(error)
-            }
-        }
-    }
-}
-
-// MARK: - Private (Chips Selection)
-
-private extension MainViewController {
-    func chipsDidSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
-        guard let selectedChips = selectedChips,
-            let window = UIApplication.shared.keyWindow else { return }
-        
-        let indicator = UIActivityIndicatorView(style: .whiteLarge)
-        indicator.color = .black
-        indicator.startAnimating()
-        indicator.center = window.center
-        indicator.startAnimating()
-        window.addSubview(indicator)
-        
-        NuguCentralManager.shared.requestTextInput(text: selectedChips.text, token: selectedChips.token, requestType: .dialog) {
-            DispatchQueue.main.async {
-                indicator.removeFromSuperview()
-            }
-        }
-    }
 }
 
 // MARK: - DisplayWebViewPresenterDelegate
@@ -338,42 +343,8 @@ extension MainViewController: AudioDisplayViewPresenterDelegate {
     }
     
     func onAudioDisplayViewChipsSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
-        chipsDidSelect(selectedChips: selectedChips)
+        NuguCentralManager.shared.chipsDidSelect(selectedChips: selectedChips)
     }
-}
-
-// MARK: - KeywordDetectorDelegate
-
-extension MainViewController: KeywordDetectorDelegate {
-    func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
-        DispatchQueue.main.async { [weak self] in
-            self?.presentVoiceChrome(initiator: .wakeUpWord(
-                keyword: keyword,
-                data: data,
-                start: start,
-                end: end,
-                detection: detection
-                )
-            )
-        }
-    }
-    
-    func keywordDetectorDidStop() {}
-    
-    func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {
-        switch state {
-        case .active:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguButton.startFlipAnimation()
-            }
-        case .inactive:
-            DispatchQueue.main.async { [weak self] in
-                self?.nuguButton.stopFlipAnimation()
-            }
-        }
-    }
-    
-    func keywordDetectorDidError(_ error: Error) {}
 }
 
 // MARK: - VoiceChromePresenterDelegate
@@ -388,42 +359,6 @@ extension MainViewController: VoiceChromePresenterDelegate {
     }
     
     func voiceChromeChipsDidClick(chips: NuguChipsButton.NuguChipsButtonType) {
-        chipsDidSelect(selectedChips: chips)
-    }
-}
-
-// MARK: - Observers
-
-private extension MainViewController {
-    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { (notification) in
-            switch notification.result {
-            case .error(let error, _):
-                DispatchQueue.main.async {
-                    switch error {
-                    case ASRError.recognizeFailed:
-                        NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                    default:
-                        break
-                    }
-                }
-            default: break
-            }
-        }
-    }
-    
-    func addDialogStateObserver(_ object: DialogStateAggregator) {
-        dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
-            log.debug("dialog satate: \(notification.state), multiTurn: \(notification.multiTurn), chips: \(notification.item.debugDescription)")
-
-            switch notification.state {
-            case .thinking:
-                DispatchQueue.main.async { [weak self] in
-                    self?.nuguButton.pauseDeactivateAnimation()
-                }
-            default:
-                break
-            }
-        }
+        NuguCentralManager.shared.chipsDidSelect(selectedChips: chips)
     }
 }

@@ -21,21 +21,28 @@
 import Foundation
 
 import NuguCore
+import NuguAgents
 
 /// <#Description#>
 public protocol NuguClientDelegate: AnyObject {
     // audio session related
-    /// Notify that  nugu client will play some audio
+    /// Notify that nugu client will play some audio
     func nuguClientWillRequireAudioSession() -> Bool
     
-    /// Notify that  nugu client won't play sound anymore.
+    /// Notify that nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
     
-    /// Notify that  nugu client need to get mic input
+    /// Notify that nugu client need to get mic input
     func nuguClientWillUseMic(requestingFocus: Bool)
     
+    /// Notify that nugu client did wake up by keyword
+    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator)
+    
+    /// Notify that  nugu client keyword detector's state has been changed
+    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState)
+    
     // nugu server related
-    /// Notify that  nugu client received directive
+    /// Notify that nugu client received directive
     /// - Parameter direcive: Response from server
     func nuguClientDidReceive(direcive: Downstream.Directive)
     
