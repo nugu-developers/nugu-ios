@@ -19,6 +19,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 import NuguAgents
 import NuguClientKit
@@ -136,6 +137,10 @@ final class MainViewController: UIViewController {
 
 extension MainViewController {
     func presentVoiceChrome(initiator: ASRInitiator) {
+        guard AVAudioSession.sharedInstance().recordPermission == .granted else {
+            NuguToast.shared.showToast(message: "설정에서 마이크 접근 권한을 허용 후 이용하실 수 있습니다.")
+            return
+        }
         do {
             try voiceChromePresenter.presentVoiceChrome(chipsData: [
                 NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
