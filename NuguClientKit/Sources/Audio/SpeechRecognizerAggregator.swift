@@ -67,6 +67,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
                     keywordDetector.start()
                 } else {
                     keywordDetector.stop()
+                    self.stopMicInputProvider()
                 }
             case .listening:
                 keywordDetector.stop()
