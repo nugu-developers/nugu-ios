@@ -35,13 +35,7 @@ public class KeywordDetector: ContextInfoProvidable {
     private let contextManager: ContextManageable
     
     /// Keyword detector state
-    @Atomic private(set) public var state: KeywordDetectorState = .inactive {
-        didSet {
-            if oldValue != state {
-                delegate?.keywordDetectorStateDidChange(state)
-            }
-        }
-    }
+    @Atomic private(set) public var state: KeywordDetectorState = .inactive
     
     /// Must set `keywordSource` for using `KeywordDetector`
     @Atomic public var keyword: Keyword = .aria {
@@ -105,10 +99,16 @@ extension KeywordDetector {
             
             switch notification {
             case .active:
+                if self?.state != .active {
+                    self?.delegate?.keywordDetectorStateDidChange(.active)
+                }
                 self?._state.mutate {
                     $0 = .active
                 }
             case .inactive:
+                if self?.state != .inactive {
+                    self?.delegate?.keywordDetectorStateDidChange(.inactive)
+                }
                 self?._state.mutate {
                     $0 = .inactive
                 }
