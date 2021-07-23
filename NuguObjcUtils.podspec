@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguObjcUtils'
-  s.version = '1.4.0-beta.2'
+  s.version = '1.4.0-beta.3'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Utils'
   s.description = <<-DESC

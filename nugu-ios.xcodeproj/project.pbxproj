@@ -1308,6 +1308,9 @@
 		75E623D525E89EC800EAAE3C /* ASRBeepPlayerResourcesURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayerResourcesURL.swift; sourceTree = "<group>"; };
 		75E624D52603257200EAAE3C /* MarqueeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarqueeLabel.swift; sourceTree = "<group>"; };
 		75F1A7D724B451F00023B6C9 /* WeakScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakScriptMessageHandler.swift; sourceTree = "<group>"; };
+		75FC863526AA463C00699784 /* NuguObjcUtils.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguObjcUtils.podspec; sourceTree = "<group>"; };
+		75FC863626AA463C00699784 /* TycheSDK.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TycheSDK.podspec; sourceTree = "<group>"; };
+		75FC863726AA463C00699784 /* OpusSDK.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = OpusSDK.podspec; sourceTree = "<group>"; };
 		7E0713DA24FCD01C009314DA /* NuguUserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguUserDefault.swift; sourceTree = "<group>"; };
 		7E0713DD24FCD02C009314DA /* UserDefaults+Nugu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Nugu.swift"; sourceTree = "<group>"; };
 		7E0E0B072437077F00198FCB /* EndPointDetectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointDetectable.swift; sourceTree = "<group>"; };
@@ -1692,6 +1695,9 @@
 		1F100951237A887A00D90FEE /* Cocoapods */ = {
 			isa = PBXGroup;
 			children = (
+				75FC863526AA463C00699784 /* NuguObjcUtils.podspec */,
+				75FC863726AA463C00699784 /* OpusSDK.podspec */,
+				75FC863626AA463C00699784 /* TycheSDK.podspec */,
 				06500CCC2578821B0088F776 /* NuguUtils.podspec */,
 				1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */,
 				1F1008BE237688E200D90FEE /* NuguCore.podspec */,
