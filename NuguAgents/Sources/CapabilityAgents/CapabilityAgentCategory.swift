@@ -40,7 +40,7 @@ public enum CapabilityAgentCategory: Hashable {
     case alerts
     case routine
     case nudge
-    case etc(name: String)
+    case plugin(name: String)
 }
 
 public extension CapabilityAgentCategory {
@@ -65,7 +65,7 @@ public extension CapabilityAgentCategory {
         case .alerts: return "Alerts"
         case .routine: return "Routine"
         case .nudge: return "Nudge"
-        case .etc(let categoryName): return categoryName
+        case .plugin(let categoryName): return categoryName
         }
     }
 }
