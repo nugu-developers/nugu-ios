@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'JadeMarble'
-  s.version = '1.4.0-beta.3'
+  s.version = '1.4.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'End Point Detector for NUGU ASR'
   s.homepage = 'https://github.com/nugu-developers/nugu-ios'
@@ -18,5 +18,9 @@ Pod::Spec.new do |s|
 
   s.dependency 'NattyLog', '~> 1'
   s.dependency 'TycheSDK', s.version.to_s
+  
+  s.xcconfig = {
+    'OTHER_SWIFT_FLAGS' => '-DDEPLOY_OTHER_PACKAGE_MANAGER'
+  }
   
 end

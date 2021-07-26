@@ -254,7 +254,11 @@ public extension NuguVoiceChrome {
 
 private extension NuguVoiceChrome {
     func playAnimationByState() {
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         animationView.animation = Animation.named(currentState.transitionFileName, bundle: Bundle(for: NuguVoiceChrome.self))
+        #else
+        animationView.animation = Animation.named(currentState.transitionFileName, bundle: Bundle.module)
+        #endif
         animationView.loopMode = .playOnce
         animationView.play { [weak self] (finished) in
             guard let self = self else { return }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'OpusSDK'
-  s.version = '1.4.0-beta.3'
+  s.version = '1.4.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Opus codec wrapper'
   s.description = <<-DESC
@@ -21,5 +21,7 @@ play encoded data using AVAudioEngine
   s.source_files = 'OpusSDK/include/*.h', 'OpusSDK/shim.c'
   s.public_header_files = 'OpusSDK/include/*.h'
   s.preserve_paths = 'OpusSDK/include/**'
-  
+  s.xcconfig = {
+    'OTHER_SWIFT_FLAGS' => '-DDEPLOY_OTHER_PACKAGE_MANAGER'
+  }
 end

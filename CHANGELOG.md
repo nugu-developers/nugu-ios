@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 `NUGU SDK for iOS` adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [1.4.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.4.0)
+Released on 2021-07-26
+### SDK
+#### Fixed
+- Send `dialog_request_id` when loading `NuguDisplayWebView` (#883)
+- Apply `RxSwift` version 6 (#881)
+- Send stop / start event instead resume event (#884)
+- Fix the state change from `.playing` to `.playing` in `RoutineAgent` (#885)
+
+#### Added
+- Add `TabExtension` to `DisplayAgent` (upgrade to v1.8) (#880)
+- Add `ignoreSendingResumeEvent` variable (#882)
+
+#### Update
+- Supports `Swift package manager` (#886)
+- Refactor `NuguClientKit` and `MainViewController` (#888)
+
+#### Removed
+- Remove useless `preserved_path` statement in podspec files (#892)
+
 ## [1.3.0](https://github.com/nugu-developers/nugu-ios/releases/tag/1.3.0)
 Released on 2021-06-28
 ### SDK

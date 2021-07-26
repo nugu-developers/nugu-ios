@@ -3,6 +3,7 @@
 ![Platform](https://img.shields.io/badge/platform-iOS-999999)
 [![CocoaPods compatible](https://img.shields.io/cocoapods/v/NuguClientKit)](https://github.com/nugu-developers/nugu-ios)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![SwiftPackageManager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg?style=flat)](https://github.com/apple/swift-package-manager)
 ![License](https://img.shields.io/github/license/nugu-developers/nugu-ios)
 
 ## Requirements

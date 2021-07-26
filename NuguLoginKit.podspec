@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguLoginKit'
-  s.version = '1.4.0-beta.3'
+  s.version = '1.4.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Supported login for Nugu Service'
   s.description = <<-DESC
@@ -18,4 +18,8 @@ Framework for login using OAuth 2.0
   s.source_files = 'NuguLoginKit/Sources/**/*'
 
   s.dependency 'NuguUtils', s.version.to_s
+  
+  s.xcconfig = {
+    'OTHER_SWIFT_FLAGS' => '-DDEPLOY_OTHER_PACKAGE_MANAGER'
+  }
 end

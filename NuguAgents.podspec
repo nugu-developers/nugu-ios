@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguAgents'
-  s.version = '1.4.0-beta.3'
+  s.version = '1.4.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Agents'
   s.description = <<-DESC
@@ -22,6 +22,10 @@ Default Agent Implementations for Nugu service
   s.dependency 'SilverTray', s.version.to_s
   s.dependency 'NattyLog', '~> 1'
   s.ios.dependency 'JadeMarble', s.version.to_s
+  
+  s.xcconfig = {
+    'OTHER_SWIFT_FLAGS' => '-DDEPLOY_OTHER_PACKAGE_MANAGER'
+  }
 
   # s.subspec 'iOS_Specific' do |iOS|
   #   iOS.subspec 'ASR' do |asr|

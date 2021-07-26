@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguClientKit'
-  s.version = '1.4.0-beta.3'
+  s.version = '1.4.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Client Kit'
   s.description = <<-DESC
@@ -27,4 +27,8 @@ Default Instances for Nugu service
   s.dependency 'NuguServiceKit', s.version.to_s
 
   s.dependency 'NattyLog', '~> 1'
+  
+  s.xcconfig = {
+    'OTHER_SWIFT_FLAGS' => '-DDEPLOY_OTHER_PACKAGE_MANAGER'
+  }
 end

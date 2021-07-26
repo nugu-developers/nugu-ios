@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguCore'
-  s.version = '1.4.0-beta.3'
+  s.version = '1.4.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu'
   s.description = <<-DESC
@@ -24,5 +24,8 @@ Nugu framework for AI Service
   s.dependency 'NuguUtils', s.version.to_s
   s.dependency 'NattyLog', '~> 1.0'
   s.dependency 'RxSwift', '~> 6'
-
+  
+  s.xcconfig = {
+    'OTHER_SWIFT_FLAGS' => '-DDEPLOY_OTHER_PACKAGE_MANAGER'
+  }
 end

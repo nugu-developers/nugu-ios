@@ -83,20 +83,38 @@ public enum Keyword: Int, CustomStringConvertible, CaseIterable {
     }
     
     var netFilePath: String {
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         switch self {
         case .aria:
             return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_am_aria", withExtension: "raw")!.path
         case .tinkerbell:
             return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw")!.path
         }
+        #else
+        switch self {
+        case .aria:
+            return Bundle.module.url(forResource: "skt_trigger_am_aria", withExtension: "raw")!.path
+        case .tinkerbell:
+            return Bundle.module.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw")!.path
+        }
+        #endif
     }
     
     var searchFilePath: String {
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         switch self {
         case .aria:
             return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_search_aria", withExtension: "raw")!.path
         case .tinkerbell:
             return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw")!.path
         }
+        #else
+        switch self {
+        case .aria:
+            return Bundle.module.url(forResource: "skt_trigger_search_aria", withExtension: "raw")!.path
+        case .tinkerbell:
+            return Bundle.module.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw")!.path
+        }
+        #endif
     }
 }

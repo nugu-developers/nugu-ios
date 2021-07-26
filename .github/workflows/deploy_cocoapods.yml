@@ -29,13 +29,13 @@ jobs:
           pod trunk push --synchronous --allow-warnings NuguCore.podspec
           pod trunk push --synchronous --allow-warnings TycheSDK.podspec
           pod trunk push --synchronous --allow-warnings JadeMarble.podspec
+          pod trunk push --synchronous --allow-warnings KeenSense.podspec
           pod trunk push --synchronous --allow-warnings OpusSDK.podspec
           pod trunk push --synchronous --allow-warnings SilverTray.podspec
           pod trunk push --synchronous --allow-warnings NuguAgents.podspec
           pod trunk push --synchronous --allow-warnings NuguServiceKit.podspec
           pod trunk push --synchronous --allow-warnings NuguUIKit.podspec
           pod trunk push --synchronous --allow-warnings NuguLoginKit.podspec
-          pod trunk push --synchronous --allow-warnings KeenSense.podspec
           pod trunk push --synchronous --allow-warnings NuguClientKit.podspec
 
         env:

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguObjcUtils'
-  s.version = '1.4.0-beta.3'
+  s.version = '1.4.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Utils'
   s.description = <<-DESC
@@ -23,7 +23,8 @@ play encoded data using AVAudioEngine
   s.preserve_paths = 'NuguObjcUtils/include/**'
   
   s.xcconfig = {
-    'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/NuguObjcUtils/NuguObjcUtils/**'
+    'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/NuguObjcUtils/NuguObjcUtils/**',
+    'OTHER_SWIFT_FLAGS' => '-DDEPLOY_OTHER_PACKAGE_MANAGER'
   }
   
 end
