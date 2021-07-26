@@ -13,7 +13,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'JadeMarble/Sources/**/*.swift'
   s.vendored_frameworks = 'TycheCommon.xcframework', 'TycheEpd.xcframework', 'TycheSpeex.xcframework'
-  s.preserve_paths = 'JadeMarble/Frameworks/*'
   s.resources = 'JadeMarble/Resources/*'
   s.libraries = 'c++'
 
