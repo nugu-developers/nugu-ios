@@ -14,7 +14,6 @@ Pod::Spec.new do |s|
   s.source_files = 'KeenSense/Sources/**/*.swift'
   s.vendored_frameworks = 'TycheWakeupCommon.xcframework', 'TycheWakeup.xcframework'
   s.resource = 'KeenSense/Resources/*'
-  s.preserve_paths = '.'
   s.libraries = 'c++'
 
   s.dependency 'NuguUtils', s.version.to_s
