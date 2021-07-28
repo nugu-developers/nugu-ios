@@ -148,9 +148,6 @@ public extension SpeechRecognizerAggregator {
             } else {
                 DispatchQueue.global().async(execute: startMicWorkItem)
             }
-        } else {
-            keywordDetector.stop()
-            stopMicInputProvider()
         }
     }
     

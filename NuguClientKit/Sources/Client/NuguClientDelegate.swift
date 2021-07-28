@@ -26,13 +26,10 @@ import NuguCore
 public protocol NuguClientDelegate: AnyObject {
     // audio session related
     /// Notify that  nugu client will play some audio
-    func nuguClientWillRequireAudioSession() -> Bool
+    @discardableResult func nuguClientShouldUpdateAudioSession(requestingFocus: Bool) -> Bool
     
     /// Notify that  nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
-    
-    /// Notify that  nugu client need to get mic input
-    func nuguClientWillUseMic(requestingFocus: Bool)
     
     // nugu server related
     /// Notify that  nugu client received directive
