@@ -51,7 +51,11 @@ final class DisplayIdleBar: UIView {
     
     func loadFromXib() {
         // swiftlint:disable force_cast
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         let view = Bundle(for: DisplayIdleBar.self).loadNibNamed("DisplayIdleBar", owner: self)?.first as! UIView
+        #else
+        let view = Bundle.module.loadNibNamed("DisplayIdleBar", owner: self)?.first as! UIView
+        #endif
         // swiftlint:enable force_cast
         addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false

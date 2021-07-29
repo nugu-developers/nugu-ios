@@ -39,7 +39,11 @@ final class DisplayTitleView: UIView {
     
     func loadFromXib() {
         // swiftlint:disable force_cast
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         let view = Bundle(for: DisplayTitleView.self).loadNibNamed("DisplayTitleView", owner: self)?.first as! UIView
+        #else
+        let view = Bundle.module.loadNibNamed("DisplayTitleView", owner: self)?.first as! UIView
+        #endif
         // swiftlint:enable force_cast
         insertSubview(view, at: 0)
         view.translatesAutoresizingMaskIntoConstraints = false

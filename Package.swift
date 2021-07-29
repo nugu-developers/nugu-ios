@@ -126,6 +126,7 @@ let package = Package(
                 .process("Resources/animations/03_transition.json"),
                 .process("Resources/animations/02_passive.json"),
                 .process("Resources/animations/01_intro.json"),
+                .process("Resources/Assets.xcassets")
             ]
         ),
         .target(

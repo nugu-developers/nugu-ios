@@ -53,7 +53,11 @@ final class FullLyricsView: UIView {
     
     func loadFromXib() {
         // swiftlint:disable force_cast
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         let view = Bundle(for: FullLyricsView.self).loadNibNamed("FullLyricsView", owner: self)?.first as! UIView
+        #else
+        let view = Bundle.module.loadNibNamed("FullLyricsView", owner: self)?.first as! UIView
+        #endif
         // swiftlint:enable force_cast
         addSubview(view)
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewDidTap(gestureRecognizer:)))

@@ -112,7 +112,11 @@ final public class NuguVoiceChrome: UIView {
     
     private func loadFromXib() {
         // swiftlint:disable force_cast
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         let view = Bundle(for: NuguVoiceChrome.self).loadNibNamed("NuguVoiceChrome", owner: self)?.first as! UIView
+        #else
+        let view = Bundle.module.loadNibNamed("NuguVoiceChrome", owner: self)?.first as! UIView
+        #endif
         // swiftlint:enable force_cast
         addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false

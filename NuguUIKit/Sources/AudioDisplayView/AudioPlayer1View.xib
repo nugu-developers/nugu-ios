@@ -49,11 +49,11 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XB6-sV-z0B">
                     <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                     <subviews>
-                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MHe-JQ-duj" customClass="FullLyricsView" customModule="NuguUIKit" customModuleProvider="target">
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MHe-JQ-duj" customClass="FullLyricsView" customModule="NuguUIKit">
                             <rect key="frame" x="20" y="120" width="350" height="525"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ekx-W3-HQh" customClass="DisplayTitleView" customModule="NuguUIKit" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ekx-W3-HQh" customClass="DisplayTitleView" customModule="NuguUIKit">
                             <rect key="frame" x="0.0" y="44" width="390" height="76"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2vu-vb-vL1" userLabel="BarTypeButton">
@@ -324,7 +324,7 @@
                                 </view>
                             </subviews>
                         </stackView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FcB-0U-tGu" customClass="DisplayIdleBar" customModule="NuguUIKit" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FcB-0U-tGu" customClass="DisplayIdleBar" customModule="NuguUIKit">
                             <rect key="frame" x="0.0" y="742" width="390" height="68"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="68" id="pQ7-qN-hoE"/>
@@ -391,7 +391,7 @@
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Ao-iv-h9T" userLabel="BarAudioPlayerContainerView">
                     <rect key="frame" x="0.0" y="752" width="390" height="92"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fUg-yj-tT4" customClass="AudioPlayerBarView" customModule="NuguUIKit" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fUg-yj-tT4" customClass="AudioPlayerBarView" customModule="NuguUIKit">
                             <rect key="frame" x="0.0" y="0.0" width="390" height="58"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="58" id="oSy-Sm-Jvd"/>

@@ -79,8 +79,12 @@ final public class NuguDisplayWebView: UIView {
     }
     
     func loadFromXib() {
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         // swiftlint:disable force_cast
         let view = Bundle(for: NuguDisplayWebView.self).loadNibNamed("NuguDisplayWebView", owner: self)?.first as! UIView
+        #else
+        let view = Bundle.module.loadNibNamed("NuguDisplayWebView", owner: self)?.first as! UIView
+        #endif
         // swiftlint:enable force_cast
         addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false

@@ -125,7 +125,11 @@ final class AudioPlayer1View: AudioDisplayView {
     
     private func loadFromXib() {
         // swiftlint:disable force_cast
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         let view = Bundle(for: AudioPlayer1View.self).loadNibNamed("AudioPlayer1View", owner: self)?.first as! UIView
+        #else
+        let view = Bundle.module.loadNibNamed("AudioPlayer1View", owner: self)?.first as! UIView
+        #endif
         // swiftlint:enable force_cast
         addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false

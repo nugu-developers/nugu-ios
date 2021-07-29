@@ -25,9 +25,14 @@ extension Bundle {
     ///
     /// https://github.com/CocoaPods/CocoaPods/issues/8122#issuecomment-674844941
     static var imageBundle: Bundle? {
+        #if DEPLOY_OTHER_PACKAGE_MANAGER
         guard let bundlePath = Bundle(for: NuguButton.self).path(forResource: "NuguUIKit-Images", ofType: "bundle") else {
             return Bundle(for: NuguButton.self)
         }
+        
         return Bundle(path: bundlePath)
+        #else
+        return Bundle.module
+        #endif
     }
 }
