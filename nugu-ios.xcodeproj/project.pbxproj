@@ -1209,6 +1209,7 @@
 		752CE557246E731D00E68733 /* UILabel+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Convenience.swift"; sourceTree = "<group>"; };
 		752CE55A246E849900E68733 /* DisplayTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTitleView.swift; sourceTree = "<group>"; };
 		752CE55E246E84EC00E68733 /* DisplayTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayTitleView.xib; sourceTree = "<group>"; };
+		752D6FB126BD1319007C085D /* SilverTray.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SilverTray.podspec; sourceTree = "<group>"; };
 		754C7DAE2640DF8B00123EBB /* NuguServiceCookieKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServiceCookieKey.swift; sourceTree = "<group>"; };
 		754C7DB02640E64900123EBB /* NuguServiceCookieValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguServiceCookieValue.swift; sourceTree = "<group>"; };
 		754C7DCA266086F700123EBB /* AudioDisplayViewTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayViewTheme.swift; sourceTree = "<group>"; };
@@ -1595,6 +1596,7 @@
 		1F100951237A887A00D90FEE /* Cocoapods */ = {
 			isa = PBXGroup;
 			children = (
+				752D6FB126BD1319007C085D /* SilverTray.podspec */,
 				06500CCC2578821B0088F776 /* NuguUtils.podspec */,
 				1F9C5B6723E3FAC60086CC04 /* NuguAgents.podspec */,
 				1F1008BE237688E200D90FEE /* NuguCore.podspec */,
