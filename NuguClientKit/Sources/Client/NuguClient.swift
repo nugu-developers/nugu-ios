@@ -485,7 +485,7 @@ extension NuguClient: FocusDelegate {
     
     public func focusShouldAcquire() -> Bool {
         guard let audioSessionManager = audioSessionManager else {
-            return delegate?.nuguClientWillRequireAudioSession() == true
+            return delegate?.nuguClientShouldUpdateAudioSession(requestingFocus: true) == true
         }
         
         return audioSessionManager.updateAudioSession(requestingFocus: true) == true
@@ -663,18 +663,15 @@ extension NuguClient: SpeechRecognizerAggregatorDelegate {
     }
     
     public func speechRecognizerWillUseMic(requestingFocus: Bool) {
-        guard let audioSessionManager = audioSessionManager else {
-            // FIXME: to be replace with aggregator state delegate instead of passing requesting focus parameter
-            delegate?.nuguClientWillUseMic(requestingFocus: requestingFocus)
-            return
-        }
-        
         // Control center does not work properly when mixWithOthers option has been included.
         // To avoid adding mixWithOthers option when audio player is in paused state,
         // update audioSession should be done only when requesting focus
-        if requestingFocus {
-            audioSessionManager.updateAudioSession(requestingFocus: true)
+        guard requestingFocus == true else { return }
+        guard let audioSessionManager = audioSessionManager else {
+            delegate?.nuguClientShouldUpdateAudioSession(requestingFocus: true)
+            return
         }
+        audioSessionManager.updateAudioSession(requestingFocus: true)
     }
     
     public func speechRecognizerKeywordDidDetect(initiator: ASRInitiator) {

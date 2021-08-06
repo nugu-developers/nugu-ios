@@ -447,11 +447,12 @@ extension NuguCentralManager: SoundAgentDataSource {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
-    func nuguClientWillUseMic(requestingFocus: Bool) {
+    @discardableResult func nuguClientShouldUpdateAudioSession(requestingFocus: Bool) -> Bool {
         // If you set AudioSessionManager to nil, You should implement this
-        log.debug("nuguClientWillUseMic \(requestingFocus)")
+        // And return NUGU SDK can use the audio session or not.
+        return false
     }
-    
+
     func nuguClientDidRecognizeKeyword(initiator: ASRInitiator) {
         DispatchQueue.main.async {
             guard let keyWindow = UIApplication.shared.windows.filter({$0.isKeyWindow}).first,
@@ -467,12 +468,6 @@ extension NuguCentralManager: NuguClientDelegate {
     
     func nuguClientRequestAccessToken() -> String? {
         return UserDefaults.Standard.accessToken
-    }
-    
-    func nuguClientWillRequireAudioSession() -> Bool {
-        // If you set AudioSessionManager to nil, You should implement this
-        // And return NUGU SDK can use the audio session or not.
-        return false
     }
     
     func nuguClientDidReleaseAudioSession() {
