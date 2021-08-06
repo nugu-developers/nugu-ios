@@ -133,6 +133,7 @@ extension SettingViewController: UITableViewDataSource {
             case 1:
                 cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useWakeUpDetector)
                 cell.onSwitchValueChanged = { [weak self] isOn in
+                    NuguCentralManager.shared.client.speechRecognizerAggregator.useKeywordDetector = isOn
                     UserDefaults.Standard.useWakeUpDetector = isOn
                     self?.tableView.reloadData()
                 }
