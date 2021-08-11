@@ -49,6 +49,15 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     
     public var useKeywordDetector = true
     
+    // State
+    private(set) public var state: SpeechRecognizerAggregatorState = .idle {
+        didSet {
+            if state != oldValue {
+                delegate?.speechRecognizerStateDidChange(state)
+            }
+        }
+    }
+    
     public init(
         keywordDetector: KeywordDetector,
         asrAgent: ASRAgentProtocol
@@ -57,32 +66,6 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
         self.asrAgent = asrAgent
         micInputProvider.delegate = self
         keywordDetector.delegate = self 
-        
-        asrStateObserver = asrAgent.observe(NuguAgentNotification.ASR.State.self, queue: .main) { [weak self] (notification) in
-            guard let self = self else { return }
-            
-            switch notification.state {
-            case .idle:
-                if self.useKeywordDetector == true {
-                    keywordDetector.start()
-                } else {
-                    keywordDetector.stop()
-                    self.stopMicInputProvider()
-                }
-            case .listening:
-                keywordDetector.stop()
-            case .expectingSpeech:
-                self.startMicInputProvider(requestingFocus: true) { (success) in
-                    guard success == true else {
-                        log.debug("startMicInputProvider failed!")
-                        asrAgent.stopRecognition()
-                        return
-                    }
-                }
-            default:
-                break
-            }
-        }
         
         becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
             guard let self = self else { return }
@@ -95,6 +78,8 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
             }
         })
         registerAudioSessionObservers()
+        
+        addAsrObserver()
     }
     
     deinit {
@@ -178,8 +163,11 @@ extension SpeechRecognizerAggregator {
                     return
                 }
                 self.micQueue.async { [unowned self] in
-                    self.micInputProvider.stop()
-                    self.delegate?.speechRecognizerWillUseMic(requestingFocus: requestingFocus)
+                    guard self.micInputProvider.isRunning == false else {
+                        completion(true)
+                        return
+                    }
+                    
                     do {
                         try self.micInputProvider.start()
                         completion(true)
@@ -222,22 +210,67 @@ extension SpeechRecognizerAggregator: MicInputProviderDelegate {
 
 extension SpeechRecognizerAggregator: KeywordDetectorDelegate {
     public func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
-        delegate?.speechRecognizerKeywordDidDetect(
-            initiator: .wakeUpWord(
-                keyword: keyword,
-                data: data,
-                start: start,
-                end: end,
-                detection: detection
-            )
-        )
+        state = .wakeup
+        
+        asrAgent.startRecognition(initiator: .wakeUpWord(
+            keyword: keyword,
+            data: data,
+            start: start,
+            end: end,
+            detection: detection
+        ))
     }
     
     public func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {
-        delegate?.speechRecognizerKeywordStateDidChange(state)
+        if let state = SpeechRecognizerAggregatorState(state) {
+            self.state = state
+        }
     }
     
-    public func keywordDetectorDidError(_ error: Error) {}
+    public func keywordDetectorDidError(_ error: Error) {
+        state = .error(error)
+    }
+}
+
+// MARK: - ASR Observer
+
+extension SpeechRecognizerAggregator {
+    private func addAsrObserver() {
+        if let asrStateObserver = asrStateObserver {
+            notificationCenter.removeObserver(asrStateObserver)
+        }
+        
+        // For use asr infinitely
+        asrStateObserver = asrAgent.observe(NuguAgentNotification.ASR.State.self, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+
+//            switch notification.state {
+//            case .idle:
+//                if self.useKeywordDetector == true {
+//                    self.keywordDetector.start()
+//                }
+//            case .expectingSpeech:
+                // FIXME: 이런 상황 자체를 만들지 않도록 수정.
+//                self.startMicInputProvider(requestingFocus: true) { (success) in
+//                    guard success == true else {
+//                        log.debug("startMicInputProvider failed!")
+//                        self.asrAgent.stopRecognition()
+//                        return
+//                    }
+//                }
+//            default:
+//                break
+//            }
+            
+            if case .idle = notification.state {
+                self.keywordDetector.start()
+            }
+            
+            if let state = SpeechRecognizerAggregatorState(notification.state) {
+                self.state = state
+            }
+        }
+    }
 }
 
 // MARK: - private(AudioSessionObserver)
@@ -264,6 +297,34 @@ private extension SpeechRecognizerAggregator {
         if let audioSessionInterruptionObserver = audioSessionInterruptionObserver {
             NotificationCenter.default.removeObserver(audioSessionInterruptionObserver)
             self.audioSessionInterruptionObserver = nil
+        }
+    }
+}
+
+// MARK: - ASRState transform
+
+extension SpeechRecognizerAggregatorState {
+    init?(_ asrState: ASRState) {
+        switch asrState {
+        case .idle:
+            self = .idle
+        case .listening:
+            self = .listening
+        case .recognizing:
+            self = .recognizing
+        case .busy:
+            self = .busy
+        default:
+            return nil
+        }
+    }
+    
+    init?(_ kwdState: KeywordDetectorState) {
+        switch kwdState {
+        case .active:
+            self = .wakeupTriggering
+        default:
+            return nil
         }
     }
 }

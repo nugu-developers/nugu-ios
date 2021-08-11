@@ -399,6 +399,8 @@
 		73C256D326974ED50008FE7F /* Nimble.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C256D126974ED50008FE7F /* Nimble.xcframework */; };
 		73C256D426974ED50008FE7F /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C256D226974ED50008FE7F /* Quick.xcframework */; };
 		73D380A423E7F22E000C5ED5 /* SpeexCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */; };
+		73E8F35126C3C2BA00B99140 /* nugu-config_nugu-agent.plist in Resources */ = {isa = PBXBuildFile; fileRef = 73E8F35026C3C2BA00B99140 /* nugu-config_nugu-agent.plist */; };
+		73E8F35326C3C31500B99140 /* SpeechRecognizerAggregatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E8F35226C3C31500B99140 /* SpeechRecognizerAggregatorState.swift */; };
 		73F0B71925CABC800025FC6A /* NuguClient+Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0B71825CABC800025FC6A /* NuguClient+Builder.swift */; };
 		73F0B72F25CAC4930025FC6A /* AudioSessionManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0B72E25CAC4930025FC6A /* AudioSessionManagerDelegate.swift */; };
 		75021E4E259431B50014537C /* DisplayWebViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021E4D259431B50014537C /* DisplayWebViewPresenter.swift */; };
@@ -1246,6 +1248,8 @@
 		73C256D226974ED50008FE7F /* Quick.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Quick.xcframework; path = Carthage/Build/Quick.xcframework; sourceTree = "<group>"; };
 		73C256D5269822520008FE7F /* SilverTray.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SilverTray.podspec; sourceTree = "<group>"; };
 		73D380A323E7F22E000C5ED5 /* SpeexCodec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeexCodec.swift; sourceTree = "<group>"; };
+		73E8F35026C3C2BA00B99140 /* nugu-config_nugu-agent.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "nugu-config_nugu-agent.plist"; path = "../../../../../Downloads/nugu-config_nugu-agent.plist"; sourceTree = "<group>"; };
+		73E8F35226C3C31500B99140 /* SpeechRecognizerAggregatorState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerAggregatorState.swift; sourceTree = "<group>"; };
 		73F0B71825CABC800025FC6A /* NuguClient+Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NuguClient+Builder.swift"; sourceTree = "<group>"; };
 		73F0B72E25CAC4930025FC6A /* AudioSessionManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManagerDelegate.swift; sourceTree = "<group>"; };
 		7500490F24766B1500B73DD8 /* AudioDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayView.swift; sourceTree = "<group>"; };
@@ -1907,6 +1911,7 @@
 		1FD4A98223A22302002EB56D /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				73E8F35226C3C31500B99140 /* SpeechRecognizerAggregatorState.swift */,
 				7E341F6E25AFFA0600734A45 /* AudioSessionManageable.swift */,
 				75AEA7CC25AFE5DB009E1B5E /* AudioSessionManager.swift */,
 				73F0B72E25CAC4930025FC6A /* AudioSessionManagerDelegate.swift */,
@@ -2527,6 +2532,7 @@
 		1FFFF4D1237672F100C9A177 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				73E8F35026C3C2BA00B99140 /* nugu-config_nugu-agent.plist */,
 				1FFFF4D2237672F100C9A177 /* Assets.xcassets */,
 				1FFFF4D3237672F100C9A177 /* LaunchScreen.storyboard */,
 				1FFFF4D5237672F100C9A177 /* Main.storyboard */,
@@ -3849,6 +3855,7 @@
 				75047D9B24F4DE8F007BBF22 /* listening_end.wav in Resources */,
 				1FFFF503237672F100C9A177 /* LaunchScreen.storyboard in Resources */,
 				75047D9C24F4DE8F007BBF22 /* listening_start.wav in Resources */,
+				73E8F35126C3C2BA00B99140 /* nugu-config_nugu-agent.plist in Resources */,
 				A17B06612394D22800D739E9 /* device_GW_error_003.wav in Resources */,
 				A17B065F2394D22800D739E9 /* device_GW_error_001.wav in Resources */,
 				1FFFF502237672F100C9A177 /* Assets.xcassets in Resources */,
@@ -4048,6 +4055,7 @@
 				75E6238A25E883F000EAAE3C /* ASRBeepPlayer.swift in Sources */,
 				7E341F8525AFFA1400734A45 /* SpeechRecognizerAggregatable.swift in Sources */,
 				7EF12B1423C41F5F0000E158 /* DialogState.swift in Sources */,
+				73E8F35326C3C31500B99140 /* SpeechRecognizerAggregatorState.swift in Sources */,
 				068C3C512581F80800EC0BEE /* MicInputProviderDelegate.swift in Sources */,
 				7E341F6F25AFFA0600734A45 /* AudioSessionManageable.swift in Sources */,
 				066C9D2F25553EF0000C7800 /* MicInputError.swift in Sources */,

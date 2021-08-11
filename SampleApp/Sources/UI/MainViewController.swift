@@ -53,7 +53,7 @@ final class MainViewController: UIViewController {
     private var resignActiveObserver: Any?
     private var becomeActiveObserver: Any?
     private var nuguServiceStateObserver: Any?
-    private var keywordDetectorStateObserver: Any?
+    private var speechStateObserver: Any?
     private var dialogStateObserver: Any?
 
     // MARK: Override
@@ -205,14 +205,16 @@ private extension MainViewController {
         /**
          Observe keyword detector's state change for NuguButton animation
          */
-        keywordDetectorStateObserver = notificationCenter.addObserver(forName: .keywordDetectorStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+        speechStateObserver = notificationCenter.addObserver(forName: .speechStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
             guard let self = self,
-                  let state = notification.userInfo?["state"] as? KeywordDetectorState else { return }
+                  let state = notification.userInfo?["state"] as? SpeechRecognizerAggregatorState else { return }
             switch state {
-            case .active:
+            case .wakeupTriggering:
                 self.nuguButton.startFlipAnimation()
-            case .inactive:
+            case .idle:
                 self.nuguButton.stopFlipAnimation()
+            default:
+                break
             }
         })
         
@@ -247,9 +249,9 @@ private extension MainViewController {
             self.nuguServiceStateObserver = nil
         }
         
-        if let keywordDetectorStateObserver = keywordDetectorStateObserver {
+        if let keywordDetectorStateObserver = speechStateObserver {
             NotificationCenter.default.removeObserver(keywordDetectorStateObserver)
-            self.keywordDetectorStateObserver = nil
+            self.speechStateObserver = nil
         }
         
         if let dialogStateObserver = dialogStateObserver {

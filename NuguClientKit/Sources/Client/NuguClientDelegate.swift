@@ -33,11 +33,8 @@ public protocol NuguClientDelegate: AnyObject {
     /// Notify that nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
     
-    /// Notify that nugu client did wake up by keyword
-    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator)
-    
-    /// Notify that  nugu client keyword detector's state has been changed
-    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState)
+    /// Notify that  nugu client speech-related state has been changed
+    func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState)
     
     // nugu server related
     /// Notify that nugu client received directive

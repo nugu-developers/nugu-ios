@@ -453,17 +453,8 @@ extension NuguCentralManager: NuguClientDelegate {
         return false
     }
 
-    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator) {
-        DispatchQueue.main.async {
-            guard let keyWindow = UIApplication.shared.windows.filter({$0.isKeyWindow}).first,
-                  let navigationController = keyWindow.rootViewController as? UINavigationController,
-                  let mainViewController = navigationController.viewControllers.last as? MainViewController else { return }
-            mainViewController.presentVoiceChrome(initiator: initiator)
-        }
-    }
-    
-    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState) {
-        notificationCenter.post(name: .keywordDetectorStateDidChangeNotification, object: nil, userInfo: ["state": state])
+    func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {
+        notificationCenter.post(name: .speechStateDidChangeNotification, object: nil, userInfo: ["state": state])
     }
     
     func nuguClientRequestAccessToken() -> String? {
