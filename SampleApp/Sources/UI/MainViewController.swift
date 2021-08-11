@@ -136,7 +136,7 @@ final class MainViewController: UIViewController {
 // MARK: - Internal (Voice Chrome)
 
 extension MainViewController {
-    func presentVoiceChrome(initiator: ASRInitiator) {
+    func presentVoiceChrome(initiator: ASRInitiator? = nil) {
         guard AVAudioSession.sharedInstance().recordPermission == .granted else {
             NuguToast.shared.showToast(message: "설정에서 마이크 접근 권한을 허용 후 이용하실 수 있습니다.")
             return
@@ -145,7 +145,10 @@ extension MainViewController {
             try voiceChromePresenter.presentVoiceChrome(chipsData: [
                 NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
             ])
-            NuguCentralManager.shared.startListening(initiator: initiator)
+            
+            if let initiator = initiator {
+                NuguCentralManager.shared.startListening(initiator: initiator)
+            }
         } catch {
             switch error {
             case VoiceChromePresenterError.networkUnreachable:
@@ -213,6 +216,8 @@ private extension MainViewController {
                 self.nuguButton.startFlipAnimation()
             case .idle:
                 self.nuguButton.stopFlipAnimation()
+            case .wakeup:
+                self.presentVoiceChrome()
             default:
                 break
             }
