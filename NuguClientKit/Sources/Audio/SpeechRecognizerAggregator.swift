@@ -243,31 +243,13 @@ extension SpeechRecognizerAggregator {
         // For use asr infinitely
         asrStateObserver = asrAgent.observe(NuguAgentNotification.ASR.State.self, queue: nil) { [weak self] (notification) in
             guard let self = self else { return }
-
-//            switch notification.state {
-//            case .idle:
-//                if self.useKeywordDetector == true {
-//                    self.keywordDetector.start()
-//                }
-//            case .expectingSpeech:
-                // FIXME: 이런 상황 자체를 만들지 않도록 수정.
-//                self.startMicInputProvider(requestingFocus: true) { (success) in
-//                    guard success == true else {
-//                        log.debug("startMicInputProvider failed!")
-//                        self.asrAgent.stopRecognition()
-//                        return
-//                    }
-//                }
-//            default:
-//                break
-//            }
-            
-            if case .idle = notification.state {
-                self.keywordDetector.start()
-            }
             
             if let state = SpeechRecognizerAggregatorState(notification.state) {
                 self.state = state
+            }
+            
+            if case .idle = notification.state {
+                self.keywordDetector.start()
             }
         }
     }
