@@ -7,7 +7,9 @@
 //
 
 import Foundation
+
 import NuguUtils
+import NuguAgents
 
 public enum SpeechRecognizerAggregatorState: Equatable {
     case idle
@@ -17,7 +19,7 @@ public enum SpeechRecognizerAggregatorState: Equatable {
     case recognizing
     case busy
     case cancelled
-    case result(_ asr: String)
+    case result(_ result: Result)
     case error(_ error: Error)
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -26,12 +28,67 @@ public enum SpeechRecognizerAggregatorState: Equatable {
              (.wakeupTriggering, .wakeupTriggering),
              (.wakeup, .wakeup),
              (.listening, .listening),
+             (.recognizing, .recognizing),
+             (.busy, .busy),
              (.cancelled, .cancelled),
              (.result, .result),
              (.error, .error):
             return true
         default:
             return false
+        }
+    }
+    
+    public struct Result {
+        let type: ResultType
+        let value: String
+        
+        public enum ResultType {
+            case partial
+            case complete
+        }
+    }
+}
+
+// MARK: - SpeechRecognizerAggregatorState transform
+
+extension SpeechRecognizerAggregatorState {
+    init?(_ asrState: ASRState) {
+        switch asrState {
+        case .idle:
+            self = .idle
+        case .listening:
+            self = .listening
+        case .recognizing:
+            self = .recognizing
+        case .busy:
+            self = .busy
+        default:
+            return nil
+        }
+    }
+    
+    init?(_ asrResult: ASRResult) {
+        switch asrResult {
+        case .none:
+            self = .result(Result(type: .complete, value: ""))
+        case .partial(let text, _):
+            self = .result(Result(type: .partial, value: text))
+        case .complete(let text, _):
+            self = .result(Result(type: .complete, value: text))
+        case .cancel, .cancelExpectSpeech:
+            self = .cancelled
+        case .error(let error, _):
+            self = .error(error)
+        }
+    }
+    
+    init?(_ kwdState: KeywordDetectorState) {
+        switch kwdState {
+        case .active:
+            self = .wakeupTriggering
+        default:
+            return nil
         }
     }
 }

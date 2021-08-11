@@ -206,7 +206,7 @@ private extension MainViewController {
         })
         
         /**
-         Observe keyword detector's state change for NuguButton animation
+         Observe speech state change for NuguButton animation
          */
         speechStateObserver = notificationCenter.addObserver(forName: .speechStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
             guard let self = self,
@@ -214,7 +214,7 @@ private extension MainViewController {
             switch state {
             case .wakeupTriggering:
                 self.nuguButton.startFlipAnimation()
-            case .idle:
+            case .cancelled:
                 self.nuguButton.stopFlipAnimation()
             case .wakeup:
                 self.presentVoiceChrome()
@@ -367,5 +367,9 @@ extension MainViewController: VoiceChromePresenterDelegate {
     
     func voiceChromeChipsDidClick(chips: NuguChipsButton.NuguChipsButtonType) {
         NuguCentralManager.shared.chipsDidSelect(selectedChips: chips)
+    }
+    
+    func voiceChromeDidReceiveRecognizeError() {
+        NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
     }
 }

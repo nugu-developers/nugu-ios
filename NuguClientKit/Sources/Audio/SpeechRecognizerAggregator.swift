@@ -32,6 +32,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     // Observers
     private let notificationCenter = NotificationCenter.default
     private var asrStateObserver: Any?
+    private var asrResultObserver: Any?
     private var becomeActiveObserver: Any?
     private var audioSessionInterruptionObserver: Any?
     
@@ -79,12 +80,16 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
         })
         registerAudioSessionObservers()
         
-        addAsrObserver()
+        addAsrStateObserver()
+        addAsrResultObserver()
     }
     
     deinit {
         if let asrStateObserver = asrStateObserver {
             notificationCenter.removeObserver(asrStateObserver)
+        }
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
         }
         if let becomeActiveObserver = becomeActiveObserver {
             notificationCenter.removeObserver(becomeActiveObserver)
@@ -138,7 +143,10 @@ public extension SpeechRecognizerAggregator {
     }
     
     func stopListening() {
-        keywordDetector.stop()
+        if keywordDetector.state == .active {
+            keywordDetector.stop()
+            state = .cancelled
+        }
         stopMicInputProvider()
         asrAgent.stopRecognition()
     }
@@ -235,7 +243,7 @@ extension SpeechRecognizerAggregator: KeywordDetectorDelegate {
 // MARK: - ASR Observer
 
 extension SpeechRecognizerAggregator {
-    private func addAsrObserver() {
+    private func addAsrStateObserver() {
         if let asrStateObserver = asrStateObserver {
             notificationCenter.removeObserver(asrStateObserver)
         }
@@ -250,6 +258,19 @@ extension SpeechRecognizerAggregator {
             
             if case .idle = notification.state {
                 self.keywordDetector.start()
+            }
+        }
+    }
+    
+    private func addAsrResultObserver() {
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
+        }
+        
+        asrResultObserver = asrAgent.observe(NuguAgentNotification.ASR.Result.self, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            if let state = SpeechRecognizerAggregatorState(notification.result) {
+                self.state = state
             }
         }
     }
@@ -279,34 +300,6 @@ private extension SpeechRecognizerAggregator {
         if let audioSessionInterruptionObserver = audioSessionInterruptionObserver {
             NotificationCenter.default.removeObserver(audioSessionInterruptionObserver)
             self.audioSessionInterruptionObserver = nil
-        }
-    }
-}
-
-// MARK: - ASRState transform
-
-extension SpeechRecognizerAggregatorState {
-    init?(_ asrState: ASRState) {
-        switch asrState {
-        case .idle:
-            self = .idle
-        case .listening:
-            self = .listening
-        case .recognizing:
-            self = .recognizing
-        case .busy:
-            self = .busy
-        default:
-            return nil
-        }
-    }
-    
-    init?(_ kwdState: KeywordDetectorState) {
-        switch kwdState {
-        case .active:
-            self = .wakeupTriggering
-        default:
-            return nil
         }
     }
 }
