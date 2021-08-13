@@ -22,7 +22,7 @@ import Foundation
 
 import NuguCore
 
-struct EventIdentifier: Equatable {
-    let dialogRequestId: String = TimeUUID().hexString
-    let messageId: String = TimeUUID().hexString
+public struct EventIdentifier: Equatable {
+    public let dialogRequestId: String = TimeUUID().hexString
+    public let messageId: String = TimeUUID().hexString
 }

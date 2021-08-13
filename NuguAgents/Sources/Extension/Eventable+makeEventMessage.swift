@@ -21,7 +21,7 @@ import Foundation
 
 import NuguCore
 
-extension Eventable {
+public extension Eventable {
     func makeEventMessage(
         property: CapabilityAgentProperty,
         eventIdentifier: EventIdentifier,
