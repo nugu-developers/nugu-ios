@@ -34,7 +34,6 @@ final class NuguCentralManager {
     private let notificationCenter = NotificationCenter.default
     private var systemAgentExceptionObserver: Any?
     private var systemAgentRevokeObserver: Any?
-    private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
     
     lazy private(set) var client: NuguClient = {
@@ -58,7 +57,6 @@ final class NuguCentralManager {
         
         // Observers
         addSystemAgentObserver(client.systemAgent)
-        addAsrAgentObserver(client.asrAgent)
         addDialogStateObserver(client.dialogStateAggregator)
         
         // Initialize proper audio session for Nugu service usage
@@ -98,10 +96,6 @@ final class NuguCentralManager {
         
         if let systemAgentRevokeObserver = systemAgentRevokeObserver {
             notificationCenter.removeObserver(systemAgentRevokeObserver)
-        }
-        
-        if let asrResultObserver = asrResultObserver {
-            notificationCenter.removeObserver(asrResultObserver)
         }
         
         if let dialogStateObserver = dialogStateObserver {
@@ -357,21 +351,6 @@ private extension NuguCentralManager {
         }
     }
     
-    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { [weak self] (notification) in
-            switch notification.result {
-            case .error(let error, _):
-                switch error {
-                case ASRError.recognizeFailed:
-                    self?.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                default:
-                    break
-                }
-            default: break
-            }
-        }
-    }
-    
     func addDialogStateObserver(_ object: DialogStateAggregator) {
         dialogStateObserver = object.observe(NuguClientNotification.DialogState.State.self, queue: nil) { [weak self] (notification) in
             self?.notificationCenter.post(name: .dialogStateDidChangeNotification, object: nil, userInfo: ["state": notification.state])
@@ -453,17 +432,11 @@ extension NuguCentralManager: NuguClientDelegate {
         return false
     }
 
-    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator) {
-        DispatchQueue.main.async {
-            guard let keyWindow = UIApplication.shared.windows.filter({$0.isKeyWindow}).first,
-                  let navigationController = keyWindow.rootViewController as? UINavigationController,
-                  let mainViewController = navigationController.viewControllers.last as? MainViewController else { return }
-            mainViewController.presentVoiceChrome(initiator: initiator)
+    func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {
+        if case .error(let error) = state, case ASRError.recognizeFailed = error {
+            localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
         }
-    }
-    
-    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState) {
-        notificationCenter.post(name: .keywordDetectorStateDidChangeNotification, object: nil, userInfo: ["state": state])
+        notificationCenter.post(name: .speechStateDidChangeNotification, object: nil, userInfo: ["state": state])
     }
     
     func nuguClientRequestAccessToken() -> String? {

@@ -662,23 +662,12 @@ extension NuguClient: SpeechRecognizerAggregatorDelegate {
         speechRecognizerAggregator.delegate = self
     }
     
-    public func speechRecognizerWillUseMic(requestingFocus: Bool) {
-        // Control center does not work properly when mixWithOthers option has been included.
-        // To avoid adding mixWithOthers option when audio player is in paused state,
-        // update audioSession should be done only when requesting focus
-        guard requestingFocus == true else { return }
-        guard let audioSessionManager = audioSessionManager else {
-            delegate?.nuguClientShouldUpdateAudioSession(requestingFocus: true)
-            return
-        }
-        audioSessionManager.updateAudioSession(requestingFocus: true)
+    public func speechRecognizerStateDidChange(_ state: SpeechRecognizerAggregatorState) {
+        delegate?.nuguClientDidChangeSpeechState(state)
+        notificationCenter.post(name: NuguClient.speechStateChangedNotification, object: self, userInfo: ["state": state])
     }
-    
-    public func speechRecognizerKeywordDidDetect(initiator: ASRInitiator) {
-        delegate?.nuguClientDidRecognizeKeyword(initiator: initiator)
-    }
-    
-    public func speechRecognizerKeywordStateDidChange(_ state: KeywordDetectorState) {
-        delegate?.nuguClientDidChangeKeywordDetectorState(state)
-    }
+}
+
+extension NuguClient {
+    static let speechStateChangedNotification = Notification.Name("com.sktelecom.romaine.speech_state_changed_notification")
 }

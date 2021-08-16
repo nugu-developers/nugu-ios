@@ -23,7 +23,5 @@ import Foundation
 import NuguAgents
 
 public protocol SpeechRecognizerAggregatorDelegate: AnyObject {
-    func speechRecognizerWillUseMic(requestingFocus: Bool)
-    func speechRecognizerKeywordDidDetect(initiator: ASRInitiator)
-    func speechRecognizerKeywordStateDidChange(_ state: KeywordDetectorState)
+    func speechRecognizerStateDidChange(_ state: SpeechRecognizerAggregatorState)
 }
