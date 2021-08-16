@@ -254,8 +254,8 @@ private extension MainViewController {
             self.nuguServiceStateObserver = nil
         }
         
-        if let keywordDetectorStateObserver = speechStateObserver {
-            NotificationCenter.default.removeObserver(keywordDetectorStateObserver)
+        if let speechStateObserver = speechStateObserver {
+            NotificationCenter.default.removeObserver(speechStateObserver)
             self.speechStateObserver = nil
         }
         

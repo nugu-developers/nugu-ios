@@ -485,7 +485,7 @@ extension NuguClient: FocusDelegate {
     
     public func focusShouldAcquire() -> Bool {
         guard let audioSessionManager = audioSessionManager else {
-            return delegate?.nuguClientShouldUpdateAudioSession(requestingFocus: true) == true
+            return delegate?.nuguClientShouldUpdateAudioSessionForFocusAquire() == true
         }
         
         return audioSessionManager.updateAudioSession(requestingFocus: true) == true
