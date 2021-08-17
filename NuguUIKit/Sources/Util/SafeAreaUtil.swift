@@ -22,12 +22,12 @@ import UIKit
 
 public struct SafeAreaUtil {
     public static var topSafeAreaHeight: CGFloat {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
+        guard let rootViewController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController else { return 0 }
         return rootViewController.view.safeAreaInsets.top
     }
     
     public static var bottomSafeAreaHeight: CGFloat {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return 0 }
+        guard let rootViewController = UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.rootViewController else { return 0 }
         return rootViewController.view.safeAreaInsets.bottom
     }
 }

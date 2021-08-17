@@ -282,7 +282,7 @@ extension NuguCentralManager {
 extension NuguCentralManager {
     func chipsDidSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
         guard let selectedChips = selectedChips,
-            let window = UIApplication.shared.keyWindow else { return }
+            let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first else { return }
         
         let indicator = UIActivityIndicatorView(style: .whiteLarge)
         indicator.color = .black
