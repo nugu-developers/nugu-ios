@@ -80,6 +80,8 @@ class NuguApiProvider: NSObject {
      */
     init(timeout: TimeInterval = 10.0) {
         sessionConfig = URLSessionConfiguration.ephemeral
+        sessionConfig.waitsForConnectivity = true
+        
         requestTimeout = timeout
         super.init()
     }
@@ -298,8 +300,7 @@ extension NuguApiProvider {
                     return Observable.error(error)
                 }
                 
-                guard (error as NSError).code != CFNetworkErrors.cfurlErrorCancelled.rawValue,
-                      (error as NSError).code != CFNetworkErrors.cfurlErrorNetworkConnectionLost.rawValue else {
+                guard (error as NSError).code != CFNetworkErrors.cfurlErrorCancelled.rawValue else {
                     return Observable.error(error)
                 }
                 
@@ -311,6 +312,10 @@ extension NuguApiProvider {
                     .take(1)
                     .map { _ in
                         log.info("Try to connect next resource server")
+                        guard (error as NSError).code != CFNetworkErrors.cfurlErrorNetworkConnectionLost.rawValue else {
+                            return index
+                        }
+                        
                         let currentPolicy = self.serverPolicies.removeFirst()
                         self.loadBalancedUrl = "https://\(currentPolicy.hostname):\(currentPolicy.port)"
                         
