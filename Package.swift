@@ -18,7 +18,7 @@ let package = Package(
     dependencies: [
         .package(name: "RxSwift", url: "https://github.com/ReactiveX/RxSwift", from: "6.0.0"),
         .package(name: "NattyLog", url: "https://github.com/nugu-developers/natty-log-ios", from: "1.2.2"),
-        .package(name: "Lottie", url: "https://github.com/airbnb/lottie-ios", from: "3.0.0")
+        .package(name: "Lottie", url: "https://github.com/airbnb/lottie-ios", from: "4.0.0")
     ],
     targets: [
         .target(
