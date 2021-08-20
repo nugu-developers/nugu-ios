@@ -426,7 +426,7 @@ extension NuguCentralManager: SoundAgentDataSource {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
-    @discardableResult func nuguClientShouldUpdateAudioSession(requestingFocus: Bool) -> Bool {
+    func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool {
         // If you set AudioSessionManager to nil, You should implement this
         // And return NUGU SDK can use the audio session or not.
         return false

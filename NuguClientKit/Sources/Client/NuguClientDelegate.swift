@@ -26,9 +26,8 @@ import NuguAgents
 /// <#Description#>
 public protocol NuguClientDelegate: AnyObject {
     // audio session related
-    /// Notify that  nugu client should update audio session
-    /// - Parameter requestingFocus: whether updating AudioSession is for requesting focus or just updating without requesting focus
-    @discardableResult func nuguClientShouldUpdateAudioSession(requestingFocus: Bool) -> Bool
+    /// Notify that  nugu client should update audio session for focus aquire
+    func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool
     
     /// Notify that nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
