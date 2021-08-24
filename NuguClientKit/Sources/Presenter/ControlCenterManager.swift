@@ -64,7 +64,18 @@ extension ControlCenterManager {
             // Set nowPlayingInfo display properties
             var nowPlayingInfoForUpdate = self.nowPlayingInfo
             nowPlayingInfoForUpdate[MPMediaItemPropertyTitle] = parsedPayload.title
-            nowPlayingInfoForUpdate[MPMediaItemPropertyAlbumTitle] = parsedPayload.albumTitle
+            
+            var artistString: String {
+                let artist = parsedPayload.artist
+                
+                guard let albumTitle = parsedPayload.albumTitle else {
+                    return artist
+                }
+                
+                return artist + " - " + albumTitle
+            }
+            nowPlayingInfoForUpdate[MPMediaItemPropertyArtist] = artistString
+            
             nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyPlaybackRate] = self.audioPlayerAgent.isPlaying ? 1.0 : 0.0
             
             // Set song title and album title first. Because getting album art must be processed asynchronouly.
@@ -174,7 +185,7 @@ private extension ControlCenterManager {
         removeChangePlaybackPositionCommand()
     }
     
-    func parsePayload(template: AudioPlayerDisplayTemplate) -> (title: String, albumTitle: String, imageUrl: String?)? {
+    func parsePayload(template: AudioPlayerDisplayTemplate) -> (title: String, artist: String, albumTitle: String?, imageUrl: String?)? {
         guard let payloadAsData = try? JSONSerialization.data(withJSONObject: template.payload, options: []) else {
             return nil
         }
@@ -184,7 +195,7 @@ private extension ControlCenterManager {
                 remove()
                 return nil
             }
-            return (payload.template.title.text, payload.template.content.title, payload.template.content.imageUrl)
+            return (payload.template.content.title, payload.template.content.subtitle1, payload.template.content.subtitle2, payload.template.content.imageUrl)
         default:
             remove()
             return nil

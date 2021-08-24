@@ -282,7 +282,7 @@ extension NuguCentralManager {
 extension NuguCentralManager {
     func chipsDidSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
         guard let selectedChips = selectedChips,
-            let window = UIApplication.shared.keyWindow else { return }
+            let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first else { return }
         
         let indicator = UIActivityIndicatorView(style: .whiteLarge)
         indicator.color = .black
@@ -426,7 +426,7 @@ extension NuguCentralManager: SoundAgentDataSource {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
-    @discardableResult func nuguClientShouldUpdateAudioSession(requestingFocus: Bool) -> Bool {
+    func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool {
         // If you set AudioSessionManager to nil, You should implement this
         // And return NUGU SDK can use the audio session or not.
         return false
