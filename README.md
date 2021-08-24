@@ -9,7 +9,7 @@
 ## Requirements
 - iOS 12.0+ (v1.3.0 or more) iOS 10.0+ (less than v1.3.0)
 - Xcode 11.0+
-- Swift 5.1+
+- Swift 5.4+
 
 ## Components
 NUGU SDK for iOS is composed of following Libraries 
