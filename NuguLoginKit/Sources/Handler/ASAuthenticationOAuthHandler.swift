@@ -73,6 +73,6 @@ class ASAuthenticationOAuthHandler: NSObject, OAuthHandler {
 @available(iOS 13.0, *)
 extension ASAuthenticationOAuthHandler: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        UIApplication.shared.windows.first { $0.isKeyWindow } ?? ASPresentationAnchor()
+        UIApplication.shared.keyWindow ?? ASPresentationAnchor()
     }
 }

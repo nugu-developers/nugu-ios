@@ -66,7 +66,7 @@ public extension NuguToast {
     ///   - message: <#message description#>
     ///   - bottomMargin: <#bottomMargin description#>
     func showToast(message: String?, bottomMargin: CGFloat? = nil, duration: Duration = .short) {
-        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
+        guard let window = UIApplication.shared.keyWindow else { return }
         guard let toastMessage = message, toastMessage.count > 0 else { return }
     
         hideAnimationWorkItem?.cancel()

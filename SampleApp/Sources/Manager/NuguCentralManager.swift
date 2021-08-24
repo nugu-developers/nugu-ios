@@ -288,7 +288,7 @@ extension NuguCentralManager {
 extension NuguCentralManager {
     func chipsDidSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
         guard let selectedChips = selectedChips,
-            let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
+            let window = UIApplication.shared.keyWindow else { return }
         
         let indicator = UIActivityIndicatorView(style: .whiteLarge)
         indicator.color = .black
@@ -455,7 +455,7 @@ extension NuguCentralManager: NuguClientDelegate {
 
     func nuguClientDidRecognizeKeyword(initiator: ASRInitiator) {
         DispatchQueue.main.async {
-            guard let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }),
+            guard let keyWindow = UIApplication.shared.windows.filter({$0.isKeyWindow}).first,
                   let navigationController = keyWindow.rootViewController as? UINavigationController,
                   let mainViewController = navigationController.viewControllers.last as? MainViewController else { return }
             mainViewController.presentVoiceChrome(initiator: initiator)
