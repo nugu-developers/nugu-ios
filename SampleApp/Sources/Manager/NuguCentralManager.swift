@@ -242,22 +242,11 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startListening(initiator: ASRInitiator) {
-        client.speechRecognizerAggregator.startListening(initiator: initiator) { state in
-            if case let .error(error) = state, case SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition = error {
-                log.error("startListening error: \(error)")
-                NuguToast.shared.showToast(message: "음성 인식을 위한 마이크를 사용할 수 없습니다.")
-                return
-            }
-        }
+        client.speechRecognizerAggregator.startListening(initiator: initiator)
     }
     
     func startListeningWithTrigger() {
-        client.speechRecognizerAggregator.startListeningWithTrigger { (result) in
-            if case let .failure(error) = result {
-                log.error("startListeningWithTrigger error: \(error)")
-                return
-            }
-        }
+        client.speechRecognizerAggregator.startListeningWithTrigger()
     }
     
     func stopListening() {

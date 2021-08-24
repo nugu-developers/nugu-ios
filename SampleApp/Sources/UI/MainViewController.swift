@@ -218,6 +218,13 @@ private extension MainViewController {
                 self.nuguButton.stopFlipAnimation()
             case .wakeup:
                 self.presentVoiceChrome()
+            case .error(let error):
+                log.error("speechState error: \(error)")
+                if case SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup = error {
+                    self.nuguButton.stopFlipAnimation()
+                } else if case SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition = error {
+                    NuguToast.shared.showToast(message: "음성 인식을 위한 마이크를 사용할 수 없습니다.")
+                }
             default:
                 break
             }
