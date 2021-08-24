@@ -42,6 +42,7 @@ public class DataStreamPlayer {
     
     private let audioFormat: AVAudioFormat
     private let jitterBufferSize = 2 // Use 2 chunks as a jitter buffer
+    private let bufferTimeout: DispatchTimeInterval = .seconds(30) // Wait for next buffer until this time.
     private lazy var chunkSize = Int(audioFormat.sampleRate / 10) // 100ms
     
     /// To notify last audio buffer is consumed.
@@ -69,6 +70,7 @@ public class DataStreamPlayer {
     private let notificationCenter = NotificationCenter.default
     private var audioBufferObserver: Any?
     private let audioBufferObserverQueue = OperationQueue()
+    private var audioBufferCancelItem: DispatchWorkItem?
     
     #if DEBUG
     private var appendedData = Data()
@@ -89,11 +91,23 @@ public class DataStreamPlayer {
     }
     
     /// current buffer state
-    public var bufferState: DataStreamPlayerBufferState = .bufferEmpty {
+    @Atomic public var bufferState: DataStreamPlayerBufferState = .bufferEmpty {
         didSet {
             if bufferState != oldValue {
                 os_log("[%@] buffer state changed: %@", log: .player, type: .debug, "\(id)", "\(bufferState)")
                 delegate?.dataStreamPlayerBufferStateDidChange(bufferState)
+                
+                if bufferState == .likelyToKeepUp {
+                    audioBufferCancelItem?.cancel()
+                    return
+                }
+
+                audioBufferCancelItem?.cancel()
+                let audioBufferCancelItem = DispatchWorkItem { [weak self] in
+                    self?.stop()
+                }
+                audioQueue.asyncAfter(deadline: .now() + bufferTimeout, execute: audioBufferCancelItem)
+                self.audioBufferCancelItem = audioBufferCancelItem
             }
         }
     }
@@ -312,6 +326,8 @@ public class DataStreamPlayer {
      Stop AVAudioPlayerNode.
      */
     func reset() {
+        audioBufferCancelItem?.cancel()
+        
         if let audioBufferObserver = audioBufferObserver {
             notificationCenter.removeObserver(audioBufferObserver)
         }
@@ -570,6 +586,7 @@ private extension DataStreamPlayer {
                     
                     self.audioBufferObserver = self.notificationCenter.addObserver(forName: .audioBufferChange, object: self, queue: self.audioBufferObserverQueue) { [weak self] (notification) in
                         guard let self = self else { return }
+                        guard self.bufferState == .bufferEmpty else { return }
                         guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else { return }
                         
                         os_log("[%@] Try to restart scheduler.", log: .player, type: .debug, "\(self.id)")
