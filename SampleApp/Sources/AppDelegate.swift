@@ -28,8 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        ConfigurationStore.shared.configure()
+        ConfigurationStore.shared.configure(url: Bundle.main.url(forResource: "nugu_config-tPhone", withExtension: "plist")!)
         return true
     }
 

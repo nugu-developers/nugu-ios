@@ -386,7 +386,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             case .error(let error):
                 audioPlayerState = .stopped
                 eventTypeInfo = .playbackFailed(error: error)
-            case .bufferUnderrun, .bufferRefilled:
+            case .bufferEmpty, .likelyToKeepUp:
                 break
             }
             

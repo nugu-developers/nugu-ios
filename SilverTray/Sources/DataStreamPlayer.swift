@@ -60,7 +60,7 @@ public class DataStreamPlayer {
     private var audioBuffers = [AVAudioPCMBuffer]() {
         didSet {
             if oldValue.count < audioBuffers.count {
-                notificationCenter.post(name: .audioBufferChange, object: nil, userInfo: nil)
+                notificationCenter.post(name: .audioBufferChange, object: self, userInfo: nil)
             }
         }
     }
@@ -68,6 +68,7 @@ public class DataStreamPlayer {
     private let audioQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.player_queue")
     private let notificationCenter = NotificationCenter.default
     private var audioBufferObserver: Any?
+    private let audioBufferObserverQueue = OperationQueue()
     
     #if DEBUG
     private var appendedData = Data()
@@ -77,12 +78,22 @@ public class DataStreamPlayer {
     public let decoder: AudioDecodable
     public weak var delegate: DataStreamPlayerDelegate?
     
-    /// current state
+    /// current player state
     public var state: DataStreamPlayerState = .idle {
         didSet {
             if oldValue != state {
                 os_log("[%@] state changed: %@", log: .player, type: .debug, "\(id)", "\(state)")
                 delegate?.dataStreamPlayerStateDidChange(state)
+            }
+        }
+    }
+    
+    /// current buffer state
+    public var bufferState: DataStreamPlayerBufferState = .bufferEmpty {
+        didSet {
+            if bufferState != oldValue {
+                os_log("[%@] buffer state changed: %@", log: .player, type: .debug, "\(id)", "\(bufferState)")
+                delegate?.dataStreamPlayerBufferStateDidChange(bufferState)
             }
         }
     }
@@ -516,6 +527,8 @@ private extension DataStreamPlayer {
                 scheduleBuffer(audioBuffer: audioBuffer)
             }
         }
+        
+        bufferState = .likelyToKeepUp
     }
     
     /// schedule buffer and check last data was consumed on it's closure.
@@ -553,12 +566,14 @@ private extension DataStreamPlayer {
                 guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else {
                     guard self.lastBuffer == nil else { return }
                     os_log("[%@] waiting for next audio data.", log: .player, type: .debug, "\(self.id)")
+                    self.bufferState = .bufferEmpty
                     
-                    self.audioBufferObserver = self.notificationCenter.addObserver(forName: .audioBufferChange, object: self, queue: nil) { [weak self] (notification) in
+                    self.audioBufferObserver = self.notificationCenter.addObserver(forName: .audioBufferChange, object: self, queue: self.audioBufferObserverQueue) { [weak self] (notification) in
                         guard let self = self else { return }
                         guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else { return }
                         
                         os_log("[%@] Try to restart scheduler.", log: .player, type: .debug, "\(self.id)")
+                        self.bufferState = .likelyToKeepUp
                         self.scheduleBuffer(audioBuffer: nextBuffer)
                         
                         if let audioBufferObserver = self.audioBufferObserver {

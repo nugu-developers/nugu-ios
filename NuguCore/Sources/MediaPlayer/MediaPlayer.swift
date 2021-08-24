@@ -463,10 +463,10 @@ private extension MediaPlayer {
             log.debug("buffer status changed to: \(notification)")
             
             switch notification {
-            case .buffering:
-                self.delegate?.mediaPlayerStateDidChange(.bufferUnderrun, mediaPlayer: self)
+            case .bufferEmpty:
+                self.delegate?.mediaPlayerStateDidChange(.bufferEmpty, mediaPlayer: self)
             case .likelyToKeepUp:
-                self.delegate?.mediaPlayerStateDidChange(.bufferRefilled, mediaPlayer: self)
+                self.delegate?.mediaPlayerStateDidChange(.likelyToKeepUp, mediaPlayer: self)
             }
         }
         

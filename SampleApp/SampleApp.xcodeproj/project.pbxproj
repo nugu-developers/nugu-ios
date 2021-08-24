@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		732D7D9E26CE38AC00C2CFE5 /* nugu_config-tPhone.plist in Resources */ = {isa = PBXBuildFile; fileRef = 732D7D9D26CE38AC00C2CFE5 /* nugu_config-tPhone.plist */; };
 		73F284DF23815CC9004EBBDF /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A523815CC9004EBBDF /* SettingViewController.swift */; };
 		73F284E023815CC9004EBBDF /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A623815CC9004EBBDF /* IntroViewController.swift */; };
 		73F284E123815CC9004EBBDF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F284A723815CC9004EBBDF /* MainViewController.swift */; };
@@ -38,6 +39,7 @@
 /* Begin PBXFileReference section */
 		1E35ABD8543680F9A99E41F6 /* Pods_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3251FD919C1818DBE8CE0077 /* Pods-SampleApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleApp.release.xcconfig"; path = "Target Support Files/Pods-SampleApp/Pods-SampleApp.release.xcconfig"; sourceTree = "<group>"; };
+		732D7D9D26CE38AC00C2CFE5 /* nugu_config-tPhone.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "nugu_config-tPhone.plist"; sourceTree = "<group>"; };
 		73F28420238157A7004EBBDF /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F284A523815CC9004EBBDF /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		73F284A623815CC9004EBBDF /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 		7E6A0B0E241084C000C7A19E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				732D7D9D26CE38AC00C2CFE5 /* nugu_config-tPhone.plist */,
 				7E6A0B0F241084C000C7A19E /* Assets.xcassets */,
 				7E6A0B10241084C000C7A19E /* LaunchScreen.storyboard */,
 				7E6A0B12241084C000C7A19E /* Main.storyboard */,
@@ -312,6 +315,7 @@
 				7ECD3DEF24F64605007F29CE /* listening_end.wav in Resources */,
 				7E6A0B3F2410888000C7A19E /* device_GW_error_006.wav in Resources */,
 				7E6A0B3E2410888000C7A19E /* device_GW_error_004.wav in Resources */,
+				732D7D9E26CE38AC00C2CFE5 /* nugu_config-tPhone.plist in Resources */,
 				7E6A0B392410888000C7A19E /* device_GW_error_003.wav in Resources */,
 				7E6A0B3D2410888000C7A19E /* device_GW_error_005.wav in Resources */,
 				7E6A0B15241084C000C7A19E /* LaunchScreen.storyboard in Resources */,
@@ -538,6 +542,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -560,6 +565,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

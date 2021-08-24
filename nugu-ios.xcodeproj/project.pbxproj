@@ -368,6 +368,7 @@
 		7378FD9925B810D300AB9764 /* TypedNotifyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7378FD9825B810D300AB9764 /* TypedNotifyable.swift */; };
 		7378FDC325B817BB00AB9764 /* Encodable+dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7378FDC225B817BB00AB9764 /* Encodable+dictionary.swift */; };
 		7378FDD925B8191200AB9764 /* TypedNotifyable+post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7378FDD825B8191200AB9764 /* TypedNotifyable+post.swift */; };
+		738224BE26D4DB5D0050D67A /* DataStreamPlayerBufferState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738224BD26D4DB5D0050D67A /* DataStreamPlayerBufferState.swift */; };
 		7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */; };
 		739078FD241A3E0C007D753F /* ServerSideEventReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */; };
 		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
@@ -1231,6 +1232,7 @@
 		7378FD9825B810D300AB9764 /* TypedNotifyable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedNotifyable.swift; sourceTree = "<group>"; };
 		7378FDC225B817BB00AB9764 /* Encodable+dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Encodable+dictionary.swift"; sourceTree = "<group>"; };
 		7378FDD825B8191200AB9764 /* TypedNotifyable+post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypedNotifyable+post.swift"; sourceTree = "<group>"; };
+		738224BD26D4DB5D0050D67A /* DataStreamPlayerBufferState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamPlayerBufferState.swift; sourceTree = "<group>"; };
 		7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClientDelegate.swift; sourceTree = "<group>"; };
 		739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiver.swift; sourceTree = "<group>"; };
 		739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiverState.swift; sourceTree = "<group>"; };
@@ -2785,6 +2787,7 @@
 		731B937226A6EC2B00E77A07 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				738224BD26D4DB5D0050D67A /* DataStreamPlayerBufferState.swift */,
 				731B937326A6EC2B00E77A07 /* DataStreamPlayerState.swift */,
 				731B937426A6EC2B00E77A07 /* DataStreamPlayer.swift */,
 				731B937526A6EC2B00E77A07 /* DataStreamPlayerDelegate.swift */,
@@ -4444,6 +4447,7 @@
 			files = (
 				731B938A26A6EC2B00E77A07 /* Codec.swift in Sources */,
 				731B938926A6EC2B00E77A07 /* DataStreamPlayerDelegate.swift in Sources */,
+				738224BE26D4DB5D0050D67A /* DataStreamPlayerBufferState.swift in Sources */,
 				731B938826A6EC2B00E77A07 /* DataStreamPlayer.swift in Sources */,
 				731B939026A6EC2B00E77A07 /* AudioEngineObservable.swift in Sources */,
 				731B939126A6EC2B00E77A07 /* AudioEngineManager.swift in Sources */,
