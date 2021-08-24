@@ -108,7 +108,8 @@ public extension SpeechRecognizerAggregator {
             guard success else {
                 log.error("Start MicInputProvider failed")
                 self?.asrAgent.stopRecognition()
-                completion?(.error(SpeechRecognizerAggregatorError.cannotOpenMicInput))
+                self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition)
+                completion?(.error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition))
                 return
             }
         }
@@ -126,7 +127,8 @@ public extension SpeechRecognizerAggregator {
                 self?.startMicInputProvider(requestingFocus: false) { (success) in
                     guard success else {
                         log.debug("startMicWorkItem failed!")
-                        completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInput))
+                        self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup)
+                        completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup))
                         return
                     }
                     completion?(.success(()))
