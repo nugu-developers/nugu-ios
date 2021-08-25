@@ -279,7 +279,7 @@ extension TTSAgent: MediaPlayerDelegate {
             case .start:
                 ttsState = .playing
                 eventTypeInfo = .speechStarted
-            case .resume, .likelyToKeepUp:
+            case .resume:
                 ttsState = .playing
             case .finish:
                 ttsResult = (dialogRequestId: player.header.dialogRequestId, result: .finished)
@@ -295,7 +295,7 @@ extension TTSAgent: MediaPlayerDelegate {
                 ttsResult = (dialogRequestId: player.header.dialogRequestId, result: .error(error))
                 ttsState = .stopped
                 eventTypeInfo = .speechStopped
-            case .bufferEmpty:
+            case .bufferEmpty, .likelyToKeepUp:
                 break
             }
             

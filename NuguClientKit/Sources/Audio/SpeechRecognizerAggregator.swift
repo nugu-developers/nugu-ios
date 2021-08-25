@@ -270,6 +270,10 @@ extension SpeechRecognizerAggregator {
             if let state = SpeechRecognizerAggregatorState(notification.state) {
                 self.state = state
             }
+            // if not restarted here, keyword detector is inactive in tts speaking situation
+            if case .idle = notification.state {
+                self.keywordDetector.start()
+            }
         }
     }
     
