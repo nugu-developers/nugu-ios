@@ -242,20 +242,11 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startListening(initiator: ASRInitiator) {
-        client.speechRecognizerAggregator.startListening(initiator: initiator) { state in
-            if case .error = state {
-                NuguToast.shared.showToast(message: "설정에서 마이크 접근 권한을 허용 후 이용하실 수 있습니다.")
-            }
-        }
+        client.speechRecognizerAggregator.startListening(initiator: initiator)
     }
     
     func startListeningWithTrigger() {
-        client.speechRecognizerAggregator.startListeningWithTrigger { (result) in
-            if case let .failure(error) = result {
-                log.error("startListeningWithTrigger error: \(error)")
-                return
-            }
-        }
+        client.speechRecognizerAggregator.startListeningWithTrigger()
     }
     
     func stopListening() {

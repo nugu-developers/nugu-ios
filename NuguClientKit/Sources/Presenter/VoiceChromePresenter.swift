@@ -373,9 +373,12 @@ private extension VoiceChromePresenter {
                     self.nuguVoiceChrome.setRecognizedText(text: result.value)
                 }
             case .error(let error):
-                self.asrBeepPlayer?.beep(type: .fail)
-                if case ASRError.listenFailed = error {
+                if case ASRError.listenFailed = error,
+                   case ASRError.recognizeFailed = error {
+                    self.asrBeepPlayer?.beep(type: .fail)
                     self.nuguVoiceChrome.changeState(state: .speakingError)
+                } else if case SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition = error {
+                    self.dismissVoiceChrome()
                 }
             default: break
             }
