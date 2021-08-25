@@ -1,9 +1,9 @@
 //
-//  DataStreamPlayerDelegate.swift
+//  DataStreamPlayerBufferState.swift
 //  SilverTray
 //
-//  Created by childc on 2020/04/21.
-//  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2021/08/24.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,14 +19,8 @@
 //
 
 import Foundation
-import AVFoundation
 
-public protocol DataStreamPlayerDelegate: AnyObject {
-    func dataStreamPlayerStateDidChange(_ state: DataStreamPlayerState)
-    func dataStreamPlayerBufferStateDidChange(_ state: DataStreamPlayerBufferState)
-    func dataStreamPlayerDidPlay(_ chunk: AVAudioPCMBuffer)
-}
-
-public extension DataStreamPlayerDelegate {
-    func dataStreamPlayerDidPlay(_ chunk: AVAudioPCMBuffer) {}
+public enum DataStreamPlayerBufferState {
+    case bufferEmpty
+    case likelyToKeepUp
 }

@@ -103,7 +103,7 @@ final class MediaAVPlayerItem: AVPlayerItem, TypedNotifyable {
             }
             
             log.debug("BufferEmpty")
-            post(NuguCoreNotification.MediaPlayerItem.BufferStatus.buffering)
+            post(NuguCoreNotification.MediaPlayerItem.BufferStatus.bufferEmpty)
         case #keyPath(isPlaybackLikelyToKeepUp):
             guard let isLikelyToKeepUp = change?[.newKey] as? Bool,
                   isLikelyToKeepUp == true else {
@@ -186,7 +186,7 @@ public extension NuguCoreNotification {
         public enum BufferStatus: EnumTypedNotification {
             public static let name: Notification.Name = .mediaAVPlayerItemBufferStatus
             
-            case buffering
+            case bufferEmpty
             case likelyToKeepUp
         }
     }

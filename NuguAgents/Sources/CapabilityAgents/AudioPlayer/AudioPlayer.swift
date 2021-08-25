@@ -213,7 +213,7 @@ extension AudioPlayer: MediaPlayerDelegate {
         log.info("media state: \(state)")
         
         switch state {
-        case .start, .resume, .bufferRefilled:
+        case .start, .resume, .likelyToKeepUp:
             startProgressReport()
         default:
             stopProgressReport()

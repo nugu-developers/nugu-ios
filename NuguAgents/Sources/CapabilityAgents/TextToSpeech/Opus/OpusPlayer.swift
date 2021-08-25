@@ -112,6 +112,19 @@ extension OpusPlayer: DataStreamPlayerDelegate {
         
         delegate?.mediaPlayerStateDidChange(playerState, mediaPlayer: self)
     }
+    
+    func dataStreamPlayerBufferStateDidChange(_ state: DataStreamPlayerBufferState) {
+        var mediaPlayerState: MediaPlayerState {
+            switch state {
+            case .likelyToKeepUp:
+                return .likelyToKeepUp
+            case .bufferEmpty:
+                return .bufferEmpty
+            }
+        }
+        
+        delegate?.mediaPlayerStateDidChange(mediaPlayerState, mediaPlayer: self)
+    }
 }
 
 extension OpusPlayer: MediaOpusStreamDataSource {
