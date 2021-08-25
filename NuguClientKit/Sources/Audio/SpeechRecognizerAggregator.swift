@@ -54,6 +54,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     private(set) public var state: SpeechRecognizerAggregatorState = .idle {
         didSet {
             if state != oldValue {
+                log.info("sra state: \(state)")
                 delegate?.speechRecognizerStateDidChange(state)
             }
         }
@@ -103,6 +104,17 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
 public extension SpeechRecognizerAggregator {
     @discardableResult
     func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)? = nil) -> String {
+        switch state {
+        case .cancelled,
+             .idle,
+             .error:
+            break
+        case .wakeupTriggering:
+            keywordDetector.stop()
+        default:
+            asrAgent.stopRecognition()
+        }
+        
         let dialogRequestId = asrAgent.startRecognition(initiator: initiator, completion: completion)
         startMicInputProvider(requestingFocus: true) { [weak self] success in
             guard success else {
@@ -147,6 +159,7 @@ public extension SpeechRecognizerAggregator {
             keywordDetector.stop()
             state = .cancelled
         }
+        
         stopMicInputProvider()
         asrAgent.stopRecognition()
     }
@@ -254,10 +267,6 @@ extension SpeechRecognizerAggregator {
             
             if let state = SpeechRecognizerAggregatorState(notification.state) {
                 self.state = state
-            }
-            
-            if case .idle = notification.state {
-                self.keywordDetector.start()
             }
         }
     }
