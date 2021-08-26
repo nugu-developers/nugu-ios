@@ -22,6 +22,11 @@ NUGU SDK for iOS is composed of following Libraries
 
 ## Sample Application
 
+![weather](https://user-images.githubusercontent.com/27002493/130915894-ec5f953a-c508-49a7-bd40-18ee043d6fc9.gif)
+![music](https://user-images.githubusercontent.com/27002493/130915908-877a961f-81da-4a39-b0a1-b28f3bb45e9f.gif)
+![recipe](https://user-images.githubusercontent.com/27002493/130918712-8c51bf66-b103-4989-b77a-72a386e3ffb4.gif)
+
+
 ### Run
 We have sample application in `nugu-ios.xcodeproj`.  
 To use it download or clone this repository, and run `carthage update --platform iOS` to install required frameworks.  
