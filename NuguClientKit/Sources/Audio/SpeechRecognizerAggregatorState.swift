@@ -31,9 +31,13 @@ public enum SpeechRecognizerAggregatorState: Equatable {
              (.recognizing, .recognizing),
              (.busy, .busy),
              (.cancelled, .cancelled),
-             (.result, .result),
              (.error, .error):
             return true
+        case (.result(let lhsResult), .result(let rhsResult)):
+            guard lhsResult.type == rhsResult.type else {
+                return false
+            }
+            return (lhsResult.value) == (rhsResult.value)
         default:
             return false
         }
