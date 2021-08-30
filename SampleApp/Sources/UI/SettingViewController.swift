@@ -207,13 +207,6 @@ extension SettingViewController: UITableViewDelegate {
             } else if UIDevice.current.userInterfaceIdiom == .pad {
                 if let popoverController = themeActionSheet.popoverPresentationController {
                     popoverController.sourceView = view
-                    popoverController.sourceRect = CGRect(
-                        x: view.bounds.midX,
-                        y: view.bounds.midY,
-                        width: 0,
-                        height: 0
-                    )
-                    popoverController.permittedArrowDirections = []
                     present(themeActionSheet, animated: true, completion: nil)
                 }
             }
@@ -247,13 +240,6 @@ extension SettingViewController: UITableViewDelegate {
             } else if UIDevice.current.userInterfaceIdiom == .pad {
                 if let popoverController = wakeUpWordActionSheet.popoverPresentationController {
                     popoverController.sourceView = view
-                    popoverController.sourceRect = CGRect(
-                        x: view.bounds.midX,
-                        y: view.bounds.midY,
-                        width: 0,
-                        height: 0
-                    )
-                    popoverController.permittedArrowDirections = []
                     present(wakeUpWordActionSheet, animated: true, completion: nil)
                 }
             }
