@@ -379,6 +379,10 @@ private extension VoiceChromePresenter {
                     self.nuguVoiceChrome.changeState(state: .speakingError)
                 } else if case SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition = error {
                     self.dismissVoiceChrome()
+                } else if case ASRError.listeningTimeout(let listenTimeoutFailBeep) = error {
+                    if listenTimeoutFailBeep == true {
+                        self.asrBeepPlayer?.beep(type: .fail)
+                    }
                 }
             default: break
             }

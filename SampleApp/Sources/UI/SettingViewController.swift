@@ -202,7 +202,21 @@ extension SettingViewController: UITableViewDelegate {
                 }
                 themeActionSheet.addAction(action)
             }
-            present(themeActionSheet, animated: true)
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                present(themeActionSheet, animated: true)
+            } else if UIDevice.current.userInterfaceIdiom == .pad {
+                if let popoverController = themeActionSheet.popoverPresentationController {
+                    popoverController.sourceView = view
+                    popoverController.sourceRect = CGRect(
+                        x: view.bounds.midX,
+                        y: view.bounds.midY,
+                        width: 0,
+                        height: 0
+                    )
+                    popoverController.permittedArrowDirections = []
+                    present(themeActionSheet, animated: true, completion: nil)
+                }
+            }
         case (2, 0):
             ConfigurationStore.shared.serviceSettingUrl { [weak self] (result) in
                 switch result {
@@ -228,7 +242,21 @@ extension SettingViewController: UITableViewDelegate {
                 }
                 wakeUpWordActionSheet.addAction(action)
             }
-            present(wakeUpWordActionSheet, animated: true)
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                present(wakeUpWordActionSheet, animated: true)
+            } else if UIDevice.current.userInterfaceIdiom == .pad {
+                if let popoverController = wakeUpWordActionSheet.popoverPresentationController {
+                    popoverController.sourceView = view
+                    popoverController.sourceRect = CGRect(
+                        x: view.bounds.midX,
+                        y: view.bounds.midY,
+                        width: 0,
+                        height: 0
+                    )
+                    popoverController.permittedArrowDirections = []
+                    present(wakeUpWordActionSheet, animated: true, completion: nil)
+                }
+            }
         case (4, 0):
             ConfigurationStore.shared.agreementUrl { [weak self] (result) in
                 switch result {
