@@ -143,7 +143,7 @@ extension MainViewController {
         }
         do {
             try voiceChromePresenter.presentVoiceChrome(chipsData: [
-                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
+                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 며칠이야", token: nil)
             ])
             
             if let initiator = initiator {
