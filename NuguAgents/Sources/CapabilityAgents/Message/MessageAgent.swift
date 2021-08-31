@@ -25,7 +25,7 @@ import NuguCore
 import RxSwift
 
 public final class MessageAgent: MessageAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .message, version: "1.4")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .message, version: "1.5")
     
     // MessageAgentProtocol
     public weak var delegate: MessageAgentDelegate?
