@@ -25,4 +25,12 @@ import NuguCore
 public struct EventIdentifier: Equatable {
     public let dialogRequestId: String = TimeUUID().hexString
     public let messageId: String = TimeUUID().hexString
+    
+    public init(
+        dialogRequestId: String = TimeUUID().hexString,
+        messageId: String = TimeUUID().hexString
+    ) {
+        self.dialogRequestId = dialogRequestId
+        self.messageId = messageId
+    }
 }
