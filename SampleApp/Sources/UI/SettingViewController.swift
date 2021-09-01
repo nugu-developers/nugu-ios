@@ -69,8 +69,6 @@ final class SettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NuguCentralManager.shared.client.speechRecognizerAggregator.useKeywordDetector = false
-        
         tableView.reloadData()
         
         updateTid()
