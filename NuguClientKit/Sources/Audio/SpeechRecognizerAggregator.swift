@@ -233,7 +233,7 @@ extension SpeechRecognizerAggregator: MicInputProviderDelegate {
 
 extension SpeechRecognizerAggregator: KeywordDetectorDelegate {
     public func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
-        state = .wakeup
+        state = .wakeup(initiator: .wakeUpWord(keyword: keyword, data: data, start: start, end: end, detection: detection))
         
         asrAgent.startRecognition(initiator: .wakeUpWord(
             keyword: keyword,
@@ -270,8 +270,11 @@ extension SpeechRecognizerAggregator {
             if let state = SpeechRecognizerAggregatorState(notification.state) {
                 self.state = state
             }
+            if case .listening = notification.state {
+                self.keywordDetector.stop()
+            }
             // if not restarted here, keyword detector is inactive in tts speaking situation
-            if case .idle = notification.state {
+            if case .idle = notification.state, self.useKeywordDetector == true {
                 self.keywordDetector.start()
             }
         }
