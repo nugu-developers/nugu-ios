@@ -180,7 +180,6 @@ public extension VoiceChromePresenter {
             }
         }
         voiceChromeDismissWorkItem?.cancel()
-        nuguVoiceChrome.removeFromSuperview()
         nuguVoiceChrome.changeState(state: .listeningPassive)
         if nuguClient?.dialogStateAggregator.sessionActivated == true {
             nuguVoiceChrome.setRecognizedText(text: nil)
@@ -228,14 +227,12 @@ private extension VoiceChromePresenter {
                 nuguVoiceChrome.theme = .light
             }
         }
-        
         let showAnimation = {
             UIView.animate(withDuration: 0.3) { [weak self] in
                 guard let self = self else { return }
                 self.nuguVoiceChrome.transform = CGAffineTransform(translationX: 0.0, y: 0)
             }
         }
-        
         if view.subviews.contains(nuguVoiceChrome) == false {
             view.addSubview(nuguVoiceChrome)
             nuguVoiceChrome.translatesAutoresizingMaskIntoConstraints = false
