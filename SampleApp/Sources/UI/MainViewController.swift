@@ -216,8 +216,8 @@ private extension MainViewController {
                 self.nuguButton.startFlipAnimation()
             case .cancelled:
                 self.nuguButton.stopFlipAnimation()
-            case .wakeup:
-                self.presentVoiceChrome()
+            case .wakeup(let initiator):
+                self.presentVoiceChrome(initiator: initiator)
             case .error(let error):
                 log.error("speechState error: \(error)")
                 if case SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup = error {

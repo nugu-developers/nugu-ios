@@ -14,7 +14,7 @@ import NuguAgents
 public enum SpeechRecognizerAggregatorState: Equatable {
     case idle
     case wakeupTriggering
-    case wakeup
+    case wakeup(initiator: ASRInitiator)
     case listening
     case recognizing
     case busy
