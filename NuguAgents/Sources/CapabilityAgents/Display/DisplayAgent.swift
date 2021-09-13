@@ -49,6 +49,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private var prefetchDisplayTemplate: DisplayTemplate?
     private var templateList = [DisplayTemplate]()
     private var updateTemplateList = [DisplayTemplate]()
+    private let displayCloseResult = PublishSubject<String>()
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -171,18 +172,32 @@ private extension DisplayAgent {
                 completion(.failed("Invalid payload"))
                 return
             }
-            defer { completion(.finished) }
-
+            
             self?.displayDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
+                guard let self = self else {
+                    completion(.finished)
+                    return
+                }
+                
                 guard let item = self.templateList.first(where: { $0.template.playServiceId == payload.playServiceId }) else {
                     self.sendCompactContextEvent(Event(
                         typeInfo: .closeFailed,
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
                     ).rx)
+                    completion(.finished)
                     return
                 }
+                
+                // Call `completion` after processing `close` directive
+                self.displayCloseResult
+                    .filter { $0 == item.dialogRequestId }
+                    .take(1)
+                    .subscribe(onCompleted: {
+                        completion(.finished)
+                    })
+                    .disposed(by: self.disposeBag)
+
                 
                 self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
                 self.sendCompactContextEvent(Event(
@@ -470,13 +485,19 @@ private extension DisplayAgent {
             self?.displayDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 
-                self.templateList
+                let releaseTemplateList = self.templateList
                     .filter { $0.template.playSyncProperty == notification.property && $0.templateId == notification.messageId }
+                
+                releaseTemplateList
                     .forEach {
                         if self.removeRenderedTemplate(item: $0) {
                             self.delegate?.displayAgentDidClear(templateId: $0.templateId)
                         }
-                }
+                    }
+                
+                releaseTemplateList
+                    .map { $0.dialogRequestId }
+                    .forEach { self.displayCloseResult.onNext($0) }
             }
         }
     }
