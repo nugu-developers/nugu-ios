@@ -58,6 +58,17 @@ final class MainViewController: UIViewController {
 
     // MARK: Override
     
+    // Support landscape UI for iPad
+    override public var traitCollection: UITraitCollection {
+        if UIDevice.current.userInterfaceIdiom == .pad && UIDevice.current.orientation.isLandscape {
+            return UITraitCollection(traitsFrom: [
+                UITraitCollection(horizontalSizeClass: .unspecified),
+                                        UITraitCollection(verticalSizeClass: .compact)
+            ])
+        }
+        return super.traitCollection
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

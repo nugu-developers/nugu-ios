@@ -134,17 +134,6 @@ public class AudioDisplayView: UIView {
     private var barHeightConstraint: NSLayoutConstraint?
     private var topConstraint: NSLayoutConstraint?
     
-    // Support landscape UI for iPad
-    override public var traitCollection: UITraitCollection {
-        if UIDevice.current.userInterfaceIdiom == .pad && UIDevice.current.orientation.isLandscape {
-            return UITraitCollection(traitsFrom: [
-                                        UITraitCollection(horizontalSizeClass: .compact),
-                                        UITraitCollection(verticalSizeClass: .compact)
-            ])
-        }
-        return super.traitCollection
-    }
-    
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         delegate?.onUserInteraction()
         return super.hitTest(point, with: event)

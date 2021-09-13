@@ -51,6 +51,7 @@ final class AudioPlayer1View: AudioDisplayView {
             badgeImageView.isHidden = template.content.badgeImageUrl == nil
             badgeImageView.loadImage(from: template.content.badgeImageUrl)
             badgeLabel.text = template.content.badgeMessage
+            badgeLabel.isHidden = template.content.badgeMessage == nil
             
             lyricsData = template.content.lyrics
             lyricsView.isHidden = lyricsData?.lyricsType == .none
