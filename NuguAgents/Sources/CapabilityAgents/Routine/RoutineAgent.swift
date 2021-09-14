@@ -87,7 +87,9 @@ public final class RoutineAgent: RoutineAgentProtocol {
                 "type": action.type,
                 "text": action.text,
                 "data": action.data,
-                "playServiceId": action.playServiceId
+                "playServiceId": action.playServiceId,
+                "token": action.token,
+                "postDelayInMilliseconds": action.postDelayInMilliseconds
             ]
         }.map { $0.compactMapValues { $0 } }
         
