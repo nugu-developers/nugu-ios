@@ -78,6 +78,7 @@ final class FullLyricsView: UIView {
             label.textColor = theme.fullLyricsLabelTextColor
         }
         guard let lyricsIndex = lyricsIndex,
+              lyricsIndex < stackView.arrangedSubviews.count - 1,
             let currentLyricsLabel = stackView.arrangedSubviews[lyricsIndex + 1] as? UILabel else { return }
         currentLyricsLabel.textColor = UIColor(red: 0, green: 157.0/255.0, blue: 1, alpha: 1.0)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in

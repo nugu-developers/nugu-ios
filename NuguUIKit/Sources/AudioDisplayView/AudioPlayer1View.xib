@@ -85,6 +85,7 @@
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="onk-DF-rU0">
                                     <rect key="frame" x="70" y="0.0" width="210" height="210"/>
                                     <constraints>
+                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="300" id="Hkt-AU-4mJ"/>
                                         <constraint firstAttribute="width" secondItem="onk-DF-rU0" secondAttribute="height" id="Rff-Oe-vEn"/>
                                     </constraints>
                                 </imageView>
@@ -95,12 +96,9 @@
                                         <constraint firstAttribute="width" constant="28" id="HqB-8v-VRe"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xT5-EZ-IPc" userLabel="badgeLabel">
-                                    <rect key="frame" x="280" y="184" width="0.0" height="26"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="xT5-EZ-IPc" userLabel="badgeLabel">
+                                    <rect key="frame" x="217" y="182.66666666666669" width="63" height="27.333333333333343"/>
                                     <color key="backgroundColor" red="0.0" green="0.61568627450000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="26" id="m1h-6n-Oss"/>
-                                    </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -109,6 +107,8 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="xT5-EZ-IPc" firstAttribute="trailing" secondItem="onk-DF-rU0" secondAttribute="trailing" id="3on-Uk-tUN"/>
+                                <constraint firstItem="xT5-EZ-IPc" firstAttribute="width" secondItem="onk-DF-rU0" secondAttribute="width" multiplier="0.3" id="7oP-CY-XBo"/>
+                                <constraint firstItem="xT5-EZ-IPc" firstAttribute="height" secondItem="onk-DF-rU0" secondAttribute="height" multiplier="0.13" id="Gpa-yo-GBe"/>
                                 <constraint firstItem="onk-DF-rU0" firstAttribute="centerX" secondItem="pwR-Pf-bVH" secondAttribute="centerX" id="JcL-Q0-yWG"/>
                                 <constraint firstItem="NlH-xY-hFI" firstAttribute="leading" secondItem="onk-DF-rU0" secondAttribute="leading" constant="8" id="NLt-2L-Jxv"/>
                                 <constraint firstAttribute="bottom" secondItem="onk-DF-rU0" secondAttribute="bottom" id="Ogk-LU-70a"/>
@@ -120,7 +120,7 @@
                                 <constraint firstItem="xT5-EZ-IPc" firstAttribute="bottom" secondItem="onk-DF-rU0" secondAttribute="bottom" id="mCa-oU-w0I"/>
                                 <constraint firstAttribute="bottom" secondItem="onk-DF-rU0" secondAttribute="bottom" id="nSR-NL-XH2"/>
                                 <constraint firstItem="3g3-IA-T0A" firstAttribute="top" secondItem="onk-DF-rU0" secondAttribute="top" constant="10" id="sfd-5O-SaV"/>
-                                <constraint firstItem="onk-DF-rU0" firstAttribute="width" secondItem="pwR-Pf-bVH" secondAttribute="width" multiplier="0.6" id="wWT-aX-HsU"/>
+                                <constraint firstItem="onk-DF-rU0" firstAttribute="width" secondItem="pwR-Pf-bVH" secondAttribute="width" multiplier="0.6" priority="999" id="wWT-aX-HsU"/>
                             </constraints>
                             <variation key="heightClass=compact">
                                 <mask key="constraints">
@@ -213,7 +213,7 @@
                                             <color key="textColor" red="0.13333333333333333" green="0.13333333333333333" blue="0.13333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="KQI-Sg-TwW">
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="KQI-Sg-TwW">
                                             <rect key="frame" x="20" y="296" width="350" height="4"/>
                                             <color key="progressTintColor" red="0.0" green="0.61568627450000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="trackTintColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
