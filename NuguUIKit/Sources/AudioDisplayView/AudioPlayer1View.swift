@@ -207,9 +207,11 @@ final class AudioPlayer1View: AudioDisplayView {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             if self.lyricsData == nil || self.lyricsData?.lyricsType == "NONE" {
+                self.fullLyricsView.stackView.isHidden = true
                 self.fullLyricsView.noLyricsLabel.isHidden = false
                 return
             }
+            self.fullLyricsView.stackView.isHidden = false
             self.fullLyricsView.noLyricsLabel.isHidden = true
             if self.lyricsIndex != -1 {
                 self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
@@ -222,10 +224,12 @@ final class AudioPlayer1View: AudioDisplayView {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             if self.lyricsData == nil || self.lyricsData?.lyricsType == "NONE" {
+                self.fullLyricsView.stackView.isHidden = true
                 self.fullLyricsView.noLyricsLabel.isHidden = false
                 return
             }
             self.fullLyricsView.noLyricsLabel.isHidden = true
+            self.fullLyricsView.stackView.isHidden = false
             if self.lyricsIndex != -1 {
                 self.fullLyricsView?.updateLyricsFocus(lyricsIndex: self.lyricsIndex)
             }
