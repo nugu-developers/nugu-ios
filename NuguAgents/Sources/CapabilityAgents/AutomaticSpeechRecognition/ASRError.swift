@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public enum ASRError: Error {
+public enum ASRError: Error, Equatable {
     /// Recognize event 시작 후 10초(default) 동안 사용자가 발화하지 않음.
     case listeningTimeout(listenTimeoutFailBeep: Bool)
     /// 음성 인식 시작 실패
