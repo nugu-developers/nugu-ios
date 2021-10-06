@@ -42,6 +42,17 @@ public class DialogStateAggregator: TypedNotifyable {
 
             multiturnSpeakingToListeningTimer?.cancel()
             
+            // https://tde.sktelecom.com/pms/browse/NUGUSDKQA-225
+            // Chips should be cleared when,
+            // Listening state excluding ExpectSpeech initiator
+            // And include any nudge type chip in item.chips array
+            if case .listening(let initiator) = asrState,
+               initiator != .expectSpeech,
+               let currentChips = currentChips,
+               currentChips.item.chips.filter({ $0.type == .nudge }).count != 0 {
+                self.currentChips = nil
+            }
+            
             var chipsItem: ChipsAgentItem?
             switch currentChips?.item.target {
             case .dialog where sessionManager.activeSessions.last?.dialogRequestId == currentChips?.dialogRequestId:

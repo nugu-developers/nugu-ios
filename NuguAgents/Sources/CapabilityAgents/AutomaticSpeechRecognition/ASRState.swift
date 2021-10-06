@@ -21,17 +21,30 @@
 import Foundation
 
 /// Identifies the `ASRAgent` state.
-public enum ASRState: String {
+public enum ASRState: Equatable {
     /// In this state, the `ASRAgent` is not waiting for or transmitting speech.
     case idle
     /// In this state, the `ASRAgent` is waiting for a call to `recognize()`.
     case expectingSpeech
     /// In this state, the `ASRAgent` is passively streaming speech.
-    case listening
+    case listening(initiator: ASRInitiator? = nil)
     /// In this state, the `ASRAgent` is actively streaming speech.
     case recognizing
     /// In this state, the `ASRAgent` has finished streaming and is waiting for completion of an Event.
     case busy
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case (.idle, .idle),
+            (.expectingSpeech, .expectingSpeech),
+            (.listening, .listening),
+            (.recognizing, .recognizing),
+            (.busy, .busy):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 extension ASRState {

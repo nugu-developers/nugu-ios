@@ -72,7 +72,7 @@ public final class ASRAgent: ASRAgentProtocol {
             }
             
             // Stop EPD
-            if [.listening, .recognizing].contains(asrState) == false {
+            if [.listening(), .recognizing].contains(asrState) == false {
                 endPointDetector?.stop()
                 endPointDetector?.delegate = nil
                 endPointDetector = nil
@@ -263,7 +263,7 @@ public extension ASRAgent {
         
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard [.listening, .recognizing, .busy].contains(self.asrState) == false else {
+            guard [.listening(), .recognizing, .busy].contains(self.asrState) == false else {
                 log.warning("Not permitted in current state \(self.asrState)")
                 completion?(.error(ASRError.listenFailed))
                 return
@@ -328,7 +328,7 @@ extension ASRAgent: FocusChannelDelegate {
             case (.foreground, _):
                 break
             // Not permitted background
-            case (_, let asrState) where [.listening, .recognizing].contains(asrState):
+            case (_, let asrState) where [.listening(), .recognizing].contains(asrState):
                 self.asrResult = .cancel()
             case (_, .expectingSpeech):
                 self.asrResult = .cancelExpectSpeech
@@ -604,7 +604,7 @@ private extension ASRAgent {
                     case .error(let error):
                         self?.asrResult = .error(error)
                     case .sent:
-                        self?.asrState = .listening
+                        self?.asrState = .listening(initiator: asrRequest.initiator)
                         if let formatter = self?.eventTimeFormatter {
                             UserDefaults.Nugu.lastAsrEventTime = formatter.string(from: Date())
                         }
