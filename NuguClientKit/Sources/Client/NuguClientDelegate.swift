@@ -23,19 +23,29 @@ import Foundation
 import NuguCore
 import NuguAgents
 
-/// <#Description#>
 public protocol NuguClientDelegate: AnyObject {
+    // authorization related
+    
+    /// Provides an access token from cache(ex> `UserDefault`).
+    ///
+    /// - returns: The current authorization token.
+    func nuguClientRequestAccessToken() -> String?
+    
     // audio session related
+    
     /// Notify that  nugu client should update audio session for focus aquire
     func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool
     
     /// Notify that nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
     
+    // speech recognizer aggregator state related
+    
     /// Notify that  nugu client speech-related state has been changed
     func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState)
     
     // nugu server related
+    
     /// Notify that nugu client received directive
     /// - Parameter direcive: Response from server
     func nuguClientDidReceive(direcive: Downstream.Directive)
@@ -60,13 +70,8 @@ public protocol NuguClientDelegate: AnyObject {
     ///   - error: Error during sending an event data
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?)
     
-    // authorization related
-    
-    /// Provides an access token from cache(ex> `UserDefault`).
-    ///
-    /// - returns: The current authorization token.
-    func nuguClientRequestAccessToken() -> String?
-    
+    /// Notify that nugu client server initiated directive state has been changed
+    /// - Parameter state: ServerSideEventReceiverState
     func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState)
 }
 
@@ -74,11 +79,23 @@ public protocol NuguClientDelegate: AnyObject {
 
 public extension NuguClientDelegate {
     // audio session related
+    
+    // If you set AudioSessionManager to nil, You should implement this,
+    // even if it is optional delegate method.
+    // And return NUGU SDK can use the audio session or not.
+    func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool { return false }
+    // If you set AudioSessionManager to nil, You should also implement this,
+    // even if it is optional delegate method.
+    // Do proper stuffs when NUGU SDK has released using audio session.
     func nuguClientDidReleaseAudioSession() {}
+    
+    // speech recognizer aggregator state related
+    func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {}
     
     // nugu server related
     func nuguClientDidReceive(direcive: Downstream.Directive) {}
     func nuguClientDidReceive(attachment: Downstream.Attachment) {}
+    func nuguClientWillSend(event: Upstream.Event) {}
     func nuguClientDidSend(event: Upstream.Event, error: Error?) {}
     func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {}
     func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {}
