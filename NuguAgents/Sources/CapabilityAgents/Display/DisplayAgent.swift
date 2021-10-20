@@ -62,10 +62,11 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleClose),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlFocus", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlFocus),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlScroll", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlScroll),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdate)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdate),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RedirectTriggerChild", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRedirectTriggerChild)
     ] + [
         "FullText1", "FullText2", "FullText3",
-        "ImageText1", "ImageText2", "ImageText3", "ImageText4",
+        "ImageText1", "ImageText2", "ImageText3", "ImageText4", "ImageText5",
         "TextList1", "TextList2", "TextList3", "TextList4",
         "ImageList1", "ImageList2", "ImageList3",
         "Weather1", "Weather2", "Weather3", "Weather4", "Weather5",
@@ -159,6 +160,13 @@ public extension DisplayAgent {
             self.templateList
                 .filter { $0.template.contextLayer != .overlay }
                 .forEach { self.playSyncManager.resetTimer(property: $0.template.playSyncProperty) }
+        }
+    }
+    
+    func triggerChild(templateId: String, data: [String: AnyHashable]) {
+        self.displayDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendCompactContextEvent(self.triggerChild(templateId: templateId, data: data))
         }
     }
 }
@@ -315,6 +323,25 @@ private extension DisplayAgent {
         }
     }
     
+    func handleRedirectTriggerChild() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let triggerChildPayload = try? JSONDecoder().decode(DisplayRedirectTriggerChildPayload.self, from: directive.payload)  else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            defer { completion(.finished) }
+
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.sendCompactContextEvent(Event(
+                    typeInfo: .triggerChild(parentToken: triggerChildPayload.parentToken, data: triggerChildPayload.data),
+                    playServiceId: triggerChildPayload.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
+            }
+        }
+    }
+    
     func prefetchDisplay() -> PrefetchDirective {
         return { [weak self] directive in
             guard let template = try? JSONDecoder().decode(DisplayTemplate.Payload.self, from: directive.payload)  else {
@@ -443,6 +470,24 @@ private extension DisplayAgent {
                     referrerDialogRequestId: item.dialogRequestId
                 )
             observer(.success(settingEvent))
+            return Disposables.create()
+        }.subscribe(on: displayScheduler)
+    }
+    
+    func triggerChild(templateId: String, data: [String: AnyHashable]) -> Single<Eventable> {
+        return Single.create { [weak self] (observer) -> Disposable in
+            guard let item = self?.templateList.first(where: { $0.templateId == templateId }),
+                  let targetServiceId = data["playServiceId"] as? String,
+                  let innerData = data["data"] as? [String: AnyHashable] else {
+                      observer(.failure(NuguAgentError.invalidState))
+                      return Disposables.create()
+                  }
+            let triggerChildEvent = Event(
+                typeInfo: .triggerChild(parentToken: item.template.token, data: innerData),
+                playServiceId: targetServiceId,
+                referrerDialogRequestId: item.dialogRequestId
+            )
+            observer(.success(triggerChildEvent))
             return Disposables.create()
         }.subscribe(on: displayScheduler)
     }

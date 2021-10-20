@@ -42,6 +42,8 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
     
     /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
     func notifyUserInteraction()
+    
+    func triggerChild(templateId: String, data: [String: AnyHashable])
 }
 
 // MARK: - Default

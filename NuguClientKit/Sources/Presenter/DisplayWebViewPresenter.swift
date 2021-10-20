@@ -155,6 +155,7 @@ private extension DisplayWebViewPresenter {
     
     func replaceDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
         nuguDisplayWebView?.load(
+            templateId: displayTemplate.templateId,
             dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
@@ -183,6 +184,7 @@ private extension DisplayWebViewPresenter {
         nuguDisplayWebView = NuguDisplayWebView(frame: CGRect())
         nuguDisplayWebView?.displayWebView?.navigationDelegate = self
         nuguDisplayWebView?.load(
+            templateId: displayTemplate.templateId,
             dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
@@ -203,6 +205,23 @@ private extension DisplayWebViewPresenter {
                 requestType = .dialog
             }
             self?.nuguClient?.textAgent.requestTextInput(text: text, requestType: requestType)
+        }
+        nuguDisplayWebView?.onEvent = { [weak self] (templateId, type, data) in
+            switch type {
+            case "Display.TriggerChild":
+                self?.nuguClient?.displayAgent.triggerChild(templateId: templateId, data: data)
+            default: break
+            }
+        }
+        nuguDisplayWebView?.onControl = { [weak self] (type) in
+            switch type {
+            case "TEMPLATE_PREVIOUS":
+                break
+            case "TEMPLATE_CLOSEALL":
+                self?.nuguClient?.ttsAgent.stopTTS()
+                self?.dismissDisplayView()
+            default: break
+            }
         }
         nuguDisplayWebView?.onUserInteraction = { [weak self] in
             self?.nuguClient?.displayAgent.notifyUserInteraction()
@@ -253,7 +272,11 @@ private extension DisplayWebViewPresenter {
     }
     
     func updateDisplayView(displayTemplate: DisplayTemplate) {
-        nuguDisplayWebView?.update(dialogRequestId: displayTemplate.dialogRequestId, updatePayload: displayTemplate.payload)
+        nuguDisplayWebView?.update(
+            templateId: displayTemplate.templateId,
+            dialogRequestId: displayTemplate.dialogRequestId,
+            updatePayload: displayTemplate.payload
+        )
     }
     
     func dismissDisplayView() {

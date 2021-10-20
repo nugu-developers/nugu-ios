@@ -40,6 +40,7 @@ final public class NuguDisplayWebView: UIView {
     public static var deviceTypeCode: String?
     
     public var displayWebView: WKWebView?
+    public private(set) var templateId: String?
     
     // Private Properties
     private var displayPayload: Data?
@@ -57,7 +58,7 @@ final public class NuguDisplayWebView: UIView {
     // Public Callbacks
     public var onItemSelect: ((_ token: String, _ postBack: [String: AnyHashable]?) -> Void)?
     public var onTextInput: ((_ text: String, _ playServiceId: String?) -> Void)?
-    public var onEvent: ((_ type: String, _ data: [String: AnyHashable]) -> Void)?
+    public var onEvent: ((_ templateId: String, _ type: String, _ data: [String: AnyHashable]) -> Void)?
     public var onControl: ((_ type: String) -> Void)?
     public var onUserInteraction: (() -> Void)?
     public var onNuguButtonClick: (() -> Void)?
@@ -189,7 +190,8 @@ extension NuguDisplayWebView: UIGestureRecognizerDelegate {
 // MARK: - Public Methods
 
 public extension NuguDisplayWebView {
-    func load(dialogRequestId: String, displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
+    func load(templateId: String, dialogRequestId: String, displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
+        self.templateId = templateId
         self.displayPayload = displayPayload
         self.displayType = displayType
         self.clientInfo = clientInfo
@@ -204,7 +206,7 @@ public extension NuguDisplayWebView {
                 clientInfo: clientInfo)
     }
     
-    func update(dialogRequestId: String, updatePayload: Data) {
+    func update(templateId: String, dialogRequestId: String, updatePayload: Data) {
         guard let displayingPayloadData = displayPayload,
             let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: AnyHashable],
             let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayload, options: []) as? [String: AnyHashable] else {
@@ -213,7 +215,7 @@ public extension NuguDisplayWebView {
         let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
         guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
         displayPayload = mergedPayloadData
-        load(dialogRequestId: dialogRequestId, displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
+        load(templateId: templateId, dialogRequestId: dialogRequestId, displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
     }
     
     func scroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
@@ -362,11 +364,12 @@ extension NuguDisplayWebView: WKScriptMessageHandler {
                         }
                     }
                 case "EVENT":
-                    if let type = data["type"] as? String,
+                    if let templateId = self.templateId,
+                       let type = data["type"] as? String,
                        let eventData = data["data"] as? [String: AnyHashable],
                        let onEvent = self.onEvent {
                         DispatchQueue.main.async {
-                            onEvent(type, eventData)
+                            onEvent(templateId, type, eventData)
                         }
                     }
                 case "CONTROL":
