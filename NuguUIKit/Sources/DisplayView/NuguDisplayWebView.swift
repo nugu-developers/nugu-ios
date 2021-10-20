@@ -28,7 +28,7 @@ import NuguUtils
 final public class NuguDisplayWebView: UIView {
     // JavaScript Interfaces
     private enum NuguDisplayWebViewInterface: String, CaseIterable {
-        case onElementSelected
+        case onButtonEvent
         case onNuguButtonSelected
         case onChipSelected
         case close
@@ -56,6 +56,9 @@ final public class NuguDisplayWebView: UIView {
         
     // Public Callbacks
     public var onItemSelect: ((_ token: String, _ postBack: [String: AnyHashable]?) -> Void)?
+    public var onTextInput: ((_ text: String, _ playServiceId: String?) -> Void)?
+    public var onEvent: ((_ type: String, _ data: [String: AnyHashable]) -> Void)?
+    public var onControl: ((_ type: String) -> Void)?
     public var onUserInteraction: (() -> Void)?
     public var onNuguButtonClick: (() -> Void)?
     public var onChipsSelect: ((_ selectedChips: String) -> Void)?
@@ -339,10 +342,41 @@ extension NuguDisplayWebView: WKScriptMessageHandler {
                     onClose()
                 }
             }
-        case .onElementSelected:
-            if let token = message.body as? String, let onItemSelect = self.onItemSelect {
-                DispatchQueue.main.async {
-                    onItemSelect(token, nil)
+        case .onButtonEvent:
+            if let body = message.body as? [String: Any],
+               let eventType = body["eventType"] as? String,
+               let data = body["data"] as? [String: Any] {
+                switch eventType {
+                case "Display.ElementSelected":
+                    if let token = data["token"] as? String,
+                       let onItemSelect = self.onItemSelect {
+                        DispatchQueue.main.async {
+                            onItemSelect(token, data["postback"] as? [String: AnyHashable])
+                        }
+                    }
+                case "Text.TextInput":
+                    if let text = data["text"] as? String,
+                       let onTextInput = self.onTextInput {
+                        DispatchQueue.main.async {
+                            onTextInput(text, data["playServiceId"] as? String)
+                        }
+                    }
+                case "EVENT":
+                    if let type = data["type"] as? String,
+                       let eventData = data["data"] as? [String: AnyHashable],
+                       let onEvent = self.onEvent {
+                        DispatchQueue.main.async {
+                            onEvent(type, eventData)
+                        }
+                    }
+                case "CONTROL":
+                    if let type = data["type"] as? String,
+                       let onControl = self.onControl {
+                        DispatchQueue.main.async {
+                            onControl(type)
+                        }
+                    }
+                default: break
                 }
             }
         case .onNuguButtonSelected:
