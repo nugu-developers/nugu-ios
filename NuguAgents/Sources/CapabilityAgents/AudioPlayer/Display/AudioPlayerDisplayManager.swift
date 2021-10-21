@@ -107,7 +107,7 @@ extension AudioPlayerDisplayManager {
         }
 
         // Seekable : when sourceType is "URL" and durationSec should be over than 0 (Followed by AudioPlayerInterface v1.4)
-        let isSeekable = (payload.sourceType?.rawValue == "URL")
+        let isSeekable = (payload.sourceType == .url)
             && (Int(content["durationSec"] as? String ?? "0") ?? 0 > 0)
         
         let item = AudioPlayerDisplayTemplate(
