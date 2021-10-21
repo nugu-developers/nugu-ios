@@ -417,10 +417,19 @@ extension NuguCentralManager: SoundAgentDataSource {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
+    func nuguClientRequestAccessToken() -> String? {
+        return UserDefaults.Standard.accessToken
+    }
+    
     func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool {
         // If you set AudioSessionManager to nil, You should implement this
         // And return NUGU SDK can use the audio session or not.
         return false
+    }
+    
+    func nuguClientDidReleaseAudioSession() {
+        // If you set AudioSessionManager to nil, You should also implement this
+        // Do proper stuffs when NUGU SDK has released using audio session
     }
 
     func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {
@@ -428,14 +437,6 @@ extension NuguCentralManager: NuguClientDelegate {
             localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
         }
         notificationCenter.post(name: .speechStateDidChangeNotification, object: nil, userInfo: ["state": state])
-    }
-    
-    func nuguClientRequestAccessToken() -> String? {
-        return UserDefaults.Standard.accessToken
-    }
-    
-    func nuguClientDidReleaseAudioSession() {
-        // If you set AudioSessionManager to nil, You should implement this
     }
     
     func nuguClientDidReceive(direcive: Downstream.Directive) {
