@@ -23,6 +23,12 @@ import Foundation
 import NuguCore
 import NuguAgents
 
+public typealias Directive = Downstream.Directive
+public typealias DirectiveAttachment = Downstream.Attachment
+public typealias Event = Upstream.Event
+public typealias EventAttachment = Upstream.Attachment
+public typealias ServerSideEventReceiverState = NuguCore.ServerSideEventReceiverState
+
 public protocol NuguClientDelegate: AnyObject {
     // authorization related
     
@@ -48,27 +54,27 @@ public protocol NuguClientDelegate: AnyObject {
     
     /// Notify that nugu client received directive
     /// - Parameter direcive: Response from server
-    func nuguClientDidReceive(direcive: Downstream.Directive)
+    func nuguClientDidReceive(direcive: Directive)
     
     /// Notify that nugu client received some data which is attached the directive
     /// - Parameter attachment: Data to be processed in the response
-    func nuguClientDidReceive(attachment: Downstream.Attachment)
+    func nuguClientDidReceive(attachment: DirectiveAttachment)
     
     /// Notify that nugu client will send a event
     /// - Parameter event: Request
-    func nuguClientWillSend(event: Upstream.Event)
+    func nuguClientWillSend(event: Event)
     
     /// Notify that the request is sent
     /// - Parameters:
     ///   - event: Request
     ///   - error: Error during sending an event description
-    func nuguClientDidSend(event: Upstream.Event, error: Error?)
+    func nuguClientDidSend(event: Event, error: Error?)
     
     /// Notify that the data to be processed is sent
     /// - Parameters:
     ///   - attachment: Data to be processed on server
     ///   - error: Error during sending an event data
-    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?)
+    func nuguClientDidSend(attachment: EventAttachment, error: Error?)
     
     /// Notify that nugu client server initiated directive state has been changed
     /// - Parameter state: ServerSideEventReceiverState
@@ -93,10 +99,10 @@ public extension NuguClientDelegate {
     func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {}
     
     // nugu server related
-    func nuguClientDidReceive(direcive: Downstream.Directive) {}
-    func nuguClientDidReceive(attachment: Downstream.Attachment) {}
-    func nuguClientWillSend(event: Upstream.Event) {}
-    func nuguClientDidSend(event: Upstream.Event, error: Error?) {}
-    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {}
+    func nuguClientDidReceive(direcive: Directive) {}
+    func nuguClientDidReceive(attachment: DirectiveAttachment) {}
+    func nuguClientWillSend(event: Event) {}
+    func nuguClientDidSend(event: Event, error: Error?) {}
+    func nuguClientDidSend(attachment: EventAttachment, error: Error?) {}
     func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {}
 }
