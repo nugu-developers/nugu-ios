@@ -390,8 +390,9 @@ private extension DisplayAgent {
                     )
                 )
                 
+                let displayHistoryControl = try? JSONDecoder().decode(DisplayHistoryControl.self, from: directive.payload)
                 let semaphore = DispatchSemaphore(value: 0)
-                delegate.displayAgentShouldRender(template: item) { [weak self] in
+                delegate.displayAgentShouldRender(template: item, historyControl: displayHistoryControl?.historyControl) { [weak self] in
                     defer { semaphore.signal() }
                     guard let self = self else { return }
                     guard let displayObject = $0 else {
