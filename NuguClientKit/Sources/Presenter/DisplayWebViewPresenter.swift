@@ -357,8 +357,8 @@ private extension DisplayWebViewPresenter {
         nuguDisplayWebView.onUserInteraction = { [weak self] in
             self?.nuguClient?.displayAgent.notifyUserInteraction()
         }
-        nuguDisplayWebView.onTapForStopRecognition = { [weak self] in
-            guard [.listening, .recognizing].contains(self?.nuguClient?.asrAgent.asrState) else { return }
+        nuguDisplayWebView?.onTapForStopRecognition = { [weak self] in
+            guard [.listening(), .recognizing].contains(self?.nuguClient?.asrAgent.asrState) else { return }
             self?.nuguClient?.asrAgent.stopRecognition()
         }
         nuguDisplayWebView.onChipsSelect = { [weak self] (selectedChips) in

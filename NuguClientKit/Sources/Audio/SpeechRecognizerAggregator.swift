@@ -219,7 +219,7 @@ extension SpeechRecognizerAggregator: MicInputProviderDelegate {
             keywordDetector.putAudioBuffer(buffer: buffer)
         }
         
-        if [.listening, .recognizing].contains(asrAgent.asrState) {
+        if [.listening(), .recognizing].contains(asrAgent.asrState) {
             asrAgent.putAudioBuffer(buffer: buffer)
         }
     }
