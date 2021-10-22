@@ -172,6 +172,7 @@ private extension AudioDisplayViewPresenter {
             completion(nil)
             return
         }
+        self.audioDisplayView = audioDisplayView
         audioDisplayView.delegate = self
         audioDisplayView.displayPayload = audioPlayerDisplayTemplate.payload
         
@@ -198,8 +199,6 @@ private extension AudioDisplayViewPresenter {
         
         UIView.animate(withDuration: 0.3, animations: {
             audioDisplayView.alpha = 1.0
-        }, completion: { [weak self] (_) in
-            self?.audioDisplayView = audioDisplayView
         })
     }
     
