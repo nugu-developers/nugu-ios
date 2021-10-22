@@ -220,13 +220,20 @@ private extension DisplayWebViewPresenter {
                     animations: {
                         childDisplayWebView.alpha = 0
                     },
-                    completion: { _ in
+                    completion: { [weak self] _ in
+                        self?.nuguDisplayWebViews.removeAll(where: { $0.templateId == childDisplayWebView.templateId })
                         childDisplayWebView.removeFromSuperview()
+                        if let templateId = childDisplayWebView.templateId {
+                            self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                        }
                     }
                 )
             case "TEMPLATE_CLOSEALL":
                 self?.nuguClient?.ttsAgent.stopTTS()
                 self?.nuguDisplayWebViews.forEach({ displayWebViewToClose in
+                    if let templateId = displayWebViewToClose.templateId {
+                        self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                    }
                     displayWebViewToClose.removeFromSuperview()
                 })
                 self?.nuguDisplayWebViews.removeAll()
@@ -328,13 +335,19 @@ private extension DisplayWebViewPresenter {
                         nuguDisplayWebView.alpha = 0
                     },
                     completion: { [weak self] _ in
-                        nuguDisplayWebView.removeFromSuperview()
                         self?.nuguDisplayWebViews.removeAll(where: { $0.templateId == nuguDisplayWebView.templateId })
+                        nuguDisplayWebView.removeFromSuperview()
+                        if let templateId = nuguDisplayWebView.templateId {
+                            self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                        }
                     }
                 )
             case "TEMPLATE_CLOSEALL":
                 self?.nuguClient?.ttsAgent.stopTTS()
                 self?.nuguDisplayWebViews.forEach({ displayWebViewToClose in
+                    if let templateId = displayWebViewToClose.templateId {
+                        self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                    }
                     displayWebViewToClose.removeFromSuperview()
                 })
                 self?.nuguDisplayWebViews.removeAll()
@@ -405,8 +418,13 @@ private extension DisplayWebViewPresenter {
                 nuguDisplayWebView.alpha = 0
             },
             completion: { [weak self] _ in
-                nuguDisplayWebView.removeFromSuperview()
-                self?.nuguDisplayWebViews.removeAll(where: { $0.templateId == templateId })
+                self?.nuguDisplayWebViews.forEach({ displayWebViewToClose in
+                    if let templateId = displayWebViewToClose.templateId {
+                        self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                    }
+                    displayWebViewToClose.removeFromSuperview()
+                })
+                self?.nuguDisplayWebViews.removeAll()
             }
         )
     }
