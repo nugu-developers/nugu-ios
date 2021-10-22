@@ -421,7 +421,7 @@ extension VoiceChromePresenter: UIGestureRecognizerDelegate {
     func didTapForStopRecognition() {
         guard let nuguClient = nuguClient else { return }
         
-        guard [.listening, .recognizing].contains(nuguClient.asrAgent.asrState) else { return }
+        guard [.listening(), .recognizing].contains(nuguClient.asrAgent.asrState) else { return }
         nuguClient.asrAgent.stopRecognition()
     }
 }
