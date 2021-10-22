@@ -36,6 +36,7 @@ extension DisplayAgent {
             case controlFocusFailed(direction: DisplayControlPayload.Direction)
             case controlScrollSucceeded(direction: DisplayControlPayload.Direction)
             case controlScrollFailed(direction: DisplayControlPayload.Direction)
+            case triggerChild(parentToken: String, data: [String: AnyHashable])
         }
     }
 }
@@ -58,6 +59,9 @@ extension DisplayAgent.Event: Eventable {
              .controlScrollSucceeded(let direction),
              .controlScrollFailed(let direction):
             payload["direction"] = direction
+        case .triggerChild(let parentToken, let data):
+            payload["parentToken"] = parentToken
+            payload["data"] = data
         default:
             break
         }
@@ -80,6 +84,8 @@ extension DisplayAgent.Event: Eventable {
             return "ControlScrollSucceeded"
         case .controlScrollFailed:
             return "ControlScrollFailed"
+        case .triggerChild:
+            return "TriggerChild"
         }
     }
 }
