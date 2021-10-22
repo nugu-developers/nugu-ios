@@ -90,8 +90,8 @@ public extension PlaySyncManager {
             timerGroup.forEach(self.removeTimer)
             
             // Start display only timer
-            let directiveGroup = self.playStack.filter { $0.info.dialogRequestId == info.dialogRequestId }
-            if property.contextType == .display && directiveGroup.count == 1 {
+            // Previously existed checking count = 1 logic has been removed
+            if property.contextType == .display {
                 log.debug("Add display only timer \(property) \(info.duration)")
                 self.addTimer(property: property, duration: info.duration)
             }
@@ -212,6 +212,8 @@ private extension PlaySyncManager {
             .filter { $0.property.contextType == .display }
             // 다른 display 또는 다른 play 동작 시
             .filter { property.contextType == .display || $0.info.playStackServiceId != info.playStackServiceId }
+            // history control 가 이전 display 는 parent, 새로운 display 는 child 가 아닐 시
+            .filter { (($0.info.historyControl?["parent"]) as? Bool) != true && (info.historyControl?["child"] as? Bool) != true }
             // 이전 display 를 종료함
             .forEach { popFromPlayStack(property: $0.property) }
         playStack

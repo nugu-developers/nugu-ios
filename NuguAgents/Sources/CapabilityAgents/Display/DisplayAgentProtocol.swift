@@ -42,6 +42,10 @@ public protocol DisplayAgentProtocol: CapabilityAgentable {
     
     /// This should be called when occur interaction(input event such as touch, drag, etc...) for display
     func notifyUserInteraction()
+    
+    func triggerChild(templateId: String, data: [String: AnyHashable])
+    
+    func displayTemplateViewDidClear(templateId: String)
 }
 
 // MARK: - Default
@@ -50,4 +54,8 @@ public extension DisplayAgentProtocol {
     @discardableResult func elementDidSelect(templateId: String, token: String, postback: [String: AnyHashable]?) -> String {
         return elementDidSelect(templateId: templateId, token: token, postback: postback, completion: nil)
     }
+    
+    func triggerChild(templateId: String, data: [String: AnyHashable]) {}
+    
+    func displayTemplateViewDidClear(templateId: String) {}
 }

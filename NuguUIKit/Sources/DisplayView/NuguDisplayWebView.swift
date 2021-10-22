@@ -28,7 +28,7 @@ import NuguUtils
 final public class NuguDisplayWebView: UIView {
     // JavaScript Interfaces
     private enum NuguDisplayWebViewInterface: String, CaseIterable {
-        case onElementSelected
+        case onButtonEvent
         case onNuguButtonSelected
         case onChipSelected
         case close
@@ -40,6 +40,7 @@ final public class NuguDisplayWebView: UIView {
     public static var deviceTypeCode: String?
     
     public var displayWebView: WKWebView?
+    public private(set) var templateId: String?
     
     // Private Properties
     private var displayPayload: Data?
@@ -56,6 +57,9 @@ final public class NuguDisplayWebView: UIView {
         
     // Public Callbacks
     public var onItemSelect: ((_ token: String, _ postBack: [String: AnyHashable]?) -> Void)?
+    public var onTextInput: ((_ text: String, _ playServiceId: String?) -> Void)?
+    public var onEvent: ((_ templateId: String, _ type: String, _ data: [String: AnyHashable]) -> Void)?
+    public var onControl: ((_ type: String) -> Void)?
     public var onUserInteraction: (() -> Void)?
     public var onNuguButtonClick: (() -> Void)?
     public var onChipsSelect: ((_ selectedChips: String) -> Void)?
@@ -186,7 +190,8 @@ extension NuguDisplayWebView: UIGestureRecognizerDelegate {
 // MARK: - Public Methods
 
 public extension NuguDisplayWebView {
-    func load(dialogRequestId: String, displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
+    func load(templateId: String, dialogRequestId: String, displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
+        self.templateId = templateId
         self.displayPayload = displayPayload
         self.displayType = displayType
         self.clientInfo = clientInfo
@@ -201,7 +206,7 @@ public extension NuguDisplayWebView {
                 clientInfo: clientInfo)
     }
     
-    func update(dialogRequestId: String, updatePayload: Data) {
+    func update(templateId: String, dialogRequestId: String, updatePayload: Data) {
         guard let displayingPayloadData = displayPayload,
             let displayingPayloadDictionary = try? JSONSerialization.jsonObject(with: displayingPayloadData, options: []) as? [String: AnyHashable],
             let updatePayloadDictionary = try? JSONSerialization.jsonObject(with: updatePayload, options: []) as? [String: AnyHashable] else {
@@ -210,7 +215,7 @@ public extension NuguDisplayWebView {
         let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
         guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
         displayPayload = mergedPayloadData
-        load(dialogRequestId: dialogRequestId, displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
+        load(templateId: templateId, dialogRequestId: dialogRequestId, displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
     }
     
     func scroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
@@ -339,10 +344,42 @@ extension NuguDisplayWebView: WKScriptMessageHandler {
                     onClose()
                 }
             }
-        case .onElementSelected:
-            if let token = message.body as? String, let onItemSelect = self.onItemSelect {
-                DispatchQueue.main.async {
-                    onItemSelect(token, nil)
+        case .onButtonEvent:
+            if let body = message.body as? [String: Any],
+               let eventType = body["eventType"] as? String,
+               let data = body["data"] as? [String: Any] {
+                switch eventType {
+                case "Display.ElementSelected":
+                    if let token = data["token"] as? String,
+                       let onItemSelect = self.onItemSelect {
+                        DispatchQueue.main.async {
+                            onItemSelect(token, data["postback"] as? [String: AnyHashable])
+                        }
+                    }
+                case "Text.TextInput":
+                    if let text = data["text"] as? String,
+                       let onTextInput = self.onTextInput {
+                        DispatchQueue.main.async {
+                            onTextInput(text, data["playServiceId"] as? String)
+                        }
+                    }
+                case "EVENT":
+                    if let templateId = self.templateId,
+                       let type = data["type"] as? String,
+                       let eventData = data["data"] as? [String: AnyHashable],
+                       let onEvent = self.onEvent {
+                        DispatchQueue.main.async {
+                            onEvent(templateId, type, eventData)
+                        }
+                    }
+                case "CONTROL":
+                    if let type = data["type"] as? String,
+                       let onControl = self.onControl {
+                        DispatchQueue.main.async {
+                            onControl(type)
+                        }
+                    }
+                default: break
                 }
             }
         case .onNuguButtonSelected:
