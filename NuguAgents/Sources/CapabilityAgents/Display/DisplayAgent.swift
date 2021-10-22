@@ -170,30 +170,30 @@ public extension DisplayAgent {
         }
     }
     
-func displayTemplateViewDidClear(templateId: String) {
-    guard let item = templateList.first(where: { $0.templateId == templateId }) else { return }
-    if self.removeRenderedTemplate(item: item) {
-        if templateList.count == 0 {
-            self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
-        } else {
-            guard let restartItem = templateList.first else { return }
-            let displayHistoryControl = try? JSONDecoder().decode(DisplayHistoryControl.self, from: restartItem.payload)
-            self.playSyncManager.startPlay(
-                property: restartItem.template.playSyncProperty,
-                info: PlaySyncInfo(
-                    playStackServiceId: restartItem.template.playStackControl?.playServiceId,
-                    dialogRequestId: restartItem.dialogRequestId,
-                    messageId: restartItem.templateId,
-                    duration: restartItem.template.duration?.time ?? self.defaultDisplayTempalteDuration.time,
-                    displayHistoryControl: displayHistoryControl != nil ?
-                    ["parent": displayHistoryControl?.historyControl.parent ?? false,
-                     "child": displayHistoryControl?.historyControl.child ?? false,
-                     "parentToken": displayHistoryControl?.historyControl.parentToken ?? ""] : nil
+    func displayTemplateViewDidClear(templateId: String) {
+        guard let item = templateList.first(where: { $0.templateId == templateId }) else { return }
+        if self.removeRenderedTemplate(item: item) {
+            if templateList.count == 0 {
+                self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+            } else {
+                guard let restartItem = templateList.first else { return }
+                let displayHistoryControl = try? JSONDecoder().decode(DisplayHistoryControl.self, from: restartItem.payload)
+                self.playSyncManager.startPlay(
+                    property: restartItem.template.playSyncProperty,
+                    info: PlaySyncInfo(
+                        playStackServiceId: restartItem.template.playStackControl?.playServiceId,
+                        dialogRequestId: restartItem.dialogRequestId,
+                        messageId: restartItem.templateId,
+                        duration: restartItem.template.duration?.time ?? self.defaultDisplayTempalteDuration.time,
+                        displayHistoryControl: displayHistoryControl != nil ?
+                        ["parent": displayHistoryControl?.historyControl.parent ?? false,
+                         "child": displayHistoryControl?.historyControl.child ?? false,
+                         "parentToken": displayHistoryControl?.historyControl.parentToken ?? ""] : nil
+                    )
                 )
-            )
+            }
         }
     }
-}
 }
 
 // MARK: - Private(Directive, Event)

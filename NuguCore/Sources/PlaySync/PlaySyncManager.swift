@@ -213,7 +213,7 @@ private extension PlaySyncManager {
             // 다른 display 또는 다른 play 동작 시
             .filter { property.contextType == .display || $0.info.playStackServiceId != info.playStackServiceId }
             // history control 가 이전 display 는 parent, 새로운 display 는 child 가 아닐 시
-            .filter { (($0.info.historyControl?["parent"]) as? Bool) == true && (info.historyControl?["child"] as? Bool) == false }
+            .filter { (($0.info.historyControl?["parent"]) as? Bool) != true && (info.historyControl?["child"] as? Bool) != true }
             // 이전 display 를 종료함
             .forEach { popFromPlayStack(property: $0.property) }
         playStack
