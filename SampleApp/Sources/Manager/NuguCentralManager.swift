@@ -420,17 +420,6 @@ extension NuguCentralManager: NuguClientDelegate {
     func nuguClientRequestAccessToken() -> String? {
         return UserDefaults.Standard.accessToken
     }
-    
-    func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool {
-        // If you set AudioSessionManager to nil, You should implement this
-        // And return NUGU SDK can use the audio session or not.
-        return false
-    }
-    
-    func nuguClientDidReleaseAudioSession() {
-        // If you set AudioSessionManager to nil, You should also implement this
-        // Do proper stuffs when NUGU SDK has released using audio session
-    }
 
     func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {
         if case .error(let error) = state, case ASRError.recognizeFailed = error {
@@ -439,36 +428,11 @@ extension NuguCentralManager: NuguClientDelegate {
         notificationCenter.post(name: .speechStateDidChangeNotification, object: nil, userInfo: ["state": state])
     }
     
-    func nuguClientDidReceive(direcive: Downstream.Directive) {
-        // Use some analytics SDK(or API) here.
-        log.debug("\(direcive.header.type)")
-    }
-    
-    func nuguClientDidReceive(attachment: Downstream.Attachment) {
-        // Use some analytics SDK(or API) here.
-        log.debug("\(attachment.header.type)")
-    }
-    
-    func nuguClientWillSend(event: Upstream.Event) {
-        // Use some analytics SDK(or API) here.
-        log.debug("\(event.header.type)")
-    }
-    
-    func nuguClientDidSend(event: Upstream.Event, error: Error?) {
+    func nuguClientDidSend(event: Event, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: URLError or NetworkError or EventSenderError
         log.debug("\(error?.localizedDescription ?? ""): \(event.header.type)")
         guard let error = error else { return }
         handleNetworkError(error: error)
-    }
-    
-    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
-        // Use some analytics SDK(or API) here.
-        // Error: EventSenderError
-        log.debug("\(error?.localizedDescription ?? ""): \(attachment.seq)")
-    }
-    
-    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {
-        log.debug("nuguClientServerInitiatedDirectiveRecevierStateDidChange: \(state)")
     }
 }
