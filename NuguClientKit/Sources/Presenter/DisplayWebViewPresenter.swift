@@ -162,6 +162,7 @@ private extension DisplayWebViewPresenter {
         let nuguDisplayWebView = nuguDisplayWebViews.last
         nuguDisplayWebView?.load(
             templateId: displayTemplate.templateId,
+            token: displayTemplate.template.token,
             dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
@@ -184,6 +185,7 @@ private extension DisplayWebViewPresenter {
         childDisplayWebView.displayWebView?.navigationDelegate = self
         childDisplayWebView.load(
             templateId: displayTemplate.templateId,
+            token: displayTemplate.template.token,
             dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
@@ -298,6 +300,7 @@ private extension DisplayWebViewPresenter {
         nuguDisplayWebView.displayWebView?.navigationDelegate = self
         nuguDisplayWebView.load(
             templateId: displayTemplate.templateId,
+            token: displayTemplate.template.token,
             dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
@@ -402,7 +405,7 @@ private extension DisplayWebViewPresenter {
     }
     
     func updateDisplayView(displayTemplate: DisplayTemplate) {
-        guard let nuguDisplayWebView = nuguDisplayWebViews.first(where: { $0.templateId == displayTemplate.templateId }) else { return }
+        guard let nuguDisplayWebView = nuguDisplayWebViews.first(where: { $0.token == displayTemplate.template.token }) else { return }
         nuguDisplayWebView.update(
             templateId: displayTemplate.templateId,
             dialogRequestId: displayTemplate.dialogRequestId,
