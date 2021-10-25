@@ -109,7 +109,7 @@ extension DisplayWebViewPresenter: DisplayAgentDelegate {
         })
     }
     
-    public func displayAgentShouldRender(template: DisplayTemplate, historyControl: DisplayHistoryControl.HistoryControl?, completion: @escaping (AnyObject?) -> Void) {
+    public func displayAgentShouldRender(template: DisplayTemplate, historyControl: HistoryControl?, completion: @escaping (AnyObject?) -> Void) {
         log.debug("templateId: \(template.templateId), historyControl: \(String(describing: historyControl))")
         DispatchQueue.main.async {  [weak self] in
             if historyControl?.child == true {
