@@ -39,6 +39,10 @@ public protocol SpeechRecognizerAggregatable: AnyObject {
     
     /// Stop microphone, keyword detector and ASR.
     func stopListening()
+    
+    func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void)
+    
+    func stopMicInputProvider()
 }
 
 public extension SpeechRecognizerAggregatable {
