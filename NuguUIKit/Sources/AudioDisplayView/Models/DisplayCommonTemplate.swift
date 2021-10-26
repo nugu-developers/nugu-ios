@@ -61,7 +61,10 @@ struct DisplayCommonTemplate: Decodable {
             let text: String?
             let token: String
             let eventType: EventType?
+            let triggerChild: Bool?
             let textInput: TextInput?
+            let event: Event?
+            let control: Control?
             let postback: [String: AnyHashable]?
             let autoTrigger: AutoTrigger?
             let closeTemplateAfter: Bool?
@@ -82,7 +85,10 @@ struct DisplayCommonTemplate: Decodable {
                 case text
                 case token
                 case eventType
+                case triggerChild
                 case textInput
+                case event
+                case control
                 case postback
                 case autoTrigger
                 case closeTemplateAfter
@@ -96,7 +102,10 @@ struct DisplayCommonTemplate: Decodable {
                 text = try? container.decodeIfPresent(String.self, forKey: .text)
                 token = try container.decode(String.self, forKey: .token)
                 eventType = try? container.decodeIfPresent(EventType.self, forKey: .eventType)
+                triggerChild = try? container.decodeIfPresent(Bool.self, forKey: .triggerChild)
                 textInput = try? container.decodeIfPresent(TextInput.self, forKey: .textInput)
+                event = try? container.decodeIfPresent(Event.self, forKey: .event)
+                control = try? container.decodeIfPresent(Control.self, forKey: .control)
                 // `postback` variable is an optional `[String: AnyHashable]` type which delivers additional information when `Button` object has been clicked.
                 // for decoding `[String: AnyHashable]` type, please refer `KeyedDecodingContainer+AnyHashable.swift`
                 postback = try? container.decode([String: AnyHashable].self, forKey: .postback)
@@ -127,6 +136,33 @@ struct DisplayCommonTemplate: Decodable {
         enum EventType {
             case elementSelected
             case textInput
+            case event
+            case control
+        }
+        
+        struct Event: Decodable {
+            let type: String
+            let data: [String: AnyHashable]
+            
+            enum CodingKeys: String, CodingKey {
+                case type
+                case data
+            }
+            
+            init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                
+                type = try container.decode(String.self, forKey: .type)
+                data = try container.decode([String: AnyHashable].self, forKey: .data)
+            }
+        }
+        
+        struct Control: Decodable {
+            let type: `Type`
+            enum `Type` {
+                case templatePrevious
+                case templateCloseAll
+            }
         }
         
         struct Toggle: Decodable {
@@ -216,7 +252,21 @@ extension DisplayCommonTemplate.Common.EventType: Decodable {
         switch value {
         case "Display.ElementSelected": self = .elementSelected
         case "Text.TextInput": self = .textInput
+        case "EVENT": self = .event
+        case "CONTROL": self = .control
         default: self = .elementSelected
+        }
+    }
+}
+
+extension DisplayCommonTemplate.Common.Control.`Type`: Decodable {
+    init(from decoder: Decoder) throws {
+        let value = try decoder.singleValueContainer().decode(String.self)
+        
+        switch value {
+        case "TEMPLATE_PREVIOUS": self = .templatePrevious
+        case "TEMPLATE_CLOSEALL": self = .templateCloseAll
+        default: self = .templateCloseAll
         }
     }
 }
