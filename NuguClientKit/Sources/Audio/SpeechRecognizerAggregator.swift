@@ -165,11 +165,7 @@ public extension SpeechRecognizerAggregator {
         stopMicInputProvider()
         asrAgent.stopRecognition()
     }
-}
-
-// MARK: - Private
-
-extension SpeechRecognizerAggregator {
+    
     func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
