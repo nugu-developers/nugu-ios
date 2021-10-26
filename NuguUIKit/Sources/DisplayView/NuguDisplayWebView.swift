@@ -41,6 +41,7 @@ final public class NuguDisplayWebView: UIView {
     
     public var displayWebView: WKWebView?
     public private(set) var templateId: String?
+    public private(set) var token: String?
     
     // Private Properties
     private var displayPayload: Data?
@@ -190,8 +191,11 @@ extension NuguDisplayWebView: UIGestureRecognizerDelegate {
 // MARK: - Public Methods
 
 public extension NuguDisplayWebView {
-    func load(templateId: String, dialogRequestId: String, displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
+    func load(templateId: String, token: String?, dialogRequestId: String, displayPayload: Data, displayType: String?, clientInfo: [String: String]? = nil) {
         self.templateId = templateId
+        if token != nil {
+            self.token = token
+        }
         self.displayPayload = displayPayload
         self.displayType = displayType
         self.clientInfo = clientInfo
@@ -215,7 +219,7 @@ public extension NuguDisplayWebView {
         let mergedPayloadDictionary = displayingPayloadDictionary.merged(with: updatePayloadDictionary)
         guard let mergedPayloadData = try? JSONSerialization.data(withJSONObject: mergedPayloadDictionary, options: []) else { return }
         displayPayload = mergedPayloadData
-        load(templateId: templateId, dialogRequestId: dialogRequestId, displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
+        load(templateId: templateId, token: nil, dialogRequestId: dialogRequestId, displayPayload: mergedPayloadData, displayType: displayType, clientInfo: clientInfo)
     }
     
     func scroll(direction: DisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
