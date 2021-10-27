@@ -46,10 +46,12 @@ public class DialogStateAggregator: TypedNotifyable {
             // Chips should be cleared when,
             // Listening state excluding ExpectSpeech initiator
             // And include any nudge type chip in item.chips array
+            // multiturn should be canceled also in this situation
             if case .listening(let initiator) = asrState,
                initiator != .expectSpeech,
                let currentChips = currentChips,
                currentChips.item.chips.filter({ $0.type == .nudge }).count != 0 {
+                isMultiturn = false
                 self.currentChips = nil
             }
             
