@@ -32,6 +32,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     // Observers
     private let notificationCenter = NotificationCenter.default
     private var asrStateObserver: Any?
+    private var asrResultObserver: Any?
     private var becomeActiveObserver: Any?
     private var audioSessionInterruptionObserver: Any?
     
@@ -49,6 +50,16 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     
     public var useKeywordDetector = true
     
+    // State
+    private(set) public var state: SpeechRecognizerAggregatorState = .idle {
+        didSet {
+            if state != oldValue {
+                log.info("sra state: \(state)")
+                delegate?.speechRecognizerStateDidChange(state)
+            }
+        }
+    }
+    
     public init(
         keywordDetector: KeywordDetector,
         asrAgent: ASRAgentProtocol
@@ -57,32 +68,6 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
         self.asrAgent = asrAgent
         micInputProvider.delegate = self
         keywordDetector.delegate = self 
-        
-        asrStateObserver = asrAgent.observe(NuguAgentNotification.ASR.State.self, queue: .main) { [weak self] (notification) in
-            guard let self = self else { return }
-            
-            switch notification.state {
-            case .idle:
-                if self.useKeywordDetector == true {
-                    keywordDetector.start()
-                } else {
-                    keywordDetector.stop()
-                    self.stopMicInputProvider()
-                }
-            case .listening:
-                keywordDetector.stop()
-            case .expectingSpeech:
-                self.startMicInputProvider(requestingFocus: true) { (success) in
-                    guard success == true else {
-                        log.debug("startMicInputProvider failed!")
-                        asrAgent.stopRecognition()
-                        return
-                    }
-                }
-            default:
-                break
-            }
-        }
         
         becomeActiveObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
             guard let self = self else { return }
@@ -95,11 +80,17 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
             }
         })
         registerAudioSessionObservers()
+        
+        addAsrStateObserver()
+        addAsrResultObserver()
     }
     
     deinit {
         if let asrStateObserver = asrStateObserver {
             notificationCenter.removeObserver(asrStateObserver)
+        }
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
         }
         if let becomeActiveObserver = becomeActiveObserver {
             notificationCenter.removeObserver(becomeActiveObserver)
@@ -113,12 +104,24 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
 public extension SpeechRecognizerAggregator {
     @discardableResult
     func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)? = nil) -> String {
+        switch state {
+        case .cancelled,
+             .idle,
+             .error:
+            break
+        case .wakeupTriggering:
+            keywordDetector.stop()
+        default:
+            asrAgent.stopRecognition()
+        }
+        
         let dialogRequestId = asrAgent.startRecognition(initiator: initiator, completion: completion)
         startMicInputProvider(requestingFocus: true) { [weak self] success in
             guard success else {
                 log.error("Start MicInputProvider failed")
                 self?.asrAgent.stopRecognition()
-                completion?(.error(SpeechRecognizerAggregatorError.cannotOpenMicInput))
+                self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition)
+                completion?(.error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition))
                 return
             }
         }
@@ -136,7 +139,8 @@ public extension SpeechRecognizerAggregator {
                 self?.startMicInputProvider(requestingFocus: false) { (success) in
                     guard success else {
                         log.debug("startMicWorkItem failed!")
-                        completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInput))
+                        self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup)
+                        completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup))
                         return
                     }
                     completion?(.success(()))
@@ -153,7 +157,11 @@ public extension SpeechRecognizerAggregator {
     }
     
     func stopListening() {
-        keywordDetector.stop()
+        if keywordDetector.state == .active {
+            keywordDetector.stop()
+            state = .cancelled
+        }
+        
         stopMicInputProvider()
         asrAgent.stopRecognition()
     }
@@ -178,8 +186,11 @@ extension SpeechRecognizerAggregator {
                     return
                 }
                 self.micQueue.async { [unowned self] in
-                    self.micInputProvider.stop()
-                    self.delegate?.speechRecognizerWillUseMic(requestingFocus: requestingFocus)
+                    guard self.micInputProvider.isRunning == false else {
+                        completion(true)
+                        return
+                    }
+                    
                     do {
                         try self.micInputProvider.start()
                         completion(true)
@@ -222,22 +233,62 @@ extension SpeechRecognizerAggregator: MicInputProviderDelegate {
 
 extension SpeechRecognizerAggregator: KeywordDetectorDelegate {
     public func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
-        delegate?.speechRecognizerKeywordDidDetect(
-            initiator: .wakeUpWord(
-                keyword: keyword,
-                data: data,
-                start: start,
-                end: end,
-                detection: detection
-            )
-        )
+        state = .wakeup
+        
+        asrAgent.startRecognition(initiator: .wakeUpWord(
+            keyword: keyword,
+            data: data,
+            start: start,
+            end: end,
+            detection: detection
+        ))
     }
     
     public func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {
-        delegate?.speechRecognizerKeywordStateDidChange(state)
+        if let state = SpeechRecognizerAggregatorState(state) {
+            self.state = state
+        }
     }
     
-    public func keywordDetectorDidError(_ error: Error) {}
+    public func keywordDetectorDidError(_ error: Error) {
+        state = .error(error)
+    }
+}
+
+// MARK: - ASR Observer
+
+extension SpeechRecognizerAggregator {
+    private func addAsrStateObserver() {
+        if let asrStateObserver = asrStateObserver {
+            notificationCenter.removeObserver(asrStateObserver)
+        }
+        
+        // For use asr infinitely
+        asrStateObserver = asrAgent.observe(NuguAgentNotification.ASR.State.self, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            
+            if let state = SpeechRecognizerAggregatorState(notification.state) {
+                self.state = state
+            }
+            // if not restarted here, keyword detector is inactive in tts speaking situation
+            if case .idle = notification.state {
+                self.keywordDetector.start()
+            }
+        }
+    }
+    
+    private func addAsrResultObserver() {
+        if let asrResultObserver = asrResultObserver {
+            notificationCenter.removeObserver(asrResultObserver)
+        }
+        
+        asrResultObserver = asrAgent.observe(NuguAgentNotification.ASR.Result.self, queue: nil) { [weak self] (notification) in
+            guard let self = self else { return }
+            if let state = SpeechRecognizerAggregatorState(notification.result) {
+                self.state = state
+            }
+        }
+    }
 }
 
 // MARK: - private(AudioSessionObserver)

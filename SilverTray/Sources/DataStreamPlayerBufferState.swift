@@ -1,9 +1,9 @@
 //
-//  EventIdentifier.swift
-//  NuguAgents
+//  DataStreamPlayerBufferState.swift
+//  SilverTray
 //
-//  Created by MinChul Lee on 2020/07/16.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by childc on 2021/08/24.
+//  Copyright © 2021 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,17 +20,7 @@
 
 import Foundation
 
-import NuguCore
-
-public struct EventIdentifier: Equatable {
-    public let dialogRequestId: String
-    public let messageId: String
-    
-    public init(
-        dialogRequestId: String = TimeUUID().hexString,
-        messageId: String = TimeUUID().hexString
-    ) {
-        self.dialogRequestId = dialogRequestId
-        self.messageId = messageId
-    }
+public enum DataStreamPlayerBufferState {
+    case bufferEmpty
+    case likelyToKeepUp
 }

@@ -1,52 +1,52 @@
 PODS:
-  - JadeMarble (1.4.0-beta.2):
+  - JadeMarble (1.5.0-beta.1):
     - NattyLog (~> 1)
-    - TycheSDK (= 1.4.0-beta.2)
-  - KeenSense (1.4.0-beta.2):
+    - TycheSDK (= 1.5.0-beta.1)
+  - KeenSense (1.5.0-beta.1):
     - NattyLog (~> 1)
-    - NuguUtils (= 1.4.0-beta.2)
-    - TycheSDK (= 1.4.0-beta.2)
+    - NuguUtils (= 1.5.0-beta.1)
+    - TycheSDK (= 1.5.0-beta.1)
   - lottie-ios (3.2.3)
   - NattyLog (1.2.2)
-  - NuguAgents (1.4.0-beta.2):
-    - JadeMarble (= 1.4.0-beta.2)
+  - NuguAgents (1.5.0-beta.1):
+    - JadeMarble (= 1.5.0-beta.1)
     - NattyLog (~> 1)
-    - NuguCore (= 1.4.0-beta.2)
-    - NuguUtils (= 1.4.0-beta.2)
-    - SilverTray (= 1.4.0-beta.2)
-  - NuguClientKit (1.4.0-beta.2):
-    - KeenSense (= 1.4.0-beta.2)
+    - NuguCore (= 1.5.0-beta.1)
+    - NuguUtils (= 1.5.0-beta.1)
+    - SilverTray (= 1.5.0-beta.1)
+  - NuguClientKit (1.5.0-beta.1):
+    - KeenSense (= 1.5.0-beta.1)
     - NattyLog (~> 1)
-    - NuguAgents (= 1.4.0-beta.2)
-    - NuguCore (= 1.4.0-beta.2)
-    - NuguLoginKit (= 1.4.0-beta.2)
-    - NuguServiceKit (= 1.4.0-beta.2)
-    - NuguUIKit (= 1.4.0-beta.2)
-    - NuguUtils (= 1.4.0-beta.2)
-  - NuguCore (1.4.0-beta.2):
+    - NuguAgents (= 1.5.0-beta.1)
+    - NuguCore (= 1.5.0-beta.1)
+    - NuguLoginKit (= 1.5.0-beta.1)
+    - NuguServiceKit (= 1.5.0-beta.1)
+    - NuguUIKit (= 1.5.0-beta.1)
+    - NuguUtils (= 1.5.0-beta.1)
+  - NuguCore (1.5.0-beta.1):
     - NattyLog (~> 1.0)
-    - NuguUtils (= 1.4.0-beta.2)
+    - NuguUtils (= 1.5.0-beta.1)
     - RxSwift (~> 6)
-  - NuguLoginKit (1.4.0-beta.2):
-    - NuguUtils (= 1.4.0-beta.2)
-  - NuguObjcUtils (1.4.0-beta.2)
-  - NuguServiceKit (1.4.0-beta.2):
+  - NuguLoginKit (1.5.0-beta.1):
+    - NuguUtils (= 1.5.0-beta.1)
+  - NuguObjcUtils (1.5.0-beta.1)
+  - NuguServiceKit (1.5.0-beta.1):
     - NattyLog (~> 1)
-    - NuguUtils (= 1.4.0-beta.2)
-  - NuguUIKit (1.4.0-beta.2):
+    - NuguUtils (= 1.5.0-beta.1)
+  - NuguUIKit (1.5.0-beta.1):
     - lottie-ios (~> 3)
     - NattyLog (~> 1)
-    - NuguAgents (= 1.4.0-beta.2)
-    - NuguUtils (= 1.4.0-beta.2)
-  - NuguUtils (1.4.0-beta.2):
+    - NuguAgents (= 1.5.0-beta.1)
+    - NuguUtils (= 1.5.0-beta.1)
+  - NuguUtils (1.5.0-beta.1):
     - RxSwift (~> 6)
-  - OpusSDK (1.4.0-beta.2)
+  - OpusSDK (1.5.0-beta.1)
   - RxSwift (6.2.0)
-  - SilverTray (1.4.0-beta.2):
-    - NuguObjcUtils (= 1.4.0-beta.2)
-    - NuguUtils (= 1.4.0-beta.2)
-    - OpusSDK (= 1.4.0-beta.2)
-  - TycheSDK (1.4.0-beta.2)
+  - SilverTray (1.5.0-beta.1):
+    - NuguObjcUtils (= 1.5.0-beta.1)
+    - NuguUtils (= 1.5.0-beta.1)
+    - OpusSDK (= 1.5.0-beta.1)
+  - TycheSDK (1.5.0-beta.1)
 
 DEPENDENCIES:
   - JadeMarble (from `../`)
@@ -98,23 +98,23 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  JadeMarble: a5f65824f7a7a5198e8edcff4cd1a7c61d9f1113
-  KeenSense: c120ff0be8bef52b0bb34d7f65843692111a9abe
+  JadeMarble: 1ec493ff5c4251fc4f858c46993291b7b483a39f
+  KeenSense: 96b63700349343bb299d3345c739baf1b4f13735
   lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
   NattyLog: 1a54981676b1dee3018b5e6cefed03b029212baa
-  NuguAgents: 8af0ccb89c70db04fe2ff635e7245cbb0336ce18
-  NuguClientKit: f1179fa46fcd924225a5b1ec1595a24945917207
-  NuguCore: 839f506e3fbb0179c8dda343ff8d8978290d7b5d
-  NuguLoginKit: 1095d67aeb26aaa479282a17695d8c4dcdec106d
-  NuguObjcUtils: df6244057d5702d45e804e9ec6a6575ab24f5bce
-  NuguServiceKit: 66eada47aead520216fc609bb091a5b47e5abc28
-  NuguUIKit: afb7db50eaa1ac7cd81262fcdd21390ea5e9a87b
-  NuguUtils: 0812aa85a2d8c34a082ee94cd680d2618490b4a1
-  OpusSDK: 5e9cc64427cc6fbd479f06dba2dae6ab8647c388
+  NuguAgents: ae4e1c7b54920131fb1610ec00a736bbbb474396
+  NuguClientKit: f74c1e2790a297feed437461e0d7679f7c811be1
+  NuguCore: 3b621965997b76da77dbcb3cf94dffed6cd15c86
+  NuguLoginKit: e3dfbf56d17994cb983396774cdb4d9a11821bf0
+  NuguObjcUtils: 406314afa6214919fb1b1acdebb1ff4af1477ea0
+  NuguServiceKit: 7be6aa1c235cbbee4c3f20b08713e5159d64b0cb
+  NuguUIKit: 1edbd104f0a54d0673fbed643dcac9aaee3fafd0
+  NuguUtils: 7bde43e15b3adce732ee5f96381dfd4e4f912d87
+  OpusSDK: ead204272e27986a984376d5d42fb74586e9fb2a
   RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
-  SilverTray: 64e9c0a7959fe0c497f098ba48a6909bd282b54e
-  TycheSDK: 55c13be1d5c4e61bfc4563ec6f563e18a7ef3888
+  SilverTray: d40e96a86b135f8e77acdb451d16fab656828463
+  TycheSDK: 97635d96e02da8ed49134d02251c3843380a799b
 
 PODFILE CHECKSUM: f7f296aa83b7c936b1c61ed4b79ed52e30bb3206
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2

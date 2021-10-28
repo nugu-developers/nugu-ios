@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-extension UpstreamDataSendable {
+public extension UpstreamDataSendable {
     func sendEvent(
         _ event: Single<Eventable>,
         eventIdentifier: EventIdentifier,

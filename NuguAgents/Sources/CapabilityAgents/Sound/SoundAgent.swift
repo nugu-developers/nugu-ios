@@ -158,7 +158,7 @@ extension SoundAgent: MediaPlayerDelegate {
                 self.stop()
             case .stop:
                 self.soundState = .stopped
-            case .bufferUnderrun, .bufferRefilled:
+            case .bufferEmpty, .likelyToKeepUp:
                 break
             case .error:
                 self.soundState = .stopped

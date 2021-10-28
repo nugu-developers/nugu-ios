@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguAgents'
-  s.version = '1.4.0'
+  s.version = '1.5.0'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu Agents'
   s.description = <<-DESC

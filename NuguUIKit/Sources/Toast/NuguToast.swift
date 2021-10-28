@@ -66,77 +66,83 @@ public extension NuguToast {
     ///   - message: <#message description#>
     ///   - bottomMargin: <#bottomMargin description#>
     func showToast(message: String?, bottomMargin: CGFloat? = nil, duration: Duration = .short) {
-        guard let window = UIApplication.shared.keyWindow else { return }
-        guard let toastMessage = message, toastMessage.count > 0 else { return }
-    
-        hideAnimationWorkItem?.cancel()
-        hideAnimationWorkItem = nil
-        
-        toastLabel.textAlignment = .center
-        toastLabel.textColor = ToastConst.textColor
-        toastLabel.font = ToastConst.textFont
-        toastLabel.numberOfLines = 0
-        toastLabel.preferredMaxLayoutWidth = window.bounds.size.width - CGFloat((ToastConst.viewMargin + ToastConst.textHorizontalPadding) * 2)
-        toastLabel.text = toastMessage
-        toastLabel.frame = CGRect(origin: CGPoint(x: ToastConst.textHorizontalPadding,
-                                                  y: ToastConst.textVerticalPadding),
-                                  size: toastLabel.intrinsicContentSize)
-        
-        toastView.addSubview(toastLabel)
-        toastView.backgroundColor = ToastConst.backgroundColor
-        toastView.layer.cornerRadius = ToastConst.cornerRadius
-        toastView.frame = CGRect(x: 0, y: 0,
-                                 width: window.bounds.size.width - CGFloat(ToastConst.viewMargin * 2),
-                                 height: toastLabel.intrinsicContentSize.height + CGFloat(ToastConst.textVerticalPadding * 2))
-        toastView.center = CGPoint(x: window.center.x,
-                                   y: window.bounds.size.height - (toastView.bounds.size.height/2) - (bottomMargin ?? CGFloat(ToastConst.bottomMargin)) - SafeAreaUtil.bottomSafeAreaHeight)
-        toastLabel.center = CGPoint(x: toastView.frame.size.width/2,
-                                    y: toastView.frame.size.height/2)
-        toastView.alpha = 0
-        
-        hideAnimationWorkItem = DispatchWorkItem {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first else { return }
+            guard let toastMessage = message, toastMessage.count > 0 else { return }
+            
+            self.hideAnimationWorkItem?.cancel()
+            self.hideAnimationWorkItem = nil
+            
+            self.toastLabel.textAlignment = .center
+            self.toastLabel.textColor = ToastConst.textColor
+            self.toastLabel.font = ToastConst.textFont
+            self.toastLabel.numberOfLines = 0
+            self.toastLabel.preferredMaxLayoutWidth = window.bounds.size.width - CGFloat((ToastConst.viewMargin + ToastConst.textHorizontalPadding) * 2)
+            self.toastLabel.text = toastMessage
+            self.toastLabel.frame = CGRect(origin: CGPoint(x: ToastConst.textHorizontalPadding,
+                                                      y: ToastConst.textVerticalPadding),
+                                           size: self.toastLabel.intrinsicContentSize)
+            
+            self.toastView.addSubview(self.toastLabel)
+            self.toastView.backgroundColor = ToastConst.backgroundColor
+            self.toastView.layer.cornerRadius = ToastConst.cornerRadius
+            self.toastView.frame = CGRect(x: 0, y: 0,
+                                     width: window.bounds.size.width - CGFloat(ToastConst.viewMargin * 2),
+                                     height: self.toastLabel.intrinsicContentSize.height + CGFloat(ToastConst.textVerticalPadding * 2))
+            self.toastView.center = CGPoint(x: window.center.x,
+                                            y: window.bounds.size.height - (self.toastView.bounds.size.height/2) - (bottomMargin ?? CGFloat(ToastConst.bottomMargin)) - SafeAreaUtil.bottomSafeAreaHeight)
+            self.toastLabel.center = CGPoint(x: self.toastView.frame.size.width/2,
+                                             y: self.toastView.frame.size.height/2)
+            self.toastView.alpha = 0
+            
+            self.hideAnimationWorkItem = DispatchWorkItem {
+                UIView.animate(
+                    withDuration: ToastConst.animationDuration,
+                    animations: { [weak self] in
+                        self?.toastView.alpha = 0
+                    },
+                    completion: { [weak self] _ in
+                        self?.toastLabel.removeFromSuperview()
+                        self?.toastView.removeFromSuperview()
+                    })
+            }
+            
             UIView.animate(
                 withDuration: ToastConst.animationDuration,
                 animations: { [weak self] in
-                    self?.toastView.alpha = 0
+                    guard let toastView = self?.toastView else { return }
+                    toastView.alpha = ToastConst.viewOpacity
+                    window.addSubview(toastView)
+                    window.bringSubviewToFront(toastView)
                 },
                 completion: { [weak self] _ in
-                    self?.toastLabel.removeFromSuperview()
-                    self?.toastView.removeFromSuperview()
-            })
+                    if let hideAnimationWorkItem = self?.hideAnimationWorkItem {
+                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.seconds(duration.rawValue),
+                                                      execute: hideAnimationWorkItem)
+                    }
+                })
         }
-        
-        UIView.animate(
-            withDuration: ToastConst.animationDuration,
-            animations: { [weak self] in
-                guard let toastView = self?.toastView else { return }
-                toastView.alpha = ToastConst.viewOpacity
-                window.addSubview(toastView)
-                window.bringSubviewToFront(toastView)
-            },
-            completion: { [weak self] _ in
-                if let hideAnimationWorkItem = self?.hideAnimationWorkItem {
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.seconds(duration.rawValue),
-                                                  execute: hideAnimationWorkItem)
-                }
-        })
     }
     
     /// <#Description#>
     func hideToastIfNeeded() {
-        if let hideAnimationWorkItem = self.hideAnimationWorkItem {
-            hideAnimationWorkItem.cancel()
-            self.hideAnimationWorkItem = nil
-            UIView.animate(
-                withDuration: ToastConst.animationDuration,
-                animations: {
-                    [weak self] in
-                    self?.toastView.alpha = 0
-                },
-                completion: { [weak self] _ in
-                    self?.toastLabel.removeFromSuperview()
-                    self?.toastView.removeFromSuperview()
-            })
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if let hideAnimationWorkItem = self.hideAnimationWorkItem {
+                hideAnimationWorkItem.cancel()
+                self.hideAnimationWorkItem = nil
+                UIView.animate(
+                    withDuration: ToastConst.animationDuration,
+                    animations: {
+                        [weak self] in
+                        self?.toastView.alpha = 0
+                    },
+                    completion: { [weak self] _ in
+                        self?.toastLabel.removeFromSuperview()
+                        self?.toastView.removeFromSuperview()
+                    })
+            }
         }
     }
 }

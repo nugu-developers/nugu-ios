@@ -23,6 +23,7 @@ import AVFoundation
 
 public protocol DataStreamPlayerDelegate: AnyObject {
     func dataStreamPlayerStateDidChange(_ state: DataStreamPlayerState)
+    func dataStreamPlayerBufferStateDidChange(_ state: DataStreamPlayerBufferState)
     func dataStreamPlayerDidPlay(_ chunk: AVAudioPCMBuffer)
 }
 

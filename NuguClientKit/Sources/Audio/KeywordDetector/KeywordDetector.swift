@@ -35,7 +35,11 @@ public class KeywordDetector: ContextInfoProvidable {
     private let contextManager: ContextManageable
     
     /// Keyword detector state
-    @Atomic private(set) public var state: KeywordDetectorState = .inactive
+    private(set) public var state: KeywordDetectorState = .inactive {
+        didSet {
+            delegate?.keywordDetectorStateDidChange(state)
+        }
+    }
     
     /// Must set `keywordSource` for using `KeywordDetector`
     @Atomic public var keyword: Keyword = .aria {
@@ -46,6 +50,7 @@ public class KeywordDetector: ContextInfoProvidable {
     }
     
     // Observers
+    let observerQueue = OperationQueue()
     var tycheKeywordDetectorStateObserver: Any?
     var tycheKeywordDetectorErrorObserver: Any?
     var tycheKeywordDetectorDetectedInfoObserver: Any?
@@ -94,35 +99,19 @@ public class KeywordDetector: ContextInfoProvidable {
 
 extension KeywordDetector {
     func addObservers() {
-        tycheKeywordDetectorStateObserver = engine.observe(TycheKeywordDetectorEngine.State.self, queue: nil) { [weak self] notification in
+        tycheKeywordDetectorStateObserver = engine.observe(TycheKeywordDetectorEngine.State.self, queue: observerQueue) { [weak self] notification in
             log.debug("tyche keyword detector engine state changed to \(notification)")
-            
-            switch notification {
-            case .active:
-                if self?.state != .active {
-                    self?.delegate?.keywordDetectorStateDidChange(.active)
-                }
-                self?._state.mutate {
-                    $0 = .active
-                }
-            case .inactive:
-                if self?.state != .inactive {
-                    self?.delegate?.keywordDetectorStateDidChange(.inactive)
-                }
-                self?._state.mutate {
-                    $0 = .inactive
-                }
-            }
+            self?.state = notification.keywordDetectorState
         }
         
-        tycheKeywordDetectorErrorObserver = engine.observe(TycheKeywordDetectorEngine.KeywordDetectorError.self, queue: nil) { [weak self] notification in
+        tycheKeywordDetectorErrorObserver = engine.observe(TycheKeywordDetectorEngine.KeywordDetectorError.self, queue: observerQueue) { [weak self] notification in
             log.debug("tyche keyword detector engine error: \(notification)")
             
             self?.delegate?.keywordDetectorDidError(notification)
             self?.stop()
         }
         
-        tycheKeywordDetectorDetectedInfoObserver = engine.observe(TycheKeywordDetectorEngine.DetectedInfo.self, queue: nil) { [weak self] notification in
+        tycheKeywordDetectorDetectedInfoObserver = engine.observe(TycheKeywordDetectorEngine.DetectedInfo.self, queue: observerQueue) { [weak self] notification in
             guard let self = self else { return }
             log.debug("tyche keyword detector engine detected: \(notification))")
             
@@ -145,6 +134,19 @@ extension KeywordDetector {
         if let tycheKeywordDetectorDetectedInfoObserver = tycheKeywordDetectorDetectedInfoObserver {
             NotificationCenter.default.removeObserver(tycheKeywordDetectorDetectedInfoObserver)
             self.tycheKeywordDetectorDetectedInfoObserver = nil
+        }
+    }
+}
+
+// MARK: - TycheKeywordDetectorEngine.State transform
+
+extension TycheKeywordDetectorEngine.State {
+    var keywordDetectorState: KeywordDetectorState {
+        switch self {
+        case .active:
+            return .active
+        case .inactive:
+            return .inactive
         }
     }
 }

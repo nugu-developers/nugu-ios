@@ -26,20 +26,14 @@ import NuguAgents
 /// <#Description#>
 public protocol NuguClientDelegate: AnyObject {
     // audio session related
-    /// Notify that nugu client will play some audio
-    func nuguClientWillRequireAudioSession() -> Bool
+    /// Notify that  nugu client should update audio session for focus aquire
+    func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool
     
     /// Notify that nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
     
-    /// Notify that nugu client need to get mic input
-    func nuguClientWillUseMic(requestingFocus: Bool)
-    
-    /// Notify that nugu client did wake up by keyword
-    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator)
-    
-    /// Notify that  nugu client keyword detector's state has been changed
-    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState)
+    /// Notify that  nugu client speech-related state has been changed
+    func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState)
     
     // nugu server related
     /// Notify that nugu client received directive

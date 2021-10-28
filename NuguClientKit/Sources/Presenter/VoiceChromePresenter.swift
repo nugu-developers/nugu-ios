@@ -39,7 +39,7 @@ public class VoiceChromePresenter: NSObject {
     }
     private var asrBeepPlayer: ASRBeepPlayer?
     
-    private var asrState: ASRState = .idle
+    private var speechState: SpeechRecognizerAggregatorState = .idle
     private var isMultiturn: Bool = false
     private var voiceChromeDismissWorkItem: DispatchWorkItem?
     
@@ -85,9 +85,8 @@ public class VoiceChromePresenter: NSObject {
     // Observers
     private let notificationCenter = NotificationCenter.default
     private var interactionControlObserver: Any?
-    private var asrStateObserver: Any?
-    private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
+    private var speechStateObserver: Any?
     private var themeObserver: Any?
     
     /// Initialize with superView
@@ -141,8 +140,8 @@ public class VoiceChromePresenter: NSObject {
         
         // Observers
         addInteractionControlObserver(nuguClient.interactionControlManager)
-        addAsrAgentObserver(nuguClient.asrAgent)
         addDialogStateObserver(nuguClient.dialogStateAggregator)
+        addSpeechStateObserver()
         if let themeController = themeController {
             addThemeControllerObserver(themeController)
             self.nuguVoiceChrome.theme = themeController.theme == .dark ? .dark : .light
@@ -152,14 +151,6 @@ public class VoiceChromePresenter: NSObject {
     deinit {
         if let interactionControlObserver = interactionControlObserver {
             notificationCenter.removeObserver(interactionControlObserver)
-        }
-        
-        if let asrStateObserver = asrStateObserver {
-            notificationCenter.removeObserver(asrStateObserver)
-        }
-        
-        if let asrResultObserver = asrResultObserver {
-            notificationCenter.removeObserver(asrResultObserver)
         }
         
         if let dialogStateObserver = dialogStateObserver {
@@ -276,7 +267,7 @@ private extension VoiceChromePresenter {
     
     func enableIdleTimer() {
         guard UIApplication.shared.isIdleTimerDisabled == true else { return }
-        guard isMultiturn == false, asrState == .idle else { return }
+        guard isMultiturn == false, speechState == .idle else { return }
         guard delegate?.voiceChromeShouldEnableIdleTimer() != false else { return }
         
         UIApplication.shared.isIdleTimerDisabled = false
@@ -297,45 +288,6 @@ private extension VoiceChromePresenter {
                 self.disableIdleTimer()
             } else {
                 self.enableIdleTimer()
-            }
-        }
-    }
-    
-    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrStateObserver = object.observe(NuguAgentNotification.ASR.State.self, queue: .main) { [weak self] (notification) in
-            guard let self = self else { return }
-            
-            self.asrState = notification.state
-            switch notification.state {
-            case .idle:
-                self.enableIdleTimer()
-            default:
-                self.disableIdleTimer()
-            }
-        }
-        
-        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { [weak self] (notification) in
-            guard let self = self else { return }
-            
-            switch notification.result {
-            case .complete(let text, _):
-                self.nuguVoiceChrome.setRecognizedText(text: text)
-                self.asrBeepPlayer?.beep(type: .success)
-            case .partial(let text, _):
-                self.nuguVoiceChrome.setRecognizedText(text: text)
-            case .error(let error, _):
-                switch error {
-                case ASRError.listenFailed:
-                    self.nuguVoiceChrome.changeState(state: .speakingError)
-                    self.asrBeepPlayer?.beep(type: .fail)
-                case ASRError.recognizeFailed:
-                    break
-                case ASRError.listeningTimeout(let listenTimeoutFailBeep) where listenTimeoutFailBeep == false:
-                    break
-                default:
-                    self.asrBeepPlayer?.beep(type: .fail)
-                }
-            default: break
             }
         }
     }
@@ -406,18 +358,51 @@ private extension VoiceChromePresenter {
         }
     }
     
+    func addSpeechStateObserver() {
+        speechStateObserver = notificationCenter.addObserver(forName: NuguClient.speechStateChangedNotification, object: nuguClient, queue: .main, using: { [weak self] (notification) in
+            guard let self = self,
+                  let state = notification.userInfo?["state"] as? SpeechRecognizerAggregatorState else { return }
+            self.speechState = state
+            switch state {
+            case .result(let result):
+                switch result.type {
+                case .complete:
+                    self.nuguVoiceChrome.setRecognizedText(text: result.value)
+                    self.asrBeepPlayer?.beep(type: .success)
+                case .partial:
+                    self.nuguVoiceChrome.setRecognizedText(text: result.value)
+                }
+            case .error(let error):
+                if case ASRError.listenFailed = error,
+                   case ASRError.recognizeFailed = error {
+                    self.asrBeepPlayer?.beep(type: .fail)
+                    self.nuguVoiceChrome.changeState(state: .speakingError)
+                } else if case SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition = error {
+                    self.dismissVoiceChrome()
+                } else if case ASRError.listeningTimeout(let listenTimeoutFailBeep) = error {
+                    if listenTimeoutFailBeep == true {
+                        self.asrBeepPlayer?.beep(type: .fail)
+                    }
+                }
+            default: break
+            }
+            
+            if state == .idle {
+                self.enableIdleTimer()
+            } else {
+                self.disableIdleTimer()
+            }
+        })
+    }
+    
     func addThemeControllerObserver(_ object: NuguThemeController) {
-        themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: nil, using: { [weak self] notification in
+        themeObserver = object.observe(NuguClientNotification.NuguThemeState.Theme.self, queue: .main, using: { [weak self] notification in
             guard let self = self else { return }
             switch notification.theme {
             case .dark:
-                DispatchQueue.main.async { [weak self] in
-                    self?.nuguVoiceChrome.theme = .dark
-                }
+                self.nuguVoiceChrome.theme = .dark
             case .light:
-                DispatchQueue.main.async { [weak self] in
-                    self?.nuguVoiceChrome.theme = .light
-                }
+                self.nuguVoiceChrome.theme = .light
             }
         })
     }

@@ -28,9 +28,6 @@ class ServerSideEventReceiver {
     private let stateSubject = PublishSubject<ServerSideEventReceiverState>()
     private let disposeBag = DisposeBag()
     
-    /// Resource server array
-    var serverPolicies = [Policy.ServerPolicy]()
-    
     var state: ServerSideEventReceiverState = .disconnected() {
         didSet {
             if oldValue != state {
@@ -50,14 +47,15 @@ class ServerSideEventReceiver {
 
         var error: Error?
         return apiProvider.directive
-            .take(1)
-            .concatMap { [weak self] part -> Observable<MultiPartParser.Part> in
-                guard let self = self else { return Observable.empty() }
+            .enumerated()
+            .map { [weak self] (index: Int, element: MultiPartParser.Part) in
+                if index == 0 {
+                    // Change state when the first directive arrived
+                    self?.state = .connected
+                }
                 
-                self.state = .connected
-                return self.apiProvider.directive.startWith(part)
+                return element
             }
-            .retry(when: retryDirective)
             .do(onError: {
                 error = $0
             }, onDispose: { [weak self] in
@@ -67,51 +65,6 @@ class ServerSideEventReceiver {
 
     var stateObserver: Observable<ServerSideEventReceiverState> {
         return stateSubject
-    }
-}
-
-// MARK: - Retry policy
-
-private extension ServerSideEventReceiver {
-    func retryDirective(observer: Observable<Error>) -> Observable<Int> {
-        return observer
-            .enumerated()
-            .flatMap { [weak self] (index, error) -> Observable<Int> in
-                guard let self = self else { return Observable<Int>.empty() }
-                log.error("recover network error: \(error), try count: \(index+1)")
-                
-                guard (error as? NetworkError) != NetworkError.authError else {
-                    return Observable.error(error)
-                }
-                
-                self.state = .connecting
-
-                // if server policy does not exist, get it using `policies` api.
-                guard 0 < self.serverPolicies.count else {
-                    // The more try attempt, the more time to wait. But It is limited 180 seconds.
-                    let waitTime = Int.random(in: 0...min(30*index, 180))
-                    log.debug("retry \(waitTime) seconds later.")
-                    return Observable<Int>.timer(.seconds(waitTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                        .take(1)
-                        .flatMap { _ in self.apiProvider.policies }
-                        .map { $0 as Policy? }
-                        .catch { _ in Observable<Policy?>.just(nil) }
-                        .map {
-                            guard let networkPolicies = $0 else { return index }
-
-                            self.serverPolicies = networkPolicies.serverPolicies
-                            let currentPolicy = self.serverPolicies.removeFirst()
-                            self.apiProvider.loadBalancedUrl = "https://\(currentPolicy.hostname):\(currentPolicy.port)"
-                            
-                            return index
-                        }
-                }
-                
-                let policy = self.serverPolicies.removeFirst()
-                self.apiProvider.loadBalancedUrl = "https://\(policy.hostname):\(policy.port)"
-                return Observable<Int>.timer(.seconds(0), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-                    .take(1)
-        }
     }
 }
 

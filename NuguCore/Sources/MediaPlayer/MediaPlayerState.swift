@@ -33,9 +33,9 @@ public enum MediaPlayerState {
     /// <#Description#>
     case stop
     /// <#Description#>
-    case bufferUnderrun
+    case bufferEmpty
     /// <#Description#>
-    case bufferRefilled
+    case likelyToKeepUp
     /// <#Description#>
     /// - Parameter error: <#error description#>
     case error(error: Error)

@@ -22,7 +22,7 @@ import UIKit
 
 public struct UserInterfaceUtil {
     public static var style: UIUserInterfaceStyle {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return .unspecified }
+        guard let rootViewController = UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.rootViewController else { return .unspecified }
         return rootViewController.traitCollection.userInterfaceStyle
     }
 }

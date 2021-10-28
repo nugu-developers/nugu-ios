@@ -40,6 +40,9 @@ class NuguApiProvider: NSObject {
         }
     }
     
+    /// Resource server array
+    @Atomic private var serverPolicies = [Policy.ServerPolicy]()
+    
     private var resourceServerAddress: String? {
         if isCSLBEnabled {
             return loadBalancedUrl
@@ -77,6 +80,8 @@ class NuguApiProvider: NSObject {
      */
     init(timeout: TimeInterval = 10.0) {
         sessionConfig = URLSessionConfiguration.ephemeral
+        sessionConfig.waitsForConnectivity = true
+        
         requestTimeout = timeout
         super.init()
     }
@@ -276,13 +281,66 @@ extension NuguApiProvider {
     */
     var policies: Single<Policy> {
         return internalPolicies
+            .do { [weak self] networkPolicy in
+                self?.serverPolicies = networkPolicy.serverPolicies
+                
+                if let currentPolicy = self?.serverPolicies.removeFirst() {
+                    self?.loadBalancedUrl = "https://\(currentPolicy.hostname):\(currentPolicy.port)"
+                }
+            }
+    }
+    
+    private func retryDirective(observer: Observable<Error>) -> Observable<Int> {
+        return observer
+            .enumerated()
+            .flatMap { [weak self] (index, error) -> Observable<Int> in
+                guard let self = self else { return Observable<Int>.empty() }
+                
+                guard (error as? NetworkError) != NetworkError.authError else {
+                    return Observable.error(error)
+                }
+                
+                guard (error as NSError).code != CFNetworkErrors.cfurlErrorCancelled.rawValue else {
+                    return Observable.error(error)
+                }
+                
+                guard 0 < self.serverPolicies.count else {
+                    return Observable.error(NetworkError.noSuitableResourceServer)
+                }
+                
+                return Observable<Int>.timer(.seconds(0), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+                    .take(1)
+                    .map { _ in
+                        log.info("Try to connect next resource server")
+                        guard (error as NSError).code != CFNetworkErrors.cfurlErrorNetworkConnectionLost.rawValue else {
+                            return index
+                        }
+                        
+                        let currentPolicy = self.serverPolicies.removeFirst()
+                        self.loadBalancedUrl = "https://\(currentPolicy.hostname):\(currentPolicy.port)"
+                        
+                        return index
+                    }
+                
+            }
     }
     
     /**
     Start to receive data which is not requested but sent by server. (server side event)
     */
     var directive: Observable<MultiPartParser.Part> {
-        return internalDirective
+        serverPolicies.removeAll()
+        
+        return policies
+            .asObservable()
+            .concatMap { [weak self] _ -> Observable<MultiPartParser.Part> in
+                guard let self = self else {
+                    return Observable.error(NetworkError.unknown)
+                }
+                
+                return self.internalDirective
+                    .retry(when: self.retryDirective)
+            }
     }
     
     /**

@@ -23,13 +23,6 @@ import Foundation
 /// <#Description#>
 public struct MessageAgentContext: Codable {
     /// <#Description#>
-    public let readActivity: String
-    /// <#Description#>
-    public let token: String?
-    /// <#Description#>
-    public let template: Template?
-    
-    /// <#Description#>
     public struct Template: Codable {
         /// <#Description#>
         public let info: String?
@@ -62,5 +55,27 @@ public struct MessageAgentContext: Codable {
             self.candidates = candidates
             self.messageToSend = messageToSend
         }
+    }
+    
+    /// <#Description#>
+    public let readActivity: String
+    /// <#Description#>
+    public let token: String?
+    /// <#Description#>
+    public let template: Template?
+    
+    /// <#Description#>
+    /// - Parameters:
+    ///   - readActivity: <#readActivity description#>
+    ///   - token: <#token description#>
+    ///   - template: <#template description#>
+    public init(
+        readActivity: String,
+        token: String?,
+        template: Template?
+    ) {
+        self.readActivity = readActivity
+        self.token = token
+        self.template = template
     }
 }

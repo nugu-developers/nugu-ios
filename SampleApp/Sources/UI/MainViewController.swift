@@ -53,7 +53,7 @@ final class MainViewController: UIViewController {
     private var resignActiveObserver: Any?
     private var becomeActiveObserver: Any?
     private var nuguServiceStateObserver: Any?
-    private var keywordDetectorStateObserver: Any?
+    private var speechStateObserver: Any?
     private var dialogStateObserver: Any?
 
     // MARK: Override
@@ -136,16 +136,19 @@ final class MainViewController: UIViewController {
 // MARK: - Internal (Voice Chrome)
 
 extension MainViewController {
-    func presentVoiceChrome(initiator: ASRInitiator) {
+    func presentVoiceChrome(initiator: ASRInitiator? = nil) {
         guard AVAudioSession.sharedInstance().recordPermission == .granted else {
             NuguToast.shared.showToast(message: "설정에서 마이크 접근 권한을 허용 후 이용하실 수 있습니다.")
             return
         }
         do {
             try voiceChromePresenter.presentVoiceChrome(chipsData: [
-                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 몇일이야", token: nil)
+                NuguChipsButton.NuguChipsButtonType.normal(text: "오늘 며칠이야", token: nil)
             ])
-            NuguCentralManager.shared.startListening(initiator: initiator)
+            
+            if let initiator = initiator {
+                NuguCentralManager.shared.startListening(initiator: initiator)
+            }
         } catch {
             switch error {
             case VoiceChromePresenterError.networkUnreachable:
@@ -203,16 +206,27 @@ private extension MainViewController {
         })
         
         /**
-         Observe keyword detector's state change for NuguButton animation
+         Observe speech state change for NuguButton animation
          */
-        keywordDetectorStateObserver = notificationCenter.addObserver(forName: .keywordDetectorStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+        speechStateObserver = notificationCenter.addObserver(forName: .speechStateDidChangeNotification, object: nil, queue: .main, using: { [weak self] (notification) in
             guard let self = self,
-                  let state = notification.userInfo?["state"] as? KeywordDetectorState else { return }
+                  let state = notification.userInfo?["state"] as? SpeechRecognizerAggregatorState else { return }
             switch state {
-            case .active:
+            case .wakeupTriggering:
                 self.nuguButton.startFlipAnimation()
-            case .inactive:
+            case .cancelled:
                 self.nuguButton.stopFlipAnimation()
+            case .wakeup:
+                self.presentVoiceChrome()
+            case .error(let error):
+                log.error("speechState error: \(error)")
+                if case SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup = error {
+                    self.nuguButton.stopFlipAnimation()
+                } else if case SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition = error {
+                    NuguToast.shared.showToast(message: "음성 인식을 위한 마이크를 사용할 수 없습니다.")
+                }
+            default:
+                break
             }
         })
         
@@ -247,9 +261,9 @@ private extension MainViewController {
             self.nuguServiceStateObserver = nil
         }
         
-        if let keywordDetectorStateObserver = keywordDetectorStateObserver {
-            NotificationCenter.default.removeObserver(keywordDetectorStateObserver)
-            self.keywordDetectorStateObserver = nil
+        if let speechStateObserver = speechStateObserver {
+            NotificationCenter.default.removeObserver(speechStateObserver)
+            self.speechStateObserver = nil
         }
         
         if let dialogStateObserver = dialogStateObserver {
@@ -360,5 +374,9 @@ extension MainViewController: VoiceChromePresenterDelegate {
     
     func voiceChromeChipsDidClick(chips: NuguChipsButton.NuguChipsButtonType) {
         NuguCentralManager.shared.chipsDidSelect(selectedChips: chips)
+    }
+    
+    func voiceChromeDidReceiveRecognizeError() {
+        NuguCentralManager.shared.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
     }
 }

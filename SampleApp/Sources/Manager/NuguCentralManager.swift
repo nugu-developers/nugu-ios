@@ -34,7 +34,6 @@ final class NuguCentralManager {
     private let notificationCenter = NotificationCenter.default
     private var systemAgentExceptionObserver: Any?
     private var systemAgentRevokeObserver: Any?
-    private var asrResultObserver: Any?
     private var dialogStateObserver: Any?
     
     lazy private(set) var client: NuguClient = {
@@ -58,7 +57,6 @@ final class NuguCentralManager {
         
         // Observers
         addSystemAgentObserver(client.systemAgent)
-        addAsrAgentObserver(client.asrAgent)
         addDialogStateObserver(client.dialogStateAggregator)
         
         // Initialize proper audio session for Nugu service usage
@@ -98,10 +96,6 @@ final class NuguCentralManager {
         
         if let systemAgentRevokeObserver = systemAgentRevokeObserver {
             notificationCenter.removeObserver(systemAgentRevokeObserver)
-        }
-        
-        if let asrResultObserver = asrResultObserver {
-            notificationCenter.removeObserver(asrResultObserver)
         }
         
         if let dialogStateObserver = dialogStateObserver {
@@ -248,20 +242,11 @@ extension NuguCentralManager {
 
 extension NuguCentralManager {
     func startListening(initiator: ASRInitiator) {
-        client.speechRecognizerAggregator.startListening(initiator: initiator) { state in
-            if case .error = state {
-                NuguToast.shared.showToast(message: "설정에서 마이크 접근 권한을 허용 후 이용하실 수 있습니다.")
-            }
-        }
+        client.speechRecognizerAggregator.startListening(initiator: initiator)
     }
     
     func startListeningWithTrigger() {
-        client.speechRecognizerAggregator.startListeningWithTrigger { (result) in
-            if case let .failure(error) = result {
-                log.error("startListeningWithTrigger error: \(error)")
-                return
-            }
-        }
+        client.speechRecognizerAggregator.startListeningWithTrigger()
     }
     
     func stopListening() {
@@ -288,7 +273,7 @@ extension NuguCentralManager {
 extension NuguCentralManager {
     func chipsDidSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?) {
         guard let selectedChips = selectedChips,
-            let window = UIApplication.shared.keyWindow else { return }
+            let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first else { return }
         
         let indicator = UIActivityIndicatorView(style: .whiteLarge)
         indicator.color = .black
@@ -354,21 +339,6 @@ private extension NuguCentralManager {
         systemAgentRevokeObserver = object.observe(NuguAgentNotification.System.RevokeDevice.self, queue: .main) { [weak self] (notification) in
             NuguToast.shared.showToast(message: notification.reason.rawValue)
             self?.clearSampleAppAfterErrorHandling()
-        }
-    }
-    
-    func addAsrAgentObserver(_ object: ASRAgentProtocol) {
-        asrResultObserver = object.observe(NuguAgentNotification.ASR.Result.self, queue: .main) { [weak self] (notification) in
-            switch notification.result {
-            case .error(let error, _):
-                switch error {
-                case ASRError.recognizeFailed:
-                    self?.localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
-                default:
-                    break
-                }
-            default: break
-            }
         }
     }
     
@@ -447,32 +417,21 @@ extension NuguCentralManager: SoundAgentDataSource {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
-    func nuguClientWillUseMic(requestingFocus: Bool) {
+    func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool {
         // If you set AudioSessionManager to nil, You should implement this
-        log.debug("nuguClientWillUseMic \(requestingFocus)")
+        // And return NUGU SDK can use the audio session or not.
+        return false
     }
-    
-    func nuguClientDidRecognizeKeyword(initiator: ASRInitiator) {
-        DispatchQueue.main.async {
-            guard let keyWindow = UIApplication.shared.windows.filter({$0.isKeyWindow}).first,
-                  let navigationController = keyWindow.rootViewController as? UINavigationController,
-                  let mainViewController = navigationController.viewControllers.last as? MainViewController else { return }
-            mainViewController.presentVoiceChrome(initiator: initiator)
+
+    func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {
+        if case .error(let error) = state, case ASRError.recognizeFailed = error {
+            localTTSAgent.playLocalTTS(type: .deviceGatewayRequestUnacceptable)
         }
-    }
-    
-    func nuguClientDidChangeKeywordDetectorState(_ state: KeywordDetectorState) {
-        notificationCenter.post(name: .keywordDetectorStateDidChangeNotification, object: nil, userInfo: ["state": state])
+        notificationCenter.post(name: .speechStateDidChangeNotification, object: nil, userInfo: ["state": state])
     }
     
     func nuguClientRequestAccessToken() -> String? {
         return UserDefaults.Standard.accessToken
-    }
-    
-    func nuguClientWillRequireAudioSession() -> Bool {
-        // If you set AudioSessionManager to nil, You should implement this
-        // And return NUGU SDK can use the audio session or not.
-        return false
     }
     
     func nuguClientDidReleaseAudioSession() {

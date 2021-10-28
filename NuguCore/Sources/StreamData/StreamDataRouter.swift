@@ -85,7 +85,6 @@ public extension StreamDataRouter {
      */
     func startReceiveServerInitiatedDirective(to serverPolicy: Policy.ServerPolicy) {
         log.debug("change resource server to: https://\(serverPolicy.hostname).\(serverPolicy.port)")
-        serverInitiatedDirectiveReceiver.serverPolicies = [serverPolicy]
         
         // Use stored completion closure before.
         startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
@@ -95,8 +94,6 @@ public extension StreamDataRouter {
      Reset exist connection policy and request new connection
      */
     func restartReceiveServerInitiatedDirective() {
-        serverInitiatedDirectiveReceiver.serverPolicies = []
-        
         // Use stored completion closure before.
         startReceiveServerInitiatedDirective(completion: serverInitiatedDirectiveCompletion)
     }
