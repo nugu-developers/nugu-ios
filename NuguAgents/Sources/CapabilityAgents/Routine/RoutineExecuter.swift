@@ -283,16 +283,16 @@ private extension RoutineExecuter {
     }
 
     func doNextAction() {
-        guard state == .playing, hasNextAction else {
-            doFinish()
-            return
-        }
-        
         actionWorkItem?.cancel()
+        
         if let delay = currentAction?.postDelay {
             log.debug(delay)
             let workItem = DispatchWorkItem { [weak self] in
                 guard let self = self else { return }
+                guard self.state == .playing, self.hasNextAction else {
+                    self.doFinish()
+                    return
+                }
 
                 self.currentActionIndex += 1
                 self.doAction()
@@ -300,7 +300,13 @@ private extension RoutineExecuter {
             actionWorkItem = workItem
             routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
         } else {
+            guard state == .playing, hasNextAction else {
+                doFinish()
+                return
+            }
+            
             log.debug("")
+            
             self.currentActionIndex += 1
             self.doAction()
         }
