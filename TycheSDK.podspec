@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'TycheSDK'
-  s.version = '1.5.3'
+  s.version = '1.5.4'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Tyche wrapper'
   s.description = <<-DESC
