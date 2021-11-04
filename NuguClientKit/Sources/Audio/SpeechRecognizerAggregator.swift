@@ -200,9 +200,9 @@ public extension SpeechRecognizerAggregator {
     }
     
     func stopMicInputProvider() {
-        micQueue.sync {
-            startMicWorkItem?.cancel()
-            micInputProvider.stop()
+        micQueue.async { [unowned self] in
+            self.startMicWorkItem?.cancel()
+            self.micInputProvider.stop()
         }
     }
 }
