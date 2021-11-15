@@ -30,7 +30,8 @@ import NuguUIKit
 /// Application should configure `ConfigurationStore` using `configure()`, `configure(url:)` or `configure(configuration:)`
 public class ConfigurationStore {
     public static let shared = ConfigurationStore()
-    private let discoveryQueue = DispatchQueue(label: "com.sktelecom.romaine.discovery_queue")
+    private let discoveryQueue = OperationQueue()
+    private let urlSession: URLSession
     
     public var configuration: Configuration? {
         didSet {
@@ -40,16 +41,16 @@ public class ConfigurationStore {
             NuguOAuthServerInfo.serverBaseUrl = configuration.authServerUrl
             NuguDisplayWebView.deviceTypeCode = configuration.deviceTypeCode
             
-            discoveryQueue.async { [weak self] in
-                self?.requestDiscovery(completion: nil)
-            }
+            requestDiscovery(completion: nil)
         }
     }
     
     @Atomic public var configurationMetadata: ConfigurationMetadata?
     
     // singleton
-    private init() {}
+    private init() {
+        urlSession = URLSession(configuration: .ephemeral, delegate: nil, delegateQueue: discoveryQueue)
+    }
     
     /// Configure with `Configuration`
     public func configure(configuration: Configuration) {
@@ -226,61 +227,49 @@ public extension ConfigurationStore {
 
 private extension ConfigurationStore {
     func configurationMetadata(completion: @escaping (Result<ConfigurationMetadata, Error>) -> Void) {
-        guard let configurationMetadata = configurationMetadata else {
-            discoveryQueue.async { [weak self] in
+        discoveryQueue.addOperation { [weak self] in
+            guard let configurationMetadata = self?.configurationMetadata else {
                 self?.requestDiscovery(completion: completion)
+                return
             }
-
-            return
+            
+            completion(.success(configurationMetadata))
         }
-        
-        completion(.success(configurationMetadata))
     }
     
     func requestDiscovery(completion: ((Result<ConfigurationMetadata, Error>) -> Void)?) {
-        _configurationMetadata.mutate { [weak self] in
-            guard let configuration = self?.configuration else {
-                completion?(.failure(ConfigurationError.notConfigured))
-                return
-            }
-            guard let url = URL(string: configuration.discoveryUri) else {
-                completion?(.failure(ConfigurationError.invalidUrl))
-                return
-            }
-            
-            var configurationMetadata: ConfigurationMetadata?
-            let blocker = DispatchSemaphore(value: 0)
-            let dataTask = URLSession.shared.dataTask(with: URLRequest(url: url)) { (data, _, error) in
-                defer {
-                    blocker.signal()
-                }
-                
-                guard error == nil else {
-                    log.error(error)
-                    completion?(.failure(error!))
-                    return
-                }
-                guard let data = data,
-                      let metaData = try? JSONDecoder().decode(ConfigurationMetadata.self, from: data) else {
-                    log.error(error)
-                    completion?(.failure(ConfigurationError.invalidPayload))
-                    return
-                }
-                
-                configurationMetadata = metaData
-                completion?(.success(metaData))
-            }
-            dataTask.resume()
-            blocker.wait()
-            
-            $0 = configurationMetadata
-            log.debug("configuration metadata: \($0.debugDescription)")
-            
-            if let configurationMetadata = $0 {
-                if let url = configurationMetadata.templateServerUri {
-                    NuguDisplayWebView.displayWebServerAddress = url
-                }
-            }
+        guard let configuration = configuration else {
+            completion?(.failure(ConfigurationError.notConfigured))
+            return
         }
+        
+        guard let url = URL(string: configuration.discoveryUri) else {
+            completion?(.failure(ConfigurationError.invalidUrl))
+            return
+        }
+        
+        urlSession.dataTask(with: URLRequest(url: url)) { [weak self] (data, _, error) in
+            guard error == nil else {
+                log.error(error)
+                completion?(.failure(error!))
+                return
+            }
+            guard let data = data,
+                  let metaData = try? JSONDecoder().decode(ConfigurationMetadata.self, from: data) else {
+                      log.error(error)
+                      self?.configurationMetadata = nil
+                      completion?(.failure(ConfigurationError.invalidPayload))
+                      return
+                  }
+            
+            if let url = metaData.templateServerUri {
+                NuguDisplayWebView.displayWebServerAddress = url
+            }
+            
+            self?.configurationMetadata = metaData
+            log.debug("configuration metadata: \(metaData)")
+            
+            completion?(.success(metaData))
+        }.resume()
     }
 }
