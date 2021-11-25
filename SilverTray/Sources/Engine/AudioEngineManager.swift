@@ -38,6 +38,12 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
     
     func startAudioEngine() throws {
         var engineError: Error!
+        
+        if let audioUnit = self.inputNode.audioUnit {
+            AudioOutputUnitStop(audioUnit)
+            AudioUnitInitialize(audioUnit)
+        }
+        
         _audioEngine.mutate { engine in
             guard engine.isRunning == false else { return }
             
