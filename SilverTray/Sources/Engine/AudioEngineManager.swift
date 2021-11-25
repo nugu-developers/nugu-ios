@@ -41,7 +41,7 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
         
         if let audioUnit = self.inputNode.audioUnit {
             AudioOutputUnitStop(audioUnit)
-            AudioUnitInitialize(audioUnit)
+            AudioUnitUninitialize(audioUnit)
         }
         
         _audioEngine.mutate { engine in
