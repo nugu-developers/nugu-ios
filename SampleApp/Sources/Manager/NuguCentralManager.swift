@@ -42,7 +42,16 @@ final class NuguCentralManager {
         // Set Last WakeUp Keyword
         // If you don't want to use saved wakeup-word, don't need to be implemented.
         // Because `aria` is set as a default keyword
-        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+        let wakeupDictionary = UserDefaults.Standard.wakeUpWordDictionary
+        let wakeupRawValue = Int(wakeupDictionary["rawValue"] ?? "0") ?? 0
+        let keywordItem = Keyword(
+            rawValue: wakeupRawValue,
+            description: wakeupDictionary["description"],
+            netFilePath: Bundle.main.url(forResource: wakeupDictionary["netFileName"], withExtension: "raw")?.path,
+            searchFilePath: Bundle.main.url(forResource: wakeupDictionary["searchFileName"], withExtension: "raw")?.path
+        )
+
+        if let keyword = keywordItem {
             nuguBuilder.keywordDetector.keyword = keyword
         }
         
