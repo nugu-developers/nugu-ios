@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import NuguClientKit
 
 extension UserDefaults {
     enum Standard {
@@ -40,7 +41,20 @@ extension UserDefaults {
         
         /// Setting value for using wakeup dectector, default value is "aria".
         @UserDefault(userDefaults: .standard, key: "wakeUpWord", defaultValue: 0)
-        static var wakeUpWord: Int
+        static var wakeUpWord: Int // Deprecated => need to migration
+        
+        /// Setting value for using wakeup detector's description, default value is "aria".
+        @UserDefault(
+            userDefaults: .standard,
+            key: "wakeUpWordDictionary",
+            defaultValue: [
+                "rawValue": String(Keyword.aria.rawValue),
+//                "description": "",
+//                "netFileName": "",
+//                "searchFileName": ""
+            ]
+        )
+        static var wakeUpWordDictionary: [String: String]
         
         /// Setting value whether or not to use beep when starts speech recognition.
         @UserDefault(userDefaults: .standard, key: "useAsrStartSound", defaultValue: true)

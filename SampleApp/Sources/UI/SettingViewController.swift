@@ -137,7 +137,8 @@ extension SettingViewController: UITableViewDataSource {
                 }
                 cell.isEnabled = switchEnableability
             case 2:
-                cell.configure(text: menuTitle, detailText: Keyword(rawValue: UserDefaults.Standard.wakeUpWord)?.description)
+                let description = UserDefaults.Standard.wakeUpWordDictionary["description"]
+                cell.configure(text: menuTitle, detailText: description)
                 cell.isEnabled = switchEnableability && UserDefaults.Standard.useWakeUpDetector
             case 3:
                 cell.configure(text: menuTitle, isSwitchOn: UserDefaults.Standard.useAsrStartSound)
@@ -212,7 +213,9 @@ extension SettingViewController: UITableViewDelegate {
             ConfigurationStore.shared.serviceSettingUrl { [weak self] (result) in
                 switch result {
                 case .success(let urlString):
-                    self?.performSegue(withIdentifier: "showNuguServiceWebView", sender: urlString)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.performSegue(withIdentifier: "showNuguServiceWebView", sender: urlString)
+                    }
                 case .failure(let error):
                     log.error(error)
                 }
@@ -228,11 +231,66 @@ extension SettingViewController: UITableViewDelegate {
                     title: keyword.description,
                     style: .default) { [weak self] _ in
                         NuguCentralManager.shared.client.keywordDetector.keyword = keyword
-                        UserDefaults.Standard.wakeUpWord = keyword.rawValue
+                        UserDefaults.Standard.wakeUpWordDictionary = [
+                            "rawValue": String(keyword.rawValue),
+                            "description": keyword.description
+                        ]
                         self?.tableView.reloadData()
                 }
                 wakeUpWordActionSheet.addAction(action)
             }
+            
+            let customAction = UIAlertAction(
+                title: "Custom",
+                style: .default) { [weak self] _ in
+                    let alert = UIAlertController(
+                        title: "Custom",
+                        message: "Set a custom description, netFilePath, searchFilePath",
+                        preferredStyle: .alert
+                    )
+                    alert.addTextField()
+                    alert.addTextField()
+                    alert.addTextField()
+                    
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .default)
+                    let addAction = UIAlertAction(
+                        title: "Add",
+                        style: .default,
+                        handler: { [weak self] _ in
+                            let description = alert.textFields?[0].text ?? ""
+                            let netFileName = alert.textFields?[1].text ?? ""
+                            let searchFileName = alert.textFields?[2].text ?? ""
+                        
+                            NuguCentralManager.shared.client.keywordDetector.keyword =  .custom(
+                                description: description,
+                                netFilePath: Bundle.main.url(forResource: netFileName, withExtension: "raw")!.path,
+                                searchFilePath:
+                                    Bundle.main.url(forResource: searchFileName, withExtension: "raw")!.path
+                            )
+                            
+                            UserDefaults.Standard.wakeUpWordDictionary = [
+                                "rawValue": String(-1),
+                                "description": description,
+                                "netFileName": netFileName,
+                                "searchFileName": searchFileName
+                            ]
+                            
+                            self?.tableView.reloadData()
+                    })
+                    alert.addAction(cancelAction)
+                    alert.addAction(addAction)
+                    
+                    if UIDevice.current.userInterfaceIdiom == .phone {
+                        self?.present(alert, animated: true)
+                    } else if UIDevice.current.userInterfaceIdiom == .pad {
+                        if let popoverController = alert.popoverPresentationController {
+                            popoverController.sourceView = self?.view
+                            self?.present(alert, animated: true, completion: nil)
+                        }
+                    }
+            }
+            wakeUpWordActionSheet.addAction(customAction)
+            
             if UIDevice.current.userInterfaceIdiom == .phone {
                 present(wakeUpWordActionSheet, animated: true)
             } else if UIDevice.current.userInterfaceIdiom == .pad {
