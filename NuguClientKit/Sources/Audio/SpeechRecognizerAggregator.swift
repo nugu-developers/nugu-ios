@@ -181,7 +181,8 @@ public extension SpeechRecognizerAggregator {
                     completion(false)
                     return
                 }
-                self.micQueue.async { [unowned self] in
+                self.micQueue.async { [weak self] in
+                    guard let self = self else { return }
                     guard self.micInputProvider.isRunning == false else {
                         completion(true)
                         return
@@ -200,9 +201,9 @@ public extension SpeechRecognizerAggregator {
     }
     
     func stopMicInputProvider() {
-        micQueue.async { [unowned self] in
-            self.startMicWorkItem?.cancel()
-            self.micInputProvider.stop()
+        micQueue.async { [weak self] in
+            self?.startMicWorkItem?.cancel()
+            self?.micInputProvider.stop()
         }
     }
 }
