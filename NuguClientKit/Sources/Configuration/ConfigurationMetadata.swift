@@ -24,12 +24,14 @@ public struct ConfigurationMetadata: Codable {
     public let issuer: String?
     public let authorizationEndpoint: String?
     public let tokenEndpoint: String?
+    public let jwksUri: String?
     public let tokenEndpointAuthMethodsSupported: [String]?
     public let responseTypesSupported: [String]?
     public let grantTypesSupported: [String]?
     public let introspectionEndpoint: String?
     // swiftlint:disable identifier_name
     public let introspectionEndpointAuthMethodsSupported: [String]?
+    public let codeChallengeMethodsSupported: [String]?
     public let revocationEndpoint: String?
     public let revocationEndpointAuthMethodsSupported: [String]?
     public let deviceGatewayRegistryUri: String?
@@ -45,12 +47,14 @@ public struct ConfigurationMetadata: Codable {
         case issuer = "issuer"
         case authorizationEndpoint = "authorization_endpoint"
         case tokenEndpoint = "token_endpoint"
+        case jwksUri = "jwks_uri"
         case tokenEndpointAuthMethodsSupported = "token_endpoint_auth_methods_supported"
         case responseTypesSupported = "response_types_supported"
         case grantTypesSupported = "grant_types_supported"
         case introspectionEndpoint = "introspection_endpoint"
         // swiftlint:disable identifier_name
         case introspectionEndpointAuthMethodsSupported = "introspection_endpoint_auth_methods_supported"
+        case codeChallengeMethodsSupported = "code_challenge_methods_supported"
         case revocationEndpoint = "revocation_endpoint"
         case revocationEndpointAuthMethodsSupported = "revocation_endpoint_auth_methods_supported"
         case deviceGatewayRegistryUri = "device_gateway_registry_uri"
