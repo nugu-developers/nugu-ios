@@ -79,6 +79,6 @@ public extension Configuration {
         authRedirectUri + "_refresh"
     }
     var discoveryUri: String {
-        "\(authServerUrl)/.well-known/oauth-authorization-server/\(authClientId)"
+        "\(authServerUrl)/.well-known/oauth-authorization-server"
     }
 }

@@ -248,7 +248,20 @@ private extension ConfigurationStore {
             return
         }
         
-        urlSession.dataTask(with: URLRequest(url: url)) { [weak self] (data, _, error) in
+        var urlRequest = URLRequest(url: url)
+        guard let base64AuthInfo = "\(configuration.authClientId):\(configuration.authClientSecret)"
+                .data(using: .utf8)?
+                .base64EncodedString() else {
+            completion?(.failure(ConfigurationError.notConfigured))
+            return
+        }
+        
+        urlRequest.addValue(
+            "Basic \(base64AuthInfo)",
+            forHTTPHeaderField: "Authorization"
+        )
+        
+        urlSession.dataTask(with: urlRequest) { [weak self] (data, _, error) in
             guard error == nil else {
                 log.error(error)
                 completion?(.failure(error!))
