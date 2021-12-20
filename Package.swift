@@ -98,7 +98,7 @@ let package = Package(
             name: "SilverTray",
             dependencies: ["NuguUtils", "NuguObjcUtils", "OpusSDK"],
             path: "SilverTray/",
-            exclude: ["Sources-Objc", "Info.plist"],
+            exclude: ["Info.plist"],
             publicHeadersPath: "inlcude/"
         ),
         .target(
