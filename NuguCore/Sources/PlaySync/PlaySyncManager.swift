@@ -90,8 +90,8 @@ public extension PlaySyncManager {
             timerGroup.forEach(self.removeTimer)
             
             // Start display only timer
-            // Previously existed checking count = 1 logic has been removed
-            if property.contextType == .display {
+            let directiveGroup = self.playStack.filter { $0.info.dialogRequestId == info.dialogRequestId }
+            if property.contextType == .display && directiveGroup.count == 1 {
                 log.debug("Add display only timer \(property) \(info.duration)")
                 self.addTimer(property: property, duration: info.duration)
             }
