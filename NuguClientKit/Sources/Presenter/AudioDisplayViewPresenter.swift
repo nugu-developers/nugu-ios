@@ -29,8 +29,8 @@ import NuguUtils
 /// AudioDisplayViewPresenter is a class which helps user for displaying AudioDisplayView more easily.
 public class AudioDisplayViewPresenter {
     public weak var delegate: AudioDisplayViewPresenterDelegate?
+    public var audioDisplayView: AudioDisplayView?
     
-    private var audioDisplayView: AudioDisplayView?
     private weak var viewController: UIViewController?
     private weak var superView: UIView?
     private var targetView: UIView? {
@@ -166,12 +166,14 @@ private extension AudioDisplayViewPresenter {
             replaceDisplayView(audioPlayerDisplayTemplate: audioPlayerDisplayTemplate, completion: completion)
             return
         }
+        
         audioDisplayView?.removeFromSuperview()
         guard let targetView = targetView,
               let audioDisplayView = AudioDisplayView.makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: audioPlayerDisplayTemplate, frame: targetView.frame) else {
             completion(nil)
             return
         }
+        
         self.audioDisplayView = audioDisplayView
         audioDisplayView.delegate = self
         audioDisplayView.displayPayload = audioPlayerDisplayTemplate.payload

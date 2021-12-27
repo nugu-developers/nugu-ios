@@ -344,6 +344,7 @@ extension AudioDisplayView {
     
     @IBAction func barTypeButtonDidClick(_ button: UIButton) {
         self.setBarMode()
+        delegate?.onBarTypeButtonClick()
     }
     
     @IBAction func previousButtonDidClick(_ button: UIButton) {
