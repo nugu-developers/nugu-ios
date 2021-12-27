@@ -23,6 +23,7 @@ import NuguAgents
 /// <#Description#>
 public protocol AudioDisplayViewDelegate: AnyObject {
     func onCloseButtonClick()
+    func onBarTypeButtonClick()
     func onUserInteraction()
     func onNuguButtonClick()
     func onChipsSelect(selectedChips: NuguChipsButton.NuguChipsButtonType?)
@@ -37,4 +38,8 @@ public protocol AudioDisplayViewDelegate: AnyObject {
     func requestAudioPlayerIsPlaying() -> Bool?
     func requestOffset() -> Int?
     func requestDuration() -> Int?
+}
+
+public extension AudioPlayerDisplayDelegate {
+    func onBarTypeButtonClick() {}
 }
