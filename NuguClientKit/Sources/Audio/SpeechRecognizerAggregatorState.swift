@@ -45,8 +45,8 @@ public enum SpeechRecognizerAggregatorState: Equatable {
     }
     
     public struct Result {
-        let type: ResultType
-        let value: String
+        public let type: ResultType
+        public let value: String
         
         public enum ResultType {
             case partial
