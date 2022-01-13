@@ -222,7 +222,7 @@ extension SpeechRecognizerAggregator: MicInputProviderDelegate {
     }
     
     public func audioEngineConfigurationChanged() {
-        startListeningWithTrigger()
+        // Nothing to do
     }
 }
 
