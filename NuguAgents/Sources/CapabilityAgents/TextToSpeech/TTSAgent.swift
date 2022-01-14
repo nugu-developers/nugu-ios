@@ -322,6 +322,10 @@ extension TTSAgent: MediaPlayerDelegate {
             }
         }
     }
+    
+    public func mediaPlayerChunkDidConsume(_ chunk: Data) {
+        post(NuguAgentNotification.TTS.Chunk(chunk: chunk))
+    }
 }
 
 // MARK: - Private (Directive)
@@ -504,6 +508,7 @@ private extension TTSAgent {
 extension Notification.Name {
     static let ttsAgentStateDidChange = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_state_did_change")
     static let ttsAgentResultDidReceive = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_result_did_receive")
+    static let ttsAgentChunkDidConsumed = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_chunk_did_consumed")
 }
 
 public extension NuguAgentNotification {
@@ -531,6 +536,16 @@ public extension NuguAgentNotification {
                       let header = from["header"] as? Downstream.Header else { return nil }
                 
                 return Result(text: text, header: header)
+            }
+        }
+        
+        public struct Chunk: TypedNotification {
+            public static var name: Notification.Name = .ttsAgentChunkDidConsumed
+            public let chunk: Data
+            
+            public static func make(from: [String: Any]) -> Chunk? {
+                guard let chunk = from["chunk"] as? Data else { return nil }
+                return Chunk(chunk: chunk)
             }
         }
     }

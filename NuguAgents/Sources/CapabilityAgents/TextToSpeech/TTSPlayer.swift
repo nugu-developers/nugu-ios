@@ -137,4 +137,8 @@ extension TTSPlayer: MediaPlayerDelegate {
     func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {
         delegate?.mediaPlayerDurationDidChange(duration, mediaPlayer: self)
     }
+    
+    func mediaPlayerChunkDidConsume(_ chunk: Data) {
+        delegate?.mediaPlayerChunkDidConsume(chunk)
+    }
 }
