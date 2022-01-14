@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 import NuguCore
 import NuguUtils
@@ -124,6 +125,13 @@ extension OpusPlayer: DataStreamPlayerDelegate {
         }
         
         delegate?.mediaPlayerStateDidChange(mediaPlayerState, mediaPlayer: self)
+    }
+    
+    func dataStreamPlayerDidPlay(_ chunk: AVAudioPCMBuffer) {
+        if let channelData = chunk.floatChannelData?.pointee {
+            let consumedData = Data(bytes: channelData, count: Int(chunk.frameLength)*4)
+            delegate?.mediaPlayerChunkDidConsume(consumedData)
+        }
     }
 }
 
