@@ -59,6 +59,7 @@ public class AudioDisplayView: UIView {
     @IBOutlet weak var durationTimeLabel: UILabel!
     
     @IBOutlet weak var idleBar: DisplayIdleBar!
+    @IBOutlet private weak var idleBarHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var audioPlayerBarViewContainerView: UIView!
     @IBOutlet weak var audioPlayerBarView: AudioPlayerBarView!
@@ -85,6 +86,11 @@ public class AudioDisplayView: UIView {
     
     public var displayPayload: [String: AnyHashable]?
     public var isSeekable: Bool = false
+    public var isNuguButtonShow: Bool = true {
+        didSet {
+            idleBarHeightConstraint.constant = (isNuguButtonShow ? 68.0 : 0)
+        }
+    }
     
     public var theme: AudioDisplayTheme = UserInterfaceUtil.style == .dark ? .dark : .light {
         didSet {
