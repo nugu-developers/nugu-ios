@@ -38,6 +38,7 @@ public class AudioDisplayViewPresenter {
     }
     private weak var nuguClient: NuguClient?
     private weak var themeController: NuguThemeController?
+    private let isNuguButtonShow: Bool
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -51,8 +52,9 @@ public class AudioDisplayViewPresenter {
     /// - Parameters:
     ///   - superView: Target view for AudioDisplayView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    public convenience init(superView: UIView, nuguClient: NuguClient, themeController: NuguThemeController? = nil) {
-        self.init(nuguClient: nuguClient, themeController: themeController)
+    ///   - isNuguButtonShow : Indicates whether to show the nugu microphone button.
+    public convenience init(superView: UIView, nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool = true) {
+        self.init(nuguClient: nuguClient, themeController: themeController, isNuguButtonShow: isNuguButtonShow)
         self.superView = superView
     }
     
@@ -60,17 +62,19 @@ public class AudioDisplayViewPresenter {
     /// - Parameters:
     ///   - viewController: Target viewController for AudioDisplayView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    public convenience init(viewController: UIViewController, nuguClient: NuguClient, themeController: NuguThemeController? = nil) {
-        self.init(nuguClient: nuguClient, themeController: themeController)
+    ///   - isNuguButtonShow : Indicates whether to show the nugu microphone button.
+    public convenience init(viewController: UIViewController, nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool = true) {
+        self.init(nuguClient: nuguClient, themeController: themeController, isNuguButtonShow: isNuguButtonShow)
         self.viewController = viewController
     }
     
     /// Initialize
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    private init(nuguClient: NuguClient, themeController: NuguThemeController? = nil) {
+    private init(nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool) {
         self.nuguClient = nuguClient
         self.themeController = themeController
+        self.isNuguButtonShow = isNuguButtonShow
         
         if let themeController = themeController {
             addThemeControllerObserver(themeController)
@@ -197,6 +201,7 @@ private extension AudioDisplayViewPresenter {
                 audioDisplayView.theme = .light
             }
         }
+        audioDisplayView.isNuguButtonShow = isNuguButtonShow
         completion(audioDisplayView)
         
         UIView.animate(withDuration: 0.3, animations: {
